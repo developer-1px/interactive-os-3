@@ -6,17 +6,19 @@ const w = (sel: string) => `:where(${sel})`
 const overlay = (pct: number) =>
   `linear-gradient(color-mix(in oklch, currentColor ${pct}%, transparent) 0 100%)`
 
-// leaf-only: 조상 체인 전파 방지 (hover/active 는 자식이 매칭되면 부모도 매칭되는 pseudo)
-const leaf = (pseudo: string) => `:not(:has(${pseudo}))`
+// leaf-only: 같은 역할 자손(중첩 roving 아이템)만 배제.
+// `:has(:hover)` 는 자식 span/아이콘까지 잡아 hover 를 꺼 버리므로
+// 반드시 동일 셀렉터로 좁힌다.
+const leaf = (sel: string, pseudo: string) => `:not(:has(${sel}${pseudo}))`
 
 export const hover = (sel: string) => css`
-  ${w(sel)}:hover:not([aria-disabled="true"])${leaf(':hover')} {
+  ${w(sel)}:hover:not([aria-disabled="true"])${leaf(w(sel), ':hover')} {
     background-image: ${overlay(8)};
   }
 `
 
 export const active = (sel: string) => css`
-  ${w(sel)}:active:not([aria-disabled="true"])${leaf(':active')} {
+  ${w(sel)}:active:not([aria-disabled="true"])${leaf(w(sel), ':active')} {
     background-image: ${overlay(14)};
   }
 `
