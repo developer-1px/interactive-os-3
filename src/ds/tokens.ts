@@ -1,4 +1,5 @@
 import { css } from './fn'
+import { avatarSize, containerPad, levelShift, rowGap, slotGap } from './keyline'
 
 export const seeds = css`
   @property --ds-hue     { syntax: '<number>'; initial-value: 260; inherits: true; }
@@ -34,6 +35,13 @@ export const seeds = css`
     /* 모든 control/roving이 공유하는 기본 높이 — UA가 line-height를 무시하는
        select 같은 요소까지 min-height로 강제해 같은 선상 정렬을 보장한다. */
     --ds-control-h: calc(var(--ds-text-md) * var(--ds-leading) + var(--ds-space) * 2 + 2px);
+
+    /* keyline 시스템 — 모든 container가 공유하는 간격 상수. 원본은 src/ds/keyline.ts */
+    --ds-row-gap:       ${rowGap};
+    --ds-slot-gap:      ${slotGap};
+    --ds-container-pad: ${containerPad};
+    --ds-level-shift:   ${levelShift};
+    --ds-avatar-size:   ${avatarSize};
     --ds-shadow:
       0 calc(4px * var(--ds-depth))
         calc(12px * var(--ds-depth))

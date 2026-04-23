@@ -3,12 +3,16 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 type FeedArticleProps = ComponentPropsWithoutRef<'article'> & {
   posinset?: number
   setsize?: number
+  avatar?: ReactNode
+  header?: ReactNode
   children: ReactNode
 }
 
 export function FeedArticle({
   posinset,
   setsize,
+  avatar,
+  header,
   children,
   ...rest
 }: FeedArticleProps) {
@@ -20,7 +24,11 @@ export function FeedArticle({
         aria-setsize={setsize}
         {...rest}
       >
-        {children}
+        {avatar}
+        <div>
+          {header && <header>{header}</header>}
+          {children}
+        </div>
       </article>
     </li>
   )

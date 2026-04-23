@@ -1,4 +1,4 @@
-import { Fragment, type ComponentPropsWithoutRef, type ReactNode } from 'react'
+import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import { ROOT, getChildren, getExpanded, getFocus, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../axes'
 import { bindAxis } from '../../core/bind'
@@ -40,7 +40,7 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
             aria-expanded={hasKids ? isOpen : undefined}
             aria-disabled={disabled || undefined}
             tabIndex={focused ? 0 : -1}
-            style={{ paddingInlineStart: `calc(var(--ds-space) * 4 * ${level - 1} + var(--ds-space) * 2)` }}
+            style={{ '--ds-level': level - 1 } as CSSProperties}
             onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
             onClick={(e) => {
               e.stopPropagation()

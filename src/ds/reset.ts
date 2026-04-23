@@ -28,7 +28,7 @@ export const reset = css`
   input, button, textarea, select { font: inherit; color: inherit; }
   button { background: none; border: 0; }
   p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
-  ul, ol { padding: 0; list-style: none; }
+  :where(ul, ol) { padding: 0; list-style: none; }
   a { color: inherit; text-decoration: none; }
   :focus-visible { outline: none; }
 `

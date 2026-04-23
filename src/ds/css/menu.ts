@@ -1,4 +1,4 @@
-import { css, icons, indicator, listReset, pad, radius, rowPadding, surface } from './fn'
+import { css, icons, indicator, listReset, pad, radius, rowPadding, surface } from '../fn'
 
 export const menu = () => [
   css`
