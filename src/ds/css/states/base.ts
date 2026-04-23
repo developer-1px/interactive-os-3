@@ -33,6 +33,10 @@ export const base = css`
     display: flex; align-items: center; gap: ${slotGap}; flex-wrap: wrap;
   }
   :where(${clickable}) { cursor: pointer; }
+  /* 리스트 row 내부 label은 기본 truncation (호출부 style 의존 제거) */
+  :where([role="option"], [role="menuitem"], [role="treeitem"]) > :where(span, div, a, strong) {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
   :where(input:not([type="checkbox"]):not([type="radio"])),
   :where(select),
   :where(textarea) { border-color: var(--ds-border); background: var(--ds-bg); }

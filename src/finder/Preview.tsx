@@ -1,44 +1,27 @@
-import type { CSSProperties } from 'react'
 import { formatDate, formatSize } from './data'
 import type { FsNode } from './types'
 
-const wrap: CSSProperties = {
-  width: 320, flex: 'none', overflowY: 'auto',
-  padding: 24, fontSize: 13,
-  display: 'flex', flexDirection: 'column', gap: 16,
-}
-const thumb: CSSProperties = {
-  width: '100%', aspectRatio: '4 / 3', borderRadius: 8,
-  background: 'color-mix(in oklch, Canvas 92%, CanvasText 8%)',
-  display: 'grid', placeItems: 'center',
-  fontSize: 72, border: '1px solid var(--ds-border)',
-}
-const meta: CSSProperties = { display: 'grid', gridTemplateColumns: 'auto 1fr', rowGap: 6, columnGap: 12 }
-const label: CSSProperties = { opacity: 0.55 }
-const val: CSSProperties = { textAlign: 'right', fontVariantNumeric: 'tabular-nums' }
-
 export function Preview({ node }: { node: FsNode | null }) {
-  if (!node) return <aside style={wrap}><div style={{ opacity: 0.5 }}>항목을 선택하세요</div></aside>
+  if (!node) return (
+    <aside aria-roledescription="preview" aria-label="미리보기">
+      <p>항목을 선택하세요</p>
+    </aside>
+  )
   return (
-    <aside style={wrap} aria-label="미리보기">
-      <div style={thumb} aria-hidden>
-        {node.type === 'dir' ? '📁' : fileEmoji(node.ext)}
-      </div>
+    <aside aria-roledescription="preview" aria-label="미리보기">
+      <figure aria-hidden>{node.type === 'dir' ? '📁' : fileEmoji(node.ext)}</figure>
       <div>
-        <div style={{ fontSize: 15, fontWeight: 600, wordBreak: 'break-all' }}>{node.name}</div>
-        <div style={{ opacity: 0.6, marginTop: 2 }}>
-          {node.type === 'dir' ? `${node.children?.length ?? 0}개 항목` : `${(node.ext ?? 'file').toUpperCase()} — ${formatSize(node.size)}`}
-        </div>
+        <h2>{node.name}</h2>
+        <p>{node.type === 'dir'
+          ? `${node.children?.length ?? 0}개 항목`
+          : `${(node.ext ?? 'file').toUpperCase()} — ${formatSize(node.size)}`}</p>
       </div>
-      <div>
-        <div style={{ fontWeight: 600, marginBottom: 6 }}>정보</div>
-        <div style={meta}>
-          <span style={label}>종류</span><span style={val}>{node.type === 'dir' ? '폴더' : node.ext || '파일'}</span>
-          <span style={label}>경로</span><span style={val} title={node.path}>{node.path}</span>
-          {node.size != null && <><span style={label}>크기</span><span style={val}>{formatSize(node.size)}</span></>}
-          {node.mtime && <><span style={label}>수정일</span><span style={val}>{formatDate(node.mtime)}</span></>}
-        </div>
-      </div>
+      <dl>
+        <dt>종류</dt><dd>{node.type === 'dir' ? '폴더' : node.ext || '파일'}</dd>
+        <dt>경로</dt><dd title={node.path}>{node.path}</dd>
+        {node.size != null && <><dt>크기</dt><dd>{formatSize(node.size)}</dd></>}
+        {node.mtime && <><dt>수정일</dt><dd>{formatDate(node.mtime)}</dd></>}
+      </dl>
     </aside>
   )
 }

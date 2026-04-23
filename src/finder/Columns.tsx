@@ -1,13 +1,5 @@
-import type { CSSProperties } from 'react'
 import { Listbox, Option } from '../controls'
 import type { FsNode } from './types'
-
-const wrap: CSSProperties = { flex: 1, display: 'flex', overflow: 'auto', minWidth: 0 }
-const col: CSSProperties = {
-  width: 220, flex: 'none', overflowY: 'auto',
-  borderInlineEnd: '1px solid var(--ds-border)', fontSize: 13,
-}
-const nameStyle: CSSProperties = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }
 
 export function Columns({ chain, onNavigate }: {
   chain: FsNode[]
@@ -16,28 +8,28 @@ export function Columns({ chain, onNavigate }: {
   // chain[0] = root. 각 단계 부모의 children을 한 열로 표시.
   const columns = chain.filter((n) => n.type === 'dir' && n.children)
   return (
-    <div style={wrap}>
+    <section aria-roledescription="columns" aria-label="컬럼">
       {columns.map((parent, i) => {
         const selectedChild = chain[i + 1]
         return (
-          <div key={parent.path + i} style={col}>
+          <nav key={parent.path + i} aria-roledescription="column" aria-label={parent.name}>
             <Listbox aria-label={parent.name}>
               {parent.children!.map((c) => (
                 <Option
                   key={c.path}
                   selected={selectedChild?.path === c.path}
                   onClick={() => onNavigate(c.path)}
+                  {...(c.type === 'dir' ? { 'aria-haspopup': 'menu' } : {})}
                 >
                   <span aria-hidden>{c.type === 'dir' ? '📁' : icon(c.ext)}</span>
-                  <span style={nameStyle}>{c.name}</span>
-                  {c.type === 'dir' && <span aria-hidden style={{ marginInlineStart: 'auto', opacity: 0.4 }}>›</span>}
+                  <span>{c.name}</span>
                 </Option>
               ))}
             </Listbox>
-          </div>
+          </nav>
         )
       })}
-    </div>
+    </section>
   )
 }
 

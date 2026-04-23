@@ -42,6 +42,16 @@ export const seeds = css`
     --ds-container-pad: ${containerPad};
     --ds-level-shift:   ${levelShift};
     --ds-avatar-size:   ${avatarSize};
+
+    /* 앱 셸 메트릭 — 창·타이틀바·3-컬럼 브라우저 레이아웃 */
+    --ds-shell-inset:   16px;
+    --ds-shell-radius:  12px;
+    --ds-chrome-h:      44px;
+    --ds-sidebar-w:     200px;
+    --ds-column-w:      220px;
+    --ds-preview-w:     320px;
+    --ds-traffic-size:  12px;
+
     --ds-shadow:
       0 calc(4px * var(--ds-depth))
         calc(12px * var(--ds-depth))
