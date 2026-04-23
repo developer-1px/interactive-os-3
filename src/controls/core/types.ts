@@ -17,14 +17,13 @@ export type Event =
   | { type: 'open'; id: string; open: boolean }
   | { type: 'typeahead'; buf: string; deadline: number }
 
-export const ROOT = '__root__'
-export const FOCUS = '__focus__'
-export const EXPANDED = '__expanded__'
-export const TYPEAHEAD = '__typeahead__'
-
 const metaId = (name: string) => `__${name}__`
 export const isMetaId = (id: string) => id.startsWith('__') && id.endsWith('__')
-void metaId
+
+export const ROOT = metaId('root')
+export const FOCUS = metaId('focus')
+export const EXPANDED = metaId('expanded')
+export const TYPEAHEAD = metaId('typeahead')
 
 const readMeta = <T>(d: NormalizedData, id: string, key: string, fallback: T): T =>
   (d.entities[id]?.data?.[key] as T) ?? fallback

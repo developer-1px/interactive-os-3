@@ -15,8 +15,8 @@ type Ctx = {
 const syncPopover = (el: HTMLDivElement | null, wantOpen: boolean) => {
   if (!el || el.popover !== 'auto') return
   const open = el.matches(':popover-open')
-  wantOpen && !open && el.showPopover()
-  !wantOpen && open && el.hidePopover()
+  if (wantOpen && !open) el.showPopover()
+  else if (!wantOpen && open) el.hidePopover()
 }
 
 export function MenuPopover({
@@ -28,7 +28,7 @@ export function MenuPopover({
   const wantOpen = parentId === ROOT ? undefined : expanded.has(parentId)
   return (
     <div id={domId} popover="auto" role="presentation" style={style}
-      ref={(el) => { wantOpen !== undefined && syncPopover(el, wantOpen) }}
+      ref={(el) => { if (wantOpen !== undefined) syncPopover(el, wantOpen) }}
       onToggle={(e) => {
         const open = (e.nativeEvent as ToggleEvent).newState === 'open'
         onToggle(parentId, open)
@@ -47,7 +47,7 @@ export function MenuPopover({
               aria-expanded={branch ? expanded.has(id) : undefined}
               aria-posinset={i + 1} aria-setsize={kids.length}
               style={branch ? ({ anchorName: anchorName(id) } as CSSProperties) : undefined}
-              onKeyDown={(e) => { onKey(e, id) && e.stopPropagation() }}
+              onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
               onClick={(e) => { e.stopPropagation(); onClick(id) }}
             >{getLabel(data, id)}</li>
           )

@@ -13,6 +13,12 @@ const toParentOrNull = (d: NormalizedData, id: string): Event[] | null => {
 }
 const firstEnabled = (d: NormalizedData, kids: string[]) => kids.find((c) => !isDisabled(d, c))
 
+const TOGGLE: Record<Branch, Action> = {
+  branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
+  branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
+  leaf: () => null,
+}
+
 const TABLE: Record<string, Record<Branch, Action>> = {
   ArrowRight: {
     branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
@@ -27,13 +33,9 @@ const TABLE: Record<string, Record<Branch, Action>> = {
     branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
     leaf: ({ d, id }) => toParentOrNull(d, id),
   },
-  Enter: {
-    branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
-    branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
-    leaf: () => null,
-  },
+  Enter: TOGGLE,
+  ' ': TOGGLE,
 }
-TABLE[' '] = TABLE.Enter
 
 const classify = (kids: string[], open: boolean): Branch =>
   kids.length === 0 ? 'leaf' : open ? 'branchOpen' : 'branchClosed'

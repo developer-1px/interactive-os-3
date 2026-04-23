@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { dsCss } from './ds'
-import App from './App.tsx'
+import App from './ChatApp.tsx'
 
 const styleEl = document.createElement('style')
 styleEl.setAttribute('data-ds', '')

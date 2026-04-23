@@ -6,9 +6,10 @@ export const useFocusBridge = (focusId: string | null) => {
   useEffect(() => {
     if (focusId === prev.current) return
     prev.current = focusId
-    focusId && map.current.get(focusId)?.focus()
+    if (focusId) map.current.get(focusId)?.focus()
   }, [focusId])
   return (id: string) => (el: HTMLElement | null) => {
-    el ? map.current.set(id, el) : map.current.delete(id)
+    if (el) map.current.set(id, el)
+    else map.current.delete(id)
   }
 }

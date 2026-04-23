@@ -9,7 +9,8 @@ export const bindAxis = (
   onEvent: (e: Event) => void,
 ) => (ke: KeyboardEvent, id: string): boolean => {
   const events = axis(d, id, fromKeyboardEvent(ke))
-  events?.forEach(onEvent)
-  events && ke.preventDefault()
-  return events !== null
+  if (!events) return false
+  events.forEach(onEvent)
+  ke.preventDefault()
+  return true
 }

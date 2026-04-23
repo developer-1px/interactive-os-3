@@ -19,22 +19,20 @@ export function Menu({ data, onEvent }: ControlProps) {
   const clickEvents = (id: string): Event[] => {
     if (isDisabled(data, id)) return []
     const kids = getChildren(data, id)
-    const open = expanded.has(id)
     if (!kids.length) return [{ type: 'activate', id }]
+    const open = expanded.has(id)
+    const events: Event[] = [{ type: 'expand', id, open: !open }]
     const first = !open ? firstEnabled(id) : undefined
-    return [
-      { type: 'expand', id, open: !open },
-      ...(first ? [{ type: 'navigate', id: first } as Event] : []),
-    ]
+    if (first) events.push({ type: 'navigate', id: first })
+    return events
   }
 
   const toggleEvents = (id: string, open: boolean): Event[] => {
     if (id === ROOT) {
+      const events: Event[] = [{ type: 'open', id: ROOT, open }]
       const first = open ? firstEnabled(ROOT) : undefined
-      return [
-        { type: 'open', id: ROOT, open },
-        ...(first ? [{ type: 'navigate', id: first } as Event] : []),
-      ]
+      if (first) events.push({ type: 'navigate', id: first })
+      return events
     }
     return !open && expanded.has(id) ? [{ type: 'expand', id, open: false }] : []
   }

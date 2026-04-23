@@ -12,7 +12,9 @@ const setMeta = (d: NormalizedData, id: string, data: Record<string, unknown>): 
 
 const toggleExpanded = (d: NormalizedData, id: string, open: boolean): NormalizedData => {
   const prev = (d.entities[EXPANDED]?.data?.ids as string[]) ?? []
-  const next = open ? [...new Set([...prev, id])] : prev.filter((x) => x !== id)
+  const has = prev.includes(id)
+  if (open === has) return d
+  const next = open ? [...prev, id] : prev.filter((x) => x !== id)
   return setMeta(d, EXPANDED, { ids: next })
 }
 

@@ -31,6 +31,9 @@ const clickable = [
 
 const base = css`
   ${controlBox(`${clickable}, ${control}`)}
+  /* Middle alignment invariant: every roving item composes ::before indicator
+     + label + optional ::after. Flex + align-items:center makes this automatic. */
+  :where(${rovingItem}) { display: flex; align-items: center; gap: ${pad(2)}; }
   :where(${clickable}) { cursor: pointer; }
   :where(input:not([type="checkbox"]):not([type="radio"])),
   :where(select),

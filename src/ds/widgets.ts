@@ -1,4 +1,4 @@
-import { css, icon, icons, pad, radius, rowPadding, surface } from './fn'
+import { css, icon, icons, listReset, pad, radius, rowPadding, surface } from './fn'
 
 // 새 컴포넌트 CSS — 표준 HTML/ARIA 셀렉터만 사용 (classless).
 // 단일 책임: 각 블록은 정확히 한 role(또는 한 네이티브 요소)의 시각 계약을 담는다.
@@ -118,4 +118,26 @@ const valueCss = css`
   :where(meter)::-webkit-meter-even-less-good-value { background: oklch(65% 0.22 25); }
 `
 
-export const widgets = () => [switchCss, dialogCss, tooltipCss, detailsCss, valueCss].join('\n')
+const feedCss = [
+  listReset('[role="feed"]'),
+  css`
+    :where([role="feed"]) {
+      display: flex;
+      flex-direction: column;
+      gap: ${pad(2.5)};
+    }
+    :where([role="feed"]) > li { display: block; }
+    :where([role="feed"]) article {
+      display: flex;
+      gap: ${pad(3)};
+      align-items: flex-start;
+    }
+    :where([role="feed"]) article:focus-visible {
+      outline: 2px solid var(--ds-accent);
+      outline-offset: 2px;
+      border-radius: ${radius('sm')};
+    }
+  `,
+].join('\n')
+
+export const widgets = () => [switchCss, dialogCss, tooltipCss, detailsCss, valueCss, feedCss].join('\n')

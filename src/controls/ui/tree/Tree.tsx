@@ -14,15 +14,14 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
   const onKey = bindAxis(axis, data, onEvent)
   const bindFocus = useFocusBridge(focusId)
 
-  const clickEvents = (id: string, hasKids: boolean, isOpen: boolean, disabled: boolean): Event[] =>
-    disabled
-      ? []
-      : [
-          { type: 'navigate', id },
-          hasKids
-            ? { type: 'expand', id, open: !isOpen }
-            : { type: 'activate', id },
-        ]
+  const clickEvents = (id: string): Event[] => {
+    if (isDisabled(data, id)) return []
+    const hasKids = getChildren(data, id).length > 0
+    return [
+      { type: 'navigate', id },
+      hasKids ? { type: 'expand', id, open: !expanded.has(id) } : { type: 'activate', id },
+    ]
+  }
 
   const render = (parent: string, level: number): ReactNode =>
     getChildren(data, parent).map((id, i, kids) => {
@@ -42,10 +41,10 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
             aria-disabled={disabled || undefined}
             tabIndex={focused ? 0 : -1}
             style={{ paddingInlineStart: `calc(var(--ds-space) * 4 * ${level - 1} + var(--ds-space) * 2)` }}
-            onKeyDown={(e) => { onKey(e, id) && e.stopPropagation() }}
+            onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
             onClick={(e) => {
               e.stopPropagation()
-              clickEvents(id, hasKids, isOpen, disabled).forEach(onEvent)
+              clickEvents(id).forEach(onEvent)
             }}
           >
             {getLabel(data, id)}

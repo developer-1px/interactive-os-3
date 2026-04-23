@@ -2,10 +2,10 @@ import type { Axis } from '../core/axis'
 import { ROOT, getChildren, getExpanded, isDisabled, type NormalizedData } from '../core/types'
 
 const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
-  getChildren(d, parent).forEach((id) => {
+  for (const id of getChildren(d, parent)) {
     out.push(id)
-    exp.has(id) && visibleFlat(d, id, exp, out)
-  })
+    if (exp.has(id)) visibleFlat(d, id, exp, out)
+  }
   return out
 }
 

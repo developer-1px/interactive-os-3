@@ -7,17 +7,12 @@ import { enabledSiblings } from './index'
 const WINDOW_MS = 500
 
 export const typeahead: Axis = (d, id, k) => {
-  const printable = isPrintable(k)
+  if (!isPrintable(k)) return null
   const now = Date.now()
   const { buf, deadline } = getTypeahead(d)
-  const nextBuf = printable ? (now < deadline ? buf : '') + k.key.toLowerCase() : ''
-  const match = printable
-    ? enabledSiblings(d, id).find((sid) => getLabel(d, sid).toLowerCase().startsWith(nextBuf))
-    : undefined
-  return printable
-    ? ([
-        { type: 'typeahead', buf: nextBuf, deadline: now + WINDOW_MS },
-        ...(match ? [{ type: 'navigate', id: match } as Event] : []),
-      ] as Event[])
-    : null
+  const nextBuf = (now < deadline ? buf : '') + k.key.toLowerCase()
+  const match = enabledSiblings(d, id).find((sid) => getLabel(d, sid).toLowerCase().startsWith(nextBuf))
+  const events: Event[] = [{ type: 'typeahead', buf: nextBuf, deadline: now + WINDOW_MS }]
+  if (match) events.push({ type: 'navigate', id: match })
+  return events
 }
