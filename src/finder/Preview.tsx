@@ -1,5 +1,5 @@
 import { formatDate, formatSize } from './data'
-import type { FsNode } from './types'
+import { extToIcon, type FsNode } from './types'
 
 export function Preview({ node }: { node: FsNode | null }) {
   if (!node) return (
@@ -9,7 +9,7 @@ export function Preview({ node }: { node: FsNode | null }) {
   )
   return (
     <aside aria-roledescription="preview" aria-label="미리보기">
-      <figure aria-hidden>{node.type === 'dir' ? '📁' : fileEmoji(node.ext)}</figure>
+      <figure data-icon={node.type === 'dir' ? 'dir' : extToIcon(node.ext)} aria-hidden />
       <div>
         <h2>{node.name}</h2>
         <p>{node.type === 'dir'
@@ -24,15 +24,4 @@ export function Preview({ node }: { node: FsNode | null }) {
       </dl>
     </aside>
   )
-}
-
-function fileEmoji(ext?: string): string {
-  if (!ext) return '📄'
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) return '🖼️'
-  if (['svg'].includes(ext)) return '🎨'
-  if (['ts', 'tsx', 'js', 'jsx'].includes(ext)) return '📜'
-  if (['json', 'yaml', 'yml'].includes(ext)) return '⚙️'
-  if (['md'].includes(ext)) return '📝'
-  if (['html'].includes(ext)) return '🌐'
-  return '📄'
 }

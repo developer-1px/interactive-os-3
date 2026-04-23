@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-router": "^1.168.23",
     "lucide-react": "^1.9.0",
+    "lucide-static": "^1.9.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

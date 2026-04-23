@@ -1,4 +1,4 @@
-import { css, icons, indicator, listReset, pad, radius, rowPadding, surface } from '../fn'
+import { css, indicator, listReset, pad, radius, rowPadding, surface } from '../fn'
 
 export const menu = () => [
   css`
@@ -39,8 +39,8 @@ export const menu = () => [
     }
     [role="menuitem"] { justify-content: space-between; gap: ${pad(4)}; }
   `,
-  indicator('[role="menuitem"][aria-haspopup="menu"]', icons.chevronRight, { pseudo: '::after', size: '0.9em' }),
+  indicator('[role="menuitem"][aria-haspopup="menu"]', 'chevronRight', { pseudo: '::after', size: '0.9em' }),
   css`[role="menuitem"][aria-haspopup="menu"]::after { opacity: .6; }`,
-  indicator('[role="menuitemcheckbox"]', icons.check, { on: '[aria-checked="true"]' }),
-  indicator('[role="menuitemradio"]',    icons.dot,   { on: '[aria-checked="true"]' }),
+  indicator('[role="menuitemcheckbox"]', 'check', { on: '[aria-checked="true"]' }),
+  indicator('[role="menuitemradio"]',    'dot',   { on: '[aria-checked="true"]' }),
 ].join('\n')

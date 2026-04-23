@@ -1,11 +1,10 @@
 import { Listbox, Option } from '../controls'
-import type { FsNode } from './types'
+import { extToIcon, type FsNode } from './types'
 
 export function Columns({ chain, onNavigate }: {
   chain: FsNode[]
   onNavigate: (path: string) => void
 }) {
-  // chain[0] = root. 각 단계 부모의 children을 한 열로 표시.
   const columns = chain.filter((n) => n.type === 'dir' && n.children)
   return (
     <section aria-roledescription="columns" aria-label="컬럼">
@@ -19,10 +18,10 @@ export function Columns({ chain, onNavigate }: {
                   key={c.path}
                   selected={selectedChild?.path === c.path}
                   onClick={() => onNavigate(c.path)}
+                  data-icon={c.type === 'dir' ? 'dir' : extToIcon(c.ext)}
                   {...(c.type === 'dir' ? { 'aria-haspopup': 'menu' } : {})}
                 >
-                  <span aria-hidden>{c.type === 'dir' ? '📁' : icon(c.ext)}</span>
-                  <span>{c.name}</span>
+                  {c.name}
                 </Option>
               ))}
             </Listbox>
@@ -31,15 +30,4 @@ export function Columns({ chain, onNavigate }: {
       })}
     </section>
   )
-}
-
-function icon(ext?: string): string {
-  if (!ext) return '📄'
-  if (['ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs'].includes(ext)) return '📜'
-  if (['json', 'yaml', 'yml', 'toml'].includes(ext)) return '⚙️'
-  if (['md', 'mdx', 'txt'].includes(ext)) return '📝'
-  if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) return '🖼️'
-  if (['css', 'scss', 'sass'].includes(ext)) return '🎨'
-  if (['html'].includes(ext)) return '🌐'
-  return '📄'
 }

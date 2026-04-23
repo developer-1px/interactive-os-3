@@ -1,4 +1,4 @@
-import { css, icon, icons, pad, radius } from '../../fn'
+import { css, icon, pad, radius } from '../../fn'
 
 export const detailsCss = css`
   :where(details) {
@@ -26,7 +26,7 @@ export const detailsCss = css`
   }
   :where(details) > :where(summary)::-webkit-details-marker { display: none; }
   :where(details) > :where(summary)::before {
-    ${icon(icons.chevronRight)}
+    ${icon('chevronRight')}
     opacity: .6;
     transition: transform 120ms;
     flex: none;

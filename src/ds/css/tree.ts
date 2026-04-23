@@ -1,8 +1,8 @@
-import { css, icons, indicator, pad, rowPadding } from '../fn'
+import { css, indicator, pad, rowPadding } from '../fn'
 import { levelShift } from '../keyline'
 
 export const tree = () => [
-  indicator('[role="treeitem"]', icons.chevronRight, {
+  indicator('[role="treeitem"]', 'chevronRight', {
     when: '[aria-expanded]',
     on: '[aria-expanded="true"]',
     transform: 'rotate(90deg)',

@@ -1,4 +1,4 @@
-import { css, icon, icons, pad } from '../../fn'
+import { css, icon, pad } from '../../fn'
 
 // Finder 3-컬럼 브라우저: sidebar + columns + preview.
 export const panesCss = css`
@@ -16,7 +16,7 @@ export const panesCss = css`
   }
   /* 컬럼 내 폴더 옵션 — 우측 chevron 자동 주입 */
   nav[aria-roledescription="column"] [role="option"][aria-haspopup="menu"]::after {
-    ${icon(icons.chevronRight, '0.8em')}
+    ${icon('chevronRight', '0.8em')}
     margin-inline-start: auto; opacity: .4;
   }
   aside[aria-roledescription="preview"] {

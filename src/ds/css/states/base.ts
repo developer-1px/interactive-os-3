@@ -1,4 +1,6 @@
-import { controlBox, css, icons, pad } from '../../fn'
+import { controlBox, css, pad } from '../../fn'
+
+const selectChevron = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6l5 5 5-5'/></svg>`
 import { containerPad, slotGap, tracks } from '../../keyline'
 import { clickable, control, flexItem } from './selectors'
 
@@ -49,9 +51,7 @@ export const base = css`
   :where(select) {
     appearance: none;
     padding-inline-end: calc(${pad(2)} + 1em);
-    background-image: url("data:image/svg+xml;utf8,${encodeURIComponent(
-      icons.chevronDown.replace('stroke=\'black\'', 'stroke=\'currentColor\'')
-    )}");
+    background-image: url("data:image/svg+xml;utf8,${encodeURIComponent(selectChevron)}");
     background-repeat: no-repeat;
     background-position: right ${pad(1.5)} center;
     background-size: 1em 1em;

@@ -29,10 +29,10 @@ export function formatDate(ms?: number): string {
 }
 
 export const sidebar: SidebarItem[] = [
-  { id: 'root',     label: tree.name, path: '/',            icon: '🏠' },
-  { id: 'src',      label: 'src',     path: '/src',         icon: '📁' },
-  { id: 'controls', label: 'controls', path: '/src/controls', icon: '🎛' },
-  { id: 'ds',       label: 'ds',      path: '/src/ds',      icon: '🎨' },
-  { id: 'finder',   label: 'finder',  path: '/src/finder',  icon: '🗂' },
-  { id: 'public',   label: 'public',  path: '/public',      icon: '📂' },
+  { id: 'root',     label: tree.name, path: '/',            icon: 'home' },
+  { id: 'src',      label: 'src',     path: '/src',         icon: 'dir' },
+  { id: 'controls', label: 'controls', path: '/src/controls', icon: 'sliders' },
+  { id: 'ds',       label: 'ds',      path: '/src/ds',      icon: 'palette' },
+  { id: 'finder',   label: 'finder',  path: '/src/finder',  icon: 'dirOpen' },
+  { id: 'public',   label: 'public',  path: '/public',      icon: 'dir' },
 ]
