@@ -2,7 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { dsCss } from './ds'
-import App from './ChatApp.tsx'
+import { RouterProvider } from '@tanstack/react-router'
+import { router } from './router'
 
 const styleEl = document.createElement('style')
 styleEl.setAttribute('data-ds', '')
@@ -21,6 +22,6 @@ if (import.meta.env.DEV) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )
