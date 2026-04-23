@@ -8,6 +8,7 @@ export const dialogCss = css`
     border-radius: ${radius('md')};
     max-width: min(90vw, 480px);
     min-width: 280px;
+    margin: auto;
   }
   :where(dialog)::backdrop {
     background: color-mix(in oklch, CanvasText 40%, transparent);
