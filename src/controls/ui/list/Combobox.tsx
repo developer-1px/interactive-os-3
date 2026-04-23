@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react'
+import { forwardRef, type ComponentPropsWithoutRef } from 'react'
 
 type ComboboxProps = Omit<ComponentPropsWithoutRef<'input'>, 'role' | 'type'> & {
   expanded?: boolean
@@ -7,22 +7,22 @@ type ComboboxProps = Omit<ComponentPropsWithoutRef<'input'>, 'role' | 'type'> & 
   autocomplete?: 'none' | 'inline' | 'list' | 'both'
 }
 
-export function Combobox({
-  expanded,
-  controls,
-  activedescendant,
-  autocomplete = 'list',
-  ...rest
-}: ComboboxProps) {
-  return (
-    <input
-      type="text"
-      role="combobox"
-      aria-expanded={expanded}
-      aria-controls={controls}
-      aria-activedescendant={activedescendant}
-      aria-autocomplete={autocomplete}
-      {...rest}
-    />
-  )
-}
+export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
+  function Combobox(
+    { expanded, controls, activedescendant, autocomplete = 'list', ...rest },
+    ref,
+  ) {
+    return (
+      <input
+        ref={ref}
+        type="text"
+        role="combobox"
+        aria-expanded={expanded}
+        aria-controls={controls}
+        aria-activedescendant={activedescendant}
+        aria-autocomplete={autocomplete}
+        {...rest}
+      />
+    )
+  },
+)
