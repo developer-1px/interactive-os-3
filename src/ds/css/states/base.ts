@@ -1,5 +1,5 @@
 import { controlBox, css, icons, pad } from '../../fn'
-import { containerPad, rowGap, slotGap, tracks } from '../../keyline'
+import { containerPad, slotGap, tracks } from '../../keyline'
 import { clickable, control, flexItem } from './selectors'
 
 // All roving items paint directly on themselves. Container bleed is avoided
@@ -14,7 +14,9 @@ export const base = css`
     display: grid;
     grid-template-columns: ${tracks};
     grid-auto-rows: min-content;
-    row-gap: ${rowGap};
+    /* row-gap 0 — hover 연속성을 위한 dense packing. 숨 쉬는 간격이 필요한
+       container(예: feed)만 자체 규칙에서 row-gap을 덮어쓴다. */
+    row-gap: 0;
     align-content: start;
     padding: ${containerPad};
   }
