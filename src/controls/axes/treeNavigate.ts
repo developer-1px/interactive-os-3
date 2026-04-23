@@ -1,28 +1,27 @@
-import { ROOT, getChildren, getExpanded, isDisabled, type Event, type NormalizedData } from '../core/types'
-import type { AxisHandler } from './index'
+import type { Axis } from '../core/axis'
+import { ROOT, getChildren, getExpanded, isDisabled, type NormalizedData } from '../core/types'
 
-function visibleFlat(d: NormalizedData, parent: string, expanded: Set<string>, out: string[] = []): string[] {
-  for (const id of getChildren(d, parent)) {
+const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
+  getChildren(d, parent).forEach((id) => {
     out.push(id)
-    if (expanded.has(id)) visibleFlat(d, id, expanded, out)
-  }
+    exp.has(id) && visibleFlat(d, id, exp, out)
+  })
   return out
 }
 
-// APG tree: ArrowUp/Down walk visible flat list (DFS), not siblings.
-export function createTreeNavigate(d: NormalizedData, onEvent: (e: Event) => void): AxisHandler {
-  const visible = visibleFlat(d, ROOT, getExpanded(d)).filter((id) => !isDisabled(d, id))
-  return (e, id) => {
-    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return false
-    const i = visible.indexOf(id)
-    if (i < 0) return false
-    const next =
-      e.key === 'ArrowDown' ? Math.min(visible.length - 1, i + 1) :
-      e.key === 'ArrowUp'   ? Math.max(0, i - 1) :
-      e.key === 'Home'      ? 0 :
-                              visible.length - 1
-    if (next !== i) onEvent({ type: 'navigate', id: visible[next] })
-    e.preventDefault()
-    return true
-  }
+type IndexFn = (len: number, i: number) => number
+const TABLE: Partial<Record<string, IndexFn>> = {
+  ArrowDown: (len, i) => Math.min(len - 1, i + 1),
+  ArrowUp: (_, i) => Math.max(0, i - 1),
+  Home: () => 0,
+  End: (len) => len - 1,
+}
+
+export const treeNavigate: Axis = (d, id, k) => {
+  const fn = TABLE[k.key]
+  const visible = fn ? visibleFlat(d, ROOT, getExpanded(d)).filter((vid) => !isDisabled(d, vid)) : null
+  const i = visible ? visible.indexOf(id) : -1
+  return fn && visible && i >= 0
+    ? [{ type: 'navigate', id: visible[fn(visible.length, i)] }]
+    : null
 }

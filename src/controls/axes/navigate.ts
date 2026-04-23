@@ -1,33 +1,31 @@
-import type { NormalizedData, Event } from '../core/types'
-import { enabledSiblings, type AxisHandler } from './index'
+import type { Axis } from '../core/axis'
+import { enabledSiblings } from './index'
 
-export function createNavigate(
-  d: NormalizedData,
-  onEvent: (e: Event) => void,
-  orientation: 'vertical' | 'horizontal' = 'vertical',
-): AxisHandler {
-  const [prev, next] =
-    orientation === 'vertical' ? ['ArrowUp', 'ArrowDown'] : ['ArrowLeft', 'ArrowRight']
-  return (e, id) => {
-    const sibs = enabledSiblings(d, id)
-    if (!sibs.length) return false
-    if (e.key === prev || e.key === next) {
-      const i = Math.max(0, sibs.indexOf(id))
-      const delta = e.key === next ? 1 : -1
-      onEvent({ type: 'navigate', id: sibs[(i + delta + sibs.length) % sibs.length] })
-      e.preventDefault()
-      return true
-    }
-    if (e.key === 'Home') {
-      onEvent({ type: 'navigate', id: sibs[0] })
-      e.preventDefault()
-      return true
-    }
-    if (e.key === 'End') {
-      onEvent({ type: 'navigate', id: sibs[sibs.length - 1] })
-      e.preventDefault()
-      return true
-    }
-    return false
-  }
+type IndexFn = (len: number, i: number) => number
+const mod = (n: number, m: number) => ((n % m) + m) % m
+
+const VERTICAL: Partial<Record<string, IndexFn>> = {
+  ArrowUp: (len, i) => mod(i - 1, len),
+  ArrowDown: (len, i) => mod(i + 1, len),
+  Home: () => 0,
+  End: (len) => len - 1,
 }
+
+const HORIZONTAL: Partial<Record<string, IndexFn>> = {
+  ArrowLeft: (len, i) => mod(i - 1, len),
+  ArrowRight: (len, i) => mod(i + 1, len),
+  Home: () => 0,
+  End: (len) => len - 1,
+}
+
+const TABLES = { vertical: VERTICAL, horizontal: HORIZONTAL }
+
+export const navigate =
+  (orientation: 'vertical' | 'horizontal' = 'vertical'): Axis =>
+  (d, id, k) => {
+    const fn = TABLES[orientation][k.key]
+    const sibs = fn ? enabledSiblings(d, id) : null
+    return fn && sibs && sibs.length
+      ? [{ type: 'navigate', id: sibs[fn(sibs.length, Math.max(0, sibs.indexOf(id)))] }]
+      : null
+  }

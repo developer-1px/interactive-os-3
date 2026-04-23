@@ -1,50 +1,51 @@
-import { Fragment, useEffect, useRef, type ComponentPropsWithoutRef, type ReactNode } from 'react'
-import { ROOT, getChildren, getExpanded, getFocus, getLabel, isDisabled, type ControlProps } from '../../core/types'
-import { compose, createActivate, createTreeExpand, createTreeNavigate, useTypeahead } from '../../axes'
+import { Fragment, type ComponentPropsWithoutRef, type ReactNode } from 'react'
+import { ROOT, getChildren, getExpanded, getFocus, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
+import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../axes'
+import { bindAxis } from '../../core/bind'
+import { useFocusBridge } from '../../core/focus'
 
 type TreeProps = ControlProps & Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>
 
+const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
+
 export function Tree({ data, onEvent, ...rest }: TreeProps) {
-  const itemRefs = useRef(new Map<string, HTMLLIElement>())
   const focusId = getFocus(data)
   const expanded = getExpanded(data)
+  const onKey = bindAxis(axis, data, onEvent)
+  const bindFocus = useFocusBridge(focusId)
 
-  const onKey = compose(
-    createTreeNavigate(data, onEvent),
-    createTreeExpand(data, onEvent),
-    createActivate(data, onEvent),
-    useTypeahead(data, onEvent),
-  )
+  const clickEvents = (id: string, hasKids: boolean, isOpen: boolean, disabled: boolean): Event[] =>
+    disabled
+      ? []
+      : [
+          { type: 'navigate', id },
+          hasKids
+            ? { type: 'expand', id, open: !isOpen }
+            : { type: 'activate', id },
+        ]
 
-  useEffect(() => {
-    if (focusId && focusId !== ROOT) itemRefs.current.get(focusId)?.focus()
-  }, [focusId])
-
-  const render = (parent: string, level: number): ReactNode => {
-    const kids = getChildren(data, parent)
-    return kids.map((id, i) => {
+  const render = (parent: string, level: number): ReactNode =>
+    getChildren(data, parent).map((id, i, kids) => {
       const hasKids = getChildren(data, id).length > 0
       const isOpen = expanded.has(id)
       const disabled = isDisabled(data, id)
+      const focused = focusId === id
       return (
         <Fragment key={id}>
           <li
             role="treeitem"
-            ref={(el) => { el ? itemRefs.current.set(id, el) : itemRefs.current.delete(id) }}
+            ref={bindFocus(id)}
             aria-level={level}
             aria-posinset={i + 1}
             aria-setsize={kids.length}
             aria-expanded={hasKids ? isOpen : undefined}
             aria-disabled={disabled || undefined}
-            tabIndex={focusId === id ? 0 : -1}
+            tabIndex={focused ? 0 : -1}
             style={{ paddingInlineStart: `calc(var(--ds-space) * 4 * ${level - 1} + var(--ds-space) * 2)` }}
-            onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
+            onKeyDown={(e) => { onKey(e, id) && e.stopPropagation() }}
             onClick={(e) => {
               e.stopPropagation()
-              if (disabled) return
-              onEvent({ type: 'navigate', id })
-              if (hasKids) onEvent({ type: 'expand', id, open: !isOpen })
-              else onEvent({ type: 'activate', id })
+              clickEvents(id, hasKids, isOpen, disabled).forEach(onEvent)
             }}
           >
             {getLabel(data, id)}
@@ -53,7 +54,6 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
         </Fragment>
       )
     })
-  }
 
   return <ul role="tree" {...rest}>{render(ROOT, 1)}</ul>
 }

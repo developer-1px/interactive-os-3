@@ -1,42 +1,46 @@
-import { getChildren, getExpanded, isDisabled, type Event, type NormalizedData } from '../core/types'
-import { parentOf, type AxisHandler } from './index'
+import type { Axis } from '../core/axis'
+import type { Event, NormalizedData } from '../core/types'
+import { getChildren, getExpanded, isDisabled, isMetaId } from '../core/types'
+import { parentOf } from './index'
 
-// APG tree expand semantics:
-// ArrowRight: closed branch → open; open branch → first child; leaf → no-op
-// ArrowLeft : open branch → close; closed/leaf → parent
-// Enter/Space on branch → toggle (leaf handled by createActivate)
-export function createTreeExpand(d: NormalizedData, onEvent: (e: Event) => void): AxisHandler {
-  return (e, id) => {
-    if (isDisabled(d, id)) return false
-    const kids = getChildren(d, id)
-    const isBranch = kids.length > 0
-    const isOpen = getExpanded(d).has(id)
+type Branch = 'branchClosed' | 'branchOpen' | 'leaf'
+type Ctx = { d: NormalizedData; id: string; kids: string[] }
+type Action = (c: Ctx) => Event[] | null
 
-    if (e.key === 'ArrowRight' && isBranch) {
-      if (!isOpen) onEvent({ type: 'expand', id, open: true })
-      else {
-        const first = kids.find((k) => !isDisabled(d, k))
-        if (first) onEvent({ type: 'navigate', id: first })
-      }
-      e.preventDefault()
-      return true
-    }
-    if (e.key === 'ArrowLeft') {
-      if (isBranch && isOpen) {
-        onEvent({ type: 'expand', id, open: false })
-      } else {
-        const parent = parentOf(d, id)
-        if (parent && !parent.startsWith('__')) onEvent({ type: 'navigate', id: parent })
-        else return false
-      }
-      e.preventDefault()
-      return true
-    }
-    if ((e.key === 'Enter' || e.key === ' ') && isBranch) {
-      onEvent({ type: 'expand', id, open: !isOpen })
-      e.preventDefault()
-      return true
-    }
-    return false
-  }
+const toParentOrNull = (d: NormalizedData, id: string): Event[] | null => {
+  const p = parentOf(d, id)
+  return p && !isMetaId(p) ? [{ type: 'navigate', id: p }] : null
+}
+const firstEnabled = (d: NormalizedData, kids: string[]) => kids.find((c) => !isDisabled(d, c))
+
+const TABLE: Record<string, Record<Branch, Action>> = {
+  ArrowRight: {
+    branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
+    branchOpen: ({ d, kids }) => {
+      const first = firstEnabled(d, kids)
+      return first ? [{ type: 'navigate', id: first }] : null
+    },
+    leaf: () => null,
+  },
+  ArrowLeft: {
+    branchClosed: ({ d, id }) => toParentOrNull(d, id),
+    branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
+    leaf: ({ d, id }) => toParentOrNull(d, id),
+  },
+  Enter: {
+    branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
+    branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
+    leaf: () => null,
+  },
+}
+TABLE[' '] = TABLE.Enter
+
+const classify = (kids: string[], open: boolean): Branch =>
+  kids.length === 0 ? 'leaf' : open ? 'branchOpen' : 'branchClosed'
+
+export const treeExpand: Axis = (d, id, k) => {
+  const kids = getChildren(d, id)
+  const branch = classify(kids, getExpanded(d).has(id))
+  const action = !isDisabled(d, id) ? TABLE[k.key]?.[branch] : undefined
+  return action ? action({ d, id, kids }) : null
 }

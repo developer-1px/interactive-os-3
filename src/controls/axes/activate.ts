@@ -1,16 +1,9 @@
-import { getChildren, isDisabled, type Event, type NormalizedData } from '../core/types'
-import type { AxisHandler } from './index'
+import type { Axis } from '../core/axis'
+import { getChildren, isDisabled } from '../core/types'
 
-export function createActivate(
-  d: NormalizedData,
-  onEvent: (e: Event) => void,
-): AxisHandler {
-  return (e, id) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return false
-    if (isDisabled(d, id)) return false
-    if (getChildren(d, id).length) return false
-    onEvent({ type: 'activate', id })
-    e.preventDefault()
-    return true
-  }
-}
+const TRIGGER = new Set(['Enter', ' '])
+
+export const activate: Axis = (d, id, k) =>
+  TRIGGER.has(k.key) && !isDisabled(d, id) && !getChildren(d, id).length
+    ? [{ type: 'activate', id }]
+    : null

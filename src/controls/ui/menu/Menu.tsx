@@ -1,68 +1,54 @@
-import { useEffect, useId, useRef, type CSSProperties } from 'react'
-import { ROOT, getChildren, getExpanded, getFocus, getLabel, isDisabled, type ControlProps } from '../../core/types'
-import { compose, createActivate, createExpand, createNavigate, useTypeahead } from '../../axes'
+import { useId, type CSSProperties } from 'react'
+import { ROOT, getChildren, getFocus, getExpanded, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
+import { activate, composeAxes, expand, navigate, typeahead } from '../../axes'
+import { bindAxis } from '../../core/bind'
+import { useFocusBridge } from '../../core/focus'
 import { MenuPopover, type MenuCtx } from './MenuPopover'
+
+const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
 export function Menu({ data, onEvent }: ControlProps) {
   const popoverId = useId()
-  const itemRefs = useRef(new Map<string, HTMLLIElement>())
-  const popoverRefs = useRef(new Map<string, HTMLDivElement>())
-  const lastOpenState = useRef(new Map<string, boolean>())
-  const triggerRef = useRef<HTMLButtonElement>(null)
   const focusId = getFocus(data)
   const expanded = getExpanded(data)
-
-  const onKey = compose(
-    createNavigate(data, onEvent, 'vertical'),
-    createExpand(data, onEvent),
-    createActivate(data, onEvent),
-    useTypeahead(data, onEvent),
-  )
-
-  useEffect(() => {
-    popoverRefs.current.forEach((el, id) => {
-      if (id === ROOT) return
-      const shouldOpen = expanded.has(id)
-      const isOpen = el.matches(':popover-open')
-      if (shouldOpen && !isOpen) el.showPopover?.()
-      else if (!shouldOpen && isOpen) el.hidePopover?.()
-    })
-  }, [expanded])
-
-  useEffect(() => {
-    if (focusId && focusId !== ROOT) itemRefs.current.get(focusId)?.focus()
-  }, [focusId])
-
-  const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
+  const onKey = bindAxis(axis, data, onEvent)
+  const bindFocus = useFocusBridge(focusId)
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`
+  const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
 
-  const onClick = (id: string) => {
-    if (isDisabled(data, id)) return
+  const clickEvents = (id: string): Event[] => {
+    if (isDisabled(data, id)) return []
     const kids = getChildren(data, id)
-    if (kids.length) {
-      const open = expanded.has(id)
-      onEvent({ type: 'expand', id, open: !open })
-      if (!open) { const first = firstEnabled(id); if (first) onEvent({ type: 'navigate', id: first }) }
-    } else {
-      onEvent({ type: 'activate', id })
-      popoverRefs.current.get(ROOT)?.hidePopover?.()
-    }
+    const open = expanded.has(id)
+    if (!kids.length) return [{ type: 'activate', id }]
+    const first = !open ? firstEnabled(id) : undefined
+    return [
+      { type: 'expand', id, open: !open },
+      ...(first ? [{ type: 'navigate', id: first } as Event] : []),
+    ]
   }
 
-  const onToggle = (id: string, open: boolean) => {
+  const toggleEvents = (id: string, open: boolean): Event[] => {
     if (id === ROOT) {
-      onEvent({ type: 'open', id: ROOT, open })
-      if (open) { const first = firstEnabled(ROOT); if (first) onEvent({ type: 'navigate', id: first }) }
-    } else if (!open && expanded.has(id)) {
-      onEvent({ type: 'expand', id, open: false })
+      const first = open ? firstEnabled(ROOT) : undefined
+      return [
+        { type: 'open', id: ROOT, open },
+        ...(first ? [{ type: 'navigate', id: first } as Event] : []),
+      ]
     }
+    return !open && expanded.has(id) ? [{ type: 'expand', id, open: false }] : []
   }
 
-  const ctx: MenuCtx = { data, focusId, expanded, itemRefs, popoverRefs, lastOpenState, anchorName, onToggle, onKey, onClick }
+  const ctx: MenuCtx = {
+    data, focusId, expanded, anchorName, bindFocus,
+    onToggle: (id, open) => toggleEvents(id, open).forEach(onEvent),
+    onKey,
+    onClick: (id) => clickEvents(id).forEach(onEvent),
+  }
 
   return (
     <>
-      <button ref={triggerRef} type="button" popoverTarget={popoverId} aria-haspopup="menu"
+      <button type="button" popoverTarget={popoverId} aria-haspopup="menu"
         style={{ anchorName: anchorName(ROOT) } as CSSProperties}>{getLabel(data, ROOT)}</button>
       <MenuPopover ctx={ctx} parentId={ROOT} domId={popoverId} style={{
         positionAnchor: anchorName(ROOT), top: 'anchor(bottom)',
