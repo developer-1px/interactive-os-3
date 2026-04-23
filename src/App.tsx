@@ -103,7 +103,7 @@ export default function App() {
               <option value="b">Option B</option>
             </select>
             <input disabled placeholder="disabled" />
-            <Listbox aria-label="Inline" style={{ display: 'inline-flex', gap: 2 }}>
+            <Listbox aria-label="Inline">
               <Option selected>Roving</Option>
               <Option>Item</Option>
             </Listbox>
@@ -152,7 +152,7 @@ export default function App() {
             <Tab controls="panel-2">Details</Tab>
             <Tab disabled>Admin</Tab>
           </TabList>
-          <TabPanel id="panel-1" style={{ padding: 8 }}>
+          <TabPanel id="panel-1">
             Overview content
           </TabPanel>
         </div>
@@ -191,7 +191,7 @@ export default function App() {
 
         <div>
           <h3>Toolbar</h3>
-          <Toolbar aria-label="Format" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <Toolbar aria-label="Format">
             <ToolbarButton pressed>B</ToolbarButton>
             <ToolbarButton>I</ToolbarButton>
             <ToolbarButton>U</ToolbarButton>
@@ -337,10 +337,10 @@ export default function App() {
 
         <div>
           <h3>Carousel</h3>
-          <Carousel label="Featured" style={{ display: 'flex', gap: 8 }}>
-            <Slide label="One" posinset={1} setsize={3} style={{ padding: 16, border: '1px solid var(--ds-border)' }}>Slide 1</Slide>
-            <Slide label="Two" posinset={2} setsize={3} style={{ padding: 16, border: '1px solid var(--ds-border)' }}>Slide 2</Slide>
-            <Slide label="Three" posinset={3} setsize={3} style={{ padding: 16, border: '1px solid var(--ds-border)' }}>Slide 3</Slide>
+          <Carousel label="Featured">
+            <Slide label="One" posinset={1} setsize={3}>Slide 1</Slide>
+            <Slide label="Two" posinset={2} setsize={3}>Slide 2</Slide>
+            <Slide label="Three" posinset={3} setsize={3}>Slide 3</Slide>
           </Carousel>
         </div>
       </section>

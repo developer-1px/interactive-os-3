@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useReducer, useState, type CSSProperties } from 'react'
 import {
   Button, Feed, FeedArticle, Listbox, ListboxGroup, Option, Tab, TabList, TabPanel, Toolbar, ToolbarButton,
   Tree, Separator, FOCUS, ROOT, reduce, type Event, type NormalizedData,
@@ -42,6 +42,18 @@ const expandedInitial: NormalizedData = {
   },
 }
 
+const avatarStyle: CSSProperties = {
+  width: 'var(--ds-avatar-size)',
+  height: 'var(--ds-avatar-size)',
+  borderRadius: 6,
+  background: 'var(--ds-border)',
+  display: 'grid',
+  placeItems: 'center',
+  flex: 'none',
+  fontSize: 13,
+}
+const initials = (name: string) => name.split(' ').map((s) => s[0]).join('').slice(0, 2)
+
 type Msg = { id: string; author: string; time: string; text: string; pinned?: boolean }
 
 const messages: Msg[] = [
@@ -80,7 +92,7 @@ export default function ChatApp() {
       <header style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderBottom: '1px solid var(--ds-border)', background: 'var(--ds-bg)', flexWrap: 'wrap' }}>
         <strong style={{ flex: 'none' }}>ds</strong>
         <input type="search" placeholder="Search…" style={{ flex: 1, minWidth: 120, maxWidth: 520 }} />
-        <Toolbar aria-label="Global" style={{ display: 'flex', gap: 4, marginInlineStart: 'auto', flex: 'none' }}>
+        <Toolbar aria-label="Global" style={{ marginInlineStart: 'auto', flex: 'none' }}>
           <ToolbarButton>?</ToolbarButton>
           <ToolbarButton pressed>🔔</ToolbarButton>
           <ToolbarButton>AC</ToolbarButton>
@@ -92,7 +104,7 @@ export default function ChatApp() {
           <aside aria-label="Sidebar" style={{
             width: isNarrow ? '100%' : 260, flex: isNarrow ? 1 : 'none',
             borderInlineEnd: isNarrow ? 'none' : '1px solid var(--ds-border)',
-            display: 'flex', flexDirection: 'column', padding: 8, gap: 4, overflow: 'auto',
+            display: 'flex', flexDirection: 'column', overflow: 'auto',
           }}>
             {isNarrow && (
               <Button onClick={() => setPane('chat')} aria-label="Close channels" style={{ alignSelf: 'flex-start', marginBottom: 4 }}>← Back</Button>
@@ -112,7 +124,7 @@ export default function ChatApp() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderBottom: '1px solid var(--ds-border)', flexWrap: 'wrap' }}>
             {isNarrow && <Button onClick={() => setPane('sidebar')} aria-label="Open channels">☰</Button>}
             <h2 style={{ margin: 0, fontSize: 16, flex: 'none' }}>{activeLabel}</h2>
-            <TabList aria-label="Channel views" style={{ display: 'flex', gap: 4, marginInlineStart: 'auto', flexWrap: 'wrap' }}>
+            <TabList aria-label="Channel views" style={{ marginInlineStart: 'auto' }}>
               <Tab selected={tab === 'msgs'} controls="chat-msgs" onClick={() => setTab('msgs')}>Messages</Tab>
               <Tab selected={tab === 'pinned'} controls="chat-pinned" onClick={() => setTab('pinned')}>Pinned</Tab>
               <Tab selected={tab === 'files'} controls="chat-files" onClick={() => setTab('files')}>Files</Tab>
@@ -126,20 +138,20 @@ export default function ChatApp() {
           </div>
 
           <TabPanel id="chat-msgs" hidden={tab !== 'msgs'} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-            <Feed aria-label="Messages" style={{ flex: 1, overflow: 'auto', padding: '12px 16px' }}>
+            <Feed aria-label="Messages" style={{ flex: 1, overflow: 'auto' }}>
               {messages.map((m) => (
-                <FeedArticle key={m.id} aria-labelledby={`${m.id}-author`} aria-describedby={`${m.id}-body`}>
-                  <div aria-hidden style={{ width: 36, height: 36, borderRadius: 6, background: 'var(--ds-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', fontSize: 13 }}>
-                    {m.author.split(' ').map((s) => s[0]).join('').slice(0, 2)}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-                      <strong id={`${m.id}-author`}>{m.author}</strong>
-                      <time style={{ opacity: 0.5, fontSize: 12 }}>{m.time}</time>
-                      {m.pinned && <span aria-label="pinned" style={{ opacity: 0.6, fontSize: 12 }}>📌</span>}
-                    </div>
-                    <div id={`${m.id}-body`}>{m.text}</div>
-                  </div>
+                <FeedArticle
+                  key={m.id}
+                  aria-labelledby={`${m.id}-author`}
+                  aria-describedby={`${m.id}-body`}
+                  avatar={<div aria-hidden style={avatarStyle}>{initials(m.author)}</div>}
+                  header={<>
+                    <strong id={`${m.id}-author`}>{m.author}</strong>
+                    <time style={{ opacity: 0.5, fontSize: 12 }}>{m.time}</time>
+                    {m.pinned && <span aria-label="pinned" style={{ opacity: 0.6, fontSize: 12 }}>📌</span>}
+                  </>}
+                >
+                  <div id={`${m.id}-body`}>{m.text}</div>
                 </FeedArticle>
               ))}
             </Feed>
@@ -148,7 +160,7 @@ export default function ChatApp() {
               style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: 12, borderTop: '1px solid var(--ds-border)' }}
               onSubmit={(e) => { e.preventDefault(); if (draft.trim()) setDraft('') }}
             >
-              <Toolbar aria-label="Formatting" style={{ display: 'flex', gap: 2 }}>
+              <Toolbar aria-label="Formatting">
                 <ToolbarButton>B</ToolbarButton>
                 <ToolbarButton>I</ToolbarButton>
                 <ToolbarButton>S</ToolbarButton>
@@ -178,7 +190,7 @@ export default function ChatApp() {
             </form>
           </TabPanel>
 
-          <TabPanel id="chat-pinned" hidden={tab !== 'pinned'} style={{ flex: 1, padding: 16, overflow: 'auto' }}>
+          <TabPanel id="chat-pinned" hidden={tab !== 'pinned'} style={{ flex: 1, overflow: 'auto' }}>
             <Listbox aria-label="Pinned messages">
               {messages.filter((m) => m.pinned).map((m) => (
                 <Option key={m.id}>📌 {m.author}: {m.text}</Option>
@@ -186,7 +198,7 @@ export default function ChatApp() {
             </Listbox>
           </TabPanel>
 
-          <TabPanel id="chat-files" hidden={tab !== 'files'} style={{ flex: 1, padding: 16, overflow: 'auto' }}>
+          <TabPanel id="chat-files" hidden={tab !== 'files'} style={{ flex: 1, overflow: 'auto' }}>
             <Listbox aria-label="Shared files">
               <ListboxGroup label="Images">
                 <Option>diagram.png</Option>
@@ -205,7 +217,7 @@ export default function ChatApp() {
         <aside aria-label="Members" style={{
           width: isNarrow ? '100%' : 220, flex: isNarrow ? 1 : 'none',
           borderInlineStart: isNarrow ? 'none' : '1px solid var(--ds-border)',
-          padding: 8, overflow: 'auto',
+          overflow: 'auto',
         }}>
           {isNarrow && (
             <Button onClick={() => setPane('chat')} aria-label="Back" style={{ marginBottom: 8 }}>← Back</Button>
