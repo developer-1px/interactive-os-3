@@ -1,14 +1,10 @@
 import { Badge, ROOT, type NormalizedData } from '../../../ds'
-import { MESSAGES, folders, labelTone, type FolderId } from './data'
+import { ACTS, CELL_KEYS, HEADS, MESSAGES, folders, labelTone, type FolderId } from './data'
 
 export interface InboxState {
   folder: FolderId; selectedId: string
   setFolder: (f: FolderId) => void; setSelected: (id: string) => void
 }
-
-const ACTS = [['actReply','답장','reply'],['actForward','전달','forward'],['actArchive','보관','archive'],['actDelete','삭제','trash']] as const
-const HEADS = ['★','발신자','제목 · 프리뷰','라벨','시각']
-const CELL_KEYS = ['star','from','subject','label','time'] as const
 
 export function buildInboxPage(s: InboxState): NormalizedData {
   const vis = MESSAGES.filter((m) => s.folder === 'inbox' ? true : s.folder === 'starred' ? m.starred : m.folder === s.folder)

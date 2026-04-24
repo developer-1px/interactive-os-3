@@ -44,6 +44,8 @@ const walk = (dir: string, out: string[] = []): string[] => {
 const classifyKind = (src: string): Kind => {
   const hasControl = /ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)
   if (hasControl) return 'controlProps'
+  // @slot children escape → 구조적 wrapper (layout/disclosure/carousel)
+  if (/@slot\s+children/.test(src)) return 'fieldDriven'
   // children destructure
   if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'childrenDriven'
   // custom array prop: entries/bars/items/rows/columns as own prop named in destructure

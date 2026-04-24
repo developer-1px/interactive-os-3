@@ -29,3 +29,7 @@ export const MESSAGES: Message[] = [
 export const labelTone: Record<LabelKey, 'info' | 'success' | 'warning' | 'danger' | 'neutral'> = {
   work: 'info', news: 'neutral', billing: 'success', alert: 'danger',
 }
+
+export const ACTS = [['actReply','답장','reply'],['actForward','전달','forward'],['actArchive','보관','archive'],['actDelete','삭제','trash']] as const
+export const HEADS = ['★','발신자','제목 · 프리뷰','라벨','시각']
+export const CELL_KEYS = ['star','from','subject','label','time'] as const

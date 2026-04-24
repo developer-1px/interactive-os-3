@@ -33,6 +33,8 @@ const CANONICAL_COLLECTIONS = new Set([
 const classify = (src) => {
   if (/\bCollectionProps\b/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'controlProps'
   if (/ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'controlProps'
+  // @slot children — 구조적 wrapper (layout/Disclosure/Carousel) → fieldDriven 분류
+  if (/@slot\s+children/.test(src)) return 'fieldDriven'
   if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'childrenDriven'
   if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'customArray'
   if (/export\s+function\s+\w+\s*\(\s*\{/.test(src)) return 'fieldDriven'
