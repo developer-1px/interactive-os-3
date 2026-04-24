@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type ToolbarButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'type'> & {
   pressed?: boolean
   children?: ReactNode

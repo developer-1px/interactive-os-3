@@ -28,7 +28,7 @@ const walk = (dir, out = []) => {
 // 이 목록에 추가하면 해당 파일은 `CollectionProps` alias 를 import+사용해야 한다.
 const CANONICAL_COLLECTIONS = new Set([
   'Menu', 'Listbox', 'Tree', 'Columns',
-  'RadioGroup',
+  'RadioGroup', 'CheckboxGroup',
 ])
 
 const ENTITY_HINTS = /\b(tone|abbr|meta|actions|footer|desc|name|topBadge|change|changeDir)\s*[?:]/g

@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type Div = Omit<ComponentPropsWithoutRef<'div'>, 'role'>
 
 export function TabList({ orientation, ...rest }: Div & { orientation?: 'horizontal' | 'vertical' }) {

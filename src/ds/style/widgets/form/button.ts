@@ -25,7 +25,7 @@ export const buttonCss = css`
   :where(button):not([aria-roledescription="actions"] > button) {
     background: ${fg(2)};
     color: inherit;
-    border: 1px solid ${fg(3)};
+    border: 1px solid var(--ds-control-border);
     border-radius: ${radius('md')};
     padding: 0 ${pad(3)};
     transition: background-color var(--ds-dur-fast) var(--ds-ease-out),

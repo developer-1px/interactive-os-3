@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type GridCellProps = Omit<ComponentPropsWithoutRef<'td'>, 'role'> & {
   selected?: boolean
   disabled?: boolean

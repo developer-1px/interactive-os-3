@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type FeedProps = Omit<ComponentPropsWithoutRef<'ol'>, 'role'> & {
   busy?: boolean
   children: ReactNode

@@ -1,4 +1,4 @@
-import { css, fg, indicator, onAccent, pad, radius } from '../../../fn'
+import { css, indicator, onAccent, pad, radius } from '../../../fn'
 
 /**
  * Checkbox / Radio (custom) — `<button role="checkbox">` 와 `<div role="radio">` 로
@@ -21,9 +21,8 @@ export const toggle = () => [
       height: 1.125em;
       min-height: 0;
       padding: 0;
-      /* off-state — --ds-border(12%)는 너무 얕아 비활성 컨트롤 신호가 약했다.
-         fg(3) 레벨로 올려 Switch off-channel(fg(4))과 계층을 맞춘다. */
-      border: 1.5px solid ${fg(3)};
+      /* off-state — control emphasis ladder의 "control-border" 단. Switch channel보다 한 단계 얕음. */
+      border: 1.5px solid var(--ds-control-border);
       background: var(--ds-bg);
       flex: 0 0 auto;
       cursor: pointer;
@@ -38,7 +37,7 @@ export const toggle = () => [
     /* hover — 비활성 상태일 때 border 한 단계 짙게, 활성일 땐 accent 유지 */
     [role="checkbox"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]):not([aria-checked="mixed"]),
     [role="radio"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]) {
-      border-color: ${fg(5)};
+      border-color: var(--ds-control-border-hover);
     }
 
     /* 체크 표식 pop-in — checked 전환 시 스프링 곡선으로 살짝 튕겨 나옴 */
@@ -75,10 +74,11 @@ export const toggle = () => [
       gap: ${pad(3)};
     }
   `,
-  // checkbox check mark + mixed (minus) + radio dot
+  // checkbox check mark + mixed (minus) + radio dot — box(1.125em) 기준 비율 통일:
+  //   check ≈ 72% (0.8em / 1.125em), dot ≈ 53% (0.6em / 1.125em) → 시각 밀도가 비슷해 보이는 지점
   indicator('[role="checkbox"]', 'check', { on: '[aria-checked="true"]', size: '0.8em' }),
   indicator('[role="radio"]',    'dot',   { on: '[aria-checked="true"]', size: '0.6em' }),
-  // mixed state — 체크 아이콘(::before) 대신 가로 dash(::after)로 표시
+  // mixed state — 체크 아이콘(::before) 대신 가로 dash(::after)로 표시. stroke도 check와 동일(2px).
   css`
     [role="checkbox"][aria-checked="mixed"]::before { visibility: hidden; }
     [role="checkbox"][aria-checked="mixed"]::after {

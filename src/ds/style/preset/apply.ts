@@ -57,6 +57,17 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
       return `--ds-gray-${n}: ${g ? tokenRefToCss(g) : `color-mix(in oklab, CanvasText ${[3,6,10,16,28,44,62,80,95][Number(n)-1]}%, Canvas)`};`
     }).join('\n    ')}
 
+    /* Control emphasis ladder — off-state 신호 강도 3단 + hover 1단.
+       축 정의:
+         hairline         (--ds-border, ~12%) — 순수 시각 분리. "이건 경계"에 가깝다.
+         control-border   (gray-3)            — "이건 선택 슬롯이다". Checkbox/Radio/Button/Input/Grid 가장자리.
+         control-channel  (gray-4)            — "이건 On/Off 축이 있다". Switch track · Progress track · Slider rail.
+         *-hover          (gray-5)            — 위 두 단의 hover 강조 공통 1단.
+       Switch > Checkbox/Radio 의 계층은 이 두 토큰 차이로 자동 보장된다. */
+    --ds-control-border:        var(--ds-gray-3);
+    --ds-control-channel:       var(--ds-gray-4);
+    --ds-control-border-hover:  var(--ds-gray-5);
+
     ${p.color.traffic ? `
     --ds-traffic-close: ${tokenRefToCss(p.color.traffic.close)};
     --ds-traffic-min:   ${tokenRefToCss(p.color.traffic.min)};

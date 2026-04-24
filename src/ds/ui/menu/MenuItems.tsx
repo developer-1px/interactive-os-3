@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type Base = Omit<ComponentPropsWithoutRef<'li'>, 'role'> & { disabled?: boolean; children: ReactNode }
 
 export function MenuItem({ disabled, children, selected, ...rest }: Base & { selected?: boolean }) {

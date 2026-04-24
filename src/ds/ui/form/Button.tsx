@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type ButtonProps = ComponentPropsWithoutRef<'button'> & {
   pressed?: boolean
   children: ReactNode

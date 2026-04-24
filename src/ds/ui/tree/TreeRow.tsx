@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type TreeRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
   level: number
   posinset?: number

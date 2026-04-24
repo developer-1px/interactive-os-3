@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type RowGroupProps = Omit<ComponentPropsWithoutRef<'tbody'>, 'role'> & {
   children: ReactNode
 }

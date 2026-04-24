@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type RadioProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   checked: boolean
   disabled?: boolean

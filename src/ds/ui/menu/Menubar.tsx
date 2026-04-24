@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type MenubarProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role'> & {
   children: ReactNode
 }

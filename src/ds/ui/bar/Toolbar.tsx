@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type ToolbarProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   orientation?: 'horizontal' | 'vertical'
   children: ReactNode

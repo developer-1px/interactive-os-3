@@ -1,5 +1,6 @@
 import { useId, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type ListboxGroupProps = Omit<ComponentPropsWithoutRef<'li'>, 'role'> & {
   label: ReactNode
   children: ReactNode

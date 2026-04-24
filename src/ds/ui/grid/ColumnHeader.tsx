@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type ColumnHeaderProps = Omit<ComponentPropsWithoutRef<'th'>, 'role'> & {
   sort?: 'ascending' | 'descending' | 'none' | 'other'
   children: ReactNode

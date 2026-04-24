@@ -5,7 +5,7 @@ import {
   TabList, Tab, TabPanel, Feed, FeedArticle, Disclosure,
   Toolbar, ToolbarButton, Separator,
   Input, Textarea, Select, NumberInput, Slider, ColorInput,
-  Checkbox, Radio, RadioGroup, Combobox,
+  Checkbox, RadioGroup, CheckboxGroup, Combobox,
   Carousel, Slide,
   fromTree, useControlState, ROOT, type NormalizedData,
 } from '../../ds'
@@ -351,6 +351,21 @@ function RadioGroupDemo() {
   return <RadioGroup data={data} onEvent={onEvent} aria-label="옵션" orientation="horizontal" />
 }
 
+function CheckboxGroupDemo() {
+  const base: NormalizedData = {
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      a: { id: 'a', data: { label: '알림' } },
+      b: { id: 'b', data: { label: '이메일' } },
+      c: { id: 'c', data: { label: '푸시' } },
+      __expanded__: { id: '__expanded__', data: { ids: ['a'] } },
+    },
+    relationships: { [ROOT]: ['a', 'b', 'c'] },
+  }
+  const [data, onEvent] = useControlState(base)
+  return <CheckboxGroup data={data} onEvent={onEvent} aria-label="알림 설정" orientation="horizontal" />
+}
+
 function ComboboxDemo() {
   const [open, setOpen] = useState(false)
   return <Combobox expanded={open} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)}
@@ -391,5 +406,6 @@ export const demos: Record<string, () => ReactNode> = {
   ColorInput: ColorInputDemo,
   Checkbox: CheckboxDemo,
   RadioGroup: RadioGroupDemo,
+  CheckboxGroup: CheckboxGroupDemo,
   Combobox: ComboboxDemo,
 }

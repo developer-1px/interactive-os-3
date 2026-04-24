@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type DataGridRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
   children: ReactNode
 }

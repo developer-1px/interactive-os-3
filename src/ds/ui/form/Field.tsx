@@ -1,5 +1,6 @@
 import { createContext, useContext, useId, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 
+// @slot children — composable (wrapper/label/subpart)
 type FieldContextValue = {
   controlId: string
   descriptionId: string
