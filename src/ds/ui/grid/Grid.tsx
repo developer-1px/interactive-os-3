@@ -1,10 +1,10 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
-type GridProps = Omit<ComponentPropsWithoutRef<'table'>, 'role'> & {
+type DataGridProps = Omit<ComponentPropsWithoutRef<'table'>, 'role'> & {
   children: ReactNode
 }
 
-export function Grid({ children, ...rest }: GridProps) {
+export function DataGrid({ children, ...rest }: DataGridProps) {
   return (
     <table role="grid" {...rest}>
       {children}

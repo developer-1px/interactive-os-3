@@ -110,4 +110,5 @@ export default defineConfig([
   },
   { files: ['src/**/*.{ts,tsx}'],              rules: { 'no-restricted-syntax': ['error', role, className, style] } },
   { files: ['src/ds/ui/**/*.{ts,tsx}'],        rules: { 'no-restricted-syntax': ['error', className] } },
+  { files: ['src/ds/layout/**/*.{ts,tsx}'],    rules: { 'no-restricted-syntax': ['error', className] } },
 ])

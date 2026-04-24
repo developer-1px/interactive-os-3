@@ -1,10 +1,10 @@
 import { forwardRef, type ComponentPropsWithoutRef } from 'react'
 import { useField } from './Field'
 
-type InputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'>
+type TextareaProps = ComponentPropsWithoutRef<'textarea'>
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  function Input(props, ref) {
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  function Textarea(props, ref) {
     const field = useField()
     const id = props.id ?? field?.controlId
     const describedBy = field
@@ -12,9 +12,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           .filter(Boolean).join(' ') || undefined
       : props['aria-describedby']
     return (
-      <input
+      <textarea
         ref={ref}
-        type="text"
         {...props}
         id={id}
         aria-describedby={describedBy}

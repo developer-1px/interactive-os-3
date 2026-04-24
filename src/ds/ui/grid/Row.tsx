@@ -7,11 +7,11 @@ import {
   type ReactNode,
 } from 'react'
 
-type RowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
+type DataGridRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
   children: ReactNode
 }
 
-export function Row({ children, ...rest }: RowProps) {
+export function DataGridRow({ children, ...rest }: DataGridRowProps) {
   const cells = Children.toArray(children).filter(isValidElement) as ReactElement<{
     colindex?: number
   }>[]

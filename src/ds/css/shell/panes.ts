@@ -115,4 +115,35 @@ export const panesCss = css`
     font-variant-numeric: tabular-nums;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+
+  /* edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content) */
+  main[aria-roledescription="edu-portal-admin-app"] {
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] {
+    flex: 1; display: flex; min-height: 0;
+  }
+  section[aria-roledescription="workspace"] {
+    flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  }
+  header[aria-roledescription="topbar"] {
+    flex: none;
+    padding: ${pad(3)} ${pad(6)};
+    border-bottom: 1px solid var(--ds-border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: ${pad(3)};
+  }
+  header[aria-roledescription="topbar"] > hgroup h1 {
+    font-size: var(--ds-text-xl); font-weight: 600; margin: 0;
+  }
+  header[aria-roledescription="topbar"] > hgroup p {
+    opacity: .6; margin: ${pad(0.5)} 0 0;
+  }
+  header[aria-roledescription="topbar"] > [aria-roledescription="actions"] {
+    display: flex; gap: ${pad(2)};
+  }
+  section[aria-roledescription="content"] {
+    flex: 1; overflow: auto; padding: ${pad(6)};
+    display: flex; flex-direction: column; gap: ${pad(6)};
+  }
 `
