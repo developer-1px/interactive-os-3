@@ -1,4 +1,4 @@
-import { css, dim, fg, icon, microLabel, pad, radius, surface } from '../../fn'
+import { css, dim, fg, icon, microLabel, pad, radius, status, surface } from '../../fn'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
@@ -65,7 +65,7 @@ export const panesCss = css`
     opacity: .7;
   }
   [data-cell-error] {
-    color: oklch(55% 0.2 25); font-size: .75em;
+    color: ${status('danger')}; font-size: .75em;
     white-space: pre-wrap; word-break: break-word;
   }
 
@@ -132,9 +132,11 @@ export const panesCss = css`
     font-size: var(--ds-text-xs);
   }
 
-  /* Finder panes */
+  /* Finder panes
+     - columns: 내용 자연 폭만 사용. 넘치면 자체 가로 스크롤.
+     - preview: 남는 공간 전부 차지, 단 var(--ds-preview-w)를 최소 폭으로 유지. */
   section[aria-roledescription="columns"] {
-    flex: 1; display: flex; overflow: auto; min-width: 0;
+    flex: 0 1 auto; display: flex; overflow: auto; min-width: 0;
   }
   nav[aria-roledescription="column"] {
     width: var(--ds-column-w); flex: none; overflow-y: auto;
@@ -146,9 +148,39 @@ export const panesCss = css`
     margin-inline-start: auto; opacity: .4;
   }
   aside[aria-roledescription="preview"] {
-    width: var(--ds-preview-w); flex: none; overflow-y: auto;
+    flex: 1 1 0; min-width: var(--ds-preview-w);
+    overflow-x: hidden; overflow-y: auto;
     padding: ${pad(6)};
     display: flex; flex-direction: column; gap: ${pad(4)};
+  }
+  /* preview 내부 코드/이미지는 자기 폭 안에서 해결 — preview 자체에 가로 스크롤 금지 */
+  aside[aria-roledescription="preview"] > pre,
+  aside[aria-roledescription="preview"] > article pre {
+    max-width: 100%; overflow-x: auto; margin: 0;
+  }
+  /* shiki 출력에 줄번호 부여 — <span class="line"> 카운터 */
+  aside[aria-roledescription="preview"] pre code {
+    counter-reset: line;
+    display: block;
+  }
+  aside[aria-roledescription="preview"] pre code .line {
+    counter-increment: line;
+  }
+  aside[aria-roledescription="preview"] pre code .line::before {
+    content: counter(line);
+    display: inline-block;
+    width: 2.5em;
+    margin-inline-end: ${pad(3)};
+    text-align: end;
+    opacity: .35;
+    user-select: none;
+  }
+  aside[aria-roledescription="preview"] > article {
+    max-width: 100%; min-width: 0;
+    overflow-wrap: anywhere; word-break: break-word;
+  }
+  aside[aria-roledescription="preview"] img {
+    max-width: 100%; height: auto;
   }
   aside[aria-roledescription="preview"] > figure {
     ${surface(1)}

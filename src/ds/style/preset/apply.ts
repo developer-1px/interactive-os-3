@@ -43,11 +43,14 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-muted:  ${tokenRefToCss(p.color.muted)};
     --ds-border: ${tokenRefToCss(p.color.border)};
     --ds-accent: ${tokenRefToCss(p.color.accent)};
-    /* accent 위에 올라가는 텍스트 색 — 흰/검 자동 대비. 현재는 흰색 고정, 추후 oklch 분기 */
-    --ds-accent-on: #fff;
-    --ds-success: ${p.color.success ? tokenRefToCss(p.color.success) : 'var(--ds-accent)'};
-    --ds-warning: ${p.color.warning ? tokenRefToCss(p.color.warning) : 'var(--ds-accent)'};
-    --ds-danger:  ${p.color.danger  ? tokenRefToCss(p.color.danger)  : 'var(--ds-accent)'};
+    /* on-* = 해당 bg 위의 전경 텍스트. preset이 contrast 책임을 진다 (consumer CI 불필요). */
+    --ds-accent-on:  ${p.color.accentOn  ? tokenRefToCss(p.color.accentOn)  : '#fff'};
+    --ds-success:    ${p.color.success   ? tokenRefToCss(p.color.success)   : 'var(--ds-accent)'};
+    --ds-success-on: ${p.color.successOn ? tokenRefToCss(p.color.successOn) : 'var(--ds-accent-on)'};
+    --ds-warning:    ${p.color.warning   ? tokenRefToCss(p.color.warning)   : 'var(--ds-accent)'};
+    --ds-warning-on: ${p.color.warningOn ? tokenRefToCss(p.color.warningOn) : '#000'};
+    --ds-danger:     ${p.color.danger    ? tokenRefToCss(p.color.danger)    : 'var(--ds-accent)'};
+    --ds-danger-on:  ${p.color.dangerOn  ? tokenRefToCss(p.color.dangerOn)  : 'var(--ds-accent-on)'};
 
     ${(['1','2','3','4','5','6','7','8','9'] as const).map((n) => {
       const g = p.color.gray?.[n]

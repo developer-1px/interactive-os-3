@@ -131,7 +131,6 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
   const ph = placementAttrs(d)
   return (
     <aside
-      data-ds="Aside"
       data-flow={d.flow}
       data-emphasis={d.emphasis}
       aria-label={d.label}
@@ -150,7 +149,6 @@ function SectionView({ page, id, d }: { page: NormalizedData; id: string; d: Sec
   const headingId = d.heading ? `${id}-h` : undefined
   return (
     <section
-      data-ds="Section"
       data-flow={d.flow}
       data-emphasis={d.emphasis}
       aria-label={d.label && !headingId ? d.label : undefined}
@@ -169,7 +167,6 @@ function HeaderView({ page, id, d }: { page: NormalizedData; id: string; d: Head
   const ph = placementAttrs(d)
   return (
     <header
-      data-ds="Header"
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -186,7 +183,6 @@ function FooterView({ page, id, d }: { page: NormalizedData; id: string; d: Foot
   const ph = placementAttrs(d)
   return (
     <footer
-      data-ds="Footer"
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -238,7 +234,6 @@ function TextLeaf({ d }: { d: TextNode }) {
   const variant = d.variant ?? 'body'
   const ph = placementAttrs(d)
   const common = {
-    'data-ds': 'Text',
     'data-variant': variant,
     hidden: d.hidden || undefined,
     ...ph,

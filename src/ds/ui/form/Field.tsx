@@ -32,7 +32,8 @@ export function Field({ required = false, invalid = false, children, ...rest }: 
   return (
     <FieldContext.Provider value={value}>
       <div
-        data-ds="Field"
+        role="group"
+        aria-roledescription="field"
         aria-required={required || undefined}
         aria-invalid={invalid || undefined}
         {...rest}

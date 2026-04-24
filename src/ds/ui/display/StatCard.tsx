@@ -24,7 +24,7 @@ export function StatCard({
   label, value, sub, change, changeDir, topBadge, tone = 'normal', icon, ...rest
 }: StatCardProps) {
   return (
-    <article data-ds="StatCard" data-tone={tone} {...rest}>
+    <article className="stat-card" data-tone={tone} {...rest}>
       <header>
         <dl>
           <dt>
@@ -34,11 +34,11 @@ export function StatCard({
             )}
           </dt>
         </dl>
-        {icon && <span data-ds-icon aria-hidden="true">{icon}</span>}
+        {icon && <span aria-hidden="true">{icon}</span>}
       </header>
-      <strong data-ds-value>{value}</strong>
-      {sub && <small data-ds-sub>{sub}</small>}
-      {change && <small data-ds-change data-dir={changeDir}>{change}</small>}
+      <strong>{value}</strong>
+      {sub && <small>{sub}</small>}
+      {change && <small data-dir={changeDir}>{change}</small>}
     </article>
   )
 }

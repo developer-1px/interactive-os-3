@@ -11,7 +11,7 @@ export const chromeCss = css`
     display: flex; flex-direction: column; overflow: hidden;
   }
   main:has(> header > [aria-roledescription="window-controls"]) > header {
-    display: flex; align-items: center; gap: var(--ds-slot-gap);
+    display: flex; flex-direction: row; align-items: center; gap: var(--ds-slot-gap);
     height: var(--ds-chrome-h); flex: none;
     padding-inline: ${pad(3)};
     border-bottom: 1px solid var(--ds-border);
@@ -25,9 +25,9 @@ export const chromeCss = css`
   [aria-roledescription="window-controls"] { display: flex; gap: ${pad(2)}; align-items: center; }
   [aria-roledescription="window-controls"] > span {
     width: var(--ds-traffic-size); height: var(--ds-traffic-size);
-    border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 50%; border: 1px solid var(--ds-border);
   }
-  [aria-roledescription="window-controls"] > span:nth-child(1) { background: #ff5f57; }
-  [aria-roledescription="window-controls"] > span:nth-child(2) { background: #febc2e; }
-  [aria-roledescription="window-controls"] > span:nth-child(3) { background: #28c840; }
+  [aria-roledescription="window-controls"] > span:nth-child(1) { background: var(--ds-traffic-close); }
+  [aria-roledescription="window-controls"] > span:nth-child(2) { background: var(--ds-traffic-min); }
+  [aria-roledescription="window-controls"] > span:nth-child(3) { background: var(--ds-traffic-max); }
 `

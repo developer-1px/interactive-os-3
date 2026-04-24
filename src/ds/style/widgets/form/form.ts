@@ -22,32 +22,34 @@ export const formCss = css`
   }
 
   /* ── Field — 기본은 세로 스택. 라벨이 위, 컨트롤이 아래, 설명이 그 아래 ───── */
-  [data-ds="Field"] {
+  [role="group"][aria-roledescription="field"] {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: ${pad(1)};
     min-inline-size: 0;
+    grid-template-columns: none;
   }
-  [data-ds="Field"] > label {
+  [role="group"][aria-roledescription="field"] > label {
     font-size: var(--ds-text-sm);
     font-weight: 600;
     color: ${dim(85)};
     line-height: 1.3;
   }
-  [data-ds="Field"][aria-required="true"] > label::after {
+  [role="group"][aria-roledescription="field"][aria-required="true"] > label::after {
     content: ' *';
     color: var(--ds-danger);
     font-weight: 400;
   }
-  [data-ds="Field"] > p {
+  [role="group"][aria-roledescription="field"] > p {
     font-size: var(--ds-text-xs);
     color: ${dim(55)};
     margin: 0;
     line-height: 1.4;
   }
-  [data-ds="Field"] > input,
-  [data-ds="Field"] > select,
-  [data-ds="Field"] > textarea {
+  [role="group"][aria-roledescription="field"] > input,
+  [role="group"][aria-roledescription="field"] > select,
+  [role="group"][aria-roledescription="field"] > textarea {
     inline-size: 100%;
   }
 
@@ -92,7 +94,7 @@ export const formCss = css`
   }
 
   /* ── Section 헤딩 계층 ───────────────────────────────────────────────── */
-  [data-ds="Section"] > h2:first-child {
+  section > h2:first-child {
     font-size: var(--ds-text-lg);
     font-weight: 700;
     margin: 0 0 ${pad(2)};
@@ -100,7 +102,7 @@ export const formCss = css`
     border-bottom: 1px solid ${fg(3)};
     letter-spacing: var(--ds-tracking);
   }
-  [data-ds="Section"] > h3:first-child {
+  section > h3:first-child {
     font-size: var(--ds-text-md);
     font-weight: 600;
     margin: 0 0 ${pad(1.5)};
@@ -128,23 +130,50 @@ export const formCss = css`
     margin-inline-start: ${pad(0.5)};
   }
 
-  /* ── Aside — 게시/공개 설정 등 보조 행동을 담는 우측 패널 ─────────────── */
-  [data-ds="Aside"] {
+  /* ── Aside — 게시/공개 설정 등 보조 행동을 담는 우측 패널.
+     이름 있는 aside(preview/inspector 등 pane)는 제외하고 일반 "안내/설정" aside만. */
+  aside:not([aria-roledescription]) {
+    display: flex; flex-direction: column; flex: none; min-inline-size: 0;
     background: ${fg(1)};
+    border: 1px solid ${fg(3)};
+    border-inline-start: 3px solid ${tint(accent(), 45)};
     border-radius: ${radius('lg')};
     padding: ${pad(4)};
-    gap: ${pad(4)};
+    gap: ${pad(3)};
   }
-  [data-ds="Aside"] > [data-ds="Section"] {
+  /* Aside 내부 본문 리스트 — 기본 ul이 Text[body] 안에 들어와도 읽기 리듬을 유지 */
+  aside:not([aria-roledescription]) :where(ul, ol) {
+    margin: 0; padding-inline-start: ${pad(4)};
+    display: flex; flex-direction: column; gap: ${pad(1.5)};
+  }
+  aside:not([aria-roledescription]) :where(li) { line-height: 1.55; }
+  /* dl 형태의 미니 stats (badge + value 쌍) — dl > div로 그룹, 가로 배치 */
+  aside:not([aria-roledescription]) :where(dl) {
+    margin: 0;
+    display: flex; flex-direction: column; gap: ${pad(1)};
+  }
+  aside:not([aria-roledescription]) :where(dl) > div {
+    display: flex; align-items: center; justify-content: space-between;
     gap: ${pad(2)};
   }
-  [data-ds="Aside"] > [data-ds="Section"] + [data-ds="Section"] {
+  aside:not([aria-roledescription]) :where(dl) :where(dt, dd) {
+    margin: 0;
+    font-size: var(--ds-text-sm);
+  }
+  aside:not([aria-roledescription]) :where(dl) :where(dd) {
+    color: ${dim(60)};
+    font-variant-numeric: tabular-nums;
+  }
+  aside:not([aria-roledescription]) > section {
+    gap: ${pad(2)};
+  }
+  aside:not([aria-roledescription]) > section + section {
     padding-top: ${pad(3)};
     border-top: 1px solid ${fg(3)};
   }
 
   /* Aside의 "위험 영역" section은 경고 톤 */
-  [data-ds="Aside"] > [data-ds="Section"][aria-roledescription="danger"] > h3:first-child {
+  aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
     color: var(--ds-danger);
   }
 

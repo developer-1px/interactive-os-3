@@ -1,4 +1,4 @@
-import { css } from '../../../fn'
+import { css, radius } from '../../../fn'
 
 // input[type="range"] — native role=slider. 토큰 기반 얇은 스타일.
 export const sliderCss = css`
@@ -9,7 +9,7 @@ export const sliderCss = css`
   }
   :where(input[type="range"])::-webkit-slider-runnable-track,
   :where(input[type="range"])::-moz-range-track {
-    height: 2px; background: var(--ds-border); border-radius: 999px;
+    height: 2px; background: var(--ds-border); border-radius: ${radius('pill')};
   }
   :where(input[type="range"])::-webkit-slider-thumb,
   :where(input[type="range"])::-moz-range-thumb {

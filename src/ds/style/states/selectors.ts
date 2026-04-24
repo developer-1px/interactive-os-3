@@ -15,13 +15,22 @@ export const flexItem = [
 ].join(', ')
 
 // 네이티브 <tr>/<td>에 얹힌 roving — display·box는 건드리지 않고 state(hover/focus/selected)만 공유.
+// columnheader(sortable) 도 포함 — aria-sort 있을 때만 클릭 피드백이 보여야 하므로 조건부 셀렉터.
 export const tableItem = [
   '[role="row"]',
   '[role="gridcell"]',
+  '[role="columnheader"][aria-sort]',
 ].join(', ')
 
-// state 규칙(hover/focus/selected/disabled)에는 table row/cell도 포함시킨다.
-export const rovingItem = [subgridItem, flexItem, tableItem].join(', ')
+// form-toggle roving — <div role="radio"> 등 native control 밖의 토글.
+// controlBox 금지, state(hover/focus/selected/disabled)만 공유.
+// <button role="switch"|"checkbox">는 native <button>으로 이미 control에 포함되므로 여기에 넣지 않는다.
+export const formToggle = [
+  '[role="radio"]',
+].join(', ')
+
+// state 규칙(hover/focus/selected/disabled)에는 table row/cell·form toggle도 포함시킨다.
+export const rovingItem = [subgridItem, flexItem, tableItem, formToggle].join(', ')
 
 export const control = 'button, [role="button"], input, select, textarea'
 

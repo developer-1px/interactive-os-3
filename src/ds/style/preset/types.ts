@@ -23,11 +23,18 @@ export type DsPreset = {
     border: TokenRef
     muted: TokenRef
     accent: TokenRef
+    // "on-*" = 해당 채도 색 위에 올라가는 텍스트 전경. bg/fg를 쌍으로 묶어
+    // preset 정의 시점에 contrast를 결정한다. 소비처는 fn/pair의 tone(name)으로
+    // 두 값을 한 번에 적용 → 한쪽만 쓰고 다른 쪽을 빼먹는 누락을 구조적으로 방지.
+    accentOn?: TokenRef   // 기본 '#fff'
     // Semantic status colors — Badge / Field error / inline indicators가 공유.
     // 없으면 accent로 폴백.
     success?: TokenRef
+    successOn?: TokenRef  // 기본 '#fff'
     warning?: TokenRef
+    warningOn?: TokenRef  // 기본 '#000' (warning은 밝은 톤이라 검정이 안전)
     danger?: TokenRef
+    dangerOn?: TokenRef   // 기본 '#fff'
     // Gray scale — 1(가장 약한 tint) ~ 9(가장 강한 텍스트)로 계층. muted/border는
     // 이 스케일에서 파생 가능. preset에 없으면 CanvasText 기반 color-mix로 폴백.
     gray?: Partial<Record<'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9', TokenRef>>

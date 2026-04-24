@@ -8,6 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:ds": "node scripts/lint-ds.mjs",
+    "lint:ds:values": "node scripts/lint-ds-values.mjs",
+    "lint:ds:invariants": "node scripts/lint-ds-invariants.mjs",
+    "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "preview": "vite preview"
   },
@@ -15,8 +18,10 @@
     "@tanstack/react-router": "^1.168.23",
     "lucide-react": "^1.9.0",
     "lucide-static": "^1.9.0",
+    "marked": "^18.0.2",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "shiki": "^4.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

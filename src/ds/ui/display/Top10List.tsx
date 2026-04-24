@@ -14,12 +14,11 @@ type Top10Props = Omit<ComponentPropsWithoutRef<'ol'>, 'children'> & {
 
 export function Top10List({ entries, ...rest }: Top10Props) {
   return (
-    <ol data-ds="Top10List" {...rest}>
+    <ol className="top-10" {...rest}>
       {entries.map((e, i) => (
         <li key={i}>
-          <span data-ds-rank>{i + 1}</span>
-          <span data-ds-top-label>{e.label}</span>
-          <small data-ds-count>{e.count}</small>
+          <span>{e.label}</span>
+          <small>{e.count}</small>
         </li>
       ))}
     </ol>

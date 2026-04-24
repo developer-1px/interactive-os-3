@@ -6,10 +6,10 @@ import type { ComponentPropsWithoutRef } from 'react'
  */
 export type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
 
-type BadgeProps = ComponentPropsWithoutRef<'span'> & {
+type BadgeProps = ComponentPropsWithoutRef<'mark'> & {
   tone?: BadgeTone
 }
 
 export function Badge({ tone = 'neutral', ...rest }: BadgeProps) {
-  return <span data-ds="Badge" data-tone={tone} {...rest} />
+  return <mark data-tone={tone} {...rest} />
 }

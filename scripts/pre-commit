@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# ds pre-commit hook — values + invariants 린트가 그린일 때만 커밋 허용.
+# 설치: `bash scripts/install-git-hook.sh` 1회 실행.
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+echo "→ lint:ds (hatch/classless/inline)"
+node scripts/lint-ds.mjs
+
+echo "→ lint:ds:values (hex/raw-color/raw-mask/radius-literal)"
+node scripts/lint-ds-values.mjs
+
+echo "→ lint:ds:invariants (state coverage / controlBox bypass)"
+node scripts/lint-ds-invariants.mjs
+
+echo "✅ ds lint 통과"

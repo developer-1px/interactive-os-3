@@ -1,4 +1,4 @@
-import { css, indicator, pad, radius } from '../../../fn'
+import { css, indicator, onAccent, pad, radius } from '../../../fn'
 
 /**
  * Checkbox / Radio (custom) — `<button role="checkbox">` 와 `<div role="radio">` 로
@@ -48,7 +48,7 @@ export const toggle = () => [
     [role="radio"][aria-checked="true"] {
       background: var(--ds-accent);
       border-color: var(--ds-accent);
-      color: #fff;
+      color: ${onAccent()};
     }
 
     /* disabled — base가 aria-disabled opacity 0.4를 이미 처리 */

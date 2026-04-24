@@ -37,6 +37,7 @@ import { LegendDot } from '../ui/display/LegendDot'
 import { StatCard } from '../ui/display/StatCard'
 import { BarChart } from '../ui/display/BarChart'
 import { Top10List } from '../ui/display/Top10List'
+import { CourseCard } from '../ui/display/CourseCard'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>
@@ -50,7 +51,7 @@ export const uiRegistry: Record<string, AnyCmp> = {
   Disclosure,
   DataGrid, DataGridRow, RowGroup, ColumnHeader, RowHeader, GridCell,
   Listbox, Dialog,
-  Badge, LegendDot, StatCard, BarChart, Top10List,
+  Badge, LegendDot, StatCard, BarChart, Top10List, CourseCard,
 }
 
 export type UiComponentName = keyof typeof uiRegistry

@@ -20,18 +20,18 @@ type BarChartProps = Omit<ComponentPropsWithoutRef<'figure'>, 'children'> & {
 
 export function BarChart({ bars, caption, ...rest }: BarChartProps) {
   return (
-    <figure data-ds="BarChart" {...rest}>
-      <ul data-ds-bars>
+    <figure className="bar-chart" {...rest}>
+      <dl>
         {bars.map((b, i) => (
-          <li key={i} data-tone={b.tone ?? 'info'}>
-            <span data-ds-bar-label>{b.label}</span>
-            <span data-ds-bar-track>
-              <span data-ds-bar-fill style={{ inlineSize: `${Math.max(0, Math.min(100, b.pct))}%` }} />
-            </span>
-            <span data-ds-bar-value>{b.value}</span>
-          </li>
+          <div key={i} data-tone={b.tone ?? 'info'}>
+            <dt>{b.label}</dt>
+            <dd>
+              <meter value={Math.max(0, Math.min(100, b.pct))} min={0} max={100} />
+              <span>{b.value}</span>
+            </dd>
+          </div>
         ))}
-      </ul>
+      </dl>
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
   )

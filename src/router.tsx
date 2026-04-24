@@ -4,6 +4,7 @@ import {
 import { Finder } from './meta/finder/Finder'
 import { Inspector } from './meta/inspector/Inspector'
 import { Matrix } from './meta/matrix/Matrix'
+import { Atlas } from './meta/atlas/Atlas'
 import { EduPortalAdmin } from './meta/edu-portal-admin/EduPortalAdmin'
 import { Dashboard } from './meta/edu-portal-admin/pages/Dashboard'
 import { VideoList } from './meta/edu-portal-admin/pages/VideoList'
@@ -52,6 +53,15 @@ const matrixRoute = createRoute({
   component: Matrix,
   staticData: {
     palette: { label: 'DS Matrix', to: '/ds-matrix' },
+  },
+})
+
+const atlasRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/atlas',
+  component: Atlas,
+  staticData: {
+    palette: { label: 'Atlas', to: '/atlas' },
   },
 })
 
@@ -138,7 +148,7 @@ const eduPortalAdminRoute = eduRoot.addChildren([
   eduVideoOrder,
 ])
 
-const routeTree = rootRoute.addChildren([indexRoute, finderRoute, inspectorRoute, matrixRoute, eduPortalAdminRoute])
+const routeTree = rootRoute.addChildren([indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, eduPortalAdminRoute])
 
 export const router = createRouter({ routeTree })
 

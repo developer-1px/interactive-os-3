@@ -100,6 +100,7 @@ export * from './ui/display/LegendDot'
 export * from './ui/display/StatCard'
 export * from './ui/display/BarChart'
 export * from './ui/display/Top10List'
+export * from './ui/display/CourseCard'
 export {
   Renderer, definePage, uiRegistry, resolveUi, placementAttrs, validatePage, node,
   type UiComponentName, type AnyNode, type NodeType,
