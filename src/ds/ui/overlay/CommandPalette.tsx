@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useId } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useId } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Dialog } from './Dialog'
 import { Combobox } from '../list/Combobox'
@@ -12,11 +12,33 @@ type PaletteEntry = {
   params?: Record<string, string>
 }
 
+type State = { open: boolean; query: string; active: number }
+type Action =
+  | { type: 'toggle' }
+  | { type: 'open' }
+  | { type: 'close' }
+  | { type: 'query'; value: string }
+  | { type: 'active'; value: number }
+  | { type: 'move'; delta: number; max: number }
+  | { type: 'clamp'; max: number }
+
+const INITIAL: State = { open: false, query: '', active: 0 }
+
+function reducer(s: State, a: Action): State {
+  switch (a.type) {
+    case 'toggle': return { ...s, open: !s.open, query: '', active: 0 }
+    case 'open':   return { ...s, open: true, query: '', active: 0 }
+    case 'close':  return { ...s, open: false }
+    case 'query':  return { ...s, query: a.value, active: 0 }
+    case 'active': return { ...s, active: a.value }
+    case 'move':   return { ...s, active: Math.max(0, Math.min(a.max, s.active + a.delta)) }
+    case 'clamp':  return s.active > a.max ? { ...s, active: Math.max(0, a.max) } : s
+  }
+}
+
 export function CommandPalette() {
   const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const [active, setActive] = useState(0)
+  const [{ open, query, active }, dispatch] = useReducer(reducer, INITIAL)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
@@ -41,7 +63,7 @@ export function CommandPalette() {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
-        setOpen((v) => !v)
+        dispatch({ type: 'toggle' })
       }
     }
     window.addEventListener('keydown', onKey)
@@ -53,8 +75,6 @@ export function CommandPalette() {
     if (!d) return
     if (open && !d.open) {
       d.showModal()
-      setQuery('')
-      setActive(0)
       queueMicrotask(() => inputRef.current?.focus())
     } else if (!open && d.open) {
       d.close()
@@ -62,34 +82,24 @@ export function CommandPalette() {
   }, [open])
 
   useEffect(() => {
-    if (active >= filtered.length) setActive(Math.max(0, filtered.length - 1))
-  }, [filtered.length, active])
+    dispatch({ type: 'clamp', max: filtered.length - 1 })
+  }, [filtered.length])
 
-  const close = () => setOpen(false)
+  const close = () => dispatch({ type: 'close' })
 
   const commit = (entry: PaletteEntry) => {
     close()
     router.navigate({ to: entry.to, params: entry.params })
   }
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setActive((i) => Math.min(filtered.length - 1, i + 1))
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setActive((i) => Math.max(0, i - 1))
-    } else if (e.key === 'Enter') {
-      const entry = filtered[active]
-      if (entry) {
-        e.preventDefault()
-        commit(entry)
-      }
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      close()
-    }
+  const max = filtered.length - 1
+  const keymap: Record<string, (e: React.KeyboardEvent) => void> = {
+    ArrowDown: (e) => { e.preventDefault(); dispatch({ type: 'move', delta: +1, max }) },
+    ArrowUp:   (e) => { e.preventDefault(); dispatch({ type: 'move', delta: -1, max }) },
+    Enter:     (e) => { const entry = filtered[active]; if (entry) { e.preventDefault(); commit(entry) } },
+    Escape:    (e) => { e.preventDefault(); close() },
   }
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => keymap[e.key]?.(e)
 
   const activeId = filtered[active]?.id
 
@@ -107,7 +117,7 @@ export function CommandPalette() {
       if (entry) commit(entry)
     } else if (ev.type === 'navigate') {
       const idx = filtered.findIndex((e) => e.id === ev.id)
-      if (idx >= 0) setActive(idx)
+      if (idx >= 0) dispatch({ type: 'active', value: idx })
     }
   }
 
@@ -119,7 +129,7 @@ export function CommandPalette() {
         controls={listId}
         activedescendant={activeId}
         value={query}
-        onChange={(e) => { setQuery(e.currentTarget.value); setActive(0) }}
+        onChange={(e) => dispatch({ type: 'query', value: e.currentTarget.value })}
         onKeyDown={onKeyDown}
         placeholder="Jump to…"
         aria-label="Search routes"

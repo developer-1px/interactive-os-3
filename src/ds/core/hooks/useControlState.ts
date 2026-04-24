@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useReducer } from 'react'
 import { reduce } from '../reduce'
 import type { Event, NormalizedData } from '../types'
 
 const EMPTY: NormalizedData = { entities: {}, relationships: {} }
 
 export function useControlState(base: NormalizedData): [NormalizedData, (e: Event) => void] {
-  const [meta, setMeta] = useState<NormalizedData>(EMPTY)
+  const [meta, dispatch] = useReducer(reduce, EMPTY)
   const data = useMemo<NormalizedData>(
     () => ({
       entities: { ...base.entities, ...meta.entities },
@@ -13,6 +13,5 @@ export function useControlState(base: NormalizedData): [NormalizedData, (e: Even
     }),
     [base, meta],
   )
-  const dispatch = (e: Event) => setMeta((d) => reduce(d, e))
   return [data, dispatch]
 }
