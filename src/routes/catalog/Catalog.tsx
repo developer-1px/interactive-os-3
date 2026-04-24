@@ -6,28 +6,29 @@ import { demos } from './demos'
  * Catalog — data 기반 ui 컴포넌트 감사 대시보드.
  *
  * "쓰는 법 통일"을 체크리스트로 시각화. 분파별 수렴률을 보여준다.
- *   A. ControlProps (canonical)
- *   B. customArray    — 통일 탈선
- *   C. childrenDriven — 통일 탈선
- *   D. fieldDriven    — content widget (분파 허용)
+ *   A. Collection (CollectionProps 강제) — canonical
+ *   B. Entity     (도메인 엔티티 1벌)   — content widget
+ *   C. Control    (보편 컨트롤)         — Button/Switch/Input 류
+ *   D. Composable (wrapper/layout)       — @slot children
+ *   🟡 Drift     (탈선)                  — ControlProps 수렴 대상
  */
 
 const kindLabel: Record<Kind, string> = {
-  controlProps: 'A · ControlProps (canonical)',
-  customArray: 'B · customArray (탈선)',
-  childrenDriven: 'C · childrenDriven (탈선)',
-  fieldDriven: 'D · fieldDriven (content widget)',
-  stateless: '· stateless (headless input 등)',
+  collection: 'A · Collection (CollectionProps 강제)',
+  entity:     'B · Entity (도메인 엔티티 1벌)',
+  control:    'C · Control (보편 컨트롤)',
+  composable: 'D · Composable (wrapper/layout)',
+  drift:      '🟡 Drift (통일 탈선 — 수렴 대상)',
 }
 
-const kindOrder: Kind[] = ['controlProps', 'customArray', 'childrenDriven', 'fieldDriven', 'stateless']
+const kindOrder: Kind[] = ['collection', 'entity', 'control', 'composable', 'drift']
 
 export function Catalog() {
   const [filter, setFilter] = useState<Kind | 'all'>('all')
 
   const grouped = useMemo(() => {
     const m: Record<Kind, Contract[]> = {
-      controlProps: [], customArray: [], childrenDriven: [], fieldDriven: [], stateless: [],
+      collection: [], entity: [], control: [], composable: [], drift: [],
     }
     for (const c of contracts) m[c.kind].push(c)
     return m
@@ -35,8 +36,8 @@ export function Catalog() {
 
   const totals = useMemo(() => {
     const total = contracts.length
-    const canonical = grouped.controlProps.length
-    const drift = grouped.customArray.length + grouped.childrenDriven.length
+    const canonical = grouped.collection.length
+    const drift = grouped.drift.length
     const passAll = contracts.filter((c) => c.checks.every((k) => k.pass)).length
     return { total, canonical, drift, passAll }
   }, [grouped])
@@ -122,12 +123,12 @@ function Card({ contract }: { contract: Contract }) {
           </li>
         ))}
       </ul>
-      {kind !== 'controlProps' && (
+      {kind !== 'collection' && (
         <footer style={{ marginTop: 8, fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)' }}>
-          {kind === 'childrenDriven' && 'children 주입형 — ControlProps 수렴 고려'}
-          {kind === 'customArray' && '커스텀 배열 prop — ControlProps 수렴 고려'}
-          {kind === 'fieldDriven' && '필드 엔티티형 — content widget 분파'}
-          {kind === 'stateless' && 'headless/stateless — 감사 대상 아님'}
+          {kind === 'drift'      && 'children/array 주입형 — ControlProps 수렴 고려'}
+          {kind === 'entity'     && '도메인 엔티티 1벌 — content widget'}
+          {kind === 'control'    && '보편 컨트롤 — primitive 값 입출력'}
+          {kind === 'composable' && 'wrapper/layout — @slot children'}
         </footer>
       )}
     </article>
