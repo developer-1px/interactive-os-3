@@ -1,28 +1,59 @@
+import { type ComponentPropsWithoutRef } from 'react'
 import {
-  Children,
-  cloneElement,
-  isValidElement,
-  type ComponentPropsWithoutRef,
-  type ReactElement,
-  type ReactNode,
-} from 'react'
+  ROOT,
+  getChildren,
+  getFocus,
+  getLabel,
+  isDisabled,
+  type ControlProps,
+} from '../../core/types'
+import { activate, composeAxes, navigate, typeahead } from '../../axes'
+import { bindAxis } from '../../core/bind'
+import { useFocusBridge } from '../../core/hooks/focus'
+import { Option } from './Option'
 
-type ListboxProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role'> & {
-  children: ReactNode
-}
+type ListboxProps = ControlProps &
+  Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>
 
-export function Listbox({ children, ...rest }: ListboxProps) {
-  const items = Children.toArray(children).filter(isValidElement) as ReactElement<{
-    posinset?: number
-    setsize?: number
-  }>[]
-  const total = items.length
-  const enhanced = items.map((el, i) =>
-    cloneElement(el, { posinset: i + 1, setsize: total }),
-  )
+const axis = composeAxes(navigate('vertical'), activate, typeahead)
+
+export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
+  const focusId = getFocus(data)
+  const onKey = bindAxis(axis, data, onEvent)
+  const bindFocus = useFocusBridge(focusId)
+  const kids = getChildren(data, ROOT)
+
   return (
     <ul role="listbox" {...rest}>
-      {enhanced}
+      {kids.map((id, i) => {
+        const d = data.entities[id]?.data ?? {}
+        const selected = Boolean(d.selected)
+        const disabled = isDisabled(data, id)
+        return (
+          <Option
+            key={id}
+            id={id}
+            ref={bindFocus(id)}
+            posinset={i + 1}
+            setsize={kids.length}
+            selected={selected}
+            disabled={disabled}
+            tabIndex={focusId === id ? 0 : -1}
+            data-icon={d.icon as string | undefined}
+            aria-haspopup={d.haspopup as ComponentPropsWithoutRef<'li'>['aria-haspopup']}
+            onKeyDown={(e) => {
+              if (onKey(e, id)) e.stopPropagation()
+            }}
+            onClick={() => {
+              if (disabled) return
+              onEvent({ type: 'navigate', id })
+              onEvent({ type: 'activate', id })
+            }}
+          >
+            {getLabel(data, id)}
+          </Option>
+        )
+      })}
     </ul>
   )
 }

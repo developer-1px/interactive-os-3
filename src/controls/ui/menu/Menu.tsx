@@ -2,7 +2,7 @@ import { useId, type CSSProperties } from 'react'
 import { ROOT, getChildren, getFocus, getExpanded, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '../../axes'
 import { bindAxis } from '../../core/bind'
-import { useFocusBridge } from '../../core/focus'
+import { useFocusBridge } from '../../core/hooks/focus'
 import { MenuPopover, type MenuCtx } from './MenuPopover'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)

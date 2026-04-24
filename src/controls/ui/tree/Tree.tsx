@@ -2,7 +2,7 @@ import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type React
 import { ROOT, getChildren, getExpanded, getFocus, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../axes'
 import { bindAxis } from '../../core/bind'
-import { useFocusBridge } from '../../core/focus'
+import { useFocusBridge } from '../../core/hooks/focus'
 
 type TreeProps = ControlProps & Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>
 

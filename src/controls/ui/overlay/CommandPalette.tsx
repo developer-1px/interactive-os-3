@@ -3,7 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { Dialog } from './Dialog'
 import { Combobox } from '../list/Combobox'
 import { Listbox } from '../list/Listbox'
-import { Option } from '../list/Option'
+import { ROOT, type Event, type NormalizedData } from '../../core/types'
 
 type PaletteEntry = {
   id: string
@@ -20,7 +20,6 @@ export function CommandPalette() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
-  const optionIdBase = useId()
 
   const entries = useMemo<PaletteEntry[]>(() => {
     const byId = (router as unknown as { routesById: Record<string, { id: string; options?: { staticData?: { palette?: { label: string; to: string; params?: Record<string, string> } } } }> }).routesById ?? {}
@@ -92,8 +91,25 @@ export function CommandPalette() {
     }
   }
 
-  const optionId = (i: number) => `${optionIdBase}-${i}`
-  const activeId = filtered[active] ? optionId(active) : undefined
+  const activeId = filtered[active]?.id
+
+  const data: NormalizedData = useMemo(() => {
+    const entities: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
+    filtered.forEach((e, i) => {
+      entities[e.id] = { id: e.id, data: { label: e.label, selected: i === active } }
+    })
+    return { entities, relationships: { [ROOT]: filtered.map((e) => e.id) } }
+  }, [filtered, active])
+
+  const onEvent = (ev: Event) => {
+    if (ev.type === 'activate') {
+      const entry = filtered.find((e) => e.id === ev.id)
+      if (entry) commit(entry)
+    } else if (ev.type === 'navigate') {
+      const idx = filtered.findIndex((e) => e.id === ev.id)
+      if (idx >= 0) setActive(idx)
+    }
+  }
 
   return (
     <Dialog ref={dialogRef} aria-label="Command palette" onClose={close}>
@@ -109,19 +125,7 @@ export function CommandPalette() {
         aria-label="Search routes"
       />
       {filtered.length > 0 && (
-        <Listbox id={listId}>
-          {filtered.map((e, i) => (
-            <Option
-              key={e.id}
-              id={optionId(i)}
-              selected={i === active}
-              onMouseEnter={() => setActive(i)}
-              onClick={() => commit(e)}
-            >
-              <span>{e.label}</span>
-            </Option>
-          ))}
-        </Listbox>
+        <Listbox id={listId} data={data} onEvent={onEvent} />
       )}
     </Dialog>
   )

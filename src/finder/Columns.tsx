@@ -1,33 +1,47 @@
-import { Listbox, Option } from '../controls'
+import { useMemo } from 'react'
+import {
+  Columns as ColumnsRole,
+  fromTree,
+  pathAncestors,
+  parentOf,
+  useControlState,
+  ROOT,
+  type Event,
+} from '../controls'
+import { tree } from './data'
 import { extToIcon, type FsNode } from './types'
 
-export function Columns({ chain, onNavigate }: {
+export function Columns({
+  chain,
+  onNavigate,
+}: {
   chain: FsNode[]
   onNavigate: (path: string) => void
 }) {
-  const columns = chain.filter((n) => n.type === 'dir' && n.children)
-  return (
-    <section aria-roledescription="columns" aria-label="컬럼">
-      {columns.map((parent, i) => {
-        const selectedChild = chain[i + 1]
-        return (
-          <nav key={parent.path + i} aria-roledescription="column" aria-label={parent.name}>
-            <Listbox aria-label={parent.name}>
-              {parent.children!.map((c) => (
-                <Option
-                  key={c.path}
-                  selected={selectedChild?.path === c.path}
-                  onClick={() => onNavigate(c.path)}
-                  data-icon={c.type === 'dir' ? 'dir' : extToIcon(c.ext)}
-                  {...(c.type === 'dir' ? { 'aria-haspopup': 'menu' } : {})}
-                >
-                  {c.name}
-                </Option>
-              ))}
-            </Listbox>
-          </nav>
-        )
-      })}
-    </section>
+  const currentPath = chain[chain.length - 1]?.path ?? '/'
+  const base = useMemo(
+    () =>
+      fromTree(tree.children ?? [], {
+        getId: (n) => n.path,
+        getKids: (n) => n.children,
+        toData: (n) => ({
+          label: n.name,
+          icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
+          selected: n.path === currentPath,
+        }),
+        focusId: currentPath,
+        expandedIds: pathAncestors(currentPath),
+      }),
+    [currentPath],
   )
+  const [data, dispatch] = useControlState(base)
+  const onEvent = (e: Event) => {
+    if (e.type === 'typeahead') dispatch(e)
+    else if (e.type === 'navigate' || e.type === 'activate') onNavigate(e.id)
+    else if (e.type === 'expand') {
+      const parent = parentOf(data, e.id)
+      onNavigate(e.open ? e.id : !parent || parent === ROOT ? '/' : parent)
+    }
+  }
+  return <ColumnsRole data={data} onEvent={onEvent} aria-label="컬럼" />
 }
