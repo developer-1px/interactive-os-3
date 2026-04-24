@@ -336,15 +336,19 @@ function CheckboxDemo() {
   )
 }
 
-function RadioDemo() {
-  const [v, setV] = useState('b')
-  return (
-    <RadioGroup aria-label="옵션" orientation="horizontal">
-      {['a', 'b', 'c'].map((k) => (
-        <Radio key={k} checked={v === k} onClick={() => setV(k)}>옵션 {k.toUpperCase()}</Radio>
-      ))}
-    </RadioGroup>
-  )
+function RadioGroupDemo() {
+  const base: NormalizedData = {
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      a: { id: 'a', data: { label: '옵션 A' } },
+      b: { id: 'b', data: { label: '옵션 B' } },
+      c: { id: 'c', data: { label: '옵션 C' } },
+      __focus__: { id: '__focus__', data: { id: 'b' } },
+    },
+    relationships: { [ROOT]: ['a', 'b', 'c'] },
+  }
+  const [data, onEvent] = useControlState(base)
+  return <RadioGroup data={data} onEvent={onEvent} aria-label="옵션" orientation="horizontal" />
 }
 
 function ComboboxDemo() {
@@ -386,6 +390,6 @@ export const demos: Record<string, () => ReactNode> = {
   Slider: SliderDemo,
   ColorInput: ColorInputDemo,
   Checkbox: CheckboxDemo,
-  Radio: RadioDemo,
+  RadioGroup: RadioGroupDemo,
   Combobox: ComboboxDemo,
 }
