@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — layout primitive (DOM 평탄화 wrapper)
 export type Flow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
 export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'
 

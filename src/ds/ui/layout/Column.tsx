@@ -1,6 +1,8 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import type { Emphasis, Flow } from './Row'
 
+// @slot children — layout primitive (DOM 평탄화 wrapper)
+
 export type ColumnProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   flow?: Flow
   emphasis?: Emphasis

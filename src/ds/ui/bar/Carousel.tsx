@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — Carousel/Slide 모두 wrapper content (Slide 컴포저블)
 type CarouselProps = Omit<ComponentPropsWithoutRef<'section'>, 'aria-roledescription'> & {
   label: string
   children: ReactNode

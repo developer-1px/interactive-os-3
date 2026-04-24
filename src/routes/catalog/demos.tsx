@@ -4,6 +4,9 @@ import {
   Badge, LegendDot, Button, Switch, Progress, Field,
   TabList, Tab, TabPanel, Feed, FeedArticle, Disclosure,
   Toolbar, ToolbarButton, Separator,
+  Input, Textarea, Select, NumberInput, Slider, ColorInput,
+  Checkbox, Radio, RadioGroup, Combobox,
+  Carousel, Slide,
   fromTree, useControlState, ROOT, type NormalizedData,
 } from '../../ds'
 
@@ -253,6 +256,103 @@ function ToolbarDemo() {
   )
 }
 
+function ToolbarButtonDemo() {
+  const [b, setB] = useState(false)
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <ToolbarButton data-icon="bold" aria-label="굵게"
+        pressed={b} onClick={() => setB((v) => !v)} />
+      <ToolbarButton data-icon="italic" aria-label="기울임" />
+    </div>
+  )
+}
+
+function SeparatorDemo() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 24 }}>
+      <span>왼쪽</span><Separator /><span>오른쪽</span>
+    </div>
+  )
+}
+
+function CarouselDemo() {
+  return (
+    <Carousel label="슬라이드">
+      <Slide label="1" posinset={1} setsize={2}>
+        <div style={{ padding: 16, minWidth: 120 }}>첫 슬라이드</div>
+      </Slide>
+      <Slide label="2" posinset={2} setsize={2}>
+        <div style={{ padding: 16, minWidth: 120 }}>두 번째</div>
+      </Slide>
+    </Carousel>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// form inputs (native 기반)
+// ─────────────────────────────────────────────────────────────
+function InputDemo() {
+  return <Input defaultValue="hello" placeholder="텍스트" />
+}
+
+function TextareaDemo() {
+  return <Textarea defaultValue={'멀티라인\n텍스트'} rows={3} />
+}
+
+function SelectDemo() {
+  return (
+    <Select defaultValue="b">
+      <option value="a">옵션 A</option>
+      <option value="b">옵션 B</option>
+      <option value="c">옵션 C</option>
+    </Select>
+  )
+}
+
+function NumberInputDemo() {
+  const [v, setV] = useState(5)
+  return <NumberInput value={v} onChange={setV} min={0} max={100} />
+}
+
+function SliderDemo() {
+  const [v, setV] = useState(40)
+  return <Slider value={v} onChange={setV} min={0} max={100} aria-label="볼륨" />
+}
+
+function ColorInputDemo() {
+  const [v, setV] = useState('#4f46e5')
+  return <ColorInput value={v} onChange={setV} />
+}
+
+function CheckboxDemo() {
+  const [a, setA] = useState(true)
+  const [b, setB] = useState<boolean | 'mixed'>('mixed')
+  return (
+    <div style={{ display: 'flex', gap: 12 }}>
+      <Checkbox checked={a} onClick={() => setA((v) => !v)} aria-label="A" />
+      <Checkbox checked={b} onClick={() => setB((v) => v === 'mixed' ? true : v === true ? false : 'mixed')} aria-label="삼상" />
+      <Checkbox checked={false} disabled aria-label="disabled" />
+    </div>
+  )
+}
+
+function RadioDemo() {
+  const [v, setV] = useState('b')
+  return (
+    <RadioGroup aria-label="옵션" orientation="horizontal">
+      {['a', 'b', 'c'].map((k) => (
+        <Radio key={k} checked={v === k} onClick={() => setV(k)}>옵션 {k.toUpperCase()}</Radio>
+      ))}
+    </RadioGroup>
+  )
+}
+
+function ComboboxDemo() {
+  const [open, setOpen] = useState(false)
+  return <Combobox expanded={open} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)}
+    placeholder="검색" defaultValue="" />
+}
+
 // ─────────────────────────────────────────────────────────────
 // registry
 // ─────────────────────────────────────────────────────────────
@@ -276,4 +376,16 @@ export const demos: Record<string, () => ReactNode> = {
   Feed: FeedDemo,
   Disclosure: DisclosureDemo,
   Toolbar: ToolbarDemo,
+  ToolbarButton: ToolbarButtonDemo,
+  Separator: SeparatorDemo,
+  Carousel: CarouselDemo,
+  Input: InputDemo,
+  Textarea: TextareaDemo,
+  Select: SelectDemo,
+  NumberInput: NumberInputDemo,
+  Slider: SliderDemo,
+  ColorInput: ColorInputDemo,
+  Checkbox: CheckboxDemo,
+  Radio: RadioDemo,
+  Combobox: ComboboxDemo,
 }

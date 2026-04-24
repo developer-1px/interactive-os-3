@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+// @slot children — details 내부 wrapper content (items 아님)
 type DisclosureProps = ComponentPropsWithoutRef<'details'> & {
   summary: ReactNode
   children: ReactNode
