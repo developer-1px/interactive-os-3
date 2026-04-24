@@ -8,25 +8,32 @@ import { css, dim, mix, pad, radius, status, surface, tint } from '../../../fn'
  * currentColor 대비 자동 맞춤. alert/warning은 border까지 emphasize.
  */
 export const display = () => css`
-  /* ── Badge ─────────────────────────────────────────────────────── */
+  /* ── Badge ─────────────────────────────────────────────────────────
+     Button과 구분되는 시각 계약:
+     - Badge는 "읽는 라벨" — 작고(xs), pill, 낮은 명도 tint, height auto(텍스트 자체 크기)
+     - Button은 "눌리는 컨트롤" — 기본 체력(29.5px), radius md, 서피스 fg(2)
+     포인트: Badge는 min-height 강제 없음 → 컨트롤과 같은 라인에 있어도 명확히 작음.
+     cursor: default로 비-pressable 명시 (호버 피드백 없음). */
   [data-ds="Badge"] {
     display: inline-flex; align-items: center; gap: ${pad(0.5)};
-    padding: 0 ${pad(1)};
-    min-height: calc(var(--ds-text-sm) * 1.8);
+    padding: 1px ${pad(1.25)};
     border-radius: ${radius('pill')};
     font-size: var(--ds-text-xs);
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.4;
     white-space: nowrap;
-    background: ${dim(12)};
+    background: ${dim(8)};
     color: currentColor;
+    cursor: default;
+    user-select: none;
+    vertical-align: middle;
   }
   /* info는 ds에 semantic 토큰이 없어 accent에 위임. success/warning/danger는 preset 토큰 직접 소비. */
-  [data-ds="Badge"][data-tone="info"]    { color: var(--ds-accent);    background: ${tint('var(--ds-accent)', 14)}; }
-  [data-ds="Badge"][data-tone="success"] { color: ${status('success')}; background: ${tint(status('success'), 14)}; }
-  [data-ds="Badge"][data-tone="warning"] { color: ${status('warning')}; background: ${tint(status('warning'), 14)}; }
-  [data-ds="Badge"][data-tone="danger"]  { color: ${status('danger')};  background: ${tint(status('danger'), 14)}; }
-  [data-ds="Badge"][data-tone="neutral"] { color: ${dim(70)}; }
+  [data-ds="Badge"][data-tone="info"]    { color: var(--ds-accent);    background: ${tint('var(--ds-accent)', 10)}; }
+  [data-ds="Badge"][data-tone="success"] { color: ${status('success')}; background: ${tint(status('success'), 10)}; }
+  [data-ds="Badge"][data-tone="warning"] { color: ${status('warning')}; background: ${tint(status('warning'), 10)}; }
+  [data-ds="Badge"][data-tone="danger"]  { color: ${status('danger')};  background: ${tint(status('danger'), 10)}; }
+  [data-ds="Badge"][data-tone="neutral"] { color: ${dim(65)}; background: ${dim(6)}; }
 
   /* ── LegendDot ─────────────────────────────────────────────────── */
   [data-ds="LegendDot"] {

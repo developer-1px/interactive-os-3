@@ -69,16 +69,17 @@ export function VideoList() {
       grid: { id: 'grid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '영상 목록' } } },
       headGroup: { id: 'headGroup', data: { type: 'Ui', component: 'RowGroup' } },
       headRow: { id: 'headRow', data: { type: 'Ui', component: 'DataGridRow' } },
-      h_title: { id: 'h_title', data: { type: 'Ui', component: 'ColumnHeader', content: <button type="button" onClick={() => onSort('title')} aria-sort={sortOf('title')}>영상 제목</button> } },
-      h_level: { id: 'h_level', data: { type: 'Ui', component: 'ColumnHeader', content: '레벨' } },
-      h_roles: { id: 'h_roles', data: { type: 'Ui', component: 'ColumnHeader', content: '역할' } },
-      h_enrolled: { id: 'h_enrolled', data: { type: 'Ui', component: 'ColumnHeader', content: <button type="button" onClick={() => onSort('enrolled')} aria-sort={sortOf('enrolled')}>수강 신청</button> } },
-      h_completion: { id: 'h_completion', data: { type: 'Ui', component: 'ColumnHeader', content: <button type="button" onClick={() => onSort('completion')} aria-sort={sortOf('completion')}>완료율</button> } },
-      h_rating: { id: 'h_rating', data: { type: 'Ui', component: 'ColumnHeader', content: '별점' } },
-      h_status: { id: 'h_status', data: { type: 'Ui', component: 'ColumnHeader', content: '상태' } },
-      h_visible: { id: 'h_visible', data: { type: 'Ui', component: 'ColumnHeader', content: '노출' } },
-      h_createdAt: { id: 'h_createdAt', data: { type: 'Ui', component: 'ColumnHeader', content: <button type="button" onClick={() => onSort('createdAt')} aria-sort={sortOf('createdAt')}>등록일</button> } },
-      h_manage: { id: 'h_manage', data: { type: 'Ui', component: 'ColumnHeader', content: '관리' } },
+      h_thumb:      { id: 'h_thumb',      data: { type: 'Ui', component: 'ColumnHeader', props: { 'aria-label': '썸네일' }, content: '' } },
+      h_title:      { id: 'h_title',      data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('title') },      content: <button type="button" onClick={() => onSort('title')}>영상 제목</button> } },
+      h_level:      { id: 'h_level',      data: { type: 'Ui', component: 'ColumnHeader', content: '레벨' } },
+      h_roles:      { id: 'h_roles',      data: { type: 'Ui', component: 'ColumnHeader', content: '역할' } },
+      h_enrolled:   { id: 'h_enrolled',   data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('enrolled'),   'data-num': 'true' }, content: <button type="button" onClick={() => onSort('enrolled')}>수강 신청</button> } },
+      h_completion: { id: 'h_completion', data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('completion'), 'data-num': 'true' }, content: <button type="button" onClick={() => onSort('completion')}>완료율</button> } },
+      h_rating:     { id: 'h_rating',     data: { type: 'Ui', component: 'ColumnHeader', props: { 'data-num': 'true' }, content: '별점' } },
+      h_status:     { id: 'h_status',     data: { type: 'Ui', component: 'ColumnHeader', content: '상태' } },
+      h_visible:    { id: 'h_visible',    data: { type: 'Ui', component: 'ColumnHeader', content: '노출' } },
+      h_createdAt:  { id: 'h_createdAt',  data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('createdAt'),   'data-num': 'true' }, content: <button type="button" onClick={() => onSort('createdAt')}>등록일</button> } },
+      h_manage:     { id: 'h_manage',     data: { type: 'Ui', component: 'ColumnHeader', props: { 'aria-label': '관리' }, content: '' } },
 
       bodyGroup: { id: 'bodyGroup', data: { type: 'Ui', component: 'RowGroup' } },
       ...bodyRowNodes(sorted),
@@ -89,7 +90,7 @@ export function VideoList() {
       toolbar: ['tb_q','tb_search','tb_sep','tb_level','tb_role','tb_status','tb_count'],
       grid: ['headGroup', 'bodyGroup'],
       headGroup: ['headRow'],
-      headRow: ['h_title','h_level','h_roles','h_enrolled','h_completion','h_rating','h_status','h_visible','h_createdAt','h_manage'],
+      headRow: ['h_thumb','h_title','h_level','h_roles','h_enrolled','h_completion','h_rating','h_status','h_visible','h_createdAt','h_manage'],
       bodyGroup: sorted.map((v) => `row-${v.id}`),
       ...bodyRowRels(sorted),
     },
@@ -98,40 +99,86 @@ export function VideoList() {
   return <Renderer page={definePage(data)} />
 }
 
+// 카테고리 → Badge tone 매핑.
+// 레벨은 난이도 척도 — "danger/success"는 의미 오용이라 neutral 계열만 사용.
+// 상태는 실제 운영 의미(게시/예약/비공개)라 semantic tone 사용 OK.
+const LEVEL_TONE: Record<string, 'neutral' | 'info'> = {
+  '초급': 'neutral', '중급': 'neutral', '고급': 'info',
+}
+const STATUS_TONE: Record<string, 'success' | 'neutral' | 'info' | 'danger'> = {
+  '게시 중': 'success', '예약': 'info', '임시저장': 'neutral', '숨김': 'danger',
+}
+
+// 썸네일 — picsum.photos seeded로 id마다 안정된 이미지. 16:9, 120x68.
+const thumbUrl = (id: string) => `https://picsum.photos/seed/${id}/240/136`
+
 function bodyRowNodes(items: typeof videos) {
   const out: Record<string, { id: string; data: Record<string, unknown> }> = {}
   for (const v of items) {
     out[`row-${v.id}`] = { id: `row-${v.id}`, data: { type: 'Ui', component: 'DataGridRow' } }
-    const cells: Array<[string, React.ReactNode]> = [
-      ['title', <>{v.title}<br /><small>{v.duration}</small></>],
-      ['level', <span>{v.level}</span>],
-      ['roles', v.roles.join(', ')],
-      ['enrolled', v.enrolled],
-      ['completion', v.completion == null ? '—' : `${v.completion}%`],
-      ['rating', v.rating == null ? '—' : `★ ${v.rating}`],
-      ['status', <span>{v.status}</span>],
-      ['visible', v.visible ? '노출' : '숨김'],
-      ['createdAt', v.createdAt],
-      ['manage', null],
-    ]
-    for (const [k, content] of cells) {
-      if (k === 'manage') {
-        out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell' } }
-        out[`b-${v.id}-manage`] = { id: `b-${v.id}-manage`, data: { type: 'Ui', component: 'Button', content: '수정' } }
-      } else {
-        out[`c-${v.id}-${k}`] = { id: `c-${v.id}-${k}`, data: { type: 'Ui', component: 'GridCell', content } }
-      }
-    }
+
+    const detailHref = `/edu-portal-admin/videos/${v.id}/edit`
+
+    // 썸네일 — 영상 목록의 주 시각. <a>로 감싸서 pressable 신호 확보.
+    out[`c-${v.id}-thumb`] = { id: `c-${v.id}-thumb`, data: {
+      type: 'Ui', component: 'GridCell',
+      content: <a href={detailHref} aria-label={`${v.title} 수정`}><img src={thumbUrl(v.id)} alt="" width={120} height={68} loading="lazy" style={{ display: 'block', borderRadius: 'var(--ds-radius-md)', objectFit: 'cover', background: 'var(--ds-gray-2)' }} /></a>,
+    } }
+
+    // title은 pressable link (상세로), duration은 읽기 전용 메타.
+    out[`c-${v.id}-title`] = { id: `c-${v.id}-title`, data: {
+      type: 'Ui', component: 'GridCell',
+      content: <>
+        <a href={detailHref} style={{ display: 'block', fontWeight: 600, marginBlockEnd: 2 }}>{v.title}</a>
+        <small style={{ color: 'var(--ds-gray-5)', fontVariantNumeric: 'tabular-nums' }}>{v.duration}</small>
+      </>,
+    } }
+
+    out[`c-${v.id}-level`]  = { id: `c-${v.id}-level`,  data: { type: 'Ui', component: 'GridCell' } }
+    out[`b-${v.id}-level`]  = { id: `b-${v.id}-level`,  data: { type: 'Ui', component: 'Badge', props: { tone: LEVEL_TONE[v.level] ?? 'neutral' }, content: v.level } }
+
+    out[`c-${v.id}-roles`]  = { id: `c-${v.id}-roles`,  data: { type: 'Ui', component: 'GridCell', content: <span style={{ color: 'var(--ds-gray-6)' }}>{v.roles.join(', ')}</span> } }
+
+    out[`c-${v.id}-enrolled`] = { id: `c-${v.id}-enrolled`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: v.enrolled } }
+
+    // completion → Progress + % (폭 120px로 확장해 시각 신호 충분히)
+    out[`c-${v.id}-completion`] = { id: `c-${v.id}-completion`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
+      content: v.completion == null
+        ? <span style={{ color: 'var(--ds-gray-5)' }}>—</span>
+        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, justifyContent: 'flex-end' }}><progress value={v.completion} max={100} aria-label={`완료율 ${v.completion}%`} style={{ inlineSize: 120 }} /><strong>{v.completion}%</strong></span>,
+    } }
+
+    out[`c-${v.id}-rating`] = { id: `c-${v.id}-rating`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
+      content: v.rating == null
+        ? <span style={{ color: 'var(--ds-gray-5)' }}>—</span>
+        : <>★ {v.rating}</>,
+    } }
+
+    out[`c-${v.id}-status`] = { id: `c-${v.id}-status`, data: { type: 'Ui', component: 'GridCell' } }
+    out[`b-${v.id}-status`] = { id: `b-${v.id}-status`, data: { type: 'Ui', component: 'Badge', props: { tone: STATUS_TONE[v.status] ?? 'neutral' }, content: v.status } }
+
+    out[`c-${v.id}-visible`] = { id: `c-${v.id}-visible`, data: { type: 'Ui', component: 'GridCell',
+      content: v.visible
+        ? <span style={{ color: 'var(--ds-gray-6)' }}>노출</span>
+        : <span style={{ color: 'var(--ds-gray-4)' }}>숨김</span>,
+    } }
+
+    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: <span style={{ color: 'var(--ds-gray-6)' }}>{v.createdAt}</span> } }
+
+    out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell' } }
+    out[`b-${v.id}-manage`] = { id: `b-${v.id}-manage`, data: { type: 'Ui', component: 'Button', content: '수정' } }
   }
   return out
 }
 
 function bodyRowRels(items: typeof videos) {
   const out: Record<string, string[]> = {}
-  const keys = ['title','level','roles','enrolled','completion','rating','status','visible','createdAt','manage']
+  const keys = ['thumb','title','level','roles','enrolled','completion','rating','status','visible','createdAt','manage']
   for (const v of items) {
     out[`row-${v.id}`] = keys.map((k) => `c-${v.id}-${k}`)
-    out[`c-${v.id}-manage`] = [`b-${v.id}-manage`]
+    out[`c-${v.id}-level`]   = [`b-${v.id}-level`]
+    out[`c-${v.id}-status`]  = [`b-${v.id}-status`]
+    out[`c-${v.id}-manage`]  = [`b-${v.id}-manage`]
   }
   return out
 }
