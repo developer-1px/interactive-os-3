@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type MouseEvent, type ReactNode } from 'react'
+import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type ControlProps } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
@@ -7,17 +7,21 @@ type TreeProps = ControlProps & Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'o
 
 const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
 
+const idFrom = (e: { target: EventTarget }): string | null =>
+  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
+
 export function Tree({ data, onEvent, ...rest }: TreeProps) {
   const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
 
-  // 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate 헬퍼로.
-  const onItemClick = (e: MouseEvent, id: string) => {
-    e.stopPropagation()
-    if (isDisabled(data, id)) return
+  // 위임: 컨테이너 ul에서 한 번 처리. 단일 제스처 emit.
+  const onClick = (e: MouseEvent) => {
+    const id = idFrom(e)
+    if (!id || isDisabled(data, id)) return
     onEvent({ type: 'activate', id })
   }
-  const onItemKey = (e: React.KeyboardEvent, id: string) => {
-    if (onKey(e, id)) e.stopPropagation()
+  const onKeyDown = (e: KeyboardEvent) => {
+    const id = idFrom(e)
+    if (id) onKey(e, id)
   }
 
   const render = (parent: string, level: number): ReactNode =>
@@ -30,6 +34,7 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
         <Fragment key={id}>
           <li
             role="treeitem"
+            data-id={id}
             ref={bindFocus(id)}
             aria-level={level}
             aria-posinset={i + 1}
@@ -38,8 +43,6 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
             aria-disabled={disabled || undefined}
             tabIndex={focused ? 0 : -1}
             style={{ '--ds-level': level - 1 } as CSSProperties}
-            onKeyDown={(e) => onItemKey(e, id)}
-            onClick={(e) => onItemClick(e, id)}
           >
             {getLabel(data, id)}
           </li>
@@ -48,5 +51,5 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
       )
     })
 
-  return <ul role="tree" {...rest}>{render(ROOT, 1)}</ul>
+  return <ul role="tree" onClick={onClick} onKeyDown={onKeyDown} {...rest}>{render(ROOT, 1)}</ul>
 }

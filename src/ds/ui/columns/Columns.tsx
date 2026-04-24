@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type MouseEvent } from 'react'
+import { type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent } from 'react'
 import {
   ROOT,
   getChildren,
@@ -19,21 +19,25 @@ const chainFrom = (d: ControlProps['data'], exp: Set<string>, cur: string = ROOT
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }
 
+const idFrom = (e: { target: EventTarget }): string | null =>
+  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
+
 export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
   const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
 
-  // 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate로.
-  const onItemClick = (e: MouseEvent, id: string) => {
-    e.stopPropagation()
-    if (isDisabled(data, id)) return
+  // 위임. 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate로.
+  const onClick = (e: MouseEvent) => {
+    const id = idFrom(e)
+    if (!id || isDisabled(data, id)) return
     onEvent({ type: 'activate', id })
   }
-  const onItemKey = (e: React.KeyboardEvent, id: string) => {
-    if (onKey(e, id)) e.stopPropagation()
+  const onKeyDown = (e: KeyboardEvent) => {
+    const id = idFrom(e)
+    if (id) onKey(e, id)
   }
 
   return (
-    <section aria-roledescription="columns" {...rest}>
+    <section aria-roledescription="columns" onClick={onClick} onKeyDown={onKeyDown} {...rest}>
       {chainFrom(data, expanded).map((parent) => {
         const kids = getChildren(data, parent)
         const label = parent === ROOT ? 'root' : getLabel(data, parent)
@@ -49,6 +53,7 @@ export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
                   <li
                     key={id}
                     role="option"
+                    data-id={id}
                     ref={bindFocus(id)}
                     aria-posinset={i + 1}
                     aria-setsize={kids.length}
@@ -58,8 +63,6 @@ export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
                     aria-disabled={disabled || undefined}
                     tabIndex={focusId === id ? 0 : -1}
                     data-icon={d.icon as string | undefined}
-                    onKeyDown={(e) => onItemKey(e, id)}
-                    onClick={(e) => onItemClick(e, id)}
                   >
                     <span>{getLabel(data, id)}</span>
                   </li>

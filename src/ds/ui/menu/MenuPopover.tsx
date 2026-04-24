@@ -1,5 +1,8 @@
-import type { CSSProperties, KeyboardEvent } from 'react'
+import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData } from '../../core/types'
+
+const idFrom = (e: { target: EventTarget }): string | null =>
+  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
 
 type Ctx = {
   data: NormalizedData
@@ -26,6 +29,16 @@ export function MenuPopover({
   const kids = getChildren(data, parentId)
   const branches = kids.filter((id) => getChildren(data, id).length > 0)
   const wantOpen = parentId === ROOT ? undefined : expanded.has(parentId)
+
+  const onUlClick = (e: MouseEvent) => {
+    const id = idFrom(e)
+    if (id) onClick(id)
+  }
+  const onUlKey = (e: KeyboardEvent) => {
+    const id = idFrom(e)
+    if (id) onKey(e, id)
+  }
+
   return (
     <div id={domId} popover="auto" role="presentation" style={style}
       ref={(el) => { if (wantOpen !== undefined) syncPopover(el, wantOpen) }}
@@ -34,21 +47,19 @@ export function MenuPopover({
         onToggle(parentId, open)
       }}
     >
-      <ul role="menu">
+      <ul role="menu" onClick={onUlClick} onKeyDown={onUlKey}>
         {kids.map((id, i) => {
           const branch = getChildren(data, id).length > 0
           const disabled = isDisabled(data, id)
           const focused = focusId === id
           return (
-            <li key={id} role="menuitem" tabIndex={focused ? 0 : -1}
+            <li key={id} role="menuitem" data-id={id} tabIndex={focused ? 0 : -1}
               ref={bindFocus(id)}
               aria-disabled={disabled || undefined}
               aria-haspopup={branch ? 'menu' : undefined}
               aria-expanded={branch ? expanded.has(id) : undefined}
               aria-posinset={i + 1} aria-setsize={kids.length}
               style={branch ? ({ anchorName: anchorName(id) } as CSSProperties) : undefined}
-              onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
-              onClick={(e) => { e.stopPropagation(); onClick(id) }}
             >{getLabel(data, id)}</li>
           )
         })}
