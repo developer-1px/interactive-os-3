@@ -76,7 +76,7 @@ const dsLimits = {
 
 // ds 원칙: style·className·role 금지. 모든 스타일/레이아웃은 ds CSS 가 태그+ARIA
 // 셀렉터로 관장한다.
-// - controls/ui 내부만 예외: role 리터럴 허용 (컴포넌트 정의부) + 동적 style 허용
+// - ds/ui 내부만 예외: role 리터럴 허용 (컴포넌트 정의부) + 동적 style 허용
 //   (anchor-name/CSS custom property 같이 정적 CSS로 표현 불가한 값).
 const className = {
   selector: 'JSXAttribute[name.name="className"]',
@@ -109,5 +109,5 @@ export default defineConfig([
     },
   },
   { files: ['src/**/*.{ts,tsx}'],              rules: { 'no-restricted-syntax': ['error', role, className, style] } },
-  { files: ['src/controls/ui/**/*.{ts,tsx}'],  rules: { 'no-restricted-syntax': ['error', className] } },
+  { files: ['src/ds/ui/**/*.{ts,tsx}'],        rules: { 'no-restricted-syntax': ['error', className] } },
 ])
