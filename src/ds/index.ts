@@ -24,6 +24,12 @@ export { fromTree, pathAncestors } from './core/fromTree'
 export { useControlState } from './core/hooks/useControlState'
 export { useRoving } from './core/hooks/useRoving'
 export { parentOf } from './core/axes'
+export {
+  navigateOnActivate,
+  expandBranchOnActivate,
+  composeGestures,
+  type GestureHelper,
+} from './core/gesture'
 export * from './ui/menu/Menu'
 export * from './ui/menu/Menubar'
 export * from './ui/menu/MenuList'

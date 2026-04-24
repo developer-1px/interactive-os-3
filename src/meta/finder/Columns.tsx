@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import {
   Columns as ColumnsRole,
+  expandBranchOnActivate,
   fromTree,
   pathAncestors,
   parentOf,
@@ -35,13 +36,14 @@ export function Columns({
     [currentPath],
   )
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) => {
-    if (e.type === 'typeahead') dispatch(e)
-    else if (e.type === 'navigate' || e.type === 'activate') onNavigate(e.id)
-    else if (e.type === 'expand') {
-      const parent = parentOf(data, e.id)
-      onNavigate(e.open ? e.id : !parent || parent === ROOT ? '/' : parent)
-    }
-  }
+  const onEvent = (raw: Event) =>
+    expandBranchOnActivate(data, raw).forEach((e) => {
+      if (e.type === 'typeahead') dispatch(e)
+      else if (e.type === 'navigate' || e.type === 'activate') onNavigate(e.id)
+      else if (e.type === 'expand') {
+        const parent = parentOf(data, e.id)
+        onNavigate(e.open ? e.id : !parent || parent === ROOT ? '/' : parent)
+      }
+    })
   return <ColumnsRole data={data} onEvent={onEvent} aria-label="컬럼" />
 }

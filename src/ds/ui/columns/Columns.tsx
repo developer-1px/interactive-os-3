@@ -1,11 +1,10 @@
-import { type ComponentPropsWithoutRef } from 'react'
+import { type ComponentPropsWithoutRef, type MouseEvent } from 'react'
 import {
   ROOT,
   getChildren,
   getLabel,
   isDisabled,
   type ControlProps,
-  type Event,
 } from '../../core/types'
 import { activate, composeAxes, navigate, treeExpand, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
@@ -20,13 +19,18 @@ const chainFrom = (d: ControlProps['data'], exp: Set<string>, cur: string = ROOT
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }
 
-const clickEvents = (id: string, hasKids: boolean, isOpen: boolean): Event[] => [
-  { type: 'navigate', id },
-  hasKids ? { type: 'expand', id, open: !isOpen } : { type: 'activate', id },
-]
-
 export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
   const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
+
+  // 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate로.
+  const onItemClick = (e: MouseEvent, id: string) => {
+    e.stopPropagation()
+    if (isDisabled(data, id)) return
+    onEvent({ type: 'activate', id })
+  }
+  const onItemKey = (e: React.KeyboardEvent, id: string) => {
+    if (onKey(e, id)) e.stopPropagation()
+  }
 
   return (
     <section aria-roledescription="columns" {...rest}>
@@ -54,14 +58,8 @@ export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
                     aria-disabled={disabled || undefined}
                     tabIndex={focusId === id ? 0 : -1}
                     data-icon={d.icon as string | undefined}
-                    onKeyDown={(e) => {
-                      if (onKey(e, id)) e.stopPropagation()
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (disabled) return
-                      clickEvents(id, hasKids, isOpen).forEach(onEvent)
-                    }}
+                    onKeyDown={(e) => onItemKey(e, id)}
+                    onClick={(e) => onItemClick(e, id)}
                   >
                     <span>{getLabel(data, id)}</span>
                   </li>

@@ -1,5 +1,5 @@
-import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type ReactNode } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
+import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type MouseEvent, type ReactNode } from 'react'
+import { ROOT, getChildren, getLabel, isDisabled, type ControlProps } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 
@@ -10,13 +10,14 @@ const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
 export function Tree({ data, onEvent, ...rest }: TreeProps) {
   const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
 
-  const clickEvents = (id: string): Event[] => {
-    if (isDisabled(data, id)) return []
-    const hasKids = getChildren(data, id).length > 0
-    return [
-      { type: 'navigate', id },
-      hasKids ? { type: 'expand', id, open: !expanded.has(id) } : { type: 'activate', id },
-    ]
+  // 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate 헬퍼로.
+  const onItemClick = (e: MouseEvent, id: string) => {
+    e.stopPropagation()
+    if (isDisabled(data, id)) return
+    onEvent({ type: 'activate', id })
+  }
+  const onItemKey = (e: React.KeyboardEvent, id: string) => {
+    if (onKey(e, id)) e.stopPropagation()
   }
 
   const render = (parent: string, level: number): ReactNode =>
@@ -37,11 +38,8 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
             aria-disabled={disabled || undefined}
             tabIndex={focused ? 0 : -1}
             style={{ '--ds-level': level - 1 } as CSSProperties}
-            onKeyDown={(e) => { if (onKey(e, id)) e.stopPropagation() }}
-            onClick={(e) => {
-              e.stopPropagation()
-              clickEvents(id).forEach(onEvent)
-            }}
+            onKeyDown={(e) => onItemKey(e, id)}
+            onClick={(e) => onItemClick(e, id)}
           >
             {getLabel(data, id)}
           </li>
