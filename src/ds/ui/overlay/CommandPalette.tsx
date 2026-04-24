@@ -130,7 +130,7 @@ export function CommandPalette() {
     relationships: { [ROOT]: [] },
   }), [open])
 
-  const onEvent = (ev: Event) => {
+  const onListEvent = (ev: Event) => {
     if (ev.type === 'activate') {
       const idx = filtered.findIndex((e) => e.id === ev.id)
       if (idx >= 0) { dispatch({ type: 'active', value: idx }); dispatch({ type: 'commit' }) }
@@ -140,8 +140,12 @@ export function CommandPalette() {
     }
   }
 
+  const onDialogEvent = (ev: Event) => {
+    if (ev.type === 'open' && !ev.open) dispatch({ type: 'close' })
+  }
+
   return (
-    <Dialog data={dialogData} onEvent={(ev) => { if (ev.type === 'open' && !ev.open) dispatch({ type: 'close' }) }}>
+    <Dialog data={dialogData} onEvent={onDialogEvent}>
       <Combobox
         ref={inputRef}
         expanded={filtered.length > 0}
@@ -154,7 +158,7 @@ export function CommandPalette() {
         aria-label="Search routes"
       />
       {filtered.length > 0 && (
-        <Listbox id={listId} data={listData} onEvent={onEvent} />
+        <Listbox id={listId} data={listData} onEvent={onListEvent} />
       )}
     </Dialog>
   )
