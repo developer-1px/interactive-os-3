@@ -12,33 +12,55 @@ type PaletteEntry = {
   params?: Record<string, string>
 }
 
-type State = { open: boolean; query: string; active: number }
+type Intent = null | 'commit'
+
+type State = {
+  open: boolean
+  query: string
+  active: number
+  length: number
+  intent: Intent
+}
+
 type Action =
   | { type: 'toggle' }
-  | { type: 'open' }
   | { type: 'close' }
   | { type: 'query'; value: string }
   | { type: 'active'; value: number }
-  | { type: 'move'; delta: number; max: number }
-  | { type: 'clamp'; max: number }
+  | { type: 'move'; delta: number }
+  | { type: 'setLength'; value: number }
+  | { type: 'commit' }
+  | { type: 'consume' }
 
-const INITIAL: State = { open: false, query: '', active: 0 }
+const INITIAL: State = { open: false, query: '', active: 0, length: 0, intent: null }
+
+const clamp = (n: number, max: number) => Math.max(0, Math.min(max, n))
 
 function reducer(s: State, a: Action): State {
   switch (a.type) {
-    case 'toggle': return { ...s, open: !s.open, query: '', active: 0 }
-    case 'open':   return { ...s, open: true, query: '', active: 0 }
-    case 'close':  return { ...s, open: false }
-    case 'query':  return { ...s, query: a.value, active: 0 }
-    case 'active': return { ...s, active: a.value }
-    case 'move':   return { ...s, active: Math.max(0, Math.min(a.max, s.active + a.delta)) }
-    case 'clamp':  return s.active > a.max ? { ...s, active: Math.max(0, a.max) } : s
+    case 'toggle':    return { ...s, open: !s.open, query: '', active: 0, intent: null }
+    case 'close':     return { ...s, open: false, intent: null }
+    case 'query':     return { ...s, query: a.value, active: 0 }
+    case 'active':    return { ...s, active: clamp(a.value, s.length - 1) }
+    case 'move':      return { ...s, active: clamp(s.active + a.delta, s.length - 1) }
+    case 'setLength': return { ...s, length: a.value, active: clamp(s.active, a.value - 1) }
+    case 'commit':    return s.length > 0 ? { ...s, intent: 'commit' } : s
+    case 'consume':   return { ...s, intent: null }
   }
 }
 
+// 순수 데이터 — 함수·런타임 참조 0. JSON 직렬화 가능.
+const keymap = {
+  ArrowDown: { type: 'move', delta: +1 },
+  ArrowUp:   { type: 'move', delta: -1 },
+  Enter:     { type: 'commit' },
+  Escape:    { type: 'close' },
+} as const satisfies Record<string, Action>
+
 export function CommandPalette() {
   const router = useRouter()
-  const [{ open, query, active }, dispatch] = useReducer(reducer, INITIAL)
+  const [state, dispatch] = useReducer(reducer, INITIAL)
+  const { open, query, active, intent } = state
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
@@ -58,6 +80,10 @@ export function CommandPalette() {
     if (!q) return entries
     return entries.filter((e) => e.label.toLowerCase().includes(q))
   }, [entries, query])
+
+  useEffect(() => {
+    dispatch({ type: 'setLength', value: filtered.length })
+  }, [filtered.length])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -81,25 +107,21 @@ export function CommandPalette() {
     }
   }, [open])
 
+  // intent 기반 effect 분리: reducer는 의도만 표시, navigate는 여기서.
   useEffect(() => {
-    dispatch({ type: 'clamp', max: filtered.length - 1 })
-  }, [filtered.length])
+    if (intent !== 'commit') return
+    const entry = filtered[active]
+    dispatch({ type: 'close' })
+    if (entry) router.navigate({ to: entry.to, params: entry.params })
+  }, [intent])
 
-  const close = () => dispatch({ type: 'close' })
-
-  const commit = (entry: PaletteEntry) => {
-    close()
-    router.navigate({ to: entry.to, params: entry.params })
+  // 어댑터: React 결합은 이 1지점에만.
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const action = keymap[e.key as keyof typeof keymap]
+    if (!action) return
+    e.preventDefault()
+    dispatch(action)
   }
-
-  const max = filtered.length - 1
-  const keymap: Record<string, (e: React.KeyboardEvent) => void> = {
-    ArrowDown: (e) => { e.preventDefault(); dispatch({ type: 'move', delta: +1, max }) },
-    ArrowUp:   (e) => { e.preventDefault(); dispatch({ type: 'move', delta: -1, max }) },
-    Enter:     (e) => { const entry = filtered[active]; if (entry) { e.preventDefault(); commit(entry) } },
-    Escape:    (e) => { e.preventDefault(); close() },
-  }
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => keymap[e.key]?.(e)
 
   const activeId = filtered[active]?.id
 
@@ -113,8 +135,8 @@ export function CommandPalette() {
 
   const onEvent = (ev: Event) => {
     if (ev.type === 'activate') {
-      const entry = filtered.find((e) => e.id === ev.id)
-      if (entry) commit(entry)
+      const idx = filtered.findIndex((e) => e.id === ev.id)
+      if (idx >= 0) { dispatch({ type: 'active', value: idx }); dispatch({ type: 'commit' }) }
     } else if (ev.type === 'navigate') {
       const idx = filtered.findIndex((e) => e.id === ev.id)
       if (idx >= 0) dispatch({ type: 'active', value: idx })
@@ -122,7 +144,7 @@ export function CommandPalette() {
   }
 
   return (
-    <Dialog ref={dialogRef} aria-label="Command palette" onClose={close}>
+    <Dialog ref={dialogRef} aria-label="Command palette" onClose={() => dispatch({ type: 'close' })}>
       <Combobox
         ref={inputRef}
         expanded={filtered.length > 0}
