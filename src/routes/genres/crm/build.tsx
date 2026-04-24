@@ -14,6 +14,14 @@ const rowCells = (c: Contact, sel: Set<string>, toggle: (id: string) => void) =>
   [`c-${c.id}-5`, c.value.toLocaleString()], [`c-${c.id}-6`, c.owner], [`c-${c.id}-7`, <small>{c.updatedAt}</small>],
 ] as const
 
+const renderContact = (c: Contact) => (
+  <div data-ds="Column" data-flow="form"><h2>{c.name}</h2><dl data-ds-dl>
+    <dt>회사</dt><dd>{c.company}</dd><dt>이메일</dt><dd>{c.email}</dd>
+    <dt>단계</dt><dd><Badge tone={stageTone(c.stage)}>{c.stage}</Badge></dd>
+    <dt>가치</dt><dd>${c.value.toLocaleString()}</dd><dt>담당</dt><dd>{c.owner}</dd>
+    <dt>업데이트</dt><dd>{c.updatedAt}</dd></dl></div>
+)
+
 export function buildCrmPage(s: CrmState): NormalizedData {
   const rows = CONTACTS.filter((c) => !s.q || c.name.includes(s.q) || c.company.includes(s.q) || c.email.includes(s.q))
   const allChecked = rows.length > 0 && rows.every((r) => s.sel.has(r.id))
@@ -48,22 +56,7 @@ export function buildCrmPage(s: CrmState): NormalizedData {
       pPrev: { id: 'pPrev', data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'chevron-left', 'aria-label': '이전' }, content: '이전' } },
       pCur:  { id: 'pCur',  data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: true, 'aria-label': '1 페이지' }, content: '1' } },
       pNext: { id: 'pNext', data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'chevron-right', 'aria-label': '다음' }, content: '다음' } },
-      drawer: { id: 'drawer', data: { type: 'Ui', component: 'Dialog', props: {
-        open: Boolean(current), onClose: () => s.setOpen(null), 'aria-label': '연락처 상세',
-        children: current ? (
-          <div data-ds="Column" data-flow="form">
-            <h2>{current.name}</h2>
-            <dl data-ds-dl>
-              <dt>회사</dt><dd>{current.company}</dd>
-              <dt>이메일</dt><dd>{current.email}</dd>
-              <dt>단계</dt><dd><Badge tone={stageTone(current.stage)}>{current.stage}</Badge></dd>
-              <dt>가치</dt><dd>${current.value.toLocaleString()}</dd>
-              <dt>담당</dt><dd>{current.owner}</dd>
-              <dt>업데이트</dt><dd>{current.updatedAt}</dd>
-            </dl>
-          </div>
-        ) : null,
-      } } },
+      drawer: { id: 'drawer', data: { type: 'Ui', component: 'Dialog', props: { open: Boolean(current), onClose: () => s.setOpen(null), 'aria-label': '연락처 상세', children: current ? renderContact(current) : null } } },
     },
     relationships: {
       [ROOT]: ['page'], page: ['hdr', 'bulk', 'grid', 'foot', 'drawer'],

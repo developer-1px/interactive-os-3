@@ -27,9 +27,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
         content: b.text,
       } }])),
       canvas: { id: 'canvas', data: { type: 'Column', flow: 'form', grow: true } },
-      docTitle: { id: 'docTitle', data: { type: 'Ui', component: 'Input', props: {
-        value: s.title, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setTitle(e.target.value), 'aria-label': '문서 제목', 'data-ds-title': '',
-      } } },
+      docTitle: { id: 'docTitle', data: { type: 'Ui', component: 'Input', props: { value: s.title, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setTitle(e.target.value), 'aria-label': '문서 제목', 'data-ds-title': '' } } },
       toolbar: { id: 'toolbar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '서식' } } },
       ...Object.fromEntries(FMT_ACTS.map(([id, label, icon, content]) => [id, { id, data: {
         type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label }, content,
@@ -56,11 +54,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
       fPubDesc: { id: 'fPubDesc', data: { type: 'Ui', component: 'FieldDescription', content: s.isPublic ? '링크가 있는 누구나' : '초대된 사람만' } },
       fBlkKind: { id: 'fBlkKind', data: { type: 'Ui', component: 'Field', hidden: !s.current } },
       fBlkKindLbl: { id: 'fBlkKindLbl', data: { type: 'Ui', component: 'FieldLabel', content: '블록 타입' } },
-      fBlkKindSel: { id: 'fBlkKindSel', data: { type: 'Ui', component: 'Select',
-        props: { value: s.current?.kind ?? 'p', 'aria-label': '블록 타입',
-          onChange: (e: React.ChangeEvent<HTMLSelectElement>) => s.current && s.updateKind(s.current.id, e.target.value as BlockKind) },
-        content: <>{BLOCK_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</>,
-      } },
+      fBlkKindSel: { id: 'fBlkKindSel', data: { type: 'Ui', component: 'Select', props: { value: s.current?.kind ?? 'p', 'aria-label': '블록 타입', onChange: (e: React.ChangeEvent<HTMLSelectElement>) => s.current && s.updateKind(s.current.id, e.target.value as BlockKind) }, content: <>{BLOCK_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</> } },
       stats: { id: 'stats', data: { type: 'Text', variant: 'small', content: `블록 ${s.blocks.length}개 · 선택: ${s.current?.kind ?? '—'}` } },
     },
     relationships: {
