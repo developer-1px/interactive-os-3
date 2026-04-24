@@ -29,7 +29,7 @@ export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
   const onClick = (e: MouseEvent) => {
     const id = idFrom(e)
     if (!id || isDisabled(data, id)) return
-    onEvent({ type: 'activate', id })
+    onEvent?.({ type: 'activate', id })
   }
   const onKeyDown = (e: KeyboardEvent) => {
     const id = idFrom(e)

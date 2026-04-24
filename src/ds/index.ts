@@ -39,7 +39,7 @@ export const dsCss = [
 ].join('\n')
 export * from './core/types'
 export { reduce } from './core/state/reduce'
-export { fromTree, pathAncestors } from './core/state/fromTree'
+export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
 export { useControlState } from './core/hooks/useControlState'
 export { useRoving } from './core/hooks/useRoving'
 export { parentOf } from './core/axes'

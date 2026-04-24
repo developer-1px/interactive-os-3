@@ -11,7 +11,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
   const cur = MESSAGES.find((m) => m.id === s.selectedId) ?? vis[0]
   const rowPairs = vis.flatMap((m) => {
     const cs: Array<[typeof CELL_KEYS[number], unknown]> = [
-      ['star', <span aria-label={m.starred ? '별표' : '없음'} aria-pressed={m.starred} data-icon={m.starred ? 'star' : 'star-off'} />],
+      ['star', <span aria-label={m.starred ? '별표' : '없음'} data-icon="star" style={{ opacity: m.starred ? 1 : 0.2 }} />],
       ['from', <>{m.from}{m.unread && <span data-icon="dot" data-tone="info" aria-label="안 읽음" />}</>],
       ['subject', <><strong>{m.subject}</strong> <small>— {m.preview}</small></>],
       ['label', m.label ? <Badge tone={labelTone[m.label]}>{m.label}</Badge> : null],
@@ -25,7 +25,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
       nav: { id: 'nav', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 220 } },
       navHdr: { id: 'navHdr', data: { type: 'Text', variant: 'h3', content: '📮 Inbox' } },
       composeBtn: { id: 'composeBtn', data: { type: 'Ui', component: 'Button', props: { onClick: () => alert('compose'), 'aria-label': '새 메일' }, content: '＋ 새 메일' } },
@@ -46,7 +46,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       listBody: { id: 'listBody', data: { type: 'Ui', component: 'RowGroup' } },
       ...Object.fromEntries(rowPairs),
       detail: { id: 'detail', data: { type: 'Column', flow: 'form', emphasis: 'raised', width: 420 } },
-      detailHdr: { id: 'detailHdr', data: { type: 'Header', flow: 'split' } },
+      detailHdr: { id: 'detailHdr', data: { type: 'Header', flow: 'list' } },
       detailTitleCol: { id: 'detailTitleCol', data: { type: 'Column', flow: 'list', grow: true } },
       detailSubject: { id: 'detailSubject', data: { type: 'Text', variant: 'h2', content: cur?.subject ?? '—' } },
       detailMeta: { id: 'detailMeta', data: { type: 'Text', variant: 'small', content: cur ? `${cur.from} · ${cur.time}` : '' } },

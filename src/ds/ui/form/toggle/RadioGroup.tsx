@@ -29,7 +29,7 @@ export function RadioGroup({ data, onEvent, orientation, ...rest }: CollectionPr
             key={id}
             checked={selectedId === id}
             disabled={disabled}
-            onClick={() => !disabled && onEvent({ type: 'navigate', id })}
+            onClick={() => !disabled && onEvent?.({ type: 'navigate', id })}
           >
             {getLabel(data, id)}
           </Radio>

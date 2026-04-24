@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Renderer, definePage, ROOT, Badge, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, Badge, fromList, type NormalizedData } from '../../../ds'
 import { kpi, videos } from '../data'
 import { PAGE_PATHS } from '../data'
 
@@ -95,12 +95,12 @@ export function Dashboard() {
         type: 'Ui', component: 'BarChart',
         props: {
           caption: '단위: 수강 신청 수 (명)',
-          bars: [
+          data: fromList([
             { label: '개발자',   value: 312, pct: 100, tone: 'info' },
             { label: '엔지니어', value: 228, pct:  73, tone: 'success' },
             { label: '보안',     value: 138, pct:  44, tone: 'danger' },
             { label: 'AI',       value: 126, pct:  40, tone: 'warning' },
-          ],
+          ]),
         },
       } },
       lvlSec: { id: 'lvlSec', data: { type: 'Section', heading: { content: '레벨별 평균 완료율' }, emphasis: 'raised' } },
@@ -167,11 +167,11 @@ export function Dashboard() {
       kwList: { id: 'kwList', data: {
         type: 'Ui', component: 'Top10List',
         props: {
-          entries: [
+          data: fromList([
             { label: 'Kubernetes', count: '142회' },
             { label: 'NKS',        count:  '98회' },
             { label: 'CI/CD',      count:  '76회' },
-          ],
+          ]),
         },
       } },
       vidSec: { id: 'vidSec', data: {
@@ -181,7 +181,7 @@ export function Dashboard() {
       vidList: { id: 'vidList', data: {
         type: 'Ui', component: 'Top10List',
         props: {
-          entries: videos.map((v) => ({ label: v.title, count: `${v.enrolled}회` })),
+          data: fromList(videos.map((v) => ({ label: v.title, count: `${v.enrolled}회` }))),
         },
       } },
     },

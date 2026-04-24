@@ -29,12 +29,14 @@ const walk = (dir, out = []) => {
 const CANONICAL_COLLECTIONS = new Set([
   'Menu', 'Listbox', 'Tree', 'Columns',
   'RadioGroup', 'CheckboxGroup',
+  'Top10List', 'BarChart',
 ])
 
 const ENTITY_HINTS = /\b(tone|abbr|meta|actions|footer|desc|name|topBadge|change|changeDir)\s*[?:]/g
 
 const classify = (src) => {
-  if (/\bCollectionProps\b/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'collection'
+  // CollectionProps 타입 사용 + data prop 존재 → collection (onEvent는 optional)
+  if (/\bCollectionProps\b/.test(src) && /\{\s*data\b/.test(src)) return 'collection'
   if (/ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'collection'
   if (/@slot\s+children/.test(src)) return 'composable'
   if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'drift'
@@ -54,7 +56,7 @@ const check = (src, kind) => {
   const bannedVariant = /^\s*(variant|size)\s*[?:]/m.test(afterExport)
   const emitsRole = /role=["'][\w-]+["']/.test(src)
     || /aria-\w+=/.test(src)
-    || /<(dialog|button|input|select|textarea|details|summary)\b/i.test(src)
+    || /<(dialog|button|input|select|textarea|details|summary|ol|ul|li|figure|figcaption|meter|progress|article|nav|header|footer|section)\b/i.test(src)
 
   return [
     { id: 'data-prop', pass: isControl },

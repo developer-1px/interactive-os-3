@@ -24,7 +24,7 @@ export function Dialog({ data, onEvent, children }: ControlProps & { children?: 
       ref={ref}
       role={alert ? 'alertdialog' : undefined}
       aria-label={label}
-      onClose={() => onEvent({ type: 'open', id: ROOT, open: false })}
+      onClose={() => onEvent?.({ type: 'open', id: ROOT, open: false })}
     >
       {children}
     </dialog>

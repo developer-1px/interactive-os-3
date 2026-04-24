@@ -1,36 +1,40 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import type { BadgeTone } from './Badge'
+import {
+  ROOT,
+  getChildren,
+  type CollectionProps,
+} from '../../core/types'
 
 /**
- * BarChart — data 주도 가로막대 차트 (figure 시맨틱).
- * bars: [{label, value, pct:0~100, tone?}]. 자체 SVG 없이 CSS width%로 그림.
+ * BarChart — 가로 막대 차트 (figure 시맨틱). CollectionProps 기반.
+ *
+ * data.entities[id].data: { label, value, pct: 0~100, tone? }
+ * Display-only이므로 onEvent 생략 가능.
  */
-export interface BarChartBar {
-  label: ReactNode
-  value: ReactNode
-  /** 0 ~ 100 */
-  pct: number
-  tone?: BadgeTone
-}
-
-type BarChartProps = Omit<ComponentPropsWithoutRef<'figure'>, 'children'> & {
-  bars: BarChartBar[]
+type Extra = Omit<ComponentPropsWithoutRef<'figure'>, 'children'> & {
   caption?: ReactNode
 }
 
-export function BarChart({ bars, caption, ...rest }: BarChartProps) {
+export function BarChart({ data, caption, ...rest }: CollectionProps<Extra>) {
+  const kids = getChildren(data, ROOT)
   return (
     <figure className="bar-chart" {...rest}>
       <dl>
-        {bars.map((b, i) => (
-          <div key={i} data-tone={b.tone ?? 'info'}>
-            <dt>{b.label}</dt>
-            <dd>
-              <meter value={Math.max(0, Math.min(100, b.pct))} min={0} max={100} />
-              <span>{b.value}</span>
-            </dd>
-          </div>
-        ))}
+        {kids.map((id) => {
+          const d = (data.entities[id]?.data ?? {}) as {
+            label?: ReactNode; value?: ReactNode; pct?: number; tone?: string
+          }
+          const pct = Math.max(0, Math.min(100, Number(d.pct) || 0))
+          return (
+            <div key={id} data-tone={d.tone ?? 'info'}>
+              <dt>{d.label}</dt>
+              <dd>
+                <meter value={pct} min={0} max={100} />
+                <span>{d.value}</span>
+              </dd>
+            </div>
+          )
+        })}
       </dl>
       {caption && <figcaption>{caption}</figcaption>}
     </figure>

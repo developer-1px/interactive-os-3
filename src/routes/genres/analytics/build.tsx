@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '../../../ds'
+import { ROOT, fromList, type NormalizedData } from '../../../ds'
 import { RANGES, kpis, regionBars, sources, weekBars, type Range } from './data'
 
 export interface AnalyticsState { range: Range; setRange: (r: Range) => void }
@@ -27,11 +27,11 @@ export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
       } }])),
       chartsGrid: { id: 'chartsGrid', data: { type: 'Grid', cols: 2, flow: 'form' } },
       trafficSec: { id: 'trafficSec', data: { type: 'Section', heading: { content: '주간 트래픽' }, emphasis: 'raised' } },
-      trafficChart: { id: 'trafficChart', data: { type: 'Ui', component: 'BarChart', props: { caption: '일일 방문 수', bars: weekBars } } },
+      trafficChart: { id: 'trafficChart', data: { type: 'Ui', component: 'BarChart', props: { caption: '일일 방문 수', data: fromList(weekBars) } } },
       sourceSec: { id: 'sourceSec', data: { type: 'Section', heading: { content: '유입 채널 Top 5' }, emphasis: 'raised' } },
-      sourceList: { id: 'sourceList', data: { type: 'Ui', component: 'Top10List', props: { entries: sources } } },
+      sourceList: { id: 'sourceList', data: { type: 'Ui', component: 'Top10List', props: { data: fromList(sources) } } },
       regionSec: { id: 'regionSec', data: { type: 'Section', heading: { content: '지역별 활성 사용자' }, emphasis: 'raised' } },
-      regionChart: { id: 'regionChart', data: { type: 'Ui', component: 'BarChart', props: { caption: '단위: 명', bars: regionBars } } },
+      regionChart: { id: 'regionChart', data: { type: 'Ui', component: 'BarChart', props: { caption: '단위: 명', data: fromList(regionBars) } } },
       gapNote: { id: 'gapNote', data: { type: 'Text', variant: 'small',
         content: '※ 갭: LineChart/DonutChart/AreaChart · DateRangePicker · Drilldown 부재.' } },
     },

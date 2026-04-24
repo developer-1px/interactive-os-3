@@ -1,2 +1,3 @@
 /* ds 토큰(src/ds/tokens.ts + reset.ts)이 폰트/색상/배경을 관리한다. 이 파일은 페이지 레이아웃만 담당. */
-#root { min-height: 100svh; }
+#root { min-height: 100svh; display: flex; flex-direction: column; }
+#root > * { flex: 1 1 auto; min-block-size: 0; }

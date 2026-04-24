@@ -7,7 +7,7 @@ import {
   Input, Textarea, Select, NumberInput, Slider, ColorInput,
   Checkbox, RadioGroup, CheckboxGroup, Combobox,
   Carousel, Slide,
-  fromTree, useControlState, ROOT, type NormalizedData,
+  fromTree, fromList, useControlState, ROOT, type NormalizedData,
 } from '../../ds'
 
 /**
@@ -81,23 +81,26 @@ function ColumnsDemo() {
 // ─────────────────────────────────────────────────────────────
 function Top10Demo() {
   return (
-    <Top10List entries={[
+    <Top10List data={fromList([
       { label: '홈', count: '12,480' },
       { label: '검색', count: '8,210' },
       { label: '영상 상세', count: '5,640' },
       { label: '설정', count: '2,110' },
-    ]} />
+    ])} />
   )
 }
 
 function BarChartDemo() {
   return (
-    <BarChart bars={[
-      { label: 'NCA', value: '48%', pct: 48, tone: 'success' },
-      { label: 'NCP', value: '30%', pct: 30, tone: 'info' },
-      { label: 'NCE', value: '15%', pct: 15, tone: 'warning' },
-      { label: 'ETC', value: '7%',  pct:  7, tone: 'neutral' },
-    ]} caption="전체 수강" />
+    <BarChart
+      caption="전체 수강"
+      data={fromList([
+        { label: 'NCA', value: '48%', pct: 48, tone: 'success' },
+        { label: 'NCP', value: '30%', pct: 30, tone: 'info' },
+        { label: 'NCE', value: '15%', pct: 15, tone: 'warning' },
+        { label: 'ETC', value: '7%',  pct:  7, tone: 'neutral' },
+      ])}
+    />
   )
 }
 

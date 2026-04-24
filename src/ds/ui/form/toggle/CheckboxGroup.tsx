@@ -30,7 +30,7 @@ export function CheckboxGroup({ data, onEvent, orientation, ...rest }: Collectio
             <Checkbox
               checked={checked}
               disabled={disabled}
-              onClick={() => !disabled && onEvent({ type: 'expand', id, open: !checked })}
+              onClick={() => !disabled && onEvent?.({ type: 'expand', id, open: !checked })}
             />
             <span>{getLabel(data, id)}</span>
           </label>

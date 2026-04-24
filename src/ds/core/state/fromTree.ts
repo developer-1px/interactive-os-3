@@ -29,6 +29,19 @@ export function fromTree<T>(
   return { entities, relationships }
 }
 
+/**
+ * fromList — 평탄한 배열을 NormalizedData 로 변환. Display-only Collection
+ * (Top10List/BarChart 류)에서 entries/bars 대신 쓰는 adapter.
+ */
+export function fromList(items: Array<Record<string, unknown>>): NormalizedData {
+  const ids = items.map((_, i) => `__${i}`)
+  const entities: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
+  items.forEach((item, i) => {
+    entities[ids[i]] = { id: ids[i], data: item }
+  })
+  return { entities, relationships: { [ROOT]: ids } }
+}
+
 export const pathAncestors = (path: string, sep: string = '/'): string[] => {
   const segs = path.split(sep).filter(Boolean)
   return segs.reduce<string[]>(
