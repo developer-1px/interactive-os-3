@@ -8,7 +8,12 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(npm install *)",
       "Bash(pnpm add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "WebSearch",
+      "WebFetch(domain:polaris-react.shopify.com)",
+      "WebFetch(domain:m3.material.io)",
+      "WebFetch(domain:uxpatterns.dev)",
+      "WebFetch(domain:ant-design.antgroup.com)"
     ]
   },
   "enabledPlugins": {}

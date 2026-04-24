@@ -1,18 +1,28 @@
 import {
   createRootRoute, createRoute, createRouter, Outlet, redirect,
 } from '@tanstack/react-router'
-import { Finder } from './meta/finder/Finder'
-import { Inspector } from './meta/inspector/Inspector'
-import { Matrix } from './meta/matrix/Matrix'
-import { Atlas } from './meta/atlas/Atlas'
-import { EduPortalAdmin } from './meta/edu-portal-admin/EduPortalAdmin'
-import { Dashboard } from './meta/edu-portal-admin/pages/Dashboard'
-import { VideoList } from './meta/edu-portal-admin/pages/VideoList'
-import { VideoEdit } from './meta/edu-portal-admin/pages/VideoEdit'
-import { RoleCategory } from './meta/edu-portal-admin/pages/RoleCategory'
-import { CourseCategory } from './meta/edu-portal-admin/pages/CourseCategory'
-import { VideoOrder } from './meta/edu-portal-admin/pages/VideoOrder'
+import { Finder } from './routes/finder/Finder'
+import { Inspector } from './routes/inspector/Inspector'
+import { Matrix } from './routes/matrix/Matrix'
+import { Atlas } from './routes/atlas/Atlas'
+import { Catalog } from './routes/catalog/Catalog'
+import { EduPortalAdmin } from './routes/edu-portal-admin/EduPortalAdmin'
+import { Dashboard } from './routes/edu-portal-admin/pages/Dashboard'
+import { VideoList } from './routes/edu-portal-admin/pages/VideoList'
+import { VideoEdit } from './routes/edu-portal-admin/pages/VideoEdit'
+import { RoleCategory } from './routes/edu-portal-admin/pages/RoleCategory'
+import { CourseCategory } from './routes/edu-portal-admin/pages/CourseCategory'
+import { VideoOrder } from './routes/edu-portal-admin/pages/VideoOrder'
 import { CommandPalette } from './ds/ui/overlay/CommandPalette'
+import { GenresHub } from './routes/genres/GenresHub'
+import { Inbox } from './routes/genres/Inbox'
+import { Chat } from './routes/genres/Chat'
+import { Shop } from './routes/genres/Shop'
+import { Crm } from './routes/genres/Crm'
+import { Editor as GenreEditor } from './routes/genres/Editor'
+import { Feed } from './routes/genres/Feed'
+import { Analytics } from './routes/genres/Analytics'
+import { Settings } from './routes/genres/Settings'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -62,6 +72,15 @@ const atlasRoute = createRoute({
   component: Atlas,
   staticData: {
     palette: { label: 'Atlas', to: '/atlas' },
+  },
+})
+
+const catalogRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/catalog',
+  component: Catalog,
+  staticData: {
+    palette: { label: 'Catalog', to: '/catalog' },
   },
 })
 
@@ -148,7 +167,35 @@ const eduPortalAdminRoute = eduRoot.addChildren([
   eduVideoOrder,
 ])
 
-const routeTree = rootRoute.addChildren([indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, eduPortalAdminRoute])
+const genresHubRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/genres',
+  component: GenresHub,
+  staticData: { palette: { label: 'Genres · Hub', to: '/genres' } },
+})
+
+const mkGenreRoute = (path: string, component: () => React.ReactNode, label: string) => createRoute({
+  getParentRoute: () => rootRoute,
+  path,
+  component,
+  staticData: { palette: { label, to: path } },
+})
+
+const genresInboxRoute     = mkGenreRoute('/genres/inbox',     Inbox,        'Genres · Inbox')
+const genresChatRoute      = mkGenreRoute('/genres/chat',      Chat,         'Genres · Chat')
+const genresShopRoute      = mkGenreRoute('/genres/shop',      Shop,         'Genres · Shop')
+const genresCrmRoute       = mkGenreRoute('/genres/crm',       Crm,          'Genres · CRM')
+const genresEditorRoute    = mkGenreRoute('/genres/editor',    GenreEditor,  'Genres · Editor')
+const genresFeedRoute      = mkGenreRoute('/genres/feed',      Feed,         'Genres · Feed')
+const genresAnalyticsRoute = mkGenreRoute('/genres/analytics', Analytics,    'Genres · Analytics')
+const genresSettingsRoute  = mkGenreRoute('/genres/settings',  Settings,     'Genres · Settings')
+
+const routeTree = rootRoute.addChildren([
+  indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, catalogRoute, eduPortalAdminRoute,
+  genresHubRoute,
+  genresInboxRoute, genresChatRoute, genresShopRoute, genresCrmRoute,
+  genresEditorRoute, genresFeedRoute, genresAnalyticsRoute, genresSettingsRoute,
+])
 
 export const router = createRouter({ routeTree })
 

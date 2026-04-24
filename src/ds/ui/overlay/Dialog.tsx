@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { ROOT, type ControlProps } from '../../core/types'
 
 // SRP: open/close 라이프사이클만 책임. 콘텐츠는 children (구조적 슬롯).
+// @slot children — items 아닌 wrapper content
 // data[ROOT].data: { open, label?, alert? }
 // onEvent: { type: 'open', id: ROOT, open: false } — 사용자가 닫을 때
 export function Dialog({ data, onEvent, children }: ControlProps & { children?: ReactNode }) {

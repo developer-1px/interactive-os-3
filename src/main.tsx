@@ -30,7 +30,7 @@ if (import.meta.hot) {
 }
 
 if (import.meta.env.DEV) {
-  import('./meta/debug/guides')
+  import('./routes/debug/guides')
 }
 
 createRoot(document.getElementById('root')!).render(

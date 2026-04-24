@@ -221,6 +221,77 @@ export const display = () => css`
     border-color: ${dim(15)};
     box-shadow: 0 1px 3px ${dim(6)};
   }
+  /* resource list breathing — widget이 자기 outer spacing 주장.
+     부모 flow가 조밀한 "list"로 지정됐어도 카드 사이 최소 호흡을 확보. */
+  .course-card + .course-card { margin-block-start: ${pad(2)}; }
+
+  /* ── RoleCard — sortable resource list item.
+     button(drag) + span[aria-hidden](icon) + div(info) + div(side). */
+  .role-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: center;
+    gap: ${pad(3)};
+    padding: ${pad(2)} ${pad(3)};
+    background: Canvas;
+    border: 1px solid ${dim(8)};
+    border-radius: ${radius('md')};
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .role-card:hover {
+    border-color: ${dim(15)};
+    box-shadow: 0 1px 3px ${dim(6)};
+  }
+  .role-card + .role-card { margin-block-start: ${pad(1.5)}; }
+
+  /* drag handle — aria-label이 "드래그"를 포함하면 ghost grip 스타일.
+     role-card/sortable-list 가리지 않고 모든 drag handle에 공통 적용. */
+  button[aria-label*="드래그"] {
+    padding: ${pad(0.5)};
+    background: transparent; border: 0;
+    color: ${dim(45)};
+    font-size: var(--ds-text-lg);
+    line-height: 1;
+    cursor: grab;
+    min-block-size: 0; min-inline-size: 0;
+  }
+  button[aria-label*="드래그"]:hover { color: ${dim(75)}; }
+  button[aria-label*="드래그"]:active { cursor: grabbing; }
+
+  /* 장식 아이콘 — emoji 또는 lucide. aria-hidden으로 의미 차단. */
+  .role-card > span[aria-hidden="true"] {
+    font-size: var(--ds-text-xl);
+    line-height: 1;
+    inline-size: 28px;
+    text-align: center;
+  }
+
+  /* 중앙 info — h3 + p */
+  .role-card > div:nth-of-type(1) {
+    min-inline-size: 0;
+    display: flex; flex-direction: column; gap: ${pad(0.25)};
+  }
+  .role-card > div:nth-of-type(1) > h3 {
+    margin: 0;
+    font-size: var(--ds-text-md);
+    font-weight: 700;
+  }
+  .role-card > div:nth-of-type(1) > p {
+    margin: 0;
+    font-size: var(--ds-text-sm);
+    color: ${dim(60)};
+    line-height: 1.5;
+  }
+
+  /* 우측 side — meta(<mark>) + actions */
+  .role-card > div:nth-of-type(2) {
+    display: flex; align-items: center;
+    gap: ${pad(2)};
+    flex-shrink: 0;
+  }
+  .role-card > div:nth-of-type(2) > div {
+    display: flex; align-items: center; gap: ${pad(1)};
+  }
 
   /* 좌측 대형 그라디언트 뱃지 — figure 태그로 식별 */
   .course-card > figure {

@@ -13,4 +13,7 @@ node scripts/lint-ds-values.mjs
 echo "→ lint:ds:invariants (state coverage / controlBox bypass)"
 node scripts/lint-ds-invariants.mjs
 
+echo "→ lint:ds:contracts (data 주도 ui 계약 정합)"
+node scripts/lint-ds-contracts.mjs
+
 echo "✅ ds lint 통과"

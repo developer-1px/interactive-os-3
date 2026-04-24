@@ -4,17 +4,17 @@ import {
   getChildren,
   getLabel,
   isDisabled,
-  type ControlProps,
+  type CollectionProps,
+  type NormalizedData,
 } from '../../core/types'
 import { activate, composeAxes, navigate, treeExpand, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 
-type ColumnsProps = ControlProps &
-  Omit<ComponentPropsWithoutRef<'section'>, 'role' | 'onKeyDown'>
+type ColumnsProps = CollectionProps<Omit<ComponentPropsWithoutRef<'section'>, 'role' | 'onKeyDown'>>
 
 const axis = composeAxes(navigate('vertical'), treeExpand, activate, typeahead)
 
-const chainFrom = (d: ControlProps['data'], exp: Set<string>, cur: string = ROOT): string[] => {
+const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): string[] => {
   const open = getChildren(d, cur).find((k) => exp.has(k) && getChildren(d, k).length > 0)
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }

@@ -10,7 +10,8 @@
     "lint:ds": "node scripts/lint-ds.mjs",
     "lint:ds:values": "node scripts/lint-ds-values.mjs",
     "lint:ds:invariants": "node scripts/lint-ds-invariants.mjs",
-    "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants",
+    "lint:ds:contracts": "node scripts/lint-ds-contracts.mjs",
+    "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "preview": "vite preview"
   },

@@ -75,16 +75,27 @@ function subTabNodes(
   return out
 }
 
+const levelTone: Record<'초급' | '중급' | '고급', 'success' | 'info' | 'warning'> = {
+  초급: 'success', 중급: 'info', 고급: 'warning',
+}
+
 function videoOrderNodes(items: typeof videos) {
   const out: NormalizedData['entities'] = {}
   items.forEach((v, i) => {
     const key = `vo-${v.id}-${i}`
     out[key] = { id: key, data: { type: 'Row', flow: 'cluster' } }
-    out[`${key}-h`] = { id: `${key}-h`, data: { type: 'Text', variant: 'body', content: '⠿' } }
+    out[`${key}-h`] = { id: `${key}-h`, data: {
+      type: 'Ui', component: 'Button',
+      props: { 'aria-label': '드래그로 순서 변경', type: 'button' },
+      content: '⠿',
+    } }
     out[`${key}-n`] = { id: `${key}-n`, data: { type: 'Text', variant: 'strong', content: `${i + 1}.` } }
     out[`${key}-t`] = { id: `${key}-t`, data: { type: 'Text', variant: 'body', content: v.title, grow: true } }
     out[`${key}-d`] = { id: `${key}-d`, data: { type: 'Text', variant: 'small', content: v.duration } }
-    out[`${key}-l`] = { id: `${key}-l`, data: { type: 'Text', variant: 'small', content: v.level } }
+    out[`${key}-l`] = { id: `${key}-l`, data: {
+      type: 'Text', variant: 'body',
+      content: <mark data-tone={levelTone[v.level]}>{v.level}</mark>,
+    } }
   })
   return out
 }

@@ -1,12 +1,12 @@
 import { useId, type CSSProperties } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
+import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type Event } from '../../core/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 import { MenuPopover, type MenuCtx } from './MenuPopover'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
-export function Menu({ data, onEvent }: ControlProps) {
+export function Menu({ data, onEvent }: CollectionProps) {
   const popoverId = useId()
   const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`

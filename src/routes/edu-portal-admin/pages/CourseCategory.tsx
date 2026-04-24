@@ -28,13 +28,8 @@ export function CourseCategory() {
     page: { id: 'page', data: { type: 'Row', flow: 'form' } },
 
     main: { id: 'main', data: { type: 'Column', flow: 'form', grow: true } },
-    sec: { id: 'sec', data: { type: 'Section', labelledBy: 'cc-h' } },
-    secHeader: { id: 'secHeader', data: { type: 'Header', flow: 'split' } },
-    secH: { id: 'secH', data: { type: 'Text', variant: 'h2', content: '코스 카테고리 목록' } },
-    secSub: { id: 'secSub', data: { type: 'Text', variant: 'small',
-      content: 'NCA·NCP·NCE는 삭제 불가 · 추가 항목은 삭제 가능' } },
 
-    list: { id: 'list', data: { type: 'Column', flow: 'list' } },
+    list: { id: 'list', data: { type: 'Column', flow: 'list', label: '코스 카테고리' } },
     ...certCardNodes(list, toggle),
     addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 코스 카테고리 추가' } },
 
@@ -64,9 +59,7 @@ export function CourseCategory() {
   const relationships: NormalizedData['relationships'] = {
     [ROOT]: ['page'],
     page: ['main', 'aside'],
-    main: ['sec'],
-    sec: ['secHeader', 'list', 'addBtn'],
-    secHeader: ['secH', 'secSub'],
+    main: ['list', 'addBtn'],
     list: list.map((c) => `card-${c.id}`),
     aside: ['infoSec', 'statsSec'],
     infoSec: ['infoH', 'infoBody'],

@@ -4,14 +4,13 @@ import {
   getChildren,
   getLabel,
   isDisabled,
-  type ControlProps,
+  type CollectionProps,
 } from '../../core/types'
 import { activate, composeAxes, navigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 import { Option } from './Option'
 
-type ListboxProps = ControlProps &
-  Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>
+type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>
 
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
 

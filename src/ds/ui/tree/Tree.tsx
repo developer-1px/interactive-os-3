@@ -1,9 +1,9 @@
 import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type ControlProps } from '../../core/types'
+import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 
-type TreeProps = ControlProps & Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>
+type TreeProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>
 
 const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
 

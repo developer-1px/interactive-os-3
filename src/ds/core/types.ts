@@ -44,6 +44,22 @@ export interface ControlProps {
   onEvent: (e: Event) => void
 }
 
+/**
+ * CollectionProps<Extra> — 집합/계층 렌더 ui의 공용 루트 타입.
+ *
+ * data 기반 컴포넌트(Menu/Listbox/Tree/Columns 등)는 반드시 이 타입을 props
+ * 시그니처로 써야 한다. `Extra`로 aria-label 같은 추가 prop만 확장 허용.
+ *
+ * Radix/Ariakit/React-Aria 의 Collection root 컨벤션과 동일:
+ *   - data 는 NormalizedData (트리 + focus/expanded meta)
+ *   - onEvent 는 단발 emit (gesture 분리 원칙)
+ *   - children 금지 — 항목은 data 에서만 파생
+ *
+ * 예) export function Menu(props: CollectionProps) { ... }
+ *     export function Listbox(props: CollectionProps<{ 'aria-label'?: string }>) { ... }
+ */
+export type CollectionProps<Extra = {}> = ControlProps & Extra
+
 export const getChildren = (d: NormalizedData, id: string): string[] =>
   d.relationships[id] ?? []
 
