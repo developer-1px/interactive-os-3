@@ -31,19 +31,21 @@ const CANONICAL_COLLECTIONS = new Set([
   'RadioGroup',
 ])
 
+const ENTITY_HINTS = /\b(tone|abbr|meta|actions|footer|desc|name|topBadge|change|changeDir)\s*[?:]/g
+
 const classify = (src) => {
-  if (/\bCollectionProps\b/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'controlProps'
-  if (/ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'controlProps'
-  // @slot children — 구조적 wrapper (layout/Disclosure/Carousel) → fieldDriven 분류
-  if (/@slot\s+children/.test(src)) return 'fieldDriven'
-  if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'childrenDriven'
-  if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'customArray'
-  if (/export\s+function\s+\w+\s*\(\s*\{/.test(src)) return 'fieldDriven'
-  return 'stateless'
+  if (/\bCollectionProps\b/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'collection'
+  if (/ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)) return 'collection'
+  if (/@slot\s+children/.test(src)) return 'composable'
+  if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'drift'
+  if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'drift'
+  const hits = (src.match(ENTITY_HINTS) ?? []).length
+  if (hits >= 2) return 'entity'
+  return 'control'
 }
 
 const check = (src, kind) => {
-  const isControl = kind === 'controlProps'
+  const isControl = kind === 'collection'
   const afterExport = src.split(/\bexport\s+(?:function|const)/)[1] ?? ''
   const slotEscape = /@slot\s+children/.test(src)
   const hasChildren = !slotEscape && /\{[^}]*\bchildren\b[^}]*\}/.test(afterExport.split(/[}]\s*:/)[0] ?? afterExport)
@@ -85,15 +87,15 @@ for (const file of files) {
     }
   }
 
-  if (kind === 'controlProps' && failed.length > 0) {
+  if (kind === 'collection' && failed.length > 0) {
     fail += failed.length
     report.push(`🔴 ${rel} [${kind}]`)
     for (const f of failed) report.push(`   ✗ ${f.id}`)
-  } else if (kind === 'childrenDriven' || kind === 'customArray') {
+  } else if (kind === 'drift') {
     warn += 1
-    report.push(`🟡 ${rel} [${kind}] — 통일 탈선 (ControlProps 수렴 대상)`)
+    report.push(`🟡 ${rel} [drift] — 통일 탈선 (ControlProps 수렴 대상)`)
   } else if (failed.length > 0) {
-    // fieldDriven/stateless — no block, just note
+    // entity/control/composable — baseline, 경고만
     warn += 1
     report.push(`⚪ ${rel} [${kind}] failed: ${failed.map((f) => f.id).join(', ')}`)
   }

@@ -12,7 +12,12 @@ import type { Plugin } from 'vite'
  *       체크리스트로 점수화해 Catalog 페이지에 공급한다.
  */
 
-export type Kind = 'controlProps' | 'customArray' | 'childrenDriven' | 'fieldDriven' | 'stateless'
+export type Kind =
+  | 'collection'    // CollectionProps 강제 (canonical)
+  | 'entity'        // 도메인 엔티티 1벌 (StatCard 류)
+  | 'control'       // 보편 컨트롤 (Button/Switch/Input 류)
+  | 'composable'    // @slot children wrapper (layout/Disclosure 류)
+  | 'drift'         // 탈선 — childrenDriven/customArray 수렴 대상
 
 export type ContractCheck = {
   id: string
@@ -41,18 +46,23 @@ const walk = (dir: string, out: string[] = []): string[] => {
   return out
 }
 
+// 도메인 엔티티 prop 시그니처 — 이 중 2개 이상 등장하면 "entity"로 분류.
+// 이런 prop은 엔티티의 domain 속성이지 보편적 control 입력이 아니다.
+const ENTITY_HINTS = /\b(tone|abbr|meta|actions|footer|desc|name|topBadge|change|changeDir)\s*[?:]/g
+
 const classifyKind = (src: string): Kind => {
   const hasControl = /ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)
-  if (hasControl) return 'controlProps'
-  // @slot children escape → 구조적 wrapper (layout/disclosure/carousel)
-  if (/@slot\s+children/.test(src)) return 'fieldDriven'
-  // children destructure
-  if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'childrenDriven'
-  // custom array prop: entries/bars/items/rows/columns as own prop named in destructure
-  if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'customArray'
-  // field-driven content widget: many own props, no data/children array
-  if (/export\s+function\s+\w+\s*\(\s*\{/.test(src)) return 'fieldDriven'
-  return 'stateless'
+  if (hasControl) return 'collection'
+  // @slot children escape → composable wrapper
+  if (/@slot\s+children/.test(src)) return 'composable'
+  // children destructure (with no @slot) → drift
+  if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'drift'
+  // customArray prop → drift
+  if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'drift'
+  // entity vs control — 도메인 hint prop 개수로 판정
+  const hits = (src.match(ENTITY_HINTS) ?? []).length
+  if (hits >= 2) return 'entity'
+  return 'control'
 }
 
 const extractRole = (src: string): string | null => {
@@ -75,7 +85,7 @@ const extractExportNames = (src: string): string[] => {
 }
 
 const buildChecks = (src: string, kind: Kind): ContractCheck[] => {
-  const isControl = kind === 'controlProps'
+  const isControl = kind === 'collection'
   const afterExport = src.split(/\bexport\s+(?:function|const)/)[1] ?? ''
   const slotEscape = /@slot\s+children/.test(src)
   const hasChildren = !slotEscape && /\{[^}]*\bchildren\b[^}]*\}/.test((afterExport.split(/[}]\s*:/)[0] ?? afterExport))
