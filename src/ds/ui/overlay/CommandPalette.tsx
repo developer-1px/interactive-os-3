@@ -4,6 +4,7 @@ import { Dialog } from './Dialog'
 import { Combobox } from '../list/Combobox'
 import { Listbox } from '../list/Listbox'
 import { ROOT, type Event, type NormalizedData } from '../../core/types'
+import { useShortcut } from '../../core/hooks/useShortcut'
 
 type PaletteEntry = {
   id: string
@@ -84,16 +85,7 @@ export function CommandPalette() {
     dispatch({ type: 'setLength', value: filtered.length })
   }, [filtered.length])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        dispatch({ type: 'toggle' })
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  useShortcut('mod+k', () => dispatch({ type: 'toggle' }))
 
   useEffect(() => {
     if (open) queueMicrotask(() => inputRef.current?.focus())

@@ -18,7 +18,6 @@ export function ToolbarButton({
       aria-pressed={pressed}
       aria-disabled={disabled || undefined}
       disabled={disabled}
-      tabIndex={pressed ? 0 : -1}
       {...rest}
     >
       {children}

@@ -1,0 +1,58 @@
+import { useEffect } from 'react'
+
+/**
+ * shortcut — 글로벌 단축키 de facto 표준(tinykeys 스타일) 수렴.
+ * "mod+k" 의 mod 는 mac=Meta, 그 외=Ctrl 자동. "+" 로 모디파이어 결합.
+ * 토큰: mod | meta | ctrl | alt | shift | <key>  (대소문자 무시, key 는 e.key 매칭)
+ *
+ * 우선순위 규약 (focus ⊃ global):
+ *  1) 포커스된 컴포넌트의 onKeyDown 이 먼저 버블. e.preventDefault() 로 global 을 덮어쓸 수 있다.
+ *  2) editable(input/textarea/contenteditable) 안에서 modifier 없는 단축키는 타이핑을 탈취하지 않는다.
+ *  3) 위 두 가드를 통과하면 global 핸들러 발동.
+ */
+
+const isMac = typeof navigator !== 'undefined' && /Mac|iP(hone|od|ad)/.test(navigator.platform)
+
+type Parsed = { key: string; meta: boolean; ctrl: boolean; alt: boolean; shift: boolean }
+
+const parse = (spec: string): Parsed => {
+  const parts = spec.toLowerCase().split('+').map((s) => s.trim())
+  const flags = { meta: false, ctrl: false, alt: false, shift: false }
+  let key = ''
+  for (const p of parts) {
+    if (p === 'mod') { if (isMac) flags.meta = true; else flags.ctrl = true }
+    else if (p in flags) flags[p as keyof typeof flags] = true
+    else key = p
+  }
+  return { key, ...flags }
+}
+
+const match = (e: KeyboardEvent, s: Parsed): boolean =>
+  e.key.toLowerCase() === s.key &&
+  e.metaKey === s.meta && e.ctrlKey === s.ctrl &&
+  e.altKey === s.alt && e.shiftKey === s.shift
+
+const hasModifier = (s: Parsed): boolean => s.meta || s.ctrl || s.alt
+const isEditable = (t: EventTarget | null): boolean => {
+  const el = t as HTMLElement | null
+  if (!el) return false
+  const tag = el.tagName
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable
+}
+
+export function onShortcut(spec: string, handler: (e: KeyboardEvent) => void): () => void {
+  const parsed = parse(spec)
+  const onKey = (e: KeyboardEvent) => {
+    if (e.defaultPrevented) return                              // (1) 로컬 override
+    if (!hasModifier(parsed) && isEditable(e.target)) return    // (2) 편집 중 단일 키 탈취 금지
+    if (!match(e, parsed)) return
+    e.preventDefault()
+    handler(e)
+  }
+  window.addEventListener('keydown', onKey)
+  return () => window.removeEventListener('keydown', onKey)
+}
+
+export function useShortcut(spec: string, handler: (e: KeyboardEvent) => void) {
+  useEffect(() => onShortcut(spec, handler), [spec, handler])
+}
