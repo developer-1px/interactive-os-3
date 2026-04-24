@@ -2,14 +2,12 @@ import { type ComponentPropsWithoutRef } from 'react'
 import {
   ROOT,
   getChildren,
-  getFocus,
   getLabel,
   isDisabled,
   type ControlProps,
 } from '../../core/types'
 import { activate, composeAxes, navigate, typeahead } from '../../axes'
-import { bindAxis } from '../../core/bind'
-import { useFocusBridge } from '../../core/hooks/focus'
+import { useRoving } from '../../core/hooks/useRoving'
 import { Option } from './Option'
 
 type ListboxProps = ControlProps &
@@ -18,9 +16,7 @@ type ListboxProps = ControlProps &
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
 
 export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
-  const focusId = getFocus(data)
-  const onKey = bindAxis(axis, data, onEvent)
-  const bindFocus = useFocusBridge(focusId)
+  const { focusId, onKey, bindFocus } = useRoving(axis, data, onEvent)
   const kids = getChildren(data, ROOT)
 
   return (

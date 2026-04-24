@@ -1,18 +1,14 @@
 import { useId, type CSSProperties } from 'react'
-import { ROOT, getChildren, getFocus, getExpanded, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
+import { ROOT, getChildren, getLabel, isDisabled, type ControlProps, type Event } from '../../core/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '../../axes'
-import { bindAxis } from '../../core/bind'
-import { useFocusBridge } from '../../core/hooks/focus'
+import { useRoving } from '../../core/hooks/useRoving'
 import { MenuPopover, type MenuCtx } from './MenuPopover'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
 export function Menu({ data, onEvent }: ControlProps) {
   const popoverId = useId()
-  const focusId = getFocus(data)
-  const expanded = getExpanded(data)
-  const onKey = bindAxis(axis, data, onEvent)
-  const bindFocus = useFocusBridge(focusId)
+  const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`
   const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
 
