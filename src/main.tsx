@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { dsCss } from './ds'
-import { applyPreset, defaultPreset, hairlinePreset } from './ds/preset'
+import { applyPreset, defaultPreset, hairlinePreset } from './ds/style/preset'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 

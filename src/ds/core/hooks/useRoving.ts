@@ -1,5 +1,5 @@
 import type { Axis } from '../axis'
-import { bindAxis } from '../bind'
+import { bindAxis } from '../state/bind'
 import { getExpanded, getFocus, type Event, type NormalizedData } from '../types'
 import { useFocusBridge } from './focus'
 

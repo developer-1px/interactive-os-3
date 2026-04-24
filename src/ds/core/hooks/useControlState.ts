@@ -1,5 +1,5 @@
 import { useMemo, useReducer } from 'react'
-import { reduce } from '../reduce'
+import { reduce } from '../state/reduce'
 import type { Event, NormalizedData } from '../types'
 
 const EMPTY: NormalizedData = { entities: {}, relationships: {} }
