@@ -1,9 +1,10 @@
-import { Badge, ROOT, type NormalizedData } from '../../../ds'
-import { ACTS, CELL_KEYS, HEADS, MESSAGES, folders, labelTone, type FolderId } from './data'
+import { Badge, ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ACTS, CELL_KEYS, HEADS, MESSAGES, labelTone, type FolderId } from './data'
 
 export interface InboxState {
   folder: FolderId; selectedId: string
   setFolder: (f: FolderId) => void; setSelected: (id: string) => void
+  folderNav: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildInboxPage(s: InboxState): NormalizedData {
@@ -30,11 +31,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       navHdr: { id: 'navHdr', data: { type: 'Text', variant: 'h3', content: '📮 Inbox' } },
       composeBtn: { id: 'composeBtn', data: { type: 'Ui', component: 'Button', props: { onClick: () => alert('compose'), 'aria-label': '새 메일' }, content: '＋ 새 메일' } },
       folderSep: { id: 'folderSep', data: { type: 'Ui', component: 'Separator', props: { orientation: 'horizontal' } } },
-      ...Object.fromEntries(folders.map((f) => [`f-${f.id}`, { id: `f-${f.id}`, data: {
-        type: 'Ui', component: 'ToolbarButton',
-        props: { pressed: s.folder === f.id, onClick: () => s.setFolder(f.id), 'aria-label': f.label, 'data-icon': f.icon },
-        content: <><span>{f.label}</span>{f.count !== undefined && <small data-ds-count>{f.count}</small>}</>,
-      } }])),
+      folderList: { id: 'folderList', data: { type: 'Ui', component: 'Listbox', props: { data: s.folderNav.data, onEvent: s.folderNav.onEvent, 'aria-label': '폴더' } } },
       list: { id: 'list', data: { type: 'Column', flow: 'list', grow: true } },
       listHdr: { id: 'listHdr', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '도구' } } },
       searchInput: { id: 'searchInput', data: { type: 'Ui', component: 'Input', props: { type: 'search', placeholder: '검색…', 'aria-label': '검색', grow: true }, grow: true } },
@@ -59,7 +56,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page'], page: ['nav', 'list', 'detail'],
-      nav: ['navHdr', 'composeBtn', 'folderSep', ...folders.map((f) => `f-${f.id}`)],
+      nav: ['navHdr', 'composeBtn', 'folderSep', 'folderList'],
       list: ['listHdr', 'listGrid'], listHdr: ['searchInput', 'sortSel'],
       listGrid: ['listHead', 'listBody'], listHead: ['listHeadRow'],
       listHeadRow: HEADS.map((_, i) => `lh${i}`),

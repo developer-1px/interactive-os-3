@@ -50,6 +50,7 @@ export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
             disabled={disabled}
             tabIndex={focusId === id ? 0 : -1}
             data-icon={d.icon as string | undefined}
+            data-badge={d.badge as string | number | undefined}
             aria-haspopup={d.haspopup as ComponentPropsWithoutRef<'li'>['aria-haspopup']}
           >
             {getLabel(data, id)}
