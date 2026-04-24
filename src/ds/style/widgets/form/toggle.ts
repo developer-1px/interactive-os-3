@@ -1,4 +1,4 @@
-import { css, indicator, onAccent, pad, radius } from '../../../fn'
+import { css, fg, indicator, onAccent, pad, radius } from '../../../fn'
 
 /**
  * Checkbox / Radio (custom) — `<button role="checkbox">` 와 `<div role="radio">` 로
@@ -11,21 +11,35 @@ export const toggle = () => [
   css`
     [role="checkbox"],
     [role="radio"] {
-      /* base controlBox가 min-height/padding을 잡으므로 여기선 박스 scale만 */
+      /* base controlBox가 min-height/padding을 잡으므로 여기선 박스 scale만.
+         box-size는 1.125em — 1em(body)보다 살짝 크게 해야 "컨트롤이 있다"는 tactile 신호가 선다
+         (Material 3 · iOS 16 · Radix 2026 수렴). */
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1em;
-      height: 1em;
+      width: 1.125em;
+      height: 1.125em;
       min-height: 0;
       padding: 0;
-      border: 1px solid var(--ds-border);
+      /* off-state — --ds-border(12%)는 너무 얕아 비활성 컨트롤 신호가 약했다.
+         fg(3) 레벨로 올려 Switch off-channel(fg(4))과 계층을 맞춘다. */
+      border: 1.5px solid ${fg(3)};
       background: var(--ds-bg);
       flex: 0 0 auto;
       cursor: pointer;
+      transition:
+        background-color var(--ds-dur-base) var(--ds-ease-out),
+        border-color var(--ds-dur-base) var(--ds-ease-out),
+        box-shadow var(--ds-dur-base) var(--ds-ease-out);
     }
     [role="checkbox"] { border-radius: ${radius('sm')}; }
     [role="radio"]    { border-radius: 50%; }
+
+    /* hover — 비활성 상태일 때 border 한 단계 짙게, 활성일 땐 accent 유지 */
+    [role="checkbox"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]):not([aria-checked="mixed"]),
+    [role="radio"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]) {
+      border-color: ${fg(5)};
+    }
 
     /* 체크 표식 pop-in — checked 전환 시 스프링 곡선으로 살짝 튕겨 나옴 */
     @keyframes ds-toggle-pop {
@@ -33,13 +47,9 @@ export const toggle = () => [
       100% { opacity: 1; transform: scale(1); }
     }
     [role="checkbox"][aria-checked="true"]::before,
+    [role="checkbox"][aria-checked="mixed"]::after,
     [role="radio"][aria-checked="true"]::before {
       animation: ds-toggle-pop var(--ds-dur-base) var(--ds-ease-spring);
-    }
-    [role="checkbox"],
-    [role="radio"] {
-      transition: background-color var(--ds-dur-base) var(--ds-ease-out),
-                  border-color var(--ds-dur-base) var(--ds-ease-out);
     }
 
     /* checked — accent 배경 + 흰색 표식 */
