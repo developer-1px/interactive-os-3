@@ -1,5 +1,5 @@
 import { ROOT, type Event, type NormalizedData } from '../../../ds'
-import { ACTS, INITIAL, MEMBERS, activeLabel, type Msg } from './data'
+import { ACTS, INITIAL, MEMBERS, activeLabel, statusLabel, statusTone, type Msg } from './data'
 
 export interface ChatState {
   active: string; draft: string; stream: Record<string, Msg[]>
@@ -41,9 +41,14 @@ export function buildChatPage(s: ChatState): NormalizedData {
         onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') s.send() },
       }, grow: true } },
       composerSend: { id: 'composerSend', data: { type: 'Ui', component: 'Button', props: { onClick: s.send }, content: '전송' } },
-      right: { id: 'right', data: { type: 'Column', flow: 'form', emphasis: 'raised', width: 260 } },
-      rHdr: { id: 'rHdr', data: { type: 'Text', variant: 'h3', content: '멤버 (4)' } },
-      ...Object.fromEntries(MEMBERS.map((text, i) => [`mb${i}`, { id: `mb${i}`, data: { type: 'Text', variant: 'body', content: text } }])),
+      right: { id: 'right', data: { type: 'Column', flow: 'list', emphasis: 'raised', width: 260 } },
+      rHdr: { id: 'rHdr', data: { type: 'Text', variant: 'h3', content: `멤버 (${MEMBERS.length})` } },
+      ...Object.fromEntries(MEMBERS.flatMap((m) => [
+        [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
+        [`mdot-${m.id}`, { id: `mdot-${m.id}`, data: { type: 'Ui', component: 'LegendDot', props: { tone: statusTone[m.status], 'aria-hidden': true } } }],
+        [`mnm-${m.id}`,  { id: `mnm-${m.id}`,  data: { type: 'Text', variant: 'body', content: m.name, grow: true } }],
+        [`mst-${m.id}`,  { id: `mst-${m.id}`,  data: { type: 'Text', variant: 'small', content: statusLabel[m.status] } }],
+      ] as Array<readonly [string, unknown]>)),
     },
     relationships: {
       [ROOT]: ['page'], page: ['side', 'main', 'right'],
@@ -54,7 +59,8 @@ export function buildChatPage(s: ChatState): NormalizedData {
       stream: msgs.map((m) => `mrow-${m.id}`),
       ...Object.fromEntries(msgs.map((m) => [`mrow-${m.id}`, [`mwho-${m.id}`, `mtxt-${m.id}`, `mtm-${m.id}`]])),
       composer: ['composerIn', 'composerSend'],
-      right: ['rHdr', ...MEMBERS.map((_, i) => `mb${i}`)],
+      right: ['rHdr', ...MEMBERS.map((m) => `mrow-${m.id}`)],
+      ...Object.fromEntries(MEMBERS.map((m) => [`mrow-${m.id}`, [`mdot-${m.id}`, `mnm-${m.id}`, `mst-${m.id}`]])),
     },
   }
 }

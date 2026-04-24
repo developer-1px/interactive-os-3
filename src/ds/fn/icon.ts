@@ -50,6 +50,7 @@ const tokens = [
   'inbox', 'send', 'ban', 'trash', 'reply', 'forward', 'archive', 'star-off',
   'hash', 'lock', 'user',
   'pin', 'search', 'info',
+  'filter', 'edit',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

@@ -20,10 +20,22 @@ export const INITIAL: Record<string, Msg[]> = {
   ],
 }
 
-export const MEMBERS = [
-  '🟢 유용태 · 온라인', '🟢 Alex Kim · 온라인',
-  '⚪ Sora Park · 자리비움', '⚫ Jun Lee · 오프라인',
+export type MemberStatus = 'online' | 'away' | 'offline'
+export interface Member { id: string; name: string; status: MemberStatus }
+
+export const MEMBERS: Member[] = [
+  { id: 'yt',   name: '유용태',    status: 'online'  },
+  { id: 'ak',   name: 'Alex Kim',  status: 'online'  },
+  { id: 'sp',   name: 'Sora Park', status: 'away'    },
+  { id: 'jl',   name: 'Jun Lee',   status: 'offline' },
 ]
+
+export const statusLabel: Record<MemberStatus, string> = {
+  online: '온라인', away: '자리비움', offline: '오프라인',
+}
+export const statusTone: Record<MemberStatus, 'success' | 'warning' | 'neutral'> = {
+  online: 'success', away: 'warning', offline: 'neutral',
+}
 
 export const ACTS = [['aPin','핀','pin'],['aSearch','검색','search'],['aInfo','정보','info']] as const
 
