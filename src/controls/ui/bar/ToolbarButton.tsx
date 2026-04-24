@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 type ToolbarButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'type'> & {
   pressed?: boolean
-  children: ReactNode
+  children?: ReactNode
 }
 
 export function ToolbarButton({

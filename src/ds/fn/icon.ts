@@ -26,6 +26,17 @@ const svgs = {
   home:         lucide(`<path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/><path d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>`),
   sliders:      lucide(`<path d='M10 5H3'/><path d='M12 19H3'/><path d='M14 3v4'/><path d='M16 17v4'/><path d='M21 12h-9'/><path d='M21 19h-5'/><path d='M21 5h-7'/><path d='M8 10v4'/><path d='M8 12H3'/>`),
   palette:      lucide(`<path d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/><circle cx='13.5' cy='6.5' r='.8' fill='black' stroke='none'/><circle cx='17.5' cy='10.5' r='.8' fill='black' stroke='none'/><circle cx='6.5' cy='12.5' r='.8' fill='black' stroke='none'/><circle cx='8.5' cy='7.5' r='.8' fill='black' stroke='none'/>`),
+
+  'align-left':              lucide(`<path d='M15 12H3'/><path d='M17 18H3'/><path d='M21 6H3'/>`),
+  'align-center-horizontal': lucide(`<path d='M17 12H7'/><path d='M19 18H5'/><path d='M21 6H3'/>`),
+  'align-right':             lucide(`<path d='M21 12H9'/><path d='M21 18H7'/><path d='M21 6H3'/>`),
+  'align-top':               lucide(`<path d='M12 9v12'/><path d='M18 7v14'/><path d='M6 3h18'/>`),
+  'align-center-vertical':   lucide(`<path d='M12 7v10'/><path d='M18 5v14'/><path d='M6 3v18'/>`),
+  'align-bottom':            lucide(`<path d='M12 3v12'/><path d='M18 3v14'/><path d='M3 21h18'/>`),
+  'arrow-right':             lucide(`<path d='M5 12h14'/><path d='m12 5 7 7-7 7'/>`),
+  'arrow-down':              lucide(`<path d='M12 5v14'/><path d='m19 12-7 7-7-7'/>`),
+  'plus':                    lucide(`<path d='M5 12h14'/><path d='M12 5v14'/>`),
+  'settings':                lucide(`<path d='M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z'/><circle cx='12' cy='12' r='3'/>`),
 } as const
 
 export type IconToken = keyof typeof svgs

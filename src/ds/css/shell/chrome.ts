@@ -1,15 +1,16 @@
 import { css, pad, surface } from '../../fn'
 
-// Finder 창 셸 + 크롬 (타이틀바). 태그 + aria-roledescription 만으로 매칭.
+// 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.
+// 모든 앱(finder / inspector / …)이 동일 규칙을 상속한다. classless + structural.
 export const chromeCss = css`
-  main[aria-roledescription="finder"] {
+  main:has(> header > [aria-roledescription="window-controls"]) {
     position: fixed;
     inset: var(--ds-shell-inset);
     border-radius: var(--ds-shell-radius);
     ${surface(2)}
     display: flex; flex-direction: column; overflow: hidden;
   }
-  main[aria-roledescription="finder"] > header {
+  main:has(> header > [aria-roledescription="window-controls"]) > header {
     display: flex; align-items: center; gap: var(--ds-slot-gap);
     height: var(--ds-chrome-h); flex: none;
     padding-inline: ${pad(3)};
@@ -17,7 +18,8 @@ export const chromeCss = css`
     background: color-mix(in oklch, Canvas 95%, CanvasText 5%);
     font-weight: 600;
   }
-  main[aria-roledescription="finder"] > section[aria-roledescription="body"] {
+  main:has(> header > [aria-roledescription="window-controls"])
+    > section[aria-roledescription="body"] {
     flex: 1; display: flex; min-height: 0;
   }
   [aria-roledescription="window-controls"] { display: flex; gap: ${pad(2)}; align-items: center; }

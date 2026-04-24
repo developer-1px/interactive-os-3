@@ -1,7 +1,76 @@
 import { css, icon, pad, surface } from '../../fn'
 
-// Finder 3-컬럼 브라우저: sidebar + columns + preview.
+// 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
+  /* Inspector: canvas가 남은 공간을, aside panel이 고정폭 */
+  section[aria-roledescription="canvas"] {
+    flex: 1; min-width: 0; overflow: auto; display: grid; place-items: center;
+    background: color-mix(in oklch, Canvas 93%, CanvasText 7%);
+  }
+  section[aria-roledescription="canvas"] > svg {
+    width: 100%; height: 100%; max-width: 100%;
+  }
+  aside[aria-roledescription="panel"] {
+    width: var(--ds-panel-w, 280px); flex: none; overflow-y: auto;
+    border-inline-start: 1px solid var(--ds-border);
+    display: flex; flex-direction: column;
+  }
+  aside[aria-roledescription="panel"] [role="tabpanel"] {
+    display: flex; flex-direction: column;
+  }
+  section[aria-roledescription="panel-section"] {
+    padding: ${pad(3)};
+    border-bottom: 1px solid var(--ds-border);
+    display: flex; flex-direction: column; gap: ${pad(2)};
+  }
+  section[aria-roledescription="panel-section"] > h3 {
+    font-size: var(--ds-text-sm); font-weight: 600;
+    opacity: .6; text-transform: uppercase; letter-spacing: .05em;
+    margin: 0;
+  }
+  [aria-roledescription="field"] {
+    display: grid;
+    grid-template-columns: 5rem 1fr auto;
+    align-items: center; gap: ${pad(2)};
+  }
+  [aria-roledescription="field"] > label { opacity: .6; font-size: var(--ds-text-sm); }
+  [aria-roledescription="field"] > [aria-roledescription="control"] {
+    display: flex; align-items: center; gap: ${pad(1)}; min-width: 0;
+  }
+  [aria-roledescription="field"] > [aria-roledescription="control"] > * { min-width: 0; flex: 1; }
+  [aria-roledescription="field"] > [aria-roledescription="unit"] {
+    opacity: .5; font-size: var(--ds-text-sm); min-width: 1.5em; text-align: end;
+  }
+
+  /* DS Matrix — 컨트롤 하나당 cell 하나, 사람 눈이 일관성 판단 */
+  main[aria-roledescription="ds-matrix"] {
+    padding: ${pad(6)};
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: ${pad(2)};
+    max-width: 1400px; margin: 0 auto;
+  }
+  main[aria-roledescription="ds-matrix"] > header { grid-column: 1 / -1; }
+  main[aria-roledescription="ds-matrix"] > header h1 { margin: 0; }
+  main[aria-roledescription="ds-matrix"] > header p { opacity: .6; margin: ${pad(1)} 0 0; }
+  figure[aria-roledescription="matrix-cell"] {
+    ${surface(1)}
+    margin: 0;
+    border: 1px solid var(--ds-border); border-radius: ${pad(1.5)};
+    padding: ${pad(2)};
+    display: grid; grid-template-rows: auto 1fr;
+    gap: ${pad(1.5)};
+    min-height: 120px;
+  }
+  figure[aria-roledescription="matrix-cell"] > figcaption {
+    font-family: ui-monospace, monospace; font-size: var(--ds-text-sm);
+    opacity: .7;
+  }
+  [data-cell-error] {
+    color: oklch(55% 0.2 25); font-size: .75em;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* Finder panes */
   nav[aria-roledescription="sidebar"] {
     width: var(--ds-sidebar-w); flex: none; overflow: auto;
     border-inline-end: 1px solid var(--ds-border);

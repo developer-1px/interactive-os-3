@@ -2,6 +2,8 @@ import {
   createRootRoute, createRoute, createRouter, Outlet, redirect,
 } from '@tanstack/react-router'
 import { Finder } from './finder/Finder'
+import { Inspector } from './inspector/Inspector'
+import { Matrix } from './ds-matrix/Matrix'
 import { CommandPalette } from './controls/ui/overlay/CommandPalette'
 
 const rootRoute = createRootRoute({
@@ -28,7 +30,25 @@ const finderRoute = createRoute({
   },
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, finderRoute])
+const inspectorRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/inspector',
+  component: Inspector,
+  staticData: {
+    palette: { label: 'Inspector', to: '/inspector' },
+  },
+})
+
+const matrixRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/ds-matrix',
+  component: Matrix,
+  staticData: {
+    palette: { label: 'DS Matrix', to: '/ds-matrix' },
+  },
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, finderRoute, inspectorRoute, matrixRoute])
 
 export const router = createRouter({ routeTree })
 
