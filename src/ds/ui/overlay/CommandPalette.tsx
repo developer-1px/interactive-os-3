@@ -61,7 +61,6 @@ export function CommandPalette() {
   const router = useRouter()
   const [state, dispatch] = useReducer(reducer, INITIAL)
   const { open, query, active, intent } = state
-  const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
 
@@ -97,14 +96,7 @@ export function CommandPalette() {
   }, [])
 
   useEffect(() => {
-    const d = dialogRef.current
-    if (!d) return
-    if (open && !d.open) {
-      d.showModal()
-      queueMicrotask(() => inputRef.current?.focus())
-    } else if (!open && d.open) {
-      d.close()
-    }
+    if (open) queueMicrotask(() => inputRef.current?.focus())
   }, [open])
 
   // intent 기반 effect 분리: reducer는 의도만 표시, navigate는 여기서.
@@ -125,13 +117,18 @@ export function CommandPalette() {
 
   const activeId = filtered[active]?.id
 
-  const data: NormalizedData = useMemo(() => {
+  const listData: NormalizedData = useMemo(() => {
     const entities: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
     filtered.forEach((e, i) => {
       entities[e.id] = { id: e.id, data: { label: e.label, selected: i === active } }
     })
     return { entities, relationships: { [ROOT]: filtered.map((e) => e.id) } }
   }, [filtered, active])
+
+  const dialogData: NormalizedData = useMemo(() => ({
+    entities: { [ROOT]: { id: ROOT, data: { open, label: 'Command palette' } } },
+    relationships: { [ROOT]: [] },
+  }), [open])
 
   const onEvent = (ev: Event) => {
     if (ev.type === 'activate') {
@@ -144,7 +141,7 @@ export function CommandPalette() {
   }
 
   return (
-    <Dialog ref={dialogRef} aria-label="Command palette" onClose={() => dispatch({ type: 'close' })}>
+    <Dialog data={dialogData} onEvent={(ev) => { if (ev.type === 'open' && !ev.open) dispatch({ type: 'close' }) }}>
       <Combobox
         ref={inputRef}
         expanded={filtered.length > 0}
@@ -157,7 +154,7 @@ export function CommandPalette() {
         aria-label="Search routes"
       />
       {filtered.length > 0 && (
-        <Listbox id={listId} data={data} onEvent={onEvent} />
+        <Listbox id={listId} data={listData} onEvent={onEvent} />
       )}
     </Dialog>
   )
