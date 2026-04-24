@@ -35,7 +35,7 @@ export const grid = () => [
     }
     [role="grid"] [role="columnheader"],
     [role="treegrid"] [role="columnheader"] {
-      border-block-end: 1px solid ${fg(3)};
+      border-block-end: 1px solid var(--ds-control-border);
     }
     /* 테이블 끝 행의 bottom hairline 제거 — 닫히는 느낌 대신 열린 느낌 */
     [role="grid"] [role="rowgroup"]:last-child [role="row"]:last-child > :is([role="gridcell"], [role="rowheader"]),

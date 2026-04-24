@@ -99,7 +99,7 @@ export const formCss = css`
     font-weight: 700;
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
-    border-bottom: 1px solid ${fg(3)};
+    border-bottom: 1px solid var(--ds-control-border);
     letter-spacing: var(--ds-tracking);
   }
   section > h3:first-child {
@@ -135,7 +135,7 @@ export const formCss = css`
   aside:not([aria-roledescription]) {
     display: flex; flex-direction: column; flex: none; min-inline-size: 0;
     background: ${fg(1)};
-    border: 1px solid ${fg(3)};
+    border: 1px solid var(--ds-control-border);
     border-inline-start: 3px solid ${tint(accent(), 45)};
     border-radius: ${radius('lg')};
     padding: ${pad(4)};
@@ -169,7 +169,7 @@ export const formCss = css`
   }
   aside:not([aria-roledescription]) > section + section {
     padding-top: ${pad(3)};
-    border-top: 1px solid ${fg(3)};
+    border-top: 1px solid var(--ds-control-border);
   }
 
   /* Aside의 "위험 영역" section은 경고 톤 */

@@ -41,7 +41,8 @@ export const getTypeahead = (d: NormalizedData): { buf: string; deadline: number
 
 export interface ControlProps {
   data: NormalizedData
-  onEvent: (e: Event) => void
+  /** 상호작용 컴포넌트는 필수. Display-only Collection(Top10List/BarChart 류)은 생략 가능. */
+  onEvent?: (e: Event) => void
 }
 
 /**
