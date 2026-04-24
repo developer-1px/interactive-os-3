@@ -7,7 +7,7 @@ import {
   Input, Textarea, Select, NumberInput, Slider, ColorInput,
   Checkbox, RadioGroup, CheckboxGroup, Combobox,
   Carousel, Slide,
-  fromTree, fromList, useControlState, ROOT, type NormalizedData,
+  fromTree, fromList, useControlState, ROOT, FOCUS, EXPANDED, type NormalizedData,
 } from '../../ds'
 
 /**
@@ -339,33 +339,35 @@ function CheckboxDemo() {
   )
 }
 
+const radioBase: NormalizedData = {
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    a: { id: 'a', data: { label: '옵션 A' } },
+    b: { id: 'b', data: { label: '옵션 B' } },
+    c: { id: 'c', data: { label: '옵션 C' } },
+    [FOCUS]: { id: FOCUS, data: { id: 'b' } },
+  },
+  relationships: { [ROOT]: ['a', 'b', 'c'] },
+}
+
+const checkboxBase: NormalizedData = {
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    a: { id: 'a', data: { label: '알림' } },
+    b: { id: 'b', data: { label: '이메일' } },
+    c: { id: 'c', data: { label: '푸시' } },
+    [EXPANDED]: { id: EXPANDED, data: { ids: ['a'] } },
+  },
+  relationships: { [ROOT]: ['a', 'b', 'c'] },
+}
+
 function RadioGroupDemo() {
-  const base: NormalizedData = {
-    entities: {
-      [ROOT]: { id: ROOT, data: {} },
-      a: { id: 'a', data: { label: '옵션 A' } },
-      b: { id: 'b', data: { label: '옵션 B' } },
-      c: { id: 'c', data: { label: '옵션 C' } },
-      __focus__: { id: '__focus__', data: { id: 'b' } },
-    },
-    relationships: { [ROOT]: ['a', 'b', 'c'] },
-  }
-  const [data, onEvent] = useControlState(base)
+  const [data, onEvent] = useControlState(radioBase)
   return <RadioGroup data={data} onEvent={onEvent} aria-label="옵션" orientation="horizontal" />
 }
 
 function CheckboxGroupDemo() {
-  const base: NormalizedData = {
-    entities: {
-      [ROOT]: { id: ROOT, data: {} },
-      a: { id: 'a', data: { label: '알림' } },
-      b: { id: 'b', data: { label: '이메일' } },
-      c: { id: 'c', data: { label: '푸시' } },
-      __expanded__: { id: '__expanded__', data: { ids: ['a'] } },
-    },
-    relationships: { [ROOT]: ['a', 'b', 'c'] },
-  }
-  const [data, onEvent] = useControlState(base)
+  const [data, onEvent] = useControlState(checkboxBase)
   return <CheckboxGroup data={data} onEvent={onEvent} aria-label="알림 설정" orientation="horizontal" />
 }
 

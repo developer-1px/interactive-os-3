@@ -29,6 +29,13 @@ const scaleAlpha = (t: TokenRef, k: number): string => {
 export const elevationToShadow = (layers: Layer[], alphaScale = 1): string =>
   layers.length === 0 ? 'none' : layers.map((l) => layerToCss(l, alphaScale)).join(', ')
 
+/**
+ * Control emphasis ladder:
+ *   hairline        (--ds-border, ~12%)  — 경계 분리
+ *   control-border  (gray-3)             — Checkbox/Radio/Button/Grid 가장자리
+ *   control-channel (gray-4)             — Switch track · Progress rail (On/Off 축)
+ *   *-hover         (gray-5)             — 위 두 단 공통 hover 1단
+ */
 const rootBlock = (p: DsPreset, alphaScale = 1) => {
   const elev = (n: 0 | 1 | 2 | 3) =>
     `--ds-elev-${n}: ${elevationToShadow(p.elevation[n], alphaScale)};`
@@ -57,13 +64,6 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
       return `--ds-gray-${n}: ${g ? tokenRefToCss(g) : `color-mix(in oklab, CanvasText ${[3,6,10,16,28,44,62,80,95][Number(n)-1]}%, Canvas)`};`
     }).join('\n    ')}
 
-    /* Control emphasis ladder — off-state 신호 강도 3단 + hover 1단.
-       축 정의:
-         hairline         (--ds-border, ~12%) — 순수 시각 분리. "이건 경계"에 가깝다.
-         control-border   (gray-3)            — "이건 선택 슬롯이다". Checkbox/Radio/Button/Input/Grid 가장자리.
-         control-channel  (gray-4)            — "이건 On/Off 축이 있다". Switch track · Progress track · Slider rail.
-         *-hover          (gray-5)            — 위 두 단의 hover 강조 공통 1단.
-       Switch > Checkbox/Radio 의 계층은 이 두 토큰 차이로 자동 보장된다. */
     --ds-control-border:        var(--ds-gray-3);
     --ds-control-channel:       var(--ds-gray-4);
     --ds-control-border-hover:  var(--ds-gray-5);

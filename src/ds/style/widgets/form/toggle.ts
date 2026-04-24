@@ -1,19 +1,9 @@
 import { css, indicator, onAccent, pad, radius } from '../../../fn'
 
-/**
- * Checkbox / Radio (custom) — `<button role="checkbox">` 와 `<div role="radio">` 로
- * 컴포넌트가 emit되므로 native input을 못 쓴다. 박스 자체를 여기서 그린다.
- * states base는 이미 `[aria-checked="true"]`에 accent 배경을 주므로, 박스 모양 · 체크 표식만 더한다.
- *
- * radiogroup — 그룹 컨테이너는 항목들을 수직 정렬로 묶는다 (row flow도 허용).
- */
 export const toggle = () => [
   css`
     [role="checkbox"],
     [role="radio"] {
-      /* base controlBox가 min-height/padding을 잡으므로 여기선 박스 scale만.
-         box-size는 1.125em — 1em(body)보다 살짝 크게 해야 "컨트롤이 있다"는 tactile 신호가 선다
-         (Material 3 · iOS 16 · Radix 2026 수렴). */
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -21,7 +11,6 @@ export const toggle = () => [
       height: 1.125em;
       min-height: 0;
       padding: 0;
-      /* off-state — control emphasis ladder의 "control-border" 단. Switch channel보다 한 단계 얕음. */
       border: 1.5px solid var(--ds-control-border);
       background: var(--ds-bg);
       flex: 0 0 auto;
@@ -34,13 +23,11 @@ export const toggle = () => [
     [role="checkbox"] { border-radius: ${radius('sm')}; }
     [role="radio"]    { border-radius: 50%; }
 
-    /* hover — 비활성 상태일 때 border 한 단계 짙게, 활성일 땐 accent 유지 */
-    [role="checkbox"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]):not([aria-checked="mixed"]),
-    [role="radio"]:hover:not([aria-disabled="true"]):not([aria-checked="true"]) {
+    [role="checkbox"][aria-checked="false"]:hover:not([aria-disabled="true"]),
+    [role="radio"][aria-checked="false"]:hover:not([aria-disabled="true"]) {
       border-color: var(--ds-control-border-hover);
     }
 
-    /* 체크 표식 pop-in — checked 전환 시 스프링 곡선으로 살짝 튕겨 나옴 */
     @keyframes ds-toggle-pop {
       0%   { opacity: 0; transform: scale(0.5); }
       100% { opacity: 1; transform: scale(1); }
@@ -51,7 +38,6 @@ export const toggle = () => [
       animation: ds-toggle-pop var(--ds-dur-base) var(--ds-ease-spring);
     }
 
-    /* checked — accent 배경 + 흰색 표식 */
     [role="checkbox"][aria-checked="true"],
     [role="checkbox"][aria-checked="mixed"],
     [role="radio"][aria-checked="true"] {
@@ -60,9 +46,6 @@ export const toggle = () => [
       color: ${onAccent()};
     }
 
-    /* disabled — base가 aria-disabled opacity 0.4를 이미 처리 */
-
-    /* radiogroup — 세로 흐름 기본, aria-orientation="horizontal"일 때 가로 */
     [role="radiogroup"] {
       display: flex;
       flex-direction: column;
@@ -74,11 +57,8 @@ export const toggle = () => [
       gap: ${pad(3)};
     }
   `,
-  // checkbox check mark + mixed (minus) + radio dot — box(1.125em) 기준 비율 통일:
-  //   check ≈ 72% (0.8em / 1.125em), dot ≈ 53% (0.6em / 1.125em) → 시각 밀도가 비슷해 보이는 지점
   indicator('[role="checkbox"]', 'check', { on: '[aria-checked="true"]', size: '0.8em' }),
   indicator('[role="radio"]',    'dot',   { on: '[aria-checked="true"]', size: '0.6em' }),
-  // mixed state — 체크 아이콘(::before) 대신 가로 dash(::after)로 표시. stroke도 check와 동일(2px).
   css`
     [role="checkbox"][aria-checked="mixed"]::before { visibility: hidden; }
     [role="checkbox"][aria-checked="mixed"]::after {
@@ -92,10 +72,6 @@ export const toggle = () => [
   `,
 ].join('\n')
 
-/**
- * Field error — `role="alert"` 로 emit되는 에러 메시지.
- * 작은 글자, error 톤, 라인 높이 맞춤.
- */
 export const alert = () => css`
   [role="alert"] {
     color: var(--ds-danger);
