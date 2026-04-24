@@ -201,9 +201,6 @@ export function VideoEdit() {
     secDanger: ['delBtn','delNote'],
   }
 
-  const removeBtnOnClick = (list: string[], setter: (x: string[]) => void) => (t: string) => removeTag(list, setter, t)
-  void removeBtnOnClick
-
   return <Renderer page={definePage({ entities, relationships })} />
 }
 

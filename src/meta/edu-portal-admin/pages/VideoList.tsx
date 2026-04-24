@@ -29,19 +29,9 @@ export function VideoList() {
     setSort((s) => ({ key, dir: s.key === key && s.dir === 'ascending' ? 'descending' : 'ascending' }))
   const sortOf = (key: SortKey) => (sort.key === key ? sort.dir : 'none')
 
-  const sortBtn = (key: SortKey, label: string) => ({
-    type: 'Ui' as const, component: 'Button',
-    props: { onClick: () => onSort(key), 'aria-sort': sortOf(key) },
-    content: label,
-  })
-
   const filterOpts: Array<[string, React.ReactNode]> = [['', '전체 레벨'], ['초급','초급'], ['중급','중급'], ['고급','고급']]
   const roleOpts: Array<[string, React.ReactNode]>   = [['', '전체 역할'], ['개발자','개발자'], ['엔지니어','엔지니어'], ['보안','보안'], ['AI','AI']]
   const statusOpts: Array<[string, React.ReactNode]> = [['', '전체 상태'], ['게시 중','게시 중'], ['임시저장','임시저장'], ['숨김','숨김'], ['예약','예약']]
-
-  const headerLabels = [
-    'title_sort','레벨','역할','enrolled_sort','completion_sort','별점','상태','노출','createdAt_sort','관리',
-  ]
 
   const data: NormalizedData = {
     entities: {
@@ -104,8 +94,6 @@ export function VideoList() {
       ...bodyRowRels(sorted),
     },
   }
-  // Silence unused var (sortBtn alternative not used but reserved)
-  void sortBtn; void headerLabels
 
   return <Renderer page={definePage(data)} />
 }

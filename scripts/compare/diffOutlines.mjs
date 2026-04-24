@@ -21,7 +21,9 @@ const indexBy = (arr) => {
   const map = new Map()
   for (const it of arr) {
     const k = keyOf(it)
-    map.set(k, [...(map.get(k) || []), it])
+    const bucket = map.get(k)
+    if (bucket) bucket.push(it)
+    else map.set(k, [it])
   }
   return map
 }
@@ -33,21 +35,15 @@ const missing = []    // mock 있음, impl 없음
 const extra   = []    // impl 있음, mock 없음
 const matched = []    // 양쪽 있음 (메타 차이 있을 수 있음)
 
-const seen = new Set()
 for (const [k, ms] of mMap) {
   const is = iMap.get(k) ?? []
   const minCount = Math.min(ms.length, is.length)
   if (ms.length > minCount) missing.push(...ms.slice(minCount))
+  if (is.length > minCount) extra.push(...is.slice(minCount))
   for (let i = 0; i < minCount; i++) matched.push({ mock: ms[i], impl: is[i] })
-  seen.add(k)
 }
 for (const [k, is] of iMap) {
-  if (seen.has(k)) {
-    const ms = mMap.get(k) ?? []
-    if (is.length > ms.length) extra.push(...is.slice(ms.length))
-  } else {
-    extra.push(...is)
-  }
+  if (!mMap.has(k)) extra.push(...is)
 }
 
 // ── pretty print ──

@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { Dialog, Input, Textarea, Field, FieldLabel, Button, ROOT, type Event } from '../../../ds'
+import { Dialog, Input, Textarea, Field, FieldLabel, Button } from '../../../ds'
+import { useDialog } from './_useDialog'
 
 export function CategoryEdit({
   open, name, desc, onClose, onSave,
@@ -10,16 +10,7 @@ export function CategoryEdit({
   onClose: () => void
   onSave: (name: string, desc: string) => void
 }) {
-  const data = useMemo(
-    () => ({
-      entities: { [ROOT]: { id: ROOT, data: { open, label: '카테고리 편집' } } },
-      relationships: {},
-    }),
-    [open],
-  )
-  const onEvent = (e: Event) => {
-    if (e.type === 'open' && !e.open) onClose()
-  }
+  const { data, onEvent } = useDialog(open, '카테고리 편집', onClose)
   return (
     <Dialog data={data} onEvent={onEvent}>
       <article>

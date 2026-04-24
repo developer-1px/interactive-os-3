@@ -1,19 +1,10 @@
-import { useMemo } from 'react'
-import { Dialog, Button, ROOT, type Event } from '../../../ds'
+import { Dialog, Button } from '../../../ds'
+import { useDialog } from './_useDialog'
 
 export function DeleteConfirm({
   open, target, onClose, onConfirm,
 }: { open: boolean; target: string; onClose: () => void; onConfirm: () => void }) {
-  const data = useMemo(
-    () => ({
-      entities: { [ROOT]: { id: ROOT, data: { open, label: `${target} 삭제 확인`, alert: true } } },
-      relationships: {},
-    }),
-    [open, target],
-  )
-  const onEvent = (e: Event) => {
-    if (e.type === 'open' && !e.open) onClose()
-  }
+  const { data, onEvent } = useDialog(open, `${target} 삭제 확인`, onClose, { alert: true, deps: [target] })
   return (
     <Dialog data={data} onEvent={onEvent}>
       <article>

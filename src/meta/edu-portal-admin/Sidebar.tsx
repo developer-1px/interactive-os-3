@@ -1,21 +1,7 @@
 import { useMemo } from 'react'
 import { useRouter, useRouterState } from '@tanstack/react-router'
 import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData } from '../../ds'
-import { navItems, PAGE_PATHS, type PageId } from './data'
-
-/**
- * Sidebar navigation.
- *
- * Active page is derived from the router location so deep-linking and browser
- * back/forward work. On activate we call router.navigate to the child route.
- * Sections ("메인"/"콘텐츠"/"설정") are separate Listbox instances so each has
- * its own roving focus scope — ListboxGroup assumes a single flat data tree.
- */
-function activePage(pathname: string): PageId {
-  const match = (Object.entries(PAGE_PATHS) as [PageId, string][])
-    .find(([, p]) => pathname === p || pathname.startsWith(p + '/'))
-  return match?.[0] ?? 'dashboard'
-}
+import { activePage, navItems, PAGE_PATHS, type PageId } from './data'
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })

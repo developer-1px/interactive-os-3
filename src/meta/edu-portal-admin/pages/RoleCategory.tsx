@@ -5,7 +5,7 @@ import { roleCategories as initial } from '../data'
 export function RoleCategory() {
   const [list, setList] = useState(initial)
   const toggle = (id: string) =>
-    setList(list.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)))
+    setList((prev) => prev.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)))
 
   const entities: NormalizedData['entities'] = {
     [ROOT]: { id: ROOT, data: {} },

@@ -1,24 +1,16 @@
 import { useMemo } from 'react'
 import {
   Dialog, Listbox, useControlState, navigateOnActivate,
-  ROOT, type Event, type NormalizedData,
+  type Event, type NormalizedData,
 } from '../../../ds'
+import { useDialog } from './_useDialog'
 
 const ICONS = ['💻', '🔧', '🛡', '🤖', '📘', '🎓', '📊', '🧠', '⚙️', '🌐']
 
 export function IconPick({
   open, onClose, onPick,
 }: { open: boolean; onClose: () => void; onPick: (icon: string) => void }) {
-  const dialogData = useMemo(
-    () => ({
-      entities: { [ROOT]: { id: ROOT, data: { open, label: '아이콘 선택' } } },
-      relationships: {},
-    }),
-    [open],
-  )
-  const onDialogEvent = (e: Event) => {
-    if (e.type === 'open' && !e.open) onClose()
-  }
+  const { data: dialogData, onEvent: onDialogEvent } = useDialog(open, '아이콘 선택', onClose)
 
   const base = useMemo<NormalizedData>(
     () => ({

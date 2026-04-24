@@ -1,6 +1,3 @@
-// Static sample data mirroring docs/edu-portal-admin.html mock.
-// No fetching, no mutation helpers — pages render directly from these.
-
 export type PageId =
   | 'dashboard'
   | 'video-list'
@@ -25,6 +22,12 @@ export const PAGE_PATHS: Record<PageId, string> = {
   'role-category':  '/edu-portal-admin/role-categories',
   'cert-category':  '/edu-portal-admin/course-categories',
   'video-order':    '/edu-portal-admin/video-order',
+}
+
+export function activePage(pathname: string): PageId {
+  const match = (Object.entries(PAGE_PATHS) as [PageId, string][])
+    .find(([, p]) => pathname === p || pathname.startsWith(p + '/'))
+  return match?.[0] ?? 'dashboard'
 }
 
 export interface NavItem {

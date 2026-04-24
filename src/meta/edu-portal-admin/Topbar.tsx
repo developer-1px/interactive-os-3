@@ -1,18 +1,7 @@
 import { useRouter, useRouterState } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
-import { PAGE_PATHS, PAGE_TITLES, type PageId } from './data'
+import { activePage, PAGE_PATHS, PAGE_TITLES } from './data'
 
-function activePage(pathname: string): PageId {
-  const match = (Object.entries(PAGE_PATHS) as [PageId, string][])
-    .find(([, p]) => pathname === p || pathname.startsWith(p + '/'))
-  return match?.[0] ?? 'dashboard'
-}
-
-/**
- * Topbar — two-column Header (title hgroup | actions). The outer <header>
- * carries `aria-roledescription="topbar"` so existing shell CSS still hits;
- * internal layout is entirely data-driven via definePage.
- */
 export function Topbar() {
   const router = useRouter()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
