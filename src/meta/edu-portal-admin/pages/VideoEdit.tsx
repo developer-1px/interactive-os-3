@@ -131,12 +131,12 @@ export function VideoEdit() {
       type: 'Ui', component: 'Input',
       props: { placeholder: 'https://...', 'aria-label': '주소' },
     } },
-    urlAdd: { id: 'urlAdd', data: { type: 'Ui', component: 'Button', content: '+ 추가' } },
+    urlAdd: { id: 'urlAdd', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '추가' } },
 
     // — aside (publish panel) —
     aside: { id: 'aside', data: { type: 'Aside', flow: 'form', width: 320, labelledBy: 'secPublish-h' } },
     secPublish: { id: 'secPublish', data: { type: 'Section', heading: { content: '게시 설정' } } },
-    publishBtns: { id: 'publishBtns', data: { type: 'Row', flow: 'cluster' } },
+    publishBtns: { id: 'publishBtns', data: { type: 'Row', flow: 'cluster', roledescription: 'actions' } },
     publishNow: { id: 'publishNow', data: { type: 'Ui', component: 'Button', content: '게시하기' } },
     saveDraft: { id: 'saveDraft', data: { type: 'Ui', component: 'Button', content: '임시저장' } },
 
@@ -154,7 +154,7 @@ export function VideoEdit() {
     secVis: { id: 'secVis', data: { type: 'Section', heading: { variant: 'h3', content: '노출 설정' } } },
     ...visibilityRows(visible, setVisible),
 
-    secDanger: { id: 'secDanger', data: { type: 'Section', heading: { variant: 'h3', content: '위험 영역' } } },
+    secDanger: { id: 'secDanger', data: { type: 'Section', heading: { variant: 'h3', content: '위험 영역' }, roledescription: 'danger' } },
     delBtn: { id: 'delBtn', data: { type: 'Ui', component: 'Button', content: '이 영상 삭제' } },
     delNote: { id: 'delNote', data: { type: 'Text', variant: 'small',
       content: '수강 이력이 있는 경우 삭제 전 확인이 필요합니다' } },
@@ -257,14 +257,17 @@ function checkboxRels<K extends string>(prefix: string, state: Record<K, boolean
 function tagChipNodes(prefix: string, items: string[], onRemove: (t: string) => void): NodeMap {
   const out: NodeMap = {}
   for (const t of items) {
-    out[`${prefix}-chip-${t}`] = { id: `${prefix}-chip-${t}`, data: { type: 'Row', flow: 'cluster' } }
+    // 각 chip row는 aria-roledescription="chip" — ds chip 시각 계약(pill + inline × remove) 수신.
+    out[`${prefix}-chip-${t}`] = { id: `${prefix}-chip-${t}`, data: { type: 'Row', flow: 'cluster', roledescription: 'chip' } }
     out[`${prefix}-chipLbl-${t}`] = { id: `${prefix}-chipLbl-${t}`, data: { type: 'Text', variant: 'body', content: t } }
+    // remove 버튼: 인디케이터는 이모지/글자가 아니라 아이콘이 원칙.
+    // 시각은 chip.ts가 ::before 에 lucide 'x' mask로 그림. content는 비움.
     out[`${prefix}-chipBtn-${t}`] = {
       id: `${prefix}-chipBtn-${t}`,
       data: {
         type: 'Ui', component: 'Button',
         props: { 'aria-label': `${t} 제거`, onClick: () => onRemove(t) },
-        content: '×',
+        content: '',
       },
     }
   }

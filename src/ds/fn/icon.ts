@@ -45,6 +45,8 @@ const tokens = [
   'align-left', 'align-center-horizontal', 'align-right',
   'align-top', 'align-center-vertical', 'align-bottom',
   'arrow-right', 'arrow-down', 'plus', 'settings',
+  'x', 'star', 'arrow-up', 'arrow-left', 'trending-up', 'trending-down',
+  'video', 'users', 'badge-check', 'door-open',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

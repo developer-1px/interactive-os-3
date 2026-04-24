@@ -115,10 +115,12 @@ export const certCategories: CertCategory[] = [
   { id: 'nce', name: 'NCE', desc: 'NAVER Cloud Expert — 심화 과정', level: 'NCE', videoCount: 3, visible: true, locked: true },
 ]
 
+// change 문자열에서 ↑/↓ 글리프 제거 — 방향 시각은 changeDir prop + StatCard가 lucide
+// trending-up/down 아이콘으로 렌더링한다. 숫자 앞 기호는 컨텐츠에 남길 수 있다(+3).
 export const kpi = {
   totalVideos: { value: 12, sub: '게시 중 10 · 임시저장 2', change: '+3 이번 달' },
-  enrolled:    { value: 312, sub: '이번 주 신규 수강자',   change: '↑ 24.3% 전주 대비' },
-  completion:  { value: '68%', sub: '완료 212 / 신청 312', change: '↑ 5%p 전주 대비' },
-  rating:      { value: 4.3, sub: '피드백 142건',         change: '↓ 0.1 전주 대비' },
-  dropout:     { value: '27%', sub: '50% 미만 이탈 · 이번 주', change: '↑ 3%p 전주 대비' },
+  enrolled:    { value: 312, sub: '이번 주 신규 수강자',   change: '24.3% 전주 대비' },
+  completion:  { value: '68%', sub: '완료 212 / 신청 312', change: '5%p 전주 대비' },
+  rating:      { value: 4.3, sub: '피드백 142건',         change: '0.1 전주 대비' },
+  dropout:     { value: '27%', sub: '50% 미만 이탈 · 이번 주', change: '3%p 전주 대비' },
 }

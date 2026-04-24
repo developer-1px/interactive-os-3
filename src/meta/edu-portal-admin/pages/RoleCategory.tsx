@@ -20,7 +20,7 @@ export function RoleCategory() {
     rolesList: { id: 'rolesList', data: { type: 'Column', flow: 'list', label: '역할 카테고리' } },
     ...roleItemNodes(list, toggle),
 
-    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', content: '+ 새 역할 카테고리 추가' } },
+    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 역할 카테고리 추가' } },
 
     aside: { id: 'aside', data: { type: 'Aside', flow: 'form', width: 300, labelledBy: 'aside-h' } },
     asideH: { id: 'asideH', data: { type: 'Text', variant: 'h3', content: '안내' } },

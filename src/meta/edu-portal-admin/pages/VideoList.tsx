@@ -151,7 +151,7 @@ function bodyRowNodes(items: typeof videos) {
     out[`c-${v.id}-rating`] = { id: `c-${v.id}-rating`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
       content: v.rating == null
         ? <span style={{ color: 'var(--ds-gray-5)' }}>—</span>
-        : <>★ {v.rating}</>,
+        : <span data-icon="star" aria-label={`별점 ${v.rating}`}>{v.rating}</span>,
     } }
 
     out[`c-${v.id}-status`] = { id: `c-${v.id}-status`, data: { type: 'Ui', component: 'GridCell' } }

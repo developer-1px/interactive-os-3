@@ -3,6 +3,8 @@ import { grid } from './style/widgets/grid/grid'
 import { toolbar } from './style/widgets/bar/toolbar'
 import { toggle, alert } from './style/widgets/form/toggle'
 import { buttonCss } from './style/widgets/form/button'
+import { formCss } from './style/widgets/form/form'
+import { chipCss } from './style/widgets/display/chip'
 import { layout } from './style/widgets/layout/layout'
 import { menu } from './style/widgets/menu/menu'
 import { reset } from './style/seed/reset'
@@ -26,6 +28,8 @@ export const dsCss = [
   toggle(),
   alert(),
   buttonCss,
+  formCss,
+  chipCss,
   grid(),
   toolbar(),
   layout(),

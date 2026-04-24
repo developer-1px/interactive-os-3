@@ -5,7 +5,12 @@ export const listReset = (sel: string) => css`
   :where(${sel}) { list-style: none; margin: 0; padding: 0; }
 `
 
-// 29.5px 높이 계약. clickable·control·사용자 정의 컨트롤 모두 이 한 함수로 정렬된다.
+// 29.5px 높이 계약 + 콘텐츠 중앙 정렬 축.
+// clickable·control·사용자 정의 컨트롤 모두 이 한 함수로 정렬된다.
+// inline-flex + center는 "컨트롤 내부의 아이콘·텍스트가 vertically·horizontally 가운데
+// 위치해야 한다"는 규약을 한 곳에서 박아둔 것 — data-icon::before + 텍스트 조합이 baseline이
+// 아닌 기하 중앙에 놓이게 만든다. <input>/<select>/<textarea>는 replaced element라 내부에
+// 영향 없음.
 export const controlBox = (sel: string) => css`
   :where(${sel}) {
     box-sizing: border-box;
@@ -17,6 +22,9 @@ export const controlBox = (sel: string) => css`
     border-radius: ${radius('sm')};
     background: transparent;
     color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 `
 

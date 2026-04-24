@@ -30,12 +30,14 @@ export const menu = () => [
       display: flex; flex-direction: column; color: var(--ds-fg);
     }
 
+    /* inline-flex + align-items:center + justify-content:center + gap은 controlBox 축에서 상속.
+       여기선 display를 flex(블록 플로우)로 넓히고, menuitem만 space-between로 덮는다. */
     [role="menuitem"],
     [role="menuitemcheckbox"],
     [role="menuitemradio"] {
       padding: ${rowPadding(2.5)};
       border-radius: ${radius('sm')};
-      display: flex; align-items: center;
+      display: flex;
       gap: ${pad(2)};
       cursor: default; user-select: none; outline: none;
       transition: background-color var(--ds-dur-fast) var(--ds-ease-out),

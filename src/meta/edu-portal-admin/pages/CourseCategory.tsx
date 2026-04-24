@@ -20,7 +20,7 @@ export function CourseCategory() {
 
     list: { id: 'list', data: { type: 'Column', flow: 'list' } },
     ...certItemNodes(list, toggle),
-    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', content: '+ 새 코스 카테고리 추가' } },
+    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 코스 카테고리 추가' } },
 
     aside: { id: 'aside', data: { type: 'Aside', flow: 'form', width: 300, labelledBy: 'ccHelp-h' } },
     asideH: { id: 'asideH', data: { type: 'Text', variant: 'h3', content: '안내' } },

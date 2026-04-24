@@ -38,22 +38,37 @@ export const buttonCss = css`
     border-color: ${tint(accent(), 40)};
   }
 
-  /* ── Primary (actions 영역) ───────────────────────────────────
-     topbar의 "+ 영상 등록", Dialog의 "저장" 등 페이지 주 행동. */
-  [aria-roledescription="actions"] > button {
+  /* ── Primary (actions 영역의 "주" 버튼 하나) ─────────────────────
+     [aria-roledescription="actions"] 안의 첫 번째 버튼만 primary로 승격.
+     두 번째 이상은 default 스타일 (2CTA 경쟁 방지 — 1 primary 규약). */
+  [aria-roledescription="actions"] > button:first-of-type {
     background: ${accent()};
     color: ${onAccent()};
+    border: 1px solid ${accent()};
     border-radius: ${radius('md')};
     padding: 0 ${pad(4)};
     font-weight: 600;
     transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
                 transform var(--ds-dur-fast) var(--ds-ease-out);
   }
-  [aria-roledescription="actions"] > button:hover:not([aria-disabled="true"]) {
+  [aria-roledescription="actions"] > button:first-of-type:hover:not([aria-disabled="true"]) {
     background: ${tint(accent(), 85)};
   }
-  [aria-roledescription="actions"] > button:active:not([aria-disabled="true"]) {
+  [aria-roledescription="actions"] > button:first-of-type:active:not([aria-disabled="true"]) {
     transform: translateY(1px);
+  }
+
+  /* ── Danger (위험 영역) ────────────────────────────────────────
+     [aria-roledescription="danger"] 섹션 안의 button은 경고 색. 삭제/해지 등. */
+  [aria-roledescription="danger"] button {
+    background: ${tint(`var(--ds-danger)`, 8)};
+    color: var(--ds-danger);
+    border-color: ${tint(`var(--ds-danger)`, 30)};
+  }
+  [aria-roledescription="danger"] button:hover:not([aria-disabled="true"]) {
+    background: var(--ds-danger);
+    color: ${onAccent()};
+    border-color: var(--ds-danger);
   }
 
   /* ── 예외: columnheader 안의 sort 토글 버튼은 텍스트 링크처럼 처리

@@ -10,13 +10,13 @@ type StatCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   value: ReactNode
   sub?: ReactNode
   change?: ReactNode
-  /** '↑'·'↓' 시각 큐의 방향 */
+  /** 변화 방향 — display.ts가 trending-up/down 아이콘을 mask로 주입 */
   changeDir?: 'up' | 'down'
   /** 누적/신규 같은 미니 배지 */
   topBadge?: { tone?: BadgeTone; content: ReactNode }
   /** 카드 전체 강조 (이탈율 같은 alert 카드) */
   tone?: 'normal' | 'alert'
-  /** 16px emoji/lucide 등 */
+  /** lucide data-icon span 등 아이콘 노드 — 이모지 금지 */
   icon?: ReactNode
 }
 

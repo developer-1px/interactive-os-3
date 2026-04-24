@@ -1,4 +1,4 @@
-import { css, dim, mix, pad, radius, status, surface, tint } from '../../../fn'
+import { css, dim, icon, mix, pad, radius, status, surface, tint } from '../../../fn'
 
 /**
  * Display widgets — Badge / LegendDot / StatCard / BarChart / Top10List.
@@ -106,8 +106,16 @@ export const display = () => css`
     font-weight: 500;
     color: ${dim(55)};
   }
+  [data-ds="StatCard"] > [data-ds-change] {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(0.5)};
+  }
   [data-ds="StatCard"] > [data-ds-change][data-dir="up"]   { color: ${status('success')}; }
   [data-ds="StatCard"] > [data-ds-change][data-dir="down"] { color: ${status('danger')}; }
+  /* 방향 아이콘 — lucide trending-up/down mask */
+  [data-ds="StatCard"] > [data-ds-change][data-dir="up"]::before   { ${icon('trending-up',   '1em')} }
+  [data-ds="StatCard"] > [data-ds-change][data-dir="down"]::before { ${icon('trending-down', '1em')} }
 
   /* ── BarChart ──────────────────────────────────────────────────── */
   [data-ds="BarChart"] {

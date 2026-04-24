@@ -238,15 +238,16 @@ export function Dashboard() {
 /* ── helpers ───────────────────────────────────────────────────── */
 
 function kpiNodes() {
+  // 이모지 아이콘 → lucide 토큰으로 치환. StatCard.icon은 ReactNode라 span[data-icon]으로 전달.
   const items: Array<{
-    key: string; kpiKey: keyof typeof kpi; term: string; icon: string;
+    key: string; kpiKey: keyof typeof kpi; term: string; iconToken: string;
     changeDir: 'up' | 'down'; tone?: 'alert'; topBadge?: string;
   }> = [
-    { key: 'totalVideos', kpiKey: 'totalVideos', term: '전체 영상',  icon: '🎬', changeDir: 'up', topBadge: '누적' },
-    { key: 'enrolled',    kpiKey: 'enrolled',    term: '수강 신청',  icon: '👥', changeDir: 'up' },
-    { key: 'completion',  kpiKey: 'completion',  term: '평균 완료율', icon: '✅', changeDir: 'up' },
-    { key: 'rating',      kpiKey: 'rating',      term: '평균 별점',   icon: '⭐', changeDir: 'down' },
-    { key: 'dropout',     kpiKey: 'dropout',     term: '평균 이탈율', icon: '🚪', changeDir: 'down', tone: 'alert' },
+    { key: 'totalVideos', kpiKey: 'totalVideos', term: '전체 영상',  iconToken: 'video',       changeDir: 'up', topBadge: '누적' },
+    { key: 'enrolled',    kpiKey: 'enrolled',    term: '수강 신청',  iconToken: 'users',       changeDir: 'up' },
+    { key: 'completion',  kpiKey: 'completion',  term: '평균 완료율', iconToken: 'badge-check', changeDir: 'up' },
+    { key: 'rating',      kpiKey: 'rating',      term: '평균 별점',   iconToken: 'star',        changeDir: 'down' },
+    { key: 'dropout',     kpiKey: 'dropout',     term: '평균 이탈율', iconToken: 'door-open',   changeDir: 'down', tone: 'alert' },
   ]
   const out: Record<string, { id: string; data: Record<string, unknown> }> = {}
   for (const it of items) {
@@ -257,7 +258,9 @@ function kpiNodes() {
         type: 'Ui', component: 'StatCard',
         props: {
           label: it.term, value: v.value, sub: v.sub, change: v.change,
-          changeDir: it.changeDir, icon: it.icon, tone: it.tone ?? 'normal',
+          changeDir: it.changeDir,
+          icon: <span data-icon={it.iconToken} aria-hidden="true" />,
+          tone: it.tone ?? 'normal',
           topBadge: it.topBadge ? { tone: 'info', content: it.topBadge } : undefined,
           'aria-label': it.term,
         },
@@ -335,7 +338,7 @@ function videoRowNodes(prefix: string) {
       [`roles`, roleChips],
       [`enrolled`, v.enrolled],
       [`completion`, completionCell],
-      [`rating`, v.rating == null ? '—' : <>★ {v.rating}</>],
+      [`rating`, v.rating == null ? '—' : <span data-icon="star" aria-label={`별점 ${v.rating}`}>{v.rating}</span>],
       [`status`, <Badge tone={statusTone}>{v.status}</Badge>],
       [`createdAt`, v.createdAt],
     ]

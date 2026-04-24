@@ -23,8 +23,9 @@ export function Topbar() {
         id: 'action',
         data: {
           type: 'Ui', component: 'Button',
-          props: { onClick: onAction },
-          content: onEditScreen ? '← 목록으로' : '+ 영상 등록',
+          // data-icon으로 lucide mask 아이콘 선행 주입 — 이모지·글자 indicator 금지.
+          props: { onClick: onAction, 'data-icon': onEditScreen ? 'arrow-left' : 'plus' },
+          content: onEditScreen ? '목록으로' : '영상 등록',
         },
       },
     },
