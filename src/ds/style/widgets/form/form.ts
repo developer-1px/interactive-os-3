@@ -187,4 +187,13 @@ export const formCss = css`
     /* 이미 checked인 박스는 accent fill 유지, unchecked인 경우만 hover 시 border 힌트 */
     border-color: ${tint(accent(), 50)};
   }
+
+  /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */
+  section[data-emphasis="raised"] > :where(h2, h3):first-child {
+    margin: 0 0 ${pad(2)};
+    padding-bottom: ${pad(2)};
+    border-bottom: 1px solid ${dim(8)};
+    font-size: var(--ds-text-md);
+    font-weight: 600;
+  }
 `
