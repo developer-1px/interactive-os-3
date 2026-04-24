@@ -10,18 +10,16 @@ export type RowProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
 }
 
 /**
- * Horizontal flex container. Classless — styled by [data-ds="Row"].
- * `role="group"` is only applied when the consumer provides an accessible name
- * (aria-label or aria-labelledby), avoiding the nameless-group trap.
+ * Horizontal flex container. 순수 시각 primitive — 의미 role을 방출하지 않는다.
+ * 스타일은 [data-ds="Row"] (구조적 식별자; className/variant class가 아님).
+ * 접근성 그룹이 필요하면 Aside / MenuGroup / ListboxGroup 같은 의미 역할 컴포넌트를 쓴다.
  */
 export function Row({ flow, emphasis, children, ...rest }: RowProps) {
-  const hasName = Boolean(rest['aria-label'] || rest['aria-labelledby'])
   return (
     <div
       data-ds="Row"
       data-flow={flow}
       data-emphasis={emphasis}
-      role={hasName ? 'group' : undefined}
       {...rest}
     >
       {children}

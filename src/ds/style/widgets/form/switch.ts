@@ -17,7 +17,10 @@ export const switchCss = css`
     border-radius: 50%;
     background: var(--ds-bg);
     box-shadow: var(--ds-shadow);
-    transition: transform 120ms;
+    transition: transform var(--ds-dur-base) var(--ds-ease-spring);
+  }
+  :where([role="switch"]) {
+    transition: background-color var(--ds-dur-base) var(--ds-ease-out);
   }
   :where([role="switch"])[aria-checked="true"] { background: var(--ds-accent); }
   :where([role="switch"])[aria-checked="true"]::before {

@@ -1,4 +1,4 @@
-import { css, pad, radius, surface } from '../../../fn'
+import { css, dim, mix, pad, radius, status, surface, tint } from '../../../fn'
 
 /**
  * Display widgets — Badge / LegendDot / StatCard / BarChart / Top10List.
@@ -18,20 +18,21 @@ export const display = () => css`
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
-    background: color-mix(in oklch, currentColor 12%, transparent);
+    background: ${dim(12)};
     color: currentColor;
   }
-  [data-ds="Badge"][data-tone="info"]    { color: oklch(55% 0.18 240); background: color-mix(in oklch, oklch(55% 0.18 240) 14%, transparent); }
-  [data-ds="Badge"][data-tone="success"] { color: oklch(52% 0.16 150); background: color-mix(in oklch, oklch(52% 0.16 150) 14%, transparent); }
-  [data-ds="Badge"][data-tone="warning"] { color: oklch(60% 0.18  70); background: color-mix(in oklch, oklch(60% 0.18  70) 14%, transparent); }
-  [data-ds="Badge"][data-tone="danger"]  { color: oklch(55% 0.20  25); background: color-mix(in oklch, oklch(55% 0.20  25) 14%, transparent); }
-  [data-ds="Badge"][data-tone="neutral"] { color: color-mix(in oklch, currentColor 70%, transparent); }
+  /* info는 ds에 semantic 토큰이 없어 accent에 위임. success/warning/danger는 preset 토큰 직접 소비. */
+  [data-ds="Badge"][data-tone="info"]    { color: var(--ds-accent);    background: ${tint('var(--ds-accent)', 14)}; }
+  [data-ds="Badge"][data-tone="success"] { color: ${status('success')}; background: ${tint(status('success'), 14)}; }
+  [data-ds="Badge"][data-tone="warning"] { color: ${status('warning')}; background: ${tint(status('warning'), 14)}; }
+  [data-ds="Badge"][data-tone="danger"]  { color: ${status('danger')};  background: ${tint(status('danger'), 14)}; }
+  [data-ds="Badge"][data-tone="neutral"] { color: ${dim(70)}; }
 
   /* ── LegendDot ─────────────────────────────────────────────────── */
   [data-ds="LegendDot"] {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};
     font-size: var(--ds-text-xs);
-    color: color-mix(in oklch, currentColor 70%, transparent);
+    color: ${dim(70)};
   }
   [data-ds="LegendDot"]::before {
     content: ''; display: inline-block;
@@ -39,10 +40,10 @@ export const display = () => css`
     border-radius: 999px;
     background: currentColor;
   }
-  [data-ds="LegendDot"][data-tone="info"]    { color: oklch(55% 0.18 240); }
-  [data-ds="LegendDot"][data-tone="success"] { color: oklch(52% 0.16 150); }
-  [data-ds="LegendDot"][data-tone="warning"] { color: oklch(60% 0.18  70); }
-  [data-ds="LegendDot"][data-tone="danger"]  { color: oklch(55% 0.20  25); }
+  [data-ds="LegendDot"][data-tone="info"]    { color: var(--ds-accent); }
+  [data-ds="LegendDot"][data-tone="success"] { color: ${status('success')}; }
+  [data-ds="LegendDot"][data-tone="warning"] { color: ${status('warning')}; }
+  [data-ds="LegendDot"][data-tone="danger"]  { color: ${status('danger')}; }
 
   /* ── StatCard ──────────────────────────────────────────────────── */
   [data-ds="StatCard"] {
@@ -58,8 +59,8 @@ export const display = () => css`
     min-inline-size: 0;
   }
   [data-ds="StatCard"][data-tone="alert"] {
-    border: 1px solid oklch(55% 0.20 25 / 0.4);
-    background: color-mix(in oklch, oklch(55% 0.20 25) 4%, Canvas);
+    border: 1px solid ${tint(status('danger'), 40)};
+    background: ${mix(status('danger'), 4)};
   }
   [data-ds="StatCard"] > header {
     grid-column: 1 / -1;
@@ -72,7 +73,7 @@ export const display = () => css`
   [data-ds="StatCard"] > header > dl > dt {
     display: inline-flex; align-items: center; gap: ${pad(1)};
     font-size: var(--ds-text-sm);
-    color: color-mix(in oklch, currentColor 60%, transparent);
+    color: ${dim(60)};
     font-weight: 500;
   }
   [data-ds="StatCard"] > header > [data-ds-icon] {
@@ -89,17 +90,17 @@ export const display = () => css`
   }
   [data-ds="StatCard"] > [data-ds-sub] {
     grid-column: 1 / -1;
-    color: color-mix(in oklch, currentColor 55%, transparent);
+    color: ${dim(55)};
     font-size: var(--ds-text-xs);
   }
   [data-ds="StatCard"] > [data-ds-change] {
     grid-column: 1 / -1;
     font-size: var(--ds-text-xs);
     font-weight: 500;
-    color: color-mix(in oklch, currentColor 55%, transparent);
+    color: ${dim(55)};
   }
-  [data-ds="StatCard"] > [data-ds-change][data-dir="up"]   { color: oklch(52% 0.16 150); }
-  [data-ds="StatCard"] > [data-ds-change][data-dir="down"] { color: oklch(55% 0.20  25); }
+  [data-ds="StatCard"] > [data-ds-change][data-dir="up"]   { color: ${status('success')}; }
+  [data-ds="StatCard"] > [data-ds-change][data-dir="down"] { color: ${status('danger')}; }
 
   /* ── BarChart ──────────────────────────────────────────────────── */
   [data-ds="BarChart"] {
@@ -118,12 +119,12 @@ export const display = () => css`
   }
   [data-ds="BarChart"] [data-ds-bar-label] {
     font-size: var(--ds-text-sm);
-    color: color-mix(in oklch, currentColor 70%, transparent);
+    color: ${dim(70)};
   }
   [data-ds="BarChart"] [data-ds-bar-track] {
     display: block;
     block-size: 8px; align-self: center;
-    background: color-mix(in oklch, currentColor 6%, transparent);
+    background: ${dim(6)};
     border-radius: 999px;
     overflow: hidden;
   }
@@ -136,16 +137,16 @@ export const display = () => css`
   [data-ds="BarChart"] [data-ds-bar-value] {
     font-size: var(--ds-text-xs);
     font-variant-numeric: tabular-nums;
-    color: color-mix(in oklch, currentColor 60%, transparent);
+    color: ${dim(60)};
     min-inline-size: 3ch; text-align: end;
   }
-  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="info"]    { color: oklch(55% 0.18 240); }
-  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="success"] { color: oklch(52% 0.16 150); }
-  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="warning"] { color: oklch(60% 0.18  70); }
-  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="danger"]  { color: oklch(55% 0.20  25); }
+  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="info"]    { color: var(--ds-accent); }
+  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="success"] { color: ${status('success')}; }
+  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="warning"] { color: ${status('warning')}; }
+  [data-ds="BarChart"] > [data-ds-bars] > li[data-tone="danger"]  { color: ${status('danger')}; }
   [data-ds="BarChart"] > figcaption {
     font-size: var(--ds-text-xs);
-    color: color-mix(in oklch, currentColor 50%, transparent);
+    color: ${dim(50)};
     text-align: end;
   }
 
@@ -160,7 +161,7 @@ export const display = () => css`
     align-items: center;
     column-gap: ${pad(2)};
     padding: ${pad(1)} 0;
-    border-bottom: 1px solid color-mix(in oklch, currentColor 8%, transparent);
+    border-bottom: 1px solid ${dim(8)};
   }
   [data-ds="Top10List"] > li:last-child { border-bottom: 0; }
   [data-ds="Top10List"] [data-ds-rank] {
@@ -168,10 +169,10 @@ export const display = () => css`
     font-weight: 600;
     font-size: var(--ds-text-sm);
     text-align: center;
-    color: color-mix(in oklch, currentColor 55%, transparent);
+    color: ${dim(55)};
   }
   [data-ds="Top10List"] > li:nth-child(-n+3) [data-ds-rank] {
-    color: oklch(55% 0.18 240);
+    color: var(--ds-accent);
   }
   [data-ds="Top10List"] [data-ds-top-label] {
     min-inline-size: 0;
@@ -179,14 +180,14 @@ export const display = () => css`
   }
   [data-ds="Top10List"] [data-ds-count] {
     font-variant-numeric: tabular-nums;
-    color: color-mix(in oklch, currentColor 55%, transparent);
+    color: ${dim(55)};
   }
 
   /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */
   [data-ds="Section"][data-emphasis="raised"] > :where(h2, h3):first-child {
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
-    border-bottom: 1px solid color-mix(in oklch, currentColor 8%, transparent);
+    border-bottom: 1px solid ${dim(8)};
     font-size: var(--ds-text-md);
     font-weight: 600;
   }

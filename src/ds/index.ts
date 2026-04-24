@@ -1,4 +1,6 @@
 import { display } from './style/widgets/display/display'
+import { grid } from './style/widgets/grid/grid'
+import { toggle, alert } from './style/widgets/form/toggle'
 import { layout } from './style/widgets/layout/layout'
 import { menu } from './style/widgets/menu/menu'
 import { reset } from './style/seed/reset'
@@ -19,6 +21,9 @@ export const dsCss = [
   tree(),
   tabs(),
   widgets(),
+  toggle(),
+  alert(),
+  grid(),
   layout(),
   display(),
   iconIndicator(),

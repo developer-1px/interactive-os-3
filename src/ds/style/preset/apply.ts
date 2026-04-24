@@ -43,6 +43,16 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-muted:  ${tokenRefToCss(p.color.muted)};
     --ds-border: ${tokenRefToCss(p.color.border)};
     --ds-accent: ${tokenRefToCss(p.color.accent)};
+    /* accent 위에 올라가는 텍스트 색 — 흰/검 자동 대비. 현재는 흰색 고정, 추후 oklch 분기 */
+    --ds-accent-on: #fff;
+    --ds-success: ${p.color.success ? tokenRefToCss(p.color.success) : 'var(--ds-accent)'};
+    --ds-warning: ${p.color.warning ? tokenRefToCss(p.color.warning) : 'var(--ds-accent)'};
+    --ds-danger:  ${p.color.danger  ? tokenRefToCss(p.color.danger)  : 'var(--ds-accent)'};
+
+    ${(['1','2','3','4','5','6','7','8','9'] as const).map((n) => {
+      const g = p.color.gray?.[n]
+      return `--ds-gray-${n}: ${g ? tokenRefToCss(g) : `color-mix(in oklab, CanvasText ${[3,6,10,16,28,44,62,80,95][Number(n)-1]}%, Canvas)`};`
+    }).join('\n    ')}
 
     ${p.color.traffic ? `
     --ds-traffic-close: ${tokenRefToCss(p.color.traffic.close)};

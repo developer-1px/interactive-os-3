@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:ds": "node scripts/lint-ds.mjs",
+    "audit:role-css": "tsx scripts/role-css-audit.ts",
     "preview": "vite preview"
   },
   "dependencies": {

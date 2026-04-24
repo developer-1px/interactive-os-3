@@ -1,4 +1,4 @@
-import { css, indicator, listReset, pad, radius, rowPadding, surface } from '../../../fn'
+import { css, indicator, listReset, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
 
 export const menu = () => [
   css`
@@ -10,8 +10,10 @@ export const menu = () => [
     }
     button[popovertarget][aria-expanded="true"],
     [role="menuitem"][aria-expanded="true"] {
-      background-color: var(--ds-accent); color: #fff;
+      background-color: var(--ds-accent); color: var(--ds-accent-on);
     }
+    /* 메뉴 아이템은 global tint(selected)가 아니라 풀 accent fill(selectedStrong)로 강조 —
+       팝오버의 짧은 리스트에선 명확한 "이것" 신호가 필요하다. */
 
     [popover] {
       margin: 0;
@@ -36,6 +38,8 @@ export const menu = () => [
       display: flex; align-items: center;
       gap: ${pad(2)};
       cursor: default; user-select: none; outline: none;
+      transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
+                  color var(--ds-dur-fast) var(--ds-ease-out);
     }
     [role="menuitem"] { justify-content: space-between; gap: ${pad(4)}; }
   `,
@@ -43,4 +47,6 @@ export const menu = () => [
   css`[role="menuitem"][aria-haspopup="menu"]::after { opacity: .6; }`,
   indicator('[role="menuitemcheckbox"]', 'check', { on: '[aria-checked="true"]' }),
   indicator('[role="menuitemradio"]',    'dot',   { on: '[aria-checked="true"]' }),
+  // global selected(tint)를 덮어쓰는 풀 fill — menu 3종만 대상.
+  selectedStrong('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]'),
 ].join('\n')

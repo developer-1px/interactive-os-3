@@ -1,4 +1,4 @@
-import { css, pad, radius, rowPadding, surface } from '../../../fn'
+import { css, pad, radius, rowPadding, surface, tint } from '../../../fn'
 
 export const dialogCss = css`
   :where(dialog) {
@@ -10,9 +10,10 @@ export const dialogCss = css`
     min-width: 280px;
     margin: auto;
   }
-  /* 흐리지 않은 투명 백드롭 — 콘텐츠가 선명하게 비치도록 */
+  /* 2026 — 얇은 틴트 + backdrop-filter blur로 콘텐츠를 "위에 뜬" 듯 분리 */
   :where(dialog)::backdrop {
-    background: color-mix(in oklch, CanvasText 6%, transparent);
+    background: ${tint('CanvasText', 10)};
+    backdrop-filter: blur(8px);
   }
 
   /* Command palette — 상단 정렬, 가로 확장, 입력/목록 스택 */

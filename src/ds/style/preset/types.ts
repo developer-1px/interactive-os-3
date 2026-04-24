@@ -23,6 +23,14 @@ export type DsPreset = {
     border: TokenRef
     muted: TokenRef
     accent: TokenRef
+    // Semantic status colors — Badge / Field error / inline indicators가 공유.
+    // 없으면 accent로 폴백.
+    success?: TokenRef
+    warning?: TokenRef
+    danger?: TokenRef
+    // Gray scale — 1(가장 약한 tint) ~ 9(가장 강한 텍스트)로 계층. muted/border는
+    // 이 스케일에서 파생 가능. preset에 없으면 CanvasText 기반 color-mix로 폴백.
+    gray?: Partial<Record<'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9', TokenRef>>
     traffic?: { close: TokenRef; min: TokenRef; max: TokenRef }
   }
   space: { unit: string }

@@ -1,4 +1,5 @@
 import { css, pad, radius, surface } from '../../../fn/values'
+import { mix } from '../../../fn/palette'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -47,7 +48,7 @@ export const layout = () => css`
     padding: ${pad(3)};
   }
   [data-ds][data-emphasis="sunk"]    {
-    background: color-mix(in oklch, Canvas 96%, CanvasText 4%);
+    background: ${mix('Canvas', 96, 'CanvasText')};
     border-radius: ${radius('md')};
     padding: ${pad(3)};
   }

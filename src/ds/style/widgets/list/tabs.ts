@@ -1,4 +1,4 @@
-import { css, pad, radius } from '../../../fn'
+import { accent, css, dim, pad, radius, tint } from '../../../fn'
 
 /**
  * Tabs — 보편적 탭 어포던스.
@@ -24,14 +24,17 @@ export const tabs = () => css`
     padding: ${pad(1.5)} ${pad(3)};
     border-bottom: 2px solid transparent;
     margin-bottom: -1px;
-    color: color-mix(in oklab, currentColor 65%, transparent);
+    color: ${dim(65)};
     background: transparent;
     border-radius: ${radius('sm')} ${radius('sm')} 0 0;
     user-select: none;
+    transition: color var(--ds-dur-base) var(--ds-ease-out),
+                border-bottom-color var(--ds-dur-base) var(--ds-ease-out),
+                border-inline-end-color var(--ds-dur-base) var(--ds-ease-out);
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-bottom-color: color-mix(in oklab, var(--ds-accent) 40%, transparent);
+    border-bottom-color: ${tint(accent(), 40)};
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"][aria-selected="true"] {
     color: var(--ds-accent);
@@ -49,7 +52,7 @@ export const tabs = () => css`
     padding: ${pad(1.5)} ${pad(3)};
     border-inline-end: 2px solid transparent;
     margin-inline-end: -1px;
-    color: color-mix(in oklab, currentColor 65%, transparent);
+    color: ${dim(65)};
     background: transparent;
     border-radius: ${radius('sm')} 0 0 ${radius('sm')};
     text-align: start;
@@ -57,7 +60,7 @@ export const tabs = () => css`
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-inline-end-color: color-mix(in oklab, var(--ds-accent) 40%, transparent);
+    border-inline-end-color: ${tint(accent(), 40)};
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"][aria-selected="true"] {
     color: var(--ds-accent);

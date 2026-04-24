@@ -9,27 +9,45 @@ export const defaultPreset: DsPreset = {
     muted: { mix: ['CanvasText', 60, 'transparent'] },
     border: { mix: ['CanvasText', 12, 'transparent'] },
     accent: 'oklch(65% 0.22 var(--ds-hue))',
+    success: 'oklch(62% 0.15 150)',
+    warning: 'oklch(72% 0.15 75)',
+    danger:  'oklch(58% 0.20 25)',
+    // Light/dark 모두에서 일관된 계층 — Canvas/CanvasText를 기준으로 단계적 mix.
+    // 숫자가 높을수록 CanvasText(전경)에 가까워진다 = 더 강한 대비.
+    gray: {
+      '1': { mix: ['CanvasText', 3,  'Canvas'] },
+      '2': { mix: ['CanvasText', 6,  'Canvas'] },
+      '3': { mix: ['CanvasText', 10, 'Canvas'] },
+      '4': { mix: ['CanvasText', 16, 'Canvas'] },
+      '5': { mix: ['CanvasText', 28, 'Canvas'] },
+      '6': { mix: ['CanvasText', 44, 'Canvas'] },
+      '7': { mix: ['CanvasText', 62, 'Canvas'] },
+      '8': { mix: ['CanvasText', 80, 'Canvas'] },
+      '9': { mix: ['CanvasText', 95, 'Canvas'] },
+    },
   },
   space: { unit: '4px' },
+  // 2026 스케일 — 산업 수렴 방향(Linear/Arc/Vercel): 더 둥글게, 덜 타이트하게.
   radius: {
-    sm: '4px',
-    md: '6px',
-    lg: '10px',
+    sm: '6px',
+    md: '10px',
+    lg: '14px',
     pill: '999px',
   },
   text: {
     xs: '11px',
     sm: '12px',
-    md: '13px',
+    md: '13.5px',
     lg: '15px',
     xl: '18px',
-    '2xl': '22px',
+    '2xl': '24px',
   },
   font: {
     sans: `ui-sans-serif, -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`,
     mono: `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace`,
   },
-  leading: { normal: 1.5, tight: 1.3, tracking: '-0.01em' },
+  // 타이포 타이트닝 — 본문 leading 낮추고 tracking은 강화.
+  leading: { normal: 1.4, tight: 1.25, tracking: '-0.014em' },
   /* 현재 ds 재현: elev-2 = 기존 --ds-shadow (선형 depth 스케일),
      elev-1 = none (border-only), elev-0 = none, elev-3 = 기존 shadow × 1.5 */
   /* d=1의 ring은 기존 `border: 1px solid var(--ds-border)`와 1:1 동치 (hairline, alpha 12%).

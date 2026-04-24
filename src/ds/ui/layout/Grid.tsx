@@ -11,19 +11,16 @@ export type GridProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
 }
 
 /**
- * N-column grid container. Classless — styled by [data-ds="Grid"][data-cols="…"].
- * `role="group"` is only applied when the consumer provides an accessible name.
- * No raw template-string escape hatch — pick one of 1 | 2 | 3 | 4 | 6 | 12.
+ * N-column grid container. 순수 시각 primitive — 의미 role을 방출하지 않는다.
+ * 스타일은 [data-ds="Grid"][data-cols="…"]. cols는 1 | 2 | 3 | 4 | 6 | 12에서만 선택.
  */
 export function Grid({ cols, flow, emphasis, children, ...rest }: GridProps) {
-  const hasName = Boolean(rest['aria-label'] || rest['aria-labelledby'])
   return (
     <div
       data-ds="Grid"
       data-cols={cols}
       data-flow={flow}
       data-emphasis={emphasis}
-      role={hasName ? 'group' : undefined}
       {...rest}
     >
       {children}

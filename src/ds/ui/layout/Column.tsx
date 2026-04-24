@@ -8,17 +8,15 @@ export type ColumnProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
 }
 
 /**
- * Vertical flex container. Classless — styled by [data-ds="Column"].
- * `role="group"` is only applied when the consumer provides an accessible name.
+ * Vertical flex container. 순수 시각 primitive — 의미 role을 방출하지 않는다.
+ * 스타일은 [data-ds="Column"]. 의미 그룹은 Aside / Section / MenuGroup 등을 사용.
  */
 export function Column({ flow, emphasis, children, ...rest }: ColumnProps) {
-  const hasName = Boolean(rest['aria-label'] || rest['aria-labelledby'])
   return (
     <div
       data-ds="Column"
       data-flow={flow}
       data-emphasis={emphasis}
-      role={hasName ? 'group' : undefined}
       {...rest}
     >
       {children}
