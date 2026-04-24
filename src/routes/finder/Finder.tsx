@@ -1,5 +1,6 @@
+import { useSyncExternalStore } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { walk } from './data'
+import { getTree, subscribeTree, walk } from './data'
 import { TitleBar } from './TitleBar'
 import { Sidebar } from './Sidebar'
 import { Columns } from './Columns'
@@ -9,6 +10,7 @@ export function Finder() {
   const navigate = useNavigate()
   const { _splat } = useParams({ strict: false }) as { _splat?: string }
   const path = '/' + (_splat ?? '')
+  useSyncExternalStore(subscribeTree, getTree, getTree)
   const chain = walk(path)
   const current = chain[chain.length - 1] ?? null
   const go = (p: string) =>

@@ -1,7 +1,27 @@
-import { tree } from 'virtual:fs-tree'
+import { tree as initialTree } from 'virtual:fs-tree'
 import type { FsNode, SidebarItem } from './types'
 
-export { tree }
+let currentTree: FsNode = (import.meta.hot?.data.tree as FsNode | undefined) ?? initialTree
+const listeners: Set<() => void> = (import.meta.hot?.data.listeners as Set<() => void> | undefined) ?? new Set()
+if (import.meta.hot) {
+  import.meta.hot.data.listeners = listeners
+  import.meta.hot.accept()
+}
+
+export const tree = initialTree
+export function getTree(): FsNode { return currentTree }
+export function subscribeTree(l: () => void): () => void {
+  listeners.add(l)
+  return () => { listeners.delete(l) }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.on('fs-tree:update', (next: FsNode) => {
+    currentTree = next
+    if (import.meta.hot) import.meta.hot.data.tree = next
+    listeners.forEach((l) => l())
+  })
+}
 
 /** 프로젝트 파일 raw 텍스트 lazy loader — path → () => Promise<string> */
 const textLoaders = {
@@ -27,6 +47,9 @@ const imageUrls = {
   ...import.meta.glob('/public/**/*.{png,jpg,jpeg,gif,webp,avif,svg}', {
     query: '?url', import: 'default', eager: true,
   }),
+  ...import.meta.glob('/docs/**/*.{png,jpg,jpeg,gif,webp,avif,svg}', {
+    query: '?url', import: 'default', eager: true,
+  }),
 } as Record<string, string>
 
 export function getImageUrl(path: string): string | undefined {
@@ -42,8 +65,9 @@ export async function loadText(path: string): Promise<string | null> {
 /** path를 / 세그먼트로 분해해 tree 경로를 따라가며 각 단계의 노드를 반환. */
 export function walk(path: string): FsNode[] {
   const parts = path.split('/').filter(Boolean)
-  const chain: FsNode[] = [tree]
-  let cur: FsNode | undefined = tree
+  const root = currentTree
+  const chain: FsNode[] = [root]
+  let cur: FsNode | undefined = root
   for (const p of parts) {
     cur = cur?.children?.find((c) => c.name === p)
     if (!cur) break
