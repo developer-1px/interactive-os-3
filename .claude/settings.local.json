@@ -4,10 +4,12 @@
       "Bash(pnpm tsc *)",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm install *)",
+      "Bash(pnpm add *)",
+      "Bash(git commit -m ' *)"
     ]
   },
-  "enabledPlugins": {
-    "teo-claude-code@teo-marketplace": true
-  }
+  "enabledPlugins": {}
 }

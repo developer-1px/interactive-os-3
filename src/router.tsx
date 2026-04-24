@@ -1,10 +1,10 @@
 import {
   createRootRoute, createRoute, createRouter, Outlet, redirect,
 } from '@tanstack/react-router'
-import { Finder } from './finder/Finder'
-import { Inspector } from './inspector/Inspector'
-import { Matrix } from './ds-matrix/Matrix'
-import { CommandPalette } from './controls/ui/overlay/CommandPalette'
+import { Finder } from './meta/finder/Finder'
+import { Inspector } from './meta/inspector/Inspector'
+import { Matrix } from './meta/matrix/Matrix'
+import { CommandPalette } from './ds/ui/overlay/CommandPalette'
 
 const rootRoute = createRootRoute({
   component: () => (
