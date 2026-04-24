@@ -5,7 +5,7 @@ import { parentOf } from './index'
 
 const OPEN_KEYS = new Set(['ArrowRight', 'Enter', ' '])
 
-export const expand: Axis = (d, id, k) => {
+export const expand: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
   const kids = getChildren(d, id)
   if (kids.length > 0 && !isDisabled(d, id) && OPEN_KEYS.has(k.key)) {
     const events: Event[] = [{ type: 'expand', id, open: true }]

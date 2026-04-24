@@ -10,7 +10,7 @@ const AXIS_KEYS = {
 
 export const navigate =
   (orientation: 'vertical' | 'horizontal' = 'vertical'): Axis =>
-  (d, id, k) => {
+  (d, id, t) => { if (t.kind !== "key") return null; const k = t;
     const { prev, next } = AXIS_KEYS[orientation]
     const sibs = enabledSiblings(d, id)
     if (!sibs.length) return null

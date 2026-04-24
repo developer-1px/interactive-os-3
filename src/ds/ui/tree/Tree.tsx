@@ -11,15 +11,13 @@ const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
 
 export function Tree({ data, onEvent, ...rest }: TreeProps) {
-  const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
+  const { focusId, expanded, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
 
-  // 위임: 컨테이너 ul에서 한 번 처리. 단일 제스처 emit.
-  const onClick = (e: MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     const id = idFrom(e)
-    if (!id || isDisabled(data, id)) return
-    onEvent?.({ type: 'activate', id })
+    if (id) onClick(e, id)
   }
-  const onKeyDown = (e: KeyboardEvent) => {
+  const handleKey = (e: KeyboardEvent) => {
     const id = idFrom(e)
     if (id) onKey(e, id)
   }
@@ -51,5 +49,5 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
       )
     })
 
-  return <ul role="tree" onClick={onClick} onKeyDown={onKeyDown} {...rest}>{render(ROOT, 1)}</ul>
+  return <ul role="tree" onClick={handleClick} onKeyDown={handleKey} {...rest}>{render(ROOT, 1)}</ul>
 }

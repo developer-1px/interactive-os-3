@@ -18,7 +18,7 @@ const TABLE: Partial<Record<string, IndexFn>> = {
   End: (len) => len - 1,
 }
 
-export const treeNavigate: Axis = (d, id, k) => {
+export const treeNavigate: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
   const fn = TABLE[k.key]
   const visible = fn ? visibleFlat(d, ROOT, getExpanded(d)).filter((vid) => !isDisabled(d, vid)) : null
   const i = visible ? visible.indexOf(id) : -1

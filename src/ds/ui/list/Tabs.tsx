@@ -1,10 +1,12 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import { useRovingDOM } from '../../core/hooks/useRovingDOM'
 
 // @slot children — composable (wrapper/label/subpart)
 type Div = Omit<ComponentPropsWithoutRef<'div'>, 'role'>
 
-export function TabList({ orientation, ...rest }: Div & { orientation?: 'horizontal' | 'vertical' }) {
-  return <div role="tablist" aria-orientation={orientation} {...rest} />
+export function TabList({ orientation = 'horizontal', ...rest }: Div & { orientation?: 'horizontal' | 'vertical' }) {
+  const { onKeyDown, ref } = useRovingDOM<HTMLDivElement>(null, { orientation })
+  return <div ref={ref} role="tablist" aria-orientation={orientation} onKeyDown={onKeyDown} {...rest} />
 }
 
 export function Tab({ selected, disabled, controls, children, ...rest }: Div & {

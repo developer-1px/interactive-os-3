@@ -18,22 +18,20 @@ const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
 
 export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
-  const { focusId, onKey, bindFocus } = useRoving(axis, data, onEvent)
+  const { focusId, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
   const kids = getChildren(data, ROOT)
 
-  // 위임. 단일 제스처 emit. focus 동기화는 소비자가 navigateOnActivate로.
-  const onClick = (e: MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     const id = idFrom(e)
-    if (!id || isDisabled(data, id)) return
-    onEvent?.({ type: 'activate', id })
+    if (id) onClick(e, id)
   }
-  const onKeyDown = (e: KeyboardEvent) => {
+  const handleKey = (e: KeyboardEvent) => {
     const id = idFrom(e)
     if (id) onKey(e, id)
   }
 
   return (
-    <ul role="listbox" onClick={onClick} onKeyDown={onKeyDown} {...rest}>
+    <ul role="listbox" onClick={handleClick} onKeyDown={handleKey} {...rest}>
       {kids.map((id, i) => {
         const d = data.entities[id]?.data ?? {}
         const selected = Boolean(d.selected)

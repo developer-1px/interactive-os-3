@@ -10,7 +10,7 @@ export function useRoving(
 ) {
   const focusId = getFocus(data)
   const expanded = getExpanded(data)
-  const onKey = bindAxis(axis, data, onEvent)
+  const { onKey, onClick } = bindAxis(axis, data, onEvent)
   const bindFocus = useFocusBridge(focusId)
-  return { focusId, expanded, onKey, bindFocus }
+  return { focusId, expanded, onKey, onClick, bindFocus }
 }

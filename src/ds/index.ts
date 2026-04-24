@@ -42,6 +42,7 @@ export { reduce } from './core/state/reduce'
 export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
 export { useControlState } from './core/hooks/useControlState'
 export { useRoving } from './core/hooks/useRoving'
+export { useRovingDOM } from './core/hooks/useRovingDOM'
 export { parentOf } from './core/axes'
 export {
   navigateOnActivate,

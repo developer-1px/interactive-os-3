@@ -16,4 +16,7 @@ node scripts/lint-ds-invariants.mjs
 echo "→ lint:ds:contracts (data 주도 ui 계약 정합)"
 node scripts/lint-ds-contracts.mjs
 
+echo "→ lint:ds:keyboard (role 별 APG 키보드 계약)"
+node scripts/lint-ds-keyboard.mjs
+
 echo "✅ ds lint 통과"

@@ -40,7 +40,7 @@ const TABLE: Record<string, Record<Branch, Action>> = {
 const classify = (kids: string[], open: boolean): Branch =>
   kids.length === 0 ? 'leaf' : open ? 'branchOpen' : 'branchClosed'
 
-export const treeExpand: Axis = (d, id, k) => {
+export const treeExpand: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
   const kids = getChildren(d, id)
   const branch = classify(kids, getExpanded(d).has(id))
   const action = !isDisabled(d, id) ? TABLE[k.key]?.[branch] : undefined

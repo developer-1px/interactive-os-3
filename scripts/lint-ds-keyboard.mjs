@@ -56,7 +56,7 @@ for (const file of files) {
   const roleMatch = src.match(/role=["']([a-z]+)["']/)
   const role = roleMatch?.[1] ?? null
   const hasCollection = /\b(CollectionProps|ControlProps)\b/.test(src)
-  const usesRoving = /\buseRoving\b/.test(src) || /\bcomposeAxes\b/.test(src)
+  const usesRoving = /\buseRoving\b/.test(src) || /\buseRovingDOM\b/.test(src) || /\bcomposeAxes\b/.test(src)
   const hasOnKeyDown = /onKeyDown\s*=\s*\{/.test(src)
   const hasNative = /<(button|input|select|textarea|details|summary|dialog)\b/.test(src)
 

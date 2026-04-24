@@ -1,8 +1,37 @@
 /** Chat — Slack 3열 (채널 · 스트림+composer · 멤버). */
-import { useState } from 'react'
-import { Renderer, definePage } from '../../../ds'
-import { INITIAL, now, type Msg } from './data'
+import { useMemo, useState } from 'react'
+import {
+  Renderer, definePage, useControlState, navigateOnActivate,
+  type Event, type NormalizedData,
+} from '../../../ds'
+import { INITIAL, channels, now, type Channel, type Msg } from './data'
 import { buildChatPage } from './build'
+
+const iconOf = (t: Channel['type']) => (t === 'dm' ? 'user' : t === 'private' ? 'lock' : 'hash')
+
+function useChannelList(items: Channel[], active: string, setActive: (id: string) => void) {
+  const base = useMemo<NormalizedData>(() => {
+    const entities: Record<string, { id: string; data: Record<string, unknown> }> = {
+      __root__: { id: '__root__', data: {} },
+      __focus__: { id: '__focus__', data: { id: active } },
+    }
+    for (const c of items) {
+      entities[c.id] = {
+        id: c.id,
+        data: { label: c.name, icon: iconOf(c.type), badge: c.unread, selected: c.id === active },
+      }
+    }
+    return { entities, relationships: { __root__: items.map((c) => c.id) } }
+  }, [active, items])
+
+  const [data, dispatch] = useControlState(base)
+  const onEvent = (e: Event) =>
+    navigateOnActivate(data, e).forEach((ev) => {
+      dispatch(ev)
+      if (ev.type === 'activate') setActive(ev.id)
+    })
+  return { data, onEvent }
+}
 
 export function Chat() {
   const [active, setActive] = useState('ds')
@@ -13,5 +42,15 @@ export function Chat() {
     setStream((s) => ({ ...s, [active]: [...(s[active] ?? []), { id: `m-${Date.now()}`, who: '나', time: now(), text: v, me: true }] }))
     setDraft('')
   }
-  return <Renderer page={definePage(buildChatPage({ active, draft, stream, setActive, setDraft, send }))} />
+  const pubs = useMemo(() => channels.filter((c) => c.type !== 'dm'), [])
+  const dms = useMemo(() => channels.filter((c) => c.type === 'dm'), [])
+  const pubNav = useChannelList(pubs, active, setActive)
+  const dmNav = useChannelList(dms, active, setActive)
+  return (
+    <Renderer
+      page={definePage(
+        buildChatPage({ active, draft, stream, setActive, setDraft, send, pubNav, dmNav }),
+      )}
+    />
+  )
 }

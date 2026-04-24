@@ -1,21 +1,15 @@
-import { Badge, ROOT, type NormalizedData } from '../../../ds'
-import { ACTS, INITIAL, MEMBERS, activeLabel, channels, type Msg } from './data'
+import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ACTS, INITIAL, MEMBERS, activeLabel, type Msg } from './data'
 
 export interface ChatState {
   active: string; draft: string; stream: Record<string, Msg[]>
   setActive: (id: string) => void; setDraft: (v: string) => void; send: () => void
+  pubNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  dmNav: { data: NormalizedData; onEvent: (e: Event) => void }
 }
-
-const chanEntry = (c: typeof channels[number], active: string, setActive: (id: string) => void) => [`ch-${c.id}`, { id: `ch-${c.id}`, data: {
-  type: 'Ui', component: 'ToolbarButton',
-  props: { pressed: active === c.id, onClick: () => setActive(c.id), 'aria-label': c.name, 'data-icon': c.type === 'dm' ? 'user' : c.type === 'private' ? 'lock' : 'hash' },
-  content: <><span>{c.name}</span>{c.unread && <Badge tone="danger">{c.unread}</Badge>}</>,
-} }] as const
 
 export function buildChatPage(s: ChatState): NormalizedData {
   const msgs = s.stream[s.active] ?? INITIAL[s.active] ?? []
-  const pubs = channels.filter((c) => c.type !== 'dm')
-  const dms = channels.filter((c) => c.type === 'dm')
   const msgEnts = msgs.flatMap((m) => [
     [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
     [`mwho-${m.id}`, { id: `mwho-${m.id}`, data: { type: 'Text', variant: 'strong', content: m.who, width: 96 } }],
@@ -25,14 +19,14 @@ export function buildChatPage(s: ChatState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
       side: { id: 'side', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
       ws: { id: 'ws', data: { type: 'Text', variant: 'h3', content: 'DS Workspace' } },
       wsMeta: { id: 'wsMeta', data: { type: 'Text', variant: 'small', content: '유용태 · 온라인' } },
       chHdr: { id: 'chHdr', data: { type: 'Text', variant: 'strong', content: '채널' } },
-      ...Object.fromEntries(pubs.map((c) => chanEntry(c, s.active, s.setActive))),
+      pubList: { id: 'pubList', data: { type: 'Ui', component: 'Listbox', props: { data: s.pubNav.data, onEvent: s.pubNav.onEvent, 'aria-label': '채널' } } },
       dmHdr: { id: 'dmHdr', data: { type: 'Text', variant: 'strong', content: 'DM' } },
-      ...Object.fromEntries(dms.map((c) => chanEntry(c, s.active, s.setActive))),
+      dmList: { id: 'dmList', data: { type: 'Ui', component: 'Listbox', props: { data: s.dmNav.data, onEvent: s.dmNav.onEvent, 'aria-label': 'DM' } } },
       main: { id: 'main', data: { type: 'Column', flow: 'list', grow: true } },
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
       mainTitle: { id: 'mainTitle', data: { type: 'Text', variant: 'h2', content: `# ${activeLabel(s.active)}` } },
@@ -53,7 +47,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page'], page: ['side', 'main', 'right'],
-      side: ['ws', 'wsMeta', 'chHdr', ...pubs.map((c) => `ch-${c.id}`), 'dmHdr', ...dms.map((c) => `ch-${c.id}`)],
+      side: ['ws', 'wsMeta', 'chHdr', 'pubList', 'dmHdr', 'dmList'],
       main: ['mainHdr', 'stream', 'composer'],
       mainHdr: ['mainTitle', 'mainActions'],
       mainActions: ACTS.map(([id]) => id) as string[],

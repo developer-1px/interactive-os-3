@@ -40,6 +40,7 @@ export const dialogCss = css`
     border-top: 1px solid var(--ds-border);
     border-radius: 0;
     max-height: min(60vh, 420px);
+    min-height: 0;
     overflow: auto;
     padding: ${pad(1)} 0 0;
   }

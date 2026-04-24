@@ -6,7 +6,7 @@ import { enabledSiblings } from './index'
 
 const WINDOW_MS = 500
 
-export const typeahead: Axis = (d, id, k) => {
+export const typeahead: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
   if (!isPrintable(k)) return null
   const now = Date.now()
   const { buf, deadline } = getTypeahead(d)

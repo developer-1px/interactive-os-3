@@ -23,21 +23,19 @@ const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
 
 export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
-  const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
+  const { focusId, expanded, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
 
-  // 위임. 단일 제스처 emit. expand/navigate 도출은 소비자가 expandBranchOnActivate로.
-  const onClick = (e: MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     const id = idFrom(e)
-    if (!id || isDisabled(data, id)) return
-    onEvent?.({ type: 'activate', id })
+    if (id) onClick(e, id)
   }
-  const onKeyDown = (e: KeyboardEvent) => {
+  const handleKey = (e: KeyboardEvent) => {
     const id = idFrom(e)
     if (id) onKey(e, id)
   }
 
   return (
-    <section aria-roledescription="columns" onClick={onClick} onKeyDown={onKeyDown} {...rest}>
+    <section aria-roledescription="columns" onClick={handleClick} onKeyDown={handleKey} {...rest}>
       {chainFrom(data, expanded).map((parent) => {
         const kids = getChildren(data, parent)
         const label = parent === ROOT ? 'root' : getLabel(data, parent)
