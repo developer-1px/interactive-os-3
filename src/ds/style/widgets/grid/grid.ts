@@ -1,4 +1,4 @@
-import { accent, css, dim, indicator, pad, rowPadding, tint } from '../../../fn'
+import { accent, css, dim, indicator, microLabel, pad, rowPadding, tint } from '../../../fn'
 
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
@@ -40,12 +40,8 @@ export const grid = () => [
 
     /* columnheader — 얇은 상단 리본. 배경은 덜 때리고 글자를 강조. */
     [role="columnheader"] {
+      ${microLabel()}
       background: transparent;
-      color: ${dim(60)};
-      font-size: 0.85em;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
       white-space: nowrap;
       user-select: none;
       padding-block: ${pad(2)};

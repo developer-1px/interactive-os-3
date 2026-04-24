@@ -1,4 +1,4 @@
-import { css, icon, pad, surface } from '../../fn'
+import { css, dim, fg, icon, microLabel, pad, radius, surface } from '../../fn'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
@@ -24,8 +24,7 @@ export const panesCss = css`
     display: flex; flex-direction: column; gap: ${pad(2)};
   }
   section[aria-roledescription="panel-section"] > h3 {
-    font-size: var(--ds-text-sm); font-weight: 600;
-    opacity: .6; text-transform: uppercase; letter-spacing: .05em;
+    ${microLabel()}
     margin: 0;
   }
   [aria-roledescription="field"] {
@@ -70,12 +69,70 @@ export const panesCss = css`
     white-space: pre-wrap; word-break: break-word;
   }
 
-  /* Finder panes */
+  /* ── Sidebar (2026) ───────────────────────────────────────────────
+     - 하드 divider 대신 gray-1 틴트 배경으로 본문과 분리
+     - header / sections / footer 3단 수직 flow, footer는 하단 고정
+     - section 헤더는 uppercase micro-label
+     - Listbox 내부 padding 제거 — sidebar 외곽이 padding을 제공
+     - option은 radius + subtle hover (global selected/hover가 이미 tint 제공)
+     - scrollbar 얇게, 필요 시만 노출 */
   nav[aria-roledescription="sidebar"] {
-    width: var(--ds-sidebar-w); flex: none; overflow: auto;
-    border-inline-end: 1px solid var(--ds-border);
-    background: color-mix(in oklch, Canvas 97%, CanvasText 3%);
+    width: var(--ds-sidebar-w); flex: none;
+    overflow-y: auto; overflow-x: hidden;
+    background: ${fg(1)};
+    display: flex; flex-direction: column;
+    padding: ${pad(3)} ${pad(2)};
+    gap: ${pad(3)};
+    scrollbar-width: thin;
   }
+  nav[aria-roledescription="sidebar"] > header {
+    padding: ${pad(1.5)} ${pad(2)};
+    display: grid; gap: ${pad(0.25)};
+  }
+  nav[aria-roledescription="sidebar"] > header > strong {
+    font-size: var(--ds-text-md);
+    font-weight: 700;
+    letter-spacing: var(--ds-tracking);
+  }
+  nav[aria-roledescription="sidebar"] > header > small {
+    font-size: var(--ds-text-xs);
+    color: ${dim(55)};
+  }
+  nav[aria-roledescription="sidebar"] > section {
+    display: flex; flex-direction: column; gap: ${pad(0.5)};
+  }
+  nav[aria-roledescription="sidebar"] > section > h3 {
+    ${microLabel()}
+    margin: 0 0 ${pad(1)};
+    padding: 0 ${pad(2)};
+  }
+  /* sidebar 안의 Listbox는 컨테이너 padding/grid를 리셋 — option만 밀도 있게 쌓임 */
+  nav[aria-roledescription="sidebar"] [role="listbox"] {
+    padding: 0;
+    gap: ${pad(0.25)};
+    row-gap: ${pad(0.25)};
+  }
+  nav[aria-roledescription="sidebar"] [role="option"] {
+    border-radius: ${radius('md')};
+    padding: ${pad(1.25)} ${pad(2)};
+  }
+  nav[aria-roledescription="sidebar"] > footer {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: ${pad(2)};
+    padding: ${pad(2)};
+    border-radius: ${radius('md')};
+    background: ${fg(2)};
+    font-size: var(--ds-text-sm);
+  }
+  nav[aria-roledescription="sidebar"] > footer > small {
+    color: ${dim(55)};
+    font-size: var(--ds-text-xs);
+  }
+
+  /* Finder panes */
   section[aria-roledescription="columns"] {
     flex: 1; display: flex; overflow: auto; min-width: 0;
   }

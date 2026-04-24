@@ -1,4 +1,4 @@
-import { css, indicator, pad, rowPadding } from '../../../fn'
+import { css, indicator, microLabel, pad, rowPadding } from '../../../fn'
 import { levelShift } from '../../seed/keyline'
 
 export const tree = () => [
@@ -17,11 +17,8 @@ export const tree = () => [
   // Group label in listbox/menu — the [role=presentation] li directly inside [role=group]
   css`
     [role="group"] > li[role="presentation"]:first-child {
+      ${microLabel()}
       padding: ${rowPadding(2)};
-      font-size: .85em;
-      opacity: .6;
-      text-transform: uppercase;
-      letter-spacing: .05em;
       pointer-events: none;
     }
   `,
