@@ -1,4 +1,4 @@
-import { css, icon, pad } from '../../fn'
+import { css, icon, pad, surface } from '../../fn'
 
 // Finder 3-컬럼 브라우저: sidebar + columns + preview.
 export const panesCss = css`
@@ -25,9 +25,9 @@ export const panesCss = css`
     display: flex; flex-direction: column; gap: ${pad(4)};
   }
   aside[aria-roledescription="preview"] > figure {
+    ${surface(1)}
     width: 100%; aspect-ratio: 4/3;
     border-radius: ${pad(2)};
-    border: 1px solid var(--ds-border);
     background: color-mix(in oklch, Canvas 92%, CanvasText 8%);
     display: grid; place-items: center;
     font-size: 72px; margin: 0;

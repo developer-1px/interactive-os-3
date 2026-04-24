@@ -1,0 +1,58 @@
+import type { DsPreset } from './types'
+
+export const defaultPreset: DsPreset = {
+  id: 'default',
+  seed: { hue: 260, density: 1, depth: 1 },
+  color: {
+    fg: 'CanvasText',
+    bg: 'Canvas',
+    muted: { mix: ['CanvasText', 60, 'transparent'] },
+    border: { mix: ['CanvasText', 12, 'transparent'] },
+    accent: 'oklch(65% 0.22 var(--ds-hue))',
+  },
+  space: { unit: '4px' },
+  radius: {
+    sm: '4px',
+    md: '6px',
+    lg: '10px',
+    pill: '999px',
+  },
+  text: {
+    xs: '11px',
+    sm: '12px',
+    md: '13px',
+    lg: '15px',
+    xl: '18px',
+    '2xl': '22px',
+  },
+  font: {
+    sans: `ui-sans-serif, -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`,
+    mono: `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace`,
+  },
+  leading: { normal: 1.5, tight: 1.3, tracking: '-0.01em' },
+  /* 현재 ds 재현: elev-2 = 기존 --ds-shadow (선형 depth 스케일),
+     elev-1 = none (border-only), elev-0 = none, elev-3 = 기존 shadow × 1.5 */
+  /* d=1의 ring은 기존 `border: 1px solid var(--ds-border)`와 1:1 동치 (hairline, alpha 12%).
+     d=2는 기존 --ds-shadow + ring 포함해 dialog·tooltip 시각 유지. */
+  elevation: {
+    0: [],
+    1: [{ x: 0, y: 0, blur: 0, spread: 1, color: { mix: ['CanvasText', 12, 'transparent'] } }],
+    2: [
+      { x: 0, y: 0, blur: 0, spread: 1, color: { mix: ['CanvasText', 12, 'transparent'] } },
+      { x: 0, y: 4, blur: 12, spread: 0, color: { mix: ['CanvasText', 10, 'transparent'] } },
+    ],
+    3: [
+      { x: 0, y: 0, blur: 0, spread: 1, color: { mix: ['CanvasText', 12, 'transparent'] } },
+      { x: 0, y: 6, blur: 18, spread: 0, color: { mix: ['CanvasText', 15, 'transparent'] } },
+    ],
+  },
+  shell: {
+    inset: '16px',
+    radius: '12px',
+    chromeH: '44px',
+    sidebarW: '200px',
+    columnW: '220px',
+    previewW: '320px',
+    trafficSize: '12px',
+  },
+}
