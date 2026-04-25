@@ -7,8 +7,8 @@ type TreeProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | '
 
 const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
 
-export function Tree({ data, onEvent, ...rest }: TreeProps) {
-  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
+export function Tree({ data, onEvent, autoFocus, ...rest }: TreeProps) {
+  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
 
   const render = (parent: string, level: number): ReactNode =>
     getChildren(data, parent).map((id, i, kids) => {

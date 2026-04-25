@@ -12,12 +12,12 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
 }
 
-export function CheckboxGroup({ data, onEvent, orientation = 'vertical', ...rest }: CollectionProps<Extra>) {
+export function CheckboxGroup({ data, onEvent, orientation = 'vertical', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation), activate)
   const checkedIds = getExpanded(data)
   const toggle = (id: string): Event => ({ type: 'expand', id, open: !checkedIds.has(id) })
   const relay = (e: Event) => onEvent?.(e.type === 'activate' ? toggle(e.id) : e)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay)
+  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

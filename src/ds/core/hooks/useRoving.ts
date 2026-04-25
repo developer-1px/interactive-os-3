@@ -14,11 +14,12 @@ export function useRoving(
   axis: Axis,
   data: NormalizedData,
   onEvent: (e: Event) => void,
+  options: { autoFocus?: boolean } = {},
 ) {
   const focusId = getFocus(data)
   const expanded = getExpanded(data)
   const { onKey, onClick } = bindAxis(axis, data, onEvent)
-  const bindFocus = useFocusBridge(focusId)
+  const bindFocus = useFocusBridge(focusId, options.autoFocus)
 
   const delegate = {
     onClick: (e: MouseEvent) => {

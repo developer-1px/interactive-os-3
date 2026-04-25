@@ -21,10 +21,10 @@ const axis = composeAxes(navigate('vertical'), activate, typeahead)
  * ↑↓로 옵션을 옮기면 즉시 활성화(activate)도 함께 emit → 소비자는 선택 상태를
  * 같이 갱신한다. 클릭/Enter/Space는 그대로 activate.
  */
-export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
+export function Listbox({ data, onEvent, autoFocus, ...rest }: ListboxProps) {
   const relay = (e: Event) =>
     activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay)
+  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

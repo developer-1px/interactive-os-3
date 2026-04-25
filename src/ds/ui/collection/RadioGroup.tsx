@@ -12,9 +12,9 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
 }
 
-export function RadioGroup({ data, onEvent, orientation = 'vertical', ...rest }: CollectionProps<Extra>) {
+export function RadioGroup({ data, onEvent, orientation = 'vertical', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation), activate)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
+  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

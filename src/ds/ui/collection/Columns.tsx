@@ -19,8 +19,8 @@ const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): str
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }
 
-export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
-  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
+export function Columns({ data, onEvent, autoFocus, ...rest }: ColumnsProps) {
+  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
 
   return (
     <section aria-roledescription="columns" {...delegate} {...rest}>
