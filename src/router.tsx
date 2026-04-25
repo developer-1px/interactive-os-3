@@ -2,6 +2,7 @@ import {
   createRootRoute, createRoute, createRouter, Outlet, redirect,
 } from '@tanstack/react-router'
 import { Finder } from './routes/finder/Finder'
+import { FinderMobile } from './routes/finder-mobile/FinderMobile'
 import { Inspector } from './routes/inspector/Inspector'
 import { Matrix } from './routes/matrix/Matrix'
 import { Atlas } from './routes/atlas/Atlas'
@@ -49,6 +50,17 @@ const finderRoute = createRoute({
   component: Finder,
   staticData: {
     palette: { label: 'Finder', to: '/finder/$', params: { _splat: '' } },
+  },
+})
+
+/** 모바일 Finder — 별도 라우트. URL이 셸 dispatcher, JS runtime branching 없음.
+ *  데스크톱 Finder와 도메인(walk/data/Preview)만 공유, 셸은 완전 별개. */
+const finderMobileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/m/finder/$',
+  component: FinderMobile,
+  staticData: {
+    palette: { label: 'Finder (mobile)', to: '/m/finder/$', params: { _splat: '' } },
   },
 })
 
@@ -205,7 +217,7 @@ const genresAnalyticsRoute = mkGenreRoute('/genres/analytics', Analytics,    'Ge
 const genresSettingsRoute  = mkGenreRoute('/genres/settings',  Settings,     'Genres · Settings')
 
 const routeTree = rootRoute.addChildren([
-  indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, catalogRoute, eduPortalAdminRoute,
+  indexRoute, finderRoute, finderMobileRoute, inspectorRoute, matrixRoute, atlasRoute, catalogRoute, eduPortalAdminRoute,
   markdownRoute,
   genresHubRoute,
   genresInboxRoute, genresChatRoute, genresBoardRoute, genresShopRoute, genresCrmRoute,
