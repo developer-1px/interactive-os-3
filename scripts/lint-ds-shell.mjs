@@ -1,13 +1,16 @@
 #!/usr/bin/env node
-// ds shell-mode 분리 린트 — "viewport는 L0가 한 번만 본다" invariant.
+// ds shell-mode 분리 린트 — "viewport는 CSS만 본다, JS는 모른다" invariant.
+//
+// 정책 (2026-04 수정): JS 셸-모드 분기(useShellMode/ShellSwitch) 제거,
+// 모바일/데스크톱 적응은 CSS @media/@container만으로 처리한다. JS 트리는 단일.
 //
 // 룰:
 //   R1. 라우트 코드(src/routes/**)에서 window.matchMedia 직접 호출 금지.
-//        → useShellMode/<ShellSwitch>로 강제.
+//        → 모바일/데스크톱 분기는 CSS @media/@container로 처리.
 //   R2. ds widget CSS(src/ds/ui/**)에서 viewport @media (... -width:) 사용 금지.
 //        → 컨텐츠 reflow는 @container 만 허용.
 //   R3. shell CSS(src/ds/style/**, src/routes/**)에서 max-width/min-width 리터럴 폭
-//        @media를 쓸 때 var(--ds-shell-mobile-max) 아닌 숫자 리터럴 금지.
+//        @media를 쓸 때 SHELL_MOBILE_MAX 토큰(${SHELL_MOBILE_MAX} interpolation) 사용 강제.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
@@ -44,7 +47,7 @@ for (const f of walk(join(ROOT, 'src/routes')).filter(isCode)) {
     const m = /\b(?:window\.)?matchMedia\(/.exec(ln)
     if (!m) return
     if (isInStringOrComment(ln, m.index)) return
-    violations.push({ rule: 'R1', file: relative(ROOT, f), line: i + 1, msg: 'window.matchMedia 직접 호출 — useShellMode/<ShellSwitch> 사용', text: ln.trim() })
+    violations.push({ rule: 'R1', file: relative(ROOT, f), line: i + 1, msg: 'window.matchMedia 직접 호출 — CSS @media/@container 사용', text: ln.trim() })
   })
 }
 
