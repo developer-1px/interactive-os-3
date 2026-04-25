@@ -370,7 +370,11 @@ export const panesCss = css`
     color: inherit;
     font-size: 1.5rem; line-height: 1;
     cursor: pointer;
-    box-shadow: 0 4px 16px color-mix(in oklch, CanvasText 18%, transparent);
+    /* 1px hairline ring + 짧은 drop — 큰 blur 흐림 제거 */
+    box-shadow:
+      0 0 0 1px ${tint('CanvasText', 6)},
+      0 1px 2px ${tint('CanvasText', 10)},
+      0 4px 10px ${tint('CanvasText', 8)};
     transition: transform var(--ds-dur-fast) var(--ds-ease-out);
   }
   aside[aria-roledescription="floating-nav"] > button:hover { transform: scale(1.05); }

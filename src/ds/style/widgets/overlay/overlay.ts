@@ -59,7 +59,11 @@ export const tooltipCss = css`
     padding: ${pad(3)};
     border-radius: ${radius('lg')};
     border: 1px solid var(--ds-border);
-    box-shadow: 0 12px 32px ${tint('CanvasText', 22)};
+    /* 선명도 우선 — 1px hairline ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
+    box-shadow:
+      0 0 0 1px ${tint('CanvasText', 6)},
+      0 2px 6px ${tint('CanvasText', 8)},
+      0 8px 16px ${tint('CanvasText', 10)};
   }
   body:has([popover][data-ds-scrim]:popover-open)::before {
     content: '';
