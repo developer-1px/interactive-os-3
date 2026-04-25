@@ -7,7 +7,7 @@
  *  - dir                     → 자식 리스트
  *  - file                    → Preview 한 장 (back 버튼으로 부모 폴더 복귀)
  */
-import { useMemo, useSyncExternalStore } from 'react'
+import { useLayoutEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import {
   Listbox, fromTree, navigateOnActivate, useControlState, type Event,
@@ -33,7 +33,14 @@ export function FinderMobile() {
   const chain = smart ? [] : walk(path)
   const current = smart ? null : chain[chain.length - 1] ?? null
   const isFile = current?.type === 'file'
-  const parent = smart ? '/' : chain[chain.length - 2]?.path ?? null
+  const parentNode = chain[chain.length - 2] ?? null
+  const parent = smart ? '/' : parentNode?.path ?? null
+  const siblings = useMemo(
+    () => (isFile && parentNode?.children
+      ? parentNode.children.filter((n) => n.type === 'file')
+      : []),
+    [isFile, parentNode],
+  )
 
   const title = useMemo(() => {
     if (path === '/') return '브라우즈'
@@ -42,8 +49,12 @@ export function FinderMobile() {
   }, [path, smart, current])
 
   return (
-    <main aria-roledescription="finder-mobile" aria-label="Finder">
-      <header>
+    <main
+      aria-roledescription="finder-mobile"
+      aria-label="Finder"
+      style={{ display: 'flex', flexDirection: 'column', minBlockSize: 0, blockSize: '100svh' }}
+    >
+      <header style={{ position: 'sticky', insetBlockStart: 0, zIndex: 1 }}>
         {parent !== null && (
           <button type="button" aria-label="뒤로" onClick={() => go(parent!)}>‹</button>
         )}
@@ -54,7 +65,7 @@ export function FinderMobile() {
         : smart
           ? <SmartList group={smart} items={smartItems(smart.id)} onNavigate={go} />
           : isFile && current
-            ? <FullPreview node={current} />
+            ? <FilesSwiper files={siblings.length ? siblings : [current]} initialPath={current.path} />
             : current?.type === 'dir'
               ? <DirList node={current} onNavigate={go} />
               : <Empty />}
@@ -129,10 +140,49 @@ function SmartList({
   )
 }
 
-function FullPreview({ node }: { node: FsNode }) {
+/** TikTok식 세로 스냅 스와이퍼 — 형제 파일들을 한 화면씩 풀-블리드로 쌓는다.
+ *  스크롤은 CSS scroll-snap이 담당한다. JS는 진입 시 현재 파일로 1회 점프만 한다(클릭 driven).
+ *  IO/scroll로 URL을 동기화하지 않는다 — 덜그덕 방지 (memory: feedback_mobile_js_boundary). */
+function FilesSwiper({ files, initialPath }: { files: FsNode[]; initialPath: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const root = ref.current
+    if (!root) return
+    const target = root.querySelector(
+      `[data-path="${CSS.escape(initialPath)}"]`,
+    ) as HTMLElement | null
+    target?.scrollIntoView({ block: 'start' })
+  }, [initialPath])
   return (
-    <section aria-roledescription="finder-file">
-      <Preview node={node} />
+    <section
+      ref={ref}
+      aria-roledescription="finder-tiktok"
+      style={{
+        flex: '1 1 auto',
+        minBlockSize: 0,
+        overflowY: 'auto',
+        scrollSnapType: 'y mandatory',
+        scrollbarWidth: 'none',
+      }}
+    >
+      {files.map((f) => (
+        <article
+          key={f.path}
+          data-path={f.path}
+          aria-roledescription="finder-file"
+          aria-label={f.name}
+          style={{
+            scrollSnapAlign: 'start',
+            scrollSnapStop: 'always',
+            blockSize: '100%',
+            minBlockSize: '100%',
+            display: 'grid',
+            overflow: 'hidden',
+          }}
+        >
+          <Preview node={f} />
+        </article>
+      ))}
     </section>
   )
 }
