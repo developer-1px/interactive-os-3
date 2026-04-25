@@ -354,19 +354,30 @@ export const panesCss = css`
   [aria-roledescription="feed-page"] [data-emphasis="raised"] {
     border-radius: ${radius('lg')};
   }
-  /* Feed avatar — width + aspect:square가 정사각형을 잡고, 여기선 배경/원형/정렬만 */
-  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] {
+  /* Feed avatar — width + aspect:square가 정사각형을 잡고, 여기선 배경/원형/정렬/clip만 */
+  [aria-roledescription$="-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] {
     border-radius: 50%;
+    overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center;
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
     font-size: var(--ds-text-md);
   }
-  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-grow] > small {
+  [aria-roledescription$="-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] > img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  [aria-roledescription$="-page"] [data-flow="cluster"] > strong[data-ds-grow] > small {
     display: block;
     font-weight: 400;
     color: ${dim(55)};
     font-size: var(--ds-text-xs);
     margin-top: ${pad(0.25)};
+  }
+  /* 포스트/카드 본문 이미지 — 카드 폭 채우고 라운딩 + aspect 보존 */
+  [aria-roledescription$="-page"] [data-emphasis="raised"] > p > img {
+    width: 100%; height: auto; display: block;
+    border-radius: ${radius('md')};
+    aspect-ratio: 16 / 9; object-fit: cover;
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
   }
 
   /* edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content) */

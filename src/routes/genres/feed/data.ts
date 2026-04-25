@@ -1,14 +1,64 @@
+import { faker } from '@faker-js/faker'
+
 export interface Post {
   id: string; author: string; handle: string; time: string; body: string
   likes: number; comments: number; shared: number
+  avatar: string
+  image?: string
 }
 
-export const POSTS: Post[] = [
-  { id: 'p1', author: '유용태',    handle: '@yongtae', time: '2시간 전', body: 'DS 커버리지 스윕 시작 — 오늘은 8장르 중 Inbox·Chat·Commerce·CRM까지 완료.', likes: 42,  comments: 8,  shared: 3 },
-  { id: 'p2', author: 'Alex Kim',  handle: '@alex',    time: '4시간 전', body: 'Radix / Base / Ariakit / RAC 중 2곳 이상 수렴하는 패턴만 ds로 채택 중.',       likes: 128, comments: 24, shared: 17 },
-  { id: 'p3', author: 'Sora Park', handle: '@sora',    time: '어제',     body: 'FlatLayout definePage의 매력: 누가 구현해도 같은 결과로 수렴하는 선언형.',     likes: 89,  comments: 12, shared: 6 },
+faker.seed(2026_04_25)
+
+const TOPICS = [
+  'DS 커버리지 스윕 — 오늘은 Inbox·Chat·Commerce·CRM까지 정리.',
+  'Radix / Base / Ariakit / RAC 중 2곳 이상 수렴하는 패턴만 ds로 채택.',
+  'FlatLayout definePage의 매력: 누가 구현해도 같은 결과로 수렴하는 선언형.',
+  '컴포넌트 variant 폭발을 막는 첫 단추는 prop 이름을 ARIA에 맞추는 것.',
+  '오늘의 발견: container query 안에서 :popover-open이 polyfill 환경에서도 잘 동작.',
+  '디자인 토큰을 palette/semantic/pair/component 4-tier로 쪼개니 widget이 단순해진다.',
+  '모바일 stack-nav는 따로 만드는 게 정답. 같은 컴포넌트가 두 모드를 다 처리하면 둘 다 어색해짐.',
 ]
 
-export const NAV = [['navHome','홈','home','🏠 홈',true],['navExp','탐색','compass','🧭 탐색',false],['navNot','알림','bell','🔔 알림',false],['navProf','프로필','user','👤 프로필',false]] as const
-export const TRENDS = ['#ds-커버리지 · 128 posts', '#flatlayout · 64 posts', '#2026-tone · 42 posts']
-export const SUGGESTIONS = ['📌 @radix', '📌 @react-aria', '📌 @ariakit']
+const RELATIVE_TIMES = ['방금', '5분 전', '12분 전', '1시간 전', '2시간 전', '4시간 전', '오늘 오전', '어제', '이틀 전']
+
+const seedAvatar = (seed: string) => `https://i.pravatar.cc/96?u=${encodeURIComponent(seed)}`
+const seedImage = (seed: string) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/640/360`
+
+export const POSTS: Post[] = Array.from({ length: 8 }, (_, i) => {
+  const author = faker.person.fullName()
+  const handle = '@' + faker.internet.username().toLowerCase().slice(0, 14)
+  const body = faker.helpers.arrayElement(TOPICS) + ' ' + faker.lorem.sentence({ min: 6, max: 14 })
+  const hasImage = i % 3 === 1
+  return {
+    id: `p${i + 1}`,
+    author,
+    handle,
+    time: RELATIVE_TIMES[i % RELATIVE_TIMES.length],
+    body,
+    likes: faker.number.int({ min: 8, max: 540 }),
+    comments: faker.number.int({ min: 0, max: 64 }),
+    shared: faker.number.int({ min: 0, max: 32 }),
+    avatar: seedAvatar(handle),
+    image: hasImage ? seedImage(`feed-${i}`) : undefined,
+  }
+})
+
+export const NAV = [
+  ['navHome','홈','home','🏠 홈',true],
+  ['navExp','탐색','compass','🧭 탐색',false],
+  ['navNot','알림','bell','🔔 알림',false],
+  ['navProf','프로필','user','👤 프로필',false],
+] as const
+
+export const TRENDS = [
+  '#ds-커버리지 · 128 posts',
+  '#flatlayout · 64 posts',
+  '#2026-tone · 42 posts',
+  '#container-query · 31 posts',
+  '#aria-first · 24 posts',
+]
+
+export const SUGGESTIONS = Array.from({ length: 5 }, () => {
+  const handle = '@' + faker.internet.username().toLowerCase().slice(0, 12)
+  return `📌 ${handle}`
+})

@@ -17,6 +17,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@oddbird/popover-polyfill": "^0.6.1",
     "@tanstack/react-router": "^1.168.23",
     "lucide-react": "^1.9.0",
