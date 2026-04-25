@@ -1,8 +1,8 @@
-import { accent, css, dim, pad, radius, status } from '../../../fn'
+import { accent, css, dim, font, pad, radius, status } from '../../../fn'
 export const legendDot = () => css`
   .legend-dot {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     color: ${dim(70)};
   }
   .legend-dot::before {

@@ -1,4 +1,4 @@
-import { border, css, icon, pad, radius } from '../../../fn'
+import { border, css, font, icon, pad, radius } from '../../../fn'
 export const detailsCss = css`
   :where(details) {
     border: 1px solid ${border()};
@@ -41,7 +41,7 @@ export const detailsCss = css`
   :where(details) > :where(summary) > :where(small)  {
     margin-inline-start: auto;
     opacity: .55;
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }

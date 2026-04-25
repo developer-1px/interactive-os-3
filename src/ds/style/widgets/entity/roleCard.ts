@@ -1,5 +1,4 @@
-import { css, dim, pad, radius } from '../../../fn'
-
+import { css, dim, font, pad, radius } from '../../../fn'
 export const roleCard = () => css`
   .role-card {
     display: grid;
@@ -22,7 +21,7 @@ export const roleCard = () => css`
     padding: ${pad(0.5)};
     background: transparent; border: 0;
     color: ${dim(45)};
-    font-size: var(--ds-text-lg);
+    font-size: ${font('lg')};
     line-height: 1;
     cursor: grab;
     min-block-size: 0; min-inline-size: 0;
@@ -31,7 +30,7 @@ export const roleCard = () => css`
   button[aria-label*="드래그"]:active { cursor: grabbing; }
 
   .role-card > span[aria-hidden="true"] {
-    font-size: var(--ds-text-xl);
+    font-size: ${font('xl')};
     line-height: 1;
     inline-size: 28px;
     text-align: center;
@@ -43,12 +42,12 @@ export const roleCard = () => css`
   }
   .role-card > div:nth-of-type(1) > h3 {
     margin: 0;
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     font-weight: 700;
   }
   .role-card > div:nth-of-type(1) > p {
     margin: 0;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(60)};
     line-height: 1.5;
   }

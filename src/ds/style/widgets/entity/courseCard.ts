@@ -1,4 +1,4 @@
-import { accent, css, dim, mix, on, pad, radius, status } from '../../../fn'
+import { accent, css, dim, font, mix, on, pad, radius, status } from '../../../fn'
 export const courseCard = () => css`
   .course-card {
     display: grid;
@@ -22,7 +22,7 @@ export const courseCard = () => css`
     inline-size: 56px; block-size: 56px;
     border-radius: ${radius('md')};
     display: grid; place-items: center;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     font-weight: 800;
     letter-spacing: -0.02em;
     color: ${on('accent')};
@@ -50,13 +50,13 @@ export const courseCard = () => css`
   }
   .course-card > div:nth-of-type(1) > h3 {
     margin: 0;
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     font-weight: 700;
     letter-spacing: -0.01em;
   }
   .course-card > div:nth-of-type(1) > p {
     margin: 0;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(60)};
     line-height: 1.5;
   }
@@ -70,7 +70,7 @@ export const courseCard = () => css`
     display: flex; align-items: center; gap: ${pad(1)};
   }
   .course-card > div:nth-of-type(2) > small {
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     color: ${dim(55)};
   }
 `

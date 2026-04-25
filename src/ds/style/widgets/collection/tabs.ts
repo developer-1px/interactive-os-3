@@ -1,4 +1,4 @@
-import { accent, border, css, dim, pad, radius, tint } from '../../../fn'
+import { accent, border, css, dim, dur, ease, pad, radius, tint } from '../../../fn'
 /**
  * Tabs — 보편적 탭 어포던스.
  *
@@ -27,9 +27,9 @@ export const tabs = () => css`
     background: transparent;
     border-radius: ${radius('sm')} ${radius('sm')} 0 0;
     user-select: none;
-    transition: color var(--ds-dur-base) var(--ds-ease-out),
-                border-bottom-color var(--ds-dur-base) var(--ds-ease-out),
-                border-inline-end-color var(--ds-dur-base) var(--ds-ease-out);
+    transition: color ${dur('base')} ${ease('out')},
+                border-bottom-color ${dur('base')} ${ease('out')},
+                border-inline-end-color ${dur('base')} ${ease('out')};
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;

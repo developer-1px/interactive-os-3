@@ -1,5 +1,4 @@
-import { css, dim, fg, pad, radius } from '../../../fn'
-
+import { control, css, dim, fg, font, pad, radius } from '../../../fn'
 /**
  * Toolbar — 필터·액션을 담는 수평 컨테이너.
  *
@@ -30,14 +29,14 @@ export const toolbar = () => css`
   [role="toolbar"] > [data-variant] {
     margin-inline-start: auto;
     color: ${dim(60)};
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     white-space: nowrap;
   }
 
   /* vertical separator — 얇고 높이는 컨트롤 높이에 맞춤 */
   [role="toolbar"] > [role="separator"][aria-orientation="vertical"] {
     inline-size: 1px;
-    block-size: calc(var(--ds-control-h) * 0.6);
+    block-size: calc(${control('h')} * 0.6);
     background: ${fg(3)};
     align-self: center;
   }

@@ -1,5 +1,4 @@
-import { accent, css, dim, icon, pad, radius, tint } from '../../../fn'
-
+import { accent, css, dim, dur, ease, font, icon, pad, radius, tint } from '../../../fn'
 /**
  * Chip — 삭제 가능한 태그 라벨. Badge(읽기)와 Button(컨트롤) 사이의 합성물.
  *
@@ -19,7 +18,7 @@ export const chipCss = css`
     padding: 2px 2px 2px ${pad(1.5)};
     background: ${dim(8)};
     border-radius: ${radius('pill')};
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     line-height: 1.4;
     white-space: nowrap;
   }
@@ -38,12 +37,12 @@ export const chipCss = css`
     color: inherit;
     opacity: .5;
     font-size: 0;
-    transition: opacity var(--ds-dur-fast) var(--ds-ease-out),
-                background-color var(--ds-dur-fast) var(--ds-ease-out);
+    transition: opacity ${dur('fast')} ${ease('out')},
+                background-color ${dur('fast')} ${ease('out')};
   }
   [aria-roledescription="chip"] > button::before {
     ${icon('x', '0.85em')}
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
   }
   [aria-roledescription="chip"] > button:hover {
     opacity: 1;

@@ -1,4 +1,4 @@
-import { accent, border, css, radius, status } from '../../../fn'
+import { accent, border, css, radius, space, status } from '../../../fn'
 // Progress / Meter — 네이티브 요소를 토큰 기반으로 얇게 스타일.
 // aria-valuenow는 native progress/meter의 value 속성으로 반영되므로 별도 attr() 불필요.
 export const valueCss = css`
@@ -6,7 +6,7 @@ export const valueCss = css`
     appearance: none;
     -webkit-appearance: none;
     width: 100%;
-    height: calc(var(--ds-space) * 2);
+    height: calc(${space()} * 2);
     border: 1px solid ${border()};
     border-radius: ${radius('pill')};
     background: transparent;

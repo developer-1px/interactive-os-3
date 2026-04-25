@@ -1,5 +1,4 @@
-import { css, dim, icon, mix, pad, radius, status, surface, tint } from '../../../fn'
-
+import { css, dim, font, icon, mix, pad, radius, status, surface, tint } from '../../../fn'
 export const statCard = () => css`
   .stat-card {
     ${surface(1)}
@@ -25,17 +24,17 @@ export const statCard = () => css`
   .stat-card > header > dl { margin: 0; }
   .stat-card > header > dl > dt {
     display: inline-flex; align-items: center; gap: ${pad(1)};
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(60)};
     font-weight: 500;
   }
   .stat-card > header > span[aria-hidden="true"] {
-    font-size: var(--ds-text-lg);
+    font-size: ${font('lg')};
     opacity: .7;
   }
   .stat-card > strong {
     grid-column: 1 / -1;
-    font-size: calc(var(--ds-text-xl) * 1.4);
+    font-size: calc(${font('xl')} * 1.4);
     font-weight: 700;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
@@ -44,7 +43,7 @@ export const statCard = () => css`
   .stat-card > small {
     grid-column: 1 / -1;
     color: ${dim(55)};
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
   }
   .stat-card > small[data-dir] {
     display: inline-flex; align-items: center; gap: ${pad(0.5)};

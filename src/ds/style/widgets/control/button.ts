@@ -1,4 +1,4 @@
-import { accent, css, fg, onAccent, pad, radius, square, status, tint } from '../../../fn'
+import { accent, control, css, dur, ease, fg, onAccent, pad, radius, square, status, tint } from '../../../fn'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
 //  - Button: 체크기(29.5px control-h), radius md, gray-2 서피스, 1px hairline 경계, cursor pointer
@@ -24,12 +24,12 @@ export const buttonCss = css`
   :where(button:not([aria-roledescription="actions"] > button)) {
     background: ${fg(2)};
     color: inherit;
-    border: 1px solid var(--ds-control-border);
+    border: 1px solid ${control('border')};
     border-radius: ${radius('md')};
     padding: 0 ${pad(3)};
-    transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
-                color var(--ds-dur-fast) var(--ds-ease-out),
-                border-color var(--ds-dur-fast) var(--ds-ease-out);
+    transition: background-color ${dur('fast')} ${ease('out')},
+                color ${dur('fast')} ${ease('out')},
+                border-color ${dur('fast')} ${ease('out')};
   }
   /* icon-only — children이 비어있고 data-icon만 있는 버튼은 정사각형. fn/square로 통일.
      ::before 아이콘 너비(1.25em) + control-h 높이로 자연 정사각형. */
@@ -53,8 +53,8 @@ export const buttonCss = css`
     border-radius: ${radius('md')};
     padding: 0 ${pad(4)};
     font-weight: 600;
-    transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
-                transform var(--ds-dur-fast) var(--ds-ease-out);
+    transition: background-color ${dur('fast')} ${ease('out')},
+                transform ${dur('fast')} ${ease('out')};
   }
   [aria-roledescription="actions"] > button:first-of-type:hover:not([aria-disabled="true"]) {
     background: ${tint(accent(), 85)};

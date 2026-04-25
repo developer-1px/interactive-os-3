@@ -1,11 +1,10 @@
-import { css, dim, pad, radius, toneTint } from '../../../fn'
-
+import { css, dim, font, pad, radius, toneTint } from '../../../fn'
 export const badge = () => css`
   mark {
     display: inline-flex; align-items: center; gap: ${pad(0.5)};
     padding: 1px ${pad(1.25)};
     border-radius: ${radius('pill')};
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     font-weight: 600;
     line-height: 1.4;
     white-space: nowrap;

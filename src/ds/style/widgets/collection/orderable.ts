@@ -1,4 +1,4 @@
-import { accent, css, dim, fg, hairline, listReset, pad, tint } from '../../../fn'
+import { accent, control, css, dim, dur, ease, fg, font, hairline, listReset, pad, tint } from '../../../fn'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 /**
@@ -25,7 +25,7 @@ export const orderableCss = () => css`
     align-items: center;
     gap: ${slotGap};
     padding-block: ${pad(1)};
-    transition: background var(--ds-dur-base) var(--ds-ease-out);
+    transition: background ${dur('base')} ${ease('out')};
   }
   ${hairline(`ol[aria-roledescription="orderable"] > li`)}
   ol[aria-roledescription="orderable"] > li:hover {
@@ -47,9 +47,9 @@ export const orderableCss = () => css`
     background: transparent;
     border: 0;
     color: ${dim(50)};
-    min-inline-size: var(--ds-control-h);
-    min-block-size: var(--ds-control-h);
-    font-size: var(--ds-text-md);
+    min-inline-size: ${control('h')};
+    min-block-size: ${control('h')};
+    font-size: ${font('md')};
     line-height: 1;
     display: inline-flex;
     align-items: center;

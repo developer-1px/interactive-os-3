@@ -1,4 +1,4 @@
-import { accent, bg, css, dim, emphasize, fg, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
+import { accent, bg, control, css, dim, dur, ease, emphasize, fg, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -23,8 +23,8 @@ export const grid = () => [
        gray-2로 아주 얇게, columnheader 경계는 gray-3로 살짝 더 진하게. */
     [role="grid"] [role="row"],
     [role="treegrid"] [role="row"] {
-      transition: background-color var(--ds-dur-base) var(--ds-ease-out),
-                  box-shadow var(--ds-dur-fast) var(--ds-ease-out);
+      transition: background-color ${dur('base')} ${ease('out')},
+                  box-shadow ${dur('fast')} ${ease('out')};
     }
     [role="grid"] [role="gridcell"],
     [role="grid"] [role="rowheader"],
@@ -34,7 +34,7 @@ export const grid = () => [
     }
     [role="grid"] [role="columnheader"],
     [role="treegrid"] [role="columnheader"] {
-      border-block-end: 1px solid var(--ds-control-border);
+      border-block-end: 1px solid ${control('border')};
     }
     /* 테이블 끝 행의 bottom hairline 제거 — 닫히는 느낌 대신 열린 느낌 */
     [role="grid"] [role="rowgroup"]:last-child [role="row"]:last-child > :is([role="gridcell"], [role="rowheader"]),
@@ -95,7 +95,7 @@ export const grid = () => [
     [role="treegrid"][data-density="compact"] [role="columnheader"],
     [role="grid"][data-density="compact"] [role="columnheader"] {
       padding: ${pad(1)} ${pad(2)};
-      font-size: var(--ds-text-sm);
+      font-size: ${font('sm')};
     }
     /* hairline 더 흐리게 (Finder 톤) */
     [role="treegrid"][data-density="compact"] [role="gridcell"],
@@ -148,7 +148,7 @@ export const grid = () => [
       display: inline-flex;
       align-items: center;
       gap: ${pad(0.5)};
-      transition: color var(--ds-dur-fast) var(--ds-ease-out);
+      transition: color ${dur('fast')} ${ease('out')};
     }
     [role="columnheader"] > button:hover {
       color: ${accent()};
@@ -170,7 +170,7 @@ export const grid = () => [
       text-decoration: none;
       text-underline-offset: 3px;
       cursor: pointer;
-      transition: color var(--ds-dur-fast) var(--ds-ease-out);
+      transition: color ${dur('fast')} ${ease('out')};
     }
     [role="gridcell"] a[href]:hover {
       color: ${accent()};
@@ -264,9 +264,9 @@ export const grid = () => [
       color: inherit;
     }
     [role="grid"][data-density="mail"] [role="gridcell"][data-col="from"]    { grid-area: from; ${emphasize(1)} }
-    [role="grid"][data-density="mail"] [role="gridcell"][data-col="time"]    { grid-area: time; justify-self: end; font-size: var(--ds-text-sm); ${mute(2)} }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="time"]    { grid-area: time; justify-self: end; font-size: ${font('sm')}; ${mute(2)} }
     [role="grid"][data-density="mail"] [role="gridcell"][data-col="subject"] { grid-area: subject; font-weight: 500; }
-    [role="grid"][data-density="mail"] [role="gridcell"][data-col="preview"] { grid-area: preview; font-size: var(--ds-text-sm); ${mute(2)} }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="preview"] { grid-area: preview; font-size: ${font('sm')}; ${mute(2)} }
     /* unread 강조 — 색 ❌, weight ✅ (mute/emphasize는 surface 무관) */
     [role="grid"][data-density="mail"] [role="row"][data-unread="true"] [role="gridcell"][data-col="from"],
     [role="grid"][data-density="mail"] [role="row"][data-unread="true"] [role="gridcell"][data-col="subject"] {

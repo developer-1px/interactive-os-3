@@ -1,4 +1,4 @@
-import { accent, css, dim, pad, radius, status } from '../../../fn'
+import { accent, css, dim, font, pad, radius, status } from '../../../fn'
 export const barChart = () => css`
   .bar-chart {
     margin: 0;
@@ -13,7 +13,7 @@ export const barChart = () => css`
   }
   .bar-chart > dl > div { display: contents; }
   .bar-chart dt {
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(70)};
   }
   .bar-chart dd {
@@ -45,7 +45,7 @@ export const barChart = () => css`
   }
   .bar-chart meter::-moz-meter-bar { background: currentColor; }
   .bar-chart dd > span {
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     font-variant-numeric: tabular-nums;
     color: ${dim(60)};
     min-inline-size: 3ch; text-align: end;
@@ -55,7 +55,7 @@ export const barChart = () => css`
   .bar-chart > dl > div[data-tone="warning"] { color: ${status('warning')}; }
   .bar-chart > dl > div[data-tone="danger"]  { color: ${status('danger')}; }
   .bar-chart > figcaption {
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     color: ${dim(50)};
     text-align: end;
   }

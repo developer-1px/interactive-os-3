@@ -1,4 +1,4 @@
-import { bg, border, css, pad, radius, rowPadding, surface, tint } from '../../../fn'
+import { bg, border, css, dur, ease, font, hairlineWidth, pad, radius, rowPadding, surface, tint } from '../../../fn'
 export const dialogCss = css`
   :where(dialog) {
     ${surface(3)}
@@ -27,7 +27,7 @@ export const dialogCss = css`
   :where(dialog[aria-label="Command palette"]) :where(input[role="combobox"]) {
     border: 0;
     background: transparent;
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     padding: ${pad(2)} ${pad(3)};
   }
   :where(dialog[aria-label="Command palette"]) :where(input[role="combobox"]):focus {
@@ -57,10 +57,10 @@ export const tooltipCss = css`
     margin: 0;
     padding: ${pad(3)};
     border-radius: ${radius('lg')};
-    border: var(--ds-hairline) solid ${border()};
+    border: ${hairlineWidth()} solid ${border()};
     /* 선명도 우선 — 1 device-px ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
     box-shadow:
-      0 0 0 var(--ds-hairline) ${tint('CanvasText', 6)},
+      0 0 0 ${hairlineWidth()} ${tint('CanvasText', 6)},
       0 2px 6px ${tint('CanvasText', 8)},
       0 8px 16px ${tint('CanvasText', 10)};
   }
@@ -78,7 +78,7 @@ export const tooltipCss = css`
     max-width: none;
     border-radius: 0;
     padding: ${pad(3)};
-    transition: translate var(--ds-dur-base) var(--ds-ease-out);
+    transition: translate ${dur('base')} ${ease('out')};
   }
   :where(dialog[data-ds-sheet="end"]) {
     inset-block: 0; inset-inline-end: 0; inset-inline-start: auto;
@@ -101,7 +101,7 @@ export const tooltipCss = css`
   :where([role="tooltip"]) {
     ${surface(2)}
     padding: ${rowPadding(2)};
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     border-radius: ${radius('sm')};
     color: inherit;
     pointer-events: none;

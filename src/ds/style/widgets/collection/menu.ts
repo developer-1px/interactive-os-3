@@ -1,4 +1,4 @@
-import { accent, css, fg, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
+import { accent, css, dur, ease, fg, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
 export const menu = () => [
   css`
     button[popovertarget] {
@@ -39,8 +39,8 @@ export const menu = () => [
       display: flex;
       gap: ${pad(2)};
       cursor: default; user-select: none; outline: none;
-      transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
-                  color var(--ds-dur-fast) var(--ds-ease-out);
+      transition: background-color ${dur('fast')} ${ease('out')},
+                  color ${dur('fast')} ${ease('out')};
     }
     [role="menuitem"] { justify-content: space-between; gap: ${pad(4)}; }
   `,

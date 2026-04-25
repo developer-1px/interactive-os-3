@@ -1,4 +1,4 @@
-import { accent, css, dim, pad } from '../../../fn'
+import { accent, css, dim, font, pad } from '../../../fn'
 export const top10 = () => css`
   .top-10 {
     counter-reset: rank;
@@ -19,7 +19,7 @@ export const top10 = () => css`
     content: counter(rank);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     text-align: center;
     color: ${dim(55)};
   }

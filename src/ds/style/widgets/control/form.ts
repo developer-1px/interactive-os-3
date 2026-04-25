@@ -1,4 +1,4 @@
-import { accent, css, dim, fg, onAccent, pad, radius, status, tint } from '../../../fn'
+import { accent, control, css, dim, dur, ease, fg, font, onAccent, pad, radius, status, tint, tracking } from '../../../fn'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -30,7 +30,7 @@ export const formCss = css`
     grid-template-columns: none;
   }
   [role="group"][aria-roledescription="field"] > label {
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     font-weight: 600;
     color: ${dim(85)};
     line-height: 1.3;
@@ -41,7 +41,7 @@ export const formCss = css`
     font-weight: 400;
   }
   [role="group"][aria-roledescription="field"] > p {
-    font-size: var(--ds-text-xs);
+    font-size: ${font('xs')};
     color: ${dim(55)};
     margin: 0;
     line-height: 1.4;
@@ -60,11 +60,11 @@ export const formCss = css`
     background: ${fg(1)};
     border: 1px dashed ${fg(4)};
     border-radius: ${radius('md')};
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(65)};
     cursor: pointer;
-    transition: background-color var(--ds-dur-fast) var(--ds-ease-out),
-                border-color var(--ds-dur-fast) var(--ds-ease-out);
+    transition: background-color ${dur('fast')} ${ease('out')},
+                border-color ${dur('fast')} ${ease('out')};
   }
   :where(input[type="file"]):hover {
     background: ${tint(accent(), 4)};
@@ -86,7 +86,7 @@ export const formCss = css`
     font: inherit;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color var(--ds-dur-fast) var(--ds-ease-out);
+    transition: background-color ${dur('fast')} ${ease('out')};
   }
   :where(input[type="file"])::file-selector-button:hover {
     background: ${tint(accent(), 85)};
@@ -94,15 +94,15 @@ export const formCss = css`
 
   /* ── Section 헤딩 계층 ───────────────────────────────────────────────── */
   section > h2:first-child {
-    font-size: var(--ds-text-lg);
+    font-size: ${font('lg')};
     font-weight: 700;
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
-    border-bottom: 1px solid var(--ds-control-border);
-    letter-spacing: var(--ds-tracking);
+    border-bottom: 1px solid ${control('border')};
+    letter-spacing: ${tracking()};
   }
   section > h3:first-child {
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     font-weight: 600;
     margin: 0 0 ${pad(1.5)};
     color: ${dim(85)};
@@ -116,15 +116,15 @@ export const formCss = css`
     margin-block-end: ${pad(2)};
   }
   [aria-roledescription="fieldset"] > :where(strong, p):first-child {
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     font-weight: 700;
     color: ${dim(90)};
     margin: 0 0 ${pad(0.5)};
-    letter-spacing: var(--ds-tracking);
+    letter-spacing: ${tracking()};
   }
   [aria-roledescription="fieldset"] > :where(strong, p):first-child > small {
     font-weight: 400;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
     color: ${dim(55)};
     margin-inline-start: ${pad(0.5)};
   }
@@ -134,7 +134,7 @@ export const formCss = css`
   aside:not([aria-roledescription]) {
     display: flex; flex-direction: column; flex: none; min-inline-size: 0;
     background: ${fg(1)};
-    border: 1px solid var(--ds-control-border);
+    border: 1px solid ${control('border')};
     border-inline-start: 3px solid ${tint(accent(), 45)};
     border-radius: ${radius('lg')};
     padding: ${pad(4)};
@@ -157,7 +157,7 @@ export const formCss = css`
   }
   aside:not([aria-roledescription]) :where(dl) :where(dt, dd) {
     margin: 0;
-    font-size: var(--ds-text-sm);
+    font-size: ${font('sm')};
   }
   aside:not([aria-roledescription]) :where(dl) :where(dd) {
     color: ${dim(60)};
@@ -168,7 +168,7 @@ export const formCss = css`
   }
   aside:not([aria-roledescription]) > section + section {
     padding-top: ${pad(3)};
-    border-top: 1px solid var(--ds-control-border);
+    border-top: 1px solid ${control('border')};
   }
 
   /* Aside의 "위험 영역" section은 경고 톤 */
@@ -192,7 +192,7 @@ export const formCss = css`
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
     border-bottom: 1px solid ${dim(8)};
-    font-size: var(--ds-text-md);
+    font-size: ${font('md')};
     font-weight: 600;
   }
 `

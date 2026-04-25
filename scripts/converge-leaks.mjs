@@ -22,6 +22,32 @@ const REPLACEMENTS = [
   ['radius-md',  `\${radius('md')}`,       'radius'],
   ['radius-lg',  `\${radius('lg')}`,       'radius'],
   ['radius-pill',`\${radius('pill')}`,     'radius'],
+  // 타이포
+  ['text-xs',    `\${font('xs')}`,         'font'],
+  ['text-sm',    `\${font('sm')}`,         'font'],
+  ['text-md',    `\${font('md')}`,         'font'],
+  ['text-lg',    `\${font('lg')}`,         'font'],
+  ['text-xl',    `\${font('xl')}`,         'font'],
+  ['text-2xl',   `\${font('2xl')}`,        'font'],
+  ['tracking',   `\${tracking()}`,         'tracking'],
+  // 모션
+  ['ease-out',   `\${ease('out')}`,        'ease'],
+  ['ease-spring',`\${ease('spring')}`,     'ease'],
+  ['dur-fast',   `\${dur('fast')}`,        'dur'],
+  ['dur-base',   `\${dur('base')}`,        'dur'],
+  // control
+  ['control-h',           `\${control('h')}`,           'control'],
+  ['control-border-hover',`\${control('borderHover')}`, 'control'],
+  ['control-border',      `\${control('border')}`,      'control'],
+  ['control-channel',     `\${control('channel')}`,     'control'],
+  // 잡 스칼라
+  ['shadow',     `\${shadow()}`,           'shadow'],
+  ['elev-0',     `\${elev(0)}`,            'elev'],
+  ['elev-1',     `\${elev(1)}`,            'elev'],
+  ['elev-2',     `\${elev(2)}`,            'elev'],
+  ['elev-3',     `\${elev(3)}`,            'elev'],
+  ['hairline',   `\${hairlineWidth()}`,    'hairlineWidth'],
+  ['space',      `\${space()}`,            'space'],
 ]
 
 const walk = (dir, out = []) => {
