@@ -370,7 +370,11 @@ export const panesCss = css`
     color: inherit;
     font-size: 1.5rem; line-height: 1;
     cursor: pointer;
-    box-shadow: 0 4px 16px color-mix(in oklch, CanvasText 18%, transparent);
+    /* 1px hairline ring + 짧은 drop — 큰 blur 흐림 제거 */
+    box-shadow:
+      0 0 0 1px ${tint('CanvasText', 6)},
+      0 1px 2px ${tint('CanvasText', 10)},
+      0 4px 10px ${tint('CanvasText', 8)};
     transition: transform var(--ds-dur-fast) var(--ds-ease-out);
   }
   aside[aria-roledescription="floating-nav"] > button:hover { transform: scale(1.05); }
@@ -647,6 +651,61 @@ export const panesCss = css`
   section[aria-roledescription="content"] {
     flex: 1; overflow: auto; padding: ${pad(6)};
     display: flex; flex-direction: column; gap: ${pad(6)};
+  }
+
+  /* nav-toggle은 데스크톱에서 숨김 — admin/catalog 공통 */
+  main[aria-roledescription="edu-portal-admin-app"] [aria-roledescription="nav-toggle"] { display: none; }
+
+  /* edu-portal-admin 모바일 — sidebar 좌측 드로어 + topbar/content 컴팩트 */
+  @media (max-width: 600px) {
+    main[aria-roledescription="edu-portal-admin-app"] [aria-roledescription="nav-toggle"] {
+      display: inline-flex; align-items: center; justify-content: center;
+      inline-size: 2.25rem; block-size: 2.25rem;
+      border: 1px solid var(--ds-border); border-radius: ${radius('md')};
+      background: var(--ds-bg); cursor: pointer; flex: none;
+      position: absolute; inset-block-start: ${pad(2)}; inset-inline-start: ${pad(2)};
+      z-index: 10;
+    }
+    /* sidebar 드로어화 */
+    main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"] {
+      position: fixed;
+      inset-block: 0; inset-inline-start: 0;
+      inline-size: min(80vw, 18rem);
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform var(--ds-dur-fast) var(--ds-ease-out);
+      box-shadow: 0 0 24px color-mix(in oklch, CanvasText 12%, transparent);
+    }
+    main[aria-roledescription="edu-portal-admin-app"][data-nav-open="true"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"] {
+      transform: translateX(0);
+    }
+    main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] > button[aria-roledescription="scrim"] {
+      position: fixed; inset: 0; z-index: 49;
+      background: color-mix(in oklch, CanvasText 35%, transparent);
+      border: 0;
+    }
+
+    /* workspace는 nav-toggle을 위한 padding 확보 */
+    main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] > section[aria-roledescription="workspace"] {
+      position: relative;
+    }
+    /* topbar 컴팩트 — title 좌측 padding(toggle 자리), 부제 숨김, h1 축소 */
+    main[aria-roledescription="edu-portal-admin-app"] header[aria-roledescription="topbar"] {
+      padding: ${pad(2)} ${pad(2)} ${pad(2)} calc(${pad(2)} + 2.25rem + ${pad(1.5)});
+      gap: ${pad(2)};
+    }
+    main[aria-roledescription="edu-portal-admin-app"] header[aria-roledescription="topbar"] > hgroup h1 {
+      font-size: var(--ds-text-md);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      min-inline-size: 0;
+    }
+    main[aria-roledescription="edu-portal-admin-app"] header[aria-roledescription="topbar"] > hgroup p { display: none; }
+
+    /* content 패딩 ↓ + safe-area */
+    main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] > section[aria-roledescription="workspace"] > section[aria-roledescription="content"] {
+      padding: ${pad(2)} max(${pad(2)}, env(safe-area-inset-left)) ${pad(4)} max(${pad(2)}, env(safe-area-inset-right));
+      gap: ${pad(3)};
+    }
   }
 
   /* Catalog — ds ui zone-first 감사 대시보드. edu-portal-admin 과 동일한 셸 구조,

@@ -17,16 +17,19 @@ export const glassCss = css`
               backdrop-filter: blur(20px) saturate(180%);
       border: 1px solid ${tint('CanvasText', 8)};
       border-radius: ${radius('pill')};
+      /* hairline 1px ring(경계 또렷) + 짧은 드롭 — 큰 blur 흐림 제거 */
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 6)},
-        0 6px 20px ${tint('CanvasText', 8)};
+        0 1px 2px ${tint('CanvasText', 8)},
+        0 4px 10px ${tint('CanvasText', 6)};
     }
 
     [aria-roledescription="actions"] > button:first-of-type {
       border-radius: ${radius('pill')};
       box-shadow:
         inset 0 1px 0 ${tint('Canvas', 30)},
-        0 8px 24px color-mix(in oklch, var(--ds-accent) 30%, transparent);
+        0 1px 2px color-mix(in oklch, var(--ds-accent) 20%, transparent),
+        0 6px 14px color-mix(in oklch, var(--ds-accent) 22%, transparent);
     }
 
     :where(input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
@@ -40,7 +43,7 @@ export const glassCss = css`
       box-shadow: inset 0 1px 0 ${tint('CanvasText', 5)};
     }
 
-    /* card / sheet — emphasis="raised" 카드도 frosted */
+    /* card / sheet — emphasis="raised" 카드도 frosted, 선명한 1px ring + 작은 drop */
     [data-emphasis="raised"] {
       background: color-mix(in oklch, Canvas 75%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -48,7 +51,8 @@ export const glassCss = css`
       border: 1px solid ${tint('CanvasText', 8)};
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 5)},
-        0 12px 28px ${tint('CanvasText', 6)};
+        0 1px 2px ${tint('CanvasText', 6)},
+        0 6px 14px ${tint('CanvasText', 5)};
     }
 
     /* popover/dialog 표면 — 동일 frosted, scrim과 어우러져 layered glass */
@@ -60,7 +64,7 @@ export const glassCss = css`
       border: 1px solid ${tint('CanvasText', 8)};
     }
 
-    /* FloatingNav FAB — 더 진한 glass + 부드러운 그림자 */
+    /* FloatingNav FAB — 진한 glass + 선명 ring + 짧은 drop */
     aside[aria-roledescription="floating-nav"] > button {
       background: color-mix(in oklch, Canvas 60%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -68,7 +72,9 @@ export const glassCss = css`
       border: 1px solid ${tint('CanvasText', 10)};
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 8)},
-        0 10px 30px ${tint('CanvasText', 14)};
+        0 0 0 1px ${tint('CanvasText', 4)},
+        0 2px 4px ${tint('CanvasText', 10)},
+        0 8px 16px ${tint('CanvasText', 8)};
     }
 
     /* toolbar (반응 버튼 묶음) — ghost glass, 활성/hover 시만 살짝 채움 */

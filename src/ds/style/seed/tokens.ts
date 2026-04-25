@@ -10,8 +10,11 @@ const staticSeeds = css`
   @property --ds-depth   { syntax: '<number>'; initial-value: 1;   inherits: true; }
 
   :root {
-    /* UA가 line-height를 무시하는 select까지 min-height로 강제해 같은 선상 정렬 보장 */
-    --ds-control-h: calc(var(--ds-text-md) * var(--ds-leading) + var(--ds-space) * 2 + 2px);
+    /* 컨트롤 높이는 맥락 폰트크기 기반(1em). 헤더 안 버튼은 헤더 글자에 맞고,
+       small 옆 칩은 small에 맞는다. 토큰 값은 :root 기본 — 자식이 :where(button) 등에서
+       자체 font-size를 지정해도 calc(1em × leading)이 그 1em에 비례 재계산됨.
+       leading × text + 수직 padding(space*2) + 1px 보더 양변. */
+    --ds-control-h: calc(1em * var(--ds-leading) + var(--ds-space) * 2 + 2px);
     /* 터치 타겟 — iOS HIG 44px·Android Material 48dp 수렴 (de facto 표준) */
     --ds-touch-target: 44px;
 
@@ -28,10 +31,10 @@ const staticSeeds = css`
     --ds-dur-fast:    120ms;
     --ds-dur-base:    180ms;
   }
-  /* 터치 환경(coarse pointer + hover 없음): control-h를 touch-target까지 승격.
-     장치 특성 query는 container query로 표현 불가 — viewport 폭이 아닌 입력 장치 분기. */
+  /* 터치 환경(coarse pointer + hover 없음): touch-target 최소치 보장.
+     맥락 폰트가 크면 자연 더 커지도록 max()로 합쳐 — 헤더 안 버튼은 더 크고, 본문 안에서는 44 보장. */
   @media (hover: none) and (pointer: coarse) {
-    :root { --ds-control-h: var(--ds-touch-target); }
+    :root { --ds-control-h: max(var(--ds-touch-target), calc(1em * var(--ds-leading) + var(--ds-space) * 2 + 2px)); }
   }
 `
 
