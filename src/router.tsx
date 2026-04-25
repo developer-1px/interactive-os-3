@@ -24,6 +24,7 @@ import { Editor as GenreEditor } from './routes/genres/editor/Editor'
 import { Feed } from './routes/genres/feed/Feed'
 import { Analytics } from './routes/genres/analytics/Analytics'
 import { Settings } from './routes/genres/settings/Settings'
+import { Markdown } from './routes/markdown/Markdown'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -169,6 +170,15 @@ const eduPortalAdminRoute = eduRoot.addChildren([
   eduVideoOrder,
 ])
 
+const markdownRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/markdown/$',
+  component: Markdown,
+  staticData: {
+    palette: { label: 'Markdown Viewer', to: '/markdown/$', params: { _splat: 'README.md' } },
+  },
+})
+
 const genresHubRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/genres',
@@ -194,6 +204,7 @@ const genresSettingsRoute  = mkGenreRoute('/genres/settings',  Settings,     'Ge
 
 const routeTree = rootRoute.addChildren([
   indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, catalogRoute, eduPortalAdminRoute,
+  markdownRoute,
   genresHubRoute,
   genresInboxRoute, genresChatRoute, genresShopRoute, genresCrmRoute,
   genresEditorRoute, genresFeedRoute, genresAnalyticsRoute, genresSettingsRoute,

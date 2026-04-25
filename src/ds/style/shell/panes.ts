@@ -278,6 +278,26 @@ export const panesCss = css`
     word-break: keep-all; line-height: 1.3;
   }
 
+  /* Feed (genres/feed) — 좁은 viewport에서 좌측 nav · 우측 side를 menu Popover로 숨긴다.
+     content 레벨 container query — 페이지 외 다른 라우트에 영향 없도록 roledescription scoped. */
+  [aria-roledescription="feed-page"] {
+    container-type: inline-size;
+    container-name: feed-page;
+  }
+  [aria-roledescription="feed-page"] [data-feed-menu-btn] { display: none; }
+  @container feed-page (inline-size < 48rem) {
+    [aria-roledescription="feed-page"] > [data-ds="Column"]:first-child,
+    [aria-roledescription="feed-page"] > [data-ds="Column"]:last-child {
+      display: none;
+    }
+    [aria-roledescription="feed-page"] [data-feed-menu-btn] {
+      display: inline-flex;
+    }
+    [aria-roledescription="feed-page"] > [data-ds="Column"][data-ds-grow] {
+      width: 100%; min-width: 0;
+    }
+  }
+
   /* edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content) */
   main[aria-roledescription="edu-portal-admin-app"] {
     height: 100vh; display: flex; flex-direction: column; overflow: hidden;

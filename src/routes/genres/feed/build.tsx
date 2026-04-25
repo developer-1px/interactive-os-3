@@ -19,7 +19,24 @@ export function buildFeedPage(s: FeedState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'feed-page', label: 'Feed' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'feed-menu', 'aria-label': '메뉴', 'data-feed-menu-btn': '' }, content: '☰' } },
+      menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'feed-menu', label: 'Feed 메뉴', scrim: true }, content: (
+        <>
+          <section>
+            <h3>탐색</h3>
+            <ul>{NAV.map(([id, label, , content]) => <li key={id}>{content || label}</li>)}</ul>
+          </section>
+          <section>
+            <h3>트렌드</h3>
+            <ul>{TRENDS.map((t, i) => <li key={i}>{t}</li>)}</ul>
+          </section>
+          <section>
+            <h3>추천 팔로우</h3>
+            <ul>{SUGGESTIONS.map((s2, i) => <li key={i}>{s2}</li>)}</ul>
+          </section>
+        </>
+      ) } },
       nav: { id: 'nav', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 220 } },
       ...Object.fromEntries(NAV.map(([id, label, icon, content, pressed]) => [id, { id, data: {
         type: 'Ui', component: 'ToolbarButton', props: { pressed: pressed || undefined, 'data-icon': icon, 'aria-label': label }, content,
@@ -40,10 +57,10 @@ export function buildFeedPage(s: FeedState): NormalizedData {
       ...Object.fromEntries(SUGGESTIONS.map((s2, i) => [`sg${i}`, { id: `sg${i}`, data: { type: 'Text', variant: 'body', content: s2 } }])),
     },
     relationships: {
-      [ROOT]: ['page'], page: ['nav', 'feed', 'side'],
+      [ROOT]: ['page', 'menuPop'], page: ['nav', 'feed', 'side'],
       nav: [...NAV.map(([id]) => id), 'composeBtn'],
       feed: ['feedHdr', ...POSTS.map((p) => `card-${p.id}`)],
-      feedHdr: ['feedTitle', 'feedTabs'],
+      feedHdr: ['menuBtn', 'feedTitle', 'feedTabs'],
       feedTabs: ['tabAll', 'tabFol', 'tabFav'],
       ...Object.fromEntries(POSTS.map((p) => [`card-${p.id}`, [`meta-${p.id}`, `body-${p.id}`, `rxn-${p.id}`]])),
       ...Object.fromEntries(POSTS.map((p) => [`meta-${p.id}`, [`avatar-${p.id}`, `who-${p.id}`, `more-${p.id}`]])),
