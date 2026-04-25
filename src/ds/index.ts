@@ -9,6 +9,7 @@ import { layout } from './style/widgets/layout/layout'
 import { menu } from './style/widgets/menu/menu'
 import { reset } from './style/seed/reset'
 import { shell } from './style/shell'
+import { glassCss } from './style/glass'
 import { states } from './style/states'
 import { seeds } from './style/seed/tokens'
 import { breakpointsCss } from './style/seed/breakpoints'
@@ -38,6 +39,7 @@ export const dsCss = [
   display(),
   iconIndicator(),
   shell(),
+  glassCss,
 ].join('\n')
 export * from './core/types'
 export { reduce } from './core/state/reduce'
