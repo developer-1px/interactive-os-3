@@ -885,6 +885,92 @@ export const panesCss = css`
     border-top: var(--ds-hairline) solid var(--ds-border); padding-top: ${pad(1.5)};
   }
 
+  /* Catalog preview — 카드 클릭 시 우측 aside에 큰 demo + 상세. body가
+     workspace + preview 2단으로 갈라진다. data-preview-open이 없으면 preview는
+     남아있지만 폭 0에 가깝게 접힘. */
+  main[aria-roledescription="catalog-app"] > section[aria-roledescription="body"]
+    > aside[aria-roledescription="preview"] {
+    display: none;
+  }
+  main[aria-roledescription="catalog-app"][data-preview-open="true"]
+    > section[aria-roledescription="body"]
+    > aside[aria-roledescription="preview"] {
+    display: flex; flex-direction: column; gap: ${pad(3)};
+    flex: 0 0 var(--ds-preview-w, 480px);
+    border-inline-start: var(--ds-hairline) solid var(--ds-border);
+    background: ${fg(1)};
+    padding: ${pad(4)};
+    overflow-y: auto;
+  }
+  aside[aria-roledescription="preview"] > header {
+    display: flex; align-items: flex-start; gap: ${pad(2)};
+  }
+  aside[aria-roledescription="preview"] > header > hgroup { flex: 1; min-width: 0; }
+  aside[aria-roledescription="preview"] > header > hgroup > h2 {
+    margin: 0; font-size: var(--ds-text-xl); font-weight: 700;
+  }
+  aside[aria-roledescription="preview"] > header > hgroup > p {
+    margin: ${pad(0.5)} 0 0;
+    display: flex; gap: ${pad(1.5)}; align-items: baseline; flex-wrap: wrap;
+    color: ${dim(55)}; font-size: var(--ds-text-sm);
+  }
+  aside[aria-roledescription="preview"] > header > hgroup > p > code {
+    font-family: ui-monospace, monospace; font-size: var(--ds-text-xs);
+  }
+  aside[aria-roledescription="preview"] > header > button {
+    inline-size: 2rem; block-size: 2rem;
+    border: 0; background: transparent; color: inherit; cursor: pointer;
+    font-size: 1.25rem; line-height: 1; border-radius: ${radius('md')};
+  }
+  aside[aria-roledescription="preview"] > header > button:hover {
+    background: color-mix(in oklch, CanvasText 8%, transparent);
+  }
+  aside[aria-roledescription="preview"] > figure[aria-roledescription="card-demo"] {
+    margin: 0; padding: ${pad(4)};
+    border: 1px dashed var(--ds-border);
+    border-radius: ${pad(1.5)};
+    background: color-mix(in oklch, var(--ds-fg) 2%, transparent);
+    min-block-size: 200px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  aside[aria-roledescription="preview"] > pre {
+    margin: 0; padding: ${pad(2.5)};
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+    border-radius: ${pad(1)}; font-size: var(--ds-text-xs);
+    overflow-x: auto; font-family: ui-monospace, monospace;
+  }
+  aside[aria-roledescription="preview"] > ul[aria-roledescription="card-checks"] {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: ${pad(0.75)}; font-size: var(--ds-text-sm);
+  }
+  aside[aria-roledescription="preview"] [data-pass="true"]  { color: ${status('success')}; }
+  aside[aria-roledescription="preview"] [data-pass="false"] { color: ${status('danger')}; }
+
+  /* 카드 클릭 어포던스 + 선택 표식 */
+  article[aria-roledescription="catalog-card"] {
+    cursor: pointer;
+    transition: border-color var(--ds-dur-fast) var(--ds-ease-out),
+                box-shadow var(--ds-dur-fast) var(--ds-ease-out);
+  }
+  article[aria-roledescription="catalog-card"]:hover {
+    border-color: color-mix(in oklch, var(--ds-accent) 40%, var(--ds-border));
+  }
+  article[aria-roledescription="catalog-card"][aria-current="true"] {
+    border-color: var(--ds-accent);
+    box-shadow: 0 0 0 1px var(--ds-accent);
+  }
+
+  /* 모바일 — preview는 화면 전체를 덮는 오버레이로 */
+  @container shell (max-width: ${SHELL_MOBILE_MAX}) {
+    main[aria-roledescription="catalog-app"][data-preview-open="true"]
+      > section[aria-roledescription="body"]
+      > aside[aria-roledescription="preview"] {
+      position: fixed; inset: 0; z-index: 50;
+      flex: none; inline-size: 100%;
+      border-inline-start: 0;
+    }
+  }
+
   /* topbar의 nav-toggle은 데스크톱에서 숨김, 모바일에서만 노출 */
   main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] { display: none; }
 

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData, ROOT } from '../../ds'
 import { demos } from './demos'
+import { CatalogPreview } from './CatalogPreview'
 
 /**
  * Catalog — ds ui zone-first 감사 대시보드.
@@ -39,6 +40,11 @@ export function Catalog() {
   const [filter, setFilter] = useState<Filter>('all')
   // mobile drawer는 CSS-only로 처리 (data-nav-open 토글만 JS, viewport 분기는 CSS).
   const [navOpen, setNavOpen] = useState(false)
+  const [selected, setSelected] = useState<string | null>(null)
+  const selectedContract = useMemo(
+    () => contracts.find((c) => c.name === selected) ?? null,
+    [selected],
+  )
 
   const grouped = useMemo(() => {
     const m: Record<Kind, Contract[]> = {
@@ -66,6 +72,7 @@ export function Catalog() {
       aria-roledescription="catalog-app"
       aria-label="Catalog"
       data-nav-open={navOpen ? 'true' : undefined}
+      data-preview-open={selectedContract ? 'true' : undefined}
     >
       <section aria-roledescription="body">
         <CatalogNav
@@ -117,13 +124,22 @@ export function Catalog() {
                       </header>
                       <p>{kindBlurb[k]}</p>
                       <ul aria-roledescription="catalog-grid">
-                        {list.map((c) => <li key={c.file}><Card contract={c} /></li>)}
+                        {list.map((c) => (
+                          <li key={c.file}>
+                            <Card
+                              contract={c}
+                              selected={c.name === selected}
+                              onSelect={() => setSelected(c.name)}
+                            />
+                          </li>
+                        ))}
                       </ul>
                     </section>
                   )
                 })}
           </section>
         </section>
+        <CatalogPreview contract={selectedContract} onClose={() => setSelected(null)} />
       </section>
     </main>
   )
@@ -168,14 +184,22 @@ function CatalogNav({
   )
 }
 
-function Card({ contract }: { contract: Contract }) {
+function Card({
+  contract, selected, onSelect,
+}: { contract: Contract; selected: boolean; onSelect: () => void }) {
   const { name, file, role, propsSignature, checks, score, callSites, kind } = contract
   const allPass = checks.every((c) => c.pass)
   const badge = allPass ? '✓' : `${checks.filter((c) => c.pass).length}/${checks.length}`
   const badgeTone = allPass ? 'good' : score >= 0.7 ? 'warn' : 'bad'
 
   return (
-    <article aria-roledescription="catalog-card">
+    <article
+      aria-roledescription="catalog-card"
+      aria-current={selected ? 'true' : undefined}
+      tabIndex={0}
+      onClick={onSelect}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }}
+    >
       <header>
         <h3>{name}</h3>
         <span data-badge data-tone={badgeTone}>{badge}</span>
