@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentPropsWithoutRef } from 'react'
+import { forwardRef, useEffect, type ComponentPropsWithoutRef } from 'react'
 
 type ComboboxProps = Omit<ComponentPropsWithoutRef<'input'>, 'role' | 'type'> & {
   expanded?: boolean
@@ -12,6 +12,17 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     { expanded, controls, activedescendant, autocomplete = 'list', ...rest },
     ref,
   ) {
+    /* aria-activedescendant 패턴은 실제 DOM focus를 옮기지 않아 브라우저 기본
+       focus-driven scroll이 발동하지 않는다. roving(focus-based)이 무료로 받는
+       scrollIntoView를 activedescendant 축에서도 동일하게 보장한다. */
+    useEffect(() => {
+      if (!activedescendant || !controls) return
+      const root = document.getElementById(controls)
+      const opt = root?.querySelector<HTMLElement>(`[data-id="${CSS.escape(activedescendant)}"]`)
+        ?? document.getElementById(activedescendant)
+      opt?.scrollIntoView({ block: 'nearest' })
+    }, [activedescendant, controls])
+
     return (
       <input
         ref={ref}

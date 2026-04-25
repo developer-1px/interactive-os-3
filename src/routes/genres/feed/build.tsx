@@ -4,6 +4,8 @@ import { NAV, POSTS, SUGGESTIONS, TRENDS } from './data'
 export interface FeedState {
   liked: Set<string>; toggle: (id: string) => void
   nav: { data: NormalizedData; onEvent: (e: Event) => void }
+  feedTabs: { data: NormalizedData; onEvent: (e: Event) => void }
+  rxn: Record<string, { data: NormalizedData; onEvent: (e: Event) => void }>
 }
 
 export function buildFeedPage(s: FeedState): NormalizedData {
@@ -15,10 +17,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
     [`more-${p.id}`,    { id: `more-${p.id}`,    data: { type: 'Ui', component: 'Button', props: { 'aria-label': '더보기', 'data-icon': 'more' }, content: '' } }],
     [`body-${p.id}`,    { id: `body-${p.id}`,    data: { type: 'Text', variant: 'body', content: p.body } }],
     ...(p.image ? [[`img-${p.id}`, { id: `img-${p.id}`, data: { type: 'Text', variant: 'body', content: <img src={p.image} alt="" loading="lazy" /> } }] as const] : []),
-    [`rxn-${p.id}`,     { id: `rxn-${p.id}`,     data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '반응' } } }],
-    [`rxLike-${p.id}`,  { id: `rxLike-${p.id}`,  data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: s.liked.has(p.id), onClick: () => s.toggle(p.id), 'data-icon': 'heart', 'aria-label': '좋아요' }, content: String(p.likes + (s.liked.has(p.id) ? 1 : 0)) } }],
-    [`rxCom-${p.id}`,   { id: `rxCom-${p.id}`,   data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'message-circle', 'aria-label': '댓글' }, content: String(p.comments) } }],
-    [`rxShare-${p.id}`, { id: `rxShare-${p.id}`, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'share', 'aria-label': '공유' }, content: String(p.shared) } }],
+    [`rxn-${p.id}`, { id: `rxn-${p.id}`, data: { type: 'Ui', component: 'Toolbar', props: { data: s.rxn[p.id]?.data, onEvent: s.rxn[p.id]?.onEvent, 'aria-label': '반응' } } }],
   ] as Array<readonly [string, unknown]>)
   return {
     entities: {
@@ -48,10 +47,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
       feed: { id: 'feed', data: { type: 'Main', flow: 'form', grow: true, label: '피드' } },
       feedHdr: { id: 'feedHdr', data: { type: 'Header', flow: 'split' } },
       feedTitle: { id: 'feedTitle', data: { type: 'Text', variant: 'h1', content: '홈' } },
-      feedTabs: { id: 'feedTabs', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '피드 탭' } } },
-      tabAll: { id: 'tabAll', data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: true, 'aria-label': '전체' }, content: '전체' } },
-      tabFol: { id: 'tabFol', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '팔로잉' }, content: '팔로잉' } },
-      tabFav: { id: 'tabFav', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '인기' }, content: '인기' } },
+      feedTabs: { id: 'feedTabs', data: { type: 'Ui', component: 'Toolbar', props: { data: s.feedTabs.data, onEvent: s.feedTabs.onEvent, 'aria-label': '피드 탭' } } },
       ...Object.fromEntries(postEnts),
       side: { id: 'side', data: { type: 'Aside', flow: 'form', emphasis: 'raised', width: 280, label: '추천' } },
       sHdr: { id: 'sHdr', data: { type: 'Text', variant: 'h3', content: '트렌드' } },
@@ -64,10 +60,8 @@ export function buildFeedPage(s: FeedState): NormalizedData {
       nav: ['navList', 'composeBtn'],
       feed: ['feedHdr', ...POSTS.map((p) => `card-${p.id}`)],
       feedHdr: ['menuBtn', 'feedTitle', 'feedTabs'],
-      feedTabs: ['tabAll', 'tabFol', 'tabFav'],
       ...Object.fromEntries(POSTS.map((p) => [`card-${p.id}`, [`meta-${p.id}`, `body-${p.id}`, ...(p.image ? [`img-${p.id}`] : []), `rxn-${p.id}`]])),
       ...Object.fromEntries(POSTS.map((p) => [`meta-${p.id}`, [`avatar-${p.id}`, `who-${p.id}`, `more-${p.id}`]])),
-      ...Object.fromEntries(POSTS.map((p) => [`rxn-${p.id}`, [`rxLike-${p.id}`, `rxCom-${p.id}`, `rxShare-${p.id}`]])),
       side: ['sHdr', ...TRENDS.map((_, i) => `tr${i}`), 'sugHdr', ...SUGGESTIONS.map((_, i) => `sg${i}`)],
     },
   }

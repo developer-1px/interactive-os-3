@@ -1,11 +1,12 @@
 import { ROOT, type Event, type NormalizedData } from '../../../ds'
-import { ACTS, INITIAL, MEMBERS, activeLabel, statusLabel, statusTone, type Msg } from './data'
+import { INITIAL, MEMBERS, activeLabel, statusLabel, statusTone, type Msg } from './data'
 
 export interface ChatState {
   active: string; draft: string; stream: Record<string, Msg[]>
   setActive: (id: string) => void; setDraft: (v: string) => void; send: () => void
   pubNav: { data: NormalizedData; onEvent: (e: Event) => void }
   dmNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  mainActions: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildChatPage(s: ChatState): NormalizedData {
@@ -47,8 +48,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
       main: { id: 'main', data: { type: 'Main', flow: 'list', grow: true, label: '메시지' } },
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
       mainTitle: { id: 'mainTitle', data: { type: 'Text', variant: 'h2', content: `# ${activeLabel(s.active)}` } },
-      mainActions: { id: 'mainActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '채널 액션' } } },
-      ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label } } }])),
+      mainActions: { id: 'mainActions', data: { type: 'Ui', component: 'Toolbar', props: { data: s.mainActions.data, onEvent: s.mainActions.onEvent, 'aria-label': '채널 액션' } } },
       stream: { id: 'stream', data: { type: 'Column', flow: 'list', grow: true, emphasis: 'sunk' } },
       ...Object.fromEntries(msgEnts),
       composer: { id: 'composer', data: { type: 'Row', flow: 'cluster' } },
@@ -71,7 +71,6 @@ export function buildChatPage(s: ChatState): NormalizedData {
       side: ['pubList', 'dmList'],
       main: ['mainHdr', 'stream', 'composer'],
       mainHdr: ['menuBtn', 'mainTitle', 'mainActions'],
-      mainActions: ACTS.map(([id]) => id) as string[],
       stream: msgs.map((m) => `mb-${m.id}`),
       ...Object.fromEntries(msgs.map((m) => [`mb-${m.id}`, [`mh-${m.id}`, `mt-${m.id}`]])),
       composer: ['composerIn', 'composerSend'],

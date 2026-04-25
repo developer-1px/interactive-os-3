@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import type { Event } from '../../core/types'
+import type { Event } from '../../../core/types'
 import { INITIAL, keymap, reducer } from './paletteReducer'
 import { usePaletteEntries } from './usePaletteEntries'
 import { toDialogData, toListData } from './paletteAdapters'

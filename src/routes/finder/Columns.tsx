@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react'
+import { useMemo } from 'react'
 import {
   Columns as ColumnsRole,
   expandBranchOnActivate,
@@ -6,10 +6,12 @@ import {
   pathAncestors,
   parentOf,
   useControlState,
+  useResource,
   ROOT,
   type Event,
 } from '../../ds'
-import { getTree, subscribeTree, walk } from './data'
+import { walk } from './data'
+import { treeResource } from './resources'
 import { extToIcon, type FsNode } from './types'
 
 export function Columns({
@@ -22,15 +24,16 @@ export function Columns({
   onNavigate: (path: string) => void
 }) {
   const currentPath = chain[chain.length - 1]?.path ?? '/'
-  const tree = useSyncExternalStore(subscribeTree, getTree, getTree)
+  const [tree] = useResource(treeResource)
   const rootNode = useMemo(() => {
+    if (!tree) return undefined
     if (rootPath === '/') return tree
     const c = walk(rootPath)
     return c[c.length - 1] ?? tree
   }, [rootPath, tree])
   const base = useMemo(
     () =>
-      fromTree(rootNode.children ?? [], {
+      fromTree(rootNode?.children ?? [], {
         getId: (n) => n.path,
         getKids: (n) => n.children,
         toData: (n) => ({

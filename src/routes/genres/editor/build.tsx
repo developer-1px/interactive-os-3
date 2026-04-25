@@ -1,5 +1,5 @@
 import { ROOT, type Event, type NormalizedData } from '../../../ds'
-import { BLOCK_OPTS, FMT_ACTS, type Block, type BlockKind } from './data'
+import { BLOCK_OPTS, type Block, type BlockKind } from './data'
 
 export interface EditorState {
   blocks: Block[]; selected: string; title: string; isPublic: boolean
@@ -7,14 +7,10 @@ export interface EditorState {
   setSelected: (id: string) => void; setTitle: (v: string) => void; setPublic: (v: boolean) => void
   updateText: (id: string, v: string) => void; updateKind: (id: string, k: BlockKind) => void
   outlineNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  toolbar: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildEditorPage(s: EditorState): NormalizedData {
-  const kindBtn = (kind: BlockKind, label: string) => [`t-${kind}`, { id: `t-${kind}`, data: {
-    type: 'Ui', component: 'ToolbarButton',
-    props: { onClick: () => s.current && s.updateKind(s.current.id, kind), 'aria-label': label },
-    content: label,
-  } }] as const
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
@@ -25,12 +21,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
         props: { data: s.outlineNav.data, onEvent: s.outlineNav.onEvent, 'aria-label': '아웃라인' } } },
       canvas: { id: 'canvas', data: { type: 'Main', flow: 'form', grow: true, label: '편집 영역' } },
       docTitle: { id: 'docTitle', data: { type: 'Ui', component: 'Input', props: { value: s.title, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setTitle(e.target.value), 'aria-label': '문서 제목', 'data-ds-title': '' } } },
-      toolbar: { id: 'toolbar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '서식' } } },
-      ...Object.fromEntries(FMT_ACTS.map(([id, label, icon, content]) => [id, { id, data: {
-        type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label }, content,
-      } }])),
-      tSep: { id: 'tSep', data: { type: 'Ui', component: 'Separator', props: { orientation: 'vertical' } } },
-      ...Object.fromEntries(['h1','h2','list','code'].map((k) => kindBtn(k as BlockKind, k === 'list' ? '• 리스트' : k === 'code' ? '</>' : k.toUpperCase()))),
+      toolbar: { id: 'toolbar', data: { type: 'Ui', component: 'Toolbar', props: { data: s.toolbar.data, onEvent: s.toolbar.onEvent, 'aria-label': '서식' } } },
       ...Object.fromEntries(s.blocks.map((b) => [`blk-${b.id}`, { id: `blk-${b.id}`, data: {
         type: 'Ui', component: 'Textarea',
         props: {
@@ -58,7 +49,6 @@ export function buildEditorPage(s: EditorState): NormalizedData {
       [ROOT]: ['page'], page: ['outline', 'canvas', 'props'],
       outline: ['oHdr', 'olList'],
       canvas: ['docTitle', 'toolbar', ...s.blocks.map((b) => `blk-${b.id}`)],
-      toolbar: [...FMT_ACTS.map(([id]) => id), 'tSep', 't-h1', 't-h2', 't-list', 't-code'],
       props: ['pHdr', 'fTitle', 'fPub', 'fBlkKind', 'stats'],
       fTitle: ['fTitleLbl', 'fTitleIn'],
       fPub: ['fPubLbl', 'fPubSw', 'fPubDesc'],

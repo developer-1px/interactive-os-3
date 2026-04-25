@@ -15,8 +15,8 @@ import { Checkbox } from '../ui/control/Checkbox'
 import { Progress, Meter } from '../ui/control/Progress'
 import { Field, FieldLabel, FieldDescription, FieldError } from '../ui/control/Field'
 import { ToolbarButton } from '../ui/control/ToolbarButton'
-import { Toolbar } from '../ui/composite/Toolbar'
-import { TabList, Tab, TabPanel } from '../ui/composite/Tabs'
+import { Toolbar } from '../ui/collection/Toolbar'
+import { TabList, Tab, TabPanel } from '../ui/collection/Tabs'
 import { OrderableList } from '../ui/composite/OrderableList'
 import { DataGrid } from '../ui/composite/DataGrid'
 import { DataGridRow } from '../ui/composite/DataGridRow'
@@ -37,6 +37,9 @@ import { MessageBubble } from '../ui/entity/MessageBubble'
 import { PostCard } from '../ui/entity/PostCard'
 import { FeedPost } from '../ui/entity/FeedPost'
 import { ProductCard } from '../ui/entity/ProductCard'
+import { ContractCard } from '../ui/entity/ContractCard'
+import { FnCard } from '../ui/entity/FnCard'
+import { LeakTable } from '../ui/entity/LeakTable'
 import { LegendDot } from '../ui/layout/LegendDot'
 import { Separator } from '../ui/layout/Separator'
 import { BarChart } from '../ui/layout/BarChart'
@@ -91,6 +94,9 @@ export const uiRegistry = {
   PostCard:      { component: PostCard,      zone: 'entity' },
   FeedPost:      { component: FeedPost,      zone: 'entity' },
   ProductCard:   { component: ProductCard,   zone: 'entity' },
+  ContractCard:  { component: ContractCard,  zone: 'entity' },
+  FnCard:        { component: FnCard,        zone: 'entity' },
+  LeakTable:     { component: LeakTable,     zone: 'entity' },
   // layout
   LegendDot: { component: LegendDot, zone: 'layout' },
   Separator: { component: Separator, zone: 'layout' },

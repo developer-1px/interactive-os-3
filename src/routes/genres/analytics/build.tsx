@@ -1,7 +1,10 @@
-import { ROOT, fromList, type NormalizedData } from '../../../ds'
-import { RANGES, kpis, regionBars, sources, weekBars, type Range } from './data'
+import { ROOT, fromList, type Event, type NormalizedData } from '../../../ds'
+import { kpis, regionBars, sources, weekBars, type Range } from './data'
 
-export interface AnalyticsState { range: Range; setRange: (r: Range) => void }
+export interface AnalyticsState {
+  range: Range; setRange: (r: Range) => void
+  rangeNav: { data: NormalizedData; onEvent: (e: Event) => void }
+}
 
 export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
   return {
@@ -10,12 +13,7 @@ export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
       page: { id: 'page', data: { type: 'Column', flow: 'form', roledescription: 'analytics-page', label: 'Analytics' } },
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'split' } },
       title: { id: 'title', data: { type: 'Text', variant: 'h1', content: 'Analytics' } },
-      rangeBar: { id: 'rangeBar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '기간' } } },
-      ...Object.fromEntries(RANGES.map((r) => [`r-${r}`, { id: `r-${r}`, data: {
-        type: 'Ui', component: 'ToolbarButton',
-        props: { pressed: s.range === r, onClick: () => s.setRange(r), 'aria-label': r },
-        content: r === 'custom' ? '사용자 지정' : r,
-      } }])),
+      rangeBar: { id: 'rangeBar', data: { type: 'Ui', component: 'Toolbar', props: { data: s.rangeNav.data, onEvent: s.rangeNav.onEvent, 'aria-label': '기간' } } },
       kpis: { id: 'kpis', data: { type: 'Grid', cols: 4, flow: 'form' } },
       ...Object.fromEntries(kpis.map((k) => [`kpi-${k.id}`, { id: `kpi-${k.id}`, data: {
         type: 'Ui', component: 'StatCard',
@@ -38,7 +36,6 @@ export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
     relationships: {
       [ROOT]: ['page'], page: ['hdr', 'kpis', 'chartsGrid', 'regionSec', 'gapNote'],
       hdr: ['title', 'rangeBar'],
-      rangeBar: RANGES.map((r) => `r-${r}`),
       kpis: kpis.map((k) => `kpi-${k.id}`),
       chartsGrid: ['trafficSec', 'sourceSec'],
       trafficSec: ['trafficChart'], sourceSec: ['sourceList'],

@@ -69,3 +69,7 @@ export const getLabel = (d: NormalizedData, id: string): string =>
 
 export const isDisabled = (d: NormalizedData, id: string): boolean =>
   Boolean(d.entities[id]?.data?.disabled)
+
+// 의미 색 토큰 — Badge/LegendDot/Card 등이 공유하는 design token.
+// zone 위계상 어느 ui/<zone> 에도 속하지 않으므로 core 가 소유한다.
+export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'

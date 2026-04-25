@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '../../core/types'
+import { ROOT, type NormalizedData } from '../../../core/types'
 import type { PaletteEntry } from './usePaletteEntries'
 
 /** filtered entries → Listbox 용 NormalizedData. active index의 항목만 selected. */

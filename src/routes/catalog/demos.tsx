@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import {
   Menu, Listbox, Tree, Columns, Top10List, BarChart, StatCard, CourseCard, RoleCard,
   Badge, LegendDot, Button, Switch, Progress, Field,
-  TabList, Tab, TabPanel, Feed, FeedArticle, Disclosure,
+  TabList, TabPanel, Feed, FeedArticle, Disclosure,
   Toolbar, ToolbarButton, Separator,
   Input, Textarea, Select, NumberInput, Slider, ColorInput,
   Checkbox, RadioGroup, CheckboxGroup, Combobox,
@@ -211,14 +211,22 @@ function FieldDemo() {
   )
 }
 
+const tabsBase: NormalizedData = {
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    t1: { id: 't1', data: { label: '개요', controls: 'p1' } },
+    t2: { id: 't2', data: { label: '통계', controls: 'p2' } },
+    t3: { id: 't3', data: { label: '설정', controls: 'p3' } },
+    [FOCUS]: { id: FOCUS, data: { id: 't1' } },
+  },
+  relationships: { [ROOT]: ['t1', 't2', 't3'] },
+}
+
 function TabsDemo() {
+  const [data, onEvent] = useControlState(tabsBase)
   return (
     <div>
-      <TabList>
-        <Tab selected controls="p1">개요</Tab>
-        <Tab controls="p2">통계</Tab>
-        <Tab controls="p3">설정</Tab>
-      </TabList>
+      <TabList data={data} onEvent={onEvent} aria-label="섹션" />
       <TabPanel id="p1" labelledBy="t1">
         <p>개요 패널</p>
       </TabPanel>
@@ -249,15 +257,21 @@ function DisclosureDemo() {
   )
 }
 
+const toolbarBase: NormalizedData = {
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    bold: { id: 'bold', data: { label: '굵게', icon: 'bold' } },
+    italic: { id: 'italic', data: { label: '기울임', icon: 'italic' } },
+    sep: { id: 'sep', data: { separator: true } },
+    link: { id: 'link', data: { label: '링크', icon: 'link' } },
+    [FOCUS]: { id: FOCUS, data: { id: 'bold' } },
+  },
+  relationships: { [ROOT]: ['bold', 'italic', 'sep', 'link'] },
+}
+
 function ToolbarDemo() {
-  return (
-    <Toolbar aria-label="편집" orientation="horizontal">
-      <ToolbarButton data-icon="bold" aria-label="굵게" />
-      <ToolbarButton data-icon="italic" aria-label="기울임" />
-      <Separator />
-      <ToolbarButton data-icon="link" aria-label="링크" />
-    </Toolbar>
-  )
+  const [data, onEvent] = useControlState(toolbarBase)
+  return <Toolbar data={data} onEvent={onEvent} aria-label="편집" orientation="horizontal" />
 }
 
 function ToolbarButtonDemo() {
@@ -394,6 +408,9 @@ export const demos: Record<string, () => ReactNode> = {
   Progress: ProgressDemo,
   Field: FieldDemo,
   Tabs: TabsDemo,
+  TabList: TabsDemo,
+  Tab: TabsDemo,
+  TabPanel: TabsDemo,
   Feed: FeedDemo,
   Disclosure: DisclosureDemo,
   Toolbar: ToolbarDemo,

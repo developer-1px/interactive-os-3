@@ -1,4 +1,8 @@
-import { ColorInput, Input, NumberInput, Toolbar, ToolbarButton } from '../../../ds'
+import { useMemo } from 'react'
+import {
+  ColorInput, Input, NumberInput, Toolbar, ROOT, FOCUS, useControlState,
+  type NormalizedData, type Event,
+} from '../../../ds'
 import { Field } from '../Field'
 import type { Selection, StrokeStyle } from '../types'
 
@@ -44,17 +48,27 @@ export function StrokeSection({ sel, set }: {
         />
       </Field>
       <Field label="Style">
-        <Toolbar aria-label="Stroke style">
-          {STROKE_STYLES.map((s) => (
-            <ToolbarButton
-              key={s}
-              pressed={sel.strokeStyle === s}
-              onClick={() => set({ strokeStyle: s })}
-              aria-label={s}
-            >{s}</ToolbarButton>
-          ))}
-        </Toolbar>
+        <StrokeStyleToolbar value={sel.strokeStyle} onChange={(strokeStyle) => set({ strokeStyle })} />
       </Field>
     </section>
   )
+}
+
+function StrokeStyleToolbar({ value, onChange }: { value: StrokeStyle; onChange: (v: StrokeStyle) => void }) {
+  const base = useMemo<NormalizedData>(() => ({
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      ...Object.fromEntries(STROKE_STYLES.map((s) => [
+        s, { id: s, data: { label: s, content: s, pressed: value === s } },
+      ])),
+      [FOCUS]: { id: FOCUS, data: { id: value } },
+    },
+    relationships: { [ROOT]: [...STROKE_STYLES] },
+  }), [value])
+  const [data, dispatch] = useControlState(base)
+  const onEvent = (e: Event) => {
+    dispatch(e)
+    if (e.type === 'activate') onChange(e.id as StrokeStyle)
+  }
+  return <Toolbar data={data} onEvent={onEvent} aria-label="Stroke style" />
 }

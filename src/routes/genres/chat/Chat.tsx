@@ -4,8 +4,18 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   type Event, type NormalizedData,
 } from '../../../ds'
-import { INITIAL, channels, now, type Channel, type Msg } from './data'
+import { ROOT } from '../../../ds'
+import { ACTS, INITIAL, channels, now, type Channel, type Msg } from './data'
 import { buildChatPage } from './build'
+
+const mainActionsBase = (): NormalizedData => ({
+  entities: {
+    __root__: { id: '__root__', data: {} },
+    __focus__: { id: '__focus__', data: { id: 'aPin' } },
+    ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { label, icon } }])),
+  },
+  relationships: { [ROOT]: ACTS.map(([id]) => id) as string[] },
+})
 
 const iconOf = (t: Channel['type']) => (t === 'dm' ? 'user' : t === 'private' ? 'lock' : 'hash')
 
@@ -46,10 +56,12 @@ export function Chat() {
   const dms = useMemo(() => channels.filter((c) => c.type === 'dm'), [])
   const pubNav = useChannelList(pubs, active, setActive)
   const dmNav = useChannelList(dms, active, setActive)
+  const [mainActionsData, mainActionsDispatch] = useControlState(useMemo(mainActionsBase, []))
+  const mainActions = { data: mainActionsData, onEvent: mainActionsDispatch }
   return (
     <Renderer
       page={definePage(
-        buildChatPage({ active, draft, stream, setActive, setDraft, send, pubNav, dmNav }),
+        buildChatPage({ active, draft, stream, setActive, setDraft, send, pubNav, dmNav, mainActions }),
       )}
     />
   )

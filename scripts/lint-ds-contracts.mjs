@@ -88,6 +88,24 @@ for (const file of files) {
     report.push(`🔴 ${rel} — onKeyDown prop 노출 금지 (roving self-attach 불변)`)
   }
 
+  // 직렬화 불변(WARN): entity / control 의 props 타입에 ReactNode|ReactElement 등장 시 경고.
+  // 데이터 주도(string/number/구조화 객체)로 좁혀라. composable(@slot children) 면제.
+  if (kind === 'entity' || kind === 'control') {
+    const propTypeBlock = src.split(/\bexport\s+(?:function|const)/)[0] ?? ''
+    const m = propTypeBlock.match(/^\s*(\w+)\s*\??\s*:\s*(ReactNode|ReactElement|JSX\.Element)\b/m)
+    if (m) {
+      warn += 1
+      report.push(`🟡 ${rel} [${kind}] — prop "${m[1]}: ${m[2]}" 직렬화 불가 (string|구조화 객체로 좁혀라)`)
+    }
+  }
+
+  // 직렬화 불변(WARN): cloneElement / Children.* 사용 시 경고. composable 면제.
+  // children 변형은 데이터 주도 위반. data prop으로 받아 자체 렌더해라.
+  if (kind !== 'composable' && (/\bcloneElement\b/.test(src) || /\bChildren\.(map|toArray|forEach|count|only)\b/.test(src))) {
+    warn += 1
+    report.push(`🟡 ${rel} — cloneElement / Children.* 사용 (children 변형 = 데이터 주도 위반)`)
+  }
+
   // Canonical 화이트리스트: CollectionProps 타입 시그니처 강제
   if (CANONICAL_COLLECTIONS.has(name)) {
     if (!/\bCollectionProps\b/.test(src)) {
@@ -107,6 +125,27 @@ for (const file of files) {
     // entity/control/composable — baseline, 경고만
     warn += 1
     report.push(`⚪ ${rel} [${kind}] failed: ${failed.map((f) => f.id).join(', ')}`)
+  }
+}
+
+// Resource 단일 인터페이스 — routes/**에서 useSyncExternalStore 직접 호출 금지.
+// 공유 도메인 데이터 read/write는 useResource(resource) 단일 인터페이스로만.
+// 컴포넌트 로컬 useState는 허용 (UI state). 모듈 스코프 store 구독은 useResource로 흡수.
+const ROUTES = join(ROOT, 'src/routes')
+const walkAll = (dir, out = []) => {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, e.name)
+    if (e.isDirectory()) walkAll(p, out)
+    else if (/\.(tsx|ts)$/.test(e.name)) out.push(p)
+  }
+  return out
+}
+for (const file of walkAll(ROUTES)) {
+  const src = readFileSync(file, 'utf8')
+  const rel = relative(ROOT, file)
+  if (/\buseSyncExternalStore\b/.test(src)) {
+    warn += 1
+    report.push(`🟡 ${rel} — useSyncExternalStore 직접 호출 (useResource 단일 인터페이스로 수렴 권장)`)
   }
 }
 

@@ -19,4 +19,10 @@ node scripts/lint-ds-contracts.mjs
 echo "→ lint:ds:keyboard (role 별 APG 키보드 계약)"
 node scripts/lint-ds-keyboard.mjs
 
+echo "→ lint:ds:serializable (definePage 직렬화 누수)"
+node scripts/lint-ds-serializable.mjs
+
+echo "→ lint:ds:css-orphans (widgets/index.ts 미등록 css)"
+node scripts/lint-ds-css-orphans.mjs
+
 echo "✅ ds lint 통과"

@@ -1,10 +1,12 @@
-import { Badge, ROOT, type NormalizedData } from '../../../ds'
-import { BULK_ACTS, CONTACTS, HEADS, stageTone, type Contact } from './data'
+import { Badge, ROOT, type Event, type NormalizedData } from '../../../ds'
+import { CONTACTS, HEADS, stageTone, type Contact } from './data'
 
 export interface CrmState {
   sel: Set<string>; open: string | null; q: string
   toggle: (id: string) => void; toggleAll: () => void
   setOpen: (id: string | null) => void; setQ: (v: string) => void
+  bulkBar: { data: NormalizedData; onEvent: (e: Event) => void }
+  pageNav: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 const rowCells = (c: Contact, sel: Set<string>, toggle: (id: string) => void) => [
@@ -36,13 +38,12 @@ export function buildCrmPage(s: CrmState): NormalizedData {
       page: { id: 'page', data: { type: 'Column', flow: 'form', roledescription: 'crm-page', label: 'CRM' } },
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'split' } },
       title: { id: 'title', data: { type: 'Text', variant: 'h1', content: 'Contacts' } },
-      hdrActions: { id: 'hdrActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '도구' } } },
+      hdrActions: { id: 'hdrActions', data: { type: 'Row', flow: 'cluster', label: '도구' } },
       search: { id: 'search', data: { type: 'Ui', component: 'Input', props: { type: 'search', placeholder: '이름·회사·이메일…', value: s.q, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setQ(e.target.value), 'aria-label': '검색' } } },
       newBtn: { id: 'newBtn', data: { type: 'Ui', component: 'Button', props: { onClick: () => alert('신규') }, content: '＋ 신규' } },
       bulk: { id: 'bulk', data: { type: 'Row', flow: 'cluster', emphasis: 'raised', hidden: s.sel.size === 0 } },
       bulkLbl: { id: 'bulkLbl', data: { type: 'Text', variant: 'strong', content: `${s.sel.size}건 선택됨` } },
-      bulkBar: { id: 'bulkBar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '일괄' } } },
-      ...Object.fromEntries(BULK_ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, onClick: () => alert(label) }, content: label } }])),
+      bulkBar: { id: 'bulkBar', data: { type: 'Ui', component: 'Toolbar', props: { data: s.bulkBar.data, onEvent: s.bulkBar.onEvent, 'aria-label': '일괄' } } },
       grid: { id: 'grid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '연락처' } } },
       head: { id: 'head', data: { type: 'Ui', component: 'RowGroup' } },
       headRow: { id: 'headRow', data: { type: 'Ui', component: 'DataGridRow' } },
@@ -52,21 +53,22 @@ export function buildCrmPage(s: CrmState): NormalizedData {
       ...Object.fromEntries(rowEnts),
       foot: { id: 'foot', data: { type: 'Footer', flow: 'split' } },
       pageInfo: { id: 'pageInfo', data: { type: 'Text', variant: 'small', content: `${rows.length} / ${CONTACTS.length} rows` } },
-      pageNav: { id: 'pageNav', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '페이지' } } },
-      pPrev: { id: 'pPrev', data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'chevron-left', 'aria-label': '이전' }, content: '이전' } },
-      pCur:  { id: 'pCur',  data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: true, 'aria-label': '1 페이지' }, content: '1' } },
-      pNext: { id: 'pNext', data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'chevron-right', 'aria-label': '다음' }, content: '다음' } },
-      drawer: { id: 'drawer', data: { type: 'Ui', component: 'Dialog', props: { open: Boolean(current), onClose: () => s.setOpen(null), 'aria-label': '연락처 상세', children: current ? renderContact(current) : null } } },
+      pageNav: { id: 'pageNav', data: { type: 'Ui', component: 'Toolbar', props: { data: s.pageNav.data, onEvent: s.pageNav.onEvent, 'aria-label': '페이지' } } },
+      drawer: { id: 'drawer', data: { type: 'Ui', component: 'Dialog', props: {
+        data: { entities: { [ROOT]: { id: ROOT, data: { open: Boolean(current), label: '연락처 상세' } } }, relationships: {} },
+        onEvent: (e: Event) => { if (e.type === 'open' && !e.open) s.setOpen(null) },
+        children: current ? renderContact(current) : null,
+      } } },
     },
     relationships: {
       [ROOT]: ['page'], page: ['hdr', 'bulk', 'grid', 'foot', 'drawer'],
       hdr: ['title', 'hdrActions'], hdrActions: ['search', 'newBtn'],
-      bulk: ['bulkLbl', 'bulkBar'], bulkBar: BULK_ACTS.map(([id]) => id) as string[],
+      bulk: ['bulkLbl', 'bulkBar'],
       grid: ['head', 'body'], head: ['headRow'],
       headRow: HEADS.map((_, i) => `h${i}`),
       body: rows.map((c) => `row-${c.id}`),
       ...Object.fromEntries(rows.map((c) => [`row-${c.id}`, HEADS.map((_, i) => `c-${c.id}-${i}`)])),
-      foot: ['pageInfo', 'pageNav'], pageNav: ['pPrev', 'pCur', 'pNext'],
+      foot: ['pageInfo', 'pageNav'],
     },
   }
 }

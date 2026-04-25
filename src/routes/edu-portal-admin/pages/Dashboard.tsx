@@ -45,7 +45,7 @@ export function Dashboard() {
       page: { id: 'page', data: { type: 'Column', flow: 'form' } },
 
       /* ── 기간 필터 ─────────────────────────────────────────────── */
-      filter: { id: 'filter', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '기간 필터' } } },
+      filter: { id: 'filter', data: { type: 'Row', flow: 'cluster', label: '기간 필터' } },
       filterLabel: { id: 'filterLabel', data: { type: 'Text', variant: 'strong', content: '기간' } },
       filterSep: { id: 'filterSep', data: { type: 'Ui', component: 'Separator', props: { orientation: 'vertical' } } },
       ...Object.fromEntries((['daily','weekly','quarterly','custom'] as Period[]).map((p) => [

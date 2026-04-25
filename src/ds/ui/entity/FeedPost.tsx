@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * FeedPost — SNS/소셜 피드 포스트 카드.
@@ -12,7 +12,7 @@ type FeedPostProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   author: string
   handle: string
   time: string
-  body: ReactNode
+  body: string
   avatar: string
   image?: string
   likes: number

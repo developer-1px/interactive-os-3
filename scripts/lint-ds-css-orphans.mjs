@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+/**
+ * css 누락 감지 — src/ds/style/widgets/** 아래 css 정의 파일이 widgets/index.ts에 등록되지 않은 경우를 차단.
+ *
+ * widgets/index.ts 가 등록한 css 함수만 widgets() 결과에 포함되므로,
+ * 파일이 존재해도 index.ts 에서 import 되지 않으면 런타임에 스타일이 사라진다 (unstyled widget).
+ *
+ * 사용:  node scripts/lint-ds-css-orphans.mjs           # repo 전체 검사
+ *        node scripts/lint-ds-css-orphans.mjs <files…>  # changed-only (pre-commit)
+ *
+ * exit 0 통과 / exit 1 위반.
+ */
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { join, relative } from 'node:path'
+
+const ROOT = new URL('..', import.meta.url).pathname
+const WIDGETS = join(ROOT, 'src/ds/style/widgets')
+const INDEX = join(WIDGETS, 'index.ts')
+
+function walk(dir) {
+  const out = []
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name)
+    const st = statSync(p)
+    if (st.isDirectory()) out.push(...walk(p))
+    else if (st.isFile() && p.endsWith('.ts') && p !== INDEX) out.push(p)
+  }
+  return out
+}
+
+const indexSrc = readFileSync(INDEX, 'utf8')
+const files = walk(WIDGETS)
+
+const orphans = []
+for (const file of files) {
+  const rel = './' + relative(WIDGETS, file).replace(/\.ts$/, '')
+  const importRe = new RegExp(`from\\s+['"]${rel.replace(/[.+]/g, '\\$&')}['"]`)
+  if (!importRe.test(indexSrc)) {
+    orphans.push(rel)
+  }
+}
+
+// changed-only 모드: 인자로 받은 파일과 교집합만 보고
+const argv = process.argv.slice(2)
+let report = orphans
+if (argv.length > 0) {
+  const changed = new Set(
+    argv.map((f) => './' + relative(WIDGETS, join(ROOT, f)).replace(/\.ts$/, '')),
+  )
+  report = orphans.filter((o) => changed.has(o))
+}
+
+if (report.length === 0) process.exit(0)
+
+console.error('🔴 css 누락 — widgets/index.ts에 등록되지 않은 css 정의 파일:')
+for (const rel of report) console.error(`   - src/ds/style/widgets/${rel.replace(/^\.\//, '')}.ts`)
+console.error('')
+console.error('가이드: src/ds/style/widgets/index.ts 상단에 import 추가 + widgets() 배열에 호출 추가.')
+console.error('       파일이 더 이상 필요 없다면 삭제. (오프 상태로 남기지 말 것)')
+process.exit(1)

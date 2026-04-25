@@ -39,7 +39,7 @@ export function VideoList() {
       page: { id: 'page', data: { type: 'Column', flow: 'form' } },
 
       // Filter toolbar
-      toolbar: { id: 'toolbar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '영상 필터' } } },
+      toolbar: { id: 'toolbar', data: { type: 'Row', flow: 'cluster', label: '영상 필터' } },
       tb_q: { id: 'tb_q', data: {
         type: 'Ui', component: 'Input',
         props: { 'aria-label': '검색', placeholder: '영상 제목, 키워드 검색', value: q, onChange: (e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value) },

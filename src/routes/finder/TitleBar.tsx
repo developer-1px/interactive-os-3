@@ -1,4 +1,8 @@
-import { Toolbar, ToolbarButton } from '../../ds'
+import { useMemo } from 'react'
+import {
+  Toolbar, ROOT, FOCUS, useControlState,
+  type NormalizedData, type Event,
+} from '../../ds'
 import { smartGroupOf } from './data'
 import type { ViewMode } from './types'
 
@@ -20,6 +24,21 @@ export function TitleBar({
 }) {
   const smart = smartGroupOf(path)
   const name = smart ? `최근 — ${smart.label}` : (path.split('/').filter(Boolean).pop() ?? 'root')
+  const base = useMemo<NormalizedData>(() => ({
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      ...Object.fromEntries(VIEW_ITEMS.map((v) => [
+        v.id, { id: v.id, data: { label: v.label, icon: v.icon, pressed: view === v.id } },
+      ])),
+      [FOCUS]: { id: FOCUS, data: { id: view } },
+    },
+    relationships: { [ROOT]: VIEW_ITEMS.map((v) => v.id) },
+  }), [view])
+  const [data, dispatch] = useControlState(base)
+  const onEvent = (e: Event) => {
+    dispatch(e)
+    if (e.type === 'activate') onViewChange(e.id as ViewMode)
+  }
   return (
     <header>
       <div aria-roledescription="window-controls" aria-label="창 컨트롤">
@@ -28,17 +47,7 @@ export function TitleBar({
       <button type="button" onClick={onBack} aria-disabled={!canBack || undefined} aria-label="뒤로">‹</button>
       <button type="button" aria-disabled aria-label="앞으로">›</button>
       <h1>{name}</h1>
-      <Toolbar aria-label="뷰 모드">
-        {VIEW_ITEMS.map((v) => (
-          <ToolbarButton
-            key={v.id}
-            pressed={view === v.id}
-            aria-label={v.label}
-            data-icon={v.icon}
-            onClick={() => onViewChange(v.id)}
-          />
-        ))}
-      </Toolbar>
+      <Toolbar data={data} onEvent={onEvent} aria-label="뷰 모드" />
     </header>
   )
 }

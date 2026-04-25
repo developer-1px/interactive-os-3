@@ -1,5 +1,5 @@
 import { ROOT, type Event, type NormalizedData } from '../../../ds'
-import { ACTS, MESSAGES, folders, labelTone, type FolderId } from './data'
+import { MESSAGES, folders, labelTone, type FolderId } from './data'
 
 const currentFolderLabel = (f: FolderId) => folders.find((x) => x.id === f)?.label ?? '메일'
 
@@ -10,6 +10,8 @@ export interface InboxState {
   folder: FolderId; selectedId: string
   setFolder: (f: FolderId) => void; setSelected: (id: string) => void
   folderNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  listTools: { data: NormalizedData; onEvent: (e: Event) => void }
+  detailActions: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildInboxPage(s: InboxState): NormalizedData {
@@ -41,17 +43,12 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       listTitleCol: { id: 'listTitleCol', data: { type: 'Column', flow: 'list', grow: true } },
       listTitle: { id: 'listTitle', data: { type: 'Text', variant: 'h2', content: currentFolderLabel(s.folder) } },
       listCount: { id: 'listCount', data: { type: 'Text', variant: 'small', content: `${vis.length}개의 메시지` } },
-      listTools: { id: 'listTools', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '도구' } } },
-      btnFilter: { id: 'btnFilter', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '필터', 'data-icon': 'filter' } } },
-      btnCompose: { id: 'btnCompose', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '새 메일', 'data-icon': 'edit', onClick: () => alert('compose') } } },
+      listTools: { id: 'listTools', data: { type: 'Ui', component: 'Toolbar', props: { data: s.listTools.data, onEvent: s.listTools.onEvent, 'aria-label': '도구' } } },
       listGrid: { id: 'listGrid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '메시지', 'data-density': 'mail' } } },
       listBody: { id: 'listBody', data: { type: 'Ui', component: 'RowGroup' } },
       ...Object.fromEntries(rowPairs),
       detail: { id: 'detail', data: { type: 'Aside', flow: 'list', emphasis: 'raised', grow: true, label: '메시지 상세' } },
-      detailActions: { id: 'detailActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '액션' } } },
-      grpReply: { id: 'grpReply', data: { type: 'Row', flow: 'cluster', label: '답장' } },
-      grpArchive: { id: 'grpArchive', data: { type: 'Row', flow: 'cluster', label: '정리' } },
-      ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': label, 'data-icon': icon } } }])),
+      detailActions: { id: 'detailActions', data: { type: 'Ui', component: 'Toolbar', props: { data: s.detailActions.data, onEvent: s.detailActions.onEvent, 'aria-label': '액션' } } },
       detailHdr: { id: 'detailHdr', data: { type: 'Header', flow: 'list' } },
       detailCount: { id: 'detailCount', data: { type: 'Text', variant: 'small', content: '1개의 메시지' } },
       detailSenderRow: { id: 'detailSenderRow', data: { type: 'Row', flow: 'cluster' } },
@@ -74,14 +71,10 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       listHdr: ['listTitleRow'],
       listTitleRow: ['listTitleCol', 'listTools'],
       listTitleCol: ['listTitle', 'listCount'],
-      listTools: ['btnFilter', 'btnCompose'],
       listGrid: ['listBody'],
       listBody: vis.map((m) => `row-${m.id}`),
       ...Object.fromEntries(vis.map((m) => [`row-${m.id}`, MAIL_COLS.map((k) => `c-${m.id}-${k}`)])),
       detail: ['detailActions', 'detailHdr', 'detailBody', 'detailFooter'],
-      detailActions: ['grpReply', 'grpArchive'],
-      grpReply: ['actReply', 'actForward'],
-      grpArchive: ['actArchive', 'actDelete'],
       detailHdr: ['detailCount', 'detailSenderRow', 'detailLabel'],
       detailSenderRow: ['detailSenderCol', 'detailAsideCol'],
       detailSenderCol: ['detailFrom', 'detailSubject'],

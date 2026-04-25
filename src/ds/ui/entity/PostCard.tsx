@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * PostCard — Slack/Discord 식 채널 게시판 한 줄.
@@ -11,7 +11,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 type PostCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   who: string
   time: string
-  text: ReactNode
+  text: string
   avatar: string
   /** 이전 post가 같은 작성자면 true — avatar/header를 묶어 표시 */
   cont?: boolean

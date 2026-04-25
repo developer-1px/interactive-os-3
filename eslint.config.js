@@ -14,8 +14,74 @@ const MAX_FILES_PER_DIR = 7
 // max-lines-no-imports: import 제외 줄 수 초과 → 파일 분리 신호
 // max-files-per-dir   : 같은 폴더 파일 수 초과 → 하위 폴더 분리 신호
 const dirFileCountCache = new Map()
+
+// ui/ zone 위계 — 작은 인덱스가 토대, 큰 인덱스가 합성.
+// 같은/낮은 zone 만 import 허용. entity ↔ overlay 는 같은 층(서로 import 금지).
+const ZONE_ORDER = { layout: 1, control: 2, entity: 3, overlay: 3, collection: 4, composite: 5 }
+
 const dsLimits = {
   rules: {
+    'token-tier': {
+      meta: { type: 'problem', schema: [] },
+      create(context) {
+        const file = context.filename ?? context.getFilename?.()
+        if (!file) return {}
+        // 소비자(widget·ui·layout)는 Tier1(palette/seed) 직접 import 금지.
+        // semantic은 CSS var 문자열로 소비, Tier3은 src/ds/fn/* 로 소비.
+        const isConsumer =
+          /\/src\/ds\/ui\//.test(file) ||
+          /\/src\/ds\/layout\//.test(file) ||
+          /\/src\/ds\/style\/widgets\//.test(file)
+        if (!isConsumer) return {}
+        return {
+          ImportDeclaration(node) {
+            const src = node.source.value
+            if (typeof src !== 'string') return
+            const t1 = /(?:^|\/)ds\/style\/preset(?:$|\/)/.test(src) ||
+                       /(?:^|\/)ds\/style\/seed(?:$|\/)/.test(src) ||
+                       /^\.\.?\/.*style\/(preset|seed)(?:$|\/)/.test(src)
+            if (t1) {
+              context.report({
+                node,
+                message:
+                  `토큰 티어 위반: 소비자(ui/layout/widgets)는 Tier1(preset/seed) 직접 import 금지 — ` +
+                  `색은 var(--ds-*) 또는 src/ds/fn 의 tone()/pair()/mute()/emphasize() 로만 소비.`,
+              })
+            }
+          },
+        }
+      },
+    },
+    'zone-boundary': {
+      meta: { type: 'problem', schema: [] },
+      create(context) {
+        const file = context.filename ?? context.getFilename?.()
+        const m = file && file.match(/\/src\/ds\/ui\/([^/]+)\//)
+        if (!m) return {}
+        const fromZone = m[1]
+        const fromRank = ZONE_ORDER[fromZone]
+        if (fromRank == null) return {}
+        return {
+          ImportDeclaration(node) {
+            const src = node.source.value
+            // ui/ 내부 cross-zone import 는 '../<zone>/...' 패턴.
+            // 절대경로(.../ui/<zone>/...) 도 함께 캐치.
+            const rel = src.match(/(?:^|\/)ui\/([^/]+)\//) || src.match(/^\.\.\/([^/]+)\//)
+            if (!rel) return
+            const toZone = rel[1]
+            const toRank = ZONE_ORDER[toZone]
+            if (toRank == null) return
+            if (toZone === fromZone) return
+            if (toRank >= fromRank) {
+              context.report({
+                node,
+                message: `zone 경계 위반: ${fromZone}(L${fromRank}) → ${toZone}(L${toRank}). 위계상 아래 zone 만 import 가능.`,
+              })
+            }
+          },
+        }
+      },
+    },
     'max-lines-no-imports': {
       meta: { type: 'suggestion', schema: [{ type: 'number' }] },
       create(context) {
@@ -106,6 +172,8 @@ export default defineConfig([
     rules: {
       'ds/max-lines-no-imports': ['warn', MAX_LINES],
       'ds/max-files-per-dir': ['warn', MAX_FILES_PER_DIR],
+      'ds/zone-boundary': 'error',
+      'ds/token-tier': 'error',
     },
   },
   { files: ['src/**/*.{ts,tsx}'],              rules: { 'no-restricted-syntax': ['error', role, className, style] } },

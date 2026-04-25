@@ -1,24 +1,53 @@
-import { useEffect, useState, type ReactNode } from 'react'
+/** Atlas — fn/ 레이어 검증 대시보드. master-slave sidebar (FlatLayout). */
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { audit, type AuditData } from 'virtual:ds-audit'
+import {
+  Renderer, definePage, useControlState, navigateOnActivate,
+  ROOT, type Event, type NormalizedData,
+} from '../../ds'
 import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '../../ds/style/preset'
 import { hover, focus, selected, selectedStrong, highlighted, active, disabled } from '../../ds/fn/state'
+import { buildAtlasPage } from './build'
 
-/**
- * Atlas — fn/ 레이어 검증 대시보드.
- *
- * "DS를 만드는 DS인가" 3가지 가설을 시각으로 판정한다:
- *   1. 조립식이 실제로 재사용되나 (카드별 usage 배지)
- *   2. fn 값만 건드리면 전체가 따라오나 (leak report)
- *   3. preset 갈아끼우면 다른 DS인가 (상단 스위처)
- */
-
-const presets: { id: string; preset: DsPreset }[] = [
-  { id: 'default', preset: defaultPreset },
-  { id: 'hairline', preset: hairlinePreset },
+const presets: { id: string; label: string; preset: DsPreset }[] = [
+  { id: 'default',  label: 'default',  preset: defaultPreset },
+  { id: 'hairline', label: 'hairline', preset: hairlinePreset },
 ]
+
+const navBase = (filter: string, fileEntries: [string, AuditData['exports']][], totalExports: number, totalLeaks: number): NormalizedData => {
+  const items: { id: string; label: string; badge: number }[] = [
+    { id: 'all', label: 'All', badge: totalExports },
+    ...fileEntries.map(([file, list]) => ({
+      id: file,
+      label: file.replace('/src/ds/fn/', ''),
+      badge: list.length,
+    })),
+    { id: 'leaks', label: 'Leak Report', badge: totalLeaks },
+  ]
+  const entities: NormalizedData['entities'] = {
+    [ROOT]: { id: ROOT, data: {} },
+    __focus__: { id: '__focus__', data: { id: filter } },
+  }
+  for (const it of items) {
+    entities[it.id] = { id: it.id, data: { label: it.label, badge: it.badge, selected: it.id === filter } }
+  }
+  return { entities, relationships: { [ROOT]: items.map((i) => i.id) } }
+}
+
+const presetToolsBase = (presetId: string): NormalizedData => {
+  const entities: NormalizedData['entities'] = {
+    [ROOT]: { id: ROOT, data: {} },
+    __focus__: { id: '__focus__', data: { id: presetId } },
+  }
+  for (const p of presets) {
+    entities[p.id] = { id: p.id, data: { label: p.label, selected: p.id === presetId } }
+  }
+  return { entities, relationships: { [ROOT]: presets.map((p) => p.id) } }
+}
 
 export function Atlas() {
   const [presetId, setPresetId] = useState('default')
+  const [filter, setFilter] = useState<string>('all')
 
   useEffect(() => {
     const p = presets.find((x) => x.id === presetId)?.preset ?? defaultPreset
@@ -26,49 +55,43 @@ export function Atlas() {
   }, [presetId])
 
   const { exports, callSites, leaks } = audit as AuditData
-  const byFile = groupBy(exports, (e) => e.file)
+  const byFile = useMemo(() => {
+    const out: Record<string, AuditData['exports']> = {}
+    for (const e of exports) (out[e.file] ??= []).push(e)
+    return Object.entries(out)
+  }, [exports])
+
+  const navData0 = useMemo(() => navBase(filter, byFile, exports.length, leaks.length), [filter, byFile, exports.length, leaks.length])
+  const [navData, navDispatch] = useControlState(navData0)
+  const onNavEvent = (e: Event) =>
+    navigateOnActivate(navData, e).forEach((ev) => {
+      navDispatch(ev)
+      if (ev.type === 'activate') setFilter(ev.id)
+    })
+
+  const presetData0 = useMemo(() => presetToolsBase(presetId), [presetId])
+  const [presetData, presetDispatch] = useControlState(presetData0)
+  const onPresetEvent = (e: Event) => {
+    presetDispatch(e)
+    if (e.type === 'activate') setPresetId(e.id)
+  }
 
   return (
-    <main aria-roledescription="atlas-app" aria-label="Atlas">
-      <header>
-        <h1>Atlas</h1>
-        <p>fn/ 레이어가 메타-DS인지 시각으로 판정</p>
-        <div data-roledescription="preset-switcher">
-          <label htmlFor="preset">Preset</label>
-          <select
-            id="preset"
-            value={presetId}
-            onChange={(e) => setPresetId(e.target.value)}
-          >
-            {presets.map((p) => <option key={p.id} value={p.id}>{p.id}</option>)}
-          </select>
-        </div>
-      </header>
-
-      <section aria-labelledby="cards">
-        <h2 id="cards">fn exports <small>({exports.length})</small></h2>
-        {Object.entries(byFile).map(([file, list]) => (
-          <section key={file} aria-labelledby={`f-${file}`} aria-roledescription="atlas-fn-group">
-            <h3 id={`f-${file}`}>{file.replace('/src/ds/fn/', '')}</h3>
-            <div aria-roledescription="atlas-card-grid">
-              {list.map((fn) => (
-                <Card key={fn.name} name={fn.name} doc={fn.doc} signature={fn.signature} sites={callSites[fn.name] ?? []}>
-                  {renderDemo(fn.name)}
-                </Card>
-              ))}
-            </div>
-          </section>
-        ))}
-      </section>
-
-      <section aria-labelledby="leaks" aria-roledescription="atlas-leaks">
-        <h2 id="leaks">Leak Report <small>({leaks.length})</small></h2>
-        <p>style/widgets/** 에서 fn/ 을 거치지 않은 리터럴·직접 var 참조. 0에 가까울수록 메타-DS.</p>
-        <LeakTable leaks={leaks} />
-      </section>
-    </main>
+    <Renderer
+      page={definePage(
+        buildAtlasPage({
+          filter,
+          exports, callSites, leaks, byFile,
+          nav: { data: navData, onEvent: onNavEvent },
+          presetTools: { data: presetData, onEvent: onPresetEvent },
+          renderDemo,
+        }),
+      )}
+    />
   )
 }
+
+// ── Demos ────────────────────────────────────────────────────────────────
 
 const microLabelInline: React.CSSProperties = {
   fontSize: 'var(--ds-text-xs)',
@@ -78,77 +101,6 @@ const microLabelInline: React.CSSProperties = {
   letterSpacing: '.06em',
   margin: 0,
 }
-
-function Card({ name, doc, signature, sites, children }: {
-  name: string; doc: string; signature: string; sites: { file: string; line: number }[]; children: ReactNode
-}) {
-  const dead = sites.length === 0
-  return (
-    <article aria-roledescription="atlas-card" aria-label={name}>
-      <header>
-        <code data-role="title">{name}</code>
-        <span
-          aria-roledescription="atlas-usage"
-          aria-label={`${sites.length} call sites`}
-          title={sites.length ? sites.slice(0, 10).map((s) => `${s.file}:${s.line}`).join('\n') : '호출처 없음 — 죽은 조립식 가능성'}
-          data-dead={dead}
-        >
-          ×{sites.length}
-        </span>
-      </header>
-      <figure aria-roledescription="atlas-demo">{children}</figure>
-      {doc && <p>{doc}</p>}
-      <code data-role="signature">{signature}</code>
-      {sites.length > 0 && (
-        <details>
-          <summary>호출처 {sites.length}</summary>
-          <ul aria-roledescription="atlas-call-sites">
-            {sites.slice(0, 40).map((s, i) => (
-              <li key={i}><code>{s.file.replace('/src/ds/', '')}:{s.line}</code></li>
-            ))}
-          </ul>
-        </details>
-      )}
-    </article>
-  )
-}
-
-function LeakTable({ leaks }: { leaks: AuditData['leaks'] }) {
-  if (leaks.length === 0) return <p data-tone="good">누수 없음.</p>
-  const byFile = groupBy(leaks, (l) => l.file)
-  return (
-    <div aria-roledescription="atlas-leak-list">
-      {Object.entries(byFile).map(([file, list]) => (
-        <details key={file}>
-          <summary>
-            <code>{file.replace('/src/ds/style/widgets/', '')}</code>{' '}
-            <small>({list.length})</small>
-          </summary>
-          <table aria-roledescription="atlas-leak-table">
-            <thead>
-              <tr>
-                <th data-col="line">line</th>
-                <th data-col="kind">kind</th>
-                <th data-col="snippet">snippet</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((l, i) => (
-                <tr key={i}>
-                  <td data-col="line">{l.line}</td>
-                  <td data-col="kind">{l.kind}</td>
-                  <td data-col="snippet">{l.snippet}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </details>
-      ))}
-    </div>
-  )
-}
-
-// ── Demos ────────────────────────────────────────────────────────────────
 
 function renderDemo(name: string): ReactNode {
   const fn = demos[name]
@@ -166,7 +118,6 @@ const Row = ({ children }: { children: ReactNode }) => (
   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>{children}</div>
 )
 
-// 데모 주입용 공용 셀렉터 — CSS가 다른 카드에 새지 않도록 카드별 id 래핑
 const Scoped = ({ id, css, children }: { id: string; css: string; children: ReactNode }) => (
   <div id={id} style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
     <style>{css.replace(/:where\(/g, `:where(#${id} `)}</style>
@@ -175,7 +126,7 @@ const Scoped = ({ id, css, children }: { id: string; css: string; children: Reac
 )
 
 const sampleList = (items: { id: string; label: string; state?: string }[]) => (
-  <ul aria-roledescription="atlas-demo-list" style={{ listStyle: 'none', margin: 0, padding: 0, width: '100%', border: '1px solid var(--ds-border)', borderRadius: 'var(--ds-radius-sm)' }}>
+  <ul style={{ listStyle: 'none', margin: 0, padding: 0, width: '100%', border: '1px solid var(--ds-border)', borderRadius: 'var(--ds-radius-sm)' }}>
     {items.map((it) => (
       <li
         key={it.id}
@@ -190,7 +141,6 @@ const sampleList = (items: { id: string; label: string; state?: string }[]) => (
 )
 
 const demos: Record<string, () => ReactNode> = {
-  // palette
   fg: () => (
     <Row>
       {[1, 3, 5, 7, 9].map((n) => (
@@ -246,11 +196,7 @@ const demos: Record<string, () => ReactNode> = {
       </Row>
     </div>
   ),
-
-  // recipes
   microLabel: () => <span style={microLabelInline}>SECTION LABEL</span>,
-
-  // state
   hover: () => (
     <Scoped id="demo-hover" css={hover('li')}>
       {sampleList([{ id: 'a', label: '마우스를 올려보세요' }, { id: 'b', label: '다른 행도 시도' }])}
@@ -298,10 +244,4 @@ const demos: Record<string, () => ReactNode> = {
       ])}
     </Scoped>
   ),
-}
-
-function groupBy<T>(xs: T[], key: (x: T) => string): Record<string, T[]> {
-  const out: Record<string, T[]> = {}
-  for (const x of xs) (out[key(x)] ??= []).push(x)
-  return out
 }

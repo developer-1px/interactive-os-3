@@ -1,8 +1,8 @@
 import { useId } from 'react'
-import { Dialog } from './Dialog'
-import { Combobox } from '../control/Combobox'
-import { Listbox } from '../collection/Listbox'
-import { useShortcut } from '../../core/hooks/useShortcut'
+import { Dialog } from '../../overlay/Dialog'
+import { Combobox } from '../../control/Combobox'
+import { Listbox } from '../../collection/Listbox'
+import { useShortcut } from '../../../core/hooks/useShortcut'
 import { usePaletteController } from './usePaletteController'
 
 export function CommandPalette() {

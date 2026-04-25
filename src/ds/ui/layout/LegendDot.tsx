@@ -1,11 +1,8 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import type { BadgeTone } from '../entity/Badge'
+import type { Tone } from '../../core/types'
 
-/**
- * LegendDot — 차트/테이블 범례의 색점. Badge의 축약 형태 — 색 + 라벨 text.
- */
 type LegendDotProps = ComponentPropsWithoutRef<'span'> & {
-  tone?: BadgeTone
+  tone?: Tone
 }
 
 export function LegendDot({ tone = 'neutral', ...rest }: LegendDotProps) {
