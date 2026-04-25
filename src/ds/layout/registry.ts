@@ -28,6 +28,7 @@ import { Listbox } from '../ui/collection/Listbox'
 import { Disclosure } from '../ui/overlay/Disclosure'
 import { Dialog } from '../ui/overlay/Dialog'
 import { Sheet } from '../ui/overlay/Sheet'
+import { Popover } from '../ui/overlay/Popover'
 import { Badge } from '../ui/entity/Badge'
 import { StatCard } from '../ui/entity/StatCard'
 import { CourseCard } from '../ui/entity/CourseCard'
@@ -76,6 +77,7 @@ export const uiRegistry = {
   Disclosure: { component: Disclosure, zone: 'overlay' },
   Dialog:     { component: Dialog,     zone: 'overlay' },
   Sheet:      { component: Sheet,      zone: 'overlay' },
+  Popover:    { component: Popover,    zone: 'overlay' },
   // entity
   Badge:      { component: Badge,      zone: 'entity' },
   StatCard:   { component: StatCard,   zone: 'entity' },

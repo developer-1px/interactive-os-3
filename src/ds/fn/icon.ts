@@ -19,6 +19,8 @@ const alias: Record<string, string> = {
   fileConfig: 'file-cog',
   fileGlobe: 'file',
   filePalette: 'palette',
+  share: 'share-2',
+  more: 'more-horizontal',
 }
 
 const toKebab = (s: string) => s.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())
@@ -52,6 +54,7 @@ const tokens = [
   'pin', 'search', 'info',
   'filter', 'edit',
   'layout-grid', 'list', 'columns-3', 'gallery-vertical',
+  'heart', 'message-circle', 'share', 'more',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

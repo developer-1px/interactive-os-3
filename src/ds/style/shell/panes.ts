@@ -283,6 +283,12 @@ export const panesCss = css`
   [aria-roledescription="feed-page"] {
     container-type: inline-size;
     container-name: feed-page;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: ${pad(4)};
+    gap: ${pad(4)};
+    min-height: 100dvh;
+    box-sizing: border-box;
   }
   [aria-roledescription="feed-page"] [data-feed-menu-btn] { display: none; }
   @container feed-page (inline-size < 48rem) {
@@ -296,6 +302,31 @@ export const panesCss = css`
     [aria-roledescription="feed-page"] > [data-ds="Column"][data-ds-grow] {
       width: 100%; min-width: 0;
     }
+    [aria-roledescription="feed-page"] {
+      padding: ${pad(2)};
+      gap: ${pad(2)};
+      max-width: 640px; margin-inline: auto;
+    }
+  }
+  /* Feed 카드 레벨 다듬기 — avatar 원형, body 줄높이, reaction toolbar 정렬 */
+  [aria-roledescription="feed-page"] [role="article"],
+  [aria-roledescription="feed-page"] [data-emphasis="raised"] {
+    border-radius: ${radius('lg')};
+  }
+  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-width] {
+    width: 2.25rem; height: 2.25rem;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
+    font-size: var(--ds-text-md);
+    flex: none;
+  }
+  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-grow] > small {
+    display: block;
+    font-weight: 400;
+    color: ${dim(55)};
+    font-size: var(--ds-text-xs);
+    margin-top: ${pad(0.25)};
   }
 
   /* edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content) */

@@ -9,12 +9,12 @@ export function buildFeedPage(s: FeedState): NormalizedData {
     [`meta-${p.id}`,    { id: `meta-${p.id}`,    data: { type: 'Row', flow: 'cluster' } }],
     [`avatar-${p.id}`,  { id: `avatar-${p.id}`,  data: { type: 'Text', variant: 'strong', content: p.author[0], width: 36 } }],
     [`who-${p.id}`,     { id: `who-${p.id}`,     data: { type: 'Text', variant: 'strong', content: <>{p.author} <small>{p.handle} · {p.time}</small></>, grow: true } }],
-    [`more-${p.id}`,    { id: `more-${p.id}`,    data: { type: 'Ui', component: 'Button', props: { 'aria-label': '더보기', 'data-icon': 'more' }, content: '⋯' } }],
+    [`more-${p.id}`,    { id: `more-${p.id}`,    data: { type: 'Ui', component: 'Button', props: { 'aria-label': '더보기', 'data-icon': 'more' }, content: '' } }],
     [`body-${p.id}`,    { id: `body-${p.id}`,    data: { type: 'Text', variant: 'body', content: p.body } }],
     [`rxn-${p.id}`,     { id: `rxn-${p.id}`,     data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '반응' } } }],
-    [`rxLike-${p.id}`,  { id: `rxLike-${p.id}`,  data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: s.liked.has(p.id), onClick: () => s.toggle(p.id), 'data-icon': 'heart', 'aria-label': '좋아요' }, content: <>♥ {p.likes + (s.liked.has(p.id) ? 1 : 0)}</> } }],
-    [`rxCom-${p.id}`,   { id: `rxCom-${p.id}`,   data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'message-circle', 'aria-label': '댓글' }, content: <>💬 {p.comments}</> } }],
-    [`rxShare-${p.id}`, { id: `rxShare-${p.id}`, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'share', 'aria-label': '공유' }, content: <>↗ {p.shared}</> } }],
+    [`rxLike-${p.id}`,  { id: `rxLike-${p.id}`,  data: { type: 'Ui', component: 'ToolbarButton', props: { pressed: s.liked.has(p.id), onClick: () => s.toggle(p.id), 'data-icon': 'heart', 'aria-label': '좋아요' }, content: String(p.likes + (s.liked.has(p.id) ? 1 : 0)) } }],
+    [`rxCom-${p.id}`,   { id: `rxCom-${p.id}`,   data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'message-circle', 'aria-label': '댓글' }, content: String(p.comments) } }],
+    [`rxShare-${p.id}`, { id: `rxShare-${p.id}`, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': 'share', 'aria-label': '공유' }, content: String(p.shared) } }],
   ] as Array<readonly [string, unknown]>)
   return {
     entities: {
