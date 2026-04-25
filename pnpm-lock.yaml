@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@oddbird/popover-polyfill':
+        specifier: ^0.6.1
+        version: 0.6.1
       '@tanstack/react-router':
         specifier: ^1.168.23
         version: 1.168.23(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -386,6 +389,9 @@ packages:
     peerDependencies:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
+
+  '@oddbird/popover-polyfill@0.6.1':
+    resolution: {integrity: sha512-Papau51NPG+NajXvoEHCNT1CBJv4WIyvIGfH5gpJPLL8MZJt/4giC0jJ/mNZRtJmdzRuXWpUFB6QxkJa1RvMAQ==}
 
   '@oxc-project/types@0.126.0':
     resolution: {integrity: sha512-oGfVtjAgwQVVpfBrbtk4e1XDyWHRFta6BS3GWVzrF8xYBT2VGQAk39yJS/wFSMrZqoiCU4oghT3Ch0HaHGIHcQ==}
@@ -1962,6 +1968,8 @@ snapshots:
       '@emnapi/runtime': 1.9.2
       '@tybys/wasm-util': 0.10.1
     optional: true
+
+  '@oddbird/popover-polyfill@0.6.1': {}
 
   '@oxc-project/types@0.126.0': {}
 
