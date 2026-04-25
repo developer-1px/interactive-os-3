@@ -9,11 +9,10 @@
  */
 import { useMemo } from 'react'
 import { Listbox, fromTree, navigateOnActivate, useControlState, type Event } from '../../ds'
-import {
-  sidebar, smartGroups, smartGroupOf, smartItems, walk,
-} from './data'
-import { extToIcon, type FsNode, type SidebarItem, type SmartGroupItem } from './types'
+import { smartGroupOf, smartItems, walk } from './data'
+import { extToIcon, type FsNode, type SmartGroupItem } from './types'
 import { Preview } from './Preview'
+import { useSidebarNav } from './shared/useSidebarNav'
 
 export function FinderMobile({ path, onNavigate }: { path: string; onNavigate: (p: string) => void }) {
   const smart = smartGroupOf(path)
@@ -37,7 +36,7 @@ export function FinderMobile({ path, onNavigate }: { path: string; onNavigate: (
         <h1>{title}</h1>
       </header>
       {path === '/'
-        ? <Home onNavigate={onNavigate} current={path} />
+        ? <Home current={path} onNavigate={onNavigate} />
         : smart
           ? <SmartList group={smart} items={smartItems(smart.id)} onNavigate={onNavigate} />
           : isFile && current
@@ -50,38 +49,16 @@ export function FinderMobile({ path, onNavigate }: { path: string; onNavigate: (
 }
 
 function Home({ current, onNavigate }: { current: string; onNavigate: (p: string) => void }) {
-  const recentBase = useMemo(
-    () => fromTree(smartGroups, {
-      getId: (g: SmartGroupItem) => g.path,
-      toData: (g: SmartGroupItem) => ({ label: g.label, icon: g.icon, selected: g.path === current }),
-      focusId: current,
-    }),
-    [current],
-  )
-  const favBase = useMemo(
-    () => fromTree(sidebar, {
-      getId: (s: SidebarItem) => s.path,
-      toData: (s: SidebarItem) => ({ label: s.label, icon: s.icon, selected: s.path === current }),
-      focusId: current,
-    }),
-    [current],
-  )
-  const [recent, dispatchRecent] = useControlState(recentBase)
-  const [fav, dispatchFav] = useControlState(favBase)
-  const handle = (data: typeof recent, dispatch: typeof dispatchRecent) => (e: Event) =>
-    navigateOnActivate(data, e).forEach((ev) => {
-      dispatch(ev)
-      if (ev.type === 'activate') onNavigate(ev.id)
-    })
+  const { recent, fav } = useSidebarNav(current, onNavigate)
   return (
     <section aria-roledescription="finder-home">
       <section>
         <h2>최근</h2>
-        <Listbox data={recent} onEvent={handle(recent, dispatchRecent)} aria-label="최근" />
+        <Listbox data={recent.data} onEvent={recent.onEvent} aria-label="최근" />
       </section>
       <section>
         <h2>위치</h2>
-        <Listbox data={fav} onEvent={handle(fav, dispatchFav)} aria-label="즐겨찾기" />
+        <Listbox data={fav.data} onEvent={fav.onEvent} aria-label="즐겨찾기" />
       </section>
     </section>
   )
@@ -120,10 +97,7 @@ function SmartList({
   const base = useMemo(
     () => fromTree(items, {
       getId: (n: FsNode) => n.path,
-      toData: (n: FsNode) => ({
-        label: n.name,
-        icon: extToIcon(n.ext),
-      }),
+      toData: (n: FsNode) => ({ label: n.name, icon: extToIcon(n.ext) }),
     }),
     [items],
   )
@@ -156,4 +130,3 @@ function Empty({ note }: { note?: string } = {}) {
     </section>
   )
 }
-

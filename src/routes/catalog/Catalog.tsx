@@ -1,15 +1,7 @@
-import { useMemo, useState, useSyncExternalStore } from 'react'
+import { useMemo, useState } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
-import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData, ROOT } from '../../ds'
+import { Listbox, useControlState, navigateOnActivate, useShellMode, type Event, type NormalizedData, ROOT } from '../../ds'
 import { demos } from './demos'
-
-const MOBILE_QUERY = '(max-width: 600px)'
-const subscribeMobile = (cb: () => void) => {
-  const mq = window.matchMedia(MOBILE_QUERY)
-  mq.addEventListener('change', cb)
-  return () => mq.removeEventListener('change', cb)
-}
-const getIsMobile = () => window.matchMedia(MOBILE_QUERY).matches
 
 /**
  * Catalog — ds ui zone-first 감사 대시보드.
@@ -45,7 +37,7 @@ type Filter = Kind | 'all'
 
 export function Catalog() {
   const [filter, setFilter] = useState<Filter>('all')
-  const isMobile = useSyncExternalStore(subscribeMobile, getIsMobile, () => false)
+  const isMobile = useShellMode() === 'mobile'
   const [navOpen, setNavOpen] = useState(false)
 
   const grouped = useMemo(() => {

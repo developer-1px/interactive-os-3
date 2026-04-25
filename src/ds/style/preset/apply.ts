@@ -101,6 +101,7 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-column-w:      ${p.shell.columnW};
     --ds-preview-w:     ${p.shell.previewW};
     --ds-traffic-size:  ${p.shell.trafficSize};
+    --ds-shell-mobile-max: ${p.shell.mobileMax};
 
     ${elev(0)}
     ${elev(1)}

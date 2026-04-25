@@ -83,5 +83,6 @@ export const defaultPreset: DsPreset = {
     columnW: '220px',
     previewW: '320px',
     trafficSize: '12px',
+    mobileMax: '600px',
   },
 }

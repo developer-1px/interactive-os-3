@@ -54,6 +54,10 @@ export type DsPreset = {
     columnW: string
     previewW: string
     trafficSize: string
+    /** mobile shell mode 임계 폭. 이 값 이하 viewport는 mobile shell 분기.
+     *  L0(viewport)만 이 값을 본다. L1 shell CSS는 var(--ds-shell-mobile-max)로 참조,
+     *  L2/L3는 viewport 모름(@container 사용). */
+    mobileMax: string
   }
   darkShadowMultiplier?: number
 }

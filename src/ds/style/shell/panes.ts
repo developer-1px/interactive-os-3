@@ -144,6 +144,21 @@ export const panesCss = css`
   section[aria-roledescription="list-view"] {
     flex: 1 1 0; min-width: 0; overflow: auto;
     display: block;
+    /* L3 — 자기 폭에 따라 보조 컬럼 reflow. viewport가 아닌 자기 컨테이너 기준. */
+    container-type: inline-size;
+    container-name: list-view;
+  }
+  /* 좁은 컨테이너 — 보조 컬럼(수정일/크기/종류) 숨김, 이름만. tap 친화 행 높이. */
+  @container list-view (max-width: 480px) {
+    section[aria-roledescription="list-view"] [role="treegrid"] colgroup col:nth-child(n+2),
+    section[aria-roledescription="list-view"] [role="treegrid"] thead th:nth-child(n+2),
+    section[aria-roledescription="list-view"] [role="treegrid"] tbody td:nth-child(n+2) {
+      display: none;
+    }
+    section[aria-roledescription="list-view"] [role="treegrid"] tbody td:first-child {
+      padding-block: ${pad(1.5)};
+      font-size: var(--ds-text-md);
+    }
   }
   section[aria-roledescription="list-view"] [role="treegrid"] {
     table-layout: fixed;
@@ -161,11 +176,19 @@ export const panesCss = css`
     ${icon('chevronRight', '0.8em')}
     margin-inline-start: auto; opacity: .4;
   }
+  /* Preview widget 본체 — outer layout(min-width/flex) 결정은 부모 셸이 소유.
+     desktop Finder body는 아래 별도 규칙에서 min-width를 지정, 모바일/모달 등 다른
+     컨텍스트에서는 자기 컨테이너 크기를 따른다. */
   aside[aria-roledescription="preview"] {
-    flex: 1 1 0; min-width: var(--ds-preview-w);
     overflow-x: hidden; overflow-y: auto;
     padding: ${pad(6)};
     display: flex; flex-direction: column; gap: ${pad(4)};
+    min-width: 0;
+  }
+  /* L1 desktop Finder layout — preview에 min-width를 부여하는 책임은 여기. */
+  main[aria-roledescription="finder"] > section[aria-roledescription="body"] > aside[aria-roledescription="preview"] {
+    flex: 1 1 0;
+    min-width: var(--ds-preview-w);
   }
   /* preview 내부 코드/이미지는 자기 폭 안에서 해결 — preview 자체에 가로 스크롤 금지 */
   aside[aria-roledescription="preview"] > pre,
@@ -275,14 +298,13 @@ export const panesCss = css`
     font-size: var(--ds-text-md);
     border-radius: ${radius('md')};
   }
-  /* File 풀스크린 Preview — finder-file 자체가 finder-mobile > section.
-     desktop preview의 min-width(--ds-preview-w)를 모바일에서 해제, 가로 오버플로 차단. */
+  /* File 풀스크린 Preview — Preview widget이 컨텍스트 무관해졌으므로
+     모바일에서도 자기 폭에 맞게 흐른다. shell이 padding/flex만 결정. */
   main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-file"] {
     padding: 0; gap: 0;
   }
   section[aria-roledescription="finder-file"] > aside[aria-roledescription="preview"] {
     flex: 1 1 auto;
-    min-inline-size: 0; max-inline-size: 100%;
     padding: ${pad(3)};
   }
   section[aria-roledescription="finder-empty"] {
