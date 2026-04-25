@@ -333,8 +333,9 @@ export const panesCss = css`
   }
   [aria-roledescription$="-page"] [data-collapse-menu-btn] { display: none; }
   @container collapse-sides (inline-size < 48rem) {
-    [aria-roledescription$="-page"] > [data-ds="Column"]:first-child,
-    [aria-roledescription$="-page"] > [data-ds="Column"]:last-child {
+    /* grow 없는 보조 Column(filters/side/right)만 숨김 — main은 grow 보유라 살아남음.
+       2-col(filters|main), 3-col(side|main|right) 모두 안전. */
+    [aria-roledescription$="-page"] > [data-ds="Column"]:not([data-ds-grow]) {
       display: none;
     }
     [aria-roledescription$="-page"] [data-collapse-menu-btn] {
@@ -377,6 +378,16 @@ export const panesCss = css`
     width: 100%; height: auto; display: block;
     border-radius: ${radius('md')};
     aspect-ratio: 16 / 9; object-fit: cover;
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+  }
+  /* Shop 카드의 첫 텍스트 슬롯이 이미지일 때(상품 썸네일) — 정사각형 비율, 카드 라운딩 동기화 */
+  [aria-roledescription="shop-page"] [data-emphasis="raised"] > p:first-child {
+    margin: 0; padding: 0;
+  }
+  [aria-roledescription="shop-page"] [data-emphasis="raised"] > p:first-child > img {
+    width: 100%; height: auto; display: block;
+    aspect-ratio: 1 / 1; object-fit: cover;
+    border-radius: ${radius('md')};
     background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
   }
 

@@ -16,7 +16,9 @@ export function buildShopPage(s: ShopState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'shop-page', label: 'Shop' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'shop-menu', 'aria-label': '필터', 'data-icon': 'filter', 'data-collapse-menu-btn': '' }, content: '' } },
+      menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'shop-menu', label: '필터', scrim: true } } },
       filters: { id: 'filters', data: { type: 'Column', flow: 'form', emphasis: 'raised', width: 260 } },
       fHdr: { id: 'fHdr', data: { type: 'Text', variant: 'h3', content: '필터' } },
       priceLbl: { id: 'priceLbl', data: { type: 'Text', variant: 'strong', content: `최대 가격: $${s.priceMax}` } },
@@ -43,10 +45,10 @@ export function buildShopPage(s: ShopState): NormalizedData {
       ...Object.fromEntries(vis.flatMap(card)),
     },
     relationships: {
-      [ROOT]: ['page'], page: ['filters', 'main'],
+      [ROOT]: ['page', 'menuPop'], page: ['filters', 'main'],
       filters: ['fHdr', 'priceLbl', 'priceInput', 'saleOnly', 'ratingLbl', 'ratingSel', 'brandLbl', ...ALL_BRANDS.map((b) => `brand-${b}`), 'resetBtn'],
       main: ['mainHdr', 'pgrid'],
-      mainHdr: ['mainTitle', 'mainSort'],
+      mainHdr: ['menuBtn', 'mainTitle', 'mainSort'],
       pgrid: vis.map((p) => `pc-${p.id}`),
       ...Object.fromEntries(vis.map((p) => [`pc-${p.id}`, CARD_KEYS.map((k) => `${k}-${p.id}`)])),
       ...Object.fromEntries(vis.map((p) => [`pprow-${p.id}`, [`pprice-${p.id}`, `porig-${p.id}`, `pdisc-${p.id}`]])),

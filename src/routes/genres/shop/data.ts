@@ -1,18 +1,46 @@
+import { faker } from '@faker-js/faker'
+
 export interface Product {
   id: string; title: string; brand: string; price: number; orig?: number
   rating: number; reviews: number; image: string; tags: string[]
 }
 
-export const products: Product[] = [
-  { id: 'p1', title: 'Merino Wool Sweater',  brand: 'Everlane',  price: 98,   orig: 128, rating: 4.6, reviews: 312,  image: '🧥', tags: ['니트','울'] },
-  { id: 'p2', title: 'Linen Oxford Shirt',    brand: 'UNIQLO',    price: 39,              rating: 4.4, reviews: 980,  image: '👔', tags: ['린넨','셔츠'] },
-  { id: 'p3', title: 'Relaxed Denim Jeans',   brand: "Levi's",    price: 78,              rating: 4.7, reviews: 2140, image: '👖', tags: ['데님'] },
-  { id: 'p4', title: 'Cashmere Beanie',       brand: 'Acne',      price: 120,             rating: 4.8, reviews: 84,   image: '🧢', tags: ['캐시미어'] },
-  { id: 'p5', title: 'Leather Chelsea Boots', brand: "Church's",  price: 520,             rating: 4.9, reviews: 42,   image: '🥾', tags: ['가죽','부츠'] },
-  { id: 'p6', title: 'Cotton Tee',            brand: 'Muji',      price: 22,              rating: 4.2, reviews: 560,  image: '👕', tags: ['코튼','티'] },
-  { id: 'p7', title: 'Trench Coat',           brand: 'Burberry',  price: 1890,            rating: 4.9, reviews: 28,   image: '🧥', tags: ['트렌치','울'] },
-  { id: 'p8', title: 'Canvas Sneakers',       brand: 'Converse',  price: 65,              rating: 4.5, reviews: 1820, image: '👟', tags: ['스니커즈'] },
+faker.seed(2026_04_25)
+
+const BRANDS = ['Everlane', 'UNIQLO', "Levi's", 'Acne', "Church's", 'Muji', 'Burberry', 'Converse', 'Patagonia', 'COS', 'A.P.C.', 'Margiela']
+const CATEGORIES: Array<[string, string[]]> = [
+  ['Sweater',  ['니트', '울', '캐시미어']],
+  ['Shirt',    ['린넨', '셔츠', '코튼']],
+  ['Jeans',    ['데님', '워싱']],
+  ['Beanie',   ['캐시미어', '겨울']],
+  ['Boots',    ['가죽', '부츠']],
+  ['Tee',      ['코튼', '티']],
+  ['Coat',     ['울', '트렌치']],
+  ['Sneakers', ['스니커즈', '캔버스']],
+  ['Jacket',   ['아우터', '봄']],
+  ['Scarf',    ['울', '겨울']],
 ]
+
+const seedImage = (seed: string) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/480/480`
+
+export const products: Product[] = Array.from({ length: 12 }, (_, i) => {
+  const [cat, tagPool] = faker.helpers.arrayElement(CATEGORIES)
+  const brand = faker.helpers.arrayElement(BRANDS)
+  const price = faker.number.int({ min: 22, max: 1890 })
+  const onSale = i % 3 === 0
+  const orig = onSale ? Math.round(price * faker.number.float({ min: 1.2, max: 1.8 })) : undefined
+  return {
+    id: `p${i + 1}`,
+    title: `${faker.commerce.productAdjective()} ${cat}`,
+    brand,
+    price,
+    orig,
+    rating: faker.number.float({ min: 3.8, max: 4.9, fractionDigits: 1 }),
+    reviews: faker.number.int({ min: 12, max: 2400 }),
+    image: seedImage(`shop-${i}-${cat}`),
+    tags: faker.helpers.arrayElements(tagPool, { min: 1, max: 2 }),
+  }
+})
 
 export const ALL_BRANDS = Array.from(new Set(products.map((p) => p.brand)))
 

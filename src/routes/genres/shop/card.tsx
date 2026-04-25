@@ -3,7 +3,7 @@ import type { Product } from './data'
 
 export const card = (p: Product) => [
   [`pc-${p.id}`,     { id: `pc-${p.id}`,     data: { type: 'Section', emphasis: 'raised', flow: 'list' } }],
-  [`pi-${p.id}`,     { id: `pi-${p.id}`,     data: { type: 'Text', variant: 'h1', content: p.image } }],
+  [`pi-${p.id}`,     { id: `pi-${p.id}`,     data: { type: 'Text', variant: 'body', content: <img src={p.image} alt={p.title} loading="lazy" /> } }],
   [`pt-${p.id}`,     { id: `pt-${p.id}`,     data: { type: 'Text', variant: 'strong', content: p.title } }],
   [`pprow-${p.id}`,  { id: `pprow-${p.id}`,  data: { type: 'Row', flow: 'cluster' } }],
   [`pprice-${p.id}`, { id: `pprice-${p.id}`, data: { type: 'Text', variant: 'h3', content: `$${p.price}` } }],
