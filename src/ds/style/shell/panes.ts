@@ -215,6 +215,42 @@ export const panesCss = css`
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
+  /* Finder 모바일 — 데스크톱 메타포(sidebar | columns | preview)를 ListView 한 면으로 축약.
+     메모리 원칙: shell은 desktop·mobile 별도 구현, CSS는 컨텐츠만 reflow하지만
+     finder의 보조 패널은 모바일에서 의미가 사라지므로 표시만 끈다 (DOM 평탄화/포털 아님). */
+  @media (max-width: 600px) {
+    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"],
+    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > aside[aria-roledescription="preview"],
+    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > section[aria-roledescription="columns"] {
+      display: none;
+    }
+    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > section[aria-roledescription="list-view"] {
+      flex: 1 1 auto;
+    }
+    /* 헤더 — 뷰 토글(Toolbar)은 모바일에서 가치가 낮음, 숨김. 제목은 줄임. */
+    main[aria-roledescription="finder"] > header > [role="toolbar"] {
+      display: none;
+    }
+    main[aria-roledescription="finder"] > header > h1 {
+      font-size: var(--ds-text-md);
+      min-inline-size: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    /* ListView — 보조 컬럼(수정일/크기/종류) 숨김, 이름만. 행 높이 ↑ for tap. */
+    main[aria-roledescription="finder"] [role="treegrid"] colgroup col:nth-child(n+2),
+    main[aria-roledescription="finder"] [role="treegrid"] thead th:nth-child(n+2),
+    main[aria-roledescription="finder"] [role="treegrid"] tbody td:nth-child(n+2) {
+      display: none;
+    }
+    main[aria-roledescription="finder"] [role="treegrid"] tbody td:first-child {
+      padding-block: ${pad(1.5)};
+      font-size: var(--ds-text-md);
+    }
+    main[aria-roledescription="finder"] [role="treegrid"] thead th:first-child {
+      font-size: var(--ds-text-xs);
+    }
+  }
+
   /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]
      안에 든 popover에 한해 우하단 anchor로 강제. 그 외 popover는 overlay.ts 기본 centered. */
   aside[aria-roledescription="floating-nav"] {

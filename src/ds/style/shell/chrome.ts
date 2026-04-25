@@ -32,4 +32,18 @@ export const chromeCss = css`
   [aria-roledescription="window-controls"] > span:nth-child(1) { background: var(--ds-traffic-close); }
   [aria-roledescription="window-controls"] > span:nth-child(2) { background: var(--ds-traffic-min); }
   [aria-roledescription="window-controls"] > span:nth-child(3) { background: var(--ds-traffic-max); }
+
+  /* 모바일: 데스크톱 윈도우 메타포(traffic lights, inset, radius)를 떼고 풀스크린 */
+  @media (max-width: 600px) {
+    main:has(> header > [aria-roledescription="window-controls"]) {
+      position: fixed;
+      inset: 0;
+      border-radius: 0;
+    }
+    main:has(> header > [aria-roledescription="window-controls"]) > header {
+      padding-inline: max(${pad(2)}, env(safe-area-inset-left)) max(${pad(2)}, env(safe-area-inset-right));
+      padding-block-start: env(safe-area-inset-top);
+    }
+    [aria-roledescription="window-controls"] { display: none; }
+  }
 `

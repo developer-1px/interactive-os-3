@@ -1,4 +1,13 @@
 import { useState, useSyncExternalStore } from 'react'
+
+const MOBILE_QUERY = '(max-width: 600px)'
+const subscribeMobile = (cb: () => void) => {
+  const mq = window.matchMedia(MOBILE_QUERY)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const getIsMobile = () => window.matchMedia(MOBILE_QUERY).matches
+const getIsMobileSSR = () => false
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { getTree, subscribeTree, walk, sidebar, isSmartPath, smartGroupOf, smartItems } from './data'
 import { TitleBar } from './TitleBar'
@@ -21,6 +30,8 @@ export function Finder() {
     navigate({ to: '/finder/$', params: { _splat: isSmartPath(p) ? p : p.replace(/^\//, '') } })
 
   const [view, setView] = useState<ViewMode>('columns')
+  const isMobile = useSyncExternalStore(subscribeMobile, getIsMobile, getIsMobileSSR)
+  const effectiveView: ViewMode = isMobile ? 'list' : view
 
   // columns 가 아닌 뷰는 현재 디렉터리(파일이면 부모) 기준으로 목록을 보인다.
   const listAnchor = current?.type === 'dir'
@@ -35,22 +46,22 @@ export function Finder() {
         .sort((a, b) => b.path.length - a.path.length)[0]?.path ?? '/'
 
   return (
-    <main aria-roledescription="finder" aria-label="Finder" data-view={smart ? 'list' : view}>
+    <main aria-roledescription="finder" aria-label="Finder" data-view={smart ? 'list' : effectiveView}>
       <TitleBar
         path={path}
         canBack={!smart && chain.length > 1}
         onBack={() => go(smart ? '/' : chain[chain.length - 2]?.path ?? '/')}
-        view={smart ? 'list' : view}
+        view={smart ? 'list' : effectiveView}
         onViewChange={setView}
       />
       <section aria-roledescription="body">
         <Sidebar current={path} onPick={go} />
         {smart
           ? <ListView node={null} items={smartItems(smart.id)} currentPath={path} onNavigate={go} />
-          : view === 'columns'
+          : effectiveView === 'columns'
             ? <Columns chain={chain} rootPath={favoriteRoot} onNavigate={go} />
             : <ListView node={listAnchor} currentPath={path} onNavigate={go} />}
-        {!smart && view === 'columns' && <Preview node={current} />}
+        {!smart && effectiveView === 'columns' && <Preview node={current} />}
       </section>
     </main>
   )
