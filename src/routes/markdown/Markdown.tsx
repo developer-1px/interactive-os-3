@@ -17,8 +17,8 @@ export function Markdown() {
   }, [text])
 
   return (
-    <main data-route="markdown">
-      <nav aria-label="경로">
+    <main aria-roledescription="markdown-app">
+      <nav aria-label="경로" data-flow="cluster">
         <Link to="/finder/$" params={{ _splat: '' }}>← Finder</Link>
         <code>{path}</code>
       </nav>
