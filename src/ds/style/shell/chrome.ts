@@ -1,4 +1,5 @@
 import { css, pad, surface } from '../../fn'
+import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.
 // 모든 앱(finder / inspector / …)이 동일 규칙을 상속한다. classless + structural.
@@ -34,7 +35,7 @@ export const chromeCss = css`
   [aria-roledescription="window-controls"] > span:nth-child(3) { background: var(--ds-traffic-max); }
 
   /* 모바일: 데스크톱 윈도우 메타포(traffic lights, inset, radius)를 떼고 풀스크린 */
-  @media (max-width: 600px) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     main:has(> header > [aria-roledescription="window-controls"]) {
       position: fixed;
       inset: 0;

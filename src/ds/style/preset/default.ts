@@ -1,4 +1,5 @@
 import type { DsPreset } from './types'
+import { SHELL_MOBILE_MAX } from './breakpoints'
 
 export const defaultPreset: DsPreset = {
   id: 'default',
@@ -83,6 +84,6 @@ export const defaultPreset: DsPreset = {
     columnW: '220px',
     previewW: '320px',
     trafficSize: '12px',
-    mobileMax: '600px',
+    mobileMax: SHELL_MOBILE_MAX,
   },
 }

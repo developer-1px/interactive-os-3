@@ -27,15 +27,24 @@ function isCode(p) { return /\.(ts|tsx|mjs|cjs|js|jsx)$/.test(p) }
 
 const violations = []
 
-// R1 — routes에서 window.matchMedia 금지
+// R1 — routes에서 window.matchMedia 금지.
+// 문자열/백틱/주석 내부 언급은 제외 (문서/blurb는 위반 아님).
+const isInStringOrComment = (ln, idx) => {
+  const before = ln.slice(0, idx)
+  // // line comment
+  if (/(^|\s)\/\//.test(before) && !/['"`]/.test(before.split(/\/\//).pop() ?? '')) return true
+  // 따옴표/백틱 카운트가 홀수면 string 내부
+  const quoteCount = (before.match(/(?<!\\)['"`]/g) ?? []).length
+  return quoteCount % 2 === 1
+}
 for (const f of walk(join(ROOT, 'src/routes')).filter(isCode)) {
   const src = readFileSync(f, 'utf8')
   const lines = src.split('\n')
   lines.forEach((ln, i) => {
-    if (/\bwindow\.matchMedia\(/.test(ln) || /\bmatchMedia\(/.test(ln)) {
-      // useShellMode 자신은 ds/core에 있으므로 routes에선 0이어야
-      violations.push({ rule: 'R1', file: relative(ROOT, f), line: i + 1, msg: 'window.matchMedia 직접 호출 — useShellMode/<ShellSwitch> 사용', text: ln.trim() })
-    }
+    const m = /\b(?:window\.)?matchMedia\(/.exec(ln)
+    if (!m) return
+    if (isInStringOrComment(ln, m.index)) return
+    violations.push({ rule: 'R1', file: relative(ROOT, f), line: i + 1, msg: 'window.matchMedia 직접 호출 — useShellMode/<ShellSwitch> 사용', text: ln.trim() })
   })
 }
 

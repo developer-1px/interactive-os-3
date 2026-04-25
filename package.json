@@ -12,7 +12,8 @@
     "lint:ds:invariants": "node scripts/lint-ds-invariants.mjs",
     "lint:ds:contracts": "node scripts/lint-ds-contracts.mjs",
     "lint:ds:keyboard": "node scripts/lint-ds-keyboard.mjs",
-    "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts && pnpm lint:ds:keyboard",
+    "lint:ds:shell": "node scripts/lint-ds-shell.mjs",
+    "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts && pnpm lint:ds:keyboard && pnpm lint:ds:shell",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "preview": "vite preview"
   },

@@ -1,5 +1,6 @@
 import { css, pad, radius } from '../../../fn/values'
 import { mix } from '../../../fn/palette'
+import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
  * Prose typography — markdown 렌더링 결과(article[data-flow="prose"])에 자동 적용.
@@ -151,7 +152,7 @@ export const proseCss = () => css`
   [data-flow="prose"] a:hover { text-decoration-thickness: 2px; }
 
   /* ── mobile (≤600px) — body 17px로 약간 키우고 패딩 축소 ── */
-  @media (max-width: 600px) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     [data-flow="prose"] {
       --prose-body: 17px;
       --prose-leading: 1.65;

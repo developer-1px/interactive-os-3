@@ -1,15 +1,8 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
+import { useShellMode } from '../../ds'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
-
-const MOBILE_QUERY = '(max-width: 600px)'
-const subscribeMobile = (cb: () => void) => {
-  const mq = window.matchMedia(MOBILE_QUERY)
-  mq.addEventListener('change', cb)
-  return () => mq.removeEventListener('change', cb)
-}
-const getIsMobile = () => window.matchMedia(MOBILE_QUERY).matches
 
 /**
  * Shell wrapper. The outer `<main>/<section>` structure is matched by
@@ -19,7 +12,7 @@ const getIsMobile = () => window.matchMedia(MOBILE_QUERY).matches
  * route page bodies are rewritten to `definePage + Renderer`.
  */
 export function EduPortalAdmin() {
-  const isMobile = useSyncExternalStore(subscribeMobile, getIsMobile, () => false)
+  const isMobile = useShellMode() === 'mobile'
   const [navOpen, setNavOpen] = useState(false)
   return (
     <main

@@ -1,4 +1,5 @@
 import { css, dim, fg, icon, microLabel, mix, pad, radius, status, surface, tint } from '../../fn'
+import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
@@ -681,7 +682,7 @@ export const panesCss = css`
   main[aria-roledescription="edu-portal-admin-app"] [aria-roledescription="nav-toggle"] { display: none; }
 
   /* edu-portal-admin 모바일 — sidebar 좌측 드로어 + topbar/content 컴팩트 */
-  @media (max-width: 600px) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     main[aria-roledescription="edu-portal-admin-app"] [aria-roledescription="nav-toggle"] {
       display: inline-flex; align-items: center; justify-content: center;
       inline-size: 2.25rem; block-size: 2.25rem;
@@ -854,7 +855,7 @@ export const panesCss = css`
   main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] { display: none; }
 
   /* Catalog 모바일 — sidebar는 좌측 드로어로 숨기고, 카드는 1라인(이름+badge+소비처)으로 압축 */
-  @media (max-width: 600px) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] {
       display: inline-flex; align-items: center; justify-content: center;
       inline-size: 2.25rem; block-size: 2.25rem;
@@ -945,6 +946,9 @@ export const panesCss = css`
     border-block-end: var(--ds-hairline) solid var(--ds-border);
     position: sticky; top: 0; z-index: 1;
     background: var(--ds-bg);
+    /* L3 — 자기 폭으로 subtitle inline 복귀 결정. viewport 모름. */
+    container-type: inline-size;
+    container-name: atlas-header;
   }
   main[aria-roledescription="atlas-app"] > header > h1 {
     margin: 0; font-size: var(--ds-text-lg); font-weight: 700;
@@ -965,8 +969,8 @@ export const panesCss = css`
     background: var(--ds-bg);
     font-size: var(--ds-text-sm);
   }
-  /* 데스크톱: subtitle을 헤더 인라인으로 복귀 */
-  @media (min-width: 720px) {
+  /* 헤더가 충분히 넓으면 subtitle을 인라인 복귀. viewport 아닌 자기 헤더 폭 기준. */
+  @container atlas-header (min-width: 720px) {
     main[aria-roledescription="atlas-app"] > header > p {
       inline-size: auto; order: 0;
     }
@@ -994,13 +998,15 @@ export const panesCss = css`
     margin: 0;
   }
 
-  /* 카드 grid — 모바일 1열 / 480+ 2열 / 720+ 자동 채움 (최소 280px) */
+  /* 카드 grid — 자기 폭에 따라 1열/auto-fill 결정. viewport가 아닌 컨테이너 기준. */
   [aria-roledescription="atlas-card-grid"] {
     display: grid;
     grid-template-columns: 1fr;
     gap: ${pad(2)};
+    container-type: inline-size;
+    container-name: atlas-card-grid;
   }
-  @media (min-width: 480px) {
+  @container atlas-card-grid (min-width: 480px) {
     [aria-roledescription="atlas-card-grid"] {
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     }
@@ -1109,7 +1115,7 @@ export const panesCss = css`
   main[aria-roledescription="markdown-app"] > article {
     inline-size: 100%; margin-inline: auto;
   }
-  @media (max-width: 600px) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     main[aria-roledescription="markdown-app"] {
       padding: ${pad(2)} max(${pad(2)}, env(safe-area-inset-left)) ${pad(6)} max(${pad(2)}, env(safe-area-inset-right));
       gap: ${pad(2)};
