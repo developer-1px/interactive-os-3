@@ -1,4 +1,4 @@
-import { css, dim, fg, icon, microLabel, mix, pad, radius, status, surface } from '../../fn'
+import { css, dim, fg, icon, microLabel, mix, pad, radius, status, surface, tint } from '../../fn'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
@@ -184,6 +184,9 @@ export const panesCss = css`
     padding: ${pad(6)};
     display: flex; flex-direction: column; gap: ${pad(4)};
     min-width: 0;
+    /* L3 — 자기 폭에 따라 코드 soft-wrap. viewport 모름. */
+    container-type: inline-size;
+    container-name: preview;
   }
   /* L1 desktop Finder layout — preview에 min-width를 부여하는 책임은 여기. */
   main[aria-roledescription="finder"] > section[aria-roledescription="body"] > aside[aria-roledescription="preview"] {
@@ -194,6 +197,22 @@ export const panesCss = css`
   aside[aria-roledescription="preview"] > pre,
   aside[aria-roledescription="preview"] > article pre {
     max-width: 100%; overflow-x: auto; margin: 0;
+  }
+  /* 좁은 preview — 코드 soft-wrap. 모바일/좁은 모달에서 가로 스크롤 제거.
+     wrap된 줄도 line counter는 .line 단위로 1번만 증가하므로 줄번호 정확. */
+  @container preview (max-width: 600px) {
+    aside[aria-roledescription="preview"] > pre,
+    aside[aria-roledescription="preview"] > article pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      overflow-x: hidden;
+      tab-size: 2;
+    }
+    aside[aria-roledescription="preview"] pre code .line::before {
+      width: 2em;
+      margin-inline-end: ${pad(2)};
+    }
   }
   /* shiki 출력에 줄번호 부여 — <span class="line"> 카운터 */
   aside[aria-roledescription="preview"] pre code {
@@ -437,6 +456,92 @@ export const panesCss = css`
     margin: 0;
     line-height: 1.4;
     word-break: break-word;
+  }
+
+  /* Board (Slack/Discord 스타일) — 게시판형 채널 타임라인.
+     - sidebar: 채널 리스트 (#·🔒 + 이름 + unread)
+     - 각 post: avatar | header(name+time) + body
+     - 연속 post(post-cont): avatar/header 숨겨 같은 사람 메시지가 묶여 보임 */
+  [aria-roledescription="board-page"] [aria-roledescription="board-nav"] {
+    padding: ${pad(2)};
+    gap: ${pad(2)};
+  }
+  [aria-roledescription="board-page"] [aria-roledescription="board-nav"] > h3 {
+    font-size: var(--ds-text-md); font-weight: 700; margin: 0;
+  }
+  [aria-roledescription="board-page"] [aria-roledescription="board-nav"] > small {
+    color: ${dim(55)}; font-size: var(--ds-text-xs);
+  }
+  [aria-roledescription="board-page"] button[data-board-ch] {
+    justify-content: flex-start;
+    background: transparent; border: 0; padding: ${pad(1)} ${pad(2)};
+    color: inherit; font-weight: 400;
+    border-radius: ${radius('md')};
+  }
+  [aria-roledescription="board-page"] button[data-board-ch][aria-pressed="true"] {
+    background: var(--ds-accent);
+    color: var(--ds-accent-on);
+  }
+  [aria-roledescription="board-page"] button[data-board-ch] > small {
+    margin-inline-start: auto;
+    background: ${tint('CanvasText', 12)};
+    border-radius: ${radius('pill')};
+    padding: 0 ${pad(1)};
+    font-size: var(--ds-text-xs);
+  }
+  [aria-roledescription="board-page"] [aria-roledescription="board-stream"] {
+    overflow-y: auto;
+  }
+  [aria-roledescription="board-page"] [aria-roledescription="board-posts"] {
+    gap: 0;
+    padding: ${pad(2)} 0;
+  }
+  [aria-roledescription="post"],
+  [aria-roledescription="post-cont"] {
+    align-items: flex-start;
+    padding: ${pad(0.5)} ${pad(2)};
+    gap: ${pad(2)};
+    transition: background var(--ds-dur-fast) var(--ds-ease-out);
+  }
+  [aria-roledescription="post"] { padding-top: ${pad(2)}; }
+  [aria-roledescription="post"]:hover,
+  [aria-roledescription="post-cont"]:hover {
+    background: ${tint('CanvasText', 4)};
+  }
+  /* avatar — 36x36 라운드 사각 */
+  [aria-roledescription^="post"] > strong[data-ds-aspect="square"] {
+    border-radius: ${radius('md')};
+    overflow: hidden;
+    flex: none;
+    background: ${tint('CanvasText', 8)};
+  }
+  [aria-roledescription^="post"] > strong[data-ds-aspect="square"] > img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  /* 연속 post: avatar는 자리만 비워두고 시각 숨김, 헤더 라인 숨김 */
+  [aria-roledescription="post-cont"] > strong[data-ds-aspect="square"] {
+    visibility: hidden;
+    background: transparent;
+  }
+  [aria-roledescription="post-cont"] > [data-ds="Column"] > strong:first-child {
+    display: none;
+  }
+  /* 본문 컬럼 */
+  [aria-roledescription^="post"] > [data-ds="Column"] {
+    gap: ${pad(0.25)};
+    min-inline-size: 0;
+  }
+  [aria-roledescription^="post"] > [data-ds="Column"] > strong:first-child {
+    font-size: var(--ds-text-md);
+  }
+  [aria-roledescription^="post"] > [data-ds="Column"] > strong:first-child > small {
+    margin-inline-start: ${pad(1)};
+    color: ${dim(55)};
+    font-weight: 400;
+    font-size: var(--ds-text-xs);
+  }
+  [aria-roledescription^="post"] > [data-ds="Column"] > p {
+    margin: 0; line-height: 1.45;
   }
 
   /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지(feed/chat 등)에서

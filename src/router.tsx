@@ -22,6 +22,7 @@ import { Shop } from './routes/genres/shop/Shop'
 import { Crm } from './routes/genres/crm/Crm'
 import { Editor as GenreEditor } from './routes/genres/editor/Editor'
 import { Feed } from './routes/genres/feed/Feed'
+import { Board } from './routes/genres/board/Board'
 import { Analytics } from './routes/genres/analytics/Analytics'
 import { Settings } from './routes/genres/settings/Settings'
 import { Markdown } from './routes/markdown/Markdown'
@@ -194,7 +195,8 @@ const mkGenreRoute = (path: string, component: () => React.ReactNode, label: str
 })
 
 const genresInboxRoute     = mkGenreRoute('/genres/inbox',     Inbox,        'Genres · Inbox')
-const genresChatRoute      = mkGenreRoute('/genres/chat',      Chat,         'Genres · Chat')
+const genresChatRoute      = mkGenreRoute('/genres/chat',      Chat,         'Genres · Chat (DM)')
+const genresBoardRoute     = mkGenreRoute('/genres/board',     Board,        'Genres · Board')
 const genresShopRoute      = mkGenreRoute('/genres/shop',      Shop,         'Genres · Shop')
 const genresCrmRoute       = mkGenreRoute('/genres/crm',       Crm,          'Genres · CRM')
 const genresEditorRoute    = mkGenreRoute('/genres/editor',    GenreEditor,  'Genres · Editor')
@@ -206,7 +208,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute, finderRoute, inspectorRoute, matrixRoute, atlasRoute, catalogRoute, eduPortalAdminRoute,
   markdownRoute,
   genresHubRoute,
-  genresInboxRoute, genresChatRoute, genresShopRoute, genresCrmRoute,
+  genresInboxRoute, genresChatRoute, genresBoardRoute, genresShopRoute, genresCrmRoute,
   genresEditorRoute, genresFeedRoute, genresAnalyticsRoute, genresSettingsRoute,
 ])
 
