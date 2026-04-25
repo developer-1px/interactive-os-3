@@ -27,7 +27,7 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - run: pnpm exec vite build
         env:
           GITHUB_PAGES: 'true'
       - run: cp dist/index.html dist/404.html
