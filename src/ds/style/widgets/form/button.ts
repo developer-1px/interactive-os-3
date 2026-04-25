@@ -1,4 +1,4 @@
-import { accent, css, fg, onAccent, pad, radius, tint } from '../../../fn'
+import { accent, css, fg, onAccent, pad, radius, square, tint } from '../../../fn'
 
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
@@ -32,14 +32,9 @@ export const buttonCss = css`
                 color var(--ds-dur-fast) var(--ds-ease-out),
                 border-color var(--ds-dur-fast) var(--ds-ease-out);
   }
-  /* icon-only — children이 비어있고 data-icon만 있는 버튼은 정사각형. 축 구조적 해결.
+  /* icon-only — children이 비어있고 data-icon만 있는 버튼은 정사각형. fn/square로 통일.
      ::before 아이콘 너비(1.25em) + control-h 높이로 자연 정사각형. */
-  :where(button[data-icon]:empty) {
-    aspect-ratio: 1 / 1;
-    padding: 0;
-    display: inline-grid;
-    place-items: center;
-  }
+  ${square('button[data-icon]:empty')}
   :where(button[data-icon]:empty)::before {
     margin-inline-end: 0;
   }

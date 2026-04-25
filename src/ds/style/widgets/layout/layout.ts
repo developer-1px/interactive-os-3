@@ -1,5 +1,6 @@
 import { css, pad, radius, surface } from '../../../fn/values'
 import { mix } from '../../../fn/palette'
+import { square } from '../../../fn/structural'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -91,8 +92,8 @@ export const layout = () => css`
   [data-ds-align="stretch"]  { align-self: stretch; }
 
   /* aspect — width 축만 정해진 곳에 height를 비율로 도출. avatar/icon tile 등.
-     square는 1/1, 그 외는 inline-size/block-size 비율. */
-  [data-ds-aspect="square"] { aspect-ratio: 1 / 1; block-size: auto; }
+     square는 fn/square로 일관 처리, 그 외는 inline 비율 변수로. */
+  ${square('[data-ds-aspect="square"]')}
   [data-ds-aspect]:not([data-ds-aspect="square"]) { aspect-ratio: var(--ds-aspect, 1); }
 
   /* Text variants — semantic tags already carry weight, these only bundle
