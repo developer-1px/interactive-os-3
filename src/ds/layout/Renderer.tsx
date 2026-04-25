@@ -9,8 +9,9 @@
  * need arbitrary content can use Text (ReactNode `content`) or Ui with
  * `content`/`props.children`.
  */
-import { createElement, type CSSProperties, type ReactNode } from 'react'
+import { createElement, useEffect, type CSSProperties, type ReactNode } from 'react'
 import { ROOT, type NormalizedData } from '../core/types'
+import { printTree, printHeadingOutline } from '../debug/printTree'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
@@ -26,6 +27,7 @@ export interface RendererProps {
 }
 
 export function Renderer({ page, rootId = ROOT }: RendererProps) {
+  useDebugTree(page)
   if (!page.entities[rootId]) {
     // Accept single-rooted trees that omit the `__root__` meta entity by
     // rendering the relationships root directly if present.
@@ -34,6 +36,22 @@ export function Renderer({ page, rootId = ROOT }: RendererProps) {
     return <NodeChildren page={page} id={rootFromRel} />
   }
   return <NodeChildren page={page} id={rootId} />
+}
+
+function useDebugTree(page: NormalizedData) {
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('debug') !== 'tree') return
+    // eslint-disable-next-line no-console
+    console.groupCollapsed('%c[FlatLayout] hierarchy', 'color:#888')
+    // eslint-disable-next-line no-console
+    console.log(printTree(page))
+    // eslint-disable-next-line no-console
+    console.log('\n=== HEADING OUTLINE ===\n' + printHeadingOutline(page))
+    // eslint-disable-next-line no-console
+    console.groupEnd()
+  }, [page])
 }
 
 function NodeChildren({ page, id }: { page: NormalizedData; id: string }) {

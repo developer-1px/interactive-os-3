@@ -42,11 +42,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
         </>
       ) } },
       side: { id: 'side', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
-      ws: { id: 'ws', data: { type: 'Text', variant: 'h3', content: 'DS Workspace' } },
-      wsMeta: { id: 'wsMeta', data: { type: 'Text', variant: 'small', content: '유용태 · 온라인' } },
-      chHdr: { id: 'chHdr', data: { type: 'Text', variant: 'strong', content: '채널' } },
       pubList: { id: 'pubList', data: { type: 'Ui', component: 'Listbox', props: { data: s.pubNav.data, onEvent: s.pubNav.onEvent, 'aria-label': '채널' } } },
-      dmHdr: { id: 'dmHdr', data: { type: 'Text', variant: 'strong', content: 'DM' } },
       dmList: { id: 'dmList', data: { type: 'Ui', component: 'Listbox', props: { data: s.dmNav.data, onEvent: s.dmNav.onEvent, 'aria-label': 'DM' } } },
       main: { id: 'main', data: { type: 'Column', flow: 'list', grow: true } },
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
@@ -63,7 +59,6 @@ export function buildChatPage(s: ChatState): NormalizedData {
       }, grow: true } },
       composerSend: { id: 'composerSend', data: { type: 'Ui', component: 'Button', props: { onClick: s.send }, content: '전송' } },
       right: { id: 'right', data: { type: 'Column', flow: 'list', emphasis: 'raised', width: 260 } },
-      rHdr: { id: 'rHdr', data: { type: 'Text', variant: 'h3', content: `멤버 (${MEMBERS.length})` } },
       ...Object.fromEntries(MEMBERS.flatMap((m) => [
         [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
         [`mdot-${m.id}`, { id: `mdot-${m.id}`, data: { type: 'Ui', component: 'LegendDot', props: { tone: statusTone[m.status], 'aria-hidden': true } } }],
@@ -73,14 +68,14 @@ export function buildChatPage(s: ChatState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page', 'menuPop'], page: ['side', 'main', 'right'],
-      side: ['ws', 'wsMeta', 'chHdr', 'pubList', 'dmHdr', 'dmList'],
+      side: ['pubList', 'dmList'],
       main: ['mainHdr', 'stream', 'composer'],
       mainHdr: ['menuBtn', 'mainTitle', 'mainActions'],
       mainActions: ACTS.map(([id]) => id) as string[],
       stream: msgs.map((m) => `mb-${m.id}`),
       ...Object.fromEntries(msgs.map((m) => [`mb-${m.id}`, [`mh-${m.id}`, `mt-${m.id}`]])),
       composer: ['composerIn', 'composerSend'],
-      right: ['rHdr', ...MEMBERS.map((m) => `mrow-${m.id}`)],
+      right: MEMBERS.map((m) => `mrow-${m.id}`),
       ...Object.fromEntries(MEMBERS.map((m) => [`mrow-${m.id}`, [`mdot-${m.id}`, `mnm-${m.id}`, `mst-${m.id}`]])),
     },
   }
