@@ -7,6 +7,7 @@ import {
   Input, Textarea, Select, NumberInput, Slider, ColorInput,
   Checkbox, RadioGroup, CheckboxGroup, Combobox,
   Carousel, Slide,
+  Row, Column,
   fromTree, fromList, useControlState, ROOT, FOCUS, EXPANDED, type NormalizedData,
 } from '../../ds'
 
@@ -147,24 +148,24 @@ function RoleCardDemo() {
 
 function BadgeDemo() {
   return (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+    <Row flow="cluster">
       <Badge tone="info">info</Badge>
       <Badge tone="success">success</Badge>
       <Badge tone="warning">warning</Badge>
       <Badge tone="danger">danger</Badge>
       <Badge tone="neutral">neutral</Badge>
-    </div>
+    </Row>
   )
 }
 
 function LegendDotDemo() {
   return (
-    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+    <Row flow="cluster">
       <LegendDot tone="info">조회</LegendDot>
       <LegendDot tone="success">완료</LegendDot>
       <LegendDot tone="warning">대기</LegendDot>
       <LegendDot tone="danger">오류</LegendDot>
-    </div>
+    </Row>
   )
 }
 
@@ -173,11 +174,11 @@ function LegendDotDemo() {
 // ─────────────────────────────────────────────────────────────
 function ButtonDemo() {
   return (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+    <Row flow="cluster">
       <Button>기본</Button>
       <Button data-icon="plus">등록</Button>
       <Button disabled>비활성</Button>
-    </div>
+    </Row>
   )
 }
 
@@ -185,20 +186,20 @@ function SwitchDemo() {
   const [a, setA] = useState(true)
   const [b, setB] = useState(false)
   return (
-    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+    <Row flow="cluster">
       <Switch checked={a} onClick={() => setA((v) => !v)} aria-label="A" />
       <Switch checked={b} onClick={() => setB((v) => !v)} aria-label="B" />
       <Switch checked={false} disabled aria-label="disabled" />
-    </div>
+    </Row>
   )
 }
 
 function ProgressDemo() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <Column flow="list">
       <Progress value={30} max={100} aria-label="업로드" />
       <Progress value={72} max={100} aria-label="처리" />
-    </div>
+    </Column>
   )
 }
 
@@ -218,8 +219,8 @@ function TabsDemo() {
         <Tab controls="p2">통계</Tab>
         <Tab controls="p3">설정</Tab>
       </TabList>
-      <TabPanel id="p1" labelledBy="t1" style={{ padding: 12 }}>
-        <p style={{ margin: 0 }}>개요 패널</p>
+      <TabPanel id="p1" labelledBy="t1">
+        <p>개요 패널</p>
       </TabPanel>
     </div>
   )
@@ -229,12 +230,12 @@ function FeedDemo() {
   return (
     <Feed aria-label="활동">
       <FeedArticle posinset={1} setsize={2}>
-        <h4 style={{ margin: 0 }}>업데이트</h4>
-        <p style={{ margin: '4px 0 0' }}>새 영상 3개 추가</p>
+        <h4>업데이트</h4>
+        <p>새 영상 3개 추가</p>
       </FeedArticle>
       <FeedArticle posinset={2} setsize={2}>
-        <h4 style={{ margin: 0 }}>공지</h4>
-        <p style={{ margin: '4px 0 0' }}>월간 점검 안내</p>
+        <h4>공지</h4>
+        <p>월간 점검 안내</p>
       </FeedArticle>
     </Feed>
   )
@@ -243,7 +244,7 @@ function FeedDemo() {
 function DisclosureDemo() {
   return (
     <Disclosure summary="세부 정보 보기">
-      <p style={{ margin: 0 }}>펼쳐진 내부 콘텐츠.</p>
+      <p>펼쳐진 내부 콘텐츠.</p>
     </Disclosure>
   )
 }
@@ -262,31 +263,27 @@ function ToolbarDemo() {
 function ToolbarButtonDemo() {
   const [b, setB] = useState(false)
   return (
-    <div style={{ display: 'flex', gap: 8 }}>
+    <Row flow="cluster">
       <ToolbarButton data-icon="bold" aria-label="굵게"
         pressed={b} onClick={() => setB((v) => !v)} />
       <ToolbarButton data-icon="italic" aria-label="기울임" />
-    </div>
+    </Row>
   )
 }
 
 function SeparatorDemo() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 24 }}>
+    <Row flow="cluster">
       <span>왼쪽</span><Separator /><span>오른쪽</span>
-    </div>
+    </Row>
   )
 }
 
 function CarouselDemo() {
   return (
     <Carousel label="슬라이드">
-      <Slide label="1" posinset={1} setsize={2}>
-        <div style={{ padding: 16, minWidth: 120 }}>첫 슬라이드</div>
-      </Slide>
-      <Slide label="2" posinset={2} setsize={2}>
-        <div style={{ padding: 16, minWidth: 120 }}>두 번째</div>
-      </Slide>
+      <Slide label="1" posinset={1} setsize={2}>첫 슬라이드</Slide>
+      <Slide label="2" posinset={2} setsize={2}>두 번째</Slide>
     </Carousel>
   )
 }
@@ -331,11 +328,11 @@ function CheckboxDemo() {
   const [a, setA] = useState(true)
   const [b, setB] = useState<boolean | 'mixed'>('mixed')
   return (
-    <div style={{ display: 'flex', gap: 12 }}>
+    <Row flow="cluster">
       <Checkbox checked={a} onClick={() => setA((v) => !v)} aria-label="A" />
       <Checkbox checked={b} onClick={() => setB((v) => v === 'mixed' ? true : v === true ? false : 'mixed')} aria-label="삼상" />
       <Checkbox checked={false} disabled aria-label="disabled" />
-    </div>
+    </Row>
   )
 }
 

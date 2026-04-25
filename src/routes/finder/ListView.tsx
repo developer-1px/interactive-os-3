@@ -18,10 +18,10 @@ export function ListView({
     <section aria-roledescription="list-view">
     <TreeGrid aria-label="목록뷰" aria-rowcount={kids.length} data-density="compact">
       <colgroup>
-        <col />
-        <col style={{ width: '14rem' }} />
-        <col style={{ width: '6rem' }} />
-        <col style={{ width: '8rem' }} />
+        <col data-col="name" />
+        <col data-col="mtime" />
+        <col data-col="size" />
+        <col data-col="kind" />
       </colgroup>
       <thead>
         <tr>
