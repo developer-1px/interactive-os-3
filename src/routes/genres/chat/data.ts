@@ -13,10 +13,15 @@ export const channels: Channel[] = [
 
 export const INITIAL: Record<string, Msg[]> = {
   ds: [
-    { id: 's1', who: '유용태', time: '09:12', text: '장르 스윕 시작합니다.' },
-    { id: 's2', who: 'Claude', time: '09:13', text: 'registry에 Tree/Menu 미등록.' },
-    { id: 's3', who: '유용태', time: '09:14', text: '일단 부품 조합, 갭만 기록.', me: true },
-    { id: 's4', who: 'Claude', time: '09:15', text: 'MessageBubble/Composer도 갭.' },
+    { id: 's1', who: '유용태',   time: '09:12', text: '장르 스윕 시작합니다.' },
+    { id: 's2', who: 'Claude',   time: '09:13', text: 'registry에 Tree/Menu 미등록 — 8군데서 사용 중인데 import 누락.' },
+    { id: 's3', who: '유용태',   time: '09:14', text: '일단 부품 조합으로 갈게요. 갭은 docs/GAPS.md에 정리.', me: true },
+    { id: 's4', who: 'Claude',   time: '09:15', text: 'MessageBubble/Composer도 ds에 없음.' },
+    { id: 's5', who: 'Alex Kim', time: '09:18', text: 'shop 카드는 picsum으로 채웠습니다 — 12개.' },
+    { id: 's6', who: '유용태',   time: '09:19', text: '👍 feed도 픽섬 + faker 적용했어요.', me: true },
+    { id: 's7', who: 'Sora Park',time: '09:23', text: '모바일에서 컨트롤 정렬 좀 봐주세요. control-h 통일됐는데 여백이 들쭉날쭉.' },
+    { id: 's8', who: '유용태',   time: '09:25', text: '확인하고 답 드릴게요.', me: true },
+    { id: 's9', who: 'Claude',   time: '09:27', text: 'square()의 block-size:auto가 controlBox를 덮고 있었네요. 패치 푸시.' },
   ],
 }
 

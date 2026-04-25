@@ -10,11 +10,12 @@ export interface ChatState {
 
 export function buildChatPage(s: ChatState): NormalizedData {
   const msgs = s.stream[s.active] ?? INITIAL[s.active] ?? []
+  // 보편 채팅 스타일 — 각 메시지는 Section bubble. me는 우측+accent, other는 좌측+surface.
+  // meta(이름·시간)는 small. me는 시간만, other는 이름·시간.
   const msgEnts = msgs.flatMap((m) => [
-    [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
-    [`mwho-${m.id}`, { id: `mwho-${m.id}`, data: { type: 'Text', variant: 'strong', content: m.who, width: 96 } }],
-    [`mtxt-${m.id}`, { id: `mtxt-${m.id}`, data: { type: 'Text', variant: 'body', content: m.text, grow: true } }],
-    [`mtm-${m.id}`,  { id: `mtm-${m.id}`,  data: { type: 'Text', variant: 'small', content: m.time, width: 64, align: 'end' } }],
+    [`mb-${m.id}`, { id: `mb-${m.id}`, data: { type: 'Section', roledescription: m.me ? 'message-me' : 'message-other', label: m.who, flow: 'list' } }],
+    [`mh-${m.id}`, { id: `mh-${m.id}`, data: { type: 'Text', variant: 'small', content: m.me ? m.time : `${m.who} · ${m.time}` } }],
+    [`mt-${m.id}`, { id: `mt-${m.id}`, data: { type: 'Text', variant: 'body', content: m.text } }],
   ] as Array<readonly [string, unknown]>)
   return {
     entities: {
@@ -76,8 +77,8 @@ export function buildChatPage(s: ChatState): NormalizedData {
       main: ['mainHdr', 'stream', 'composer'],
       mainHdr: ['menuBtn', 'mainTitle', 'mainActions'],
       mainActions: ACTS.map(([id]) => id) as string[],
-      stream: msgs.map((m) => `mrow-${m.id}`),
-      ...Object.fromEntries(msgs.map((m) => [`mrow-${m.id}`, [`mwho-${m.id}`, `mtxt-${m.id}`, `mtm-${m.id}`]])),
+      stream: msgs.map((m) => `mb-${m.id}`),
+      ...Object.fromEntries(msgs.map((m) => [`mb-${m.id}`, [`mh-${m.id}`, `mt-${m.id}`]])),
       composer: ['composerIn', 'composerSend'],
       right: ['rHdr', ...MEMBERS.map((m) => `mrow-${m.id}`)],
       ...Object.fromEntries(MEMBERS.map((m) => [`mrow-${m.id}`, [`mdot-${m.id}`, `mnm-${m.id}`, `mst-${m.id}`]])),

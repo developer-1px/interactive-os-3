@@ -376,6 +376,47 @@ export const panesCss = css`
     word-break: keep-all; line-height: 1.3;
   }
 
+  /* Chat 메시지 버블 — 보편 채팅 스타일.
+     - me: 우측 정렬, accent 색
+     - other: 좌측 정렬, surface
+     - max-width 75%, lg radius, small meta 위쪽 */
+  [aria-roledescription="chat-page"] [data-emphasis="sunk"]:has([aria-roledescription^="message-"]) {
+    gap: ${pad(1.5)};
+    align-items: stretch;
+    padding: ${pad(3)};
+  }
+  [aria-roledescription^="message-"] {
+    max-inline-size: min(75%, 36rem);
+    padding: ${pad(2)} ${pad(2.5)};
+    border-radius: ${radius('lg')};
+    display: flex; flex-direction: column;
+    gap: ${pad(0.5)};
+    margin: 0;
+  }
+  [aria-roledescription="message-other"] {
+    align-self: flex-start;
+    background: ${fg(2)};
+    border: 1px solid var(--ds-border);
+    border-end-start-radius: ${radius('sm')};
+  }
+  [aria-roledescription="message-me"] {
+    align-self: flex-end;
+    background: var(--ds-accent);
+    color: var(--ds-accent-on);
+    border: 1px solid transparent;
+    border-end-end-radius: ${radius('sm')};
+  }
+  [aria-roledescription^="message-"] > small {
+    opacity: .7;
+    font-size: var(--ds-text-xs);
+    margin: 0;
+  }
+  [aria-roledescription^="message-"] > p {
+    margin: 0;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
   /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지(feed/chat 등)에서
      좁은 viewport시 좌·우 보조 컬럼을 숨기고 [data-collapse-menu-btn]을 노출.
      roledescription 끝이 "-page"인 모든 곳에 일괄 적용 — content 레벨 container query. */
