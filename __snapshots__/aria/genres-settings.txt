@@ -1,0 +1,65 @@
+__root__
+└── page <Row> flow=split
+    ├── nav <Column> flow=list em=sunk
+    │   ├── navTitle <Text.h3> "설정"
+    │   ├── nav-profile <ToolbarButton> aria="프로필" "프로필"
+    │   ├── nav-account <ToolbarButton> aria="계정" "계정"
+    │   ├── nav-notification <ToolbarButton> aria="알림" "알림"
+    │   ├── nav-billing <ToolbarButton> aria="결제" "결제"
+    │   └── nav-danger <ToolbarButton> aria="위험 구역" "위험 구역"
+    └── main <Column> flow=form
+        ├── h <Text.h1> "프로필"
+        ├── profSec <Section> flow=form em=raised  ⚠ single-child container — flatten?
+        │   └── pName <Field>
+        │       ├── pNameL <FieldLabel> "이름"
+        │       └── pNameI <Input> aria="이름"
+        ├── accSec <Section> flow=form em=raised  ⚠ single-child container — flatten?
+        │   └── aEmail <Field>
+        │       ├── aEmailL <FieldLabel> "이메일"
+        │       └── aEmailI <Input> aria="이메일"
+        ├── notSec <Section> flow=form em=raised
+        │   ├── nE <Row> flow=split
+        │   │   ├── nEL <Column> flow=list
+        │   │   │   ├── nELbl <Text.strong> "이메일 알림"
+        │   │   │   └── nEDesc <Text.small> "중요 업데이트와 초대 메일"
+        │   │   └── nESw <Switch> aria="이메일 알림"
+        │   ├── nP <Row> flow=split
+        │   │   ├── nPL <Column> flow=list
+        │   │   │   ├── nPLbl <Text.strong> "푸시 알림"
+        │   │   │   └── nPDesc <Text.small> "실시간 이벤트"
+        │   │   └── nPSw <Switch> aria="푸시 알림"
+        │   └── nD <Field>
+        │       ├── nDL <FieldLabel> "다이제스트"
+        │       └── nDI <Select> aria="다이제스트"
+        ├── billSec <Section> flow=form em=raised
+        │   ├── bP <Row> flow=split
+        │   │   ├── bPL <Column> flow=list
+        │   │   │   ├── bPLbl <Text.strong> "현재 플랜: PRO"
+        │   │   │   └── bPDesc <Text.small> "월 $29 · 다음 결제일 2026-05-15"
+        │   │   └── bPBtn <Button> "플랜 변경"
+        │   └── bInv <Button> "청구 내역 보기"
+        └── dngSec <Section> flow=form em=callout
+            ├── dT <Text.h3> "⚠ 위험 구역"
+            ├── dExport <Row> flow=split
+            │   ├── dExportL <Column> flow=list
+            │   │   ├── dExportLbl <Text.strong> "데이터 내보내기"
+            │   │   └── dExportDesc <Text.small> "전체 계정 데이터를 JSON으로"
+            │   └── dExportBtn <Button> "내보내기"
+            └── dDel <Row> flow=split
+                ├── dDelL <Column> flow=list
+                │   ├── dDelLbl <Text.strong> "계정 삭제"
+                │   └── dDelDesc <Text.small> "이 작업은 되돌릴 수 없습니다"
+                └── dDelBtn <Button> "계정 삭제"
+
+⚠ 2 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+    h3 · 설정
+h1 · 프로필
+        strong · 이메일 알림
+        strong · 푸시 알림
+        strong · 현재 플랜: PRO
+    h3 · ⚠ 위험 구역
+        strong · 데이터 내보내기
+        strong · 계정 삭제

@@ -7,7 +7,7 @@ export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Column', flow: 'form' } },
+      page: { id: 'page', data: { type: 'Column', flow: 'form', roledescription: 'analytics-page', label: 'Analytics' } },
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'split' } },
       title: { id: 'title', data: { type: 'Text', variant: 'h1', content: 'Analytics' } },
       rangeBar: { id: 'rangeBar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '기간' } } },

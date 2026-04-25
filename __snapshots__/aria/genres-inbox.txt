@@ -1,0 +1,84 @@
+__root__
+└── page <Row> flow=list
+    ├── nav <Column> flow=list em=sunk
+    │   ├── navFavTitle <Text.small> "즐겨찾기"
+    │   ├── folderList <Listbox> aria="폴더"
+    │   └── navSmartTitle <Text.small> "스마트 메일상자"
+    ├── list <Column> flow=list
+    │   ├── listHdr <Header> flow=list
+    │   │   └── listTitleRow <Row> flow=cluster
+    │   │       ├── listTitleCol <Column> flow=list
+    │   │       │   ├── listTitle <Text.h2> "받은편지함"
+    │   │       │   └── listCount <Text.small> "8개의 메시지"
+    │   │       └── listTools <Toolbar> aria="도구"
+    │   │           ├── btnFilter <ToolbarButton> aria="필터"
+    │   │           └── btnCompose <ToolbarButton> aria="새 메일"
+    │   └── listGrid <DataGrid> aria="메시지"
+    │       └── listBody <RowGroup>
+    │           ├── row-m1 <DataGridRow>
+    │           │   ├── c-m1-from <GridCell> "GitHub"
+    │           │   ├── c-m1-time <GridCell> "오전 10:42"
+    │           │   ├── c-m1-subject <GridCell> "[ds] PR #142 merged"
+    │           │   └── c-m1-preview <GridCell> "Atlas · invariant 린트 3층…"
+    │           ├── row-m2 <DataGridRow>
+    │           │   ├── c-m2-from <GridCell> "Anthropic"
+    │           │   ├── c-m2-time <GridCell> "오전 9:15"
+    │           │   ├── c-m2-subject <GridCell> "Claude 4.7 릴리즈"
+    │           │   └── c-m2-preview <GridCell> "1M 컨텍스트…"
+    │           ├── row-m3 <DataGridRow>
+    │           │   ├── c-m3-from <GridCell> "유용태"
+    │           │   ├── c-m3-time <GridCell> "어제"
+    │           │   ├── c-m3-subject <GridCell> "ds registry 갭"
+    │           │   └── c-m3-preview <GridCell> "Tree/Menu 부재…"
+    │           ├── row-m4 <DataGridRow>
+    │           │   ├── c-m4-from <GridCell> "Linear"
+    │           │   ├── c-m4-time <GridCell> "어제"
+    │           │   ├── c-m4-subject <GridCell> "INGEST-214"
+    │           │   └── c-m4-preview <GridCell> "In Progress → In Review…"
+    │           ├── row-m5 <DataGridRow>
+    │           │   ├── c-m5-from <GridCell> "Stripe"
+    │           │   ├── c-m5-time <GridCell> "월요일"
+    │           │   ├── c-m5-subject <GridCell> "3월 결제 요약"
+    │           │   └── c-m5-preview <GridCell> "총 매출 $12,430…"
+    │           ├── row-m6 <DataGridRow>
+    │           │   ├── c-m6-from <GridCell> "npm"
+    │           │   ├── c-m6-time <GridCell> "지난 주"
+    │           │   ├── c-m6-subject <GridCell> "vite 보안 업데이트"
+    │           │   └── c-m6-preview <GridCell> "high severity 1건…"
+    │           ├── row-m7 <DataGridRow>
+    │           │   ├── c-m7-from <GridCell> "Notion"
+    │           │   ├── c-m7-time <GridCell> "지난 주"
+    │           │   ├── c-m7-subject <GridCell> "공유: DS Roadmap"
+    │           │   └── c-m7-preview <GridCell> "공유된 페이지…"
+    │           └── row-m8 <DataGridRow>
+    │               ├── c-m8-from <GridCell> "Sentry"
+    │               ├── c-m8-time <GridCell> "2주 전"
+    │               ├── c-m8-subject <GridCell> "새 이슈 3건"
+    │               └── c-m8-preview <GridCell> "TypeError…"
+    └── detail <Column> flow=list em=raised
+        ├── detailActions <Toolbar> aria="액션"
+        │   ├── grpReply <Row> flow=cluster label="답장"
+        │   │   ├── actReply <ToolbarButton> aria="답장"
+        │   │   └── actForward <ToolbarButton> aria="전달"
+        │   └── grpArchive <Row> flow=cluster label="정리"
+        │       ├── actArchive <ToolbarButton> aria="보관"
+        │       └── actDelete <ToolbarButton> aria="삭제"
+        ├── detailHdr <Header> flow=list
+        │   ├── detailCount <Text.small> "1개의 메시지"
+        │   ├── detailSenderRow <Row> flow=cluster
+        │   │   ├── detailSenderCol <Column> flow=list
+        │   │   │   ├── detailFrom <Text.strong> "GitHub"
+        │   │   │   └── detailSubject <Text.body> "[ds] PR #142 merged"
+        │   │   └── detailAsideCol <Column> flow=list
+        │   │       ├── detailFolderTag <Badge>
+        │   │       └── detailTime <Text.small> "오전 10:42"
+        │   └── detailLabel <Badge>
+        ├── detailBody <Text.body> "PR #142 merged."
+        └── detailFooter <Footer> flow=form
+            ├── replyField <Textarea> aria="답장"
+            └── replySend <Button> "보내기"
+
+
+=== HEADING OUTLINE ===
+  h2 · 받은편지함
+        strong · GitHub

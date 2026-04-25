@@ -1,0 +1,222 @@
+__root__
+├── page <Row> flow=list role=shop-page label="Shop"
+│   ├── filters <Column> flow=form em=raised
+│   │   ├── fHdr <Text.h3> "필터"
+│   │   ├── priceLbl <Text.strong> "최대 가격: $2000"  ⚠ strong used as section header — should be h3?
+│   │   ├── priceInput <Input> aria="최대 가격"
+│   │   ├── saleOnly <Checkbox> aria="세일 상품만"
+│   │   ├── ratingLbl <Text.strong> "최소 별점"  ⚠ duplicates sibling aria-label; strong used as section header — should be h3?
+│   │   ├── ratingSel <Select> aria="최소 별점"
+│   │   ├── brandLbl <Text.strong> "브랜드"  ⚠ strong used as section header — should be h3?
+│   │   ├── brand-Converse <Checkbox> aria="Converse"
+│   │   ├── brand-Church's <Checkbox> aria="Church's"
+│   │   ├── brand-Everlane <Checkbox> aria="Everlane"
+│   │   ├── brand-Burberry <Checkbox> aria="Burberry"
+│   │   ├── brand-Margiela <Checkbox> aria="Margiela"
+│   │   ├── brand-Patagonia <Checkbox> aria="Patagonia"
+│   │   ├── brand-Muji <Checkbox> aria="Muji"
+│   │   ├── brand-Acne <Checkbox> aria="Acne"
+│   │   └── resetBtn <Button> "초기화"
+│   └── main <Column> flow=form
+│       ├── mainHdr <Header> flow=split
+│       │   ├── menuBtn <Button> aria="필터"
+│       │   ├── mainTitle <Text.h1> "Shop (12)"
+│       │   └── mainSort <Select> aria="정렬"
+│       └── pgrid <Grid> flow=form
+│           ├── pc-p1 <Section> flow=list em=raised
+│           │   ├── pi-p1 <Text.body>
+│           │   ├── pt-p1 <Text.strong> "Rustic Scarf"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p1 <Row> flow=cluster
+│           │   │   ├── pprice-p1 <Text.h3> "$1289"
+│           │   │   ├── porig-p1 <Text.small>
+│           │   │   └── pdisc-p1 <Badge>
+│           │   ├── pmeta-p1 <Row> flow=split
+│           │   │   ├── pbrand-p1 <Text.small> "Converse"
+│           │   │   └── prating-p1 <Text.small> "★ 4.1 · 930"
+│           │   ├── ptags-p1 <Row> flow=cluster
+│           │   │   ├── ptag-p1-0 <Badge>
+│           │   │   └── ptag-p1-1 <Badge>
+│           │   └── pcart-p1 <Button> aria="Rustic Scarf 담기" "장바구니 담기"
+│           ├── pc-p2 <Section> flow=list em=raised
+│           │   ├── pi-p2 <Text.body>
+│           │   ├── pt-p2 <Text.strong> "Recycled Boots"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p2 <Row> flow=cluster
+│           │   │   ├── pprice-p2 <Text.h3> "$394"
+│           │   │   ├── porig-p2 <Text.small>
+│           │   │   └── pdisc-p2 <Badge>
+│           │   ├── pmeta-p2 <Row> flow=split
+│           │   │   ├── pbrand-p2 <Text.small> "Church's"
+│           │   │   └── prating-p2 <Text.small> "★ 3.9 · 1,728"
+│           │   ├── ptags-p2 <Row> flow=cluster
+│           │   │   ├── ptag-p2-0 <Badge>
+│           │   │   └── ptag-p2-1 <Badge>
+│           │   └── pcart-p2 <Button> aria="Recycled Boots 담기" "장바구니 담기"
+│           ├── pc-p3 <Section> flow=list em=raised
+│           │   ├── pi-p3 <Text.body>
+│           │   ├── pt-p3 <Text.strong> "Tasty Beanie"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p3 <Row> flow=cluster
+│           │   │   ├── pprice-p3 <Text.h3> "$261"
+│           │   │   ├── porig-p3 <Text.small>
+│           │   │   └── pdisc-p3 <Badge>
+│           │   ├── pmeta-p3 <Row> flow=split
+│           │   │   ├── pbrand-p3 <Text.small> "Everlane"
+│           │   │   └── prating-p3 <Text.small> "★ 4.5 · 2,215"
+│           │   ├── ptags-p3 <Row> flow=cluster
+│           │   │   ├── ptag-p3-0 <Badge>
+│           │   │   └── ptag-p3-1 <Badge>
+│           │   └── pcart-p3 <Button> aria="Tasty Beanie 담기" "장바구니 담기"
+│           ├── pc-p4 <Section> flow=list em=raised
+│           │   ├── pi-p4 <Text.body>
+│           │   ├── pt-p4 <Text.strong> "Awesome Shirt"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p4 <Row> flow=cluster
+│           │   │   ├── pprice-p4 <Text.h3> "$810"
+│           │   │   ├── porig-p4 <Text.small>
+│           │   │   └── pdisc-p4 <Badge>
+│           │   ├── pmeta-p4 <Row> flow=split
+│           │   │   ├── pbrand-p4 <Text.small> "Burberry"
+│           │   │   └── prating-p4 <Text.small> "★ 4.6 · 1,757"
+│           │   ├── ptags-p4 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p4-0 <Badge>
+│           │   └── pcart-p4 <Button> aria="Awesome Shirt 담기" "장바구니 담기"
+│           ├── pc-p5 <Section> flow=list em=raised
+│           │   ├── pi-p5 <Text.body>
+│           │   ├── pt-p5 <Text.strong> "Generic Jacket"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p5 <Row> flow=cluster
+│           │   │   ├── pprice-p5 <Text.h3> "$770"
+│           │   │   ├── porig-p5 <Text.small>
+│           │   │   └── pdisc-p5 <Badge>
+│           │   ├── pmeta-p5 <Row> flow=split
+│           │   │   ├── pbrand-p5 <Text.small> "Everlane"
+│           │   │   └── prating-p5 <Text.small> "★ 3.8 · 2,364"
+│           │   ├── ptags-p5 <Row> flow=cluster
+│           │   │   ├── ptag-p5-0 <Badge>
+│           │   │   └── ptag-p5-1 <Badge>
+│           │   └── pcart-p5 <Button> aria="Generic Jacket 담기" "장바구니 담기"
+│           ├── pc-p6 <Section> flow=list em=raised
+│           │   ├── pi-p6 <Text.body>
+│           │   ├── pt-p6 <Text.strong> "Awesome Tee"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p6 <Row> flow=cluster
+│           │   │   ├── pprice-p6 <Text.h3> "$1798"
+│           │   │   ├── porig-p6 <Text.small>
+│           │   │   └── pdisc-p6 <Badge>
+│           │   ├── pmeta-p6 <Row> flow=split
+│           │   │   ├── pbrand-p6 <Text.small> "Margiela"
+│           │   │   └── prating-p6 <Text.small> "★ 4.8 · 1,363"
+│           │   ├── ptags-p6 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p6-0 <Badge>
+│           │   └── pcart-p6 <Button> aria="Awesome Tee 담기" "장바구니 담기"
+│           ├── pc-p7 <Section> flow=list em=raised
+│           │   ├── pi-p7 <Text.body>
+│           │   ├── pt-p7 <Text.strong> "Soft Sweater"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p7 <Row> flow=cluster
+│           │   │   ├── pprice-p7 <Text.h3> "$267"
+│           │   │   ├── porig-p7 <Text.small>
+│           │   │   └── pdisc-p7 <Badge>
+│           │   ├── pmeta-p7 <Row> flow=split
+│           │   │   ├── pbrand-p7 <Text.small> "Converse"
+│           │   │   └── prating-p7 <Text.small> "★ 4.3 · 2,333"
+│           │   ├── ptags-p7 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p7-0 <Badge>
+│           │   └── pcart-p7 <Button> aria="Soft Sweater 담기" "장바구니 담기"
+│           ├── pc-p8 <Section> flow=list em=raised
+│           │   ├── pi-p8 <Text.body>
+│           │   ├── pt-p8 <Text.strong> "Unbranded Scarf"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p8 <Row> flow=cluster
+│           │   │   ├── pprice-p8 <Text.h3> "$581"
+│           │   │   ├── porig-p8 <Text.small>
+│           │   │   └── pdisc-p8 <Badge>
+│           │   ├── pmeta-p8 <Row> flow=split
+│           │   │   ├── pbrand-p8 <Text.small> "Church's"
+│           │   │   └── prating-p8 <Text.small> "★ 4.6 · 956"
+│           │   ├── ptags-p8 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p8-0 <Badge>
+│           │   └── pcart-p8 <Button> aria="Unbranded Scarf 담기" "장바구니 담기"
+│           ├── pc-p9 <Section> flow=list em=raised
+│           │   ├── pi-p9 <Text.body>
+│           │   ├── pt-p9 <Text.strong> "Oriental Jeans"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p9 <Row> flow=cluster
+│           │   │   ├── pprice-p9 <Text.h3> "$1621"
+│           │   │   ├── porig-p9 <Text.small>
+│           │   │   └── pdisc-p9 <Badge>
+│           │   ├── pmeta-p9 <Row> flow=split
+│           │   │   ├── pbrand-p9 <Text.small> "Patagonia"
+│           │   │   └── prating-p9 <Text.small> "★ 3.8 · 1,387"
+│           │   ├── ptags-p9 <Row> flow=cluster
+│           │   │   ├── ptag-p9-0 <Badge>
+│           │   │   └── ptag-p9-1 <Badge>
+│           │   └── pcart-p9 <Button> aria="Oriental Jeans 담기" "장바구니 담기"
+│           ├── pc-p10 <Section> flow=list em=raised
+│           │   ├── pi-p10 <Text.body>
+│           │   ├── pt-p10 <Text.strong> "Refined Boots"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p10 <Row> flow=cluster
+│           │   │   ├── pprice-p10 <Text.h3> "$749"
+│           │   │   ├── porig-p10 <Text.small>
+│           │   │   └── pdisc-p10 <Badge>
+│           │   ├── pmeta-p10 <Row> flow=split
+│           │   │   ├── pbrand-p10 <Text.small> "Muji"
+│           │   │   └── prating-p10 <Text.small> "★ 4.6 · 1,178"
+│           │   ├── ptags-p10 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p10-0 <Badge>
+│           │   └── pcart-p10 <Button> aria="Refined Boots 담기" "장바구니 담기"
+│           ├── pc-p11 <Section> flow=list em=raised
+│           │   ├── pi-p11 <Text.body>
+│           │   ├── pt-p11 <Text.strong> "Licensed Jeans"  ⚠ strong used as section header — should be h3?
+│           │   ├── pprow-p11 <Row> flow=cluster
+│           │   │   ├── pprice-p11 <Text.h3> "$858"
+│           │   │   ├── porig-p11 <Text.small>
+│           │   │   └── pdisc-p11 <Badge>
+│           │   ├── pmeta-p11 <Row> flow=split
+│           │   │   ├── pbrand-p11 <Text.small> "Acne"
+│           │   │   └── prating-p11 <Text.small> "★ 4 · 1,718"
+│           │   ├── ptags-p11 <Row> flow=cluster  ⚠ single-child container — flatten?
+│           │   │   └── ptag-p11-0 <Badge>
+│           │   └── pcart-p11 <Button> aria="Licensed Jeans 담기" "장바구니 담기"
+│           └── pc-p12 <Section> flow=list em=raised
+│               ├── pi-p12 <Text.body>
+│               ├── pt-p12 <Text.strong> "Rustic Jacket"  ⚠ strong used as section header — should be h3?
+│               ├── pprow-p12 <Row> flow=cluster
+│               │   ├── pprice-p12 <Text.h3> "$702"
+│               │   ├── porig-p12 <Text.small>
+│               │   └── pdisc-p12 <Badge>
+│               ├── pmeta-p12 <Row> flow=split
+│               │   ├── pbrand-p12 <Text.small> "Burberry"
+│               │   └── prating-p12 <Text.small> "★ 4.6 · 2,105"
+│               ├── ptags-p12 <Row> flow=cluster
+│               │   ├── ptag-p12-0 <Badge>
+│               │   └── ptag-p12-1 <Badge>
+│               └── pcart-p12 <Button> aria="Rustic Jacket 담기" "장바구니 담기"
+└── menuPop <Popover>
+
+⚠ 21 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+    h3 · 필터
+        strong · 최대 가격: $2000
+        strong · 최소 별점
+        strong · 브랜드
+h1 · Shop (12)
+        strong · Rustic Scarf
+    h3 · $1289
+        strong · Recycled Boots
+    h3 · $394
+        strong · Tasty Beanie
+    h3 · $261
+        strong · Awesome Shirt
+    h3 · $810
+        strong · Generic Jacket
+    h3 · $770
+        strong · Awesome Tee
+    h3 · $1798
+        strong · Soft Sweater
+    h3 · $267
+        strong · Unbranded Scarf
+    h3 · $581
+        strong · Oriental Jeans
+    h3 · $1621
+        strong · Refined Boots
+    h3 · $749
+        strong · Licensed Jeans
+    h3 · $858
+        strong · Rustic Jacket
+    h3 · $702

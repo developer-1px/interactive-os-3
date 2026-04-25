@@ -1,5 +1,4 @@
-import { accent, border, css, fg, pad, radius } from '../../../fn/values'
-import { mix } from '../../../fn/palette'
+import { accent, border, css, fg, mix, pad, radius } from '../../../fn'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**

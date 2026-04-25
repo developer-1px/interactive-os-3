@@ -33,7 +33,7 @@ export function buildCrmPage(s: CrmState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Column', flow: 'form' } },
+      page: { id: 'page', data: { type: 'Column', flow: 'form', roledescription: 'crm-page', label: 'CRM' } },
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'split' } },
       title: { id: 'title', data: { type: 'Text', variant: 'h1', content: 'Contacts' } },
       hdrActions: { id: 'hdrActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '도구' } } },

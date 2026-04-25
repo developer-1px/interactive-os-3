@@ -1,0 +1,13 @@
+__root__
+└── topbar <Header> flow=split role=topbar
+    ├── title <Column> flow=list
+    │   ├── h1 <Text.h1> "대시보드"
+    │   └── sub <Text.muted> "교육 포털 운영 현황"
+    └── actions <Row> flow=cluster role=actions  ⚠ single-child container — flatten?
+        └── action <Button> "영상 등록"
+
+⚠ 1 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+h1 · 대시보드

@@ -1,0 +1,52 @@
+__root__
+└── page <Column> flow=form
+    ├── hdr <Header> flow=list
+    │   ├── title <Text.h1> "장르 커버리지 스윕"
+    │   └── lede <Text.body> "보편 FE 장르 8종을 현재 ds로 구현해 커버리지와 갭을 동시에 확인한다. 각 카드는 해당 장르 라우트로 이동한다."
+    └── grid <Grid> flow=form
+        ├── card-inbox <Section> em=raised
+        │   ├── blurb-inbox <Text.small> "좌 폴더 · 중앙 리스트 · 우 디테일 3열 split"
+        │   ├── state-inbox <Text.strong> "✅ 완료"  ⚠ strong used as section header — should be h3?
+        │   └── link-inbox <Button> "열기"
+        ├── card-chat <Section> em=raised
+        │   ├── blurb-chat <Text.small> "채널 트리 + 메시지 스트림 + composer"
+        │   ├── state-chat <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-chat <Button> "준비 중"
+        ├── card-shop <Section> em=raised
+        │   ├── blurb-shop <Text.small> "필터 사이드바 + 카드 그리드"
+        │   ├── state-shop <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-shop <Button> "준비 중"
+        ├── card-crm <Section> em=raised
+        │   ├── blurb-crm <Text.small> "대량 테이블 + bulk action + drawer"
+        │   ├── state-crm <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-crm <Button> "준비 중"
+        ├── card-editor <Section> em=raised
+        │   ├── blurb-editor <Text.small> "아웃라인 + 캔버스 + 속성 패널"
+        │   ├── state-editor <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-editor <Button> "준비 중"
+        ├── card-feed <Section> em=raised
+        │   ├── blurb-feed <Text.small> "타임라인 카드 + 반응/댓글"
+        │   ├── state-feed <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-feed <Button> "준비 중"
+        ├── card-analytics <Section> em=raised
+        │   ├── blurb-analytics <Text.small> "차트 확장 + 필터 + drilldown"
+        │   ├── state-analytics <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+        │   └── link-analytics <Button> "준비 중"
+        └── card-settings <Section> em=raised
+            ├── blurb-settings <Text.small> "섹션 내비 + 폼 + danger zone"
+            ├── state-settings <Text.strong> "⬜ 예정"  ⚠ strong used as section header — should be h3?
+            └── link-settings <Button> "준비 중"
+
+⚠ 8 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+h1 · 장르 커버리지 스윕
+        strong · ✅ 완료
+        strong · ⬜ 예정
+        strong · ⬜ 예정
+        strong · ⬜ 예정
+        strong · ⬜ 예정
+        strong · ⬜ 예정
+        strong · ⬜ 예정
+        strong · ⬜ 예정

@@ -48,7 +48,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
       mainTitle: { id: 'mainTitle', data: { type: 'Text', variant: 'h2', content: `# ${activeLabel(s.active)}` } },
       mainActions: { id: 'mainActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '채널 액션' } } },
-      ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label }, content: label } }])),
+      ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label } } }])),
       stream: { id: 'stream', data: { type: 'Column', flow: 'list', grow: true, emphasis: 'sunk' } },
       ...Object.fromEntries(msgEnts),
       composer: { id: 'composer', data: { type: 'Row', flow: 'cluster' } },

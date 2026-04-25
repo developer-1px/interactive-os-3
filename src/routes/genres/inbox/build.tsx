@@ -30,7 +30,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'inbox-page', label: 'Inbox' } },
       nav: { id: 'nav', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
       navFavTitle: { id: 'navFavTitle', data: { type: 'Text', variant: 'small', content: '즐겨찾기' } },
       folderList: { id: 'folderList', data: { type: 'Ui', component: 'Listbox', props: { data: s.folderNav.data, onEvent: s.folderNav.onEvent, 'aria-label': '폴더' } } },

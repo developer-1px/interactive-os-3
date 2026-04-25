@@ -1,0 +1,12 @@
+__root__
+└── topbar <Header> flow=split role=topbar
+    ├── title <Column> flow=list  ⚠ single-child container — flatten?
+    │   └── h1 <Text.h1> "영상 관리"
+    └── actions <Row> flow=cluster role=actions  ⚠ single-child container — flatten?
+        └── action <Button> "영상 등록"
+
+⚠ 2 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+h1 · 영상 관리

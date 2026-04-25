@@ -18,7 +18,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'editor-page', label: 'Editor' } },
       outline: { id: 'outline', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
       oHdr: { id: 'oHdr', data: { type: 'Text', variant: 'h3', content: '아웃라인' } },
       ...Object.fromEntries(outline.map((b) => [`ol-${b.id}`, { id: `ol-${b.id}`, data: {

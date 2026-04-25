@@ -1,0 +1,86 @@
+__root__
+├── page <Row> flow=list role=board-page label="Board"
+│   ├── side <Column> flow=list em=sunk role=board-nav
+│   │   ├── sideHdr <Text.h3> "DS Workspace"
+│   │   ├── sideMeta <Text.small> "12 members · 6 channels"
+│   │   ├── chHdr <Text.small> "채널"
+│   │   ├── ch-general <Button> aria="general 채널"
+│   │   ├── ch-ds <Button> aria="ds 채널"
+│   │   ├── ch-random <Button> aria="random 채널"
+│   │   ├── ch-design <Button> aria="design 채널"
+│   │   ├── ch-engineering <Button> aria="engineering 채널"
+│   │   └── ch-product <Button> aria="product 채널"
+│   └── main <Column> flow=list role=board-stream
+│       ├── mainHdr <Header> flow=split
+│       │   ├── menuBtn <Button> aria="채널"
+│       │   ├── mainTitle <Text.h2> "# ds"
+│       │   └── mainMeta <Text.small> "12 posts"
+│       └── stream <Column> flow=list role=board-posts
+│           ├── pr-ds-1 <Row> flow=cluster role=post
+│           │   ├── pa-ds-1 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-1 <Column> flow=list
+│           │       ├── ph-ds-1 <Text.strong>
+│           │       └── pb-ds-1 <Text.body> "Popover scrim 옵트인 잘 동작 — 큰 popover에 backdrop이 자연스럽게 깔립니다."
+│           ├── pr-ds-2 <Row> flow=cluster role=post
+│           │   ├── pa-ds-2 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-2 <Column> flow=list
+│           │       ├── ph-ds-2 <Text.strong>
+│           │       └── pb-ds-2 <Text.body> "GitHub Pages 배포 끝났습니다. 모바일 finder도 잘 보여요."
+│           ├── pr-ds-3 <Row> flow=cluster role=post
+│           │   ├── pa-ds-3 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-3 <Column> flow=list
+│           │       ├── ph-ds-3 <Text.strong>
+│           │       └── pb-ds-3 <Text.body> "square fn으로 icon-only 버튼 정리 — aspect-ratio 1:1 원샷."
+│           ├── pr-ds-4 <Row> flow=cluster role=post
+│           │   ├── pa-ds-4 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-4 <Column> flow=list
+│           │       ├── ph-ds-4 <Text.strong>
+│           │       └── pb-ds-4 <Text.body> "@here Liquid Glass 시도 — hover:none + pointer:coarse에서만 발동, 데스크톱은 그대로."
+│           ├── pr-ds-5 <Row> flow=cluster role=post-cont
+│           │   ├── pa-ds-5 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-5 <Column> flow=list
+│           │       ├── ph-ds-5 <Text.strong>
+│           │       └── pb-ds-5 <Text.body> "@here Liquid Glass 시도 — hover:none + pointer:coarse에서만 발동, 데스크톱은 그대로."
+│           ├── pr-ds-6 <Row> flow=cluster role=post
+│           │   ├── pa-ds-6 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-6 <Column> flow=list
+│           │       ├── ph-ds-6 <Text.strong>
+│           │       └── pb-ds-6 <Text.body> "control-h 통일 후에 form 정렬 깔끔해진 거 확인했습니다 👍"
+│           ├── pr-ds-7 <Row> flow=cluster role=post
+│           │   ├── pa-ds-7 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-7 <Column> flow=list
+│           │       ├── ph-ds-7 <Text.strong>
+│           │       └── pb-ds-7 <Text.body> "포스 업데이트했어요. 새 토큰 4개 (heart, share, more, message-circle) 추가."
+│           ├── pr-ds-8 <Row> flow=cluster role=post
+│           │   ├── pa-ds-8 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-8 <Column> flow=list
+│           │       ├── ph-ds-8 <Text.strong>
+│           │       └── pb-ds-8 <Text.body> "모바일 collapse-sides 패턴 잘 동작하네요. side·right가 깔끔하게 popover로 합쳐짐."
+│           ├── pr-ds-9 <Row> flow=cluster role=post
+│           │   ├── pa-ds-9 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-9 <Column> flow=list
+│           │       ├── ph-ds-9 <Text.strong>
+│           │       └── pb-ds-9 <Text.body> "@here Liquid Glass 시도 — hover:none + pointer:coarse에서만 발동, 데스크톱은 그대로."
+│           ├── pr-ds-10 <Row> flow=cluster role=post-cont
+│           │   ├── pa-ds-10 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-10 <Column> flow=list
+│           │       ├── ph-ds-10 <Text.strong>
+│           │       └── pb-ds-10 <Text.body> "모바일 collapse-sides 패턴 잘 동작하네요. side·right가 깔끔하게 popover로 합쳐짐."
+│           ├── pr-ds-11 <Row> flow=cluster role=post
+│           │   ├── pa-ds-11 <Text.strong>  ⚠ strong used as section header — should be h3?
+│           │   └── pc-ds-11 <Column> flow=list
+│           │       ├── ph-ds-11 <Text.strong>
+│           │       └── pb-ds-11 <Text.body> "GitHub Pages 배포 끝났습니다. 모바일 finder도 잘 보여요."
+│           └── pr-ds-12 <Row> flow=cluster role=post
+│               ├── pa-ds-12 <Text.strong>  ⚠ strong used as section header — should be h3?
+│               └── pc-ds-12 <Column> flow=list
+│                   ├── ph-ds-12 <Text.strong>
+│                   └── pb-ds-12 <Text.body> "GitHub Pages 배포 끝났습니다. 모바일 finder도 잘 보여요."
+└── menuPop <Popover>
+
+⚠ 12 hint(s) — review marked nodes above.
+
+
+=== HEADING OUTLINE ===
+    h3 · DS Workspace
+  h2 · # ds

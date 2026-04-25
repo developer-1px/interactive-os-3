@@ -13,7 +13,7 @@ export function buildSettingsPage(s: SettingsState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'settings-page', label: 'Settings' } },
       nav: { id: 'nav', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
       navTitle: { id: 'navTitle', data: { type: 'Text', variant: 'h3', content: '설정' } },
       ...Object.fromEntries(SECTIONS.map(([id, label]) => [`nav-${id}`, { id: `nav-${id}`, data: {
