@@ -1,4 +1,4 @@
-import { css, dim, fg, icon, microLabel, pad, radius, status, surface } from '../../fn'
+import { css, dim, fg, icon, microLabel, mix, pad, radius, status, surface } from '../../fn'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
@@ -477,6 +477,138 @@ export const panesCss = css`
   article[aria-roledescription="catalog-card"] > footer {
     margin: 0; color: ${dim(55)}; font-size: var(--ds-text-xs);
     border-top: 1px solid var(--ds-border); padding-top: ${pad(1.5)};
+  }
+
+  /* Atlas — 카드는 컨텐츠. 모바일 퍼스트(1열, 안전 패딩) → 데스크톱은 동일 카드 DOM의 다열 reflow.
+     "shell·control은 데스크톱·모바일 별도 구현" 원칙은 header/preset switcher에만 적용. */
+  main[aria-roledescription="atlas-app"] {
+    display: flex; flex-direction: column;
+    min-block-size: 100svh;
+    overflow-x: hidden;
+  }
+
+  main[aria-roledescription="atlas-app"] > header {
+    display: flex; flex-wrap: wrap;
+    align-items: center; gap: ${pad(2)} ${pad(3)};
+    padding: ${pad(3)} max(${pad(3)}, env(safe-area-inset-left));
+    border-block-end: 1px solid var(--ds-border);
+    position: sticky; top: 0; z-index: 1;
+    background: var(--ds-bg);
+  }
+  main[aria-roledescription="atlas-app"] > header > h1 {
+    margin: 0; font-size: var(--ds-text-lg); font-weight: 700;
+  }
+  main[aria-roledescription="atlas-app"] > header > p {
+    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-sm);
+    inline-size: 100%; order: 99;
+  }
+  main[aria-roledescription="atlas-app"] > header > [data-roledescription="preset-switcher"] {
+    margin-inline-start: auto;
+    display: inline-flex; align-items: center; gap: ${pad(1)};
+    font-size: var(--ds-text-sm);
+  }
+  main[aria-roledescription="atlas-app"] > header select {
+    padding: ${pad(0.5)} ${pad(1.5)};
+    border-radius: ${radius('sm')};
+    border: 1px solid var(--ds-border);
+    background: var(--ds-bg);
+    font-size: var(--ds-text-sm);
+  }
+  /* 데스크톱: subtitle을 헤더 인라인으로 복귀 */
+  @media (min-width: 720px) {
+    main[aria-roledescription="atlas-app"] > header > p {
+      inline-size: auto; order: 0;
+    }
+  }
+
+  main[aria-roledescription="atlas-app"] > section {
+    padding: ${pad(3)} max(${pad(3)}, env(safe-area-inset-left)) ${pad(4)} max(${pad(3)}, env(safe-area-inset-right));
+    display: flex; flex-direction: column; gap: ${pad(4)};
+  }
+  main[aria-roledescription="atlas-app"] > section + section {
+    border-block-start: 1px solid var(--ds-border);
+  }
+  main[aria-roledescription="atlas-app"] > section > h2 {
+    margin: 0; font-size: var(--ds-text-md); font-weight: 700;
+  }
+  main[aria-roledescription="atlas-app"] > section > h2 > small {
+    color: ${dim(55)}; font-size: .85em; font-weight: 500;
+  }
+
+  section[aria-roledescription="atlas-fn-group"] {
+    display: flex; flex-direction: column; gap: ${pad(2)};
+  }
+  section[aria-roledescription="atlas-fn-group"] > h3 {
+    ${microLabel()}
+    margin: 0;
+  }
+
+  /* 카드 grid — 모바일 1열 / 480+ 2열 / 720+ 자동 채움 (최소 280px) */
+  [aria-roledescription="atlas-card-grid"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: ${pad(2)};
+  }
+  @media (min-width: 480px) {
+    [aria-roledescription="atlas-card-grid"] {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    }
+  }
+
+  /* 카드 — 데스크톱과 모바일에서 동일 시각, 패딩만 약간 ↓ on narrow */
+  article[aria-roledescription="atlas-card"] {
+    ${surface(1)}
+    border: 1px solid var(--ds-border);
+    border-radius: ${radius('md')};
+    padding: ${pad(2)};
+    display: flex; flex-direction: column; gap: ${pad(1.5)};
+    min-inline-size: 0;
+  }
+  article[aria-roledescription="atlas-card"] > header {
+    display: flex; align-items: center; gap: ${pad(1)};
+    min-inline-size: 0;
+  }
+  article[aria-roledescription="atlas-card"] [data-role="title"] {
+    font-size: var(--ds-text-sm); font-weight: 600;
+    overflow-wrap: anywhere; min-inline-size: 0;
+  }
+  article[aria-roledescription="atlas-card"] [aria-roledescription="atlas-usage"] {
+    margin-inline-start: auto;
+    font-size: var(--ds-text-xs); font-weight: 600;
+    padding: ${pad(0.25)} ${pad(0.75)};
+    border-radius: ${radius('pill')};
+    background: color-mix(in oklab, var(--ds-accent) 14%, transparent);
+    color: var(--ds-accent);
+    flex: none;
+  }
+  article[aria-roledescription="atlas-card"] [aria-roledescription="atlas-usage"][data-dead="true"] {
+    background: color-mix(in oklab, var(--ds-danger) 20%, transparent);
+    color: var(--ds-danger);
+  }
+  figure[aria-roledescription="atlas-demo"] {
+    margin: 0;
+    min-block-size: 48px;
+    padding: ${pad(1)};
+    border-radius: ${radius('sm')};
+    background: ${mix('Canvas', 97, 'CanvasText')};
+    display: flex; align-items: center; justify-content: center;
+  }
+  article[aria-roledescription="atlas-card"] > p {
+    margin: 0; font-size: var(--ds-text-xs);
+    color: ${dim(55)}; line-height: 1.5;
+  }
+  article[aria-roledescription="atlas-card"] [data-role="signature"] {
+    font-size: var(--ds-text-xs); color: ${dim(55)};
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow-wrap: anywhere;
+  }
+  article[aria-roledescription="atlas-card"] details > summary {
+    font-size: var(--ds-text-xs); color: ${dim(55)}; cursor: pointer;
+  }
+  ul[aria-roledescription="atlas-call-sites"] {
+    margin: ${pad(0.75)} 0 0; padding: 0 0 0 ${pad(2)};
+    font-size: var(--ds-text-xs); color: ${dim(55)};
+    max-block-size: 160px; overflow: auto;
   }
 
   /* Markdown viewer — 데스크톱은 중앙 정렬 + 여백, 모바일은 폭 100% + safe-area */

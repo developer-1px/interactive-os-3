@@ -30,32 +30,27 @@ export function Atlas() {
 
   return (
     <main aria-roledescription="atlas-app" aria-label="Atlas">
-      <header style={{ padding: '16px 24px', borderBottom: '1px solid var(--ds-border)', display: 'flex', alignItems: 'center', gap: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 'var(--ds-text-lg)' }}>Atlas</h1>
-        <span style={{ color: 'var(--ds-muted)', fontSize: 'var(--ds-text-sm)' }}>
-          fn/ 레이어가 메타-DS인지 시각으로 판정
-        </span>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label htmlFor="preset" style={{ fontSize: 'var(--ds-text-sm)' }}>Preset</label>
+      <header>
+        <h1>Atlas</h1>
+        <p>fn/ 레이어가 메타-DS인지 시각으로 판정</p>
+        <div data-roledescription="preset-switcher">
+          <label htmlFor="preset">Preset</label>
           <select
             id="preset"
             value={presetId}
             onChange={(e) => setPresetId(e.target.value)}
-            style={{ padding: '4px 8px', borderRadius: 'var(--ds-radius-sm)' }}
           >
             {presets.map((p) => <option key={p.id} value={p.id}>{p.id}</option>)}
           </select>
         </div>
       </header>
 
-      <section aria-labelledby="cards" style={{ padding: 24 }}>
-        <h2 id="cards" style={{ fontSize: 'var(--ds-text-md)', margin: '0 0 16px' }}>
-          fn exports <span style={{ color: 'var(--ds-muted)' }}>({exports.length})</span>
-        </h2>
+      <section aria-labelledby="cards">
+        <h2 id="cards">fn exports <small>({exports.length})</small></h2>
         {Object.entries(byFile).map(([file, list]) => (
-          <section key={file} aria-labelledby={`f-${file}`} style={{ marginBottom: 32 }}>
-            <h3 id={`f-${file}`} style={microLabelInline}>{file.replace('/src/ds/fn/', '')}</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12, marginTop: 8 }}>
+          <section key={file} aria-labelledby={`f-${file}`} aria-roledescription="atlas-fn-group">
+            <h3 id={`f-${file}`}>{file.replace('/src/ds/fn/', '')}</h3>
+            <div aria-roledescription="atlas-card-grid">
               {list.map((fn) => (
                 <Card key={fn.name} name={fn.name} doc={fn.doc} signature={fn.signature} sites={callSites[fn.name] ?? []}>
                   {renderDemo(fn.name)}
@@ -66,13 +61,9 @@ export function Atlas() {
         ))}
       </section>
 
-      <section aria-labelledby="leaks" style={{ padding: 24, borderTop: '1px solid var(--ds-border)' }}>
-        <h2 id="leaks" style={{ fontSize: 'var(--ds-text-md)', margin: '0 0 8px' }}>
-          Leak Report <span style={{ color: 'var(--ds-muted)' }}>({leaks.length})</span>
-        </h2>
-        <p style={{ color: 'var(--ds-muted)', fontSize: 'var(--ds-text-sm)', margin: '0 0 12px' }}>
-          style/widgets/** 에서 fn/ 을 거치지 않은 리터럴·직접 var 참조. 0에 가까울수록 메타-DS.
-        </p>
+      <section aria-labelledby="leaks" aria-roledescription="atlas-leaks">
+        <h2 id="leaks">Leak Report <small>({leaks.length})</small></h2>
+        <p>style/widgets/** 에서 fn/ 을 거치지 않은 리터럴·직접 var 참조. 0에 가까울수록 메타-DS.</p>
         <LeakTable leaks={leaks} />
       </section>
     </main>
@@ -93,60 +84,25 @@ function Card({ name, doc, signature, sites, children }: {
 }) {
   const dead = sites.length === 0
   return (
-    <article
-      aria-label={name}
-      style={{
-        border: '1px solid var(--ds-border)',
-        borderRadius: 'var(--ds-radius-md)',
-        padding: 12,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-        background: 'var(--ds-bg)',
-      }}
-    >
-      <header style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <code style={{ fontSize: 'var(--ds-text-sm)', fontWeight: 600 }}>{name}</code>
+    <article aria-roledescription="atlas-card" aria-label={name}>
+      <header>
+        <code data-role="title">{name}</code>
         <span
+          aria-roledescription="atlas-usage"
           aria-label={`${sites.length} call sites`}
           title={sites.length ? sites.slice(0, 10).map((s) => `${s.file}:${s.line}`).join('\n') : '호출처 없음 — 죽은 조립식 가능성'}
-          style={{
-            marginLeft: 'auto',
-            fontSize: 'var(--ds-text-xs)',
-            padding: '2px 6px',
-            borderRadius: 'var(--ds-radius-pill)',
-            background: dead
-              ? 'color-mix(in oklab, var(--ds-danger) 20%, transparent)'
-              : 'color-mix(in oklab, var(--ds-accent) 14%, transparent)',
-            color: dead ? 'var(--ds-danger)' : 'var(--ds-accent)',
-            fontWeight: 600,
-          }}
+          data-dead={dead}
         >
           ×{sites.length}
         </span>
       </header>
-      <div
-        aria-label="demo"
-        style={{
-          minHeight: 48,
-          padding: 8,
-          borderRadius: 'var(--ds-radius-sm)',
-          background: 'color-mix(in oklab, CanvasText 3%, Canvas)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {children}
-      </div>
-      {doc && <p style={{ margin: 0, fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)', lineHeight: 1.4 }}>{doc}</p>}
-      <code style={{ fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)', fontFamily: 'var(--ds-font-mono)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{signature}</code>
+      <figure aria-roledescription="atlas-demo">{children}</figure>
+      {doc && <p>{doc}</p>}
+      <code data-role="signature">{signature}</code>
       {sites.length > 0 && (
         <details>
-          <summary style={{ fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)', cursor: 'pointer' }}>
-            호출처 {sites.length}
-          </summary>
-          <ul style={{ margin: '6px 0 0', padding: '0 0 0 16px', fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)', maxHeight: 160, overflow: 'auto' }}>
+          <summary>호출처 {sites.length}</summary>
+          <ul aria-roledescription="atlas-call-sites">
             {sites.slice(0, 40).map((s, i) => (
               <li key={i}><code>{s.file.replace('/src/ds/', '')}:{s.line}</code></li>
             ))}
