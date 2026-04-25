@@ -123,25 +123,28 @@ function SmartList({
 
 /** FilePager — 같은 폴더의 파일 형제들을 vertical scroll-snap으로 쌓고
  *  진입 파일 위치로 자동 스크롤. 사용자 스냅 시 URL 동기화 (IntersectionObserver).
- *  외부 path 변경 시(헤더 뒤로 갔다 다시 들어옴 등)에만 scrollIntoView 재실행. */
+ *  외부 path 변경 시(헤더 뒤로 갔다 다시 들어옴 등)에만 scrollIntoView 재실행.
+ *  윈도잉 — 현재 위치 ± WINDOW만 실제 Preview, 나머지는 스켈레톤(snap 유지). */
+const PAGER_WINDOW = 3
+
 function FilePager({
   siblings, currentPath, onNavigate,
 }: { siblings: FsNode[]; currentPath: string; onNavigate: (p: string) => void }) {
   const rootRef = useRef<HTMLElement | null>(null)
-  // observer가 emit한 navigate인지 외부 변경인지 구분 — 같으면 scrollIntoView skip.
   const lastEmittedRef = useRef<string | null>(null)
+  const currentIndex = useMemo(
+    () => siblings.findIndex((n) => n.path === currentPath),
+    [siblings, currentPath],
+  )
 
-  // 외부 path 변경에만 scroll. observer가 방금 보낸 값과 같으면 skip.
   useEffect(() => {
     if (lastEmittedRef.current === currentPath) return
     const root = rootRef.current
     if (!root) return
-    const sel = `[data-path="${CSS.escape(currentPath)}"]`
-    const el = root.querySelector<HTMLElement>(sel)
+    const el = root.querySelector<HTMLElement>(`[data-path="${CSS.escape(currentPath)}"]`)
     el?.scrollIntoView({ block: 'start', behavior: 'auto' })
   }, [currentPath])
 
-  // 보이는 항목 → URL 동기화
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
@@ -166,12 +169,36 @@ function FilePager({
   if (siblings.length === 0) return <Empty note="형제 파일 없음" />
   return (
     <section aria-roledescription="finder-pager" ref={rootRef as never}>
-      {siblings.map((n) => (
-        <article key={n.path} data-path={n.path} aria-current={n.path === currentPath ? 'page' : undefined}>
-          <Preview node={n} />
-        </article>
-      ))}
+      {siblings.map((n, i) => {
+        const within = currentIndex >= 0 && Math.abs(i - currentIndex) <= PAGER_WINDOW
+        return (
+          <article
+            key={n.path}
+            data-path={n.path}
+            aria-current={n.path === currentPath ? 'page' : undefined}
+          >
+            {within
+              ? <Preview node={n} />
+              : <PagerStub node={n} />}
+          </article>
+        )
+      })}
     </section>
+  )
+}
+
+/** Pager skeleton — 윈도우 밖 형제. Preview 마운트 비용 없이 snap target만 유지. */
+function PagerStub({ node }: { node: FsNode }) {
+  return (
+    <aside aria-roledescription="preview" aria-hidden="true">
+      <header>
+        <figure data-icon={extToIcon(node.ext)} aria-hidden />
+        <div>
+          <h2>{node.name}</h2>
+          <p>{(node.ext ?? 'file').toUpperCase()}</p>
+        </div>
+      </header>
+    </aside>
   )
 }
 
