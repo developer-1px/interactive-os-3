@@ -312,6 +312,28 @@ export const panesCss = css`
     color: ${dim(55)};
     padding: ${pad(8)};
   }
+  /* FilePager — vertical scroll-snap pager. iOS Photos 식 swipe-between-siblings.
+     finder-pager 자체가 finder-mobile > section. 스크롤은 자기 안에서만. */
+  main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-pager"] {
+    padding: 0; gap: 0;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior: contain;
+  }
+  section[aria-roledescription="finder-pager"] > article {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    block-size: 100%;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  section[aria-roledescription="finder-pager"] > article > aside[aria-roledescription="preview"] {
+    flex: 1 1 auto;
+    padding: ${pad(3)};
+  }
+  /* aria-current="page" — 현재 형제임을 시각으로 약하게 표식 (헤어라인) */
+  section[aria-roledescription="finder-pager"] > article[aria-current="page"] {
+    box-shadow: inset 0 2px 0 ${mix('var(--ds-accent)', 60, 'transparent')};
+  }
 
   /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]
      안에 든 popover에 한해 우하단 anchor로 강제. 그 외 popover는 overlay.ts 기본 centered. */

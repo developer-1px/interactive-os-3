@@ -5,9 +5,10 @@
  *  - path '/' (Home)         → 위치/즐겨찾기/최근 한 면
  *  - smart:*                 → 최근 그룹 항목 리스트
  *  - dir                     → 자식 리스트
- *  - file                    → 풀스크린 Preview
+ *  - file                    → 형제 파일 vertical scroll-snap pager
+ *                              (iOS Photos 식 — 진입 후 위/아래 스와이프로 이웃 이동)
  */
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Listbox, fromTree, navigateOnActivate, useControlState, type Event } from '../../ds'
 import { smartGroupOf, smartItems, walk } from './data'
 import { extToIcon, type FsNode, type SmartGroupItem } from './types'
@@ -19,7 +20,12 @@ export function FinderMobile({ path, onNavigate }: { path: string; onNavigate: (
   const chain = smart ? [] : walk(path)
   const current = smart ? null : chain[chain.length - 1] ?? null
   const isFile = current?.type === 'file'
-  const parent = smart ? '/' : chain[chain.length - 2]?.path ?? null
+  const parentNode = smart ? null : chain[chain.length - 2] ?? null
+  const parent = smart ? '/' : parentNode?.path ?? null
+  const fileSiblings = useMemo(
+    () => parentNode?.children?.filter((n) => n.type === 'file') ?? [],
+    [parentNode],
+  )
 
   const title = useMemo(() => {
     if (path === '/') return '브라우즈'
@@ -40,7 +46,7 @@ export function FinderMobile({ path, onNavigate }: { path: string; onNavigate: (
         : smart
           ? <SmartList group={smart} items={smartItems(smart.id)} onNavigate={onNavigate} />
           : isFile && current
-            ? <FullPreview node={current} />
+            ? <FilePager siblings={fileSiblings} currentPath={current.path} onNavigate={onNavigate} />
             : current?.type === 'dir'
               ? <DirList node={current} onNavigate={onNavigate} />
               : <Empty />}
@@ -115,10 +121,56 @@ function SmartList({
   )
 }
 
-function FullPreview({ node }: { node: FsNode }) {
+/** FilePager — 같은 폴더의 파일 형제들을 vertical scroll-snap으로 쌓고
+ *  진입 파일 위치로 자동 스크롤. 사용자 스냅 시 URL 동기화 (IntersectionObserver).
+ *  외부 path 변경 시(헤더 뒤로 갔다 다시 들어옴 등)에만 scrollIntoView 재실행. */
+function FilePager({
+  siblings, currentPath, onNavigate,
+}: { siblings: FsNode[]; currentPath: string; onNavigate: (p: string) => void }) {
+  const rootRef = useRef<HTMLElement | null>(null)
+  // observer가 emit한 navigate인지 외부 변경인지 구분 — 같으면 scrollIntoView skip.
+  const lastEmittedRef = useRef<string | null>(null)
+
+  // 외부 path 변경에만 scroll. observer가 방금 보낸 값과 같으면 skip.
+  useEffect(() => {
+    if (lastEmittedRef.current === currentPath) return
+    const root = rootRef.current
+    if (!root) return
+    const sel = `[data-path="${CSS.escape(currentPath)}"]`
+    const el = root.querySelector<HTMLElement>(sel)
+    el?.scrollIntoView({ block: 'start', behavior: 'auto' })
+  }, [currentPath])
+
+  // 보이는 항목 → URL 동기화
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (!visible) return
+        const p = (visible.target as HTMLElement).dataset.path
+        if (p && p !== currentPath) {
+          lastEmittedRef.current = p
+          onNavigate(p)
+        }
+      },
+      { root, threshold: [0.5, 0.75] },
+    )
+    root.querySelectorAll<HTMLElement>('[data-path]').forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [siblings, currentPath, onNavigate])
+
+  if (siblings.length === 0) return <Empty note="형제 파일 없음" />
   return (
-    <section aria-roledescription="finder-file">
-      <Preview node={node} />
+    <section aria-roledescription="finder-pager" ref={rootRef as never}>
+      {siblings.map((n) => (
+        <article key={n.path} data-path={n.path} aria-current={n.path === currentPath ? 'page' : undefined}>
+          <Preview node={n} />
+        </article>
+      ))}
     </section>
   )
 }
