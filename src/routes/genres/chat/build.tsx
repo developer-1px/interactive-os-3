@@ -41,7 +41,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
           </section>
         </>
       ) } },
-      side: { id: 'side', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
+      side: { id: 'side', data: { type: 'Column', flow: 'list', width: 240 } },
       pubList: { id: 'pubList', data: { type: 'Ui', component: 'Listbox', props: { data: s.pubNav.data, onEvent: s.pubNav.onEvent, 'aria-label': '채널' } } },
       dmList: { id: 'dmList', data: { type: 'Ui', component: 'Listbox', props: { data: s.dmNav.data, onEvent: s.dmNav.onEvent, 'aria-label': 'DM' } } },
       main: { id: 'main', data: { type: 'Column', flow: 'list', grow: true } },
@@ -51,14 +51,14 @@ export function buildChatPage(s: ChatState): NormalizedData {
       ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'data-icon': icon, 'aria-label': label }, content: label } }])),
       stream: { id: 'stream', data: { type: 'Column', flow: 'list', grow: true, emphasis: 'sunk' } },
       ...Object.fromEntries(msgEnts),
-      composer: { id: 'composer', data: { type: 'Row', flow: 'cluster', emphasis: 'raised' } },
+      composer: { id: 'composer', data: { type: 'Row', flow: 'cluster' } },
       composerIn: { id: 'composerIn', data: { type: 'Ui', component: 'Input', props: {
         placeholder: `#${activeLabel(s.active)} 에 메시지…`, 'aria-label': '메시지', value: s.draft,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setDraft(e.target.value),
         onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') s.send() },
       }, grow: true } },
       composerSend: { id: 'composerSend', data: { type: 'Ui', component: 'Button', props: { onClick: s.send }, content: '전송' } },
-      right: { id: 'right', data: { type: 'Column', flow: 'list', emphasis: 'raised', width: 260 } },
+      right: { id: 'right', data: { type: 'Column', flow: 'list', width: 260 } },
       ...Object.fromEntries(MEMBERS.flatMap((m) => [
         [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
         [`mdot-${m.id}`, { id: `mdot-${m.id}`, data: { type: 'Ui', component: 'LegendDot', props: { tone: statusTone[m.status], 'aria-hidden': true } } }],

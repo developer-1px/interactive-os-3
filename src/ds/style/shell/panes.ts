@@ -499,7 +499,6 @@ export const panesCss = css`
   [aria-roledescription="message-other"] {
     align-self: flex-start;
     background: ${fg(2)};
-    border: var(--ds-hairline) solid var(--ds-border);
     border-end-start-radius: ${radius('sm')};
   }
   [aria-roledescription="message-me"] {
