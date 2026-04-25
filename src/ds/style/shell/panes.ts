@@ -1,4 +1,4 @@
-import { css, dim, fg, icon, microLabel, mix, pad, radius, status, surface, tint } from '../../fn'
+import { css, dim, fg, icon, microLabel, mix, pad, radius, status, grouping, tint } from '../../fn'
 import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
@@ -59,7 +59,7 @@ export const panesCss = css`
   main[aria-roledescription="ds-matrix"] > header h1 { margin: 0; }
   main[aria-roledescription="ds-matrix"] > header p { opacity: .6; margin: ${pad(1)} 0 0; }
   figure[aria-roledescription="matrix-cell"] {
-    ${surface(1)}
+    ${grouping(1)}
     margin: 0;
     border: var(--ds-hairline) solid var(--ds-border); border-radius: ${pad(1.5)};
     padding: ${pad(2)};
@@ -76,71 +76,8 @@ export const panesCss = css`
     white-space: pre-wrap; word-break: break-word;
   }
 
-  /* ── Sidebar (2026) ───────────────────────────────────────────────
-     - 하드 divider 대신 gray-1 틴트 배경으로 본문과 분리
-     - header / sections / footer 3단 수직 flow, footer는 하단 고정
-     - section 헤더는 uppercase micro-label
-     - Listbox 내부 padding 제거 — sidebar 외곽이 padding을 제공
-     - option은 radius + subtle hover (global selected/hover가 이미 tint 제공)
-     - scrollbar 얇게, 필요 시만 노출
-     - Outer-layout 정책: sidebar는 *invariant* widget(데스크톱에서 항상 같은 폭)이라
-       widget-level에서 width 소유. 모바일 드로어 변형은 각 app이 부모 셸 셀렉터로
-       override (catalog-app/edu-portal-admin-app의 [data-nav-open] 규칙 참조). */
-  nav[aria-roledescription="sidebar"] {
-    width: var(--ds-sidebar-w); flex: none;
-    overflow-y: auto; overflow-x: hidden;
-    background: ${fg(1)};
-    display: flex; flex-direction: column;
-    padding: ${pad(3)} ${pad(2)};
-    gap: ${pad(3)};
-    scrollbar-width: thin;
-  }
-  nav[aria-roledescription="sidebar"] > header {
-    padding: ${pad(1.5)} ${pad(2)};
-    display: grid; gap: ${pad(0.25)};
-  }
-  nav[aria-roledescription="sidebar"] > header > strong {
-    font-size: var(--ds-text-md);
-    font-weight: 700;
-    letter-spacing: var(--ds-tracking);
-  }
-  nav[aria-roledescription="sidebar"] > header > small {
-    font-size: var(--ds-text-xs);
-    color: ${dim(55)};
-  }
-  nav[aria-roledescription="sidebar"] > section {
-    display: flex; flex-direction: column; gap: ${pad(0.5)};
-  }
-  nav[aria-roledescription="sidebar"] > section > h3 {
-    ${microLabel()}
-    margin: 0 0 ${pad(1)};
-    padding: 0 ${pad(2)};
-  }
-  /* sidebar 안의 Listbox는 컨테이너 padding/grid를 리셋 — option만 밀도 있게 쌓임 */
-  nav[aria-roledescription="sidebar"] [role="listbox"] {
-    padding: 0;
-    gap: ${pad(0.25)};
-    row-gap: ${pad(0.25)};
-  }
-  nav[aria-roledescription="sidebar"] [role="option"] {
-    border-radius: ${radius('md')};
-    padding: ${pad(1.25)} ${pad(2)};
-  }
-  nav[aria-roledescription="sidebar"] > footer {
-    margin-top: auto;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: ${pad(2)};
-    padding: ${pad(2)};
-    border-radius: ${radius('md')};
-    background: ${fg(2)};
-    font-size: var(--ds-text-sm);
-  }
-  nav[aria-roledescription="sidebar"] > footer > small {
-    color: ${dim(55)};
-    font-size: var(--ds-text-xs);
-  }
+  /* sidebar surface 는 widgets/composite/sidebar.ts 가 owner — 여기서 다시 정의하지 않는다.
+     모바일 드로어 변형은 아래 catalog-app/edu-portal-admin-app 의 [data-nav-open] 규칙으로 유지. */
 
   /* Finder panes
      - columns: 내용 자연 폭만 사용. 넘치면 자체 가로 스크롤.
@@ -249,7 +186,7 @@ export const panesCss = css`
     max-width: 100%; height: auto;
   }
   aside[aria-roledescription="preview"] > figure {
-    ${surface(1)}
+    ${grouping(1)}
     width: 100%; aspect-ratio: 4/3;
     border-radius: ${pad(2)};
     background: color-mix(in oklch, Canvas 92%, CanvasText 8%);
@@ -321,14 +258,8 @@ export const panesCss = css`
     ${microLabel()}
     margin: 0;
   }
-  /* 모바일 리스트 — tap 친화. 행 높이 ↑, icon ↑. */
   main[aria-roledescription="finder-mobile"] [role="listbox"] {
     padding: 0; gap: ${pad(0.5)};
-  }
-  main[aria-roledescription="finder-mobile"] [role="option"] {
-    padding: ${pad(2)} ${pad(2.5)};
-    font-size: var(--ds-text-md);
-    border-radius: ${radius('md')};
   }
   section[aria-roledescription="finder-empty"] {
     display: grid; place-items: center;
@@ -423,7 +354,7 @@ export const panesCss = css`
     width: 3.5rem; height: 3.5rem;
     border-radius: 50%;
     border: var(--ds-hairline) solid var(--ds-border);
-    ${surface(3)}
+    ${grouping(3)}
     color: inherit;
     font-size: 1.5rem; line-height: 1;
     cursor: pointer;
@@ -436,6 +367,20 @@ export const panesCss = css`
   }
   aside[aria-roledescription="floating-nav"] > button:hover { transform: scale(1.05); }
   aside[aria-roledescription="floating-nav"] > button:active { transform: scale(0.96); }
+  /* mobile glass override — 진한 frosted + 선명 ring + 짧은 drop. desktop 외형은 위 base 가 유지. */
+  @media (hover: none) and (pointer: coarse) {
+    aside[aria-roledescription="floating-nav"] > button {
+      background: color-mix(in oklch, Canvas 60%, transparent);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+              backdrop-filter: blur(24px) saturate(180%);
+      border: var(--ds-hairline) solid ${tint('CanvasText', 10)};
+      box-shadow:
+        inset 0 1px 0 ${tint('CanvasText', 8)},
+        0 0 0 1px ${tint('CanvasText', 4)},
+        0 2px 4px ${tint('CanvasText', 10)},
+        0 8px 16px ${tint('CanvasText', 8)};
+    }
+  }
   /* floating-nav 안에서 popover만 우하단 anchor로 띄움 */
   aside[aria-roledescription="floating-nav"] [popover][aria-roledescription="popover"] {
     inset: auto;
@@ -765,6 +710,18 @@ export const panesCss = css`
     }
   }
 
+  /* catalog-page — definePage 단일 화면. sidebar | workspace 좌우 분리 스크롤.
+     page 자체는 viewport 높이로 잠그고 overflow:hidden, sidebar는 widget이 owner
+     (overflow-y:auto 보유), Main(workspace)만 여기서 자체 스크롤로 풀어준다. */
+  [aria-roledescription="catalog-page"] {
+    height: 100dvh; min-height: 0; overflow: hidden;
+    padding: 0; gap: 0;
+  }
+  [aria-roledescription="catalog-page"] > main {
+    overflow-y: auto; overflow-x: hidden;
+    min-block-size: 0;
+  }
+
   /* Catalog — ds ui zone-first 감사 대시보드. edu-portal-admin 과 동일한 셸 구조,
      content 영역은 zone 섹션이 위계로 쌓인다 (h2 zone, h3 component card). */
   main[aria-roledescription="catalog-app"] {
@@ -816,11 +773,14 @@ export const panesCss = css`
   }
 
   article[aria-roledescription="catalog-card"] {
-    ${surface(1)}
+    ${grouping(1)}
     margin: 0;
     border: var(--ds-hairline) solid var(--ds-border); border-radius: ${pad(2)};
     padding: ${pad(3)};
     display: flex; flex-direction: column; gap: ${pad(2)};
+    cursor: pointer;
+    transition: border-color var(--ds-dur-fast) var(--ds-ease-out),
+                box-shadow var(--ds-dur-fast) var(--ds-ease-out);
   }
   article[aria-roledescription="catalog-card"] > header {
     display: flex; align-items: baseline; gap: ${pad(1.5)}; flex-wrap: wrap;
@@ -944,12 +904,7 @@ export const panesCss = css`
   aside[aria-roledescription="preview"] [data-pass="true"]  { color: ${status('success')}; }
   aside[aria-roledescription="preview"] [data-pass="false"] { color: ${status('danger')}; }
 
-  /* 카드 클릭 어포던스 + 선택 표식 */
-  article[aria-roledescription="catalog-card"] {
-    cursor: pointer;
-    transition: border-color var(--ds-dur-fast) var(--ds-ease-out),
-                box-shadow var(--ds-dur-fast) var(--ds-ease-out);
-  }
+  /* 카드 클릭 어포던스 + 선택 표식 (base 는 위 article[catalog-card] 블록에 통합) */
   article[aria-roledescription="catalog-card"]:hover {
     border-color: color-mix(in oklch, var(--ds-accent) 40%, var(--ds-border));
   }
@@ -1132,7 +1087,7 @@ export const panesCss = css`
 
   /* 카드 — 데스크톱과 모바일에서 동일 시각, 패딩만 약간 ↓ on narrow */
   article[aria-roledescription="atlas-card"] {
-    ${surface(1)}
+    ${grouping(1)}
     border: var(--ds-hairline) solid var(--ds-border);
     border-radius: ${radius('md')};
     padding: ${pad(2)};

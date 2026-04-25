@@ -1,4 +1,4 @@
-import { accent, css, mix, pad, radius, square, surface } from '../../../fn'
+import { accent, control, css, dim, fg, font, mix, pad, radius, square, status, tint, grouping } from '../../../fn'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -52,9 +52,22 @@ export const layout = () => css`
   /* ── emphasis — surface + radius + padding bundle ────── */
   [data-emphasis="flat"]    { padding: ${pad(2)}; }
   [data-emphasis="raised"]  {
-    ${surface(1)}
+    ${grouping(1)}
     border-radius: ${radius('md')};
     padding: ${pad(3)};
+  }
+  /* mobile glass override — frosted card. desktop 외형은 위 base 가 유지. */
+  @media (hover: none) and (pointer: coarse) {
+    [data-emphasis="raised"] {
+      background: color-mix(in oklch, Canvas 75%, transparent);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+              backdrop-filter: blur(24px) saturate(180%);
+      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
+      box-shadow:
+        inset 0 1px 0 ${tint('CanvasText', 5)},
+        0 1px 2px ${tint('CanvasText', 6)},
+        0 6px 14px ${tint('CanvasText', 5)};
+    }
   }
   [data-emphasis="sunk"]    {
     background: ${mix('Canvas', 96, 'CanvasText')};
@@ -87,13 +100,54 @@ export const layout = () => css`
     flex-direction: column;
     min-inline-size: 0;
   }
-  aside:not([aria-roledescription]) { flex: none; }
+  aside:not([aria-roledescription]) {
+    flex: none;
+    background: ${fg(1)};
+    border: 1px solid ${control('border')};
+    border-inline-start: 3px solid ${tint(accent(), 45)};
+    border-radius: ${radius('lg')};
+    padding: ${pad(4)};
+    gap: ${pad(3)};
+  }
+  /* aside 내부 본문 리스트 — Text[body] 안에 와도 읽기 리듬 유지 */
+  aside:not([aria-roledescription]) :where(ul, ol) {
+    margin: 0; padding-inline-start: ${pad(4)};
+    display: flex; flex-direction: column; gap: ${pad(1.5)};
+  }
+  aside:not([aria-roledescription]) :where(li) { line-height: 1.55; }
+  /* dl 형태의 미니 stats — dl > div 그룹, 가로 배치 */
+  aside:not([aria-roledescription]) :where(dl) {
+    margin: 0;
+    display: flex; flex-direction: column; gap: ${pad(1)};
+  }
+  aside:not([aria-roledescription]) :where(dl) > div {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: ${pad(2)};
+  }
+  aside:not([aria-roledescription]) :where(dl) :where(dt, dd) {
+    margin: 0;
+    font-size: ${font('sm')};
+  }
+  aside:not([aria-roledescription]) :where(dl) :where(dd) {
+    color: ${dim(60)};
+    font-variant-numeric: tabular-nums;
+  }
+  aside:not([aria-roledescription]) > section { gap: ${pad(2)}; }
+  aside:not([aria-roledescription]) > section + section {
+    padding-top: ${pad(3)};
+    border-top: 1px solid ${control('border')};
+  }
+  aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
+    color: ${status('danger')};
+  }
   header[data-flow="split"],
   footer[data-flow="split"] { flex-direction: row; }
 
   /* Item-level placement — set on the node itself (flex item). */
   [data-ds-grow="true"]  { flex: 1 1 0; min-inline-size: 0; }
   [data-ds-width]        { flex: none; } /* inline-size comes via inline style */
+  /* maxWidth — 부모가 더 넓으면 자동 가운데 정렬. 폭 상한은 inline style.maxInlineSize. */
+  [data-ds-narrow]       { inline-size: 100%; margin-inline: auto; box-sizing: border-box; }
   [data-ds-align="start"]    { align-self: flex-start; }
   [data-ds-align="center"]   { align-self: center; }
   [data-ds-align="end"]      { align-self: flex-end; }

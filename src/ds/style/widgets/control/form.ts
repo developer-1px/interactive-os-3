@@ -129,52 +129,7 @@ export const formCss = css`
     margin-inline-start: ${pad(0.5)};
   }
 
-  /* ── Aside — 게시/공개 설정 등 보조 행동을 담는 우측 패널.
-     이름 있는 aside(preview/inspector 등 pane)는 제외하고 일반 "안내/설정" aside만. */
-  aside:not([aria-roledescription]) {
-    display: flex; flex-direction: column; flex: none; min-inline-size: 0;
-    background: ${fg(1)};
-    border: 1px solid ${control('border')};
-    border-inline-start: 3px solid ${tint(accent(), 45)};
-    border-radius: ${radius('lg')};
-    padding: ${pad(4)};
-    gap: ${pad(3)};
-  }
-  /* Aside 내부 본문 리스트 — 기본 ul이 Text[body] 안에 들어와도 읽기 리듬을 유지 */
-  aside:not([aria-roledescription]) :where(ul, ol) {
-    margin: 0; padding-inline-start: ${pad(4)};
-    display: flex; flex-direction: column; gap: ${pad(1.5)};
-  }
-  aside:not([aria-roledescription]) :where(li) { line-height: 1.55; }
-  /* dl 형태의 미니 stats (badge + value 쌍) — dl > div로 그룹, 가로 배치 */
-  aside:not([aria-roledescription]) :where(dl) {
-    margin: 0;
-    display: flex; flex-direction: column; gap: ${pad(1)};
-  }
-  aside:not([aria-roledescription]) :where(dl) > div {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: ${pad(2)};
-  }
-  aside:not([aria-roledescription]) :where(dl) :where(dt, dd) {
-    margin: 0;
-    font-size: ${font('sm')};
-  }
-  aside:not([aria-roledescription]) :where(dl) :where(dd) {
-    color: ${dim(60)};
-    font-variant-numeric: tabular-nums;
-  }
-  aside:not([aria-roledescription]) > section {
-    gap: ${pad(2)};
-  }
-  aside:not([aria-roledescription]) > section + section {
-    padding-top: ${pad(3)};
-    border-top: 1px solid ${control('border')};
-  }
-
-  /* Aside의 "위험 영역" section은 경고 톤 */
-  aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
-    color: ${status('danger')};
-  }
+  /* generic aside (no aria-roledescription) 의 surface·내부 리듬·danger 톤 은 layout/layout.ts (owner) 가 보유 */
 
   /* ── 체크박스 row — Row flow="cluster"로 Checkbox + Text 쌍을 감쌀 때 ─── */
   [data-ds="Row"][data-flow="cluster"]:has(> [role="checkbox"], > [role="radio"], > [role="switch"]) {

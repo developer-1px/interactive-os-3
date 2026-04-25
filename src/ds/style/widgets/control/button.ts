@@ -62,6 +62,16 @@ export const buttonCss = css`
   [aria-roledescription="actions"] > button:first-of-type:active:not([aria-disabled="true"]) {
     transform: translateY(1px);
   }
+  /* mobile glass override — pill + accent-tinted drop. desktop 외형은 위 base 가 유지. */
+  @media (hover: none) and (pointer: coarse) {
+    [aria-roledescription="actions"] > button:first-of-type {
+      border-radius: ${radius('pill')};
+      box-shadow:
+        inset 0 1px 0 ${tint('Canvas', 30)},
+        0 1px 2px color-mix(in oklch, ${accent()} 20%, transparent),
+        0 6px 14px color-mix(in oklch, ${accent()} 22%, transparent);
+    }
+  }
 
   /* ── Danger (위험 영역) ────────────────────────────────────────
      [aria-roledescription="danger"] 섹션 안의 button은 경고 색. 삭제/해지 등. */
@@ -76,10 +86,5 @@ export const buttonCss = css`
     border-color: ${status('danger')};
   }
 
-  /* ── 예외: columnheader 안의 sort 토글 버튼은 텍스트 링크처럼 처리
-          (grid.ts가 all: unset + 인라인 styling 부여) — 기본 Button 스타일에서 빼낸다. */
-  [role="columnheader"] > button {
-    background: transparent;
-    padding: 0;
-  }
+  /* columnheader 안의 sort 토글 버튼은 grid.ts 가 all: unset 으로 owner — 여기 예외 처리 불필요. */
 `

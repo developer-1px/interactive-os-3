@@ -16,7 +16,8 @@ import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
  * code, pre, table, hr, img, a)에만 셀렉터 적용. 별도 wrapper class 없이 동작한다.
  */
 export const proseCss = () => css`
-  [data-flow="prose"] {
+  /* root 는 article 에 한정 — layout.ts 의 generic [data-flow="prose"] (gap/align) 와 selector 분리. */
+  article[data-flow="prose"] {
     --prose-body: 16.5px;
     --prose-leading: 1.7;
     --prose-rhythm: 1.25em;          /* 블록 사이 vertical rhythm */
@@ -152,7 +153,7 @@ export const proseCss = () => css`
 
   /* ── mobile (≤600px) — body 17px로 약간 키우고 패딩 축소 ── */
   @media (max-width: ${SHELL_MOBILE_MAX}) {
-    [data-flow="prose"] {
+    article[data-flow="prose"] {
       --prose-body: 17px;
       --prose-leading: 1.65;
       --prose-rhythm: 1.15em;

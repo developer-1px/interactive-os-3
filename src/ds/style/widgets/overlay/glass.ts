@@ -1,4 +1,4 @@
-import { accent, css, hairlineWidth, pad, radius, surface, tint } from '../../../fn'
+import { accent, css, hairlineWidth, pad, radius, grouping, tint } from '../../../fn'
 // 모바일 글래스 — iOS 26 Liquid Glass / Material 3 Expressive 트렌드 수렴.
 // hover:none + pointer:coarse 환경에서만 발동하여 데스크톱 외형 유지.
 //
@@ -23,13 +23,7 @@ export const glassCss = css`
         0 4px 10px ${tint('CanvasText', 6)};
     }
 
-    [aria-roledescription="actions"] > button:first-of-type {
-      border-radius: ${radius('pill')};
-      box-shadow:
-        inset 0 1px 0 ${tint('Canvas', 30)},
-        0 1px 2px color-mix(in oklch, ${accent()} 20%, transparent),
-        0 6px 14px color-mix(in oklch, ${accent()} 22%, transparent);
-    }
+    /* primary action 의 mobile pill+drop override 는 control/button.ts (owner) 가 보유 */
 
     :where(input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
     :where(select),
@@ -42,17 +36,7 @@ export const glassCss = css`
       box-shadow: inset 0 1px 0 ${tint('CanvasText', 5)};
     }
 
-    /* card / sheet — emphasis="raised" 카드도 frosted, 선명한 1px ring + 작은 drop */
-    [data-emphasis="raised"] {
-      background: color-mix(in oklch, Canvas 75%, transparent);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-              backdrop-filter: blur(24px) saturate(180%);
-      border: ${hairlineWidth()} solid ${tint('CanvasText', 8)};
-      box-shadow:
-        inset 0 1px 0 ${tint('CanvasText', 5)},
-        0 1px 2px ${tint('CanvasText', 6)},
-        0 6px 14px ${tint('CanvasText', 5)};
-    }
+    /* emphasis="raised" 의 mobile frosted override 는 layout/layout.ts (owner) 가 보유 */
 
     /* popover/dialog 표면 — 동일 frosted, scrim과 어우러져 layered glass */
     :where([popover][role="dialog"][aria-roledescription="popover"]),
@@ -63,18 +47,7 @@ export const glassCss = css`
       border: ${hairlineWidth()} solid ${tint('CanvasText', 8)};
     }
 
-    /* FloatingNav FAB — 진한 glass + 선명 ring + 짧은 drop */
-    aside[aria-roledescription="floating-nav"] > button {
-      background: color-mix(in oklch, Canvas 60%, transparent);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-              backdrop-filter: blur(24px) saturate(180%);
-      border: ${hairlineWidth()} solid ${tint('CanvasText', 10)};
-      box-shadow:
-        inset 0 1px 0 ${tint('CanvasText', 8)},
-        0 0 0 1px ${tint('CanvasText', 4)},
-        0 2px 4px ${tint('CanvasText', 10)},
-        0 8px 16px ${tint('CanvasText', 8)};
-    }
+    /* FloatingNav FAB — frosted override 는 shell/panes.ts (FAB owner) 가 inline media query 로 직접 보유 */
 
     /* toolbar (반응 버튼 묶음) — ghost glass, 활성/hover 시만 살짝 채움 */
     :where([role="toolbar"]) > :where(button) {
@@ -90,5 +63,5 @@ export const glassCss = css`
   }
 
   /* prefers-color-scheme: dark 에서 반투명 Canvas는 어두운 frosted 자동 처리 */
-  ${surface(0).slice(0, 0)}
+  ${grouping(0).slice(0, 0)}
 `

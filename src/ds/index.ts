@@ -1,46 +1,30 @@
-import { display } from './style/widgets/entity/display'
-import { grid } from './style/widgets/composite/grid'
-import { toolbar } from './style/widgets/composite/toolbar'
-import { toggle, alert } from './style/widgets/control/toggle'
-import { buttonCss } from './style/widgets/control/button'
-import { formCss } from './style/widgets/control/form'
-import { chipCss } from './style/widgets/entity/chip'
-import { layout } from './style/widgets/layout/layout'
-import { menu } from './style/widgets/collection/menu'
 import { reset } from './style/seed/reset'
 import { shell } from './style/shell'
-import { glassCss } from './style/widgets/overlay/glass'
 import { states } from './style/states'
 import { seeds } from './style/seed/tokens'
 import { breakpointsCss } from './style/seed/breakpoints'
-import { tabs } from './style/widgets/collection/tabs'
-import { tree } from './style/widgets/collection/tree'
 import { widgets } from './style/widgets'
 import { iconVars, iconIndicator } from './fn/icon'
+import { assertUniqueSelectors } from './style/assertUnique'
 
-export const dsCss = [
-  reset,
-  seeds,
-  breakpointsCss,
-  iconVars(),
-  states(),
-  menu(),
-  tree(),
-  tabs(),
-  widgets(),
-  toggle(),
-  alert(),
-  buttonCss,
-  formCss,
-  chipCss,
-  grid(),
-  toolbar(),
-  layout(),
-  display(),
-  iconIndicator(),
-  shell(),
-  glassCss,
-].join('\n')
+// 모든 widget css 는 widgets() 가 단일 진입점으로 흡수한다 (widgets/index.ts 의 join).
+// 개별 widget css 를 이중 등록하면 동일 selector 가 cascade 에 ×3 등 누적 — assertUniqueSelectors 가 차단.
+const segments: ReadonlyArray<readonly [string, string]> = [
+  ['seed/reset', reset],
+  ['seed/tokens', seeds],
+  ['seed/breakpoints', breakpointsCss],
+  ['fn/iconVars', iconVars()],
+  ['states', states()],
+  ['widgets', widgets()],
+  ['fn/iconIndicator', iconIndicator()],
+  ['shell', shell()],
+] as const
+
+export const dsCss = segments.map(([, css]) => css).join('\n')
+
+// 부팅 시 selector 중복 차단 — cascade race 는 영구 부채. 새 중복은 throw.
+assertUniqueSelectors(segments)
+
 export * from './core/types'
 export * from './data/resource'
 export { reduce } from './core/state/reduce'
@@ -89,6 +73,7 @@ export * from './ui/control/Checkbox'
 export * from './ui/control/Radio'
 export * from './ui/control/Switch'
 export * from './ui/control/Input'
+export * from './ui/control/SearchBox'
 export * from './ui/control/Textarea'
 export * from './ui/control/Slider'
 export * from './ui/control/NumberInput'
@@ -127,7 +112,8 @@ export * from './ui/layout/BarChart'
 export * from './ui/layout/Top10List'
 export * from './ui/layout/LegendDot'
 export {
-  Renderer, definePage, uiRegistry, resolveUi, placementAttrs, validatePage, node,
+  Renderer, definePage, defineWidget, defineLayout, merge,
+  uiRegistry, resolveUi, placementAttrs, validatePage, validateFragment, node,
   type UiComponentName, type AnyNode, type NodeType,
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,
   type GridNode as LayoutGridNode, type AsideNode, type SectionNode,
@@ -135,3 +121,4 @@ export {
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
 } from './layout'
+export * from './widgets/sidebar'
