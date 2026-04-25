@@ -48,9 +48,12 @@ export const dialogCss = css`
 
 export const tooltipCss = css`
   /* Popover — non-modal light-dismiss. native [popover] element. dialog와 외형 공유하되
-     centered 강제 풀고, padding/border-radius만 기본값. 위치는 소비 측이 결정. */
-  :where([popover][role="dialog"][aria-roledescription="popover"]) {
+     centered 강제 풀고, padding/border-radius만 기본값. 위치는 소비 측이 결정.
+     [popover]는 modal <dialog>와 달리 ::backdrop을 만들지 않으므로 scrim 옵션 시
+     body::before로 dim layer를 깐다 (popover는 top layer라 scrim 위에 떠 있음). */
+  [popover][role="dialog"][aria-roledescription="popover"] {
     ${surface(3)}
+    background-color: var(--ds-bg);
     color: inherit;
     margin: 0;
     padding: ${pad(3)};
@@ -58,8 +61,12 @@ export const tooltipCss = css`
     border: 1px solid var(--ds-border);
     box-shadow: 0 12px 32px ${tint('CanvasText', 22)};
   }
-  :where([popover][role="dialog"][aria-roledescription="popover"])::backdrop {
-    background: ${tint('CanvasText', 6)};
+  body:has([popover][data-ds-scrim]:popover-open)::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: ${tint('CanvasText', 30)};
+    z-index: 99;
+    pointer-events: none;
   }
 
   /* Sheet — edge-anchored dialog (모바일 drawer). max-width/centering 무력화 + 슬라이드. */

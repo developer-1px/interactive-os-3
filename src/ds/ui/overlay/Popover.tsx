@@ -13,12 +13,21 @@ export interface PopoverProps {
   label?: string
   /** 'auto'(light-dismiss) | 'manual'(JS-only). 기본 'auto'. */
   mode?: 'auto' | 'manual'
+  /** 큰 popover용 scrim. native [popover]는 ::backdrop이 없어 별도 dim layer 필요. */
+  scrim?: boolean
   children?: ReactNode
 }
 
-export function Popover({ id, label, mode = 'auto', children }: PopoverProps) {
+export function Popover({ id, label, mode = 'auto', scrim, children }: PopoverProps) {
   return (
-    <div id={id} popover={mode} role="dialog" aria-label={label} aria-roledescription="popover">
+    <div
+      id={id}
+      popover={mode}
+      role="dialog"
+      aria-label={label}
+      aria-roledescription="popover"
+      data-ds-scrim={scrim ? '' : undefined}
+    >
       {children}
     </div>
   )
