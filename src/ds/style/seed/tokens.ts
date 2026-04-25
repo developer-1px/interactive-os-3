@@ -12,6 +12,8 @@ const staticSeeds = css`
   :root {
     /* UA가 line-height를 무시하는 select까지 min-height로 강제해 같은 선상 정렬 보장 */
     --ds-control-h: calc(var(--ds-text-md) * var(--ds-leading) + var(--ds-space) * 2 + 2px);
+    /* 터치 타겟 — iOS HIG 44px·Android Material 48dp 수렴 (de facto 표준) */
+    --ds-touch-target: 44px;
 
     /* keyline 시스템 — 원본은 src/ds/keyline.ts */
     --ds-row-gap:       ${rowGap};
@@ -25,6 +27,11 @@ const staticSeeds = css`
     --ds-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ds-dur-fast:    120ms;
     --ds-dur-base:    180ms;
+  }
+  /* 터치 환경(coarse pointer + hover 없음): control-h를 touch-target까지 승격.
+     장치 특성 query는 container query로 표현 불가 — viewport 폭이 아닌 입력 장치 분기. */
+  @media (hover: none) and (pointer: coarse) {
+    :root { --ds-control-h: var(--ds-touch-target); }
   }
 `
 

@@ -47,6 +47,32 @@ export const dialogCss = css`
 `
 
 export const tooltipCss = css`
+  /* Sheet — edge-anchored dialog (모바일 drawer). max-width/centering 무력화 + 슬라이드. */
+  :where(dialog[data-ds-sheet]) {
+    margin: 0;
+    max-width: none;
+    border-radius: 0;
+    padding: ${pad(3)};
+    transition: translate var(--ds-dur-base) var(--ds-ease-out);
+  }
+  :where(dialog[data-ds-sheet="end"]) {
+    inset-block: 0; inset-inline-end: 0; inset-inline-start: auto;
+    block-size: 100dvh; inline-size: min(360px, 92vw);
+    border-inline-start: 1px solid var(--ds-border);
+  }
+  :where(dialog[data-ds-sheet="start"]) {
+    inset-block: 0; inset-inline-start: 0; inset-inline-end: auto;
+    block-size: 100dvh; inline-size: min(320px, 88vw);
+    border-inline-end: 1px solid var(--ds-border);
+  }
+  :where(dialog[data-ds-sheet="bottom"]) {
+    inset-inline: 0; inset-block-end: 0; inset-block-start: auto;
+    inline-size: 100%; max-block-size: 88dvh;
+    border-start-start-radius: ${radius('lg')};
+    border-start-end-radius: ${radius('lg')};
+    border-block-start: 1px solid var(--ds-border);
+  }
+
   :where([role="tooltip"]) {
     ${surface(2)}
     padding: ${rowPadding(2)};

@@ -215,9 +215,80 @@ export const panesCss = css`
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
+  /* FloatingNav — 우측 하단 FAB + native popover로 전체 라우트 grid 노출.
+     anchor positioning이 아직 미보편이라 popover의 기본 centered overlay 대신
+     position: fixed로 직접 배치. popover[open]에서만 표시. */
+  aside[aria-roledescription="floating-nav"] {
+    position: fixed;
+    inset-block-end: ${pad(4)};
+    inset-inline-end: ${pad(4)};
+    z-index: 100;
+  }
+  aside[aria-roledescription="floating-nav"] > button {
+    width: 3.5rem; height: 3.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--ds-border);
+    ${surface(3)}
+    color: inherit;
+    font-size: 1.5rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 16px color-mix(in oklch, CanvasText 18%, transparent);
+    transition: transform var(--ds-dur-fast) var(--ds-ease-out);
+  }
+  aside[aria-roledescription="floating-nav"] > button:hover { transform: scale(1.05); }
+  aside[aria-roledescription="floating-nav"] > button:active { transform: scale(0.96); }
+
+  menu[aria-roledescription="route-grid"] {
+    list-style: none; margin: 0;
+    inset: auto;
+    inset-inline-end: ${pad(4)};
+    inset-block-end: calc(${pad(4)} + 3.5rem + ${pad(2)});
+    padding: ${pad(3)};
+    border: 1px solid var(--ds-border);
+    border-radius: ${radius('lg')};
+    ${surface(3)}
+    color: inherit;
+    box-shadow: 0 12px 32px color-mix(in oklch, CanvasText 22%, transparent);
+    inline-size: min(92vw, 28rem);
+    max-block-size: min(70vh, 32rem);
+    overflow: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+    gap: ${pad(2)};
+  }
+  menu[aria-roledescription="route-grid"]::backdrop {
+    background: color-mix(in oklch, CanvasText 6%, transparent);
+  }
+  menu[aria-roledescription="route-grid"] > li > a {
+    display: flex; flex-direction: column; align-items: center; gap: ${pad(1)};
+    padding: ${pad(2)} ${pad(1)};
+    border-radius: ${radius('md')};
+    color: inherit; text-decoration: none;
+    transition: background var(--ds-dur-fast) var(--ds-ease-out);
+  }
+  menu[aria-roledescription="route-grid"] > li > a:hover {
+    background: color-mix(in oklch, var(--ds-fg) 6%, transparent);
+  }
+  menu[aria-roledescription="route-grid"] > li > a > figure {
+    margin: 0;
+    width: 3rem; height: 3rem;
+    display: grid; place-items: center;
+    border-radius: ${radius('md')};
+    border: 1px solid var(--ds-border);
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+    font-size: 1.25rem; font-weight: 700;
+    font-family: ui-rounded, ui-sans-serif, sans-serif;
+    color: ${dim(55)};
+  }
+  menu[aria-roledescription="route-grid"] > li > a > strong {
+    font-size: var(--ds-text-xs); font-weight: 500; text-align: center;
+    word-break: keep-all; line-height: 1.3;
+  }
+
   /* edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content) */
   main[aria-roledescription="edu-portal-admin-app"] {
     height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    container-type: inline-size; container-name: shell;
   }
   main[aria-roledescription="edu-portal-admin-app"] > section[aria-roledescription="body"] {
     flex: 1; display: flex; min-height: 0;
@@ -250,6 +321,7 @@ export const panesCss = css`
      content 영역은 zone 섹션이 위계로 쌓인다 (h2 zone, h3 component card). */
   main[aria-roledescription="catalog-app"] {
     height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    container-type: inline-size; container-name: shell;
   }
   main[aria-roledescription="catalog-app"] > section[aria-roledescription="body"] {
     flex: 1; display: flex; min-height: 0;

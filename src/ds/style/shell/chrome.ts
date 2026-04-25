@@ -9,6 +9,8 @@ export const chromeCss = css`
     border-radius: var(--ds-shell-radius);
     ${surface(2)}
     display: flex; flex-direction: column; overflow: hidden;
+    container-type: inline-size;
+    container-name: shell;
   }
   main:has(> header > [aria-roledescription="window-controls"]) > header {
     display: flex; flex-direction: row; align-items: center; gap: var(--ds-slot-gap);

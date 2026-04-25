@@ -23,17 +23,23 @@ export const layout = () => css`
   [data-ds="Row"]    { flex-direction: row; }
   [data-ds="Column"] { flex-direction: column; }
 
+  /* Grid는 cols를 "넓을 때의 목표 열 수"로, --ds-grid-min을 "한 셀의 최소 폭"으로 사용.
+     auto-fit + minmax(max(grid-min, 100%/cols), 1fr) → 넓으면 정확히 cols 열,
+     좁아지면 grid-min 기준으로 자연 reflow. 모바일에서 1열까지 자동 수렴. */
   [data-ds="Grid"] {
     display: grid;
-    grid-template-columns: repeat(var(--ds-cols, 2), minmax(0, 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(max(var(--ds-grid-min, 16rem), 100% / var(--ds-cols, 2) - 0.01px), 1fr)
+    );
     min-inline-size: 0;
   }
-  [data-ds="Grid"][data-cols="1"]  { --ds-cols: 1;  }
-  [data-ds="Grid"][data-cols="2"]  { --ds-cols: 2;  }
-  [data-ds="Grid"][data-cols="3"]  { --ds-cols: 3;  }
-  [data-ds="Grid"][data-cols="4"]  { --ds-cols: 4;  }
-  [data-ds="Grid"][data-cols="6"]  { --ds-cols: 6;  }
-  [data-ds="Grid"][data-cols="12"] { --ds-cols: 12; }
+  [data-ds="Grid"][data-cols="1"]  { --ds-cols: 1;  --ds-grid-min: 100%;  }
+  [data-ds="Grid"][data-cols="2"]  { --ds-cols: 2;  --ds-grid-min: 18rem; }
+  [data-ds="Grid"][data-cols="3"]  { --ds-cols: 3;  --ds-grid-min: 14rem; }
+  [data-ds="Grid"][data-cols="4"]  { --ds-cols: 4;  --ds-grid-min: 12rem; }
+  [data-ds="Grid"][data-cols="6"]  { --ds-cols: 6;  --ds-grid-min: 8rem;  }
+  [data-ds="Grid"][data-cols="12"] { --ds-cols: 12; --ds-grid-min: 4rem;  }
 
   /* ── flow — one enum chooses gap + alignment bundle ───
      data-flow는 Renderer가 Row/Column/Grid/Aside/Section/Header/Footer에만 주입한다. */

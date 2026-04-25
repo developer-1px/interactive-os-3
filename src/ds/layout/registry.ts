@@ -27,6 +27,7 @@ import { GridCell } from '../ui/composite/GridCell'
 import { Listbox } from '../ui/collection/Listbox'
 import { Disclosure } from '../ui/overlay/Disclosure'
 import { Dialog } from '../ui/overlay/Dialog'
+import { Sheet } from '../ui/overlay/Sheet'
 import { Badge } from '../ui/entity/Badge'
 import { StatCard } from '../ui/entity/StatCard'
 import { CourseCard } from '../ui/entity/CourseCard'
@@ -74,6 +75,7 @@ export const uiRegistry = {
   // overlay
   Disclosure: { component: Disclosure, zone: 'overlay' },
   Dialog:     { component: Dialog,     zone: 'overlay' },
+  Sheet:      { component: Sheet,      zone: 'overlay' },
   // entity
   Badge:      { component: Badge,      zone: 'entity' },
   StatCard:   { component: StatCard,   zone: 'entity' },

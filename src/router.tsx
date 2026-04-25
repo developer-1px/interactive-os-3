@@ -14,6 +14,7 @@ import { RoleCategory } from './routes/edu-portal-admin/pages/RoleCategory'
 import { CourseCategory } from './routes/edu-portal-admin/pages/CourseCategory'
 import { VideoOrder } from './routes/edu-portal-admin/pages/VideoOrder'
 import { CommandPalette } from './ds/ui/overlay/CommandPalette'
+import { FloatingNav } from './ds/ui/overlay/FloatingNav'
 import { GenresHub } from './routes/genres/GenresHub'
 import { Inbox } from './routes/genres/inbox/Inbox'
 import { Chat } from './routes/genres/chat/Chat'
@@ -29,6 +30,7 @@ const rootRoute = createRootRoute({
     <>
       <Outlet />
       <CommandPalette />
+      <FloatingNav />
     </>
   ),
 })

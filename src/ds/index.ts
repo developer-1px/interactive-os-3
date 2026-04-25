@@ -11,6 +11,7 @@ import { reset } from './style/seed/reset'
 import { shell } from './style/shell'
 import { states } from './style/states'
 import { seeds } from './style/seed/tokens'
+import { breakpointsCss } from './style/seed/breakpoints'
 import { tabs } from './style/widgets/list/tabs'
 import { tree } from './style/widgets/tree/tree'
 import { widgets } from './style/widgets'
@@ -19,6 +20,7 @@ import { iconVars, iconIndicator } from './fn/icon'
 export const dsCss = [
   reset,
   seeds,
+  breakpointsCss,
   iconVars(),
   states(),
   menu(),
@@ -43,6 +45,7 @@ export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
 export { useControlState } from './core/hooks/useControlState'
 export { useRoving } from './core/hooks/useRoving'
 export { useRovingDOM } from './core/hooks/useRovingDOM'
+export { useSwipe, type SwipeDir, type UseSwipeOpts } from './core/hooks/useSwipe'
 export { parentOf } from './core/axes'
 export {
   navigateOnActivate,
@@ -93,6 +96,8 @@ export * from './ui/control/Combobox'
 export * from './ui/control/ToolbarButton'
 // zone: overlay — surface
 export * from './ui/overlay/Dialog'
+export * from './ui/overlay/Sheet'
+export * from './ui/overlay/FloatingNav'
 export * from './ui/overlay/Disclosure'
 export * from './ui/overlay/Tooltip'
 // zone: entity — domain content cards
