@@ -32,6 +32,17 @@ export const buttonCss = css`
                 color var(--ds-dur-fast) var(--ds-ease-out),
                 border-color var(--ds-dur-fast) var(--ds-ease-out);
   }
+  /* icon-only — children이 비어있고 data-icon만 있는 버튼은 정사각형. 축 구조적 해결.
+     ::before 아이콘 너비(1.25em) + control-h 높이로 자연 정사각형. */
+  :where(button[data-icon]:empty) {
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+  }
+  :where(button[data-icon]:empty)::before {
+    margin-inline-end: 0;
+  }
   :where(button):not([aria-roledescription="actions"] > button):hover:not([aria-disabled="true"]) {
     background: ${tint(accent(), 12)};
     color: ${accent()};

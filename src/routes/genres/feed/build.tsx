@@ -7,7 +7,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
   const postEnts = POSTS.flatMap((p) => [
     [`card-${p.id}`,    { id: `card-${p.id}`,    data: { type: 'Section', emphasis: 'raised', flow: 'form' } }],
     [`meta-${p.id}`,    { id: `meta-${p.id}`,    data: { type: 'Row', flow: 'cluster' } }],
-    [`avatar-${p.id}`,  { id: `avatar-${p.id}`,  data: { type: 'Text', variant: 'strong', content: p.author[0], width: 36 } }],
+    [`avatar-${p.id}`,  { id: `avatar-${p.id}`,  data: { type: 'Text', variant: 'strong', content: p.author[0], width: 36, aspect: 'square' } }],
     [`who-${p.id}`,     { id: `who-${p.id}`,     data: { type: 'Text', variant: 'strong', content: <>{p.author} <small>{p.handle} · {p.time}</small></>, grow: true } }],
     [`more-${p.id}`,    { id: `more-${p.id}`,    data: { type: 'Ui', component: 'Button', props: { 'aria-label': '더보기', 'data-icon': 'more' }, content: '' } }],
     [`body-${p.id}`,    { id: `body-${p.id}`,    data: { type: 'Text', variant: 'body', content: p.body } }],

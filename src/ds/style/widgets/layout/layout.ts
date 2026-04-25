@@ -90,6 +90,11 @@ export const layout = () => css`
   [data-ds-align="end"]      { align-self: flex-end; }
   [data-ds-align="stretch"]  { align-self: stretch; }
 
+  /* aspect — width 축만 정해진 곳에 height를 비율로 도출. avatar/icon tile 등.
+     square는 1/1, 그 외는 inline-size/block-size 비율. */
+  [data-ds-aspect="square"] { aspect-ratio: 1 / 1; block-size: auto; }
+  [data-ds-aspect]:not([data-ds-aspect="square"]) { aspect-ratio: var(--ds-aspect, 1); }
+
   /* Text variants — semantic tags already carry weight, these only bundle
      spacing/opacity. Renderer always attaches data-variant to Text leaves. */
   [data-variant]                 { margin: 0; }

@@ -35,6 +35,8 @@ export interface ItemPlacement {
   grow?: boolean
   width?: number | string
   align?: Align
+  /** 정사각형 등 비율 고정. 'square' = 1/1. width만 주고 high 자동 도출하고 싶을 때. */
+  aspect?: 'square' | number
 }
 
 export interface CommonNodeData extends ItemPlacement {
@@ -106,12 +108,13 @@ export function node<T extends AnyNode>(id: string, data: T): TypedEntity<T> {
   return { id, data }
 }
 
-/** Compute inline style + data attributes for a node (grow/width/align + container vars). */
+/** Compute inline style + data attributes for a node (grow/width/align/aspect + container vars). */
 export function placementAttrs(d: Partial<CommonNodeData>): {
   style?: CSSProperties
   'data-ds-grow'?: 'true'
   'data-ds-width'?: ''
   'data-ds-align'?: Align
+  'data-ds-aspect'?: 'square' | string
 } {
   const out: ReturnType<typeof placementAttrs> = {}
   if (d.grow) out['data-ds-grow'] = 'true'
@@ -120,6 +123,9 @@ export function placementAttrs(d: Partial<CommonNodeData>): {
     out.style = { inlineSize: typeof d.width === 'number' ? `${d.width}px` : d.width }
   }
   if (d.align) out['data-ds-align'] = d.align
+  if (d.aspect !== undefined) {
+    out['data-ds-aspect'] = d.aspect === 'square' ? 'square' : String(d.aspect)
+  }
   return out
 }
 

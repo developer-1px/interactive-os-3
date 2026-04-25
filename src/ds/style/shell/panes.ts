@@ -313,13 +313,12 @@ export const panesCss = css`
   [aria-roledescription="feed-page"] [data-emphasis="raised"] {
     border-radius: ${radius('lg')};
   }
-  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-width] {
-    width: 2.25rem; height: 2.25rem;
+  /* Feed avatar — width + aspect:square가 정사각형을 잡고, 여기선 배경/원형/정렬만 */
+  [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] {
     border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
     font-size: var(--ds-text-md);
-    flex: none;
   }
   [aria-roledescription="feed-page"] [data-flow="cluster"] > strong[data-ds-grow] > small {
     display: block;
