@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { marked } from 'marked'
 import { formatDate, formatSize, getImageUrl, loadText } from './data'
 import { extToIcon, extToLang, extToPreviewKind, type FsNode } from './types'
@@ -103,7 +104,14 @@ function MarkdownView({ node }: { node: FsNode }) {
     return () => { alive = false }
   }, [text])
   if (text == null || html == null) return <article aria-busy="true" />
-  return <article dangerouslySetInnerHTML={{ __html: html }} />
+  return (
+    <>
+      <nav aria-label="마크다운 액션">
+        <Link to="/markdown/$" params={{ _splat: node.path.replace(/^\//, '') }}>전체 화면으로 열기 ↗</Link>
+      </nav>
+      <article data-flow="prose" dangerouslySetInnerHTML={{ __html: html }} />
+    </>
+  )
 }
 
 async function renderMarkdown(src: string): Promise<string> {
