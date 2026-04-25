@@ -519,6 +519,86 @@ export const panesCss = css`
     border-top: 1px solid var(--ds-border); padding-top: ${pad(1.5)};
   }
 
+  /* topbar의 nav-toggle은 데스크톱에서 숨김, 모바일에서만 노출 */
+  main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] { display: none; }
+
+  /* Catalog 모바일 — sidebar는 좌측 드로어로 숨기고, 카드는 1라인(이름+badge+소비처)으로 압축 */
+  @media (max-width: 600px) {
+    main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] {
+      display: inline-flex; align-items: center; justify-content: center;
+      inline-size: 2.25rem; block-size: 2.25rem;
+      border: 1px solid var(--ds-border); border-radius: ${radius('md')};
+      background: var(--ds-bg); cursor: pointer; flex: none;
+    }
+    /* sidebar를 좌측에서 슬라이드 인하는 드로어로 — 기본 닫힘(translateX(-100%)) */
+    main[aria-roledescription="catalog-app"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"] {
+      position: fixed;
+      inset-block: 0; inset-inline-start: 0;
+      inline-size: min(80vw, 18rem);
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform var(--ds-dur-fast) var(--ds-ease-out);
+      box-shadow: 0 0 24px color-mix(in oklch, CanvasText 12%, transparent);
+    }
+    main[aria-roledescription="catalog-app"][data-nav-open="true"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"] {
+      transform: translateX(0);
+    }
+    /* scrim — 드로어 열릴 때만 표시 */
+    main[aria-roledescription="catalog-app"] > section[aria-roledescription="body"] > button[aria-roledescription="scrim"] {
+      position: fixed; inset: 0; z-index: 49;
+      background: color-mix(in oklch, CanvasText 35%, transparent);
+      border: 0;
+    }
+
+    /* topbar 압축 — stats는 숨김, 부제 1줄로 자르기 */
+    main[aria-roledescription="catalog-app"] header[aria-roledescription="topbar"] {
+      gap: ${pad(2)};
+    }
+    main[aria-roledescription="catalog-app"] header[aria-roledescription="topbar"] > hgroup > p { display: none; }
+    main[aria-roledescription="catalog-app"] header[aria-roledescription="topbar"] > hgroup > h1 {
+      font-size: var(--ds-text-md);
+    }
+    main[aria-roledescription="catalog-app"] dl[aria-roledescription="catalog-stats"] { display: none; }
+
+    /* zone 헤더 컴팩트 + 부연 설명 숨김 */
+    section[aria-roledescription="catalog-zone"] > p { display: none; }
+    section[aria-roledescription="catalog-zone"] > header > h2 { font-size: var(--ds-text-md); }
+
+    /* grid → 1열 list */
+    ul[aria-roledescription="catalog-grid"] {
+      grid-template-columns: 1fr;
+      gap: ${pad(1)};
+    }
+
+    /* 카드 1라인 — 이름 + badge + 소비처만, 나머지는 모두 숨김 */
+    article[aria-roledescription="catalog-card"] {
+      flex-direction: row; align-items: center; gap: ${pad(1.5)};
+      padding: ${pad(1.5)} ${pad(2)};
+      border-radius: ${radius('md')};
+      min-block-size: 0;
+    }
+    article[aria-roledescription="catalog-card"] > header {
+      flex: 1; min-inline-size: 0; gap: ${pad(1.5)};
+      flex-wrap: nowrap;
+    }
+    article[aria-roledescription="catalog-card"] > header > h3 {
+      font-size: var(--ds-text-sm); font-weight: 600;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      min-inline-size: 0;
+    }
+    article[aria-roledescription="catalog-card"] > header > code { display: none; }
+    article[aria-roledescription="catalog-card"] > header > small {
+      font-size: var(--ds-text-xs); flex: none;
+    }
+    article[aria-roledescription="catalog-card"] > [aria-roledescription="card-path"],
+    article[aria-roledescription="catalog-card"] > pre,
+    article[aria-roledescription="catalog-card"] > figure[aria-roledescription="card-demo"],
+    article[aria-roledescription="catalog-card"] > ul[aria-roledescription="card-checks"],
+    article[aria-roledescription="catalog-card"] > footer {
+      display: none;
+    }
+  }
+
   /* Atlas — 카드는 컨텐츠. 모바일 퍼스트(1열, 안전 패딩) → 데스크톱은 동일 카드 DOM의 다열 reflow.
      "shell·control은 데스크톱·모바일 별도 구현" 원칙은 header/preset switcher에만 적용. */
   main[aria-roledescription="atlas-app"] {

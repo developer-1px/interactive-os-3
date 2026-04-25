@@ -1,7 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useSyncExternalStore } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData, ROOT } from '../../ds'
 import { demos } from './demos'
+
+const MOBILE_QUERY = '(max-width: 600px)'
+const subscribeMobile = (cb: () => void) => {
+  const mq = window.matchMedia(MOBILE_QUERY)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const getIsMobile = () => window.matchMedia(MOBILE_QUERY).matches
 
 /**
  * Catalog — ds ui zone-first 감사 대시보드.
@@ -37,6 +45,8 @@ type Filter = Kind | 'all'
 
 export function Catalog() {
   const [filter, setFilter] = useState<Filter>('all')
+  const isMobile = useSyncExternalStore(subscribeMobile, getIsMobile, () => false)
+  const [navOpen, setNavOpen] = useState(false)
 
   const grouped = useMemo(() => {
     const m: Record<Kind, Contract[]> = {
@@ -58,11 +68,36 @@ export function Catalog() {
   const visibleZones = visible.filter((k) => grouped[k].length > 0)
 
   return (
-    <main aria-roledescription="catalog-app" aria-label="Catalog">
+    <main
+      aria-roledescription="catalog-app"
+      aria-label="Catalog"
+      data-nav-open={isMobile && navOpen ? 'true' : undefined}
+    >
       <section aria-roledescription="body">
-        <CatalogNav filter={filter} setFilter={setFilter} grouped={grouped} total={totals.total} />
+        <CatalogNav
+          filter={filter}
+          setFilter={(f) => { setFilter(f); setNavOpen(false) }}
+          grouped={grouped}
+          total={totals.total}
+        />
+        {isMobile && navOpen && (
+          <button
+            type="button"
+            aria-roledescription="scrim"
+            aria-label="메뉴 닫기"
+            onClick={() => setNavOpen(false)}
+          />
+        )}
         <section aria-roledescription="workspace">
           <header aria-roledescription="topbar">
+            <button
+              type="button"
+              aria-label="메뉴 열기"
+              aria-expanded={navOpen}
+              aria-roledescription="nav-toggle"
+              data-icon="menu"
+              onClick={() => setNavOpen((v) => !v)}
+            />
             <hgroup>
               <h1>{filter === 'all' ? 'Catalog' : kindLabel[filter as Kind]}</h1>
               <p>{filter === 'all' ? 'ui 컴포넌트 zone-first 감사' : kindBlurb[filter as Kind]}</p>
