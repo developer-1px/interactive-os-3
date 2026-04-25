@@ -1,5 +1,5 @@
-import type { Event, NormalizedData } from './types'
-import type { Trigger } from './trigger'
+import type { Event, NormalizedData } from '../types'
+import type { Trigger } from '../trigger'
 
 /**
  * Axis — data 기반 APG 키/포인터 처리 primitive.

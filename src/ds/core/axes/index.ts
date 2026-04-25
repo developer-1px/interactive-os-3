@@ -1,6 +1,6 @@
 import type { NormalizedData } from '../types'
 
-export { composeAxes, type Axis } from '../axis'
+export { composeAxes, type Axis } from './axis'
 
 export const parentOf = (d: NormalizedData, id: string): string | undefined =>
   Object.entries(d.relationships).find(([, kids]) => kids.includes(id))?.[0]
