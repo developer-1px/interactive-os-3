@@ -46,6 +46,7 @@ export { useRovingDOM } from './core/hooks/useRovingDOM'
 export { parentOf } from './core/axes'
 export {
   navigateOnActivate,
+  activateOnNavigate,
   expandBranchOnActivate,
   composeGestures,
   type GestureHelper,

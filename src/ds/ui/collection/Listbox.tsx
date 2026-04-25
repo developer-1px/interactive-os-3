@@ -5,8 +5,10 @@ import {
   getLabel,
   isDisabled,
   type CollectionProps,
+  type Event,
 } from '../../core/types'
 import { activate, composeAxes, navigate, typeahead } from '../../core/axes'
+import { activateOnNavigate } from '../../core/gesture'
 import { useRoving } from '../../core/hooks/useRoving'
 import { Option } from './Option'
 
@@ -14,8 +16,15 @@ type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' 
 
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
 
+/**
+ * Listbox — APG single-select listbox 기본 동작은 **selection follows focus**.
+ * ↑↓로 옵션을 옮기면 즉시 활성화(activate)도 함께 emit → 소비자는 선택 상태를
+ * 같이 갱신한다. 클릭/Enter/Space는 그대로 activate.
+ */
 export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
+  const relay = (e: Event) =>
+    activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
+  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay)
   const kids = getChildren(data, ROOT)
 
   return (

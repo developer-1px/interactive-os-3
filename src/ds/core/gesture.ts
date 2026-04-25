@@ -12,6 +12,16 @@ export type GestureHelper = (d: NormalizedData, e: Event) => Event[]
 export const navigateOnActivate: GestureHelper = (_d, e) =>
   e.type === 'activate' ? [{ type: 'navigate', id: e.id }, e] : [e]
 
+// 포커스 이동 시 활성화도 함께 발행 — APG single-select listbox/tabs 기본 동작
+// "selection follows focus": ↑↓로 옵션 옮기면 즉시 선택까지 이동.
+// disabled 옵션엔 발행하지 않는다 (focus만 통과시키고 활성화는 skip).
+export const activateOnNavigate: GestureHelper = (d, e) => {
+  if (e.type !== 'navigate') return [e]
+  const ent = d.entities[e.id]
+  if (ent?.data?.disabled) return [e]
+  return [e, { type: 'activate', id: e.id }]
+}
+
 // 자식이 있으면 expand 토글, 없으면 활성화 그대로.
 // Tree/Columns/Menu 등 펼침 가능한 role.
 export const expandBranchOnActivate: GestureHelper = (d, e) => {

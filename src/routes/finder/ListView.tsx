@@ -4,14 +4,16 @@ import { extToIcon, type FsNode } from './types'
 
 export function ListView({
   node,
+  items,
   currentPath,
   onNavigate,
 }: {
   node: FsNode | null
+  items?: FsNode[]
   currentPath: string
   onNavigate: (path: string) => void
 }) {
-  const kids = node?.children ?? []
+  const kids = items ?? node?.children ?? []
   return (
     <section aria-roledescription="list-view">
     <TreeGrid aria-label="목록뷰" aria-rowcount={kids.length} data-density="compact">

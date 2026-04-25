@@ -9,21 +9,28 @@ import {
   ROOT,
   type Event,
 } from '../../ds'
-import { getTree, subscribeTree } from './data'
+import { getTree, subscribeTree, walk } from './data'
 import { extToIcon, type FsNode } from './types'
 
 export function Columns({
   chain,
+  rootPath = '/',
   onNavigate,
 }: {
   chain: FsNode[]
+  rootPath?: string
   onNavigate: (path: string) => void
 }) {
   const currentPath = chain[chain.length - 1]?.path ?? '/'
   const tree = useSyncExternalStore(subscribeTree, getTree, getTree)
+  const rootNode = useMemo(() => {
+    if (rootPath === '/') return tree
+    const c = walk(rootPath)
+    return c[c.length - 1] ?? tree
+  }, [rootPath, tree])
   const base = useMemo(
     () =>
-      fromTree(tree.children ?? [], {
+      fromTree(rootNode.children ?? [], {
         getId: (n) => n.path,
         getKids: (n) => n.children,
         toData: (n) => ({
@@ -34,7 +41,7 @@ export function Columns({
         focusId: currentPath,
         expandedIds: pathAncestors(currentPath),
       }),
-    [currentPath, tree],
+    [currentPath, rootNode],
   )
   const [data, dispatch] = useControlState(base)
   const onEvent = (raw: Event) =>
@@ -43,7 +50,7 @@ export function Columns({
       else if (e.type === 'navigate' || e.type === 'activate') onNavigate(e.id)
       else if (e.type === 'expand') {
         const parent = parentOf(data, e.id)
-        onNavigate(e.open ? e.id : !parent || parent === ROOT ? '/' : parent)
+        onNavigate(e.open ? e.id : !parent || parent === ROOT ? rootPath : parent)
       }
     })
   return <ColumnsRole data={data} onEvent={onEvent} aria-label="컬럼" />

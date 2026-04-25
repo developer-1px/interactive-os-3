@@ -1,4 +1,5 @@
 import { Toolbar, ToolbarButton } from '../../ds'
+import { smartGroupOf } from './data'
 import type { ViewMode } from './types'
 
 const VIEW_ITEMS: { id: ViewMode; icon: string; label: string }[] = [
@@ -17,7 +18,8 @@ export function TitleBar({
   view: ViewMode
   onViewChange: (v: ViewMode) => void
 }) {
-  const name = path.split('/').filter(Boolean).pop() ?? 'root'
+  const smart = smartGroupOf(path)
+  const name = smart ? `최근 — ${smart.label}` : (path.split('/').filter(Boolean).pop() ?? 'root')
   return (
     <header>
       <div aria-roledescription="window-controls" aria-label="창 컨트롤">

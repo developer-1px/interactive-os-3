@@ -1,5 +1,5 @@
 import { tree as initialTree } from 'virtual:fs-tree'
-import type { FsNode, SidebarItem } from './types'
+import type { FsNode, SidebarItem, SmartGroupItem } from './types'
 
 let currentTree: FsNode = (import.meta.hot?.data.tree as FsNode | undefined) ?? initialTree
 const listeners: Set<() => void> = (import.meta.hot?.data.listeners as Set<() => void> | undefined) ?? new Set()
@@ -86,6 +86,45 @@ export function formatSize(n?: number): string {
 export function formatDate(ms?: number): string {
   if (!ms) return '—'
   return new Date(ms).toLocaleString('ko-KR')
+}
+
+export const SMART_PREFIX = 'smart:'
+export const smartGroups: SmartGroupItem[] = [
+  { id: 'today',     label: '오늘',  path: 'smart:today',     icon: 'inbox' },
+  { id: 'yesterday', label: '어제',  path: 'smart:yesterday', icon: 'archive' },
+]
+
+function startOfToday(): number {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  return d.getTime()
+}
+
+export function isSmartPath(path: string): boolean {
+  return path.startsWith(SMART_PREFIX)
+}
+
+export function smartGroupOf(path: string): SmartGroupItem | undefined {
+  return smartGroups.find((g) => g.path === path)
+}
+
+export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean): FsNode[] {
+  const out: FsNode[] = []
+  const visit = (n: FsNode) => {
+    if (n.type === 'file' && n.mtime != null && predicate(n.mtime)) out.push(n)
+    n.children?.forEach(visit)
+  }
+  visit(node)
+  return out.sort((a, b) => (b.mtime ?? 0) - (a.mtime ?? 0))
+}
+
+export function smartItems(group: 'today' | 'yesterday'): FsNode[] {
+  const t0 = startOfToday()
+  const dayMs = 24 * 60 * 60 * 1000
+  const pred = group === 'today'
+    ? (m: number) => m >= t0
+    : (m: number) => m >= t0 - dayMs && m < t0
+  return collectByAge(currentTree, pred)
 }
 
 export const sidebar: SidebarItem[] = [
