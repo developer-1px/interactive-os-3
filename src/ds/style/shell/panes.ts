@@ -3,7 +3,9 @@ import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
 export const panesCss = css`
-  /* Inspector: canvas가 남은 공간을, aside panel이 고정폭 */
+  /* Inspector: canvas가 남은 공간을, aside panel이 고정폭.
+     Outer-layout 정책 — widget이 *invariant*면 widget-level, *contextual*이면 부모 셸이 결정.
+     panel은 inspector 단일 소비처 → 부모 셸 셀렉터로 좁힌다. */
   section[aria-roledescription="canvas"] {
     flex: 1; min-width: 0; overflow: auto; display: grid; place-items: center;
     background: color-mix(in oklch, Canvas 93%, CanvasText 7%);
@@ -11,9 +13,13 @@ export const panesCss = css`
   section[aria-roledescription="canvas"] > svg {
     width: 100%; height: 100%; max-width: 100%;
   }
-  aside[aria-roledescription="panel"] {
+  /* L1 — Inspector panel의 outer-layout(width)은 inspector-app shell이 소유. */
+  main[aria-roledescription="inspector-app"] > section[aria-roledescription="body"] > aside[aria-roledescription="panel"] {
     width: var(--ds-panel-w, 280px); flex: none; overflow-y: auto;
     border-inline-start: var(--ds-hairline) solid var(--ds-border);
+  }
+  /* widget-internal layout (column flow, tabpanel)은 widget이 소유. */
+  aside[aria-roledescription="panel"] {
     display: flex; flex-direction: column;
   }
   aside[aria-roledescription="panel"] [role="tabpanel"] {
@@ -76,7 +82,10 @@ export const panesCss = css`
      - section 헤더는 uppercase micro-label
      - Listbox 내부 padding 제거 — sidebar 외곽이 padding을 제공
      - option은 radius + subtle hover (global selected/hover가 이미 tint 제공)
-     - scrollbar 얇게, 필요 시만 노출 */
+     - scrollbar 얇게, 필요 시만 노출
+     - Outer-layout 정책: sidebar는 *invariant* widget(데스크톱에서 항상 같은 폭)이라
+       widget-level에서 width 소유. 모바일 드로어 변형은 각 app이 부모 셸 셀렉터로
+       override (catalog-app/edu-portal-admin-app의 [data-nav-open] 규칙 참조). */
   nav[aria-roledescription="sidebar"] {
     width: var(--ds-sidebar-w); flex: none;
     overflow-y: auto; overflow-x: hidden;
@@ -168,11 +177,12 @@ export const panesCss = css`
   section[aria-roledescription="list-view"] col[data-col="mtime"] { inline-size: 14rem; }
   section[aria-roledescription="list-view"] col[data-col="size"]  { inline-size: 6rem; }
   section[aria-roledescription="list-view"] col[data-col="kind"]  { inline-size: 8rem; }
-  nav[aria-roledescription="column"] {
+  /* L1 — Columns 내부 column의 outer-layout(width)은 columns 부모가 소유. */
+  section[aria-roledescription="columns"] > nav[aria-roledescription="column"] {
     width: var(--ds-column-w); flex: none; overflow-y: auto;
     border-inline-end: var(--ds-hairline) solid var(--ds-border);
   }
-  /* 컬럼 내 폴더 옵션 — 우측 chevron 자동 주입 */
+  /* 컬럼 내 폴더 옵션 — 우측 chevron 자동 주입 (widget-internal) */
   nav[aria-roledescription="column"] [role="option"][aria-haspopup="menu"]::after {
     ${icon('chevronRight', '0.8em')}
     margin-inline-start: auto; opacity: .4;
