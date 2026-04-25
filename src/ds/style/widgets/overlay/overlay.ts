@@ -58,10 +58,10 @@ export const tooltipCss = css`
     margin: 0;
     padding: ${pad(3)};
     border-radius: ${radius('lg')};
-    border: 1px solid var(--ds-border);
-    /* 선명도 우선 — 1px hairline ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
+    border: var(--ds-hairline) solid var(--ds-border);
+    /* 선명도 우선 — 1 device-px ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
     box-shadow:
-      0 0 0 1px ${tint('CanvasText', 6)},
+      0 0 0 var(--ds-hairline) ${tint('CanvasText', 6)},
       0 2px 6px ${tint('CanvasText', 8)},
       0 8px 16px ${tint('CanvasText', 10)};
   }

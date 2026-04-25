@@ -17,7 +17,17 @@ const staticSeeds = css`
     --ds-control-h: calc(1em * var(--ds-leading) + var(--ds-space) * 2 + 2px);
     /* 터치 타겟 — iOS HIG 44px·Android Material 48dp 수렴 (de facto 표준) */
     --ds-touch-target: 44px;
-
+    /* Hairline — DPR이 1일 땐 1px, 고해상도에선 device-pixel 1줄로 더 얇게.
+       Chrome 109+/Safari 11+ 분수 px 지원. iOS Mobile Safari가 가장 자주 발생. */
+    --ds-hairline: 1px;
+  }
+  @media (resolution >= 2dppx) {
+    :root { --ds-hairline: 0.5px; }
+  }
+  @media (resolution >= 3dppx) {
+    :root { --ds-hairline: 0.34px; }
+  }
+  :root {
     /* keyline 시스템 — 원본은 src/ds/keyline.ts */
     --ds-row-gap:       ${rowGap};
     --ds-slot-gap:      ${slotGap};

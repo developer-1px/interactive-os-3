@@ -12,7 +12,7 @@ export const panesCss = css`
   }
   aside[aria-roledescription="panel"] {
     width: var(--ds-panel-w, 280px); flex: none; overflow-y: auto;
-    border-inline-start: 1px solid var(--ds-border);
+    border-inline-start: var(--ds-hairline) solid var(--ds-border);
     display: flex; flex-direction: column;
   }
   aside[aria-roledescription="panel"] [role="tabpanel"] {
@@ -20,7 +20,7 @@ export const panesCss = css`
   }
   section[aria-roledescription="panel-section"] {
     padding: ${pad(3)};
-    border-bottom: 1px solid var(--ds-border);
+    border-bottom: var(--ds-hairline) solid var(--ds-border);
     display: flex; flex-direction: column; gap: ${pad(2)};
   }
   section[aria-roledescription="panel-section"] > h3 {
@@ -54,7 +54,7 @@ export const panesCss = css`
   figure[aria-roledescription="matrix-cell"] {
     ${surface(1)}
     margin: 0;
-    border: 1px solid var(--ds-border); border-radius: ${pad(1.5)};
+    border: var(--ds-hairline) solid var(--ds-border); border-radius: ${pad(1.5)};
     padding: ${pad(2)};
     display: grid; grid-template-rows: auto 1fr;
     gap: ${pad(1.5)};
@@ -169,7 +169,7 @@ export const panesCss = css`
   section[aria-roledescription="list-view"] col[data-col="kind"]  { inline-size: 8rem; }
   nav[aria-roledescription="column"] {
     width: var(--ds-column-w); flex: none; overflow-y: auto;
-    border-inline-end: 1px solid var(--ds-border);
+    border-inline-end: var(--ds-hairline) solid var(--ds-border);
   }
   /* 컬럼 내 폴더 옵션 — 우측 chevron 자동 주입 */
   nav[aria-roledescription="column"] [role="option"][aria-haspopup="menu"]::after {
@@ -274,7 +274,7 @@ export const panesCss = css`
     align-items: center;
     gap: ${pad(2)};
     padding: ${pad(2)} ${pad(3)};
-    border-block-end: 1px solid var(--ds-border);
+    border-block-end: var(--ds-hairline) solid var(--ds-border);
     background: ${fg(1)};
   }
   main[aria-roledescription="finder-mobile"] > header > button {
@@ -339,7 +339,7 @@ export const panesCss = css`
   }
   section[aria-roledescription="finder-pager"] > article {
     display: flex; flex-direction: column;
-    border-block-start: 1px solid var(--ds-border);
+    border-block-start: var(--ds-hairline) solid var(--ds-border);
   }
   section[aria-roledescription="finder-pager"] > article:first-child {
     border-block-start: 0;
@@ -368,7 +368,7 @@ export const panesCss = css`
   aside[aria-roledescription="floating-nav"] > button {
     width: 3.5rem; height: 3.5rem;
     border-radius: 50%;
-    border: 1px solid var(--ds-border);
+    border: var(--ds-hairline) solid var(--ds-border);
     ${surface(3)}
     color: inherit;
     font-size: 1.5rem; line-height: 1;
@@ -413,7 +413,7 @@ export const panesCss = css`
     width: 3rem; height: 3rem;
     display: grid; place-items: center;
     border-radius: ${radius('md')};
-    border: 1px solid var(--ds-border);
+    border: var(--ds-hairline) solid var(--ds-border);
     background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
     font-size: 1.25rem; font-weight: 700;
     font-family: ui-rounded, ui-sans-serif, sans-serif;
@@ -444,7 +444,7 @@ export const panesCss = css`
   [aria-roledescription="message-other"] {
     align-self: flex-start;
     background: ${fg(2)};
-    border: 1px solid var(--ds-border);
+    border: var(--ds-hairline) solid var(--ds-border);
     border-end-start-radius: ${radius('sm')};
   }
   [aria-roledescription="message-me"] {
@@ -638,7 +638,7 @@ export const panesCss = css`
   header[aria-roledescription="topbar"] {
     flex: none;
     padding: ${pad(3)} ${pad(6)};
-    border-bottom: 1px solid var(--ds-border);
+    border-bottom: var(--ds-hairline) solid var(--ds-border);
     display: flex; align-items: center; justify-content: space-between;
     gap: ${pad(3)};
   }
@@ -664,7 +664,7 @@ export const panesCss = css`
     main[aria-roledescription="edu-portal-admin-app"] [aria-roledescription="nav-toggle"] {
       display: inline-flex; align-items: center; justify-content: center;
       inline-size: 2.25rem; block-size: 2.25rem;
-      border: 1px solid var(--ds-border); border-radius: ${radius('md')};
+      border: var(--ds-hairline) solid var(--ds-border); border-radius: ${radius('md')};
       background: var(--ds-bg); cursor: pointer; flex: none;
       position: absolute; inset-block-start: ${pad(2)}; inset-inline-start: ${pad(2)};
       z-index: 10;
@@ -739,7 +739,7 @@ export const panesCss = css`
     display: flex; flex-direction: column; gap: ${pad(3)};
   }
   section[aria-roledescription="catalog-zone"] > header {
-    border-bottom: 1px solid var(--ds-border);
+    border-bottom: var(--ds-hairline) solid var(--ds-border);
     padding-bottom: ${pad(2)};
     display: flex; align-items: baseline; gap: ${pad(2)};
   }
@@ -764,7 +764,7 @@ export const panesCss = css`
   article[aria-roledescription="catalog-card"] {
     ${surface(1)}
     margin: 0;
-    border: 1px solid var(--ds-border); border-radius: ${pad(2)};
+    border: var(--ds-hairline) solid var(--ds-border); border-radius: ${pad(2)};
     padding: ${pad(3)};
     display: flex; flex-direction: column; gap: ${pad(2)};
   }
@@ -826,7 +826,7 @@ export const panesCss = css`
   article[aria-roledescription="catalog-card"] [data-pass="false"] { color: ${status('danger')}; }
   article[aria-roledescription="catalog-card"] > footer {
     margin: 0; color: ${dim(55)}; font-size: var(--ds-text-xs);
-    border-top: 1px solid var(--ds-border); padding-top: ${pad(1.5)};
+    border-top: var(--ds-hairline) solid var(--ds-border); padding-top: ${pad(1.5)};
   }
 
   /* topbar의 nav-toggle은 데스크톱에서 숨김, 모바일에서만 노출 */
@@ -837,7 +837,7 @@ export const panesCss = css`
     main[aria-roledescription="catalog-app"] [aria-roledescription="nav-toggle"] {
       display: inline-flex; align-items: center; justify-content: center;
       inline-size: 2.25rem; block-size: 2.25rem;
-      border: 1px solid var(--ds-border); border-radius: ${radius('md')};
+      border: var(--ds-hairline) solid var(--ds-border); border-radius: ${radius('md')};
       background: var(--ds-bg); cursor: pointer; flex: none;
     }
     /* sidebar를 좌측에서 슬라이드 인하는 드로어로 — 기본 닫힘(translateX(-100%)) */
@@ -921,7 +921,7 @@ export const panesCss = css`
     display: flex; flex-wrap: wrap;
     align-items: center; gap: ${pad(2)} ${pad(3)};
     padding: ${pad(3)} max(${pad(3)}, env(safe-area-inset-left));
-    border-block-end: 1px solid var(--ds-border);
+    border-block-end: var(--ds-hairline) solid var(--ds-border);
     position: sticky; top: 0; z-index: 1;
     background: var(--ds-bg);
   }
@@ -940,7 +940,7 @@ export const panesCss = css`
   main[aria-roledescription="atlas-app"] > header select {
     padding: ${pad(0.5)} ${pad(1.5)};
     border-radius: ${radius('sm')};
-    border: 1px solid var(--ds-border);
+    border: var(--ds-hairline) solid var(--ds-border);
     background: var(--ds-bg);
     font-size: var(--ds-text-sm);
   }
@@ -956,7 +956,7 @@ export const panesCss = css`
     display: flex; flex-direction: column; gap: ${pad(4)};
   }
   main[aria-roledescription="atlas-app"] > section + section {
-    border-block-start: 1px solid var(--ds-border);
+    border-block-start: var(--ds-hairline) solid var(--ds-border);
   }
   main[aria-roledescription="atlas-app"] > section > h2 {
     margin: 0; font-size: var(--ds-text-md); font-weight: 700;
@@ -988,7 +988,7 @@ export const panesCss = css`
   /* 카드 — 데스크톱과 모바일에서 동일 시각, 패딩만 약간 ↓ on narrow */
   article[aria-roledescription="atlas-card"] {
     ${surface(1)}
-    border: 1px solid var(--ds-border);
+    border: var(--ds-hairline) solid var(--ds-border);
     border-radius: ${radius('md')};
     padding: ${pad(2)};
     display: flex; flex-direction: column; gap: ${pad(1.5)};
@@ -1056,7 +1056,7 @@ export const panesCss = css`
     display: block; overflow-x: auto;
   }
   table[aria-roledescription="atlas-leak-table"] thead tr { color: ${dim(55)}; text-align: start; }
-  table[aria-roledescription="atlas-leak-table"] tbody tr { border-block-start: 1px solid var(--ds-border); }
+  table[aria-roledescription="atlas-leak-table"] tbody tr { border-block-start: var(--ds-hairline) solid var(--ds-border); }
   table[aria-roledescription="atlas-leak-table"] :is(th, td) {
     padding: ${pad(0.5)} ${pad(1)}; text-align: start; vertical-align: top;
   }

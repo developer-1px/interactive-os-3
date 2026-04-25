@@ -15,7 +15,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid ${tint('CanvasText', 8)};
+      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
       border-radius: ${radius('pill')};
       /* hairline 1px ring(경계 또렷) + 짧은 드롭 — 큰 blur 흐림 제거 */
       box-shadow:
@@ -38,7 +38,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid ${tint('CanvasText', 8)};
+      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
       border-radius: ${radius('lg')};
       box-shadow: inset 0 1px 0 ${tint('CanvasText', 5)};
     }
@@ -48,7 +48,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 75%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid ${tint('CanvasText', 8)};
+      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 5)},
         0 1px 2px ${tint('CanvasText', 6)},
@@ -61,7 +61,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 72%, transparent);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
               backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid ${tint('CanvasText', 8)};
+      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
     }
 
     /* FloatingNav FAB — 진한 glass + 선명 ring + 짧은 drop */
@@ -69,7 +69,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 60%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid ${tint('CanvasText', 10)};
+      border: var(--ds-hairline) solid ${tint('CanvasText', 10)};
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 8)},
         0 0 0 1px ${tint('CanvasText', 4)},
