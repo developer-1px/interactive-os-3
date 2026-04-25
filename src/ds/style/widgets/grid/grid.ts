@@ -1,4 +1,4 @@
-import { accent, css, dim, fg, indicator, microLabel, pad, tint } from '../../../fn'
+import { accent, css, dim, emphasize, fg, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
 
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
@@ -58,6 +58,67 @@ export const grid = () => [
       text-align: start;
       vertical-align: middle;
       font: inherit;
+    }
+
+    /* sticky column header — body 스크롤 시 헤더 고정. table 자체 overflow는
+       소비자 컨테이너가 담당하고, th의 sticky가 thead 위치를 잡는다. */
+    [role="grid"] thead [role="columnheader"],
+    [role="treegrid"] thead [role="columnheader"] {
+      position: sticky; top: 0; z-index: 1;
+      background: var(--ds-bg);
+    }
+
+    /* 첫 셀(이름 등)의 icon+label 콤보 — 수평 정렬과 일관 gap */
+    [role="gridcell"][data-icon],
+    [role="rowheader"][data-icon] {
+      display: table-cell;
+    }
+    [role="gridcell"][data-icon]::before {
+      vertical-align: middle;
+      margin-inline-end: ${pad(1)};
+    }
+    [role="gridcell"][data-icon] > span,
+    [role="rowheader"][data-icon] > span {
+      vertical-align: middle;
+      min-inline-size: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── density=compact — Finder 목록뷰 / 파일관리자류 컴팩트 행 ────
+       세로 패딩을 데이터 테이블의 ~⅓로 줄여 한 화면에 더 많은 행을 보인다.
+       hover/selected는 edge-to-edge (둥글지 않음). */
+    [role="treegrid"][data-density="compact"] [role="gridcell"],
+    [role="treegrid"][data-density="compact"] [role="rowheader"],
+    [role="grid"][data-density="compact"] [role="gridcell"],
+    [role="grid"][data-density="compact"] [role="rowheader"] {
+      padding: ${pad(0.75)} ${pad(2)};
+    }
+    [role="treegrid"][data-density="compact"] [role="columnheader"],
+    [role="grid"][data-density="compact"] [role="columnheader"] {
+      padding: ${pad(1)} ${pad(2)};
+      font-size: var(--ds-text-sm);
+    }
+    /* hairline 더 흐리게 (Finder 톤) */
+    [role="treegrid"][data-density="compact"] [role="gridcell"],
+    [role="treegrid"][data-density="compact"] [role="rowheader"],
+    [role="grid"][data-density="compact"] [role="gridcell"],
+    [role="grid"][data-density="compact"] [role="rowheader"] {
+      border-block-end-color: ${fg(1)};
+    }
+    /* selected 행 — edge-to-edge accent fill, lead bar 제거(Finder는 풀폭) */
+    [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"],
+    [role="grid"][data-density="compact"] [role="row"][aria-selected="true"] {
+      background: ${tint(accent(), 18)};
+      box-shadow: none;
+    }
+    [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"] [role="gridcell"],
+    [role="grid"][data-density="compact"] [role="row"][aria-selected="true"] [role="gridcell"] {
+      border-block-end-color: transparent;
+    }
+    /* row가 클릭 가능함을 명시 */
+    [role="treegrid"][data-density="compact"] [role="row"]:not([aria-disabled="true"]),
+    [role="grid"][data-density="compact"] [role="row"]:not([aria-disabled="true"]) {
+      cursor: default;
     }
     /* 숫자 셀 opt-in — data-num 속성 또는 consumer가 style.textAlign 지정 */
     [role="gridcell"][data-num="true"] {
@@ -176,6 +237,50 @@ export const grid = () => [
       box-shadow: inset 0 0 0 2px ${accent()};
     }
 
+    /* ── density=mail — 메일/채팅류 2~3라인 리스트 ───────────────────
+       표(tabular) 대신 grid-template-areas로 행 내부 멀티라인 배치.
+       cell은 data-col로 식별. */
+    [role="grid"][data-density="mail"] { display: block; }
+    [role="grid"][data-density="mail"] [role="rowgroup"] { display: block; }
+    /* 색 소유 = surface 소유. row만이 bg/fg 페어를 가진다 (tone() 통해서, 누락 불가능).
+       cell·내부 요소는 색을 가지지 않는다 — color: inherit. 강조·약화는 *색* 대신
+       weight·opacity로 표현 → row가 surface를 뒤집어도 항상 함께 따라온다. */
+    [role="grid"][data-density="mail"] [role="row"] {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "from time"
+        "subject subject"
+        "preview preview";
+      gap: 2px ${pad(2)};
+      padding: ${pad(2)} ${pad(2.5)};
+      border-radius: ${radius('md')};
+      cursor: pointer;
+      color: inherit;
+    }
+    [role="grid"][data-density="mail"] [role="gridcell"] {
+      padding: 0; border: 0;
+      min-inline-size: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      color: inherit;
+    }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="from"]    { grid-area: from; ${emphasize(1)} }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="time"]    { grid-area: time; justify-self: end; font-size: var(--ds-text-sm); ${mute(2)} }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="subject"] { grid-area: subject; font-weight: 500; }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="preview"] { grid-area: preview; font-size: var(--ds-text-sm); ${mute(2)} }
+    /* unread 강조 — 색 ❌, weight ✅ (mute/emphasize는 surface 무관) */
+    [role="grid"][data-density="mail"] [role="row"][data-unread="true"] [role="gridcell"][data-col="from"],
+    [role="grid"][data-density="mail"] [role="row"][data-unread="true"] [role="gridcell"][data-col="subject"] {
+      ${emphasize()}
+    }
+
+    /* ── selected — tone() 페어로 bg+fg 동시 주입. 한쪽만 빼먹기 구조적 불가능 ── */
+    [role="grid"][data-density="mail"] [role="row"][aria-selected="true"] {
+      ${tone('accent')}
+      box-shadow: none;
+    }
+    /* selected-solid 하에선 bottom hairline 무의미 — 캡슐이 분리를 맡는다 */
+    [role="grid"][data-density="mail"] [role="row"] > [role="gridcell"] { border-block-end: 0; }
   `,
   // columnheader aria-sort 표식 — descending은 chevronDown 그대로, ascending은 180도 회전
   indicator('[role="columnheader"][aria-sort="descending"]', 'chevronDown', { pseudo: '::after', size: '0.9em', spacing: pad(1) }),

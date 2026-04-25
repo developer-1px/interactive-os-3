@@ -51,6 +51,7 @@ const tokens = [
   'hash', 'lock', 'user',
   'pin', 'search', 'info',
   'filter', 'edit',
+  'layout-grid', 'list', 'columns-3', 'gallery-vertical',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

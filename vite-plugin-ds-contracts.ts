@@ -141,7 +141,7 @@ const scanContracts = (root: string, callSiteCounts: Record<string, number>): Co
     const primary = basename(file, '.tsx')
     const name = names.includes(primary) ? primary : names[0]
 
-    const kind = classifyKind(src)
+    const kind = classifyKind(file)
     const role = extractRole(src)
     const propsSignature = extractPropsSig(src, name)
     const checks = buildChecks(src, kind)

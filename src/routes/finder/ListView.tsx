@@ -13,7 +13,14 @@ export function ListView({
 }) {
   const kids = node?.children ?? []
   return (
-    <TreeGrid aria-label="목록뷰" aria-rowcount={kids.length}>
+    <section aria-roledescription="list-view">
+    <TreeGrid aria-label="목록뷰" aria-rowcount={kids.length} data-density="compact">
+      <colgroup>
+        <col />
+        <col style={{ width: '14rem' }} />
+        <col style={{ width: '6rem' }} />
+        <col style={{ width: '8rem' }} />
+      </colgroup>
       <thead>
         <tr>
           <ColumnHeader>이름</ColumnHeader>
@@ -52,5 +59,6 @@ export function ListView({
         })}
       </RowGroup>
     </TreeGrid>
+    </section>
   )
 }

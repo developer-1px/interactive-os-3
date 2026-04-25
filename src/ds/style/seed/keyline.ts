@@ -6,11 +6,13 @@ import { pad } from '../../fn'
 // [trail] = 배지·시간·메뉴 버튼 등 후위 슬롯 (auto)
 export const tracks = '[lead] auto [label] 1fr [trail] auto'
 
-// 단일 간격 값 — container padding / row-gap / slot-gap 모두 이 값 하나로 통제된다.
-// 세 축이 같아야만 lead 슬롯(아이콘·아바타) 주변 여백이 정사각형이 된다.
+// 축 간격 — gap(container padding / row-gap)과 slotGap(lead↔label)을 분리.
+// 원칙: slotGap < containerPad. "요소 내부 그룹 간격은 외부 여백보다 작아야 한다"
+// (Law of Proximity) — 같은 행 안의 아이콘·라벨은 붙어 보이고, 행은 여유 있게 떨어져야
+// 시각 그룹이 뚜렷해진다. 행 좌우 패딩은 rowPadding(2) = pad(2)이므로 slotGap은 그보다 작게.
 export const gap = pad(2)
 export const rowGap = gap
-export const slotGap = gap
+export const slotGap = pad(1.5)
 export const containerPad = gap
 
 // Tree level 하나당 수평 들여쓰기 폭

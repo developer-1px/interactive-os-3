@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Renderer, definePage, ROOT, type NormalizedData } from '../../../ds'
-import { videos } from '../data'
+import { videos, LEVEL_TONE, STATUS_TONE } from '../data'
 
 type SortKey = 'title' | 'enrolled' | 'completion' | 'createdAt'
 type SortDir = 'ascending' | 'descending'
@@ -97,16 +97,6 @@ export function VideoList() {
   }
 
   return <Renderer page={definePage(data)} />
-}
-
-// 카테고리 → Badge tone 매핑.
-// 레벨은 난이도 척도 — "danger/success"는 의미 오용이라 neutral 계열만 사용.
-// 상태는 실제 운영 의미(게시/예약/비공개)라 semantic tone 사용 OK.
-const LEVEL_TONE: Record<string, 'neutral' | 'info'> = {
-  '초급': 'neutral', '중급': 'neutral', '고급': 'info',
-}
-const STATUS_TONE: Record<string, 'success' | 'neutral' | 'info' | 'danger'> = {
-  '게시 중': 'success', '예약': 'info', '임시저장': 'neutral', '숨김': 'danger',
 }
 
 // 썸네일 — picsum.photos seeded로 id마다 안정된 이미지. 16:9, 120x68.

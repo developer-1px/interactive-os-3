@@ -1,5 +1,6 @@
 import { css } from './values'
-import { accent, onAccent, bg, dim, tint } from './palette'
+import { accent, onAccent, bg } from './semantic'
+import { dim, tint } from './palette'
 
 // sel 은 단일/콤마-리스트 둘 다 허용. :where() 로 union 에 pseudo 적용 + specificity 0 유지.
 const w = (sel: string) => `:where(${sel})`

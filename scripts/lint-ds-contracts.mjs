@@ -81,6 +81,13 @@ for (const file of files) {
   const failed = checks.filter((c) => !c.pass)
   const rel = relative(ROOT, file)
 
+  // 진짜 불변(예외 0): ui/ 전 컴포넌트는 onKeyDown 을 prop 으로 노출하지 않는다.
+  // roving 은 self-attach (ds/core/gesture 헬퍼 내장). 소비자가 키보드를 다루면 미완성.
+  if (/^\s*onKeyDown\s*\??\s*:/m.test(src)) {
+    fail += 1
+    report.push(`🔴 ${rel} — onKeyDown prop 노출 금지 (roving self-attach 불변)`)
+  }
+
   // Canonical 화이트리스트: CollectionProps 타입 시그니처 강제
   if (CANONICAL_COLLECTIONS.has(name)) {
     if (!/\bCollectionProps\b/.test(src)) {

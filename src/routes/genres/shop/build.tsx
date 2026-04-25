@@ -1,36 +1,32 @@
 import { ROOT, type NormalizedData } from '../../../ds'
-import { ALL_BRANDS, CARD_KEYS, SORT_OPTS, products, type Product } from './data'
+import { ALL_BRANDS, CARD_KEYS, RATING_OPTS, SORT_OPTS, applyFilters, type FilterState } from './data'
+import { card } from './card'
 
-export interface ShopState {
-  priceMax: number; brands: Set<string>
-  setPriceMax: (v: number) => void; toggleBrand: (b: string) => void; reset: () => void
+export interface ShopState extends FilterState {
+  setPriceMax: (v: number) => void; toggleBrand: (b: string) => void
+  setOnSaleOnly: (v: boolean) => void; setMinRating: (v: number) => void
+  reset: () => void
 }
 
-const card = (p: Product) => [
-  [`pc-${p.id}`,    { id: `pc-${p.id}`,    data: { type: 'Section', emphasis: 'raised', flow: 'list' } }],
-  [`pi-${p.id}`,    { id: `pi-${p.id}`,    data: { type: 'Text', variant: 'h1', content: p.image } }],
-  [`pb-${p.id}`,    { id: `pb-${p.id}`,    data: { type: 'Text', variant: 'small', content: p.brand } }],
-  [`pt-${p.id}`,    { id: `pt-${p.id}`,    data: { type: 'Text', variant: 'strong', content: p.title } }],
-  [`pr-${p.id}`,    { id: `pr-${p.id}`,    data: { type: 'Text', variant: 'small', content: `★ ${p.rating} · ${p.reviews} reviews` } }],
-  [`pprow-${p.id}`, { id: `pprow-${p.id}`, data: { type: 'Row', flow: 'cluster' } }],
-  [`pprice-${p.id}`,{ id: `pprice-${p.id}`,data: { type: 'Text', variant: 'h3', content: `$${p.price}` } }],
-  [`porig-${p.id}`, { id: `porig-${p.id}`, data: { type: 'Text', variant: 'small', content: p.orig ? <s>{`$${p.orig}`}</s> : '', hidden: !p.orig } }],
-  [`pdisc-${p.id}`, { id: `pdisc-${p.id}`, data: { type: 'Ui', component: 'Badge', props: { tone: 'danger', children: p.orig ? `-${Math.round((1 - p.price / p.orig) * 100)}%` : '' }, hidden: !p.orig } }],
-  [`ptags-${p.id}`, { id: `ptags-${p.id}`, data: { type: 'Row', flow: 'cluster' } }],
-  ...p.tags.map((t, i) => [`ptag-${p.id}-${i}`, { id: `ptag-${p.id}-${i}`, data: { type: 'Ui', component: 'Badge', props: { tone: 'neutral', children: t } } }]),
-  [`pcart-${p.id}`, { id: `pcart-${p.id}`, data: { type: 'Ui', component: 'Button', props: { onClick: () => alert(`add ${p.title}`), 'aria-label': `${p.title} 담기` }, content: '장바구니 담기' } }],
-] as Array<readonly [string, unknown]>
+// @FIXME(srp): filter 사이드바 entities가 buildShopPage 안에 고정 목록으로 남아있음 —
+// 필터 항목이 6개 이상으로 늘거나 다른 페이지에서 재사용이 생기면 `filters.tsx`로 분리한다.
 
 export function buildShopPage(s: ShopState): NormalizedData {
-  const vis = products.filter((p) => p.price <= s.priceMax && (s.brands.size === 0 || s.brands.has(p.brand)))
+  const vis = applyFilters(s)
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'split' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
       filters: { id: 'filters', data: { type: 'Column', flow: 'form', emphasis: 'raised', width: 260 } },
       fHdr: { id: 'fHdr', data: { type: 'Text', variant: 'h3', content: '필터' } },
       priceLbl: { id: 'priceLbl', data: { type: 'Text', variant: 'strong', content: `최대 가격: $${s.priceMax}` } },
       priceInput: { id: 'priceInput', data: { type: 'Ui', component: 'Input', props: { type: 'range', min: 20, max: 2000, step: 10, value: s.priceMax, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setPriceMax(Number(e.target.value)), 'aria-label': '최대 가격' } } },
+      saleOnly: { id: 'saleOnly', data: { type: 'Ui', component: 'Checkbox', props: { checked: s.onSaleOnly, onChange: () => s.setOnSaleOnly(!s.onSaleOnly), 'aria-label': '세일 상품만', children: '세일 상품만' } } },
+      ratingLbl: { id: 'ratingLbl', data: { type: 'Text', variant: 'strong', content: '최소 별점' } },
+      ratingSel: { id: 'ratingSel', data: { type: 'Ui', component: 'Select',
+        props: { 'aria-label': '최소 별점', value: String(s.minRating), onChange: (e: React.ChangeEvent<HTMLSelectElement>) => s.setMinRating(Number(e.target.value)) },
+        content: <>{RATING_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</>,
+      } },
       brandLbl: { id: 'brandLbl', data: { type: 'Text', variant: 'strong', content: '브랜드' } },
       ...Object.fromEntries(ALL_BRANDS.map((b) => [`brand-${b}`, { id: `brand-${b}`, data: {
         type: 'Ui', component: 'Checkbox',
@@ -48,12 +44,13 @@ export function buildShopPage(s: ShopState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page'], page: ['filters', 'main'],
-      filters: ['fHdr', 'priceLbl', 'priceInput', 'brandLbl', ...ALL_BRANDS.map((b) => `brand-${b}`), 'resetBtn'],
+      filters: ['fHdr', 'priceLbl', 'priceInput', 'saleOnly', 'ratingLbl', 'ratingSel', 'brandLbl', ...ALL_BRANDS.map((b) => `brand-${b}`), 'resetBtn'],
       main: ['mainHdr', 'pgrid'],
       mainHdr: ['mainTitle', 'mainSort'],
       pgrid: vis.map((p) => `pc-${p.id}`),
       ...Object.fromEntries(vis.map((p) => [`pc-${p.id}`, CARD_KEYS.map((k) => `${k}-${p.id}`)])),
       ...Object.fromEntries(vis.map((p) => [`pprow-${p.id}`, [`pprice-${p.id}`, `porig-${p.id}`, `pdisc-${p.id}`]])),
+      ...Object.fromEntries(vis.map((p) => [`pmeta-${p.id}`, [`pbrand-${p.id}`, `prating-${p.id}`]])),
       ...Object.fromEntries(vis.map((p) => [`ptags-${p.id}`, p.tags.map((_, i) => `ptag-${p.id}-${i}`)])),
     },
   }

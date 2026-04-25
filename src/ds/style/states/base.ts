@@ -17,8 +17,11 @@ export const base = css`
     grid-template-columns: ${tracks};
     grid-auto-rows: min-content;
     /* row-gap 0 — hover 연속성을 위한 dense packing. 숨 쉬는 간격이 필요한
-       container(예: feed)만 자체 규칙에서 row-gap을 덮어쓴다. */
+       container(예: feed)만 자체 규칙에서 row-gap을 덮어쓴다.
+       column-gap은 subgrid 자식이 상속 — 자식에서 gap을 덮어써도 subgrid 축은
+       부모 값을 따르므로 lead↔label 간격은 반드시 여기서 선언한다. */
     row-gap: 0;
+    column-gap: ${slotGap};
     align-content: start;
     padding: ${containerPad};
   }
@@ -28,7 +31,6 @@ export const base = css`
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
     align-items: center;
-    gap: 0 ${slotGap};
   }
   /* 수평·table 배치는 subgrid 부적합 — 기존 flex 유지 */
   :where(${flexItem}) { display: flex; align-items: center; gap: ${slotGap}; }

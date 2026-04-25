@@ -17,6 +17,8 @@ export type FsNode = {
 
 export type SidebarItem = { id: string; label: string; path: string; icon: IconToken }
 
+export type ViewMode = 'icons' | 'list' | 'columns' | 'gallery'
+
 export type PreviewKind = 'image' | 'markdown' | 'code' | 'text' | 'binary'
 
 const IMAGE_EXT = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'])

@@ -138,6 +138,16 @@ export const panesCss = css`
   section[aria-roledescription="columns"] {
     flex: 0 1 auto; display: flex; overflow: auto; min-width: 0;
   }
+  /* list-view: columns와 달리 자기 폭을 자연스럽게 채우되 preview와 공유.
+     basis 자동 + 1단계 grow → preview의 min-width(var(--ds-preview-w))가 보장되는
+     남은 공간을 ListView가 차지. 행 수가 많으면 자체 세로 스크롤. */
+  section[aria-roledescription="list-view"] {
+    flex: 1 1 0; min-width: 0; overflow: auto;
+    display: block;
+  }
+  section[aria-roledescription="list-view"] [role="treegrid"] {
+    table-layout: fixed;
+  }
   nav[aria-roledescription="column"] {
     width: var(--ds-column-w); flex: none; overflow-y: auto;
     border-inline-end: 1px solid var(--ds-border);
@@ -234,5 +244,122 @@ export const panesCss = css`
   section[aria-roledescription="content"] {
     flex: 1; overflow: auto; padding: ${pad(6)};
     display: flex; flex-direction: column; gap: ${pad(6)};
+  }
+
+  /* Catalog — ds ui zone-first 감사 대시보드. edu-portal-admin 과 동일한 셸 구조,
+     content 영역은 zone 섹션이 위계로 쌓인다 (h2 zone, h3 component card). */
+  main[aria-roledescription="catalog-app"] {
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  main[aria-roledescription="catalog-app"] > section[aria-roledescription="body"] {
+    flex: 1; display: flex; min-height: 0;
+  }
+  dl[aria-roledescription="catalog-stats"] {
+    margin: 0; display: flex; gap: ${pad(5)}; align-items: baseline;
+  }
+  dl[aria-roledescription="catalog-stats"] > div { display: grid; gap: ${pad(0.25)}; }
+  dl[aria-roledescription="catalog-stats"] dt {
+    ${microLabel()}
+    margin: 0;
+  }
+  dl[aria-roledescription="catalog-stats"] dd {
+    margin: 0; font-size: var(--ds-text-lg); font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  dl[aria-roledescription="catalog-stats"] [data-tone="good"] { color: ${status('success')}; }
+  dl[aria-roledescription="catalog-stats"] [data-tone="warn"] { color: ${status('warning')}; }
+
+  section[aria-roledescription="catalog-zone"] {
+    display: flex; flex-direction: column; gap: ${pad(3)};
+  }
+  section[aria-roledescription="catalog-zone"] > header {
+    border-bottom: 1px solid var(--ds-border);
+    padding-bottom: ${pad(2)};
+    display: flex; align-items: baseline; gap: ${pad(2)};
+  }
+  section[aria-roledescription="catalog-zone"] > header > h2 {
+    margin: 0; font-size: var(--ds-text-xl); font-weight: 700;
+    letter-spacing: var(--ds-tracking);
+  }
+  section[aria-roledescription="catalog-zone"] > header > small {
+    color: ${dim(55)}; font-size: var(--ds-text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  section[aria-roledescription="catalog-zone"] > p {
+    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-sm); max-width: 60ch;
+  }
+
+  ul[aria-roledescription="catalog-grid"] {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: ${pad(3)};
+  }
+
+  article[aria-roledescription="catalog-card"] {
+    ${surface(1)}
+    margin: 0;
+    border: 1px solid var(--ds-border); border-radius: ${pad(2)};
+    padding: ${pad(3)};
+    display: flex; flex-direction: column; gap: ${pad(2)};
+  }
+  article[aria-roledescription="catalog-card"] > header {
+    display: flex; align-items: baseline; gap: ${pad(1.5)}; flex-wrap: wrap;
+  }
+  article[aria-roledescription="catalog-card"] > header > h3 {
+    margin: 0; font-size: var(--ds-text-md); font-weight: 600;
+  }
+  article[aria-roledescription="catalog-card"] > header > [data-badge] {
+    padding: ${pad(0.25)} ${pad(1)}; border-radius: ${radius('pill')};
+    font-size: var(--ds-text-xs); font-weight: 600;
+    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
+  }
+  article[aria-roledescription="catalog-card"] > header > [data-badge][data-tone="good"] {
+    background: color-mix(in oklch, ${status('success')} 14%, transparent);
+    color: ${status('success')};
+  }
+  article[aria-roledescription="catalog-card"] > header > [data-badge][data-tone="warn"] {
+    background: color-mix(in oklch, ${status('warning')} 14%, transparent);
+    color: ${status('warning')};
+  }
+  article[aria-roledescription="catalog-card"] > header > [data-badge][data-tone="bad"] {
+    background: color-mix(in oklch, ${status('danger')} 14%, transparent);
+    color: ${status('danger')};
+  }
+  article[aria-roledescription="catalog-card"] > header > code {
+    font-size: var(--ds-text-xs); color: ${dim(55)};
+    font-family: ui-monospace, monospace;
+  }
+  article[aria-roledescription="catalog-card"] > header > small {
+    margin-inline-start: auto;
+    color: ${dim(55)}; font-size: var(--ds-text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+  article[aria-roledescription="catalog-card"] > [aria-roledescription="card-path"] {
+    font-family: ui-monospace, monospace;
+    font-size: var(--ds-text-xs); color: ${dim(55)};
+  }
+  article[aria-roledescription="catalog-card"] > pre {
+    margin: 0; padding: ${pad(2)};
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+    border-radius: ${pad(1)}; font-size: var(--ds-text-xs);
+    overflow-x: auto; font-family: ui-monospace, monospace;
+  }
+  article[aria-roledescription="catalog-card"] > figure[aria-roledescription="card-demo"] {
+    margin: 0; padding: ${pad(2)};
+    border: 1px dashed var(--ds-border);
+    border-radius: ${pad(1)};
+    background: color-mix(in oklch, var(--ds-fg) 2%, transparent);
+    min-height: 56px;
+    display: flex; align-items: center;
+  }
+  article[aria-roledescription="catalog-card"] > ul[aria-roledescription="card-checks"] {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: ${pad(0.5)}; font-size: var(--ds-text-xs);
+  }
+  article[aria-roledescription="catalog-card"] [data-pass="true"]  { color: ${status('success')}; }
+  article[aria-roledescription="catalog-card"] [data-pass="false"] { color: ${status('danger')}; }
+  article[aria-roledescription="catalog-card"] > footer {
+    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-xs);
+    border-top: 1px solid var(--ds-border); padding-top: ${pad(1.5)};
   }
 `

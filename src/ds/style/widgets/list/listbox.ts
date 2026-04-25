@@ -1,4 +1,4 @@
-import { css, dim, pad } from '../../../fn'
+import { css, mute, pad } from '../../../fn'
 
 /**
  * Listbox — [icon][label ···][trailing] 보편 리스트 행.
@@ -14,7 +14,7 @@ export const listboxCss = () => css`
     margin-inline-start: auto;
     padding-inline-start: ${pad(2)};
     font-size: var(--ds-text-sm);
-    color: ${dim(55)};
+    ${mute(2)}
     font-variant-numeric: tabular-nums;
   }
 `

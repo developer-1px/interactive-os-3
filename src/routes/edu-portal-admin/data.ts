@@ -81,6 +81,42 @@ export const videos: VideoRow[] = [
     enrolled: 0, completion: null, rating: null, status: '임시저장', visible: false,
     createdAt: '2026.04.21',
   },
+  {
+    id: 'v4', title: 'NCP API·SDK 입문', duration: '00:45:00',
+    tags: ['API', 'SDK'], level: '초급', roles: ['개발자'],
+    enrolled: 142, completion: 88, rating: 4.6, status: '게시 중', visible: true,
+    createdAt: '2026.03.04',
+  },
+  {
+    id: 'v5', title: 'DevOps 자동화 패턴', duration: '01:10:00',
+    tags: ['Pipeline', 'GitOps'], level: '중급', roles: ['개발자'],
+    enrolled: 64, completion: 55, rating: 4.3, status: '게시 중', visible: true,
+    createdAt: '2026.04.22',
+  },
+  {
+    id: 'v6', title: '클라우드 인프라 설계 기초', duration: '00:55:00',
+    tags: ['VPC', 'Subnet'], level: '초급', roles: ['엔지니어'],
+    enrolled: 121, completion: 80, rating: 4.4, status: '게시 중', visible: true,
+    createdAt: '2026.02.18',
+  },
+  {
+    id: 'v7', title: '가상 서버 운영·모니터링', duration: '01:05:00',
+    tags: ['Cloud Insight', 'Monitoring'], level: '중급', roles: ['엔지니어'],
+    enrolled: 98, completion: 70, rating: 4.5, status: '게시 중', visible: true,
+    createdAt: '2026.03.20',
+  },
+  {
+    id: 'v8', title: 'IAM·접근 제어 실습', duration: '00:50:00',
+    tags: ['IAM', 'Role'], level: '중급', roles: ['보안', '엔지니어'],
+    enrolled: 71, completion: 60, rating: 4.1, status: '게시 중', visible: true,
+    createdAt: '2026.04.10',
+  },
+  {
+    id: 'v9', title: 'HyperCLOVA X 활용 입문', duration: '00:40:00',
+    tags: ['HyperCLOVA', 'LLM'], level: '초급', roles: ['AI'],
+    enrolled: 203, completion: 92, rating: 4.7, status: '게시 중', visible: true,
+    createdAt: '2026.04.20',
+  },
 ]
 
 export interface RoleCategory {
@@ -88,15 +124,15 @@ export interface RoleCategory {
   name: string
   desc: string
   icon: string
-  videoCount: number
+  videoIds: string[]
   visible: boolean
 }
 
 export const roleCategories: RoleCategory[] = [
-  { id: 'dev', name: '클라우드 개발자 과정', desc: 'NCP API·SDK·DevOps 도구를 활용한 클라우드 네이티브 개발', icon: '💻', videoCount: 5, visible: true },
-  { id: 'eng', name: '클라우드 엔지니어 과정', desc: '서버·네트워크·스토리지 구성 및 클라우드 인프라 운영 관리', icon: '🔧', videoCount: 6, visible: true },
-  { id: 'sec', name: '클라우드 보안 과정', desc: 'NCP 보안 서비스 활용 및 클라우드 환경 보안 정책 수립', icon: '🛡', videoCount: 4, visible: false },
-  { id: 'ai',  name: '생성형 AI 과정', desc: 'HyperCLOVA X 및 AI API를 활용한 생성형 AI 서비스 개발', icon: '🤖', videoCount: 4, visible: true },
+  { id: 'dev', name: '클라우드 개발자 과정', desc: 'NCP API·SDK·DevOps 도구를 활용한 클라우드 네이티브 개발', icon: '💻', videoIds: ['v4', 'v1', 'v5'], visible: true },
+  { id: 'eng', name: '클라우드 엔지니어 과정', desc: '서버·네트워크·스토리지 구성 및 클라우드 인프라 운영 관리', icon: '🔧', videoIds: ['v6', 'v7', 'v8'], visible: true },
+  { id: 'sec', name: '클라우드 보안 과정', desc: 'NCP 보안 서비스 활용 및 클라우드 환경 보안 정책 수립', icon: '🛡', videoIds: ['v8', 'v2'], visible: false },
+  { id: 'ai',  name: '생성형 AI 과정', desc: 'HyperCLOVA X 및 AI API를 활용한 생성형 AI 서비스 개발', icon: '🤖', videoIds: ['v9', 'v3'], visible: true },
 ]
 
 export interface CertCategory {
@@ -104,16 +140,33 @@ export interface CertCategory {
   name: string
   desc: string
   level: 'NCA' | 'NCP' | 'NCE' | 'ETC'
-  videoCount: number
+  videoIds: string[]
   visible: boolean
   locked: boolean
 }
 
 export const certCategories: CertCategory[] = [
-  { id: 'nca', name: 'NCA', desc: 'NAVER Cloud Associate — 입문 과정', level: 'NCA', videoCount: 4, visible: true, locked: true },
-  { id: 'ncp', name: 'NCP', desc: 'NAVER Cloud Professional — 실무 과정', level: 'NCP', videoCount: 5, visible: true, locked: true },
-  { id: 'nce', name: 'NCE', desc: 'NAVER Cloud Expert — 심화 과정', level: 'NCE', videoCount: 3, visible: true, locked: true },
+  { id: 'nca', name: 'NCA', desc: 'NAVER Cloud Associate — 입문 과정', level: 'NCA', videoIds: ['v4', 'v6', 'v9'], visible: true, locked: true },
+  { id: 'ncp', name: 'NCP', desc: 'NAVER Cloud Professional — 실무 과정', level: 'NCP', videoIds: ['v1', 'v5', 'v7', 'v8'], visible: true, locked: true },
+  { id: 'nce', name: 'NCE', desc: 'NAVER Cloud Expert — 심화 과정', level: 'NCE', videoIds: ['v2', 'v3'], visible: true, locked: true },
 ]
+
+export function videoCountOf(c: { videoIds: string[] }): number {
+  return c.videoIds.length
+}
+
+// 카테고리 → Badge tone 매핑. VideoList·VideoOrder 가 같은 출처를 공유한다.
+// 레벨은 난이도 척도 — "danger/success" 는 의미 오용이라 neutral 계열만 사용.
+// 상태는 실제 운영 의미(게시/예약/비공개)라 semantic tone 사용 OK.
+export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
+
+export const LEVEL_TONE: Record<VideoRow['level'], Tone> = {
+  '초급': 'neutral', '중급': 'neutral', '고급': 'info',
+}
+
+export const STATUS_TONE: Record<VideoRow['status'], Tone> = {
+  '게시 중': 'success', '예약': 'info', '임시저장': 'neutral', '숨김': 'danger',
+}
 
 // change 문자열에서 ↑/↓ 글리프 제거 — 방향 시각은 changeDir prop + StatCard가 lucide
 // trending-up/down 아이콘으로 렌더링한다. 숫자 앞 기호는 컨텐츠에 남길 수 있다(+3).

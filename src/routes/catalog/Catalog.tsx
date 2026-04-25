@@ -1,29 +1,42 @@
 import { useMemo, useState } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
+import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData, ROOT } from '../../ds'
 import { demos } from './demos'
 
 /**
- * Catalog — ui 컴포넌트 zone-first 감사 대시보드.
+ * Catalog — ds ui zone-first 감사 대시보드.
  *
  * 폴더 = zone 의 단일 진실 원천 (src/ds/core/INVARIANTS.md):
- *   collection · composite · control · overlay · entity · layout
- * zone 폴더 외부 컴포넌트는 drift — 폴더로 이동 또는 lint 차단.
+ *   collection · composite · control · overlay · entity · layout · drift
+ * 좌측 sidebar 는 zone 분류, 우측 content 는 zone → component card 위계.
  */
 
 const kindLabel: Record<Kind, string> = {
-  collection: 'collection — data: CollectionProps + useRoving',
-  composite:  'composite — composition roving (children + useRovingDOM)',
-  control:    'control — atomic native tabbable',
-  overlay:    'overlay — surface (dialog/popover/tooltip)',
-  entity:     'entity — domain content card',
-  layout:     'layout — primitive · decoration',
-  drift:      '🟡 drift — zone 폴더 외부',
+  collection: 'collection',
+  composite:  'composite',
+  control:    'control',
+  overlay:    'overlay',
+  entity:     'entity',
+  layout:     'layout',
+  drift:      'drift',
+}
+
+const kindBlurb: Record<Kind, string> = {
+  collection: 'data-driven roving — CollectionProps={data, onEvent} + useRoving. item 은 closed schema 의 leaf variant.',
+  composite:  'composition roving — children: ReactNode + useRovingDOM. 그룹 단위 Tab stop, 자식은 자유 JSX.',
+  control:    'atomic native — 단일 tabbable element wrap. activate 는 네이티브 button/input 이 담당.',
+  overlay:    'surface — native dialog/popover/details. Escape · backdrop · focus trap 은 플랫폼이 위임.',
+  entity:     'domain content card — 2+ 도메인 힌트 속성. roving 무관, 정보 표현 단위.',
+  layout:     'primitive · decoration — Row/Column/Grid 와 정적 시각화. roving 무관.',
+  drift:      'zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동',
 }
 
 const kindOrder: Kind[] = ['collection', 'composite', 'control', 'overlay', 'entity', 'layout', 'drift']
 
+type Filter = Kind | 'all'
+
 export function Catalog() {
-  const [filter, setFilter] = useState<Kind | 'all'>('all')
+  const [filter, setFilter] = useState<Filter>('all')
 
   const grouped = useMemo(() => {
     const m: Record<Kind, Contract[]> = {
@@ -42,55 +55,87 @@ export function Catalog() {
   }, [grouped])
 
   const visible = filter === 'all' ? kindOrder : [filter]
+  const visibleZones = visible.filter((k) => grouped[k].length > 0)
 
   return (
     <main aria-roledescription="catalog-app" aria-label="Catalog">
-      <header style={headerStyle}>
-        <h1 style={{ margin: 0, fontSize: 'var(--ds-text-lg)' }}>Catalog</h1>
-        <span style={{ color: 'var(--ds-muted)', fontSize: 'var(--ds-text-sm)' }}>
-          data 기반 ui 컴포넌트의 "쓰는 법 통일" 감사
-        </span>
-      </header>
-
-      <section aria-labelledby="stats" style={{ padding: '16px 24px', borderBottom: '1px solid var(--ds-border)' }}>
-        <h2 id="stats" style={srOnly}>통계</h2>
-        <dl style={dlStyle}>
-          <Stat label="총 컴포넌트" value={totals.total} />
-          <Stat label="canonical (ControlProps)" value={totals.canonical} tone="good" />
-          <Stat label="통일 탈선 (array + children)" value={totals.drift} tone="warn" />
-          <Stat label="6개 체크 전부 통과" value={totals.passAll} tone="good" />
-          <Stat label="수렴률"
-            value={totals.total ? `${Math.round((totals.canonical / totals.total) * 100)}%` : '—'}
-            tone={totals.canonical / totals.total > 0.3 ? 'good' : 'warn'} />
-        </dl>
-      </section>
-
-      <nav aria-label="Kind filter" style={{ padding: '12px 24px', borderBottom: '1px solid var(--ds-border)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <FilterChip active={filter === 'all'} onClick={() => setFilter('all')}>All ({contracts.length})</FilterChip>
-        {kindOrder.map((k) => (
-          <FilterChip key={k} active={filter === k} onClick={() => setFilter(k)}>
-            {kindLabel[k]} ({grouped[k].length})
-          </FilterChip>
-        ))}
-      </nav>
-
-      <section style={{ padding: 24 }}>
-        {visible.map((k) => {
-          const list = grouped[k]
-          if (list.length === 0) return null
-          return (
-            <section key={k} aria-labelledby={`k-${k}`} style={{ marginBottom: 40 }}>
-              <h2 id={`k-${k}`} style={{ fontSize: 'var(--ds-text-md)', margin: '0 0 12px' }}>
-                {kindLabel[k]} <span style={{ color: 'var(--ds-muted)', fontWeight: 400 }}>({list.length})</span>
-              </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 12 }}>
-                {list.map((c) => <Card key={c.file} contract={c} />)}
-              </div>
-            </section>
-          )
-        })}
+      <section aria-roledescription="body">
+        <CatalogNav filter={filter} setFilter={setFilter} grouped={grouped} total={totals.total} />
+        <section aria-roledescription="workspace">
+          <header aria-roledescription="topbar">
+            <hgroup>
+              <h1>{filter === 'all' ? 'Catalog' : kindLabel[filter as Kind]}</h1>
+              <p>{filter === 'all' ? 'ui 컴포넌트 zone-first 감사' : kindBlurb[filter as Kind]}</p>
+            </hgroup>
+            <dl aria-roledescription="catalog-stats">
+              <div><dt>총</dt><dd>{totals.total}</dd></div>
+              <div><dt>canonical</dt><dd data-tone="good">{totals.canonical}</dd></div>
+              <div><dt>drift</dt><dd data-tone={totals.drift > 0 ? 'warn' : undefined}>{totals.drift}</dd></div>
+              <div><dt>전부 통과</dt><dd data-tone="good">{totals.passAll}</dd></div>
+              <div><dt>수렴률</dt><dd data-tone={totals.canonical / totals.total > 0.3 ? 'good' : 'warn'}>
+                {totals.total ? `${Math.round((totals.canonical / totals.total) * 100)}%` : '—'}
+              </dd></div>
+            </dl>
+          </header>
+          <section aria-roledescription="content">
+            {visibleZones.map((k) => {
+              const list = grouped[k]
+              return (
+                <section key={k} aria-roledescription="catalog-zone" aria-labelledby={`z-${k}`}>
+                  <header>
+                    <h2 id={`z-${k}`}>{kindLabel[k]}</h2>
+                    <small>{list.length}</small>
+                  </header>
+                  <p>{kindBlurb[k]}</p>
+                  <ul aria-roledescription="catalog-grid">
+                    {list.map((c) => <li key={c.file}><Card contract={c} /></li>)}
+                  </ul>
+                </section>
+              )
+            })}
+          </section>
+        </section>
       </section>
     </main>
+  )
+}
+
+function CatalogNav({
+  filter, setFilter, grouped, total,
+}: { filter: Filter; setFilter: (f: Filter) => void; grouped: Record<Kind, Contract[]>; total: number }) {
+  const base = useMemo<NormalizedData>(() => {
+    const items: { id: Filter; label: string; badge: number }[] = [
+      { id: 'all', label: 'All', badge: total },
+      ...kindOrder.map((k) => ({ id: k, label: kindLabel[k], badge: grouped[k].length })),
+    ]
+    const entities: NormalizedData['entities'] = {
+      [ROOT]: { id: ROOT },
+      __focus__: { id: '__focus__', data: { id: filter } },
+    }
+    for (const it of items) {
+      entities[it.id] = { id: it.id, data: { label: it.label, badge: it.badge, selected: it.id === filter } }
+    }
+    return { entities, relationships: { [ROOT]: items.map((i) => i.id) } }
+  }, [filter, grouped, total])
+
+  const [data, dispatch] = useControlState(base)
+  const onEvent = (e: Event) =>
+    navigateOnActivate(data, e).forEach((ev) => {
+      dispatch(ev)
+      if (ev.type === 'activate') setFilter(ev.id as Filter)
+    })
+
+  return (
+    <nav aria-roledescription="sidebar" aria-label="Catalog navigation">
+      <header>
+        <strong>ds Catalog</strong>
+        <small>{total} components</small>
+      </header>
+      <section aria-labelledby="sb-zones">
+        <h3 id="sb-zones">zone</h3>
+        <Listbox data={data} onEvent={onEvent} aria-label="zone 분류" />
+      </section>
+    </nav>
   )
 }
 
@@ -101,37 +146,24 @@ function Card({ contract }: { contract: Contract }) {
   const badgeTone = allPass ? 'good' : score >= 0.7 ? 'warn' : 'bad'
 
   return (
-    <article style={cardStyle}>
-      <header style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-        <h3 style={{ margin: 0, fontSize: 'var(--ds-text-md)', fontWeight: 600 }}>{name}</h3>
-        <span style={{ ...badgeStyle, ...badgeToneStyle(badgeTone) }}>{badge}</span>
-        {role && <span style={roleChip}>role="{role}"</span>}
-        <span style={{ marginLeft: 'auto', color: 'var(--ds-muted)', fontSize: 'var(--ds-text-xs)' }}>
-          {callSites} 소비처
-        </span>
+    <article aria-roledescription="catalog-card">
+      <header>
+        <h3>{name}</h3>
+        <span data-badge data-tone={badgeTone}>{badge}</span>
+        {role && <code>role=&quot;{role}&quot;</code>}
+        <small>{callSites} 소비처</small>
       </header>
-      <div style={{ fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)', marginTop: 4, fontFamily: 'var(--ds-font-mono)' }}>
-        {file.replace('/src/ds/ui/', '')}
-      </div>
-      <pre style={sigStyle}>{propsSignature}</pre>
+      <small aria-roledescription="card-path">{file.replace('/src/ds/ui/', '')}</small>
+      <pre>{propsSignature}</pre>
       <Demo name={name} />
-      <ul style={checksStyle}>
+      <ul aria-roledescription="card-checks">
         {checks.map((c) => (
-          <li key={c.id} style={{ color: c.pass ? 'var(--ds-success)' : 'var(--ds-danger)' }}>
+          <li key={c.id} data-pass={c.pass ? 'true' : 'false'}>
             {c.pass ? '✓' : '✗'} {c.label}
           </li>
         ))}
       </ul>
-      {kind !== 'collection' && (
-        <footer style={{ marginTop: 8, fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)' }}>
-          {kind === 'drift'     && 'zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동'}
-          {kind === 'composite' && 'children + useRovingDOM — Toolbar/Tabs/Menubar/DataGrid 류'}
-          {kind === 'control'   && '단일 tabbable native — Button/Input/Checkbox 류'}
-          {kind === 'overlay'   && 'surface — dialog/popover/tooltip 위임'}
-          {kind === 'entity'    && '도메인 content card — 2+ 도메인 힌트 속성'}
-          {kind === 'layout'    && 'primitive · decoration — roving 무관'}
-        </footer>
-      )}
+      {kind === 'drift' && <footer>zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동</footer>}
     </article>
   )
 }
@@ -139,99 +171,8 @@ function Card({ contract }: { contract: Contract }) {
 function Demo({ name }: { name: string }) {
   const Render = demos[name]
   return (
-    <div style={demoStyle} aria-label={`${name} 예시`}>
-      {Render ? (
-        <Render />
-      ) : (
-        <span style={{ color: 'var(--ds-muted)', fontSize: 'var(--ds-text-xs)' }}>demo TBD</span>
-      )}
-    </div>
+    <figure aria-roledescription="card-demo" aria-label={`${name} 예시`}>
+      {Render ? <Render /> : <small>demo TBD</small>}
+    </figure>
   )
-}
-
-function Stat({ label, value, tone }: { label: string; value: number | string; tone?: 'good' | 'warn' }) {
-  return (
-    <div>
-      <dt style={{ fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)' }}>{label}</dt>
-      <dd style={{
-        margin: 0, fontSize: 'var(--ds-text-xl)', fontWeight: 700,
-        color: tone === 'good' ? 'var(--ds-success)' : tone === 'warn' ? 'var(--ds-warning)' : 'var(--ds-fg)',
-        fontVariantNumeric: 'tabular-nums',
-      }}>{value}</dd>
-    </div>
-  )
-}
-
-function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button type="button" onClick={onClick} aria-pressed={active} style={{
-      padding: '4px 10px',
-      borderRadius: 'var(--ds-radius-pill)',
-      border: '1px solid var(--ds-border)',
-      background: active ? 'var(--ds-accent)' : 'transparent',
-      color: active ? 'var(--ds-accent-on)' : 'var(--ds-fg)',
-      fontSize: 'var(--ds-text-xs)', cursor: 'pointer',
-    }}>{children}</button>
-  )
-}
-
-const headerStyle: React.CSSProperties = {
-  padding: '16px 24px', borderBottom: '1px solid var(--ds-border)',
-  display: 'flex', alignItems: 'center', gap: 16,
-}
-const cardStyle: React.CSSProperties = {
-  padding: 16,
-  border: '1px solid var(--ds-border)',
-  borderRadius: 'var(--ds-radius-md)',
-  background: 'var(--ds-bg)',
-}
-const badgeStyle: React.CSSProperties = {
-  padding: '2px 8px',
-  borderRadius: 'var(--ds-radius-pill)',
-  fontSize: 'var(--ds-text-xs)',
-  fontWeight: 600,
-}
-const badgeToneStyle = (tone: 'good' | 'warn' | 'bad'): React.CSSProperties => ({
-  background:
-    tone === 'good' ? 'color-mix(in oklab, var(--ds-success) 12%, transparent)' :
-    tone === 'warn' ? 'color-mix(in oklab, var(--ds-warning) 12%, transparent)' :
-                      'color-mix(in oklab, var(--ds-danger) 12%, transparent)',
-  color:
-    tone === 'good' ? 'var(--ds-success)' :
-    tone === 'warn' ? 'var(--ds-warning)' :
-                      'var(--ds-danger)',
-})
-const roleChip: React.CSSProperties = {
-  fontSize: 'var(--ds-text-xs)',
-  color: 'var(--ds-muted)',
-  fontFamily: 'var(--ds-font-mono)',
-}
-const sigStyle: React.CSSProperties = {
-  margin: '8px 0 0', padding: 8,
-  background: 'color-mix(in oklab, var(--ds-fg) 4%, transparent)',
-  borderRadius: 'var(--ds-radius-sm)',
-  fontSize: 'var(--ds-text-xs)',
-  overflowX: 'auto',
-  fontFamily: 'var(--ds-font-mono)',
-}
-const checksStyle: React.CSSProperties = {
-  margin: '10px 0 0', padding: 0, listStyle: 'none',
-  display: 'grid', gap: 4, fontSize: 'var(--ds-text-xs)',
-}
-const demoStyle: React.CSSProperties = {
-  margin: '12px 0 0',
-  padding: 12,
-  border: '1px dashed var(--ds-border)',
-  borderRadius: 'var(--ds-radius-sm)',
-  background: 'color-mix(in oklab, var(--ds-fg) 2%, transparent)',
-  minHeight: 48,
-  display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
-  overflow: 'auto',
-}
-const dlStyle: React.CSSProperties = {
-  margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16,
-}
-const srOnly: React.CSSProperties = {
-  position: 'absolute', width: 1, height: 1, padding: 0, margin: -1,
-  overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0,
 }

@@ -41,4 +41,24 @@ export const toolbar = () => css`
     background: ${fg(3)};
     align-self: center;
   }
+
+  /* ── toolbar group — pill 캡슐 단위로 액션 묶기 (Apple Mail 패턴) ──
+     role="group"을 toolbar 안에 두면 내부 버튼이 pill 클러스터로 묶임.
+     segmented 느낌 — 1개짜리 그룹도 허용(독립 pill). */
+  [role="toolbar"] > [role="group"] {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(0.25)};
+    padding: ${pad(0.5)};
+    background: ${fg(2)};
+    border-radius: ${radius('pill')};
+  }
+  [role="toolbar"] > [role="group"] > button {
+    background: transparent;
+    border: 0;
+    border-radius: ${radius('pill')};
+  }
+  [role="toolbar"] > [role="group"] > button:hover:not(:disabled) {
+    background: ${fg(3)};
+  }
 `

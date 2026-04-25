@@ -6,7 +6,9 @@ import { buildShopPage } from './build'
 export function Shop() {
   const [priceMax, setPriceMax] = useState(2000)
   const [brands, setBrands] = useState<Set<string>>(new Set())
+  const [onSaleOnly, setOnSaleOnly] = useState(false)
+  const [minRating, setMinRating] = useState(0)
   const toggleBrand = (b: string) => setBrands((p) => { const n = new Set(p); if (n.has(b)) n.delete(b); else n.add(b); return n })
-  const reset = () => { setBrands(new Set()); setPriceMax(2000) }
-  return <Renderer page={definePage(buildShopPage({ priceMax, brands, setPriceMax, toggleBrand, reset }))} />
+  const reset = () => { setBrands(new Set()); setPriceMax(2000); setOnSaleOnly(false); setMinRating(0) }
+  return <Renderer page={definePage(buildShopPage({ priceMax, brands, onSaleOnly, minRating, setPriceMax, toggleBrand, setOnSaleOnly, setMinRating, reset }))} />
 }

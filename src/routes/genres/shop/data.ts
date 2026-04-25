@@ -20,4 +20,19 @@ export const SORT_OPTS: Array<[string, string]> = [
   ['popular', '인기순'], ['price-asc', '가격 낮은순'], ['price-desc', '가격 높은순'], ['rating', '별점순'],
 ]
 
-export const CARD_KEYS = ['pi','pb','pt','pr','pprow','ptags','pcart'] as const
+export const CARD_KEYS = ['pi','pt','pprow','pmeta','ptags','pcart'] as const
+
+export const RATING_OPTS: Array<[number, string]> = [
+  [0, '전체'], [4.0, '★ 4.0+'], [4.5, '★ 4.5+'], [4.8, '★ 4.8+'],
+]
+
+export interface FilterState {
+  priceMax: number; brands: Set<string>; onSaleOnly: boolean; minRating: number
+}
+
+export const applyFilters = (f: FilterState): Product[] => products.filter((p) =>
+  p.price <= f.priceMax
+  && (f.brands.size === 0 || f.brands.has(p.brand))
+  && (!f.onSaleOnly || p.orig != null)
+  && p.rating >= f.minRating
+)

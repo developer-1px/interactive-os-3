@@ -1,7 +1,10 @@
-import { Badge, ROOT, type Event, type NormalizedData } from '../../../ds'
-import { ACTS, CELL_KEYS, MESSAGES, folders, labelTone, type FolderId } from './data'
+import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ACTS, MESSAGES, folders, labelTone, type FolderId } from './data'
 
 const currentFolderLabel = (f: FolderId) => folders.find((x) => x.id === f)?.label ?? '메일'
+
+/** density=mail 전용 셀 구성 — data-col로 grid-area 배치 */
+const MAIL_COLS = ['from', 'time', 'subject', 'preview'] as const
 
 export interface InboxState {
   folder: FolderId; selectedId: string
@@ -13,16 +16,15 @@ export function buildInboxPage(s: InboxState): NormalizedData {
   const vis = MESSAGES.filter((m) => s.folder === 'inbox' ? true : s.folder === 'starred' ? m.starred : m.folder === s.folder)
   const cur = MESSAGES.find((m) => m.id === s.selectedId) ?? vis[0]
   const rowPairs = vis.flatMap((m) => {
-    const cs: Array<[typeof CELL_KEYS[number], unknown]> = [
-      ['star', <span aria-label={m.starred ? '별표' : '없음'} data-icon="star" style={{ opacity: m.starred ? 1 : 0.2 }} />],
-      ['from', <>{m.from}{m.unread && <span data-icon="dot" data-tone="info" aria-label="안 읽음" />}</>],
-      ['subject', <><strong>{m.subject}</strong> <small>— {m.preview}</small></>],
-      ['label', m.label ? <Badge tone={labelTone[m.label]}>{m.label}</Badge> : null],
-      ['time', <small>{m.time}</small>],
+    const cs: Array<[typeof MAIL_COLS[number], unknown]> = [
+      ['from', m.from],
+      ['time', m.time],
+      ['subject', m.subject],
+      ['preview', m.preview],
     ]
     return [
       [`row-${m.id}`, { id: `row-${m.id}`, data: { type: 'Ui', component: 'DataGridRow', props: { 'aria-selected': m.id === s.selectedId, 'data-unread': m.unread || undefined, onClick: () => s.setSelected(m.id) } } }],
-      ...cs.map(([k, c]) => [`c-${m.id}-${k}`, { id: `c-${m.id}-${k}`, data: { type: 'Ui', component: 'GridCell', content: c } }]),
+      ...cs.map(([k, c]) => [`c-${m.id}-${k}`, { id: `c-${m.id}-${k}`, data: { type: 'Ui', component: 'GridCell', props: { 'data-col': k }, content: c } }]),
     ] as Array<readonly [string, unknown]>
   })
   return {
@@ -42,11 +44,13 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       listTools: { id: 'listTools', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '도구' } } },
       btnFilter: { id: 'btnFilter', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '필터', 'data-icon': 'filter' } } },
       btnCompose: { id: 'btnCompose', data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': '새 메일', 'data-icon': 'edit', onClick: () => alert('compose') } } },
-      listGrid: { id: 'listGrid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '메시지' } } },
+      listGrid: { id: 'listGrid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '메시지', 'data-density': 'mail' } } },
       listBody: { id: 'listBody', data: { type: 'Ui', component: 'RowGroup' } },
       ...Object.fromEntries(rowPairs),
       detail: { id: 'detail', data: { type: 'Column', flow: 'list', emphasis: 'raised', grow: true } },
       detailActions: { id: 'detailActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '액션' } } },
+      grpReply: { id: 'grpReply', data: { type: 'Row', flow: 'cluster', label: '답장' } },
+      grpArchive: { id: 'grpArchive', data: { type: 'Row', flow: 'cluster', label: '정리' } },
       ...Object.fromEntries(ACTS.map(([id, label, icon]) => [id, { id, data: { type: 'Ui', component: 'ToolbarButton', props: { 'aria-label': label, 'data-icon': icon } } }])),
       detailHdr: { id: 'detailHdr', data: { type: 'Header', flow: 'list' } },
       detailCount: { id: 'detailCount', data: { type: 'Text', variant: 'small', content: '1개의 메시지' } },
@@ -73,9 +77,11 @@ export function buildInboxPage(s: InboxState): NormalizedData {
       listTools: ['btnFilter', 'btnCompose'],
       listGrid: ['listBody'],
       listBody: vis.map((m) => `row-${m.id}`),
-      ...Object.fromEntries(vis.map((m) => [`row-${m.id}`, CELL_KEYS.map((k) => `c-${m.id}-${k}`)])),
+      ...Object.fromEntries(vis.map((m) => [`row-${m.id}`, MAIL_COLS.map((k) => `c-${m.id}-${k}`)])),
       detail: ['detailActions', 'detailHdr', 'detailBody', 'detailFooter'],
-      detailActions: ACTS.map(([id]) => id) as string[],
+      detailActions: ['grpReply', 'grpArchive'],
+      grpReply: ['actReply', 'actForward'],
+      grpArchive: ['actArchive', 'actDelete'],
       detailHdr: ['detailCount', 'detailSenderRow', 'detailLabel'],
       detailSenderRow: ['detailSenderCol', 'detailAsideCol'],
       detailSenderCol: ['detailFrom', 'detailSubject'],

@@ -5,6 +5,20 @@ export const listReset = (sel: string) => css`
   :where(${sel}) { list-style: none; margin: 0; padding: 0; }
 `
 
+/**
+ * Hairline divider — 리스트 행 사이 분리선.
+ *
+ * 색·두께·last-child(또는 first-child) 미적용을 한 곳에 박아 모든 widget 이
+ * 동일한 hairline 을 갖도록 한다. side='block-end' 가 기본 (대부분의 행 리스트).
+ */
+export const hairline = (sel: string, side: 'block-end' | 'block-start' = 'block-end') => {
+  const last = side === 'block-end' ? ':last-child' : ':first-child'
+  return css`
+    :where(${sel}) { border-${side}: 1px solid var(--ds-border); }
+    :where(${sel})${last} { border-${side}-color: transparent; }
+  `
+}
+
 // 29.5px 높이 계약 + 콘텐츠 중앙 정렬 축.
 // clickable·control·사용자 정의 컨트롤 모두 이 한 함수로 정렬된다.
 // inline-flex + center는 "컨트롤 내부의 아이콘·텍스트가 vertically·horizontally 가운데
