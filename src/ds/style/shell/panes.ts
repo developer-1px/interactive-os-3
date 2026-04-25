@@ -219,40 +219,76 @@ export const panesCss = css`
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
-  /* Finder 모바일 — 데스크톱 메타포(sidebar | columns | preview)를 ListView 한 면으로 축약.
-     메모리 원칙: shell은 desktop·mobile 별도 구현, CSS는 컨텐츠만 reflow하지만
-     finder의 보조 패널은 모바일에서 의미가 사라지므로 표시만 끈다 (DOM 평탄화/포털 아님). */
-  @media (max-width: 600px) {
-    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > nav[aria-roledescription="sidebar"],
-    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > aside[aria-roledescription="preview"],
-    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > section[aria-roledescription="columns"] {
-      display: none;
-    }
-    main[aria-roledescription="finder"] > section[aria-roledescription="body"] > section[aria-roledescription="list-view"] {
-      flex: 1 1 auto;
-    }
-    /* 헤더 — 뷰 토글(Toolbar)은 모바일에서 가치가 낮음, 숨김. 제목은 줄임. */
-    main[aria-roledescription="finder"] > header > [role="toolbar"] {
-      display: none;
-    }
-    main[aria-roledescription="finder"] > header > h1 {
-      font-size: var(--ds-text-md);
-      min-inline-size: 0;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    /* ListView — 보조 컬럼(수정일/크기/종류) 숨김, 이름만. 행 높이 ↑ for tap. */
-    main[aria-roledescription="finder"] [role="treegrid"] colgroup col:nth-child(n+2),
-    main[aria-roledescription="finder"] [role="treegrid"] thead th:nth-child(n+2),
-    main[aria-roledescription="finder"] [role="treegrid"] tbody td:nth-child(n+2) {
-      display: none;
-    }
-    main[aria-roledescription="finder"] [role="treegrid"] tbody td:first-child {
-      padding-block: ${pad(1.5)};
-      font-size: var(--ds-text-md);
-    }
-    main[aria-roledescription="finder"] [role="treegrid"] thead th:first-child {
-      font-size: var(--ds-text-xs);
-    }
+  /* Finder 모바일 — 데스크톱 메타포(sidebar | columns | preview)를 버린 별도 셸.
+     iOS Files 식 drill-down 한 면(Locations → Folder → File). 라우트 컴포넌트가
+     isMobile 분기로 FinderMobile을 렌더하므로 CSS는 자기 root 이름만 잡는다. */
+  main[aria-roledescription="finder-mobile"] {
+    display: flex; flex-direction: column;
+    block-size: 100%; min-block-size: 0;
+  }
+  main[aria-roledescription="finder-mobile"] > header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: ${pad(2)};
+    padding: ${pad(2)} ${pad(3)};
+    border-block-end: 1px solid var(--ds-border);
+    background: ${fg(1)};
+  }
+  main[aria-roledescription="finder-mobile"] > header > button {
+    inline-size: 2rem; block-size: 2rem;
+    border: 0; background: transparent; color: inherit;
+    font-size: 1.5rem; line-height: 1;
+    border-radius: ${radius('md')};
+    cursor: pointer;
+  }
+  main[aria-roledescription="finder-mobile"] > header > button:hover {
+    background: color-mix(in oklch, CanvasText 8%, transparent);
+  }
+  main[aria-roledescription="finder-mobile"] > header > h1 {
+    margin: 0;
+    font-size: var(--ds-text-lg); font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  main[aria-roledescription="finder-mobile"] > header > h1:only-child {
+    grid-column: 1 / -1;
+  }
+  main[aria-roledescription="finder-mobile"] > section {
+    flex: 1 1 0; min-block-size: 0; overflow-y: auto;
+    padding: ${pad(3)};
+    display: flex; flex-direction: column; gap: ${pad(4)};
+  }
+  /* Home — 위치/최근 두 섹션 */
+  section[aria-roledescription="finder-home"] > section {
+    display: flex; flex-direction: column; gap: ${pad(1)};
+  }
+  section[aria-roledescription="finder-home"] > section > h2 {
+    ${microLabel()}
+    margin: 0;
+  }
+  /* 모바일 리스트 — tap 친화. 행 높이 ↑, icon ↑. */
+  main[aria-roledescription="finder-mobile"] [role="listbox"] {
+    padding: 0; gap: ${pad(0.5)};
+  }
+  main[aria-roledescription="finder-mobile"] [role="option"] {
+    padding: ${pad(2)} ${pad(2.5)};
+    font-size: var(--ds-text-md);
+    border-radius: ${radius('md')};
+  }
+  /* File 풀스크린 Preview — finder-file 자체가 finder-mobile > section.
+     desktop preview의 min-width(--ds-preview-w)를 모바일에서 해제, 가로 오버플로 차단. */
+  main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-file"] {
+    padding: 0; gap: 0;
+  }
+  section[aria-roledescription="finder-file"] > aside[aria-roledescription="preview"] {
+    flex: 1 1 auto;
+    min-inline-size: 0; max-inline-size: 100%;
+    padding: ${pad(3)};
+  }
+  section[aria-roledescription="finder-empty"] {
+    display: grid; place-items: center;
+    color: ${dim(55)};
+    padding: ${pad(8)};
   }
 
   /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]
