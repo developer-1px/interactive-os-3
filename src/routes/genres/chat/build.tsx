@@ -19,7 +19,27 @@ export function buildChatPage(s: ChatState): NormalizedData {
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Row', flow: 'list' } },
+      page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'chat-page', label: 'Chat' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'chat-menu', 'aria-label': '메뉴', 'data-icon': 'list', 'data-collapse-menu-btn': '' }, content: '' } },
+      menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'chat-menu', label: 'Chat 메뉴', scrim: true }, content: (
+        <>
+          <section>
+            <h3>채널</h3>
+            <ul>{(s.pubNav.data.entities[ROOT]?.data?.children as string[] | undefined)?.map((cid) => {
+              const ent = s.pubNav.data.entities[cid]; const label = ent?.data?.label ?? cid
+              return <li key={cid}>{String(label)}</li>
+            }) ?? null}</ul>
+          </section>
+          <section>
+            <h3>DM</h3>
+            <ul>{MEMBERS.map((m) => <li key={m.id}>{m.name} <small>({statusLabel[m.status]})</small></li>)}</ul>
+          </section>
+          <section>
+            <h3>멤버 ({MEMBERS.length})</h3>
+            <ul>{MEMBERS.map((m) => <li key={m.id}>{m.name}</li>)}</ul>
+          </section>
+        </>
+      ) } },
       side: { id: 'side', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
       ws: { id: 'ws', data: { type: 'Text', variant: 'h3', content: 'DS Workspace' } },
       wsMeta: { id: 'wsMeta', data: { type: 'Text', variant: 'small', content: '유용태 · 온라인' } },
@@ -51,10 +71,10 @@ export function buildChatPage(s: ChatState): NormalizedData {
       ] as Array<readonly [string, unknown]>)),
     },
     relationships: {
-      [ROOT]: ['page'], page: ['side', 'main', 'right'],
+      [ROOT]: ['page', 'menuPop'], page: ['side', 'main', 'right'],
       side: ['ws', 'wsMeta', 'chHdr', 'pubList', 'dmHdr', 'dmList'],
       main: ['mainHdr', 'stream', 'composer'],
-      mainHdr: ['mainTitle', 'mainActions'],
+      mainHdr: ['menuBtn', 'mainTitle', 'mainActions'],
       mainActions: ACTS.map(([id]) => id) as string[],
       stream: msgs.map((m) => `mrow-${m.id}`),
       ...Object.fromEntries(msgs.map((m) => [`mrow-${m.id}`, [`mwho-${m.id}`, `mtxt-${m.id}`, `mtm-${m.id}`]])),

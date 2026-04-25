@@ -148,6 +148,10 @@ export const panesCss = css`
   section[aria-roledescription="list-view"] [role="treegrid"] {
     table-layout: fixed;
   }
+  section[aria-roledescription="list-view"] col[data-col="name"]  { inline-size: auto; }
+  section[aria-roledescription="list-view"] col[data-col="mtime"] { inline-size: 14rem; }
+  section[aria-roledescription="list-view"] col[data-col="size"]  { inline-size: 6rem; }
+  section[aria-roledescription="list-view"] col[data-col="kind"]  { inline-size: 8rem; }
   nav[aria-roledescription="column"] {
     width: var(--ds-column-w); flex: none; overflow-y: auto;
     border-inline-end: 1px solid var(--ds-border);
@@ -314,11 +318,12 @@ export const panesCss = css`
     word-break: keep-all; line-height: 1.3;
   }
 
-  /* Feed (genres/feed) — 좁은 viewport에서 좌측 nav · 우측 side를 menu Popover로 숨긴다.
-     content 레벨 container query — 페이지 외 다른 라우트에 영향 없도록 roledescription scoped. */
-  [aria-roledescription="feed-page"] {
+  /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지(feed/chat 등)에서
+     좁은 viewport시 좌·우 보조 컬럼을 숨기고 [data-collapse-menu-btn]을 노출.
+     roledescription 끝이 "-page"인 모든 곳에 일괄 적용 — content 레벨 container query. */
+  [aria-roledescription$="-page"] {
     container-type: inline-size;
-    container-name: feed-page;
+    container-name: collapse-sides;
     align-items: stretch;
     justify-content: flex-start;
     padding: ${pad(4)};
@@ -326,19 +331,19 @@ export const panesCss = css`
     min-height: 100dvh;
     box-sizing: border-box;
   }
-  [aria-roledescription="feed-page"] [data-feed-menu-btn] { display: none; }
-  @container feed-page (inline-size < 48rem) {
-    [aria-roledescription="feed-page"] > [data-ds="Column"]:first-child,
-    [aria-roledescription="feed-page"] > [data-ds="Column"]:last-child {
+  [aria-roledescription$="-page"] [data-collapse-menu-btn] { display: none; }
+  @container collapse-sides (inline-size < 48rem) {
+    [aria-roledescription$="-page"] > [data-ds="Column"]:first-child,
+    [aria-roledescription$="-page"] > [data-ds="Column"]:last-child {
       display: none;
     }
-    [aria-roledescription="feed-page"] [data-feed-menu-btn] {
+    [aria-roledescription$="-page"] [data-collapse-menu-btn] {
       display: inline-flex;
     }
-    [aria-roledescription="feed-page"] > [data-ds="Column"][data-ds-grow] {
+    [aria-roledescription$="-page"] > [data-ds="Column"][data-ds-grow] {
       width: 100%; min-width: 0;
     }
-    [aria-roledescription="feed-page"] {
+    [aria-roledescription$="-page"] {
       padding: ${pad(2)};
       gap: ${pad(2)};
       max-width: 640px; margin-inline: auto;
