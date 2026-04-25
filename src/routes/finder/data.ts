@@ -89,15 +89,33 @@ export function formatDate(ms?: number): string {
 }
 
 export const SMART_PREFIX = 'smart:'
+/** docs/YYYY/YYYY-MM/YYYY-MM-DD/ 폴더 위계와 동일한 의미.
+ *  사건이 일어난 날짜(mtime) 기준 calendar 경계(rolling 24h 아님). */
 export const smartGroups: SmartGroupItem[] = [
-  { id: 'today',     label: '오늘',  path: 'smart:today',     icon: 'inbox' },
-  { id: 'yesterday', label: '어제',  path: 'smart:yesterday', icon: 'archive' },
+  { id: 'today',     label: '오늘',     path: 'smart:today',     icon: 'inbox' },
+  { id: 'yesterday', label: '어제',     path: 'smart:yesterday', icon: 'archive' },
+  { id: 'thisWeek',  label: '이번 주',  path: 'smart:thisWeek',  icon: 'calendar' },
+  { id: 'thisMonth', label: '이번 달',  path: 'smart:thisMonth', icon: 'calendar-days' },
+  { id: 'thisYear',  label: '올해',     path: 'smart:thisYear',  icon: 'calendar-range' },
 ]
 
+/** Calendar 경계 — Date 객체로 자연스럽게 계산, mtime ms와 비교. */
 function startOfToday(): number {
-  const d = new Date()
-  d.setHours(0, 0, 0, 0)
+  const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime()
+}
+function startOfThisWeek(): number {
+  // 월요일 시작 (ISO). KST 기준 dayOfWeek: 0=Sun ~ 6=Sat. (mon..sun) 월=1.
+  const d = new Date(); d.setHours(0, 0, 0, 0)
+  const dow = d.getDay()
+  const offsetToMon = (dow + 6) % 7  // Mon=0, Sun=6
+  d.setDate(d.getDate() - offsetToMon)
   return d.getTime()
+}
+function startOfThisMonth(): number {
+  const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(1); return d.getTime()
+}
+function startOfThisYear(): number {
+  const d = new Date(); d.setHours(0, 0, 0, 0); d.setMonth(0, 1); return d.getTime()
 }
 
 export function isSmartPath(path: string): boolean {
@@ -118,12 +136,21 @@ export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean
   return out.sort((a, b) => (b.mtime ?? 0) - (a.mtime ?? 0))
 }
 
-export function smartItems(group: 'today' | 'yesterday'): FsNode[] {
-  const t0 = startOfToday()
+/** 각 버킷은 자기 calendar 단위 안의 mtime을 모두 포함(중복 허용).
+ *  '오늘 폴더'의 의미: 오늘 calendar day에 일어난 모든 일 — 즉 today는 thisWeek에도, thisMonth에도, thisYear에도 포함된다.
+ *  docs/2026/2026-04/2026-04-25/ 가 docs/2026/, docs/2026/2026-04/ 에 모두 속하는 것과 동일. */
+export function smartItems(group: SmartGroupItem['id']): FsNode[] {
+  const t0  = startOfToday()
+  const tW  = startOfThisWeek()
+  const tM  = startOfThisMonth()
+  const tY  = startOfThisYear()
   const dayMs = 24 * 60 * 60 * 1000
-  const pred = group === 'today'
-    ? (m: number) => m >= t0
-    : (m: number) => m >= t0 - dayMs && m < t0
+  const pred =
+    group === 'today'      ? (m: number) => m >= t0 :
+    group === 'yesterday'  ? (m: number) => m >= t0 - dayMs && m < t0 :
+    group === 'thisWeek'   ? (m: number) => m >= tW :
+    group === 'thisMonth'  ? (m: number) => m >= tM :
+    /* thisYear */           (m: number) => m >= tY
   return collectByAge(currentTree, pred)
 }
 

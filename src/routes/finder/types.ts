@@ -17,7 +17,7 @@ export type FsNode = {
 
 export type SidebarItem = { id: string; label: string; path: string; icon: IconToken }
 
-export type SmartGroupId = 'today' | 'yesterday'
+export type SmartGroupId = 'today' | 'yesterday' | 'thisWeek' | 'thisMonth' | 'thisYear'
 export type SmartGroupItem = { id: SmartGroupId; label: string; path: string; icon: IconToken }
 
 export type ViewMode = 'icons' | 'list' | 'columns' | 'gallery'
