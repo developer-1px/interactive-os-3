@@ -646,6 +646,35 @@ export const panesCss = css`
     max-block-size: 160px; overflow: auto;
   }
 
+  /* Atlas Leak Table — 모바일 가로 스크롤, snippet 1줄 유지 */
+  [aria-roledescription="atlas-leaks"] > p[data-tone="good"] { color: ${status('success')}; }
+  [aria-roledescription="atlas-leak-list"] > details { margin-block-end: ${pad(1)}; }
+  [aria-roledescription="atlas-leak-list"] summary {
+    cursor: pointer; font-size: var(--ds-text-sm);
+    padding: ${pad(0.5)} 0;
+  }
+  [aria-roledescription="atlas-leak-list"] summary > small { color: ${dim(55)}; }
+  table[aria-roledescription="atlas-leak-table"] {
+    inline-size: 100%; font-size: var(--ds-text-xs);
+    margin-block-start: ${pad(0.5)};
+    border-collapse: collapse;
+    display: block; overflow-x: auto;
+  }
+  table[aria-roledescription="atlas-leak-table"] thead tr { color: ${dim(55)}; text-align: start; }
+  table[aria-roledescription="atlas-leak-table"] tbody tr { border-block-start: 1px solid var(--ds-border); }
+  table[aria-roledescription="atlas-leak-table"] :is(th, td) {
+    padding: ${pad(0.5)} ${pad(1)}; text-align: start; vertical-align: top;
+  }
+  table[aria-roledescription="atlas-leak-table"] :is(th, td)[data-col="line"] {
+    inline-size: 4rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  table[aria-roledescription="atlas-leak-table"] :is(th, td)[data-col="kind"] { inline-size: 6rem; }
+  table[aria-roledescription="atlas-leak-table"] td[data-col="snippet"] {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-inline-size: 480px;
+  }
+
   /* Markdown viewer — 데스크톱은 중앙 정렬 + 여백, 모바일은 폭 100% + safe-area */
   main[aria-roledescription="markdown-app"] {
     display: flex; flex-direction: column; gap: ${pad(3)};

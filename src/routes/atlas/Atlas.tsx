@@ -114,30 +114,30 @@ function Card({ name, doc, signature, sites, children }: {
 }
 
 function LeakTable({ leaks }: { leaks: AuditData['leaks'] }) {
-  if (leaks.length === 0) return <p style={{ color: 'var(--ds-success)' }}>누수 없음.</p>
+  if (leaks.length === 0) return <p data-tone="good">누수 없음.</p>
   const byFile = groupBy(leaks, (l) => l.file)
   return (
-    <div>
+    <div aria-roledescription="atlas-leak-list">
       {Object.entries(byFile).map(([file, list]) => (
-        <details key={file} style={{ marginBottom: 8 }}>
-          <summary style={{ cursor: 'pointer', fontSize: 'var(--ds-text-sm)' }}>
+        <details key={file}>
+          <summary>
             <code>{file.replace('/src/ds/style/widgets/', '')}</code>{' '}
-            <span style={{ color: 'var(--ds-muted)' }}>({list.length})</span>
+            <small>({list.length})</small>
           </summary>
-          <table style={{ width: '100%', fontSize: 'var(--ds-text-xs)', marginTop: 4, borderCollapse: 'collapse' }}>
+          <table aria-roledescription="atlas-leak-table">
             <thead>
-              <tr style={{ textAlign: 'left', color: 'var(--ds-muted)' }}>
-                <th style={{ width: 64, padding: '4px 8px' }}>line</th>
-                <th style={{ width: 96, padding: '4px 8px' }}>kind</th>
-                <th style={{ padding: '4px 8px' }}>snippet</th>
+              <tr>
+                <th data-col="line">line</th>
+                <th data-col="kind">kind</th>
+                <th data-col="snippet">snippet</th>
               </tr>
             </thead>
             <tbody>
               {list.map((l, i) => (
-                <tr key={i} style={{ borderTop: '1px solid var(--ds-border)' }}>
-                  <td style={{ padding: '4px 8px', fontFamily: 'var(--ds-font-mono)' }}>{l.line}</td>
-                  <td style={{ padding: '4px 8px' }}>{l.kind}</td>
-                  <td style={{ padding: '4px 8px', fontFamily: 'var(--ds-font-mono)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 480 }}>{l.snippet}</td>
+                <tr key={i}>
+                  <td data-col="line">{l.line}</td>
+                  <td data-col="kind">{l.kind}</td>
+                  <td data-col="snippet">{l.snippet}</td>
                 </tr>
               ))}
             </tbody>
