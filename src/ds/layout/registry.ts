@@ -1,64 +1,95 @@
 /**
- * Ui leaf registry — maps `node.data.component` string to a ds/ui component.
+ * Ui leaf registry — maps `node.data.component` string to a ds/ui component
+ * and tags it with its zone (folder = source of truth).
  *
- * Consumers pass plain props via `node.data.props` — the renderer spreads them.
- * Children go into `node.data.content` (ReactNode) for components that take
- * `children` (Button label, Select <option>, etc).
- *
- * ControlProps roles (Listbox/Dialog/Tabs internals) should typically be
- * composed directly by page code and passed through the registry as props.
- * For fully data-driven trees, pass `{ data, onEvent }` via props just like
- * any other prop — the registry doesn't need special-casing.
+ * Zones (see src/ds/core/INVARIANTS.md):
+ *   collection · composite · control · overlay · entity · layout
  */
 import type { ComponentType, ReactNode } from 'react'
-import { Button } from '../ui/form/Button'
-import { Input } from '../ui/form/inputs/Input'
-import { Textarea } from '../ui/form/inputs/Textarea'
-import { Select } from '../ui/form/inputs/Select'
-import { Switch } from '../ui/form/toggle/Switch'
-import { Checkbox } from '../ui/form/toggle/Checkbox'
-import { Progress, Meter } from '../ui/form/Progress'
-import { Field, FieldLabel, FieldDescription, FieldError } from '../ui/form/Field'
-import { Toolbar } from '../ui/bar/Toolbar'
-import { ToolbarButton } from '../ui/bar/ToolbarButton'
-import { Separator } from '../ui/bar/Separator'
-import { TabList, Tab, TabPanel } from '../ui/list/Tabs'
+import { Button } from '../ui/control/Button'
+import { Input } from '../ui/control/Input'
+import { Textarea } from '../ui/control/Textarea'
+import { Select } from '../ui/control/Select'
+import { Switch } from '../ui/control/Switch'
+import { Checkbox } from '../ui/control/Checkbox'
+import { Progress, Meter } from '../ui/control/Progress'
+import { Field, FieldLabel, FieldDescription, FieldError } from '../ui/control/Field'
+import { ToolbarButton } from '../ui/control/ToolbarButton'
+import { Toolbar } from '../ui/composite/Toolbar'
+import { TabList, Tab, TabPanel } from '../ui/composite/Tabs'
+import { OrderableList } from '../ui/composite/OrderableList'
+import { DataGrid } from '../ui/composite/DataGrid'
+import { DataGridRow } from '../ui/composite/DataGridRow'
+import { RowGroup } from '../ui/composite/RowGroup'
+import { ColumnHeader } from '../ui/composite/ColumnHeader'
+import { RowHeader } from '../ui/composite/RowHeader'
+import { GridCell } from '../ui/composite/GridCell'
+import { Listbox } from '../ui/collection/Listbox'
 import { Disclosure } from '../ui/overlay/Disclosure'
-import { DataGrid } from '../ui/grid/Grid'
-import { DataGridRow } from '../ui/grid/Row'
-import { RowGroup } from '../ui/grid/RowGroup'
-import { ColumnHeader } from '../ui/grid/ColumnHeader'
-import { RowHeader } from '../ui/grid/RowHeader'
-import { GridCell } from '../ui/grid/GridCell'
-import { Listbox } from '../ui/list/Listbox'
 import { Dialog } from '../ui/overlay/Dialog'
-import { Badge } from '../ui/display/Badge'
-import { LegendDot } from '../ui/display/LegendDot'
-import { StatCard } from '../ui/display/StatCard'
-import { BarChart } from '../ui/display/BarChart'
-import { Top10List } from '../ui/display/Top10List'
-import { CourseCard } from '../ui/display/CourseCard'
-import { RoleCard } from '../ui/display/RoleCard'
+import { Badge } from '../ui/entity/Badge'
+import { StatCard } from '../ui/entity/StatCard'
+import { CourseCard } from '../ui/entity/CourseCard'
+import { RoleCard } from '../ui/entity/RoleCard'
+import { LegendDot } from '../ui/layout/LegendDot'
+import { Separator } from '../ui/layout/Separator'
+import { BarChart } from '../ui/layout/BarChart'
+import { Top10List } from '../ui/layout/Top10List'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>
+export type Zone = 'collection' | 'composite' | 'control' | 'overlay' | 'entity' | 'layout'
 
-export const uiRegistry: Record<string, AnyCmp> = {
-  Button, Input, Textarea, Select,
-  Switch, Checkbox, Progress, Meter,
-  Field, FieldLabel, FieldDescription, FieldError,
-  Toolbar, ToolbarButton, Separator,
-  TabList, Tab, TabPanel,
-  Disclosure,
-  DataGrid, DataGridRow, RowGroup, ColumnHeader, RowHeader, GridCell,
-  Listbox, Dialog,
-  Badge, LegendDot, StatCard, BarChart, Top10List, CourseCard, RoleCard,
-}
+export interface UiEntry { component: AnyCmp; zone: Zone }
+
+export const uiRegistry = {
+  // control
+  Button:           { component: Button,           zone: 'control' },
+  Input:            { component: Input,            zone: 'control' },
+  Textarea:         { component: Textarea,         zone: 'control' },
+  Select:           { component: Select,           zone: 'control' },
+  Switch:           { component: Switch,           zone: 'control' },
+  Checkbox:         { component: Checkbox,         zone: 'control' },
+  Progress:         { component: Progress,         zone: 'control' },
+  Meter:            { component: Meter,            zone: 'control' },
+  Field:            { component: Field,            zone: 'control' },
+  FieldLabel:       { component: FieldLabel,       zone: 'control' },
+  FieldDescription: { component: FieldDescription, zone: 'control' },
+  FieldError:       { component: FieldError,       zone: 'control' },
+  ToolbarButton:    { component: ToolbarButton,    zone: 'control' },
+  // composite
+  Toolbar:      { component: Toolbar,      zone: 'composite' },
+  TabList:      { component: TabList,      zone: 'composite' },
+  Tab:          { component: Tab,          zone: 'composite' },
+  TabPanel:     { component: TabPanel,     zone: 'composite' },
+  OrderableList:{ component: OrderableList,zone: 'composite' },
+  DataGrid:     { component: DataGrid,     zone: 'composite' },
+  DataGridRow:  { component: DataGridRow,  zone: 'composite' },
+  RowGroup:     { component: RowGroup,     zone: 'composite' },
+  ColumnHeader: { component: ColumnHeader, zone: 'composite' },
+  RowHeader:    { component: RowHeader,    zone: 'composite' },
+  GridCell:     { component: GridCell,     zone: 'composite' },
+  // collection
+  Listbox: { component: Listbox, zone: 'collection' },
+  // overlay
+  Disclosure: { component: Disclosure, zone: 'overlay' },
+  Dialog:     { component: Dialog,     zone: 'overlay' },
+  // entity
+  Badge:      { component: Badge,      zone: 'entity' },
+  StatCard:   { component: StatCard,   zone: 'entity' },
+  CourseCard: { component: CourseCard, zone: 'entity' },
+  RoleCard:   { component: RoleCard,   zone: 'entity' },
+  // layout
+  LegendDot: { component: LegendDot, zone: 'layout' },
+  Separator: { component: Separator, zone: 'layout' },
+  BarChart:  { component: BarChart,  zone: 'layout' },
+  Top10List: { component: Top10List, zone: 'layout' },
+} as const satisfies Record<string, UiEntry>
 
 export type UiComponentName = keyof typeof uiRegistry
 
 export function resolveUi(name: string): AnyCmp | undefined {
-  return uiRegistry[name]
+  return uiRegistry[name as UiComponentName]?.component
 }
 
 export type UiLeafContent = ReactNode

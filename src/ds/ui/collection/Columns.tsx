@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent } from 'react'
+import { type ComponentPropsWithoutRef } from 'react'
 import {
   ROOT,
   getChildren,
@@ -19,23 +19,11 @@ const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): str
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }
 
-const idFrom = (e: { target: EventTarget }): string | null =>
-  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
-
 export function Columns({ data, onEvent, ...rest }: ColumnsProps) {
-  const { focusId, expanded, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
-
-  const handleClick = (e: MouseEvent) => {
-    const id = idFrom(e)
-    if (id) onClick(e, id)
-  }
-  const handleKey = (e: KeyboardEvent) => {
-    const id = idFrom(e)
-    if (id) onKey(e, id)
-  }
+  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
 
   return (
-    <section aria-roledescription="columns" onClick={handleClick} onKeyDown={handleKey} {...rest}>
+    <section aria-roledescription="columns" {...delegate} {...rest}>
       {chainFrom(data, expanded).map((parent) => {
         const kids = getChildren(data, parent)
         const label = parent === ROOT ? 'root' : getLabel(data, parent)

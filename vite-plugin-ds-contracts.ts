@@ -12,12 +12,16 @@ import type { Plugin } from 'vite'
  *       체크리스트로 점수화해 Catalog 페이지에 공급한다.
  */
 
+// Zone = 폴더 경로 (단일 진실 원천, src/ds/core/INVARIANTS.md 참조).
+// drift = ui/ 직속 또는 미분류 폴더 — lint 또는 zone 폴더로 이동 대상.
 export type Kind =
-  | 'collection'    // CollectionProps 강제 (canonical)
-  | 'entity'        // 도메인 엔티티 1벌 (StatCard 류)
-  | 'control'       // 보편 컨트롤 (Button/Switch/Input 류)
-  | 'composable'    // @slot children wrapper (layout/Disclosure 류)
-  | 'drift'         // 탈선 — childrenDriven/customArray 수렴 대상
+  | 'collection'    // data zone: CollectionProps={data,onEvent} + useRoving
+  | 'composite'     // composition roving: children:ReactNode + useRovingDOM
+  | 'control'       // atomic native: 단일 tabbable wrapping
+  | 'overlay'       // surface: Dialog/Disclosure/Tooltip/CommandPalette
+  | 'entity'        // domain content card: 2+ 도메인 힌트 속성
+  | 'layout'        // primitive + decoration: roving 무관
+  | 'drift'         // 미분류 — zone 폴더 외부
 
 export type ContractCheck = {
   id: string
@@ -46,24 +50,14 @@ const walk = (dir: string, out: string[] = []): string[] => {
   return out
 }
 
-// 도메인 엔티티 prop 시그니처 — 이 중 2개 이상 등장하면 "entity"로 분류.
-// 이런 prop은 엔티티의 domain 속성이지 보편적 control 입력이 아니다.
-const ENTITY_HINTS = /\b(tone|abbr|meta|actions|footer|desc|name|topBadge|change|changeDir)\s*[?:]/g
+const ZONE_FOLDERS = new Set(['collection', 'composite', 'control', 'overlay', 'entity', 'layout'])
 
-const classifyKind = (src: string): Kind => {
-  if (/\bCollectionProps\b/.test(src) && /\{\s*data\b/.test(src)) return 'collection'
-  const hasControl = /ControlProps/.test(src) && /\{\s*data\s*,\s*onEvent/.test(src)
-  if (hasControl) return 'collection'
-  // @slot children escape → composable wrapper
-  if (/@slot\s+children/.test(src)) return 'composable'
-  // children destructure (with no @slot) → drift
-  if (/export\s+function\s+\w+\s*\(\s*\{[^}]*\bchildren\b/.test(src)) return 'drift'
-  // customArray prop → drift
-  if (/export\s+function\s+\w+\s*\(\s*\{\s*(entries|bars|items|rows|columns)\b/.test(src)) return 'drift'
-  // entity vs control — 도메인 hint prop 개수로 판정
-  const hits = (src.match(ENTITY_HINTS) ?? []).length
-  if (hits >= 2) return 'entity'
-  return 'control'
+// folder = zone 의 단일 진실 원천. 파일 경로의 첫 폴더를 그대로 Kind 로 사용.
+// zone 폴더 외부(ui/ 직속 또는 미분류 폴더)는 drift.
+const classifyKind = (file: string): Kind => {
+  const m = file.match(/\/ui\/([^/]+)\//)
+  if (!m) return 'drift'
+  return ZONE_FOLDERS.has(m[1]) ? (m[1] as Kind) : 'drift'
 }
 
 const extractRole = (src: string): string | null => {
@@ -86,25 +80,52 @@ const extractExportNames = (src: string): string[] => {
 }
 
 const buildChecks = (src: string, kind: Kind): ContractCheck[] => {
-  const isControl = kind === 'collection'
   const afterExport = src.split(/\bexport\s+(?:function|const)/)[1] ?? ''
-  const slotEscape = /@slot\s+children/.test(src)
-  const hasChildren = !slotEscape && /\{[^}]*\bchildren\b[^}]*\}/.test((afterExport.split(/[}]\s*:/)[0] ?? afterExport))
-  const selfAttach = /useRoving\b/.test(src) || /composeAxes\b/.test(src) || /onKeyDown\s*=\s*\{/.test(src)
-  const rovingRole = /\b(useRoving|composeAxes|navigate\s*\()/.test(src)
+  const hasCollectionProps = /\bCollectionProps\b/.test(src) && /\{\s*data\b/.test(src)
+  const hasUseRoving = /\buseRoving\b/.test(src)
+  const hasUseRovingDOM = /\buseRovingDOM\b/.test(src)
   const bannedVariant = /^\s*(variant|size)\s*[?:]/m.test(afterExport)
   const emitsRole = /role=["'][\w-]+["']/.test(src)
     || /aria-\w+=/.test(src)
     || /<(dialog|button|input|select|textarea|details|summary|ol|ul|li|figure|figcaption|meter|progress|article|nav|header|footer|section)\b/i.test(src)
 
-  return [
-    { id: 'data-prop', label: 'data prop (ControlProps)', pass: isControl },
-    { id: 'on-event',  label: 'onEvent 단발 이벤트', pass: isControl },
-    { id: 'no-children', label: 'children 금지 (item slot)', pass: !hasChildren },
-    { id: 'roving-self-attach', label: 'roving self-attach', pass: !rovingRole || selfAttach },
-    { id: 'no-variant', label: 'variant/size prop 없음', pass: !bannedVariant },
-    { id: 'aria-role-emit', label: 'ARIA role/semantic emit', pass: emitsRole },
-  ]
+  // zone 별 계약을 다르게 검증 — folder = zone 가설을 코드가 따르는지.
+  const zoneContract: Record<Kind, ContractCheck[]> = {
+    collection: [
+      { id: 'data-prop',          label: 'CollectionProps + {data, onEvent}', pass: hasCollectionProps },
+      { id: 'roving',             label: 'useRoving 사용',                    pass: hasUseRoving },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+      { id: 'aria-role-emit',     label: 'ARIA role/semantic emit',           pass: emitsRole },
+    ],
+    composite: [
+      { id: 'roving-dom',         label: 'useRovingDOM 사용',                 pass: hasUseRovingDOM || /role=["']group["']|role=["']row["']/.test(src) },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+      { id: 'aria-role-emit',     label: 'ARIA role/semantic emit',           pass: emitsRole },
+    ],
+    control: [
+      { id: 'native-element',     label: '네이티브 element wrap',             pass: /<(button|input|select|textarea|meter|progress)\b/i.test(src) },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+      { id: 'aria-role-emit',     label: 'ARIA/semantic emit',                pass: emitsRole },
+    ],
+    overlay: [
+      { id: 'native-surface',     label: '네이티브 dialog/popover/details',   pass: /<(dialog|details)\b|popover=/i.test(src) || /role=["'](dialog|tooltip|alertdialog)["']/.test(src) },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+    ],
+    entity: [
+      { id: 'no-roving',          label: 'roving 무관',                       pass: !hasUseRoving && !hasUseRovingDOM },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+      { id: 'aria-role-emit',     label: 'article/aria emit',                 pass: emitsRole },
+    ],
+    layout: [
+      { id: 'no-roving',          label: 'roving 무관',                       pass: !hasUseRoving && !hasUseRovingDOM },
+      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+    ],
+    drift: [
+      { id: 'in-zone-folder',     label: 'zone 폴더 안에 있어야 함',           pass: false },
+    ],
+  }
+
+  return zoneContract[kind]
 }
 
 const scanContracts = (root: string, callSiteCounts: Record<string, number>): Contract[] => {

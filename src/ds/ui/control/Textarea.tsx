@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentPropsWithoutRef } from 'react'
-import { useField } from '../Field'
+import { useField } from './Field'
 
 type TextareaProps = ComponentPropsWithoutRef<'textarea'>
 

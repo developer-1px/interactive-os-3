@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent } from 'react'
+import { type ComponentPropsWithoutRef } from 'react'
 import {
   ROOT,
   getChildren,
@@ -14,24 +14,12 @@ type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' 
 
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
 
-const idFrom = (e: { target: EventTarget }): string | null =>
-  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
-
 export function Listbox({ data, onEvent, ...rest }: ListboxProps) {
-  const { focusId, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
+  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
   const kids = getChildren(data, ROOT)
 
-  const handleClick = (e: MouseEvent) => {
-    const id = idFrom(e)
-    if (id) onClick(e, id)
-  }
-  const handleKey = (e: KeyboardEvent) => {
-    const id = idFrom(e)
-    if (id) onKey(e, id)
-  }
-
   return (
-    <ul role="listbox" onClick={handleClick} onKeyDown={handleKey} {...rest}>
+    <ul role="listbox" {...delegate} {...rest}>
       {kids.map((id, i) => {
         const d = data.entities[id]?.data ?? {}
         const selected = Boolean(d.selected)

@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
+import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps } from '../../core/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
@@ -7,20 +7,8 @@ type TreeProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | '
 
 const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
 
-const idFrom = (e: { target: EventTarget }): string | null =>
-  (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
-
 export function Tree({ data, onEvent, ...rest }: TreeProps) {
-  const { focusId, expanded, onKey, onClick, bindFocus } = useRoving(axis, data, onEvent ?? (() => {}))
-
-  const handleClick = (e: MouseEvent) => {
-    const id = idFrom(e)
-    if (id) onClick(e, id)
-  }
-  const handleKey = (e: KeyboardEvent) => {
-    const id = idFrom(e)
-    if (id) onKey(e, id)
-  }
+  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}))
 
   const render = (parent: string, level: number): ReactNode =>
     getChildren(data, parent).map((id, i, kids) => {
@@ -49,5 +37,5 @@ export function Tree({ data, onEvent, ...rest }: TreeProps) {
       )
     })
 
-  return <ul role="tree" onClick={handleClick} onKeyDown={handleKey} {...rest}>{render(ROOT, 1)}</ul>
+  return <ul role="tree" {...delegate} {...rest}>{render(ROOT, 1)}</ul>
 }

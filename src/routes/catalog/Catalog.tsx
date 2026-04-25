@@ -3,32 +3,31 @@ import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import { demos } from './demos'
 
 /**
- * Catalog — data 기반 ui 컴포넌트 감사 대시보드.
+ * Catalog — ui 컴포넌트 zone-first 감사 대시보드.
  *
- * "쓰는 법 통일"을 체크리스트로 시각화. 분파별 수렴률을 보여준다.
- *   A. Collection (CollectionProps 강제) — canonical
- *   B. Entity     (도메인 엔티티 1벌)   — content widget
- *   C. Control    (보편 컨트롤)         — Button/Switch/Input 류
- *   D. Composable (wrapper/layout)       — @slot children
- *   🟡 Drift     (탈선)                  — ControlProps 수렴 대상
+ * 폴더 = zone 의 단일 진실 원천 (src/ds/core/INVARIANTS.md):
+ *   collection · composite · control · overlay · entity · layout
+ * zone 폴더 외부 컴포넌트는 drift — 폴더로 이동 또는 lint 차단.
  */
 
 const kindLabel: Record<Kind, string> = {
-  collection: 'A · Collection (CollectionProps 강제)',
-  entity:     'B · Entity (도메인 엔티티 1벌)',
-  control:    'C · Control (보편 컨트롤)',
-  composable: 'D · Composable (wrapper/layout)',
-  drift:      '🟡 Drift (통일 탈선 — 수렴 대상)',
+  collection: 'collection — data: CollectionProps + useRoving',
+  composite:  'composite — composition roving (children + useRovingDOM)',
+  control:    'control — atomic native tabbable',
+  overlay:    'overlay — surface (dialog/popover/tooltip)',
+  entity:     'entity — domain content card',
+  layout:     'layout — primitive · decoration',
+  drift:      '🟡 drift — zone 폴더 외부',
 }
 
-const kindOrder: Kind[] = ['collection', 'entity', 'control', 'composable', 'drift']
+const kindOrder: Kind[] = ['collection', 'composite', 'control', 'overlay', 'entity', 'layout', 'drift']
 
 export function Catalog() {
   const [filter, setFilter] = useState<Kind | 'all'>('all')
 
   const grouped = useMemo(() => {
     const m: Record<Kind, Contract[]> = {
-      collection: [], entity: [], control: [], composable: [], drift: [],
+      collection: [], composite: [], control: [], overlay: [], entity: [], layout: [], drift: [],
     }
     for (const c of contracts) m[c.kind].push(c)
     return m
@@ -125,10 +124,12 @@ function Card({ contract }: { contract: Contract }) {
       </ul>
       {kind !== 'collection' && (
         <footer style={{ marginTop: 8, fontSize: 'var(--ds-text-xs)', color: 'var(--ds-muted)' }}>
-          {kind === 'drift'      && 'children/array 주입형 — ControlProps 수렴 고려'}
-          {kind === 'entity'     && '도메인 엔티티 1벌 — content widget'}
-          {kind === 'control'    && '보편 컨트롤 — primitive 값 입출력'}
-          {kind === 'composable' && 'wrapper/layout — @slot children'}
+          {kind === 'drift'     && 'zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동'}
+          {kind === 'composite' && 'children + useRovingDOM — Toolbar/Tabs/Menubar/DataGrid 류'}
+          {kind === 'control'   && '단일 tabbable native — Button/Input/Checkbox 류'}
+          {kind === 'overlay'   && 'surface — dialog/popover/tooltip 위임'}
+          {kind === 'entity'    && '도메인 content card — 2+ 도메인 힌트 속성'}
+          {kind === 'layout'    && 'primitive · decoration — roving 무관'}
         </footer>
       )}
     </article>

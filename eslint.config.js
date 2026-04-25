@@ -111,4 +111,7 @@ export default defineConfig([
   { files: ['src/**/*.{ts,tsx}'],              rules: { 'no-restricted-syntax': ['error', role, className, style] } },
   { files: ['src/ds/ui/**/*.{ts,tsx}'],        rules: { 'no-restricted-syntax': ['error', className] } },
   { files: ['src/ds/layout/**/*.{ts,tsx}'],    rules: { 'no-restricted-syntax': ['error', className] } },
+  // zone 폴더(src/ds/ui/*)는 의도적으로 동일 zone 컴포넌트를 모두 수집한다.
+  // 7개 제한은 arbitrary 도메인 폴더 대상이지 zone 폴더에는 적용하지 않는다.
+  { files: ['src/ds/ui/{collection,composite,control,overlay,entity,layout}/*.{ts,tsx}'], rules: { 'ds/max-files-per-dir': 'off' } },
 ])

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useReducer, useRef, useId } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Dialog } from './Dialog'
-import { Combobox } from '../list/Combobox'
-import { Listbox } from '../list/Listbox'
+import { Combobox } from '../control/Combobox'
+import { Listbox } from '../collection/Listbox'
 import { ROOT, type Event, type NormalizedData } from '../../core/types'
 import { useShortcut } from '../../core/hooks/useShortcut'
 
