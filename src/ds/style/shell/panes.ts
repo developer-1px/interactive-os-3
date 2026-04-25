@@ -318,14 +318,37 @@ export const panesCss = css`
     font-size: var(--ds-text-md);
     border-radius: ${radius('md')};
   }
-  /* File 풀스크린 Preview — Preview widget이 컨텍스트 무관해졌으므로
-     모바일에서도 자기 폭에 맞게 흐른다. shell이 padding/flex만 결정. */
+  /* File 풀스크린 Preview — 정적 단일 파일 + 이전/다음 버튼.
+     pager 윈도잉/IO 제거(덜그덕 원인). header(파일명·인덱스) + Preview + footer(prev/next). */
   main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-file"] {
     padding: 0; gap: 0;
+    display: flex; flex-direction: column; min-height: 0;
+  }
+  section[aria-roledescription="finder-file"] > header {
+    display: flex; align-items: center; gap: ${pad(2)};
+    padding: ${pad(2)} ${pad(3)};
+    border-block-end: var(--ds-hairline) solid var(--ds-border);
+    flex: none;
+  }
+  section[aria-roledescription="finder-file"] > header > figure { margin: 0; flex: none; }
+  section[aria-roledescription="finder-file"] > header > h2 {
+    margin: 0; font-size: var(--ds-text-md); font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    min-inline-size: 0; flex: 1;
+  }
+  section[aria-roledescription="finder-file"] > header > small {
+    color: ${dim(55)}; font-variant-numeric: tabular-nums; flex: none;
   }
   section[aria-roledescription="finder-file"] > aside[aria-roledescription="preview"] {
     flex: 1 1 auto;
     padding: ${pad(3)};
+    overflow-y: auto;
+  }
+  section[aria-roledescription="finder-file"] > footer[aria-roledescription="pager-controls"] {
+    display: flex; gap: ${pad(2)}; justify-content: space-between;
+    padding: ${pad(2)} ${pad(3)};
+    border-block-start: var(--ds-hairline) solid var(--ds-border);
+    flex: none;
   }
   section[aria-roledescription="finder-empty"] {
     display: grid; place-items: center;
