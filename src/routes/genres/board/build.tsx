@@ -1,7 +1,10 @@
-import { ROOT, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '../../../ds'
 import { POSTS, channels, activeLabel } from './data'
 
-export interface BoardState { active: string; setActive: (id: string) => void }
+export interface BoardState {
+  active: string; setActive: (id: string) => void
+  channelNav: { data: NormalizedData; onEvent: (e: Event) => void }
+}
 
 export function buildBoardPage(s: BoardState): NormalizedData {
   const list = POSTS[s.active] ?? []
@@ -17,7 +20,7 @@ export function buildBoardPage(s: BoardState): NormalizedData {
     ] as Array<readonly [string, unknown]>
   })
 
-  return {
+  const data = {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'board-page', label: 'Board' } },
@@ -28,21 +31,13 @@ export function buildBoardPage(s: BoardState): NormalizedData {
           <ul>{channels.map((c) => <li key={c.id}>{c.type === 'private' ? '🔒' : '#'} {c.name}{c.unread ? <small> · {c.unread}</small> : null}</li>)}</ul>
         </section>
       ) } },
-      side: { id: 'side', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240, roledescription: 'board-nav' } },
+      side: { id: 'side', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '채널' } },
       sideHdr: { id: 'sideHdr', data: { type: 'Text', variant: 'h3', content: 'DS Workspace' } },
       sideMeta: { id: 'sideMeta', data: { type: 'Text', variant: 'small', content: '12 members · 6 channels' } },
       chHdr: { id: 'chHdr', data: { type: 'Text', variant: 'small', content: '채널' } },
-      ...Object.fromEntries(channels.map((c) => [`ch-${c.id}`, { id: `ch-${c.id}`, data: {
-        type: 'Ui', component: 'Button',
-        props: {
-          onClick: () => s.setActive(c.id),
-          'aria-pressed': c.id === s.active,
-          'aria-label': `${c.name} 채널`,
-          'data-board-ch': '',
-        },
-        content: <>{c.type === 'private' ? '🔒' : '#'} {c.name}{c.unread ? <small> {c.unread}</small> : null}</>,
-      } }])),
-      main: { id: 'main', data: { type: 'Column', flow: 'list', grow: true, roledescription: 'board-stream' } },
+      chList: { id: 'chList', data: { type: 'Ui', component: 'Listbox',
+        props: { data: s.channelNav.data, onEvent: s.channelNav.onEvent, 'aria-label': '채널' } } },
+      main: { id: 'main', data: { type: 'Main', flow: 'list', grow: true, label: '게시물' } },
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
       mainTitle: { id: 'mainTitle', data: { type: 'Text', variant: 'h2', content: `# ${activeLabel(s.active)}` } },
       mainMeta: { id: 'mainMeta', data: { type: 'Text', variant: 'small', content: `${list.length} posts` } },
@@ -51,12 +46,13 @@ export function buildBoardPage(s: BoardState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page', 'menuPop'], page: ['side', 'main'],
-      side: ['sideHdr', 'sideMeta', 'chHdr', ...channels.map((c) => `ch-${c.id}`)],
+      side: ['sideHdr', 'sideMeta', 'chHdr', 'chList'],
       main: ['mainHdr', 'stream'],
       mainHdr: ['menuBtn', 'mainTitle', 'mainMeta'],
       stream: list.map((p) => `pr-${p.id}`),
       ...Object.fromEntries(list.map((p) => [`pr-${p.id}`, [`pa-${p.id}`, `pc-${p.id}`]])),
       ...Object.fromEntries(list.map((p) => [`pc-${p.id}`, [`ph-${p.id}`, `pb-${p.id}`]])),
     },
-  }
+  } as NormalizedData
+  return data
 }

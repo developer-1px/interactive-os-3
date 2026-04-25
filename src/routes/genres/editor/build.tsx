@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '../../../ds'
 import { BLOCK_OPTS, FMT_ACTS, type Block, type BlockKind } from './data'
 
 export interface EditorState {
@@ -6,6 +6,7 @@ export interface EditorState {
   current?: Block
   setSelected: (id: string) => void; setTitle: (v: string) => void; setPublic: (v: boolean) => void
   updateText: (id: string, v: string) => void; updateKind: (id: string, k: BlockKind) => void
+  outlineNav: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildEditorPage(s: EditorState): NormalizedData {
@@ -14,19 +15,15 @@ export function buildEditorPage(s: EditorState): NormalizedData {
     props: { onClick: () => s.current && s.updateKind(s.current.id, kind), 'aria-label': label },
     content: label,
   } }] as const
-  const outline = s.blocks.filter((b) => b.kind.startsWith('h'))
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'editor-page', label: 'Editor' } },
-      outline: { id: 'outline', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
+      outline: { id: 'outline', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '아웃라인' } },
       oHdr: { id: 'oHdr', data: { type: 'Text', variant: 'h3', content: '아웃라인' } },
-      ...Object.fromEntries(outline.map((b) => [`ol-${b.id}`, { id: `ol-${b.id}`, data: {
-        type: 'Ui', component: 'ToolbarButton',
-        props: { pressed: s.selected === b.id, onClick: () => s.setSelected(b.id), 'aria-label': b.text, 'data-depth': b.kind },
-        content: b.text,
-      } }])),
-      canvas: { id: 'canvas', data: { type: 'Column', flow: 'form', grow: true } },
+      olList: { id: 'olList', data: { type: 'Ui', component: 'Listbox',
+        props: { data: s.outlineNav.data, onEvent: s.outlineNav.onEvent, 'aria-label': '아웃라인' } } },
+      canvas: { id: 'canvas', data: { type: 'Main', flow: 'form', grow: true, label: '편집 영역' } },
       docTitle: { id: 'docTitle', data: { type: 'Ui', component: 'Input', props: { value: s.title, onChange: (e: React.ChangeEvent<HTMLInputElement>) => s.setTitle(e.target.value), 'aria-label': '문서 제목', 'data-ds-title': '' } } },
       toolbar: { id: 'toolbar', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '서식' } } },
       ...Object.fromEntries(FMT_ACTS.map(([id, label, icon, content]) => [id, { id, data: {
@@ -43,7 +40,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
           onFocus: () => s.setSelected(b.id),
         },
       } }])),
-      props: { id: 'props', data: { type: 'Column', flow: 'form', emphasis: 'raised', width: 280 } },
+      props: { id: 'props', data: { type: 'Aside', flow: 'form', emphasis: 'raised', width: 280, label: '속성' } },
       pHdr: { id: 'pHdr', data: { type: 'Text', variant: 'h3', content: '속성' } },
       fTitle: { id: 'fTitle', data: { type: 'Ui', component: 'Field' } },
       fTitleLbl: { id: 'fTitleLbl', data: { type: 'Ui', component: 'FieldLabel', content: '제목' } },
@@ -59,7 +56,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page'], page: ['outline', 'canvas', 'props'],
-      outline: ['oHdr', ...outline.map((b) => `ol-${b.id}`)],
+      outline: ['oHdr', 'olList'],
       canvas: ['docTitle', 'toolbar', ...s.blocks.map((b) => `blk-${b.id}`)],
       toolbar: [...FMT_ACTS.map(([id]) => id), 'tSep', 't-h1', 't-h2', 't-list', 't-code'],
       props: ['pHdr', 'fTitle', 'fPub', 'fBlkKind', 'stats'],

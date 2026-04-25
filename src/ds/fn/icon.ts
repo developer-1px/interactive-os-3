@@ -56,6 +56,7 @@ const tokens = [
   'layout-grid', 'list', 'columns-3', 'gallery-vertical',
   'heart', 'message-circle', 'share', 'more',
   'calendar', 'calendar-days', 'calendar-range',
+  'grip-vertical', 'chevron-left',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

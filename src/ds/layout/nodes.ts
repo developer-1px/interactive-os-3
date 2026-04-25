@@ -28,7 +28,7 @@ export type Align = 'start' | 'center' | 'end' | 'stretch'
 
 export type NodeType =
   | 'Row' | 'Column' | 'Grid'
-  | 'Aside' | 'Section' | 'Header' | 'Footer'
+  | 'Main' | 'Nav' | 'Aside' | 'Section' | 'Header' | 'Footer'
   | 'Ui' | 'Text'
 
 export interface ItemPlacement {
@@ -69,6 +69,18 @@ export interface AsideNode extends CommonNodeData {
   flow?: Flow
   emphasis?: Emphasis
 }
+/** Page main landmark. Renders <main role=main>. 페이지당 1개. */
+export interface MainNode extends CommonNodeData {
+  type: 'Main'
+  flow?: Flow
+  emphasis?: Emphasis
+}
+/** Navigation landmark. Renders <nav role=navigation>. */
+export interface NavNode extends CommonNodeData {
+  type: 'Nav'
+  flow?: Flow
+  emphasis?: Emphasis
+}
 export interface SectionNode extends CommonNodeData {
   type: 'Section'
   heading?: { variant?: TextVariant; content: string }
@@ -98,7 +110,7 @@ export interface TextNode extends CommonNodeData {
 
 export type AnyNode =
   | RowNode | ColumnNode | GridNode
-  | AsideNode | SectionNode | HeaderNode | FooterNode
+  | MainNode | NavNode | AsideNode | SectionNode | HeaderNode | FooterNode
   | UiNode | TextNode
 
 export type TypedEntity<T extends AnyNode = AnyNode> = Entity & { data: T }
@@ -142,7 +154,7 @@ export function validatePage(page: NormalizedData): void {
       if (id !== '__root__') issues.push(`entity "${id}" missing data.type`)
       continue
     }
-    const known: NodeType[] = ['Row','Column','Grid','Aside','Section','Header','Footer','Ui','Text']
+    const known: NodeType[] = ['Row','Column','Grid','Main','Nav','Aside','Section','Header','Footer','Ui','Text']
     if (!known.includes(t as NodeType)) issues.push(`entity "${id}" unknown type "${t}"`)
   }
   // cycle detection

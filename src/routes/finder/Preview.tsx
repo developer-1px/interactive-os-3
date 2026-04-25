@@ -21,7 +21,7 @@ export function Preview({ node }: { node: FsNode | null }) {
   )
 }
 
-function PreviewBody({ node }: { node: FsNode }) {
+export function PreviewBody({ node }: { node: FsNode }) {
   const kind = extToPreviewKind(node.ext)
   const tooLarge = (node.size ?? 0) > MAX_TEXT_BYTES
 

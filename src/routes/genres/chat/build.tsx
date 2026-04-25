@@ -41,10 +41,10 @@ export function buildChatPage(s: ChatState): NormalizedData {
           </section>
         </>
       ) } },
-      side: { id: 'side', data: { type: 'Column', flow: 'list', width: 240 } },
+      side: { id: 'side', data: { type: 'Nav', flow: 'list', width: 240, label: '채널·DM' } },
       pubList: { id: 'pubList', data: { type: 'Ui', component: 'Listbox', props: { data: s.pubNav.data, onEvent: s.pubNav.onEvent, 'aria-label': '채널' } } },
       dmList: { id: 'dmList', data: { type: 'Ui', component: 'Listbox', props: { data: s.dmNav.data, onEvent: s.dmNav.onEvent, 'aria-label': 'DM' } } },
-      main: { id: 'main', data: { type: 'Column', flow: 'list', grow: true } },
+      main: { id: 'main', data: { type: 'Main', flow: 'list', grow: true, label: '메시지' } },
       mainHdr: { id: 'mainHdr', data: { type: 'Header', flow: 'split' } },
       mainTitle: { id: 'mainTitle', data: { type: 'Text', variant: 'h2', content: `# ${activeLabel(s.active)}` } },
       mainActions: { id: 'mainActions', data: { type: 'Ui', component: 'Toolbar', props: { 'aria-label': '채널 액션' } } },
@@ -58,7 +58,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
         onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') s.send() },
       }, grow: true } },
       composerSend: { id: 'composerSend', data: { type: 'Ui', component: 'Button', props: { onClick: s.send }, content: '전송' } },
-      right: { id: 'right', data: { type: 'Column', flow: 'list', width: 260 } },
+      right: { id: 'right', data: { type: 'Aside', flow: 'list', width: 260, label: '멤버' } },
       ...Object.fromEntries(MEMBERS.flatMap((m) => [
         [`mrow-${m.id}`, { id: `mrow-${m.id}`, data: { type: 'Row', flow: 'cluster' } }],
         [`mdot-${m.id}`, { id: `mdot-${m.id}`, data: { type: 'Ui', component: 'LegendDot', props: { tone: statusTone[m.status], 'aria-hidden': true } } }],

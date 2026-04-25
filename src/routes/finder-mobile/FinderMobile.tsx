@@ -14,9 +14,10 @@ import {
 } from '../../ds'
 import {
   getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
+  formatDate, formatSize,
 } from '../finder/data'
 import { extToIcon, type FsNode, type SmartGroupItem } from '../finder/types'
-import { Preview } from '../finder/Preview'
+import { PreviewBody } from '../finder/Preview'
 import { useSidebarNav } from '../finder/shared/useSidebarNav'
 
 export function FinderMobile() {
@@ -49,23 +50,27 @@ export function FinderMobile() {
   }, [path, smart, current])
 
   return (
-    <main
-      aria-roledescription="finder-mobile"
-      aria-label="Finder"
-      style={{ display: 'flex', flexDirection: 'column', minBlockSize: 0, blockSize: '100svh' }}
-    >
-      <header style={{ position: 'sticky', insetBlockStart: 0, zIndex: 1 }}>
-        {parent !== null && (
-          <button type="button" aria-label="뒤로" onClick={() => go(parent!)}>‹</button>
-        )}
-        <h1>{title}</h1>
-      </header>
+    <main aria-roledescription="finder-mobile" aria-label="Finder">
+      {!isFile && (
+        <header>
+          {parent !== null && (
+            <button type="button" aria-label="뒤로" onClick={() => go(parent!)}>‹</button>
+          )}
+          <h1>{title}</h1>
+        </header>
+      )}
       {path === '/'
         ? <Home current={path} onNavigate={go} />
         : smart
           ? <SmartList group={smart} items={smartItems(smart.id)} onNavigate={go} />
           : isFile && current
-            ? <FilesSwiper files={siblings.length ? siblings : [current]} initialPath={current.path} />
+            ? (
+              <FilesSwiper
+                files={siblings.length ? siblings : [current]}
+                initialPath={current.path}
+                onBack={parent !== null ? () => go(parent!) : undefined}
+              />
+            )
             : current?.type === 'dir'
               ? <DirList node={current} onNavigate={go} />
               : <Empty />}
@@ -140,11 +145,14 @@ function SmartList({
   )
 }
 
-/** TikTok식 세로 스냅 스와이퍼 — 형제 파일들을 한 화면씩 풀-블리드로 쌓는다.
- *  스크롤은 CSS scroll-snap이 담당한다. JS는 진입 시 현재 파일로 1회 점프만 한다(클릭 driven).
- *  IO/scroll로 URL을 동기화하지 않는다 — 덜그덕 방지 (memory: feedback_mobile_js_boundary). */
-function FilesSwiper({ files, initialPath }: { files: FsNode[]; initialPath: string }) {
-  const ref = useRef<HTMLDivElement>(null)
+/** TikTok식 세로 스냅 스와이퍼 — 형제 파일을 한 화면씩 풀-블리드로 쌓는다.
+ *  스크롤은 CSS scroll-snap이 담당. JS는 진입 시 현재 파일로 1회 점프만 한다(클릭 driven).
+ *  IO/scroll로 URL을 동기화하지 않는다 — 덜그덕 방지 (memory: feedback_mobile_js_boundary).
+ *  스타일은 panes.ts `[aria-roledescription="finder-tiktok|finder-file|finder-tiktok-*"]`. */
+function FilesSwiper({
+  files, initialPath, onBack,
+}: { files: FsNode[]; initialPath: string; onBack?: () => void }) {
+  const ref = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     const root = ref.current
     if (!root) return
@@ -154,33 +162,31 @@ function FilesSwiper({ files, initialPath }: { files: FsNode[]; initialPath: str
     target?.scrollIntoView({ block: 'start' })
   }, [initialPath])
   return (
-    <section
-      ref={ref}
-      aria-roledescription="finder-tiktok"
-      style={{
-        flex: '1 1 auto',
-        minBlockSize: 0,
-        overflowY: 'auto',
-        scrollSnapType: 'y mandatory',
-        scrollbarWidth: 'none',
-      }}
-    >
+    <section ref={ref} aria-roledescription="finder-tiktok">
       {files.map((f) => (
         <article
           key={f.path}
           data-path={f.path}
           aria-roledescription="finder-file"
           aria-label={f.name}
-          style={{
-            scrollSnapAlign: 'start',
-            scrollSnapStop: 'always',
-            blockSize: '100%',
-            minBlockSize: '100%',
-            display: 'grid',
-            overflow: 'hidden',
-          }}
         >
-          <Preview node={f} />
+          <figure aria-roledescription="preview-fill">
+            <PreviewBody node={f} />
+          </figure>
+
+          <header aria-roledescription="finder-tiktok-top">
+            {onBack && (
+              <button type="button" data-icon="chevron-left" aria-label="뒤로" onClick={onBack} />
+            )}
+            <strong title={f.name}>{f.name}</strong>
+          </header>
+
+          <aside aria-roledescription="finder-tiktok-bottom" aria-label={`${f.name} 정보`}>
+            <mark data-tone="info">{(f.ext ?? 'file').toUpperCase()}</mark>
+            {f.size != null && <small>{formatSize(f.size)}</small>}
+            {f.mtime && <small>{formatDate(f.mtime)}</small>}
+            <small title={f.path}>{f.path}</small>
+          </aside>
         </article>
       ))}
     </section>

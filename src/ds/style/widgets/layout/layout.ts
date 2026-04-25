@@ -1,4 +1,5 @@
 import { accent, css, mix, pad, radius, square, surface } from '../../../fn'
+import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -71,7 +72,7 @@ export const layout = () => css`
      기존 emphasis padding(2/3)과 같은 스케일로 모든 페이지가 화면 가장자리에 붙지 않게.
      모바일은 좁아 가독을 위해 한 단계 축소. */
   [data-page-root]:not([data-emphasis]) { padding: ${pad(3)}; }
-  @media (max-width: 39.999rem) {
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
     [data-page-root]:not([data-emphasis]) { padding: ${pad(2)}; }
   }
 

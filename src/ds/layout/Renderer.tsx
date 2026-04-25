@@ -15,8 +15,8 @@ import { printTree, printHeadingOutline } from '../debug/printTree'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
-  type GridNode, type HeaderNode, type RowNode, type SectionNode,
-  type TextNode, type UiNode,
+  type GridNode, type HeaderNode, type MainNode, type NavNode,
+  type RowNode, type SectionNode, type TextNode, type UiNode,
 } from './nodes'
 import { resolveUi } from './registry'
 
@@ -75,6 +75,8 @@ function NodeView({ page, id, pageRoot }: { page: NormalizedData; id: string; pa
     case 'Row':     return <RowView page={page} id={id} d={d} pageRoot={pr} />
     case 'Column':  return <ColumnView page={page} id={id} d={d} pageRoot={pr} />
     case 'Grid':    return <GridView page={page} id={id} d={d} pageRoot={pr} />
+    case 'Main':    return <MainView page={page} id={id} d={d} pageRoot={pr} />
+    case 'Nav':     return <NavView page={page} id={id} d={d} />
     case 'Aside':   return <AsideView page={page} id={id} d={d} />
     case 'Section': return <SectionView page={page} id={id} d={d} pageRoot={pr} />
     case 'Header':  return <HeaderView page={page} id={id} d={d} />
@@ -147,6 +149,41 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
     >
       <NodeChildren page={page} id={id} />
     </div>
+  )
+}
+
+function MainView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: MainNode; pageRoot?: boolean }) {
+  const ph = placementAttrs(d)
+  return (
+    <main
+      data-flow={d.flow}
+      data-emphasis={d.emphasis}
+      data-page-root={pageRoot ? '' : undefined}
+      aria-label={d.label}
+      aria-labelledby={d.labelledBy}
+      aria-roledescription={d.roledescription}
+      hidden={d.hidden || undefined}
+      {...ph}
+    >
+      <NodeChildren page={page} id={id} />
+    </main>
+  )
+}
+
+function NavView({ page, id, d }: { page: NormalizedData; id: string; d: NavNode }) {
+  const ph = placementAttrs(d)
+  return (
+    <nav
+      data-flow={d.flow}
+      data-emphasis={d.emphasis}
+      aria-label={d.label}
+      aria-labelledby={d.labelledBy}
+      aria-roledescription={d.roledescription}
+      hidden={d.hidden || undefined}
+      {...ph}
+    >
+      <NodeChildren page={page} id={id} />
+    </nav>
   )
 }
 

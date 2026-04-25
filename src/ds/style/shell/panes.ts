@@ -192,8 +192,7 @@ export const panesCss = css`
      컨텍스트에서는 자기 컨테이너 크기를 따른다. */
   aside[aria-roledescription="preview"] {
     overflow-x: hidden; overflow-y: auto;
-    padding: ${pad(6)};
-    display: flex; flex-direction: column; gap: ${pad(4)};
+    display: flex; flex-direction: column;
     min-width: 0;
     /* L3 — 자기 폭에 따라 코드 soft-wrap. viewport 모름. */
     container-type: inline-size;
@@ -277,9 +276,12 @@ export const panesCss = css`
      isMobile 분기로 FinderMobile을 렌더하므로 CSS는 자기 root 이름만 잡는다. */
   main[aria-roledescription="finder-mobile"] {
     display: flex; flex-direction: column;
-    block-size: 100%; min-block-size: 0;
+    block-size: 100svh; min-block-size: 0;
   }
   main[aria-roledescription="finder-mobile"] > header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
@@ -328,88 +330,85 @@ export const panesCss = css`
     font-size: var(--ds-text-md);
     border-radius: ${radius('md')};
   }
-  /* File 풀스크린 Preview — 정적 단일 파일 + 이전/다음 버튼.
-     pager 윈도잉/IO 제거(덜그덕 원인). header(파일명·인덱스) + Preview + footer(prev/next). */
-  main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-file"] {
-    padding: 0; gap: 0;
-    display: flex; flex-direction: column; min-height: 0;
-  }
-  section[aria-roledescription="finder-file"] > header {
-    display: flex; align-items: center; gap: ${pad(2)};
-    padding: ${pad(2)} ${pad(3)};
-    border-block-end: var(--ds-hairline) solid var(--ds-border);
-    flex: none;
-  }
-  section[aria-roledescription="finder-file"] > header > figure { margin: 0; flex: none; }
-  section[aria-roledescription="finder-file"] > header > h2 {
-    margin: 0; font-size: var(--ds-text-md); font-weight: 600;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    min-inline-size: 0; flex: 1;
-  }
-  section[aria-roledescription="finder-file"] > header > small {
-    color: ${dim(55)}; font-variant-numeric: tabular-nums; flex: none;
-  }
-  section[aria-roledescription="finder-file"] > aside[aria-roledescription="preview"] {
-    flex: 1 1 auto;
-    padding: ${pad(3)};
-    overflow-y: auto;
-  }
-  section[aria-roledescription="finder-file"] > footer[aria-roledescription="pager-controls"] {
-    display: flex; gap: ${pad(2)}; justify-content: space-between;
-    padding: ${pad(2)} ${pad(3)};
-    border-block-start: var(--ds-hairline) solid var(--ds-border);
-    flex: none;
-  }
   section[aria-roledescription="finder-empty"] {
     display: grid; place-items: center;
-    color: ${dim(55)};
+    color: inherit; opacity: .55;
     padding: ${pad(8)};
   }
-  /* FilePager — feed 식 vertical scroll. 형제 파일이 자연 높이로 흐르고
-     사이 구분선만 둔다. 스크롤은 finder-pager(>section) 안에서. */
-  main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-pager"] {
+  /* TikTok 식 세로 스냅 스와이퍼 — 형제 파일을 한 화면씩 풀-블리드로 쌓는다.
+     컨테이너가 main 자식이므로 panes.ts의 일반 finder-mobile > section padding/gap을
+     덮어 풀-블리드를 만든다. JS는 진입 시 1회 점프만(useLayoutEffect),
+     IO/scroll-sync 없음 (memory: feedback_mobile_js_boundary). */
+  main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-tiktok"] {
+    display: block;
     padding: 0; gap: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+  }
+  article[aria-roledescription="finder-file"] {
+    position: relative;
+    block-size: 100svh;
+    overflow: hidden;
+    background: var(--ds-bg);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  /* preview-fill — preview를 article 풀블리드로 깔기 위한 시맨틱 wrapper.
+     div는 roleless라 aria-roledescription을 부여할 수 없으므로 figure 사용. */
+  article[aria-roledescription="finder-file"] > figure[aria-roledescription="preview-fill"] {
+    margin: 0;
+    position: absolute; inset: 0;
+    overflow: auto;
     overscroll-behavior: contain;
   }
-  section[aria-roledescription="finder-pager"] > article {
-    display: flex; flex-direction: column;
-    border-block-start: var(--ds-hairline) solid var(--ds-border);
-  }
-  section[aria-roledescription="finder-pager"] > article:first-child {
-    border-block-start: 0;
-  }
-  /* article 별 sticky 헤더 — pager 스크롤 시 현재 파일명을 항상 보이게 */
-  section[aria-roledescription="finder-pager"] > article > header {
-    position: sticky;
-    inset-block-start: 0;
+  /* TikTok top/bottom overlays — gradient mask로 콘텐츠와 분리, safe-area inset 흡수.
+     fg(1)이 surface owner이고 alpha gradient를 만든다 (페어 함수 일관). */
+  header[aria-roledescription="finder-tiktok-top"],
+  aside[aria-roledescription="finder-tiktok-bottom"] {
+    position: absolute;
+    inset-inline: 0;
     z-index: 1;
-    display: flex; align-items: center; gap: ${pad(2)};
-    padding: ${pad(1.5)} ${pad(3)};
-    background: color-mix(in oklch, ${fg(1)} 92%, transparent);
-    border-block-end: var(--ds-hairline) solid var(--ds-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    padding-inline: ${pad(3)};
   }
-  section[aria-roledescription="finder-pager"] > article > header > figure {
-    margin: 0; flex: none;
+  header[aria-roledescription="finder-tiktok-top"] {
+    inset-block-start: 0;
+    padding-block-start: calc(env(safe-area-inset-top) + ${pad(2)});
+    padding-block-end: ${pad(2)};
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: ${pad(2)};
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklch, ${fg(1)} 96%, transparent) 30%,
+      color-mix(in oklch, ${fg(1)} 70%, transparent) 70%,
+      transparent
+    );
   }
-  section[aria-roledescription="finder-pager"] > article > header > h2 {
-    margin: 0;
-    font-size: var(--ds-text-md); font-weight: 600;
+  header[aria-roledescription="finder-tiktok-top"] > strong {
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     min-inline-size: 0;
   }
-  section[aria-roledescription="finder-pager"] > article > aside[aria-roledescription="preview"] {
-    flex: 1 1 auto;
-    padding: ${pad(3)};
+  aside[aria-roledescription="finder-tiktok-bottom"] {
+    inset-block-end: 0;
+    padding-block-start: ${pad(2)};
+    padding-block-end: calc(env(safe-area-inset-bottom) + ${pad(3)});
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: ${pad(2)};
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, ${fg(1)} 96%, transparent) 30%,
+      color-mix(in oklch, ${fg(1)} 70%, transparent) 70%,
+      transparent
+    );
   }
-  /* 윈도우 밖 스텁 — feed 스크롤 위치 유지를 위한 placeholder 높이 */
-  section[aria-roledescription="finder-pager"] > article > aside[aria-hidden="true"] {
-    min-block-size: 50vh;
-  }
-  /* aria-current="page" — 현재 형제 표식 (헤어라인) */
-  section[aria-roledescription="finder-pager"] > article[aria-current="page"] {
-    box-shadow: inset 2px 0 0 ${mix('var(--ds-accent)', 60, 'transparent')};
+  /* path — 마지막 small을 trail 위치로 밀고 약화. cell-level color 금지 → opacity. */
+  aside[aria-roledescription="finder-tiktok-bottom"] > small:last-child {
+    flex: 1; min-inline-size: 0; text-align: end;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    opacity: .6;
   }
 
   /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]

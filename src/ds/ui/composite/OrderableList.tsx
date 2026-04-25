@@ -84,11 +84,10 @@ export function OrderableList({ data, onReorder, numbered, ...rest }: OrderableL
           >
             <button
               type="button"
+              data-icon="grip-vertical"
               aria-label={`${i + 1}번째 항목 순서 변경`}
               onKeyDown={onHandleKey}
-            >
-              ⠿
-            </button>
+            />
             {numbered && <strong>{i + 1}.</strong>}
             {(d.badge as ReactNode) ?? null}
             <span>{d.primary as ReactNode}</span>

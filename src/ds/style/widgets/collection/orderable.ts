@@ -1,4 +1,4 @@
-import { accent, control, css, dim, dur, ease, fg, font, hairline, listReset, pad, tint } from '../../../fn'
+import { accent, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../../fn'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 /**
@@ -41,27 +41,25 @@ export const orderableCss = () => css`
     white-space: nowrap;
   }
 
-  /* drag handle — hit target 보장 */
+  /* drag handle — icon-only button[data-icon="grip-vertical"].
+     base.ts controlBox + button.ts square('button[data-icon]:empty') 가 정사각형
+     축과 가운데 정렬을 자동 적용한다. cell-level은 color: inherit + opacity로 약화/복귀
+     (mute primitive). surface flip 시 대비 안전. */
   ol[aria-roledescription="orderable"] > li > button {
     cursor: grab;
     background: transparent;
-    border: 0;
-    color: ${dim(50)};
-    min-inline-size: ${control('h')};
-    min-block-size: ${control('h')};
-    font-size: ${font('md')};
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border-color: transparent;
+    color: inherit;
+    ${mute(3)}
   }
   ol[aria-roledescription="orderable"] > li > button:hover {
-    color: ${fg()};
+    opacity: 1;
   }
 
   /* trail slot — 시각·메타·우측 정렬 */
   ol[aria-roledescription="orderable"] > li > small {
-    color: ${dim(55)};
+    color: inherit;
+    ${mute(2)}
     font-variant-numeric: tabular-nums;
   }
 

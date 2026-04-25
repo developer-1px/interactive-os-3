@@ -1,11 +1,12 @@
-import { ROOT, type NormalizedData } from '../../../ds'
-import { DIGEST_OPTS, SECTIONS, sectionLabel, splitRow, splitRowRels, type Digest, type SectionId } from './data'
+import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { DIGEST_OPTS, sectionLabel, splitRow, splitRowRels, type Digest, type SectionId } from './data'
 
 export interface SettingsState {
   section: SectionId; name: string; email: string
   notifEmail: boolean; notifPush: boolean; notifDigest: Digest
   setSection: (s: SectionId) => void; setName: (v: string) => void; setEmail: (v: string) => void
   setNotifEmail: (v: boolean) => void; setNotifPush: (v: boolean) => void; setNotifDigest: (v: Digest) => void
+  sectionNav: { data: NormalizedData; onEvent: (e: Event) => void }
 }
 
 export function buildSettingsPage(s: SettingsState): NormalizedData {
@@ -14,14 +15,11 @@ export function buildSettingsPage(s: SettingsState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'settings-page', label: 'Settings' } },
-      nav: { id: 'nav', data: { type: 'Column', flow: 'list', emphasis: 'sunk', width: 240 } },
+      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '설정 내비게이션' } },
       navTitle: { id: 'navTitle', data: { type: 'Text', variant: 'h3', content: '설정' } },
-      ...Object.fromEntries(SECTIONS.map(([id, label]) => [`nav-${id}`, { id: `nav-${id}`, data: {
-        type: 'Ui', component: 'ToolbarButton',
-        props: { pressed: s.section === id, onClick: () => s.setSection(id), 'aria-label': label },
-        content: label,
-      } }])),
-      main: { id: 'main', data: { type: 'Column', flow: 'form', grow: true } },
+      navList: { id: 'navList', data: { type: 'Ui', component: 'Listbox',
+        props: { data: s.sectionNav.data, onEvent: s.sectionNav.onEvent, 'aria-label': '설정 섹션' } } },
+      main: { id: 'main', data: { type: 'Main', flow: 'form', grow: true } },
       h: { id: 'h', data: { type: 'Text', variant: 'h1', content: sectionLabel(s.section) } },
 
       profSec: { id: 'profSec', data: { type: 'Section', emphasis: 'raised', flow: 'form', hidden: hid('profile') } },
@@ -61,7 +59,7 @@ export function buildSettingsPage(s: SettingsState): NormalizedData {
     },
     relationships: {
       [ROOT]: ['page'], page: ['nav', 'main'],
-      nav: ['navTitle', ...SECTIONS.map(([id]) => `nav-${id}`)],
+      nav: ['navTitle', 'navList'],
       main: ['h', 'profSec', 'accSec', 'notSec', 'billSec', 'dngSec'],
       profSec: ['pName'], pName: ['pNameL', 'pNameI'],
       accSec: ['aEmail'], aEmail: ['aEmailL', 'aEmailI'],

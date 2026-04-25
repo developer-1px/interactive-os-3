@@ -16,8 +16,7 @@
     "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts && pnpm lint:ds:keyboard && pnpm lint:ds:shell",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "aria:xray": "node scripts/aria-xray.mjs",
-    "aria:xray:update": "node scripts/aria-xray.mjs --update",
-    "aria:xray:report": "node scripts/aria-xray.mjs --report",
+    "aria:tree": "TSX_TSCONFIG_PATH=tsconfig.app.json node --import tsx --loader ./scripts/aria-tree-loader.mjs scripts/aria-tree.ts",
     "preview": "vite preview"
   },
   "dependencies": {
