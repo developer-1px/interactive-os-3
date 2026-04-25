@@ -1,5 +1,4 @@
-import { accent, css, dim, pad, radius, tint } from '../../../fn'
-
+import { accent, border, css, dim, pad, radius, tint } from '../../../fn'
 /**
  * Tabs — 보편적 탭 어포던스.
  *
@@ -17,7 +16,7 @@ export const tabs = () => css`
   /* --- horizontal (default) --- */
   [role="tablist"]:not([aria-orientation="vertical"]) {
     gap: 0;
-    border-bottom: 1px solid var(--ds-border);
+    border-bottom: 1px solid ${border()};
     align-items: stretch;
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"] {
@@ -37,15 +36,15 @@ export const tabs = () => css`
     border-bottom-color: ${tint(accent(), 40)};
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"][aria-selected="true"] {
-    color: var(--ds-accent);
-    border-bottom-color: var(--ds-accent);
+    color: ${accent()};
+    border-bottom-color: ${accent()};
   }
 
   /* --- vertical --- */
   [role="tablist"][aria-orientation="vertical"] {
     flex-direction: column;
     gap: 0;
-    border-inline-end: 1px solid var(--ds-border);
+    border-inline-end: 1px solid ${border()};
     align-items: stretch;
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"] {
@@ -63,8 +62,8 @@ export const tabs = () => css`
     border-inline-end-color: ${tint(accent(), 40)};
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"][aria-selected="true"] {
-    color: var(--ds-accent);
-    border-inline-end-color: var(--ds-accent);
+    color: ${accent()};
+    border-inline-end-color: ${accent()};
   }
 
   /* --- disabled --- */
@@ -78,7 +77,7 @@ export const tabs = () => css`
     padding: ${pad(3)} 0;
   }
   [role="tabpanel"]:focus-visible {
-    outline: 2px solid var(--ds-accent);
+    outline: 2px solid ${accent()};
     outline-offset: 2px;
     border-radius: ${radius('sm')};
   }

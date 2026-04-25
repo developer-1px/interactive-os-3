@@ -1,5 +1,4 @@
-import { css, radius, status } from '../../../fn'
-
+import { accent, border, css, radius, status } from '../../../fn'
 // Progress / Meter — 네이티브 요소를 토큰 기반으로 얇게 스타일.
 // aria-valuenow는 native progress/meter의 value 속성으로 반영되므로 별도 attr() 불필요.
 export const valueCss = css`
@@ -8,7 +7,7 @@ export const valueCss = css`
     -webkit-appearance: none;
     width: 100%;
     height: calc(var(--ds-space) * 2);
-    border: 1px solid var(--ds-border);
+    border: 1px solid ${border()};
     border-radius: ${radius('pill')};
     background: transparent;
     overflow: hidden;
@@ -17,9 +16,9 @@ export const valueCss = css`
   :where(meter)::-webkit-meter-bar { background: transparent; border-radius: ${radius('pill')}; }
   :where(progress)::-webkit-progress-value,
   :where(meter)::-webkit-meter-optimum-value {
-    background: var(--ds-accent); border-radius: ${radius('pill')}; transition: inline-size 160ms;
+    background: ${accent()}; border-radius: ${radius('pill')}; transition: inline-size 160ms;
   }
-  :where(progress)::-moz-progress-bar { background: var(--ds-accent); }
+  :where(progress)::-moz-progress-bar { background: ${accent()}; }
   :where(meter)::-webkit-meter-suboptimum-value    { background: ${status('warning')}; }
   :where(meter)::-webkit-meter-even-less-good-value { background: ${status('danger')}; }
 `

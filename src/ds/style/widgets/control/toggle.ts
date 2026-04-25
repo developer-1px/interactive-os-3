@@ -1,5 +1,4 @@
-import { css, indicator, onAccent, pad, radius } from '../../../fn'
-
+import { accent, bg, css, indicator, onAccent, pad, radius, status } from '../../../fn'
 export const toggle = () => [
   css`
     [role="checkbox"],
@@ -12,7 +11,7 @@ export const toggle = () => [
       min-height: 0; block-size: 1.125em;
       padding: 0;
       border: 1.5px solid var(--ds-control-border);
-      background: var(--ds-bg);
+      background: ${bg()};
       flex: 0 0 auto;
       cursor: pointer;
       transition:
@@ -41,8 +40,8 @@ export const toggle = () => [
     [role="checkbox"][aria-checked="true"],
     [role="checkbox"][aria-checked="mixed"],
     [role="radio"][aria-checked="true"] {
-      background: var(--ds-accent);
-      border-color: var(--ds-accent);
+      background: ${accent()};
+      border-color: ${accent()};
       color: ${onAccent()};
     }
 
@@ -74,7 +73,7 @@ export const toggle = () => [
 
 export const alert = () => css`
   [role="alert"] {
-    color: var(--ds-danger);
+    color: ${status('danger')};
     font-size: 0.85em;
     line-height: 1.4;
     margin-block-start: ${pad(0.5)};

@@ -1,5 +1,4 @@
-import { css, pad, radius, rowPadding, surface, tint } from '../../../fn'
-
+import { bg, border, css, pad, radius, rowPadding, surface, tint } from '../../../fn'
 export const dialogCss = css`
   :where(dialog) {
     ${surface(3)}
@@ -37,7 +36,7 @@ export const dialogCss = css`
   }
   :where(dialog[aria-label="Command palette"]) :where([role="listbox"]) {
     border: 0;
-    border-top: 1px solid var(--ds-border);
+    border-top: 1px solid ${border()};
     border-radius: 0;
     max-height: min(60vh, 420px);
     min-height: 0;
@@ -53,12 +52,12 @@ export const tooltipCss = css`
      body::before로 dim layer를 깐다 (popover는 top layer라 scrim 위에 떠 있음). */
   [popover][role="dialog"][aria-roledescription="popover"] {
     ${surface(3)}
-    background-color: var(--ds-bg);
+    background-color: ${bg()};
     color: inherit;
     margin: 0;
     padding: ${pad(3)};
     border-radius: ${radius('lg')};
-    border: var(--ds-hairline) solid var(--ds-border);
+    border: var(--ds-hairline) solid ${border()};
     /* 선명도 우선 — 1 device-px ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
     box-shadow:
       0 0 0 var(--ds-hairline) ${tint('CanvasText', 6)},
@@ -84,19 +83,19 @@ export const tooltipCss = css`
   :where(dialog[data-ds-sheet="end"]) {
     inset-block: 0; inset-inline-end: 0; inset-inline-start: auto;
     block-size: 100dvh; inline-size: min(360px, 92vw);
-    border-inline-start: 1px solid var(--ds-border);
+    border-inline-start: 1px solid ${border()};
   }
   :where(dialog[data-ds-sheet="start"]) {
     inset-block: 0; inset-inline-start: 0; inset-inline-end: auto;
     block-size: 100dvh; inline-size: min(320px, 88vw);
-    border-inline-end: 1px solid var(--ds-border);
+    border-inline-end: 1px solid ${border()};
   }
   :where(dialog[data-ds-sheet="bottom"]) {
     inset-inline: 0; inset-block-end: 0; inset-block-start: auto;
     inline-size: 100%; max-block-size: 88dvh;
     border-start-start-radius: ${radius('lg')};
     border-start-end-radius: ${radius('lg')};
-    border-block-start: 1px solid var(--ds-border);
+    border-block-start: 1px solid ${border()};
   }
 
   :where([role="tooltip"]) {

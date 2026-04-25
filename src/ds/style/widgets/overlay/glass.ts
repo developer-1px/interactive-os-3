@@ -1,5 +1,4 @@
-import { css, pad, radius, surface, tint } from '../../../fn'
-
+import { accent, css, pad, radius, surface, tint } from '../../../fn'
 // 모바일 글래스 — iOS 26 Liquid Glass / Material 3 Expressive 트렌드 수렴.
 // hover:none + pointer:coarse 환경에서만 발동하여 데스크톱 외형 유지.
 //
@@ -28,8 +27,8 @@ export const glassCss = css`
       border-radius: ${radius('pill')};
       box-shadow:
         inset 0 1px 0 ${tint('Canvas', 30)},
-        0 1px 2px color-mix(in oklch, var(--ds-accent) 20%, transparent),
-        0 6px 14px color-mix(in oklch, var(--ds-accent) 22%, transparent);
+        0 1px 2px color-mix(in oklch, ${accent()} 20%, transparent),
+        0 6px 14px color-mix(in oklch, ${accent()} 22%, transparent);
     }
 
     :where(input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
@@ -85,7 +84,7 @@ export const glassCss = css`
       box-shadow: none;
     }
     :where([role="toolbar"]) > :where(button[aria-pressed="true"]) {
-      background: color-mix(in oklch, var(--ds-accent) 12%, transparent);
+      background: color-mix(in oklch, ${accent()} 12%, transparent);
       border-color: ${tint('CanvasText', 6)};
     }
   }

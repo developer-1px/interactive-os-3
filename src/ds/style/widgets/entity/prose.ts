@@ -1,4 +1,4 @@
-import { css, pad, radius } from '../../../fn/values'
+import { accent, border, css, fg, pad, radius } from '../../../fn/values'
 import { mix } from '../../../fn/palette'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
@@ -25,7 +25,7 @@ export const proseCss = () => css`
     max-inline-size: 72ch;
     font-size: var(--prose-body);
     line-height: var(--prose-leading);
-    color: var(--ds-fg);
+    color: ${fg()};
     overflow-wrap: break-word;
     -webkit-text-size-adjust: 100%;
   }
@@ -39,7 +39,7 @@ export const proseCss = () => css`
     font-weight: 700;
     letter-spacing: -0.01em;
     margin: 0;
-    color: var(--ds-fg);
+    color: ${fg()};
   }
   [data-flow="prose"] > :is(h1, h2, h3, h4, h5, h6) { margin-block-start: 2em; }
   [data-flow="prose"] > :is(h1, h2, h3, h4, h5, h6):first-child { margin-block-start: 0; }
@@ -50,12 +50,12 @@ export const proseCss = () => css`
     font-size: clamp(1.875rem, 1.4rem + 2.4vw, 2.5rem);     /* 30 → 40px */
     line-height: 1.15;
     letter-spacing: -0.02em;
-    border-block-end: 2px solid var(--ds-border);
+    border-block-end: 2px solid ${border()};
     padding-block-end: .35em;
   }
   [data-flow="prose"] h2 {
     font-size: clamp(1.5rem, 1.2rem + 1.6vw, 1.953rem);     /* 24 → 31px */
-    border-block-end: 1px solid var(--ds-border);
+    border-block-end: 1px solid ${border()};
     padding-block-end: .3em;
   }
   [data-flow="prose"] h3 { font-size: clamp(1.25rem, 1.1rem + .8vw, 1.563rem); }  /* 20 → 25 */
@@ -79,7 +79,7 @@ export const proseCss = () => css`
   /* ── blockquote ───────────────────────────────────────── */
   [data-flow="prose"] blockquote {
     padding: .6em 1em;
-    border-inline-start: 4px solid var(--ds-accent);
+    border-inline-start: 4px solid ${accent()};
     background: ${mix('Canvas', 96, 'CanvasText')};
     border-radius: 0 ${radius('sm')} ${radius('sm')} 0;
     color: ${mix('CanvasText', 80, 'Canvas')};
@@ -94,14 +94,14 @@ export const proseCss = () => css`
     padding: .15em .4em;
     border-radius: ${radius('sm')};
     background: ${mix('Canvas', 92, 'CanvasText')};
-    border: 1px solid var(--ds-border);
+    border: 1px solid ${border()};
     word-break: break-word;
   }
   [data-flow="prose"] pre {
     padding: 1em 1.1em;
     border-radius: ${radius('md')};
     background: ${mix('Canvas', 94, 'CanvasText')};
-    border: 1px solid var(--ds-border);
+    border: 1px solid ${border()};
     overflow-x: auto;
     line-height: 1.55;
     font-size: .9375em;             /* ~15.5px */
@@ -122,7 +122,7 @@ export const proseCss = () => css`
   }
   [data-flow="prose"] :is(th, td) {
     padding: .5em .75em;
-    border: 1px solid var(--ds-border);
+    border: 1px solid ${border()};
     text-align: start;
     vertical-align: top;
   }
@@ -134,7 +134,7 @@ export const proseCss = () => css`
   /* ── misc ─────────────────────────────────────────────── */
   [data-flow="prose"] hr {
     block-size: 1px;
-    background: var(--ds-border);
+    background: ${border()};
     border: 0;
     margin-block: 2em;
   }
@@ -144,7 +144,7 @@ export const proseCss = () => css`
     border-radius: ${radius('sm')};
   }
   [data-flow="prose"] a {
-    color: var(--ds-accent);
+    color: ${accent()};
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-thickness: from-font;

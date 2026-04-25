@@ -1,5 +1,4 @@
-import { accent, css, fg, onAccent, pad, radius, square, tint } from '../../../fn'
-
+import { accent, css, fg, onAccent, pad, radius, square, status, tint } from '../../../fn'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
 //  - Button: 체크기(29.5px control-h), radius md, gray-2 서피스, 1px hairline 경계, cursor pointer
@@ -67,14 +66,14 @@ export const buttonCss = css`
   /* ── Danger (위험 영역) ────────────────────────────────────────
      [aria-roledescription="danger"] 섹션 안의 button은 경고 색. 삭제/해지 등. */
   [aria-roledescription="danger"] button {
-    background: ${tint(`var(--ds-danger)`, 8)};
-    color: var(--ds-danger);
-    border-color: ${tint(`var(--ds-danger)`, 30)};
+    background: ${tint(`${status('danger')}`, 8)};
+    color: ${status('danger')};
+    border-color: ${tint(`${status('danger')}`, 30)};
   }
   [aria-roledescription="danger"] button:hover:not([aria-disabled="true"]) {
-    background: var(--ds-danger);
+    background: ${status('danger')};
     color: ${onAccent()};
-    border-color: var(--ds-danger);
+    border-color: ${status('danger')};
   }
 
   /* ── 예외: columnheader 안의 sort 토글 버튼은 텍스트 링크처럼 처리

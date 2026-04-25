@@ -1,5 +1,4 @@
-import { accent, css, dim, fg, onAccent, pad, radius, tint } from '../../../fn'
-
+import { accent, css, dim, fg, onAccent, pad, radius, status, tint } from '../../../fn'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -38,7 +37,7 @@ export const formCss = css`
   }
   [role="group"][aria-roledescription="field"][aria-required="true"] > label::after {
     content: ' *';
-    color: var(--ds-danger);
+    color: ${status('danger')};
     font-weight: 400;
   }
   [role="group"][aria-roledescription="field"] > p {
@@ -174,7 +173,7 @@ export const formCss = css`
 
   /* Aside의 "위험 영역" section은 경고 톤 */
   aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
-    color: var(--ds-danger);
+    color: ${status('danger')};
   }
 
   /* ── 체크박스 row — Row flow="cluster"로 Checkbox + Text 쌍을 감쌀 때 ─── */

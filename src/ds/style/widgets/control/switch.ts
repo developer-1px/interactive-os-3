@@ -1,5 +1,4 @@
-import { css, radius } from '../../../fn'
-
+import { accent, bg, css, radius } from '../../../fn'
 export const switchCss = css`
   :where([role="switch"]) {
     --ds-switch-ratio:  1.75;
@@ -25,11 +24,11 @@ export const switchCss = css`
     width: var(--ds-switch-thumb);
     height: var(--ds-switch-thumb);
     border-radius: 50%;
-    background: var(--ds-bg);
+    background: ${bg()};
     box-shadow: var(--ds-shadow);
     transition: transform var(--ds-dur-base) var(--ds-ease-spring);
   }
-  :where([role="switch"])[aria-checked="true"] { background: var(--ds-accent); }
+  :where([role="switch"])[aria-checked="true"] { background: ${accent()}; }
   :where([role="switch"])[aria-checked="true"]::before {
     transform: translateX(var(--ds-switch-travel));
   }

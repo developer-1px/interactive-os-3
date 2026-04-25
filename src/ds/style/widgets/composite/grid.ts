@@ -1,5 +1,4 @@
-import { accent, css, dim, emphasize, fg, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
-
+import { accent, bg, css, dim, emphasize, fg, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -13,7 +12,7 @@ export const grid = () => [
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      color: var(--ds-fg);
+      color: ${fg()};
       font: inherit;
     }
 
@@ -65,7 +64,7 @@ export const grid = () => [
     [role="grid"] thead [role="columnheader"],
     [role="treegrid"] thead [role="columnheader"] {
       position: sticky; top: 0; z-index: 1;
-      background: var(--ds-bg);
+      background: ${bg()};
     }
 
     /* 첫 셀(이름 등)의 icon+label 콤보 — 수평 정렬과 일관 gap */
@@ -186,7 +185,7 @@ export const grid = () => [
     /* media link — img를 감싼 <a>. 이미지 자체엔 변화 없이 ring만 감싸는 affordance. */
     [role="gridcell"] a[href]:has(> img) {
       display: inline-block;
-      border-radius: var(--ds-radius-md);
+      border-radius: ${radius('md')};
     }
     [role="gridcell"] a[href]:has(> img):hover {
       outline: 2px solid ${accent()};

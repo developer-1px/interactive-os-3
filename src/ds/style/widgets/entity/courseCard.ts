@@ -1,5 +1,4 @@
-import { css, dim, mix, on, pad, radius, status } from '../../../fn'
-
+import { accent, css, dim, mix, on, pad, radius, status } from '../../../fn'
 export const courseCard = () => css`
   .course-card {
     display: grid;
@@ -27,7 +26,7 @@ export const courseCard = () => css`
     font-weight: 800;
     letter-spacing: -0.02em;
     color: ${on('accent')};
-    background: linear-gradient(135deg, var(--ds-accent), ${mix('var(--ds-accent)', 70, 'CanvasText')});
+    background: linear-gradient(135deg, ${accent()}, ${mix('${accent()}', 70, 'CanvasText')});
   }
   .course-card[data-tone="success"] > figure {
     color: ${on('success')};

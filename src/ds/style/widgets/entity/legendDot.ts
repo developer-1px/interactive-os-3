@@ -1,5 +1,4 @@
-import { css, dim, pad, radius, status } from '../../../fn'
-
+import { accent, css, dim, pad, radius, status } from '../../../fn'
 export const legendDot = () => css`
   .legend-dot {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};
@@ -12,7 +11,7 @@ export const legendDot = () => css`
     border-radius: ${radius('pill')};
     background: currentColor;
   }
-  .legend-dot[data-tone="info"]    { color: var(--ds-accent); }
+  .legend-dot[data-tone="info"]    { color: ${accent()}; }
   .legend-dot[data-tone="success"] { color: ${status('success')}; }
   .legend-dot[data-tone="warning"] { color: ${status('warning')}; }
   .legend-dot[data-tone="danger"]  { color: ${status('danger')}; }

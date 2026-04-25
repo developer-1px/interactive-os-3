@@ -1,5 +1,4 @@
-import { css, dim, pad, radius, status } from '../../../fn'
-
+import { accent, css, dim, pad, radius, status } from '../../../fn'
 export const barChart = () => css`
   .bar-chart {
     margin: 0;
@@ -51,7 +50,7 @@ export const barChart = () => css`
     color: ${dim(60)};
     min-inline-size: 3ch; text-align: end;
   }
-  .bar-chart > dl > div[data-tone="info"]    { color: var(--ds-accent); }
+  .bar-chart > dl > div[data-tone="info"]    { color: ${accent()}; }
   .bar-chart > dl > div[data-tone="success"] { color: ${status('success')}; }
   .bar-chart > dl > div[data-tone="warning"] { color: ${status('warning')}; }
   .bar-chart > dl > div[data-tone="danger"]  { color: ${status('danger')}; }

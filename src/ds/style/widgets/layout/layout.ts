@@ -1,4 +1,4 @@
-import { css, pad, radius, surface } from '../../../fn/values'
+import { accent, css, pad, radius, surface } from '../../../fn/values'
 import { mix } from '../../../fn/palette'
 import { square } from '../../../fn/structural'
 
@@ -63,7 +63,7 @@ export const layout = () => css`
     padding: ${pad(3)};
   }
   [data-emphasis="callout"] {
-    border: 1px solid var(--ds-accent);
+    border: 1px solid ${accent()};
     border-radius: ${radius('sm')};
     padding: ${pad(3)};
   }

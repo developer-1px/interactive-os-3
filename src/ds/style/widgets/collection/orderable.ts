@@ -1,4 +1,4 @@
-import { accent, css, dim, hairline, listReset, pad, tint } from '../../../fn'
+import { accent, css, dim, fg, hairline, listReset, pad, tint } from '../../../fn'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 /**
@@ -56,7 +56,7 @@ export const orderableCss = () => css`
     justify-content: center;
   }
   ol[aria-roledescription="orderable"] > li > button:hover {
-    color: var(--ds-fg);
+    color: ${fg()};
   }
 
   /* trail slot — 시각·메타·우측 정렬 */
@@ -74,6 +74,6 @@ export const orderableCss = () => css`
     cursor: grabbing;
   }
   ol[aria-roledescription="orderable"] > li[data-drop-over] {
-    box-shadow: inset 0 2px 0 0 var(--ds-accent);
+    box-shadow: inset 0 2px 0 0 ${accent()};
   }
 `

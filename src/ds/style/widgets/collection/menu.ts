@@ -1,5 +1,4 @@
-import { css, indicator, listReset, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
-
+import { accent, css, fg, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
 export const menu = () => [
   css`
     button[popovertarget] {
@@ -10,7 +9,7 @@ export const menu = () => [
     }
     button[popovertarget][aria-expanded="true"],
     [role="menuitem"][aria-expanded="true"] {
-      background-color: var(--ds-accent); color: var(--ds-accent-on);
+      background-color: ${accent()}; color: ${onAccent()};
     }
     /* 메뉴 아이템은 global tint(selected)가 아니라 풀 accent fill(selectedStrong)로 강조 —
        팝오버의 짧은 리스트에선 명확한 "이것" 신호가 필요하다. */
@@ -27,7 +26,7 @@ export const menu = () => [
       padding: ${pad(1)};
       min-width: 180px; width: max-content;
       border-radius: ${radius('md')};
-      display: flex; flex-direction: column; color: var(--ds-fg);
+      display: flex; flex-direction: column; color: ${fg()};
     }
 
     /* inline-flex + align-items:center + justify-content:center + gap은 controlBox 축에서 상속.

@@ -1,5 +1,4 @@
-import { css, dim, pad } from '../../../fn'
-
+import { accent, css, dim, pad } from '../../../fn'
 export const top10 = () => css`
   .top-10 {
     counter-reset: rank;
@@ -24,7 +23,7 @@ export const top10 = () => css`
     text-align: center;
     color: ${dim(55)};
   }
-  .top-10 > li:nth-child(-n+3)::before { color: var(--ds-accent); }
+  .top-10 > li:nth-child(-n+3)::before { color: ${accent()}; }
   .top-10 > li > span {
     min-inline-size: 0;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

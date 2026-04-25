@@ -1,8 +1,7 @@
-import { css, icon, pad, radius } from '../../../fn'
-
+import { border, css, icon, pad, radius } from '../../../fn'
 export const detailsCss = css`
   :where(details) {
-    border: 1px solid var(--ds-border);
+    border: 1px solid ${border()};
     border-radius: ${radius('sm')};
     overflow: hidden;
   }
@@ -32,7 +31,7 @@ export const detailsCss = css`
     flex: none;
   }
   :where(details[open]) > :where(summary)::before { transform: rotate(90deg); }
-  :where(details[open]) > :where(summary) { border-bottom: 1px solid var(--ds-border); }
+  :where(details[open]) > :where(summary) { border-bottom: 1px solid ${border()}; }
   :where(details) > :not(summary) { padding: ${pad(2)}; }
 
   /* summary 내부 rhythm — strong(이름) · span(설명) · small(메타) 3단 위계.
@@ -55,7 +54,7 @@ export const detailsCss = css`
     margin-block-start: -1px;
     padding: ${pad(2)};
     background: transparent;
-    border: 1px dashed var(--ds-border);
+    border: 1px dashed ${border()};
     border-radius: ${radius('sm')};
     border-top-left-radius: 0; border-top-right-radius: 0;
     color: inherit; opacity: .7;
