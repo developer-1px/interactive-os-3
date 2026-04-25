@@ -32,7 +32,6 @@ export const hairline = (sel: string, side: 'block-end' | 'block-start' = 'block
 export const square = (sel: string) => css`
   :where(${sel}) {
     aspect-ratio: 1 / 1;
-    block-size: auto;
     padding: 0;
     display: inline-grid;
     place-items: center;
@@ -44,7 +43,7 @@ export const controlBox = (sel: string) => css`
     box-sizing: border-box;
     font: inherit;
     line-height: var(--ds-leading);
-    min-height: var(--ds-control-h);
+    block-size: var(--ds-control-h);
     padding: ${rowPadding(2)};
     border: 1px solid transparent;
     border-radius: ${radius('sm')};

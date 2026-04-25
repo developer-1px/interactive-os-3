@@ -46,7 +46,12 @@ export const base = css`
   :where(input:not([type="checkbox"]):not([type="radio"])),
   :where(select),
   :where(textarea) { border-color: var(--ds-border); background: var(--ds-bg); }
-  :where(textarea) { resize: vertical; min-height: calc(var(--ds-control-h) * 2); }
+  :where(textarea) {
+    resize: vertical;
+    /* multiline이라 controlBox의 block-size를 풀고 min만 부과 */
+    block-size: auto;
+    min-block-size: calc(var(--ds-control-h) * 2);
+  }
   :where(${control}):disabled { opacity: 0.4; pointer-events: none; }
 
   /* select: UA 화살표 제거 후 SVG chevron을 currentColor로 그린다 */

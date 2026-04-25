@@ -10,7 +10,7 @@ export const switchCss = css`
     padding: var(--ds-switch-pad);
     border-radius: ${radius('pill')};
     background: var(--ds-control-channel);
-    min-height: auto;
+    min-height: auto; block-size: var(--ds-control-h);
     display: inline-flex;
     align-items: center;
     transition:

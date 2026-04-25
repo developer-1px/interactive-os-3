@@ -22,7 +22,7 @@ import { accent, css, fg, onAccent, pad, radius, square, tint } from '../../../f
 export const buttonCss = css`
   /* ── 기본 (= secondary/default) ───────────────────────────────
      base.ts의 controlBox 위에 얕은 서피스와 경계 없는 hover 신호만 얹는다. */
-  :where(button):not([aria-roledescription="actions"] > button) {
+  :where(button:not([aria-roledescription="actions"] > button)) {
     background: ${fg(2)};
     color: inherit;
     border: 1px solid var(--ds-control-border);
@@ -38,7 +38,7 @@ export const buttonCss = css`
   :where(button[data-icon]:empty)::before {
     margin-inline-end: 0;
   }
-  :where(button):not([aria-roledescription="actions"] > button):hover:not([aria-disabled="true"]) {
+  :where(button:not([aria-roledescription="actions"] > button)):hover:not([aria-disabled="true"]) {
     background: ${tint(accent(), 12)};
     color: ${accent()};
     border-color: ${tint(accent(), 40)};

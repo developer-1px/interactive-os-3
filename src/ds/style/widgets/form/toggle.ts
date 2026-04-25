@@ -9,7 +9,7 @@ export const toggle = () => [
       justify-content: center;
       width: 1.125em;
       height: 1.125em;
-      min-height: 0;
+      min-height: 0; block-size: 1.125em;
       padding: 0;
       border: 1.5px solid var(--ds-control-border);
       background: var(--ds-bg);
