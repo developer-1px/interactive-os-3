@@ -344,6 +344,27 @@ export const panesCss = css`
   section[aria-roledescription="finder-pager"] > article:first-child {
     border-block-start: 0;
   }
+  /* article 별 sticky 헤더 — pager 스크롤 시 현재 파일명을 항상 보이게 */
+  section[aria-roledescription="finder-pager"] > article > header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    display: flex; align-items: center; gap: ${pad(2)};
+    padding: ${pad(1.5)} ${pad(3)};
+    background: color-mix(in oklch, ${fg(1)} 92%, transparent);
+    border-block-end: var(--ds-hairline) solid var(--ds-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  section[aria-roledescription="finder-pager"] > article > header > figure {
+    margin: 0; flex: none;
+  }
+  section[aria-roledescription="finder-pager"] > article > header > h2 {
+    margin: 0;
+    font-size: var(--ds-text-md); font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    min-inline-size: 0;
+  }
   section[aria-roledescription="finder-pager"] > article > aside[aria-roledescription="preview"] {
     flex: 1 1 auto;
     padding: ${pad(3)};
