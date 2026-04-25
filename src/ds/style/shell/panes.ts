@@ -331,27 +331,30 @@ export const panesCss = css`
     color: ${dim(55)};
     padding: ${pad(8)};
   }
-  /* FilePager — vertical scroll-snap pager. iOS Photos 식 swipe-between-siblings.
-     finder-pager 자체가 finder-mobile > section. 스크롤은 자기 안에서만. */
+  /* FilePager — feed 식 vertical scroll. 형제 파일이 자연 높이로 흐르고
+     사이 구분선만 둔다. 스크롤은 finder-pager(>section) 안에서. */
   main[aria-roledescription="finder-mobile"] > section[aria-roledescription="finder-pager"] {
     padding: 0; gap: 0;
-    scroll-snap-type: y mandatory;
     overscroll-behavior: contain;
   }
   section[aria-roledescription="finder-pager"] > article {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    block-size: 100%;
-    overflow-y: auto;
     display: flex; flex-direction: column;
+    border-block-start: 1px solid var(--ds-border);
+  }
+  section[aria-roledescription="finder-pager"] > article:first-child {
+    border-block-start: 0;
   }
   section[aria-roledescription="finder-pager"] > article > aside[aria-roledescription="preview"] {
     flex: 1 1 auto;
     padding: ${pad(3)};
   }
-  /* aria-current="page" — 현재 형제임을 시각으로 약하게 표식 (헤어라인) */
+  /* 윈도우 밖 스텁 — feed 스크롤 위치 유지를 위한 placeholder 높이 */
+  section[aria-roledescription="finder-pager"] > article > aside[aria-hidden="true"] {
+    min-block-size: 50vh;
+  }
+  /* aria-current="page" — 현재 형제 표식 (헤어라인) */
   section[aria-roledescription="finder-pager"] > article[aria-current="page"] {
-    box-shadow: inset 0 2px 0 ${mix('var(--ds-accent)', 60, 'transparent')};
+    box-shadow: inset 2px 0 0 ${mix('var(--ds-accent)', 60, 'transparent')};
   }
 
   /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]

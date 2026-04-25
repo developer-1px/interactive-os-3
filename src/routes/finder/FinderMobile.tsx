@@ -150,17 +150,16 @@ function FilePager({
     if (!root) return
     const io = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (!visible) return
-        const p = (visible.target as HTMLElement).dataset.path
-        if (p && p !== currentPath) {
-          lastEmittedRef.current = p
-          onNavigate(p)
+        for (const e of entries) {
+          if (!e.isIntersecting) continue
+          const p = (e.target as HTMLElement).dataset.path
+          if (p && p !== currentPath) {
+            lastEmittedRef.current = p
+            onNavigate(p)
+          }
         }
       },
-      { root, threshold: [0.5, 0.75] },
+      { root, rootMargin: '0px 0px -80% 0px', threshold: 0 },
     )
     root.querySelectorAll<HTMLElement>('[data-path]').forEach((el) => io.observe(el))
     return () => io.disconnect()
