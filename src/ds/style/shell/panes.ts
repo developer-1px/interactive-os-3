@@ -215,9 +215,8 @@ export const panesCss = css`
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
-  /* FloatingNav — 우측 하단 FAB + native popover로 전체 라우트 grid 노출.
-     anchor positioning이 아직 미보편이라 popover의 기본 centered overlay 대신
-     position: fixed로 직접 배치. popover[open]에서만 표시. */
+  /* FloatingNav — 우측 하단 FAB. popover의 위치/크기는 [aria-roledescription="floating-nav"]
+     안에 든 popover에 한해 우하단 anchor로 강제. 그 외 popover는 overlay.ts 기본 centered. */
   aside[aria-roledescription="floating-nav"] {
     position: fixed;
     inset-block-end: ${pad(4)};
@@ -237,27 +236,21 @@ export const panesCss = css`
   }
   aside[aria-roledescription="floating-nav"] > button:hover { transform: scale(1.05); }
   aside[aria-roledescription="floating-nav"] > button:active { transform: scale(0.96); }
-
-  menu[aria-roledescription="route-grid"] {
-    list-style: none; margin: 0;
+  /* floating-nav 안에서 popover만 우하단 anchor로 띄움 */
+  aside[aria-roledescription="floating-nav"] [popover][aria-roledescription="popover"] {
     inset: auto;
     inset-inline-end: ${pad(4)};
     inset-block-end: calc(${pad(4)} + 3.5rem + ${pad(2)});
-    padding: ${pad(3)};
-    border: 1px solid var(--ds-border);
-    border-radius: ${radius('lg')};
-    ${surface(3)}
-    color: inherit;
-    box-shadow: 0 12px 32px color-mix(in oklch, CanvasText 22%, transparent);
     inline-size: min(92vw, 28rem);
     max-block-size: min(70vh, 32rem);
     overflow: auto;
+  }
+
+  menu[aria-roledescription="route-grid"] {
+    list-style: none; margin: 0; padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
     gap: ${pad(2)};
-  }
-  menu[aria-roledescription="route-grid"]::backdrop {
-    background: color-mix(in oklch, CanvasText 6%, transparent);
   }
   menu[aria-roledescription="route-grid"] > li > a {
     display: flex; flex-direction: column; align-items: center; gap: ${pad(1)};

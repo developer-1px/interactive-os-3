@@ -97,6 +97,7 @@ export * from './ui/control/ToolbarButton'
 // zone: overlay — surface
 export * from './ui/overlay/Dialog'
 export * from './ui/overlay/Sheet'
+export * from './ui/overlay/Popover'
 export * from './ui/overlay/FloatingNav'
 export * from './ui/overlay/Disclosure'
 export * from './ui/overlay/Tooltip'

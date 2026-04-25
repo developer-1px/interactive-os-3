@@ -1,5 +1,6 @@
 import { Link, useRouter } from '@tanstack/react-router'
 import { useId, useMemo } from 'react'
+import { Popover } from './Popover'
 
 interface RouteEntry {
   id: string
@@ -38,21 +39,23 @@ export function FloatingNav() {
   return (
     <aside aria-roledescription="floating-nav">
       <button type="button" popovertarget={popoverId} aria-label="Navigator">⊞</button>
-      <menu id={popoverId} popover="auto" aria-roledescription="route-grid" aria-label="Routes">
-        {entries.map((e) => (
-          <li key={e.id}>
-            <Link
-              to={e.to}
-              params={e.params as never}
-              aria-label={e.label}
-              onClick={() => document.getElementById(popoverId)?.hidePopover?.()}
-            >
-              <figure aria-hidden="true">{iconOf(e.label)}</figure>
-              <strong>{e.label}</strong>
-            </Link>
-          </li>
-        ))}
-      </menu>
+      <Popover id={popoverId} label="Routes">
+        <menu aria-roledescription="route-grid">
+          {entries.map((e) => (
+            <li key={e.id}>
+              <Link
+                to={e.to}
+                params={e.params as never}
+                aria-label={e.label}
+                onClick={() => document.getElementById(popoverId)?.hidePopover?.()}
+              >
+                <figure aria-hidden="true">{iconOf(e.label)}</figure>
+                <strong>{e.label}</strong>
+              </Link>
+            </li>
+          ))}
+        </menu>
+      </Popover>
     </aside>
   )
 }
