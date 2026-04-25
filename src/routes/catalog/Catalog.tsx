@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
-import { Listbox, useControlState, navigateOnActivate, useShellMode, type Event, type NormalizedData, ROOT } from '../../ds'
+import { Listbox, useControlState, navigateOnActivate, type Event, type NormalizedData, ROOT } from '../../ds'
 import { demos } from './demos'
-import { mobileEntries, mobileLayerOrder, mobileLayerBlurb, type MobileEntry } from './mobile'
 
 /**
  * Catalog — ds ui zone-first 감사 대시보드.
@@ -34,13 +33,11 @@ const kindBlurb: Record<Kind, string> = {
 
 const kindOrder: Kind[] = ['collection', 'composite', 'control', 'overlay', 'entity', 'layout', 'drift']
 
-/** Filter — ds/ui zone과 직교하는 cross-cutting 카테고리 포함.
- *  'mobile' = viewport/shell/gesture primitive 큐레이션 (mobile.tsx). */
-type Filter = Kind | 'all' | 'mobile'
+type Filter = Kind | 'all'
 
 export function Catalog() {
   const [filter, setFilter] = useState<Filter>('all')
-  const isMobile = useShellMode() === 'mobile'
+  // mobile drawer는 CSS-only로 처리 (data-nav-open 토글만 JS, viewport 분기는 CSS).
   const [navOpen, setNavOpen] = useState(false)
 
   const grouped = useMemo(() => {
@@ -59,19 +56,16 @@ export function Catalog() {
     return { total, canonical, drift, passAll }
   }, [grouped])
 
-  const visible: Kind[] = filter === 'all' ? kindOrder : filter === 'mobile' ? [] : [filter as Kind]
+  const visible: Kind[] = filter === 'all' ? kindOrder : [filter as Kind]
   const visibleZones = visible.filter((k) => grouped[k].length > 0)
-  const isMobileCat = filter === 'mobile'
-  const headerLabel = isMobileCat ? 'mobile' : filter === 'all' ? 'Catalog' : kindLabel[filter as Kind]
-  const headerBlurb = isMobileCat
-    ? 'viewport/shell/gesture primitive — ds/ui zone과 직교하는 cross-cutting 카테고리'
-    : filter === 'all' ? 'ui 컴포넌트 zone-first 감사' : kindBlurb[filter as Kind]
+  const headerLabel = filter === 'all' ? 'Catalog' : kindLabel[filter as Kind]
+  const headerBlurb = filter === 'all' ? 'ui 컴포넌트 zone-first 감사' : kindBlurb[filter as Kind]
 
   return (
     <main
       aria-roledescription="catalog-app"
       aria-label="Catalog"
-      data-nav-open={isMobile && navOpen ? 'true' : undefined}
+      data-nav-open={navOpen ? 'true' : undefined}
     >
       <section aria-roledescription="body">
         <CatalogNav
@@ -80,7 +74,7 @@ export function Catalog() {
           grouped={grouped}
           total={totals.total}
         />
-        {isMobile && navOpen && (
+        {navOpen && (
           <button
             type="button"
             aria-roledescription="scrim"
@@ -113,9 +107,7 @@ export function Catalog() {
             </dl>
           </header>
           <section aria-roledescription="content">
-            {isMobileCat
-              ? <MobilePanel />
-              : visibleZones.map((k) => {
+            {visibleZones.map((k) => {
                   const list = grouped[k]
                   return (
                     <section key={k} aria-roledescription="catalog-zone" aria-labelledby={`z-${k}`}>
@@ -144,7 +136,6 @@ function CatalogNav({
     const items: { id: Filter; label: string; badge: number }[] = [
       { id: 'all', label: 'All', badge: total },
       ...kindOrder.map((k) => ({ id: k, label: kindLabel[k], badge: grouped[k].length })),
-      { id: 'mobile', label: 'mobile', badge: mobileEntries.length },
     ]
     const entities: NormalizedData['entities'] = {
       [ROOT]: { id: ROOT },
@@ -202,57 +193,6 @@ function Card({ contract }: { contract: Contract }) {
         ))}
       </ul>
       {kind === 'drift' && <footer>zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동</footer>}
-    </article>
-  )
-}
-
-/** MobilePanel — mobile.tsx의 큐레이션을 layer 단위로 묶어서 카드 그리드.
- *  ds/ui Card와 별도 — Contract가 아니라 cross-cutting primitive를 보여주므로
- *  단순화된 카드 형태(이름/시그니처/blurb/example)만 렌더. */
-function MobilePanel() {
-  const grouped = useMemo(() => {
-    const m = new Map<MobileEntry['layer'], MobileEntry[]>()
-    for (const layer of mobileLayerOrder) m.set(layer, [])
-    for (const e of mobileEntries) m.get(e.layer)!.push(e)
-    return m
-  }, [])
-  return (
-    <>
-      {mobileLayerOrder.map((layer) => {
-        const list = grouped.get(layer) ?? []
-        if (list.length === 0) return null
-        return (
-          <section
-            key={layer}
-            aria-roledescription="catalog-zone"
-            aria-labelledby={`m-${layer.replace(/\s+/g, '-')}`}
-          >
-            <header>
-              <h2 id={`m-${layer.replace(/\s+/g, '-')}`}>{layer}</h2>
-              <small>{list.length}</small>
-            </header>
-            <p>{mobileLayerBlurb[layer]}</p>
-            <ul aria-roledescription="catalog-grid">
-              {list.map((e) => <li key={e.id}><MobileCard entry={e} /></li>)}
-            </ul>
-          </section>
-        )
-      })}
-    </>
-  )
-}
-
-function MobileCard({ entry }: { entry: MobileEntry }) {
-  return (
-    <article aria-roledescription="catalog-card">
-      <header>
-        <h3>{entry.name}</h3>
-        <span data-badge data-tone="good">{entry.layer}</span>
-      </header>
-      <small aria-roledescription="card-path">{entry.file}</small>
-      <pre>{entry.signature}</pre>
-      <p>{entry.blurb}</p>
-      {entry.example && <pre data-lang="ts"><code>{entry.example}</code></pre>}
     </article>
   )
 }

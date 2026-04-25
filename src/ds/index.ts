@@ -47,10 +47,6 @@ export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
 export { useControlState } from './core/hooks/useControlState'
 export { useRoving } from './core/hooks/useRoving'
 export { useRovingDOM } from './core/hooks/useRovingDOM'
-export { useSwipe, type SwipeDir, type UseSwipeOpts } from './core/hooks/useSwipe'
-export { useSwipeAxis, type UseSwipeAxisOpts } from './core/hooks/useSwipeAxis'
-export { useShellMode, type ShellMode } from './core/hooks/useShellMode'
-export { ShellSwitch } from './core/ShellSwitch'
 export { parentOf } from './core/axes'
 export {
   navigateOnActivate,

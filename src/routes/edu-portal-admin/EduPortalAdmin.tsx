@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
-import { useShellMode } from '../../ds'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 
@@ -12,22 +11,22 @@ import { Topbar } from './Topbar'
  * route page bodies are rewritten to `definePage + Renderer`.
  */
 export function EduPortalAdmin() {
-  const isMobile = useShellMode() === 'mobile'
+  // mobile drawer는 CSS가 분기. JS는 navOpen 토글만 — 옵션 클릭 시 닫고 싶으면 closeOnNav.
   const [navOpen, setNavOpen] = useState(false)
   return (
     <main
       aria-roledescription="edu-portal-admin-app"
       aria-label="교육 포털 관리도구"
-      data-nav-open={isMobile && navOpen ? 'true' : undefined}
+      data-nav-open={navOpen ? 'true' : undefined}
       onClickCapture={(e) => {
-        if (!isMobile || !navOpen) return
+        if (!navOpen) return
         const t = e.target as HTMLElement
         if (t.closest('nav[aria-roledescription="sidebar"] [role="option"]')) setNavOpen(false)
       }}
     >
       <section aria-roledescription="body">
         <Sidebar />
-        {isMobile && navOpen && (
+        {navOpen && (
           <button
             type="button"
             aria-roledescription="scrim"
