@@ -486,7 +486,7 @@ export const panesCss = css`
   [aria-roledescription="chat-page"] [data-emphasis="sunk"]:has([aria-roledescription^="message-"]) {
     gap: ${pad(1.5)};
     align-items: stretch;
-    padding: ${pad(3)};
+    /* page-root inset이 외곽 padding을 책임짐 — sunk 자체 emphasis padding(3)으로 충분, 추가 인셋 없음 */
   }
   [aria-roledescription^="message-"] {
     max-inline-size: min(75%, 36rem);

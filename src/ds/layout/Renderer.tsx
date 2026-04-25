@@ -33,9 +33,9 @@ export function Renderer({ page, rootId = ROOT }: RendererProps) {
     // rendering the relationships root directly if present.
     const rootFromRel = Object.keys(page.relationships)[0]
     if (!rootFromRel) return null
-    return <NodeChildren page={page} id={rootFromRel} />
+    return <NodeChildren page={page} id={rootFromRel} pageRoot />
   }
-  return <NodeChildren page={page} id={rootId} />
+  return <NodeChildren page={page} id={rootId} pageRoot />
 }
 
 function useDebugTree(page: NormalizedData) {
@@ -54,27 +54,29 @@ function useDebugTree(page: NormalizedData) {
   }, [page])
 }
 
-function NodeChildren({ page, id }: { page: NormalizedData; id: string }) {
+function NodeChildren({ page, id, pageRoot }: { page: NormalizedData; id: string; pageRoot?: boolean }) {
   const kids = page.relationships[id] ?? []
   return (
     <>
-      {kids.map((childId) => <NodeView key={childId} page={page} id={childId} />)}
+      {kids.map((childId) => <NodeView key={childId} page={page} id={childId} pageRoot={pageRoot} />)}
     </>
   )
 }
 
-function NodeView({ page, id }: { page: NormalizedData; id: string }) {
+function NodeView({ page, id, pageRoot }: { page: NormalizedData; id: string; pageRoot?: boolean }) {
   const e = page.entities[id]
   if (!e) return null
   const d = e.data as AnyNode | undefined
   if (!d?.type) return null
 
+  // page root 마킹 — Row/Column/Grid/Section 등 컨테이너에만 의미. Ui leaf·Text는 무시.
+  const pr = pageRoot || undefined
   switch (d.type) {
-    case 'Row':     return <RowView page={page} id={id} d={d} />
-    case 'Column':  return <ColumnView page={page} id={id} d={d} />
-    case 'Grid':    return <GridView page={page} id={id} d={d} />
+    case 'Row':     return <RowView page={page} id={id} d={d} pageRoot={pr} />
+    case 'Column':  return <ColumnView page={page} id={id} d={d} pageRoot={pr} />
+    case 'Grid':    return <GridView page={page} id={id} d={d} pageRoot={pr} />
     case 'Aside':   return <AsideView page={page} id={id} d={d} />
-    case 'Section': return <SectionView page={page} id={id} d={d} />
+    case 'Section': return <SectionView page={page} id={id} d={d} pageRoot={pr} />
     case 'Header':  return <HeaderView page={page} id={id} d={d} />
     case 'Footer':  return <FooterView page={page} id={id} d={d} />
     case 'Ui':      return <UiLeaf page={page} id={id} d={d} />
@@ -84,7 +86,7 @@ function NodeView({ page, id }: { page: NormalizedData; id: string }) {
 
 // ── containers ─────────────────────────────────────────────────────
 
-function RowView({ page, id, d }: { page: NormalizedData; id: string; d: RowNode }) {
+function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: RowNode; pageRoot?: boolean }) {
   const ph = placementAttrs(d)
   const named = Boolean(d.label || d.labelledBy)
   return (
@@ -92,6 +94,7 @@ function RowView({ page, id, d }: { page: NormalizedData; id: string; d: RowNode
       data-ds="Row"
       data-flow={d.flow}
       data-emphasis={d.emphasis}
+      data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -104,7 +107,7 @@ function RowView({ page, id, d }: { page: NormalizedData; id: string; d: RowNode
   )
 }
 
-function ColumnView({ page, id, d }: { page: NormalizedData; id: string; d: ColumnNode }) {
+function ColumnView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: ColumnNode; pageRoot?: boolean }) {
   const ph = placementAttrs(d)
   const named = Boolean(d.label || d.labelledBy)
   return (
@@ -112,6 +115,7 @@ function ColumnView({ page, id, d }: { page: NormalizedData; id: string; d: Colu
       data-ds="Column"
       data-flow={d.flow}
       data-emphasis={d.emphasis}
+      data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -124,7 +128,7 @@ function ColumnView({ page, id, d }: { page: NormalizedData; id: string; d: Colu
   )
 }
 
-function GridView({ page, id, d }: { page: NormalizedData; id: string; d: GridNode }) {
+function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: GridNode; pageRoot?: boolean }) {
   const ph = placementAttrs(d)
   const named = Boolean(d.label || d.labelledBy)
   return (
@@ -133,6 +137,7 @@ function GridView({ page, id, d }: { page: NormalizedData; id: string; d: GridNo
       data-cols={d.cols}
       data-flow={d.flow}
       data-emphasis={d.emphasis}
+      data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -162,13 +167,14 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
   )
 }
 
-function SectionView({ page, id, d }: { page: NormalizedData; id: string; d: SectionNode }) {
+function SectionView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: SectionNode; pageRoot?: boolean }) {
   const ph = placementAttrs(d)
   const headingId = d.heading ? `${id}-h` : undefined
   return (
     <section
       data-flow={d.flow}
       data-emphasis={d.emphasis}
+      data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label && !headingId ? d.label : undefined}
       aria-labelledby={d.labelledBy ?? headingId}
       aria-roledescription={d.roledescription}

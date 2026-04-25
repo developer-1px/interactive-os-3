@@ -1,6 +1,4 @@
-import { accent, css, pad, radius, surface } from '../../../fn/values'
-import { mix } from '../../../fn/palette'
-import { square } from '../../../fn/structural'
+import { accent, css, mix, pad, radius, square, surface } from '../../../fn'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -66,6 +64,15 @@ export const layout = () => css`
     border: 1px solid ${accent()};
     border-radius: ${radius('sm')};
     padding: ${pad(3)};
+  }
+
+  /* ── Page root — definePage 최상위 컨테이너에 통일 inset 부여.
+     Renderer가 ROOT의 직속 children에 data-page-root를 붙인다.
+     기존 emphasis padding(2/3)과 같은 스케일로 모든 페이지가 화면 가장자리에 붙지 않게.
+     모바일은 좁아 가독을 위해 한 단계 축소. */
+  [data-page-root]:not([data-emphasis]) { padding: ${pad(3)}; }
+  @media (max-width: 39.999rem) {
+    [data-page-root]:not([data-emphasis]) { padding: ${pad(2)}; }
   }
 
   /* ── FlatLayout extras ──────────────────────────────────────── */
