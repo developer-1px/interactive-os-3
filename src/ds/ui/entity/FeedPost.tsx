@@ -37,10 +37,10 @@ export function FeedPost({
       {...rest}
     >
       <header>
-        <strong data-ds-aspect="square" style={{ inlineSize: 40 } as never}>
+        <strong data-ds-aspect="square">
           <img src={avatar} alt="" loading="lazy" />
         </strong>
-        <strong data-ds-grow>{author} <small>{handle} · {time}</small></strong>
+        <strong>{author} <small>{handle} · {time}</small></strong>
         <button type="button" aria-label="더보기" data-icon="more" />
       </header>
       <p>{body}</p>

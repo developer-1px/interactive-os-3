@@ -25,7 +25,7 @@ export function PostCard({ who, time, text, avatar, cont, ...rest }: PostCardPro
       aria-label={who}
       {...rest}
     >
-      <strong data-ds-aspect="square" style={{ inlineSize: 36 } as never}>
+      <strong data-ds-aspect="square">
         <img src={avatar} alt="" loading="lazy" />
       </strong>
       <div>

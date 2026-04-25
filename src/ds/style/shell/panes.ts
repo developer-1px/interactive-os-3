@@ -570,8 +570,9 @@ export const panesCss = css`
   [aria-roledescription="post-cont"]:hover {
     background: ${tint('CanvasText', 4)};
   }
-  /* avatar — 36x36 라운드 사각 */
+  /* avatar — 36x36 라운드 사각. inline 크기는 widget이 아니라 CSS가 결정. */
   [aria-roledescription^="post"] > strong[data-ds-aspect="square"] {
+    inline-size: 36px;
     border-radius: ${radius('md')};
     overflow: hidden;
     flex: none;
@@ -1153,5 +1154,95 @@ export const panesCss = css`
       padding: ${pad(2)} max(${pad(2)}, env(safe-area-inset-left)) ${pad(6)} max(${pad(2)}, env(safe-area-inset-right));
       gap: ${pad(2)};
     }
+  }
+
+  /* ── 표준 컨텐츠 위젯 (entity zone) ───────────────────────────────
+     ds/ui/entity/ 의 widget들이 root 1곳에 className(카탈로그) + roledescription을
+     달고 들어오면, 셀렉터는 roledescription만 잡는다. width/inline-size는 CSS가 결정. */
+
+  /* FeedPost — SNS 피드 카드 */
+  article[aria-roledescription="feed-post"] {
+    display: flex; flex-direction: column; gap: ${pad(2)};
+    padding: ${pad(3)};
+    border-radius: ${radius('lg')};
+  }
+  article[aria-roledescription="feed-post"] > header {
+    display: flex; align-items: center; gap: ${pad(2)};
+  }
+  article[aria-roledescription="feed-post"] > header > strong[data-ds-aspect="square"] {
+    inline-size: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: none;
+    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
+  }
+  article[aria-roledescription="feed-post"] > header > strong[data-ds-aspect="square"] > img {
+    inline-size: 100%; block-size: 100%; object-fit: cover; display: block;
+  }
+  article[aria-roledescription="feed-post"] > header > strong:nth-of-type(2) {
+    flex: 1; min-inline-size: 0;
+  }
+  article[aria-roledescription="feed-post"] > header > strong:nth-of-type(2) > small {
+    display: block;
+    font-weight: 400;
+    color: ${dim(55)};
+    font-size: var(--ds-text-xs);
+    margin-block-start: ${pad(0.25)};
+  }
+  article[aria-roledescription="feed-post"] > p > img {
+    inline-size: 100%; block-size: auto; display: block;
+    border-radius: ${radius('md')};
+    aspect-ratio: 16 / 9; object-fit: cover;
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+  }
+  article[aria-roledescription="feed-post"] > p { margin: 0; line-height: 1.45; }
+  article[aria-roledescription="feed-post"] > footer[role="toolbar"] {
+    display: flex; gap: ${pad(2)};
+  }
+
+  /* ProductCard — 커머스 상품 카드 */
+  article[aria-roledescription="product-card"] {
+    display: flex; flex-direction: column; gap: ${pad(1.5)};
+    padding: ${pad(2)};
+    border-radius: ${radius('lg')};
+  }
+  article[aria-roledescription="product-card"] > p:first-child { margin: 0; padding: 0; }
+  article[aria-roledescription="product-card"] > p:first-child > img {
+    inline-size: 100%; block-size: auto; display: block;
+    aspect-ratio: 1 / 1; object-fit: cover;
+    border-radius: ${radius('md')};
+    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
+  }
+  article[aria-roledescription="product-card"] > strong {
+    font-size: var(--ds-text-md); font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
+  article[aria-roledescription="product-card"] > p {
+    margin: 0; display: flex; align-items: baseline; gap: ${pad(1.5)};
+  }
+  article[aria-roledescription="product-card"] > p > strong {
+    font-size: var(--ds-text-lg); font-weight: 700;
+  }
+  article[aria-roledescription="product-card"] > p > small > s { color: ${dim(55)}; }
+  article[aria-roledescription="product-card"] > p > mark {
+    background: color-mix(in oklch, ${status('danger')} 14%, transparent);
+    color: ${status('danger')};
+    padding: ${pad(0.25)} ${pad(1)};
+    border-radius: ${radius('pill')};
+    font-size: var(--ds-text-xs); font-weight: 600;
+  }
+  article[aria-roledescription="product-card"] > small { color: ${dim(55)}; font-size: var(--ds-text-xs); }
+  article[aria-roledescription="product-card"] > p[role="list"] {
+    display: flex; flex-wrap: wrap; gap: ${pad(0.5)};
+  }
+  article[aria-roledescription="product-card"] > p[role="list"] > span {
+    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
+    padding: ${pad(0.25)} ${pad(1)};
+    border-radius: ${radius('pill')};
+    font-size: var(--ds-text-xs);
+  }
+  article[aria-roledescription="product-card"] > button {
+    margin-block-start: auto;
   }
 `
