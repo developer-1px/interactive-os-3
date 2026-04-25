@@ -33,6 +33,10 @@ import { Badge } from '../ui/entity/Badge'
 import { StatCard } from '../ui/entity/StatCard'
 import { CourseCard } from '../ui/entity/CourseCard'
 import { RoleCard } from '../ui/entity/RoleCard'
+import { MessageBubble } from '../ui/entity/MessageBubble'
+import { PostCard } from '../ui/entity/PostCard'
+import { FeedPost } from '../ui/entity/FeedPost'
+import { ProductCard } from '../ui/entity/ProductCard'
 import { LegendDot } from '../ui/layout/LegendDot'
 import { Separator } from '../ui/layout/Separator'
 import { BarChart } from '../ui/layout/BarChart'
@@ -83,6 +87,10 @@ export const uiRegistry = {
   StatCard:   { component: StatCard,   zone: 'entity' },
   CourseCard: { component: CourseCard, zone: 'entity' },
   RoleCard:   { component: RoleCard,   zone: 'entity' },
+  MessageBubble: { component: MessageBubble, zone: 'entity' },
+  PostCard:      { component: PostCard,      zone: 'entity' },
+  FeedPost:      { component: FeedPost,      zone: 'entity' },
+  ProductCard:   { component: ProductCard,   zone: 'entity' },
   // layout
   LegendDot: { component: LegendDot, zone: 'layout' },
   Separator: { component: Separator, zone: 'layout' },
