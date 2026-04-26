@@ -9,9 +9,10 @@ import { finderMobileCss } from './routes/m.finder/style'
 import { inspectorCss } from './routes/inspector/style'
 import { eduPortalAdminCss } from './routes/edu-portal-admin/style'
 import { markdownCss } from './routes/markdown/style'
+import { inboxCss } from './routes/genres/inbox/style'
 
 const appsCss = wrapAppsLayer([
-  inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, markdownCss,
+  inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, markdownCss, inboxCss,
 ])
 import { applyPreset, defaultPreset, hairlinePreset } from './ds/style/preset'
 import { onShortcut } from './ds/core/hooks/useShortcut'
