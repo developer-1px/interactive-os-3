@@ -12,12 +12,16 @@ import {
   defineFeature,
   fromTree,
   pathAncestors,
+  ROOT,
+  type NormalizedData,
   type QuerySpec,
 } from '../../ds'
 import {
   getTree, loadText, getImageUrl, sidebar as favItems, smartGroups, walk,
+  tagGroups, tagItems, isTagPath,
 } from './data'
-import type { FsNode, SmartGroupItem, SidebarItem, ViewMode } from './types'
+import { tagFromPath } from './tagIndex'
+import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from './types'
 import { extToIcon } from './types'
 
 // ── Commands ────────────────────────────────────────────────────────────
@@ -25,6 +29,7 @@ type Cmd =
   | { type: 'goto';        to: string }
   | { type: 'pinFav';      id: string }
   | { type: 'setMode';     mode: ViewMode }
+  | { type: 'setQuery';    q: string }
   | { type: 'activateCol'; id: string }
   | { type: 'expandCol';   id: string; open: boolean }
   | { type: 'activateRec'; id: string }
@@ -35,6 +40,7 @@ interface FinderState {
   url: string
   pinned: string
   mode: ViewMode
+  query: string
 }
 
 // ── Preview ViewModel ───────────────────────────────────────────────────
@@ -44,7 +50,7 @@ export type PreviewVM =
   | { kind: 'image'; node: FsNode; src: string | null }
   | { kind: 'text'; node: FsNode; text: string | null }
 
-const initial: FinderState = { url: '/', pinned: '/', mode: 'columns' }
+const initial: FinderState = { url: '/', pinned: '/', mode: 'columns', query: '' }
 
 // ── 헬퍼 ─────────────────────────────────────────────────────────────────
 const parentPath = (p: string): string => {
@@ -58,6 +64,20 @@ const isImagePath = (p: string): boolean =>
 const isFilePath = (p: string): boolean => p !== '/' && !p.endsWith('/')
 
 const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => {
+  // Tag 가상 폴더 — pinned가 tag path면 frontmatter 인덱스 기반 flat file list.
+  if (isTagPath(pinned)) {
+    const tag = tagFromPath(pinned)
+    const files = tag ? tagItems(tag) : []
+    return fromTree(files, {
+      getId: (n: FsNode) => n.path,
+      toData: (n: FsNode) => ({
+        label: n.name,
+        icon: extToIcon(n.ext),
+        selected: n.path === url,
+      }),
+      focusId: url === pinned ? (files[0]?.path ?? url) : url,
+    })
+  }
   if (!tree) return { entities: {}, relationships: {} }
   const rootNode = pinned === '/' ? tree : (walk(pinned).at(-1) ?? tree)
   return fromTree(rootNode.children ?? [], {
@@ -73,19 +93,57 @@ const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => 
   })
 }
 
-const buildRecent = (url: string) =>
+const buildTags = (pinned: string) => {
+  const tags = tagGroups()
+  return fromTree(tags, {
+    getId: (g: TagGroupItem) => g.path,
+    toData: (g: TagGroupItem) => ({
+      label: `${g.label} (${g.count})`,
+      icon: g.icon,
+      selected: g.path === pinned,
+    }),
+    focusId: matchOrFirst(tags, pinned, (g) => g.path),
+  })
+}
+
+// Listbox tabIndex={focusId===id?0:-1} — focusId가 어떤 항목과도 매칭 안 되면
+// Tab 진입 자체가 막혀 키보드 nav 가 죽는다. 매칭되지 않을 땐 첫 항목으로 fallback.
+const matchOrFirst = <T,>(items: T[], pinned: string, getId: (x: T) => string): string | undefined => {
+  const hit = items.find((x) => getId(x) === pinned)
+  return hit ? getId(hit) : (items[0] ? getId(items[0]) : undefined)
+}
+
+const buildRecent = (pinned: string) =>
   fromTree(smartGroups, {
     getId: (g: SmartGroupItem) => g.path,
-    toData: (g: SmartGroupItem) => ({ label: g.label, icon: g.icon, selected: g.path === url }),
-    focusId: url,
+    toData: (g: SmartGroupItem) => ({ label: g.label, icon: g.icon, selected: g.path === pinned }),
+    focusId: matchOrFirst(smartGroups, pinned, (g) => g.path),
   })
 
 const buildFav = (pinned: string) =>
   fromTree(favItems, {
     getId: (s: SidebarItem) => s.path,
     toData: (s: SidebarItem) => ({ label: s.label, icon: s.icon, selected: s.path === pinned }),
-    focusId: pinned,
+    focusId: matchOrFirst(favItems, pinned, (s) => s.path),
   })
+
+const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
+  { id: 'icons',   label: '아이콘',  icon: 'grid' },
+  { id: 'list',    label: '리스트',  icon: 'list' },
+  { id: 'columns', label: '컬럼',    icon: 'columns' },
+  { id: 'gallery', label: '갤러리',  icon: 'image' },
+]
+
+const buildToolbar = (mode: ViewMode): NormalizedData => ({
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    ...Object.fromEntries(VIEW_MODES.map((m) => [m.id, {
+      id: m.id,
+      data: { label: m.label, icon: m.icon, pressed: mode === m.id },
+    }])),
+  },
+  relationships: { [ROOT]: VIEW_MODES.map((m) => m.id) },
+})
 
 const buildPreview = (
   url: string,
@@ -111,10 +169,12 @@ export const finderFeature = defineFeature<FinderState, Cmd, {
 
   on: {
     goto:        (s, { to })   => ({ ...s, url: to }),
-    pinFav:      (s, { id })   => ({ ...s, pinned: id }),
+    // 사이드바 클릭(recent/fav/tag) = "이 항목을 루트로 본다". pinned 와 url 을 함께 옮긴다.
+    pinFav:      (s, { id })   => ({ ...s, pinned: id, url: id }),
     setMode:     (s, { mode }) => ({ ...s, mode }),
+    setQuery:    (s, { q })    => ({ ...s, query: q }),
     activateCol: (s, { id })   => ({ ...s, url: id }),
-    activateRec: (s, { id })   => ({ ...s, url: id }),
+    activateRec: (s, { id })   => ({ ...s, pinned: id, url: id }),
     expandCol:   (s, { id, open }) => ({ ...s, url: open ? id : parentPath(id) }),
     back:        (s) => {
       const chain = walk(s.url)
@@ -138,10 +198,12 @@ function viewFn(s: FinderState, q: {
   image: { data: string | null | undefined; isLoading: boolean; error: unknown }
 }) {
   return {
-    titlebar: { path: s.url, mode: s.mode, busy: q.text.isLoading || q.image.isLoading },
+    titlebar: { path: s.url, mode: s.mode, query: s.query, busy: q.text.isLoading || q.image.isLoading },
+    toolbar: buildToolbar(s.mode),
     sidebar: {
-      recent: buildRecent(s.url),
+      recent: buildRecent(s.pinned),
       fav:    buildFav(s.pinned),
+      tags:   buildTags(s.pinned),
     },
     columns: buildColumns(q.tree.data, s.url, s.pinned),
     preview: buildPreview(s.url, q.tree.data, q.text.data, q.image.data),

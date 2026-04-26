@@ -20,6 +20,10 @@ export type SidebarItem = { id: string; label: string; path: string; icon: IconT
 export type SmartGroupId = 'today' | 'yesterday' | 'thisWeek' | 'thisMonth' | 'thisYear'
 export type SmartGroupItem = { id: SmartGroupId; label: string; path: string; icon: IconToken }
 
+/** Tag 가상 폴더 — frontmatter.tags 기반. id는 tag 문자열 자체.
+ *  path는 `/_tag/<encoded>` (tagIndex.tagPath 참고). */
+export type TagGroupItem = { id: string; label: string; path: string; icon: IconToken; count: number }
+
 export type ViewMode = 'icons' | 'list' | 'columns' | 'gallery'
 
 export type PreviewKind = 'image' | 'markdown' | 'code' | 'text' | 'binary'

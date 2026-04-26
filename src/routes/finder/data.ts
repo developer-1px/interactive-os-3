@@ -1,5 +1,7 @@
 import { tree as initialTree } from 'virtual:fs-tree'
-import type { FsNode, SidebarItem, SmartGroupItem } from './types'
+import type { FsNode, SidebarItem, SmartGroupItem, TagGroupItem } from './types'
+import { allTags, entriesByTag, tagPath, isTagPath as _isTagPath } from './tagIndex'
+import { extToIcon } from './types'
 
 let currentTree: FsNode = (import.meta.hot?.data.tree as FsNode | undefined) ?? initialTree
 const listeners: Set<() => void> = (import.meta.hot?.data.listeners as Set<() => void> | undefined) ?? new Set()
@@ -136,6 +138,36 @@ export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean
 /** smart 그룹은 실제 폴더 경로 alias. 더 이상 가상 파일 수집을 하지 않는다. */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function smartItems(_group: SmartGroupItem['id']): FsNode[] { return [] }
+
+/** Tag 가상 폴더 sidebar 항목 — frontmatter.tags 기반.
+ *  smartGroups가 캘린더 alias라면 tagGroups는 tag 인덱스 alias. */
+export function tagGroups(): TagGroupItem[] {
+  return allTags().map(({ tag, count }) => ({
+    id: tag,
+    label: tag,
+    path: tagPath(tag),
+    icon: 'hash',
+    count,
+  }))
+}
+
+export const isTagPath = _isTagPath
+
+/** Tag 폴더 항목 — `/_tag/<tag>` path를 columns view가 들어왔을 때 보여줄 file node 목록. */
+export function tagItems(tag: string): FsNode[] {
+  return entriesByTag(tag).map((e): FsNode => {
+    const ext = e.path.split('.').pop()
+    return {
+      name: e.label,
+      path: e.path,
+      type: 'file',
+      ext,
+    }
+  })
+}
+
+// extToIcon은 types에서 사용처에서 직접 import 가능. tag 컬럼이 file 노드 렌더 시 활용.
+void extToIcon
 
 export const sidebar: SidebarItem[] = [
   { id: 'root',     label: tree.name, path: '/',            icon: 'home' },
