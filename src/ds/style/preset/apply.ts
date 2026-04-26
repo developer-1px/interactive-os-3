@@ -46,7 +46,20 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
 
     --ds-space:  calc(${p.space.unit} * var(--ds-density));
     --ds-fg:     ${tokenRefToCss(p.color.fg)};
+    /* --ds-bg = "elevated surface" (card/popover/input). Canvas(=pure white in light)로
+       유지해 base 위에서 살짝 떠 보이게 한다. 페이지 자체 배경은 --ds-base. */
     --ds-bg:     ${tokenRefToCss(p.color.bg)};
+    /* --ds-tone = 정직한 neutral 대신 미세한 warm cast(papery) 입힌 회색 소스.
+       seed.toneHue/toneChroma로 preset 갈아끼울 수 있게 변수화. CanvasText 베이스를
+       hued chip과 합쳐, OS dark mode 추적은 유지하되 톤은 살짝 따뜻하게. */
+    --ds-tone-hue:    ${p.seed.toneHue ?? 70};
+    --ds-tone-chroma: ${p.seed.toneChroma ?? 0.018};
+    --ds-tone: color-mix(in oklch,
+      CanvasText 82%,
+      oklch(60% var(--ds-tone-chroma) var(--ds-tone-hue)) 18%);
+    /* --ds-base = page ground. 컨트롤/카드(--ds-bg)보다 한 단 어두워 surface가 떠 보인다.
+       Linear/Vercel/Notion 수렴 패턴: tinted ground + bright elevated surface. */
+    --ds-base:   var(--ds-gray-1);
     --ds-muted:  ${tokenRefToCss(p.color.muted)};
     --ds-border: ${tokenRefToCss(p.color.border)};
     --ds-accent: ${tokenRefToCss(p.color.accent)};
@@ -61,7 +74,10 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
 
     ${(['1','2','3','4','5','6','7','8','9'] as const).map((n) => {
       const g = p.color.gray?.[n]
-      return `--ds-gray-${n}: ${g ? tokenRefToCss(g) : `color-mix(in oklab, CanvasText ${[3,6,10,16,28,44,62,80,95][Number(n)-1]}%, Canvas)`};`
+      // 모든 gray는 var(--ds-tone)을 베이스로 — 정직한 회색이 아니라 미세 warm cast.
+      // preset gray override 시에도 토큰을 무조건 var(--ds-tone) 기반으로 강제한다 (drift 방지).
+      const pct = [1, 2, 3.5, 6, 10, 18, 32, 52, 78][Number(n)-1]
+      return `--ds-gray-${n}: color-mix(in oklch, var(--ds-tone) ${pct}%, Canvas);`
     }).join('\n    ')}
 
     --ds-control-border:        var(--ds-gray-3);
@@ -94,6 +110,7 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-weight-medium:   500;
     --ds-weight-semibold: 600;
     --ds-weight-bold:     700;
+    --ds-weight-extrabold: 800;
 
     --ds-radius-sm:   ${p.radius.sm};
     --ds-radius-md:   ${p.radius.md};

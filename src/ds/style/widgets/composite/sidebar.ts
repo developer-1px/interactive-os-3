@@ -1,4 +1,4 @@
-import { css, dim, fg, microLabel, pad, radius } from '../../../foundations'
+import { css, dim, fg, hierarchy, microLabel, pad, radius } from '../../../foundations'
 import { gray } from '../../../palette/color'
 
 /**
@@ -26,8 +26,10 @@ export const sidebarCss = () => css`
     overflow-y: auto; overflow-x: hidden;
     background: ${fg(1)};
     display: flex; flex-direction: column;
-    padding: ${pad(3)} ${pad(2)};
-    gap: ${pad(3)};
+    /* L4 surface — sidebar 자체 padding (Figure/Ground). */
+    padding: ${hierarchy.surface};
+    /* L5 shell — section↔section, header↔section 간격. */
+    gap: ${hierarchy.shell};
     scrollbar-width: thin;
   }
   nav[aria-roledescription="sidebar"] > header {
@@ -43,19 +45,22 @@ export const sidebarCss = () => css`
     font-size: var(--ds-text-xs);
     color: ${dim(55)};
   }
+  /* L3 section — h3↔listbox는 atom보다 한 단계 넓게(Continuity 유지하며 atom과 구분).
+     section 자체는 L5 shell gap으로 분리된다. */
   nav[aria-roledescription="sidebar"] > section {
-    display: flex; flex-direction: column; gap: ${pad(0.5)};
+    display: flex; flex-direction: column; gap: ${hierarchy.section};
   }
   nav[aria-roledescription="sidebar"] > section > h3 {
     ${microLabel()}
-    margin: 0 0 ${pad(1)};
+    margin: 0;
     padding: 0 ${pad(2)};
   }
-  /* sidebar 안의 Listbox는 컨테이너 padding/grid를 리셋 — option만 밀도 있게 쌓임 */
+  /* sidebar 안의 Listbox는 surface padding 리셋 — section이 이미 surface로 감싼다.
+     row↔row는 L2 group(0)로 flush — row가 자기 모양(controlBox)으로 분리됨(Similarity). */
   nav[aria-roledescription="sidebar"] [role="listbox"] {
     padding: 0;
-    gap: ${pad(0.25)};
-    row-gap: ${pad(0.25)};
+    gap: ${hierarchy.group};
+    row-gap: ${hierarchy.group};
   }
   nav[aria-roledescription="sidebar"] [role="option"] {
     border-radius: ${radius('md')};

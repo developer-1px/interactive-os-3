@@ -3,7 +3,7 @@ import { SHELL_MOBILE_MAX } from './breakpoints'
 
 export const defaultPreset: DsPreset = {
   id: 'default',
-  seed: { hue: 260, density: 1, depth: 1 },
+  seed: { hue: 260, density: 1, depth: 1, toneHue: 70, toneChroma: 0.018 },
   color: {
     fg: 'CanvasText',
     bg: 'Canvas',
@@ -16,17 +16,9 @@ export const defaultPreset: DsPreset = {
     danger:  'oklch(58% 0.20 25)',
     // Light/dark 모두에서 일관된 계층 — Canvas/CanvasText를 기준으로 단계적 mix.
     // 숫자가 높을수록 CanvasText(전경)에 가까워진다 = 더 강한 대비.
-    gray: {
-      '1': { mix: ['CanvasText', 3,  'Canvas'] },
-      '2': { mix: ['CanvasText', 6,  'Canvas'] },
-      '3': { mix: ['CanvasText', 10, 'Canvas'] },
-      '4': { mix: ['CanvasText', 16, 'Canvas'] },
-      '5': { mix: ['CanvasText', 28, 'Canvas'] },
-      '6': { mix: ['CanvasText', 44, 'Canvas'] },
-      '7': { mix: ['CanvasText', 62, 'Canvas'] },
-      '8': { mix: ['CanvasText', 80, 'Canvas'] },
-      '9': { mix: ['CanvasText', 95, 'Canvas'] },
-    },
+    //
+    // gray 1~9 곡선은 apply.ts가 var(--ds-tone) 기반으로 일괄 계산 (drift 방지).
+    // 톤 자체를 갈고 싶으면 seed.toneHue / seed.toneChroma 조정.
   },
   space: { unit: '4px' },
   // 2026 스케일 — 산업 수렴 방향(Linear/Arc/Vercel): 더 둥글게, 덜 타이트하게.

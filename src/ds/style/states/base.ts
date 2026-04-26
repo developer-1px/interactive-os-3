@@ -1,7 +1,6 @@
-import { controlBox, css, pad } from '../../foundations'
+import { controlBox, css, hierarchy, pad } from '../../foundations'
 
 const selectChevron = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6l5 5 5-5'/></svg>`
-import { containerPad, slotGap, tracks } from '../seed/keyline'
 import { clickable, control, flexItem } from './selectors'
 
 // All roving items paint directly on themselves. Container bleed is avoided
@@ -9,34 +8,29 @@ import { clickable, control, flexItem } from './selectors'
 // of their parent li. No wrapper elements, no CSS classes.
 export const base = css`
   ${controlBox(`${clickable}, ${control}`)}
-  /* Keyline 축: 수직 리스트 container가 column을 선언하고, 내부의 모든 wrapper
-     (li / ul[role="group"] / article / presentation)가 subgrid로 상속한다.
-     chevron/아이콘/아바타 열과 라벨 열이 container 전역에서 같은 세로선에 묶인다. */
+  /* Vertical list container — 단순 block. 행은 각자 flex로 자기 안에서 정렬한다.
+     아이콘은 1.25em 고정폭이라 행 간 라벨 시작점이 자연 정렬됨 — subgrid keyline은
+     불필요한 결합도라 제거했다 (한 outlier가 트랙 전체를 흔드는 문제 차단). */
   :where([role="tree"], [role="listbox"], [role="menu"], [role="feed"]) {
-    display: grid;
-    grid-template-columns: ${tracks};
-    grid-auto-rows: min-content;
-    /* row-gap 0 — hover 연속성을 위한 dense packing. 숨 쉬는 간격이 필요한
-       container(예: feed)만 자체 규칙에서 row-gap을 덮어쓴다.
-       column-gap은 subgrid 자식이 상속 — 자식에서 gap을 덮어써도 subgrid 축은
-       부모 값을 따르므로 lead↔label 간격은 반드시 여기서 선언한다. */
-    row-gap: 0;
-    column-gap: ${slotGap};
-    align-content: start;
-    padding: ${containerPad};
+    display: block;
+    /* L4 surface — 컨테이너 자체의 inner padding (Figure/Ground). */
+    padding: ${hierarchy.surface};
   }
   :where([role="tree"], [role="listbox"], [role="menu"], [role="feed"])
-    :where(li, ul[role="group"], article, li[role="presentation"]) {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
+    :where(li, ul[role="group"], article) {
+    /* controlBox는 inline-flex + justify-content:center로 단일 컨트롤(아이콘 버튼)을
+       정렬한다. row는 [icon][label][trail] 좌→우 흐름이라 start로 덮는다.
+       L0 atom — icon↔label 등 row 안 sub-group 간격 (Proximity). */
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
+    gap: ${hierarchy.atom};
   }
-  /* 수평·table 배치는 subgrid 부적합 — 기존 flex 유지 */
-  :where(${flexItem}) { display: flex; align-items: center; gap: ${slotGap}; }
+  /* 수평·table 배치 — row와 동일한 atom 거리 적용 */
+  :where(${flexItem}) { display: flex; align-items: center; gap: ${hierarchy.atom}; }
   /* 수평 컨테이너 — 자식 배치를 ds가 통제해 호출부 style 의존을 없앤다. */
   :where([role="toolbar"], [role="tablist"], [role="menubar"]) {
-    display: flex; align-items: center; gap: ${slotGap}; flex-wrap: wrap;
+    display: flex; align-items: center; gap: ${hierarchy.atom}; flex-wrap: wrap;
   }
   :where(${clickable}) { cursor: pointer; }
   /* 리스트 row 내부 label은 기본 truncation (호출부 style 의존 제거) */

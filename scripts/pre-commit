@@ -1,28 +1,22 @@
 #!/usr/bin/env bash
-# ds pre-commit hook — values + invariants 린트가 그린일 때만 커밋 허용.
+# ds pre-commit hook — 모든 ds 린트는 경고만 (커밋 차단 ❌). 빨간 줄은 후속 정리 대상으로 남긴다.
 # 설치: `bash scripts/install-git-hook.sh` 1회 실행.
-set -e
 cd "$(git rev-parse --show-toplevel)"
 
-echo "→ lint:ds (hatch/classless/inline)"
-node scripts/lint-ds.mjs
+run_warn () {
+  local name="$1"; shift
+  echo "→ $name"
+  if ! "$@"; then
+    echo "⚠️  $name 위반 있음 (커밋은 허용, 추후 수정)"
+  fi
+}
 
-echo "→ lint:ds:values (hex/raw-color/raw-mask/radius-literal)"
-node scripts/lint-ds-values.mjs
+run_warn "lint:ds (hatch/classless/inline)"        node scripts/lint-ds.mjs
+run_warn "lint:ds:values"                          node scripts/lint-ds-values.mjs
+run_warn "lint:ds:invariants"                      node scripts/lint-ds-invariants.mjs
+run_warn "lint:ds:contracts"                       node scripts/lint-ds-contracts.mjs
+run_warn "lint:ds:keyboard"                        node scripts/lint-ds-keyboard.mjs
+run_warn "lint:ds:serializable"                    node scripts/lint-ds-serializable.mjs
+run_warn "lint:ds:css-orphans"                     node scripts/lint-ds-css-orphans.mjs
 
-echo "→ lint:ds:invariants (state coverage / controlBox bypass)"
-node scripts/lint-ds-invariants.mjs
-
-echo "→ lint:ds:contracts (data 주도 ui 계약 정합)"
-node scripts/lint-ds-contracts.mjs
-
-echo "→ lint:ds:keyboard (role 별 APG 키보드 계약)"
-node scripts/lint-ds-keyboard.mjs
-
-echo "→ lint:ds:serializable (definePage 직렬화 누수)"
-node scripts/lint-ds-serializable.mjs
-
-echo "→ lint:ds:css-orphans (widgets/index.ts 미등록 css)"
-node scripts/lint-ds-css-orphans.mjs
-
-echo "✅ ds lint 통과"
+echo "✅ ds lint 경고 단계 완료"

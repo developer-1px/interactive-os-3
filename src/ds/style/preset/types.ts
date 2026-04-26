@@ -16,7 +16,16 @@ export type ElevationLevel = 0 | 1 | 2 | 3
 
 export type DsPreset = {
   id: string
-  seed: { hue: number; density: number; depth: number }
+  seed: {
+    hue: number
+    density: number
+    depth: number
+    /** neutral 톤 hue (oklch). 70 = warm/papery (Notion·Apple Pages 톤),
+     *  250 = cool/screeny (Linear 톤). 미설정 시 70. */
+    toneHue?: number
+    /** neutral 톤 chroma (oklch). 0~0.04 권장. 미설정 시 0.018 (감지 임계 근처). */
+    toneChroma?: number
+  }
   color: {
     fg: TokenRef
     bg: TokenRef
