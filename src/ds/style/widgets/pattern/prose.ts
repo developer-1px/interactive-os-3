@@ -1,5 +1,5 @@
 import {
-  accent, border, codeSurface, css, neutral, hairlineWidth,
+  accent, border, codeSurface, css, neutral, hairlineWidth, hierarchy,
   leading, pad, proximity, radius,
   text, toneTint, trackingScale, underlineOffset, weight,
 } from '../../../foundations'
@@ -24,7 +24,10 @@ export const proseCss = () => css`
     container-name: prose;
     inline-size: min(68ch, 100%);
     margin-inline: auto;
+    /* L4 surface — article 자체가 surface. mobile에서 viewport 가장자리와 본문이
+       붙지 않도록 inline padding으로 호흡 확보. block은 reading rhythm으로 더 큼. */
     padding-block: ${pad(6)};
+    padding-inline: ${hierarchy.surface};
     /* 절대 16px — ds chrome dense root(13.5px)에서 분리. reading 표준. */
     font-size: 16px;
     /* 한국어 본문은 1.65 — 영문 1.75보다 살짝 조밀해야 단락이 한 묶음으로 읽힌다. */
