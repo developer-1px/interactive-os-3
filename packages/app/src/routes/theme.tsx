@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ThemeCreator } from '@apps/theme'
+import { ThemeCreator } from '@showcase/theme'
 
 export const Route = createFileRoute('/theme')({
   component: ThemeCreator,

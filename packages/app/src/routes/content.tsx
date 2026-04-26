@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Content } from '@apps/content'
+import { Content } from '@showcase/content'
 
 export const Route = createFileRoute('/content')({
   component: Content,

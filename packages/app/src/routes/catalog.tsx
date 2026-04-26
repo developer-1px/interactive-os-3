@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Catalog } from '@apps/catalog'
+import { Catalog } from '@showcase/catalog'
 
 export const Route = createFileRoute('/catalog')({
   component: Catalog,

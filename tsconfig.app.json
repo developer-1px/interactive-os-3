@@ -31,9 +31,10 @@
       "@p/devtools/*": ["packages/devtools/src/*"],
       "@p/app": ["packages/app/src/main.tsx"],
       "@p/app/*": ["packages/app/src/*"],
-      "@apps/*": ["apps/*/src"]
+      "@apps/*": ["apps/*/src"],
+      "@showcase/*": ["showcase/*/src"]
     }
   },
-  "include": ["packages/app/src", "packages/ds/src", "apps/*/src"],
+  "include": ["packages/app/src", "packages/ds/src", "apps/*/src", "showcase/*/src"],
   "exclude": ["packages/ds/src/build.ts"]
 }
