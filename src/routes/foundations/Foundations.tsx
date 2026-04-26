@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { audit, type AuditData, type DemoSpec, type FoundationExport } from 'virtual:ds-audit'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   ROOT, type Event, type NormalizedData,
 } from '../../ds'
 import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '../../ds/style/preset'
@@ -104,6 +105,13 @@ export function Foundations() {
             renderDemo: renderDemoFromSpec,
           }),
         )}
+      />
+      <SidebarAdminFloating
+        id="foundations-nav-mobile"
+        label="Foundations navigation"
+        tree={navData}
+        onEvent={onNavEvent}
+        collection="listbox"
       />
     </>
   )

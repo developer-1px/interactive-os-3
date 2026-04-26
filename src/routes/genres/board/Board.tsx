@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   type Event, type NormalizedData,
 } from '../../../ds'
 import { channels } from './data'
@@ -36,5 +37,16 @@ function useChannelNav(active: string, setActive: (id: string) => void) {
 export function Board() {
   const [active, setActive] = useState<string>('ds')
   const channelNav = useChannelNav(active, setActive)
-  return <Renderer page={definePage(buildBoardPage({ active, setActive, channelNav }))} />
+  return (
+    <>
+      <Renderer page={definePage(buildBoardPage({ active, setActive, channelNav }))} />
+      <SidebarAdminFloating
+        id="board-channels-mobile"
+        label="채널"
+        tree={channelNav.data}
+        onEvent={channelNav.onEvent}
+        collection="listbox"
+      />
+    </>
+  )
 }

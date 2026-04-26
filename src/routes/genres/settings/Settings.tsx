@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   type Event, type NormalizedData,
 } from '../../../ds'
 import { SECTIONS, type Digest, type SectionId } from './data'
@@ -35,9 +36,20 @@ export function Settings() {
   const [notifPush, setNotifPush] = useState(false)
   const [notifDigest, setNotifDigest] = useState<Digest>('weekly')
   const sectionNav = useSectionNav(section, setSection)
-  return <Renderer page={definePage(buildSettingsPage({
-    section, name, email, notifEmail, notifPush, notifDigest,
-    setSection, setName, setEmail, setNotifEmail, setNotifPush, setNotifDigest,
-    sectionNav,
-  }))} />
+  return (
+    <>
+      <Renderer page={definePage(buildSettingsPage({
+        section, name, email, notifEmail, notifPush, notifDigest,
+        setSection, setName, setEmail, setNotifEmail, setNotifPush, setNotifDigest,
+        sectionNav,
+      }))} />
+      <SidebarAdminFloating
+        id="settings-nav-mobile"
+        label="설정 내비게이션"
+        tree={sectionNav.data}
+        onEvent={sectionNav.onEvent}
+        collection="listbox"
+      />
+    </>
+  )
 }

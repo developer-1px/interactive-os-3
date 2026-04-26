@@ -111,7 +111,7 @@ export function buildFoundationsPage(s: FoundationsState): NormalizedData {
     [ROOT]: { id: ROOT, data: {} },
     page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'foundations-page', label: 'Foundations' } },
 
-    nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: 'Foundations navigation' } },
+    nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: 'Foundations navigation', roledescription: 'sidebar' } },
     navTitle: { id: 'navTitle', data: { type: 'Text', variant: 'small', content: 'ds Foundations' } },
     navList: { id: 'navList', data: { type: 'Ui', component: 'Listbox', props: { data: s.nav.data, onEvent: s.nav.onEvent, 'aria-label': 'fn group' } } },
 

@@ -3,6 +3,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   ROOT, FOCUS, EXPANDED, type Event, type NormalizedData,
 } from '../../ds'
 import { demos } from './demos'
@@ -118,17 +119,25 @@ export function Catalog() {
   }
 
   return (
-    <Renderer
-      page={definePage(
-        buildCatalogPage({
-          focus: focusContract,
-          visibleTiers,
-          grouped,
-          headerLabel,
-          nav: { data: navData, onEvent: onNavEvent },
-          renderDemo,
-        }),
-      )}
-    />
+    <>
+      <Renderer
+        page={definePage(
+          buildCatalogPage({
+            focus: focusContract,
+            visibleTiers,
+            grouped,
+            headerLabel,
+            nav: { data: navData, onEvent: onNavEvent },
+            renderDemo,
+          }),
+        )}
+      />
+      <SidebarAdminFloating
+        id="catalog-nav-mobile"
+        label="Catalog"
+        tree={navData}
+        onEvent={onNavEvent}
+      />
+    </>
   )
 }

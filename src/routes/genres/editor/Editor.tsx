@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
+  SidebarAdminFloating,
   type Event, type NormalizedData,
 } from '../../../ds'
 import { FMT_ACTS, INITIAL, type Block, type BlockKind } from './data'
@@ -68,5 +69,16 @@ export function Editor() {
     }
   }
   const toolbar = { data: toolbarData, onEvent: onToolbarEvent }
-  return <Renderer page={definePage(buildEditorPage({ blocks, selected, title, isPublic, current, setSelected, setTitle, setPublic, updateText, updateKind, outlineNav, toolbar }))} />
+  return (
+    <>
+      <Renderer page={definePage(buildEditorPage({ blocks, selected, title, isPublic, current, setSelected, setTitle, setPublic, updateText, updateKind, outlineNav, toolbar }))} />
+      <SidebarAdminFloating
+        id="editor-outline-mobile"
+        label="아웃라인"
+        tree={outlineNav.data}
+        onEvent={outlineNav.onEvent}
+        collection="listbox"
+      />
+    </>
+  )
 }

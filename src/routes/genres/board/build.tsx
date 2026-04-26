@@ -31,7 +31,7 @@ export function buildBoardPage(s: BoardState): NormalizedData {
           <ul>{channels.map((c) => <li key={c.id}>{c.type === 'private' ? '🔒' : '#'} {c.name}{c.unread ? <small> · {c.unread}</small> : null}</li>)}</ul>
         </section>
       ) } },
-      side: { id: 'side', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '채널' } },
+      side: { id: 'side', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '채널', roledescription: 'sidebar' } },
       sideHdr: { id: 'sideHdr', data: { type: 'Text', variant: 'h3', content: 'DS Workspace' } },
       sideMeta: { id: 'sideMeta', data: { type: 'Text', variant: 'small', content: '12 members · 6 channels' } },
       chHdr: { id: 'chHdr', data: { type: 'Text', variant: 'small', content: '채널' } },

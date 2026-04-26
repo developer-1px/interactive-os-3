@@ -15,7 +15,7 @@ export function buildSettingsPage(s: SettingsState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'settings-page', label: 'Settings' } },
-      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '설정 내비게이션' } },
+      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '설정 내비게이션', roledescription: 'sidebar' } },
       navTitle: { id: 'navTitle', data: { type: 'Text', variant: 'h3', content: '설정' } },
       navList: { id: 'navList', data: { type: 'Ui', component: 'Listbox',
         props: { data: s.sectionNav.data, onEvent: s.sectionNav.onEvent, 'aria-label': '설정 섹션' } } },

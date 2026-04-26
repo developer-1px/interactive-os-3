@@ -15,7 +15,7 @@ export function buildEditorPage(s: EditorState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'editor-page', label: 'Editor' } },
-      outline: { id: 'outline', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '아웃라인' } },
+      outline: { id: 'outline', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '아웃라인', roledescription: 'sidebar' } },
       oHdr: { id: 'oHdr', data: { type: 'Text', variant: 'h3', content: '아웃라인' } },
       olList: { id: 'olList', data: { type: 'Ui', component: 'Listbox',
         props: { data: s.outlineNav.data, onEvent: s.outlineNav.onEvent, 'aria-label': '아웃라인' } } },
