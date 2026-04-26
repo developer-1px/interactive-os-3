@@ -1,4 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -7,6 +12,11 @@
           {
             "type": "command",
             "command": "node scripts/hooks/guard-serializable.mjs",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-style-values.mjs",
             "timeout": 5
           }
         ]
