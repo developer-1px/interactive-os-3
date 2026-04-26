@@ -1,4 +1,4 @@
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import { getChildren, isDisabled } from '../types'
 
 const KEY_TRIGGER = new Set(['Enter', ' '])

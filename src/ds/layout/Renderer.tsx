@@ -11,7 +11,7 @@
  */
 import { createElement, useEffect, type CSSProperties, type ReactNode } from 'react'
 import { ROOT, type NormalizedData } from '../core/types'
-import { printTree, printHeadingOutline } from '../debug/printTree'
+import { printTree, printHeadingOutline } from '../debug'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,

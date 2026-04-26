@@ -54,9 +54,13 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
        hued chip과 합쳐, OS dark mode 추적은 유지하되 톤은 살짝 따뜻하게. */
     --ds-tone-hue:    ${p.seed.toneHue ?? 70};
     --ds-tone-chroma: ${p.seed.toneChroma ?? 0.018};
+    /* tone-tint: hued chip이 CanvasText에 섞이는 비율 (%). 18%=감지 임계, 0=정직한 회색. */
+    --ds-tone-tint:   ${p.seed.toneTint ?? 18};
+    /* step-scale: gray 1~9 곡선 전체 배율. 1=기본, <1=대비 약화(soft), >1=대비 강화(punchy). */
+    --ds-step-scale:  ${p.seed.stepScale ?? 1};
     --ds-tone: color-mix(in oklch,
-      CanvasText 82%,
-      oklch(60% var(--ds-tone-chroma) var(--ds-tone-hue)) 18%);
+      CanvasText calc(100% - var(--ds-tone-tint) * 1%),
+      oklch(60% var(--ds-tone-chroma) var(--ds-tone-hue)) calc(var(--ds-tone-tint) * 1%));
     /* --ds-base = page ground. 컨트롤/카드(--ds-bg)보다 한 단 어두워 surface가 떠 보인다.
        Linear/Vercel/Notion 수렴 패턴: tinted ground + bright elevated surface. */
     --ds-base:   var(--ds-gray-1);
@@ -77,7 +81,7 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
       // 모든 gray는 var(--ds-tone)을 베이스로 — 정직한 회색이 아니라 미세 warm cast.
       // preset gray override 시에도 토큰을 무조건 var(--ds-tone) 기반으로 강제한다 (drift 방지).
       const pct = [1, 2, 3.5, 6, 10, 18, 32, 52, 78][Number(n)-1]
-      return `--ds-gray-${n}: color-mix(in oklch, var(--ds-tone) ${pct}%, Canvas);`
+      return `--ds-gray-${n}: color-mix(in oklch, var(--ds-tone) calc(${pct}% * var(--ds-step-scale)), Canvas);`
     }).join('\n    ')}
 
     --ds-control-border:        var(--ds-gray-3);

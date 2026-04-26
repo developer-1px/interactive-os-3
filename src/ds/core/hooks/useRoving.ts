@@ -1,5 +1,5 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
-import type { Axis } from '../axis'
+import type { Axis } from '../axes'
 import { bindAxis } from '../state/bind'
 import { getExpanded, getFocus, type Event, type NormalizedData } from '../types'
 import { useFocusBridge } from './focus'

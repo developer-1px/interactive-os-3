@@ -1,4 +1,4 @@
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import type { Event } from '../types'
 import { ROOT, getChildren, isDisabled } from '../types'
 import { parentOf } from './index'

@@ -1,5 +1,5 @@
 import { Listbox } from '../../ds'
-import { useSidebarNav } from './shared/useSidebarNav'
+import { useSidebarNav } from './useSidebarNav'
 
 export function Sidebar() {
   const { recent, fav } = useSidebarNav()

@@ -23,5 +23,6 @@ export const leading = (t: 'tight' | 'normal' | 'loose') =>
  * font-weight tier — regular / medium / semibold / bold.
  * @demo type=value fn=weight args=["semibold"]
  */
-export const weight = (w: 'regular' | 'medium' | 'semibold' | 'bold') =>
-  `var(--ds-weight-${w})`
+export const weight = (
+  w: 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold',
+) => `var(--ds-weight-${w})`

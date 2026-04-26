@@ -5,22 +5,27 @@ import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,
 } from './resources'
 import { extToIcon, extToLang, extToPreviewKind, type FsNode } from './types'
+import type { PreviewVM } from './finder.feature'
 
-const MAX_TEXT_BYTES = 512 * 1024
-
-export function Preview({ node }: { node: FsNode | null }) {
-  const show = node?.type === 'file'
+/** PreviewPane — feature.view.preview 의 VM 을 받아 aside 마크업 + Meta 렌더.
+ *  파일 본문은 PreviewBody 가 자기 fetch 로 처리. */
+export function PreviewPane({ vm }: { vm: PreviewVM }) {
+  const show = vm.kind !== 'empty'
   return (
     <aside aria-roledescription="preview" aria-label="미리보기" aria-hidden={!show}>
-      {show && node && (
+      {show && 'node' in vm && (
         <>
-          <PreviewBody node={node} />
-          <Meta node={node} />
+          {vm.kind === 'dir'
+            ? <Header node={vm.node} note={`${vm.node.children?.length ?? 0}개 항목`} />
+            : <PreviewBody node={vm.node} />}
+          <Meta node={vm.node} />
         </>
       )}
     </aside>
   )
 }
+
+const MAX_TEXT_BYTES = 512 * 1024
 
 export function PreviewBody({ node }: { node: FsNode }) {
   const kind = extToPreviewKind(node.ext)
@@ -36,24 +41,27 @@ export function PreviewBody({ node }: { node: FsNode }) {
 }
 
 function Header({ node, note }: { node: FsNode; note?: string }) {
+  const isDir = node.type === 'dir'
+  const kind = isDir ? '폴더' : (node.ext ?? '파일').toUpperCase()
+  const sub = isDir ? kind : `${kind} · ${formatSize(node.size)}`
   return (
     <header>
-      <figure data-icon={extToIcon(node.ext)} aria-hidden />
-      <div>
+      <figure data-icon={isDir ? 'dir' : extToIcon(node.ext)} aria-hidden />
+      <hgroup>
         <h2>{node.name}</h2>
-        <p>{(node.ext ?? 'file').toUpperCase()} — {formatSize(node.size)}</p>
-        {note && <p>{note}</p>}
-      </div>
+        <p>{note ?? sub}</p>
+      </hgroup>
     </header>
   )
 }
 
 function Meta({ node }: { node: FsNode }) {
+  const isDir = node.type === 'dir'
   return (
     <dl>
-      <dt>종류</dt><dd>{node.ext || '파일'}</dd>
+      <dt>종류</dt><dd>{isDir ? '폴더' : (node.ext || '파일')}</dd>
       <dt>경로</dt><dd title={node.path}>{node.path}</dd>
-      {node.size != null && <><dt>크기</dt><dd>{formatSize(node.size)}</dd></>}
+      {!isDir && node.size != null && <><dt>크기</dt><dd>{formatSize(node.size)}</dd></>}
       {node.mtime && <><dt>수정일</dt><dd>{formatDate(node.mtime)}</dd></>}
     </dl>
   )

@@ -1,4 +1,4 @@
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import type { Event, NormalizedData } from '../types'
 import { getChildren, getExpanded, isDisabled, isMetaId } from '../types'
 import { parentOf } from './index'

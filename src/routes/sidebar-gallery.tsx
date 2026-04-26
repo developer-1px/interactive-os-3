@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ROOT,
   Renderer,
@@ -7,8 +7,6 @@ import {
   merge,
   sampleSidebarTree,
   sidebarAdmin,
-  sidebarBrainwave,
-  sidebarRail,
   useControlState,
   type Event as DsEvent,
   type NormalizedData,
@@ -18,10 +16,13 @@ function SidebarGallery() {
   const adminTree = useMemo(() => sampleSidebarTree({ seed: 7 }), [])
   const brainwaveTree = useMemo(() => sampleSidebarTree({ seed: 21, sections: 3 }), [])
   const railTree = useMemo(() => sampleSidebarTree({ seed: 42, sections: 2, withSubmenus: false }), [])
+  const collapseTree = useMemo(() => sampleSidebarTree({ seed: 11, sections: 2 }), [])
 
   const [admin, dispatchAdmin] = useControlState(adminTree)
   const [brainwave, dispatchBrainwave] = useControlState(brainwaveTree)
   const [rail, dispatchRail] = useControlState(railTree)
+  const [collapse, dispatchCollapse] = useControlState(collapseTree)
+  const [collapsed, setCollapsed] = useState(false)
 
   const onEvent = (dispatch: (e: DsEvent) => void) => (e: DsEvent) => dispatch(e)
 
@@ -35,25 +36,41 @@ function SidebarGallery() {
         col_brainwave: { id: 'col_brainwave', data: { type: 'Column', flow: 'list' } },
         cap_brainwave: { id: 'cap_brainwave', data: { type: 'Text', variant: 'small', content: 'brainwave · brand + tree' } },
         col_rail:      { id: 'col_rail',      data: { type: 'Column', flow: 'list' } },
-        cap_rail:      { id: 'cap_rail',      data: { type: 'Text', variant: 'small', content: 'rail · 56px · icons' } },
+        cap_rail:      { id: 'cap_rail',      data: { type: 'Text', variant: 'small', content: 'rail · 56px · icons (static)' } },
+        col_collapse:  { id: 'col_collapse',  data: { type: 'Column', flow: 'list' } },
+        cap_collapse:  { id: 'cap_collapse',  data: { type: 'Text', variant: 'small', content: 'collapsible · 토글로 rail ↔ expanded' } },
       },
       relationships: {
         [ROOT]: ['page'],
-        page: ['col_admin', 'col_brainwave', 'col_rail'],
+        page: ['col_admin', 'col_brainwave', 'col_rail', 'col_collapse'],
         col_admin:     ['cap_admin', 'sb_admin'],
         col_brainwave: ['cap_brainwave', 'sb_brainwave'],
         col_rail:      ['cap_rail', 'sb_rail'],
+        col_collapse:  ['cap_collapse', 'sb_collapse'],
       },
     }
     return definePage(merge(
       shell,
       sidebarAdmin({ id: 'sb_admin', label: '관리도구', tree: admin, onEvent: onEvent(dispatchAdmin) }),
-      sidebarBrainwave({ id: 'sb_brainwave', label: 'Brainwave', brand: 'Brainwave', tree: brainwave, onEvent: onEvent(dispatchBrainwave) }),
-      sidebarRail({ id: 'sb_rail', label: 'Rail', tree: rail, onEvent: onEvent(dispatchRail) }),
+      sidebarAdmin({ id: 'sb_brainwave', label: 'Brainwave', brand: 'Brainwave', tree: brainwave, onEvent: onEvent(dispatchBrainwave) }),
+      sidebarAdmin({ id: 'sb_rail', label: 'Rail', tree: rail, onEvent: onEvent(dispatchRail), rail: true }),
+      sidebarAdmin({ id: 'sb_collapse', label: 'Collapsible', tree: collapse, onEvent: onEvent(dispatchCollapse), rail: collapsed }),
     ))
-  }, [admin, brainwave, rail, dispatchAdmin, dispatchBrainwave, dispatchRail])
+  }, [admin, brainwave, rail, collapse, collapsed, dispatchAdmin, dispatchBrainwave, dispatchRail, dispatchCollapse])
 
-  return <Renderer page={page} />
+  return (
+    <>
+      <button
+        type="button"
+        aria-pressed={collapsed}
+        onClick={() => setCollapsed((v) => !v)}
+        style={{ position: 'fixed', insetBlockEnd: 16, insetInlineEnd: 16, zIndex: 10 }}
+      >
+        {collapsed ? '↔ Expand' : '↤ Collapse'} (4번째 sidebar)
+      </button>
+      <Renderer page={page} />
+    </>
+  )
 }
 
 export const Route = createFileRoute('/sidebar-gallery')({

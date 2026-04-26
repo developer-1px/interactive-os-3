@@ -25,6 +25,10 @@ export type DsPreset = {
     toneHue?: number
     /** neutral 톤 chroma (oklch). 0~0.04 권장. 미설정 시 0.018 (감지 임계 근처). */
     toneChroma?: number
+    /** hued chip이 CanvasText에 섞이는 비율 (0~100). 미설정 시 18 (감지 임계). */
+    toneTint?: number
+    /** gray 1~9 곡선 배율. 0.5~1.6 권장. 1=default, <1=soft 대비, >1=punchy 대비. */
+    stepScale?: number
   }
   color: {
     fg: TokenRef

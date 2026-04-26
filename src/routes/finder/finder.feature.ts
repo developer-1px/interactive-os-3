@@ -12,7 +12,6 @@ import {
   defineFeature,
   fromTree,
   pathAncestors,
-  type Effect,
   type QuerySpec,
 } from '../../ds'
 import {
@@ -38,6 +37,13 @@ interface FinderState {
   mode: ViewMode
 }
 
+// ── Preview ViewModel ───────────────────────────────────────────────────
+export type PreviewVM =
+  | { kind: 'empty' }
+  | { kind: 'dir'; node: FsNode }
+  | { kind: 'image'; node: FsNode; src: string | null }
+  | { kind: 'text'; node: FsNode; text: string | null }
+
 const initial: FinderState = { url: '/', pinned: '/', mode: 'columns' }
 
 // ── 헬퍼 ─────────────────────────────────────────────────────────────────
@@ -54,8 +60,6 @@ const isFilePath = (p: string): boolean => p !== '/' && !p.endsWith('/')
 const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => {
   if (!tree) return { entities: {}, relationships: {} }
   const rootNode = pinned === '/' ? tree : (walk(pinned).at(-1) ?? tree)
-  const c = walk(url)
-  const cwd = c[c.length - 1]?.type === 'dir' ? c[c.length - 1] : c[c.length - 2] ?? tree
   return fromTree(rootNode.children ?? [], {
     getId: (n: FsNode) => n.path,
     getKids: (n: FsNode) => n.children,
@@ -64,7 +68,7 @@ const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => 
       icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
       selected: n.path === url,
     }),
-    focusId: cwd?.path ?? url,
+    focusId: url,
     expandedIds: pathAncestors(url),
   })
 }
@@ -126,12 +130,6 @@ export const finderFeature = defineFeature<FinderState, Cmd, {
   }),
 
   view: viewFn,
-
-  effect: (s): Effect[] => [
-    { kind: 'title', text: `Finder · ${s.url}` },
-    // URL 동기화는 라우트 레벨에서 처리 — TanStack router 경유.
-    // (effect runtime 의 'navigate' 는 history.pushState 사용. router 와 충돌하므로 spec 에서는 제외.)
-  ],
 })
 
 function viewFn(s: FinderState, q: {

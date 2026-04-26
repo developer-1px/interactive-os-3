@@ -76,24 +76,25 @@ export function Content() {
     })
   }
 
-  const sidebarPage = useMemo(
-    () => definePage(
-      sidebarAdmin({
-        id: 'content-sidebar',
-        label: 'Content catalog',
-        tree,
-        onEvent,
-        width: 260,
-      }),
-    ),
-    // tree/onEvent 변경 시 갱신 (onEvent는 안정 ID가 아니지만 Renderer가 props 비교 처리).
-    [tree],
-  )
+  const sidebarPage = useMemo(() => {
+    const frag = sidebarAdmin({
+      id: 'content-sidebar',
+      label: 'Content catalog',
+      tree,
+      onEvent,
+      width: 260,
+    })
+    // sidebarAdmin은 root 없는 fragment — ROOT를 wrapping해서 Renderer가 sidebar Nav부터 그릴 수 있게.
+    return definePage({
+      entities: { [ROOT]: { id: ROOT, data: {} }, ...frag.entities },
+      relationships: { [ROOT]: ['content-sidebar'], ...frag.relationships },
+    })
+  }, [tree])
 
   return (
-    <div data-ds="Row" style={{ minHeight: '100vh', alignItems: 'stretch' }}>
+    <div data-ds="Row" style={{ minBlockSize: '100dvh', alignItems: 'stretch' }}>
       <Renderer page={sidebarPage} />
-      <main data-flow="list" style={{ flex: 1, minWidth: 0, overflow: 'auto' }}>
+      <main data-flow="list" style={{ flex: '1 1 0', minInlineSize: 0, overflow: 'auto' }}>
         <article data-flow="prose">
           <ProseSample />
         </article>

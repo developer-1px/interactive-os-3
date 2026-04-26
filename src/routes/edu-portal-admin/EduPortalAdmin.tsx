@@ -21,7 +21,7 @@ export function EduPortalAdmin() {
       onClickCapture={(e) => {
         if (!navOpen) return
         const t = e.target as HTMLElement
-        if (t.closest('nav[aria-roledescription="sidebar"] [role="option"]')) setNavOpen(false)
+        if (t.closest('nav[aria-roledescription="sidebar"] [role="treeitem"]')) setNavOpen(false)
       }}
     >
       <section aria-roledescription="body">

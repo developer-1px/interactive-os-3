@@ -1,4 +1,4 @@
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import { enabledSiblings } from './index'
 
 const mod = (n: number, m: number) => ((n % m) + m) % m

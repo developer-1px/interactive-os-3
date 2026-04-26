@@ -92,8 +92,9 @@ export const formCss = css`
     background: ${tint(accent(), 85)};
   }
 
-  /* ── Section 헤딩 계층 ───────────────────────────────────────────────── */
-  section > h2:first-child {
+  /* ── Section 헤딩 계층 — form 도메인 한정 (prose article 같은 다른 콘텐츠로 leak 금지) ── */
+  [data-ds="Row"][data-flow="form"] section > h2:first-child,
+  [data-ds="Column"][data-flow="form"] section > h2:first-child {
     font-size: ${font('lg')};
     font-weight: 700;
     margin: 0 0 ${pad(2)};
@@ -101,7 +102,8 @@ export const formCss = css`
     border-bottom: 1px solid ${control('border')};
     letter-spacing: ${tracking()};
   }
-  section > h3:first-child {
+  [data-ds="Row"][data-flow="form"] section > h3:first-child,
+  [data-ds="Column"][data-flow="form"] section > h3:first-child {
     font-size: ${font('md')};
     font-weight: 600;
     margin: 0 0 ${pad(1.5)};

@@ -12,8 +12,8 @@ import {
   merge,
   type Event, type NormalizedData,
 } from '../../ds'
-import { holyGrail } from '../../ds/layouts'
-import { sidebarAdmin } from '../../ds/widgets/sidebar'
+import { holyGrail } from '../../ds/layout/recipes'
+import { sidebarAdmin } from '../../ds/layout/recipes/sidebar'
 import type { Contract } from 'virtual:ds-contracts'
 import { tierLabel, tierBlurb, type Tier } from './tiers'
 

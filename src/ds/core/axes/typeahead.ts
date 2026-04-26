@@ -1,4 +1,4 @@
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import type { Event } from '../types'
 import { getLabel, getTypeahead } from '../types'
 import { isPrintable } from '../key'

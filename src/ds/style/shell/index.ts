@@ -1,4 +1,5 @@
+// shell — OS chrome 만 (window-controls, traffic lights, body flex 컨테이너).
+// 앱별 body 배치는 style/apps/* owner.
 import { chromeCss } from './chrome'
-import { panesCss } from './panes'
 
-export const shell = () => [chromeCss, panesCss].join('\n')
+export const shell = () => chromeCss

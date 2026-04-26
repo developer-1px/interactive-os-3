@@ -3,13 +3,13 @@ import { SHELL_MOBILE_MAX } from './breakpoints'
 
 export const defaultPreset: DsPreset = {
   id: 'default',
-  seed: { hue: 260, density: 1, depth: 1, toneHue: 70, toneChroma: 0.018 },
+  seed: { hue: 260, density: 1, depth: 1, toneHue: 70, toneChroma: 0.018, toneTint: 18, stepScale: 1 },
   color: {
     fg: 'CanvasText',
     bg: 'Canvas',
-    muted: { mix: ['CanvasText', 60, 'transparent'] },
-    /* hairline 8% — Linear/Vercel/Arc 수렴. 12%는 시각 노이즈가 강함. */
-    border: { mix: ['CanvasText', 8, 'transparent'] },
+    muted: { mix: ['var(--ds-tone)', 60, 'transparent'] },
+    /* hairline 5% — tone 기반은 CanvasText 직접 mix보다 살짝 강해 보이므로 8→5로 낮춤. */
+    border: { mix: ['var(--ds-tone)', 5, 'transparent'] },
     accent: 'oklch(65% 0.22 var(--ds-hue))',
     success: 'oklch(62% 0.15 150)',
     warning: 'oklch(72% 0.15 75)',
@@ -54,16 +54,16 @@ export const defaultPreset: DsPreset = {
        d=3: dialog·overlay — contact 4px + ambient 32px (-4 spread, 더 떠있음) */
   elevation: {
     0: [],
-    1: [{ x: 0, y: 0, blur: 0, spread: 1, color: { mix: ['CanvasText', 8, 'transparent'] } }],
+    1: [{ x: 0, y: 0, blur: 0, spread: 1, color: { mix: ['var(--ds-tone)', 5, 'transparent'] } }],
     2: [
-      { x: 0, y: 0, blur: 0, spread: 1,  color: { mix: ['CanvasText', 6,  'transparent'] } },
-      { x: 0, y: 1, blur: 2, spread: 0,  color: { mix: ['CanvasText', 5,  'transparent'] } },
-      { x: 0, y: 4, blur: 16, spread: -2, color: { mix: ['CanvasText', 8,  'transparent'] } },
+      { x: 0, y: 0, blur: 0,  spread: 1,  color: { mix: ['var(--ds-tone)', 4,  'transparent'] } },
+      { x: 0, y: 1, blur: 3,  spread: 0,  color: { mix: ['var(--ds-tone)', 3,  'transparent'] } },
+      { x: 0, y: 6, blur: 20, spread: -4, color: { mix: ['var(--ds-tone)', 5,  'transparent'] } },
     ],
     3: [
-      { x: 0, y: 0,  blur: 0,  spread: 1,  color: { mix: ['CanvasText', 6,  'transparent'] } },
-      { x: 0, y: 2,  blur: 4,  spread: 0,  color: { mix: ['CanvasText', 6,  'transparent'] } },
-      { x: 0, y: 12, blur: 32, spread: -4, color: { mix: ['CanvasText', 14, 'transparent'] } },
+      { x: 0, y: 0,  blur: 0,  spread: 1,  color: { mix: ['var(--ds-tone)', 4,  'transparent'] } },
+      { x: 0, y: 4,  blur: 8,  spread: -2, color: { mix: ['var(--ds-tone)', 4,  'transparent'] } },
+      { x: 0, y: 16, blur: 40, spread: -6, color: { mix: ['var(--ds-tone)', 9,  'transparent'] } },
     ],
   },
   /* Dark에서는 같은 alpha가 안 보임 — 2.2배 (Linear 0.25 → 0.55 패턴). */

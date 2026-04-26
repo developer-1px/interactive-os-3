@@ -7,22 +7,21 @@ import { toggle, alert } from './control/toggle'
 import { dialogCss, tooltipCss } from './overlay/overlay'
 import { detailsCss } from './overlay/details'
 import { glassCss } from './overlay/glass'
-import { feedCss } from './entity/feed'
-import { proseCss } from './entity/prose'
-import { tabPanelCss, carouselCss } from './entity/bar'
-import { highlightMark } from './entity/highlightMark'
-import { barChart } from './entity/barChart'
-import { courseCard } from './entity/courseCard'
-import { display } from './entity/display'
-import { legendDot } from './entity/legendDot'
-import { roleCard } from './entity/roleCard'
-import { statCard } from './entity/statCard'
-import { top10 } from './entity/top10'
-import { contractCard } from './entity/contractCard'
-import { postCard } from './entity/postCard'
-import { feedPost } from './entity/feedPost'
-import { messageBubble } from './entity/messageBubble'
-import { productCard } from './entity/productCard'
+import { feedCss } from './pattern/feed'
+import { tabPanelCss, carouselCss } from './pattern/bar'
+import { highlightMark } from './pattern/highlightMark'
+import { barChart } from './pattern/barChart'
+import { courseCard } from './pattern/courseCard'
+import { display } from './pattern/display'
+import { legendDot } from './pattern/legendDot'
+import { roleCard } from './pattern/roleCard'
+import { statCard } from './pattern/statCard'
+import { top10 } from './pattern/top10'
+import { contractCard } from './pattern/contractCard'
+import { postCard } from './pattern/postCard'
+import { feedPost } from './pattern/feedPost'
+import { messageBubble } from './pattern/messageBubble'
+import { productCard } from './pattern/productCard'
 import { listboxCss } from './collection/listbox'
 import { orderableCss } from './collection/orderable'
 import { menu } from './collection/menu'
@@ -31,6 +30,7 @@ import { tree } from './collection/tree'
 import { grid } from './composite/grid'
 import { toolbar } from './composite/toolbar'
 import { sidebarCss } from './composite/sidebar'
+import { pageCss } from './composite/page'
 import { layout } from './layout/layout'
 
 export const widgets = () =>
@@ -39,14 +39,14 @@ export const widgets = () =>
     switchCss, valueCss, sliderCss, buttonCss, formCss, toggle(), alert(),
     // overlay
     dialogCss, tooltipCss, detailsCss, glassCss,
-    // entity
-    feedCss, proseCss(), tabPanelCss, carouselCss,
+    // pattern
+    feedCss, tabPanelCss, carouselCss,
     highlightMark(), barChart(), courseCard(), display(),
     legendDot(), roleCard(), statCard(), top10(), contractCard(), postCard(), feedPost(), messageBubble(), productCard(),
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite
-    grid(), toolbar(), sidebarCss(),
+    grid(), toolbar(), sidebarCss(), pageCss,
     // layout
     layout(),
   ].join('\n')

@@ -11,3 +11,4 @@
 // 이 파일은 sys tier(semantic + pair)만 노출한다. raw scale 호환은 root foundations/index.ts에서.
 export * from './semantic'
 export * from './pair'
+export * from './code'

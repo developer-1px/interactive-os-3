@@ -1,5 +1,5 @@
 
-import type { Axis } from '../axis'
+import type { Axis } from './axis'
 import { ROOT, getChildren, getExpanded, isDisabled, type NormalizedData } from '../types'
 
 const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import type { Event, NormalizedData } from './types'
 import type { GestureHelper } from './gesture'
-import type { Resource } from '../data/resource'
-import { useResource } from '../data/resource'
+import type { Resource } from '../data'
+import { useResource } from '../data'
 import { useControlState } from './hooks/useControlState'
 import { useEventBridge } from './hooks/useEventBridge'
 

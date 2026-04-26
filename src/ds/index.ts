@@ -5,30 +5,55 @@ import { seeds } from './style/seed/tokens'
 import { breakpointsCss } from './style/seed/breakpoints'
 import { widgets } from './style/widgets'
 import { parts } from './style/parts'
+import { proseCss } from './style/widgets/pattern/prose'
 import { iconVars, iconIndicator } from './foundations/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
-// 모든 widget css 는 widgets() 가 단일 진입점으로 흡수한다 (widgets/index.ts 의 join).
-// 개별 widget css 를 이중 등록하면 동일 selector 가 cascade 에 ×3 등 누적 — assertUniqueSelectors 가 차단.
+/**
+ * CSS Cascade Layers — 우선순위 함정 구조적 해법.
+ *
+ * 후순위 layer 가 specificity 무관하게 무조건 이긴다. LLM/개발자가 selector
+ * specificity 카운트 없이 "어느 layer 에 속하는지"만 보고 판단 가능.
+ *
+ * 순서 (좌→우, 우측이 강함):
+ *   reset    — :where() 0-spec HTML 기본
+ *   states   — focus/hover/disabled mixin
+ *   widgets  — control·collection·composite·pattern widget
+ *   parts    — content 부품 (Card, Tag, Avatar...)
+ *   content  — prose article (markdown 출력) — widgets 보다 강해야 form 등 leak 차단
+ *   shell    — chrome·sidebar shell 골격
+ *   apps     — 앱별 라우트 override (각 routes/<app>/style.ts 가 owner. main.tsx가 합친다)
+ *
+ * tokens(:root)·breakpoints·iconVars 는 unlayered — 토큰은 layer 비교 대상 아님.
+ */
+export const APPS_LAYER_DECL = '@layer reset, states, widgets, parts, content, shell, apps;\n'
+const layerDecl = APPS_LAYER_DECL
+
+const wrap = (name: string, css: string) => `@layer ${name} {\n${css}\n}\n`
+
 const segments: ReadonlyArray<readonly [string, string]> = [
-  ['seed/reset', reset],
   ['seed/tokens', seeds],
   ['seed/breakpoints', breakpointsCss],
   ['fn/iconVars', iconVars()],
-  ['states', states()],
-  ['widgets', widgets()],
-  ['parts', parts()],
-  ['fn/iconIndicator', iconIndicator()],
-  ['shell', shell()],
+  ['seed/reset', wrap('reset', reset)],
+  ['states', wrap('states', states())],
+  ['fn/iconIndicator', wrap('states', iconIndicator())],
+  ['widgets', wrap('widgets', widgets())],
+  ['parts', wrap('parts', parts())],
+  ['content/prose', wrap('content', proseCss())],
+  ['shell', wrap('shell', shell())],
 ] as const
 
-export const dsCss = segments.map(([, css]) => css).join('\n')
+export const wrapAppsLayer = (cssStrings: readonly string[]) =>
+  `@layer apps {\n${cssStrings.join('\n')}\n}\n`
+
+export const dsCss = layerDecl + segments.map(([, css]) => css).join('\n')
 
 // 부팅 시 selector 중복 차단 — cascade race 는 영구 부채. 새 중복은 throw.
 assertUniqueSelectors(segments)
 
 export * from './core/types'
-export * from './data/resource'
+export * from './data'
 export { reduce } from './core/state/reduce'
 export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
 export { useControlState } from './core/hooks/useControlState'
@@ -132,9 +157,8 @@ export {
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
 } from './layout'
-export * from './widgets/sidebar'
-// layouts — APG 외 page-level 시각 골격 (defineLayout fragment)
-export * from './layouts'
+// layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
+export * from './layout/recipes'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-indicator/Badge와 이름 충돌하므로 alias.
 export * from './parts/Avatar'
 export * from './parts/Tag'

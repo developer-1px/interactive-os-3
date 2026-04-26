@@ -1,5 +1,5 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
-import type { Axis } from '../axis'
+import type { Axis } from '../axes'
 import type { Event, NormalizedData } from '../types'
 import { fromKeyboardEvent } from '../key'
 import { clickTrigger, keyTrigger } from '../trigger'

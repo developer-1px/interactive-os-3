@@ -24,9 +24,11 @@ interface Entry {
 
 const store = new Map<string, Entry>()
 const subs = new Set<() => void>()
+let version = 0
+export const queryVersion = (): number => version
 
 const keyOf = (k: ReadonlyArray<unknown>): string => JSON.stringify(k)
-const notify = (): void => { for (const s of subs) s() }
+const notify = (): void => { version++; for (const s of subs) s() }
 
 export function subscribeQueries(fn: () => void): () => void {
   subs.add(fn)

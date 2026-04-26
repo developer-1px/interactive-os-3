@@ -1,5 +1,0 @@
-export { sidebarAdmin } from './admin'
-export { sidebarBrainwave, type SidebarBrainwaveProps } from './brainwave'
-export { sidebarRail } from './rail'
-export { sampleSidebarTree, type SampleOptions } from './sample'
-export type { SidebarProps, SidebarVariant } from './types'

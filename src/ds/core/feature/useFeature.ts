@@ -5,9 +5,8 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useSyncExternalSto
 import type { CommandBase, FeatureSpec } from './defineFeature'
 import type { QuerySpec } from './query'
 import { applyEffectsDiff, type Effect } from './effects'
-import { resolveQueries, subscribeQueries } from './query'
+import { queryVersion, resolveQueries, subscribeQueries } from './query'
 
-const noopGetSnapshot = () => null
 const subscribeToQueries = (cb: () => void) => subscribeQueries(cb)
 
 export function useFeature<S, Cmd extends CommandBase, Q extends Record<string, QuerySpec<unknown>>, V>(
@@ -23,10 +22,10 @@ export function useFeature<S, Cmd extends CommandBase, Q extends Record<string, 
 
   const [state, dispatch] = useReducer(reducer, spec.state)
 
-  // query 갱신을 구독해서 view 재계산 트리거
-  useSyncExternalStore(subscribeToQueries, noopGetSnapshot, noopGetSnapshot)
+  // query 갱신을 구독해서 view 재계산 트리거 (version 이 바뀌면 리렌더)
+  const qv = useSyncExternalStore(subscribeToQueries, queryVersion, queryVersion)
 
-  const queries = useMemo(() => resolveQueries(spec.query, state), [spec, state])
+  const queries = useMemo(() => resolveQueries(spec.query, state), [spec, state, qv])
   const view = useMemo(() => spec.view(state, queries as never), [spec, state, queries])
 
   // effect: prev → next diff 후 실행
