@@ -7,9 +7,9 @@ import {
   type Event,
 } from '@p/ds'
 import { Split } from '@p/ds/ui/8-layout/Split'
-import { finderFeature } from './finder.feature'
+import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'
-import type { ViewMode } from './types'
+import type { ViewMode } from '../entities/types'
 
 /**
  * Finder 본문 — sidebar(recent/fav Listbox) + Columns view + Preview pane.

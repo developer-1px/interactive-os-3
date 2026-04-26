@@ -2,9 +2,9 @@ import {
   defineFlow, fromTree, navigateOnActivate, useFlow, writeResource,
   type Event, type NormalizedData,
 } from '@p/ds'
-import { sidebar, smartGroups, isSmartPath } from './data'
-import { pathResource, pinnedRootResource } from './resources'
-import type { SidebarItem, SmartGroupItem } from './types'
+import { sidebar, smartGroups, isSmartPath } from '../features/data'
+import { pathResource, pinnedRootResource } from '../features/resources'
+import type { SidebarItem, SmartGroupItem } from '../entities/types'
 
 /** L2 — sidebar 두 listbox 의 flow.
  *  recent: smart group 항목. activate → path 변경.

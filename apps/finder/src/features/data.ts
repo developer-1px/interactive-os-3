@@ -4,8 +4,8 @@ import {
   allTags, entriesByTag, tagPath, isTagPath as _isTagPath,
 } from '@p/fs'
 import type { FsNode } from '@p/fs'
-import type { SidebarItem, SmartGroupItem, TagGroupItem } from './types'
-import { extToIcon } from './types'
+import type { SidebarItem, SmartGroupItem, TagGroupItem } from '../entities/types'
+import { extToIcon } from '../entities/types'
 
 // fs primitives는 @p/fs 가 owner — finder는 re-export 만 (cross-app 호환).
 export {

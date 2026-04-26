@@ -21,7 +21,11 @@ type PhoneProps = Omit<ComponentPropsWithoutRef<'figure'>, 'children'> & {
   statusBar?: boolean
   topBar?: ReactNode
   bottomBar?: ReactNode
-  children: ReactNode
+  /** iframe 임베드 모드. src 가 있으면 children/topBar/bottomBar 무시하고 iframe 으로 라우트 임베드.
+   *  iframe viewport=393px 이라 ds @media (max-width:600px) 모바일 분기가 자연 발동.
+   *  Storybook viewport · Chromatic · Polaris docs 표준 패턴. */
+  src?: string
+  children?: ReactNode
 }
 
 export function Phone({
@@ -30,6 +34,7 @@ export function Phone({
   statusBar = true,
   topBar,
   bottomBar,
+  src,
   children,
   ...rest
 }: PhoneProps) {
@@ -47,9 +52,11 @@ export function Phone({
             </span>
           </div>
         )}
-        {topBar}
-        <div data-part="phone-screen">{children}</div>
-        {bottomBar}
+        {!src && topBar}
+        <div data-part="phone-screen">
+          {src ? <iframe src={src} title={label ?? 'phone screen'} loading="lazy" /> : children}
+        </div>
+        {!src && bottomBar}
         <div data-part="phone-home" />
       </div>
       {label && <figcaption>{label}</figcaption>}

@@ -58,7 +58,12 @@ async function renderMarkdown(src: string): Promise<string> {
     const safeLang = lang || 'txt'
     return `<pre data-lang="${escapeAttr(safeLang)}"><code>${escapeHtml(text)}</code></pre>`
   }
-  return marked.parse(src, { async: true, renderer })
+  return marked.parse(stripFrontmatter(src), { async: true, renderer })
+}
+
+function stripFrontmatter(src: string): string {
+  const m = src.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/)
+  return m ? src.slice(m[0].length) : src
 }
 
 function escapeHtml(s: string): string {

@@ -7,9 +7,9 @@ import {
   readResource,
   useFlow,
 } from '@p/ds'
-import { walk } from './data'
-import { pathResource, pinnedRootResource, treeResource } from './resources'
-import { extToIcon } from './types'
+import { walk } from '../features/data'
+import { pathResource, pinnedRootResource, treeResource } from '../features/resources'
+import { extToIcon } from '../entities/types'
 
 /** Finder columns flow — URL이 진실 원천. EXPANDED 는 base seed(pathAncestors) 가 owner.
  *  pinnedRoot 는 base 내부 readResource 로 흡수 — module-level 단일 정의. */

@@ -16,7 +16,9 @@ export const phone = () => css`
     gap: ${pad(2)};
   }
   [data-part="phone-frame"] {
-    /* iPhone 14 Pro 실물 폭 393pt + 베젤 7px. height 852pt + bezel. */
+    /* iPhone 14 Pro 실물 폭 393pt + 베젤 7px. height 852pt + bezel.
+       embed=iframe 모드 — phone-screen 안에 iframe 을 그대로 깔아 viewport 가 393px 이 되어
+       ds 의 @media (max-width:600px) 모바일 분기가 자연 발동. (Storybook · Chromatic 패턴) */
     inline-size: 407px;
     block-size: 866px;
     background: var(--ds-bg);
@@ -30,6 +32,13 @@ export const phone = () => css`
       0 1px 0 0 ${neutral(2)} inset,
       0 -1px 0 0 ${neutral(2)} inset,
       0 24px 48px -12px color-mix(in oklch, ${neutral(9)} 25%, transparent);
+  }
+  [data-part="phone-screen"] > iframe {
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+    background: var(--ds-bg);
+    display: block;
   }
 
   /* Status bar — 47pt (iOS standard) */

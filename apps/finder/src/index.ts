@@ -4,19 +4,19 @@
  *  이 barrel 만 import 한다. 내부 구현(*.feature, resources, schema 등)은
  *  apps/finder/src 안에 격리. */
 
-export { Finder } from './Finder'
-export { PreviewBody, PreviewPane } from './Preview'
-export { useSidebarNav } from './useSidebarNav'
+export { Finder } from './widgets/Finder'
+export { PreviewBody, PreviewPane } from './widgets/Preview'
+export { useSidebarNav } from './widgets/useSidebarNav'
 
 // 데이터 source — markdown·m.finder 가 사용
 export {
   getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
   formatDate, formatSize, loadText,
-} from './data'
+} from './features/data'
 
 // 타입·헬퍼 — m.finder 가 사용
-export { extToIcon } from './types'
-export type { FsNode, SmartGroupItem } from './types'
+export { extToIcon } from './entities/types'
+export type { FsNode, SmartGroupItem } from './entities/types'
 
 // 스타일 — main.tsx 가 사용
 export { finderCss } from './style'
@@ -29,4 +29,4 @@ export { finderMobileCss } from './mobile/style'
 export { default } from './plugin'
 
 // 셸 boot 가 router 를 주입 — finder 자체는 router 인스턴스를 모른다
-export { setFinderNav } from './nav'
+export { setFinderNav } from './features/nav'

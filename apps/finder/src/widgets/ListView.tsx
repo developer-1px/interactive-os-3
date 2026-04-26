@@ -1,6 +1,6 @@
 import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell, activateProps } from '@p/ds'
-import { formatDate, formatSize } from './data'
-import { extToIcon, type FsNode } from './types'
+import { formatDate, formatSize } from '../features/data'
+import { extToIcon, type FsNode } from '../entities/types'
 
 export function ListView({
   node,

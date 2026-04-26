@@ -2,8 +2,8 @@ import {
   Toolbar, ROOT, FOCUS, useControlState,
   type NormalizedData, type Event,
 } from '@p/ds'
-import { smartGroupOf } from './data'
-import type { ViewMode } from './types'
+import { smartGroupOf } from '../features/data'
+import type { ViewMode } from '../entities/types'
 
 const VIEW_ITEMS: { id: ViewMode; icon: string; label: string }[] = [
   { id: 'icons',   icon: 'layout-grid',      label: '아이콘' },

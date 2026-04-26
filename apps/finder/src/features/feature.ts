@@ -21,8 +21,8 @@ import {
   tagGroups, tagItems, isTagPath,
 } from './data'
 import { tagFromPath } from '@p/fs'
-import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from './types'
-import { extToIcon } from './types'
+import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from '../entities/types'
+import { extToIcon } from '../entities/types'
 
 // ── Commands ────────────────────────────────────────────────────────────
 type Cmd =

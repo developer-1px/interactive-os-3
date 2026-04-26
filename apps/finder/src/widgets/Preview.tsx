@@ -2,12 +2,12 @@ import { Link } from '@tanstack/react-router'
 import { useResource } from '@p/ds'
 import { CodeBlock } from '@p/ds/ui/0-primitive/CodeBlock'
 import { Prose } from '@p/ds/ui/0-primitive/Prose'
-import { formatDate, formatSize } from './data'
+import { formatDate, formatSize } from '../features/data'
 import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,
-} from './resources'
-import { extToIcon, extToLang, extToPreviewKind, type FsNode } from './types'
-import type { PreviewVM } from './finder.feature'
+} from '../features/resources'
+import { extToIcon, extToLang, extToPreviewKind, type FsNode } from '../entities/types'
+import type { PreviewVM } from '../features/feature'
 
 /** PreviewPane — feature.view.preview 의 VM 을 받아 aside 마크업 + Meta 렌더.
  *  파일 본문은 PreviewBody 가 자기 fetch 로 처리. */

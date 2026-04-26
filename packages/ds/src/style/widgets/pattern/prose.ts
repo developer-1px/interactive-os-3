@@ -22,7 +22,7 @@ export const proseCss = () => css`
   article[data-flow="prose"] {
     container-type: inline-size;
     container-name: prose;
-    inline-size: min(68ch, 100%);
+    inline-size: min(48rem, 100%);
     margin-inline: auto;
     /* L4 surface — article 자체가 surface. mobile에서 viewport 가장자리와 본문이
        붙지 않도록 inline padding으로 호흡 확보. block은 reading rhythm으로 더 큼. */

@@ -9,7 +9,7 @@ import {
   subscribeTree,
 } from './data'
 import { highlightCode } from '@p/fs'
-import type { FsNode, ViewMode, SmartGroupId } from './types'
+import type { FsNode, ViewMode, SmartGroupId } from '../entities/types'
 
 /** Finder의 모든 데이터는 이 모듈의 Resource 정의를 통해서만 노출된다.
  *  컴포넌트는 useResource(...) 단일 인터페이스로만 read/write.
