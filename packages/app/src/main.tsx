@@ -18,7 +18,7 @@ import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/style/preset'
 import { onShortcut } from '@p/ds/core/hooks/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
-import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
+import { ReproRecorderOverlay } from '@p/devtools'
 import { plugins } from './boot/plugins'
 import { composeRegistry } from './boot/registry'
 import { setFinderNav } from '@apps/finder'
@@ -66,7 +66,7 @@ if (import.meta.hot) {
 }
 
 if (import.meta.env.DEV) {
-  import('./devtools/guides')
+  import('@p/devtools/guides')
 }
 
 createRoot(document.getElementById('root')!).render(

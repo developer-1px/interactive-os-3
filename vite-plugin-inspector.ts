@@ -60,7 +60,7 @@ export function inspectorPlugin(): Plugin {
       handler(code, id) {
         if (id.includes('node_modules')) return
         if (!/\.[tj]sx$/.test(id)) return
-        if (id.includes('packages/app/src/devtools/')) return
+        if (id.includes('packages/devtools/src/')) return
 
         const relativePath = path.relative(root, id)
         const totalLines = code.split('\n').length

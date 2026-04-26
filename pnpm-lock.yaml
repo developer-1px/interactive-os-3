@@ -106,6 +106,8 @@ importers:
 
   packages/app: {}
 
+  packages/devtools: {}
+
   packages/ds: {}
 
   packages/fs: {}
