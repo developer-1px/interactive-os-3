@@ -12,7 +12,7 @@
  *   (G) Roles       — RoleCard (sortable)
  *
  * 원칙 — 모바일은 *content + 정해진 control* 만 (FlatLayout 친화):
- *   - device chrome      = ds/parts/Phone (PhoneTopBar, PhoneTabBar)
+ *   - device chrome      = ds/devices/Phone (PhoneTopBar, PhoneTabBar)
  *   - layout primitive   = ds/ui/8-layout (Row, Column)
  *   - content widget     = ds/ui/7-patterns (StatCard, ProductCard, ...)
  *   - composite control  = ds/ui/4-selection (Listbox, TabList, Toolbar)
@@ -314,7 +314,7 @@ const Feed_Timeline: ScreenDef = {
         <FeedPost
           author="박서연" handle="@seoyeon" time="1시간 전"
           avatar="https://i.pravatar.cc/64?u=seoyeon"
-          body="ds/parts/Phone 신설 — 393×852 실물 크기. dynamic island · home indicator 까지 토큰만으로 렌더."
+          body="ds/devices/Phone 신설 — 393×852 실물 크기. dynamic island · home indicator 까지 토큰만으로 렌더."
           likes={47} comments={11} shared={5}
         />
         <FeedPost
@@ -639,7 +639,7 @@ const Form_Search: ScreenDef = {
         <Listbox
           aria-label="suggestions"
           data={fromList([
-            { label: 'Phone — ds/parts/Phone' },
+            { label: 'Phone — ds/devices/Phone' },
             { label: 'PhoneTopBar' },
             { label: 'PhoneTabBar' },
             { label: 'phoneCss — style/parts/phone.ts' },
@@ -704,7 +704,7 @@ const Overlay_FAQ: ScreenDef = {
     <Phone label="FAQ" topBar={<PhoneTopBar back title="도움말" />}>
       <Body>
         <Heading level="h3">자주 묻는 질문</Heading>
-        <Disclosure summary="ds/parts/Phone 은 어떤 디바이스를 모방하나요?">
+        <Disclosure summary="ds/devices/Phone 은 어떤 디바이스를 모방하나요?">
           <p>iPhone 14 Pro 의 논리 폭 393×852pt 입니다. 베젤 + dynamic island + status bar + home indicator 까지 ds 토큰으로 그립니다.</p>
         </Disclosure>
         <Disclosure summary="composite 은 정적 화면에서도 동작하나요?">

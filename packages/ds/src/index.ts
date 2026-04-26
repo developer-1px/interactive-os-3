@@ -159,7 +159,7 @@ export * from './ui/6-overlay/FloatingNav'
 export * from './ui/6-overlay/Disclosure'
 export * from './ui/6-overlay/Tooltip'
 export * from './ui/6-overlay/MenuPopover'
-// 7-pattern — 도메인 콘텐츠 / 데이터 시각화
+// 7-patterns — 도메인 콘텐츠 / 데이터 시각화
 export * from './ui/7-patterns/StatCard'
 export * from './ui/7-patterns/CourseCard'
 export * from './ui/7-patterns/RoleCard'
@@ -190,7 +190,7 @@ export {
 } from './layout'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
 export * from './layout/recipes'
-// parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-indicator/Badge와 이름 충돌하므로 alias.
+// parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-status/Badge와 이름 충돌하므로 alias.
 export * from './parts/Avatar'
 export * from './parts/Tag'
 export * from './parts/Thumbnail'

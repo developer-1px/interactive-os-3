@@ -3,8 +3,8 @@
  * and tags it with its tier (folder = source of truth).
  *
  * Tiers (see src/ds/core/INVARIANTS.md):
- *   1-indicator · 2-action · 3-input · 4-collection · 5-composite ·
- *   6-overlay · 7-pattern · 8-layout
+ *   1-status · 2-action · 3-input · 4-selection · 5-display ·
+ *   6-overlay · 7-patterns · 8-layout
  */
 import { Fragment, createElement, type ComponentType, type ReactNode } from 'react'
 import { Outlet } from '@tanstack/react-router'

@@ -65,7 +65,7 @@ export function ContractCard({
           />
         ),
         footer: drift
-          ? <Callout tone="warning">tier 폴더 외부 — 1-indicator ~ 8-layout 중 하나로 이동</Callout>
+          ? <Callout tone="warning">tier 폴더 외부 — 1-status ~ 8-layout 중 하나로 이동</Callout>
           : null,
       }}
       slotOrder={slotOrder}
