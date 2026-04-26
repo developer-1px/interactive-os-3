@@ -138,7 +138,7 @@ function CourseCardDemo() {
 function RoleCardDemo() {
   return (
     <RoleCard
-      icon="💻"
+      icon={<span data-icon="code" aria-hidden />}
       name="프론트엔드 엔지니어"
       desc="UI 구현 + 시스템 설계"
       meta={<Badge tone="success">활성</Badge>}
