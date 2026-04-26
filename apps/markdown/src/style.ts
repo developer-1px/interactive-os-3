@@ -11,7 +11,7 @@ export const markdownCss = css`
     overflow-x: hidden;
   }
   main[data-part="markdown-app"] > nav[aria-label="경로"] {
-    inline-size: 100%; max-inline-size: 72ch; margin-inline: auto;
+    inline-size: 100%;
     font-size: var(--ds-text-sm); opacity: .8;
   }
   main[data-part="markdown-app"] > nav[aria-label="경로"] > code {
