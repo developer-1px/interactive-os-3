@@ -9,7 +9,7 @@
  * 새 자산을 추가하면 (export + @demo 태그 또는 _demos/<Name>.demo.tsx) 이 페이지에
  * 즉시 등장한다 — 등록부 0개. 흡수 통합: /catalog · /foundations 라우트 대체.
  */
-import type { ComponentType, ReactNode } from 'react'
+import { useState, type ComponentType, type ReactNode } from 'react'
 import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
 import { audit } from 'virtual:ds-audit'
 import { demos as catalogDemos } from '@showcase/catalog'
@@ -162,11 +162,39 @@ const deviceLanes = buildCompLanes(
   true,
 )
 
+// ── 컴포넌트 이름 → import path 인덱스 (선택 시 detail panel 표시용) ────────
+type CompMeta = { name: string; importPath: string; lane: string }
+const compIndex = new Map<string, CompMeta>()
+function addCompIndex(modules: Record<string, unknown>, pathRe: RegExp, laneOf: (m: RegExpMatchArray) => string) {
+  for (const path of Object.keys(modules)) {
+    const m = path.match(pathRe)
+    if (!m) continue
+    const fileName = m[m.length - 1]
+    if (fileName.startsWith('_')) continue
+    // path 예: '/Users/.../packages/ds/src/ui/2-action/Button.tsx' →
+    //        '@p/ds/ui/2-action/Button'
+    const idx = path.indexOf('/packages/ds/src/')
+    if (idx < 0) continue
+    const importPath = '@p/ds/' + path.slice(idx + '/packages/ds/src/'.length).replace(/\.tsx?$/, '')
+    const mod = modules[path] as Record<string, unknown>
+    for (const [exportName, exportVal] of Object.entries(mod)) {
+      if (typeof exportVal !== 'function' || !/^[A-Z]/.test(exportName)) continue
+      compIndex.set(exportName, { name: exportName, importPath, lane: laneOf(m) })
+    }
+  }
+}
+addCompIndex(uiModules,    /\/ui\/([^/]+)\/([^/]+)\.tsx$/, (m) => `ui/${m[1]}`)
+addCompIndex(partsModules, /\/parts\/([^/]+)\.tsx$/,        () => 'parts')
+addCompIndex(deviceModules,/\/devices\/([^/]+)\.tsx$/,      () => 'devices')
+
 // ── render ──────────────────────────────────────────────────────────────
 
 export function Canvas() {
   const totalTokens = tokenGroups.reduce((n, g) => n + g.exports.length, 0)
   const totalComps = uiLanes.reduce((n, l) => n + l.nodes.length, 0) + partsLanes.reduce((n, l) => n + l.nodes.length, 0)
+  const [selected, setSelected] = useState<string | null>(null)
+  const selectedMeta = selected ? compIndex.get(selected) : null
+  const selectedLaneLabel = selectedMeta ? LANE_LABEL[selectedMeta.lane] : null
 
   return (
     <div data-part="canvas-app">
@@ -280,7 +308,12 @@ export function Canvas() {
                         {gkey && <div data-part="canvas-shape-label">{gkey}</div>}
                         <div data-part="canvas-grid-comp">
                           {groupNodes.map((node) => (
-                            <figure key={node.name} data-part="canvas-comp-card">
+                            <figure
+                              key={node.name}
+                              data-part="canvas-comp-card"
+                              data-selected={selected === node.name || undefined}
+                              onClick={() => setSelected(selected === node.name ? null : node.name)}
+                            >
                               <div data-stage {...(node.demo ? {} : { 'data-empty': true })}>
                                 {node.demo ? node.demo() : 'no demo'}
                               </div>
@@ -324,6 +357,39 @@ export function Canvas() {
           </div>
         </div>
       </ZoomPanCanvas>
+
+      {selectedMeta && (
+        <aside data-part="canvas-detail" aria-label={`${selectedMeta.name} 상세`}>
+          <header data-part="canvas-detail-head">
+            <strong>{selectedMeta.name}</strong>
+            <button
+              type="button"
+              data-part="canvas-detail-close"
+              onClick={() => setSelected(null)}
+              aria-label="닫기"
+            >
+              ×
+            </button>
+          </header>
+          <dl data-part="canvas-detail-body">
+            <dt>Lane</dt>
+            <dd>
+              {selectedLaneLabel?.label ?? selectedMeta.lane}
+              <small> · {selectedMeta.lane}</small>
+            </dd>
+            {selectedLaneLabel?.standard && (
+              <>
+                <dt>Standard</dt>
+                <dd>≈ {selectedLaneLabel.standard}</dd>
+              </>
+            )}
+            <dt>Import</dt>
+            <dd>
+              <code>{`import { ${selectedMeta.name} } from '${selectedMeta.importPath}'`}</code>
+            </dd>
+          </dl>
+        </aside>
+      )}
     </div>
   )
 }
