@@ -60,7 +60,7 @@ export function FinderMobile() {
         </header>
       )}
       {path === '/'
-        ? <Home current={path} onNavigate={go} />
+        ? <Home />
         : smart
           ? <SmartList group={smart} items={smartItems(smart.id)} onNavigate={go} />
           : isFile && current
@@ -78,8 +78,8 @@ export function FinderMobile() {
   )
 }
 
-function Home({ current, onNavigate }: { current: string; onNavigate: (p: string) => void }) {
-  const { recent, fav } = useSidebarNav(current, onNavigate)
+function Home() {
+  const { recent, fav } = useSidebarNav()
   return (
     <section aria-roledescription="finder-home">
       <section>

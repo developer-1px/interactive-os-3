@@ -12,16 +12,19 @@ import type { Plugin } from 'vite'
  *       체크리스트로 점수화해 Catalog 페이지에 공급한다.
  */
 
-// Zone = 폴더 경로 (단일 진실 원천, src/ds/core/INVARIANTS.md 참조).
-// drift = ui/ 직속 또는 미분류 폴더 — lint 또는 zone 폴더로 이동 대상.
+// Tier = 폴더 경로 (단일 진실 원천, src/ds/core/INVARIANTS.md 참조).
+// 폴더는 `N-<kind>` 포맷 (예: 1-indicator, 8-layout) — 숫자가 의존성 위계를 명시.
+// drift = ui/ 직속 또는 미분류 폴더 — lint 또는 tier 폴더로 이동 대상.
 export type Kind =
+  | 'indicator'     // 시각 토큰: 다른 컴포넌트의 슬롯으로
+  | 'action'        // 단일 탭 액션: Button·Switch·Progress
+  | 'input'         // 폼 값을 갖는 단일 입력
   | 'collection'    // data zone: CollectionProps={data,onEvent} + useRoving
   | 'composite'     // composition roving: children:ReactNode + useRovingDOM
-  | 'control'       // atomic native: 단일 tabbable wrapping
   | 'overlay'       // surface: Dialog/Disclosure/Tooltip/CommandPalette
-  | 'entity'        // domain content card: 2+ 도메인 힌트 속성
-  | 'layout'        // primitive + decoration: roving 무관
-  | 'drift'         // 미분류 — zone 폴더 외부
+  | 'pattern'       // domain content / data viz
+  | 'layout'        // primitive: Row/Column/Grid/Carousel
+  | 'drift'         // 미분류 — tier 폴더 외부
 
 export type ContractCheck = {
   id: string
@@ -50,14 +53,17 @@ const walk = (dir: string, out: string[] = []): string[] => {
   return out
 }
 
-const ZONE_FOLDERS = new Set(['collection', 'composite', 'control', 'overlay', 'entity', 'layout'])
+const TIER_KINDS = new Set<Kind>([
+  'indicator', 'action', 'input', 'collection', 'composite', 'overlay', 'pattern', 'layout',
+])
 
-// folder = zone 의 단일 진실 원천. 파일 경로의 첫 폴더를 그대로 Kind 로 사용.
-// zone 폴더 외부(ui/ 직속 또는 미분류 폴더)는 drift.
+// folder = tier 의 단일 진실 원천. 폴더 포맷은 `N-<kind>` (예: 1-indicator).
+// tier 폴더 외부(ui/ 직속 또는 미분류 폴더)는 drift.
 const classifyKind = (file: string): Kind => {
-  const m = file.match(/\/ui\/([^/]+)\//)
+  const m = file.match(/\/ui\/(\d+-)?([a-z]+)\//)
   if (!m) return 'drift'
-  return ZONE_FOLDERS.has(m[1]) ? (m[1] as Kind) : 'drift'
+  const kind = m[2] as Kind
+  return TIER_KINDS.has(kind) ? kind : 'drift'
 }
 
 const extractRole = (src: string): string | null => {
@@ -89,43 +95,42 @@ const buildChecks = (src: string, kind: Kind): ContractCheck[] => {
     || /aria-\w+=/.test(src)
     || /<(dialog|button|input|select|textarea|details|summary|ol|ul|li|figure|figcaption|meter|progress|article|nav|header|footer|section)\b/i.test(src)
 
-  // zone 별 계약을 다르게 검증 — folder = zone 가설을 코드가 따르는지.
-  const zoneContract: Record<Kind, ContractCheck[]> = {
+  // tier 별 계약 — folder = tier 가설을 코드가 따르는지.
+  const noVariant: ContractCheck = { id: 'no-variant', label: 'variant/size prop 없음', pass: !bannedVariant }
+  const ariaEmit:  ContractCheck = { id: 'aria-role-emit', label: 'ARIA role/semantic emit', pass: emitsRole }
+  const noRoving:  ContractCheck = { id: 'no-roving', label: 'roving 무관', pass: !hasUseRoving && !hasUseRovingDOM }
+
+  const tierContract: Record<Kind, ContractCheck[]> = {
+    indicator: [noRoving, noVariant, ariaEmit],
+    action: [
+      { id: 'native-action',  label: '네이티브 button/input wrap',         pass: /<(button|input)\b/i.test(src) },
+      noVariant, ariaEmit,
+    ],
+    input: [
+      { id: 'native-input',   label: '네이티브 input/select/textarea wrap', pass: /<(input|select|textarea|meter|progress)\b/i.test(src) },
+      noVariant, ariaEmit,
+    ],
     collection: [
-      { id: 'data-prop',          label: 'CollectionProps + {data, onEvent}', pass: hasCollectionProps },
-      { id: 'roving',             label: 'useRoving 사용',                    pass: hasUseRoving },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
-      { id: 'aria-role-emit',     label: 'ARIA role/semantic emit',           pass: emitsRole },
+      { id: 'data-prop',      label: 'CollectionProps + {data, onEvent}',  pass: hasCollectionProps },
+      { id: 'roving',         label: 'useRoving 사용',                     pass: hasUseRoving },
+      noVariant, ariaEmit,
     ],
     composite: [
-      { id: 'roving-dom',         label: 'useRovingDOM 사용',                 pass: hasUseRovingDOM || /role=["']group["']|role=["']row["']/.test(src) },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
-      { id: 'aria-role-emit',     label: 'ARIA role/semantic emit',           pass: emitsRole },
-    ],
-    control: [
-      { id: 'native-element',     label: '네이티브 element wrap',             pass: /<(button|input|select|textarea|meter|progress)\b/i.test(src) },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
-      { id: 'aria-role-emit',     label: 'ARIA/semantic emit',                pass: emitsRole },
+      { id: 'roving-dom',     label: 'useRovingDOM 사용',                  pass: hasUseRovingDOM || /role=["']group["']|role=["']row["']/.test(src) },
+      noVariant, ariaEmit,
     ],
     overlay: [
-      { id: 'native-surface',     label: '네이티브 dialog/popover/details',   pass: /<(dialog|details)\b|popover=/i.test(src) || /role=["'](dialog|tooltip|alertdialog)["']/.test(src) },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
+      { id: 'native-surface', label: '네이티브 dialog/popover/details',    pass: /<(dialog|details)\b|popover=/i.test(src) || /role=["'](dialog|tooltip|alertdialog)["']/.test(src) },
+      noVariant,
     ],
-    entity: [
-      { id: 'no-roving',          label: 'roving 무관',                       pass: !hasUseRoving && !hasUseRovingDOM },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
-      { id: 'aria-role-emit',     label: 'article/aria emit',                 pass: emitsRole },
-    ],
-    layout: [
-      { id: 'no-roving',          label: 'roving 무관',                       pass: !hasUseRoving && !hasUseRovingDOM },
-      { id: 'no-variant',         label: 'variant/size prop 없음',            pass: !bannedVariant },
-    ],
+    pattern: [noRoving, noVariant, ariaEmit],
+    layout: [noRoving, noVariant],
     drift: [
-      { id: 'in-zone-folder',     label: 'zone 폴더 안에 있어야 함',           pass: false },
+      { id: 'in-tier-folder', label: 'tier 폴더 안에 있어야 함',            pass: false },
     ],
   }
 
-  return zoneContract[kind]
+  return tierContract[kind]
 }
 
 const scanContracts = (root: string, callSiteCounts: Record<string, number>): Contract[] => {

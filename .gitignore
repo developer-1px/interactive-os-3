@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 .claude/worktrees/
 src/routeTree.gen.ts
+
+.tanstack

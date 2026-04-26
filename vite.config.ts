@@ -4,6 +4,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import fsTree from './vite-plugin-fs'
 import dsAudit from './vite-plugin-ds-audit'
 import dsContracts from './vite-plugin-ds-contracts'
+import { inspectorPlugin } from './vite-plugin-inspector'
 
 export default defineConfig({
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
@@ -18,6 +19,7 @@ export default defineConfig({
       routeFileIgnorePattern: '(^|/)[A-Z][^/]*\\.(tsx?|jsx?)$',
     }),
     react(),
+    inspectorPlugin(),
     fsTree(),
     dsAudit(),
     dsContracts(),

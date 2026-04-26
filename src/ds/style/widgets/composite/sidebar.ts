@@ -1,5 +1,5 @@
-import { css, dim, fg, microLabel, pad, radius } from '../../../fn'
-import { gray } from '../../../fn/palette'
+import { css, dim, fg, microLabel, pad, radius } from '../../../foundations'
+import { gray } from '../../../palette/color'
 
 /**
  * Sidebar — nav[aria-roledescription="sidebar"] surface only.

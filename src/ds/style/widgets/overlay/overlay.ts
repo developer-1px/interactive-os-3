@@ -1,7 +1,7 @@
-import { bg, border, css, dur, ease, font, hairlineWidth, pad, radius, rowPadding, surface, tint } from '../../../fn'
+import { bg, border, css, dur, ease, font, hairlineWidth, pad, radius, rowPadding, grouping, tint } from '../../../foundations'
 export const dialogCss = css`
   :where(dialog) {
-    ${surface(3)}
+    ${grouping(3)}
     color: inherit;
     padding: ${pad(4)};
     border-radius: ${radius('lg')};
@@ -51,7 +51,7 @@ export const tooltipCss = css`
      [popover]는 modal <dialog>와 달리 ::backdrop을 만들지 않으므로 scrim 옵션 시
      body::before로 dim layer를 깐다 (popover는 top layer라 scrim 위에 떠 있음). */
   [popover][role="dialog"][aria-roledescription="popover"] {
-    ${surface(3)}
+    ${grouping(3)}
     background-color: ${bg()};
     color: inherit;
     margin: 0;
@@ -99,7 +99,7 @@ export const tooltipCss = css`
   }
 
   :where([role="tooltip"]) {
-    ${surface(2)}
+    ${grouping(2)}
     padding: ${rowPadding(2)};
     font-size: ${font('sm')};
     border-radius: ${radius('sm')};

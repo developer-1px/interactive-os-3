@@ -139,6 +139,7 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       data-cols={d.cols}
       data-flow={d.flow}
       data-emphasis={d.emphasis}
+      data-card-grid={d.cardGrid ? '' : undefined}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}

@@ -1,4 +1,4 @@
-import { accent, border, css, dim, dur, ease, pad, radius, tint } from '../../../fn'
+import { accent, border, css, dim, dur, ease, pad, radius, tint } from '../../../foundations'
 /**
  * Tabs — 보편적 탭 어포던스.
  *

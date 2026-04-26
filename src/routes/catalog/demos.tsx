@@ -391,7 +391,32 @@ function ComboboxDemo() {
 // ─────────────────────────────────────────────────────────────
 // registry
 // ─────────────────────────────────────────────────────────────
-export const demos: Record<string, () => ReactNode> = {
+// 1) 인라인 데모 (이 파일 내에서 정의된 데모들)
+// 2) 자동 등록 — 두 경로 자동 픽업 (HMR 포함):
+//    - src/routes/catalog/demos/<ComponentName>.tsx        (라우트 옆)
+//    - src/ds/ui/<tier>/<ComponentName>.demo.tsx           (컴포넌트 옆, 콜로케이션)
+//    각 파일 default export 가 데모 컴포넌트.
+const routeDemos = import.meta.glob('./demos/*.tsx', { eager: true }) as Record<
+  string,
+  { default: () => ReactNode }
+>
+const colocatedDemos = import.meta.glob('../../ds/ui/**/*.demo.tsx', { eager: true }) as Record<
+  string,
+  { default: () => ReactNode }
+>
+const pick = (path: string): string | null =>
+  path.match(/\/([^/]+)\.demo\.tsx$/)?.[1] ?? path.match(/\/([^/]+)\.tsx$/)?.[1] ?? null
+
+const autoDemos: Record<string, () => ReactNode> = Object.fromEntries(
+  [...Object.entries(routeDemos), ...Object.entries(colocatedDemos)]
+    .map(([p, m]) => {
+      const name = pick(p)
+      return name && m.default ? ([name, m.default] as const) : null
+    })
+    .filter((x): x is readonly [string, () => ReactNode] => x !== null),
+)
+
+const inlineDemos: Record<string, () => ReactNode> = {
   Menu: MenuDemo,
   Listbox: ListboxDemo,
   Tree: TreeDemo,
@@ -428,3 +453,6 @@ export const demos: Record<string, () => ReactNode> = {
   CheckboxGroup: CheckboxGroupDemo,
   Combobox: ComboboxDemo,
 }
+
+// glob 우선 (per-file override) → inline fallback
+export const demos: Record<string, () => ReactNode> = { ...inlineDemos, ...autoDemos }

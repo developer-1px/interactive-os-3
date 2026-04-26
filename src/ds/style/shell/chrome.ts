@@ -1,4 +1,4 @@
-import { css, pad, surface } from '../../fn'
+import { css, pad, grouping } from '../../foundations'
 import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.
@@ -8,7 +8,7 @@ export const chromeCss = css`
     position: fixed;
     inset: var(--ds-shell-inset);
     border-radius: var(--ds-shell-radius);
-    ${surface(2)}
+    ${grouping(2)}
     display: flex; flex-direction: column; overflow: hidden;
     container-type: inline-size;
     container-name: shell;

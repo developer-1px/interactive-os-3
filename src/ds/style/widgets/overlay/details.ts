@@ -1,4 +1,4 @@
-import { border, css, font, icon, pad, radius } from '../../../fn'
+import { border, css, font, icon, pad, radius } from '../../../foundations'
 export const detailsCss = css`
   :where(details) {
     border: 1px solid ${border()};

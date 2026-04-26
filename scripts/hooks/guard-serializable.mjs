@@ -2,7 +2,7 @@
 /**
  * PreToolUse guard — Write/Edit 직전 변경 파일에 직렬화 누수가 있으면 차단.
  *
- * 차단 대상 파일: src/routes/** + src/ds/ui/entity/**
+ * 차단 대상 파일: src/routes/** + src/ds/ui/7-pattern/**
  * 새로 들어가는 위반만 막기는 어렵기에, 변경 후 콘텐츠가 정한 패턴을 포함하면 차단.
  * 기존 빨간 파일에는 적용하지 않기 위해 changed-only / 신규 파일만 검사한다.
  *

@@ -1,4 +1,4 @@
-import { css, dim, fg, icon, microLabel, mix, pad, radius, status, grouping, tint } from '../../fn'
+import { css, dim, fg, icon, microLabel, mix, pad, radius, status, grouping, tint } from '../../foundations'
 import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱별 body 내 pane 배치. chrome.ts는 창 크롬까지, 여기부터가 앱 특성.
@@ -432,36 +432,7 @@ export const panesCss = css`
     align-items: stretch;
     /* page-root inset이 외곽 padding을 책임짐 — sunk 자체 emphasis padding(3)으로 충분, 추가 인셋 없음 */
   }
-  [aria-roledescription^="message-"] {
-    max-inline-size: min(75%, 36rem);
-    padding: ${pad(2)} ${pad(2.5)};
-    border-radius: ${radius('lg')};
-    display: flex; flex-direction: column;
-    gap: ${pad(0.5)};
-    margin: 0;
-  }
-  [aria-roledescription="message-other"] {
-    align-self: flex-start;
-    background: ${fg(2)};
-    border-end-start-radius: ${radius('sm')};
-  }
-  [aria-roledescription="message-me"] {
-    align-self: flex-end;
-    background: var(--ds-accent);
-    color: var(--ds-accent-on);
-    border: 1px solid transparent;
-    border-end-end-radius: ${radius('sm')};
-  }
-  [aria-roledescription^="message-"] > small {
-    opacity: .7;
-    font-size: var(--ds-text-xs);
-    margin: 0;
-  }
-  [aria-roledescription^="message-"] > p {
-    margin: 0;
-    line-height: 1.4;
-    word-break: break-word;
-  }
+  /* MessageBubble 시각은 widgets/entity/messageBubble.ts owner. */
 
   /* Board (Slack/Discord 스타일) — 게시판형 채널 타임라인.
      - sidebar: 채널 리스트 (#·🔒 + 이름 + unread)
@@ -501,54 +472,7 @@ export const panesCss = css`
     gap: 0;
     padding: ${pad(2)} 0;
   }
-  [aria-roledescription="post"],
-  [aria-roledescription="post-cont"] {
-    align-items: flex-start;
-    padding: ${pad(0.5)} ${pad(2)};
-    gap: ${pad(2)};
-    transition: background var(--ds-dur-fast) var(--ds-ease-out);
-  }
-  [aria-roledescription="post"] { padding-top: ${pad(2)}; }
-  [aria-roledescription="post"]:hover,
-  [aria-roledescription="post-cont"]:hover {
-    background: ${tint('CanvasText', 4)};
-  }
-  /* avatar — 36x36 라운드 사각. inline 크기는 widget이 아니라 CSS가 결정. */
-  [aria-roledescription^="post"] > strong[data-ds-aspect="square"] {
-    inline-size: 36px;
-    border-radius: ${radius('md')};
-    overflow: hidden;
-    flex: none;
-    background: ${tint('CanvasText', 8)};
-  }
-  [aria-roledescription^="post"] > strong[data-ds-aspect="square"] > img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  /* 연속 post: avatar는 자리만 비워두고 시각 숨김, 헤더 라인 숨김 */
-  [aria-roledescription="post-cont"] > strong[data-ds-aspect="square"] {
-    visibility: hidden;
-    background: transparent;
-  }
-  [aria-roledescription="post-cont"] > [data-ds="Column"] > strong:first-child {
-    display: none;
-  }
-  /* 본문 컬럼 */
-  [aria-roledescription^="post"] > [data-ds="Column"] {
-    gap: ${pad(0.25)};
-    min-inline-size: 0;
-  }
-  [aria-roledescription^="post"] > [data-ds="Column"] > strong:first-child {
-    font-size: var(--ds-text-md);
-  }
-  [aria-roledescription^="post"] > [data-ds="Column"] > strong:first-child > small {
-    margin-inline-start: ${pad(1)};
-    color: ${dim(55)};
-    font-weight: 400;
-    font-size: var(--ds-text-xs);
-  }
-  [aria-roledescription^="post"] > [data-ds="Column"] > p {
-    margin: 0; line-height: 1.45;
-  }
+  /* PostCard 시각은 widgets/entity/postCard.ts owner — board-page 컨테이너만 panes에. */
 
   /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지(feed/chat 등)에서
      좁은 viewport시 좌·우 보조 컬럼을 숨기고 [data-collapse-menu-btn]을 노출.
@@ -1004,172 +928,6 @@ export const panesCss = css`
     }
   }
 
-  /* Atlas — 카드는 컨텐츠. 모바일 퍼스트(1열, 안전 패딩) → 데스크톱은 동일 카드 DOM의 다열 reflow.
-     "shell·control은 데스크톱·모바일 별도 구현" 원칙은 header/preset switcher에만 적용. */
-  main[aria-roledescription="atlas-app"] {
-    display: flex; flex-direction: column;
-    min-block-size: 100svh;
-    overflow-x: hidden;
-  }
-
-  main[aria-roledescription="atlas-app"] > header {
-    display: flex; flex-wrap: wrap;
-    align-items: center; gap: ${pad(2)} ${pad(3)};
-    padding: ${pad(3)} max(${pad(3)}, env(safe-area-inset-left));
-    border-block-end: var(--ds-hairline) solid var(--ds-border);
-    position: sticky; top: 0; z-index: 1;
-    background: var(--ds-bg);
-    /* L3 — 자기 폭으로 subtitle inline 복귀 결정. viewport 모름. */
-    container-type: inline-size;
-    container-name: atlas-header;
-  }
-  main[aria-roledescription="atlas-app"] > header > h1 {
-    margin: 0; font-size: var(--ds-text-lg); font-weight: 700;
-  }
-  main[aria-roledescription="atlas-app"] > header > p {
-    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-sm);
-    inline-size: 100%; order: 99;
-  }
-  main[aria-roledescription="atlas-app"] > header > [data-roledescription="preset-switcher"] {
-    margin-inline-start: auto;
-    display: inline-flex; align-items: center; gap: ${pad(1)};
-    font-size: var(--ds-text-sm);
-  }
-  main[aria-roledescription="atlas-app"] > header select {
-    padding: ${pad(0.5)} ${pad(1.5)};
-    border-radius: ${radius('sm')};
-    border: var(--ds-hairline) solid var(--ds-border);
-    background: var(--ds-bg);
-    font-size: var(--ds-text-sm);
-  }
-  /* 헤더가 충분히 넓으면 subtitle을 인라인 복귀. viewport 아닌 자기 헤더 폭 기준. */
-  @container atlas-header (min-width: 720px) {
-    main[aria-roledescription="atlas-app"] > header > p {
-      inline-size: auto; order: 0;
-    }
-  }
-
-  main[aria-roledescription="atlas-app"] > section {
-    padding: ${pad(3)} max(${pad(3)}, env(safe-area-inset-left)) ${pad(4)} max(${pad(3)}, env(safe-area-inset-right));
-    display: flex; flex-direction: column; gap: ${pad(4)};
-  }
-  main[aria-roledescription="atlas-app"] > section + section {
-    border-block-start: var(--ds-hairline) solid var(--ds-border);
-  }
-  main[aria-roledescription="atlas-app"] > section > h2 {
-    margin: 0; font-size: var(--ds-text-md); font-weight: 700;
-  }
-  main[aria-roledescription="atlas-app"] > section > h2 > small {
-    color: ${dim(55)}; font-size: .85em; font-weight: 500;
-  }
-
-  section[aria-roledescription="atlas-fn-group"] {
-    display: flex; flex-direction: column; gap: ${pad(2)};
-  }
-  section[aria-roledescription="atlas-fn-group"] > h3 {
-    ${microLabel()}
-    margin: 0;
-  }
-
-  /* 카드 grid — 자기 폭에 따라 1열/auto-fill 결정. viewport가 아닌 컨테이너 기준. */
-  [aria-roledescription="atlas-card-grid"] {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: ${pad(2)};
-    container-type: inline-size;
-    container-name: atlas-card-grid;
-  }
-  @container atlas-card-grid (min-width: 480px) {
-    [aria-roledescription="atlas-card-grid"] {
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    }
-  }
-
-  /* 카드 — 데스크톱과 모바일에서 동일 시각, 패딩만 약간 ↓ on narrow */
-  article[aria-roledescription="atlas-card"] {
-    ${grouping(1)}
-    border: var(--ds-hairline) solid var(--ds-border);
-    border-radius: ${radius('md')};
-    padding: ${pad(2)};
-    display: flex; flex-direction: column; gap: ${pad(1.5)};
-    min-inline-size: 0;
-  }
-  article[aria-roledescription="atlas-card"] > header {
-    display: flex; align-items: center; gap: ${pad(1)};
-    min-inline-size: 0;
-  }
-  article[aria-roledescription="atlas-card"] [data-role="title"] {
-    font-size: var(--ds-text-sm); font-weight: 600;
-    overflow-wrap: anywhere; min-inline-size: 0;
-  }
-  article[aria-roledescription="atlas-card"] [aria-roledescription="atlas-usage"] {
-    margin-inline-start: auto;
-    font-size: var(--ds-text-xs); font-weight: 600;
-    padding: ${pad(0.25)} ${pad(0.75)};
-    border-radius: ${radius('pill')};
-    background: color-mix(in oklab, var(--ds-accent) 14%, transparent);
-    color: var(--ds-accent);
-    flex: none;
-  }
-  article[aria-roledescription="atlas-card"] [aria-roledescription="atlas-usage"][data-dead="true"] {
-    background: color-mix(in oklab, var(--ds-danger) 20%, transparent);
-    color: var(--ds-danger);
-  }
-  figure[aria-roledescription="atlas-demo"] {
-    margin: 0;
-    min-block-size: 48px;
-    padding: ${pad(1)};
-    border-radius: ${radius('sm')};
-    background: ${mix('Canvas', 97, 'CanvasText')};
-    display: flex; align-items: center; justify-content: center;
-  }
-  article[aria-roledescription="atlas-card"] > p {
-    margin: 0; font-size: var(--ds-text-xs);
-    color: ${dim(55)}; line-height: 1.5;
-  }
-  article[aria-roledescription="atlas-card"] [data-role="signature"] {
-    font-size: var(--ds-text-xs); color: ${dim(55)};
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    overflow-wrap: anywhere;
-  }
-  article[aria-roledescription="atlas-card"] details > summary {
-    font-size: var(--ds-text-xs); color: ${dim(55)}; cursor: pointer;
-  }
-  ul[aria-roledescription="atlas-call-sites"] {
-    margin: ${pad(0.75)} 0 0; padding: 0 0 0 ${pad(2)};
-    font-size: var(--ds-text-xs); color: ${dim(55)};
-    max-block-size: 160px; overflow: auto;
-  }
-
-  /* Atlas Leak Table — 모바일 가로 스크롤, snippet 1줄 유지 */
-  [aria-roledescription="atlas-leaks"] > p[data-tone="good"] { color: ${status('success')}; }
-  [aria-roledescription="atlas-leak-list"] > details { margin-block-end: ${pad(1)}; }
-  [aria-roledescription="atlas-leak-list"] summary {
-    cursor: pointer; font-size: var(--ds-text-sm);
-    padding: ${pad(0.5)} 0;
-  }
-  [aria-roledescription="atlas-leak-list"] summary > small { color: ${dim(55)}; }
-  table[aria-roledescription="atlas-leak-table"] {
-    inline-size: 100%; font-size: var(--ds-text-xs);
-    margin-block-start: ${pad(0.5)};
-    border-collapse: collapse;
-    display: block; overflow-x: auto;
-  }
-  table[aria-roledescription="atlas-leak-table"] thead tr { color: ${dim(55)}; text-align: start; }
-  table[aria-roledescription="atlas-leak-table"] tbody tr { border-block-start: var(--ds-hairline) solid var(--ds-border); }
-  table[aria-roledescription="atlas-leak-table"] :is(th, td) {
-    padding: ${pad(0.5)} ${pad(1)}; text-align: start; vertical-align: top;
-  }
-  table[aria-roledescription="atlas-leak-table"] :is(th, td)[data-col="line"] {
-    inline-size: 4rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  table[aria-roledescription="atlas-leak-table"] :is(th, td)[data-col="kind"] { inline-size: 6rem; }
-  table[aria-roledescription="atlas-leak-table"] td[data-col="snippet"] {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    max-inline-size: 480px;
-  }
-
   /* Markdown viewer — 데스크톱은 중앙 정렬 + 여백, 모바일은 폭 100% + safe-area */
   main[aria-roledescription="markdown-app"] {
     display: flex; flex-direction: column; gap: ${pad(3)};
@@ -1196,92 +954,10 @@ export const panesCss = css`
   }
 
   /* ── 표준 컨텐츠 위젯 (entity zone) ───────────────────────────────
-     ds/ui/entity/ 의 widget들이 root 1곳에 className(카탈로그) + roledescription을
+     ds/ui/7-pattern/ 의 widget들이 root 1곳에 className(카탈로그) + roledescription을
      달고 들어오면, 셀렉터는 roledescription만 잡는다. width/inline-size는 CSS가 결정. */
 
-  /* FeedPost — SNS 피드 카드 */
-  article[aria-roledescription="feed-post"] {
-    display: flex; flex-direction: column; gap: ${pad(2)};
-    padding: ${pad(3)};
-    border-radius: ${radius('lg')};
-  }
-  article[aria-roledescription="feed-post"] > header {
-    display: flex; align-items: center; gap: ${pad(2)};
-  }
-  article[aria-roledescription="feed-post"] > header > strong[data-ds-aspect="square"] {
-    inline-size: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex: none;
-    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
-  }
-  article[aria-roledescription="feed-post"] > header > strong[data-ds-aspect="square"] > img {
-    inline-size: 100%; block-size: 100%; object-fit: cover; display: block;
-  }
-  article[aria-roledescription="feed-post"] > header > strong:nth-of-type(2) {
-    flex: 1; min-inline-size: 0;
-  }
-  article[aria-roledescription="feed-post"] > header > strong:nth-of-type(2) > small {
-    display: block;
-    font-weight: 400;
-    color: ${dim(55)};
-    font-size: var(--ds-text-xs);
-    margin-block-start: ${pad(0.25)};
-  }
-  article[aria-roledescription="feed-post"] > p > img {
-    inline-size: 100%; block-size: auto; display: block;
-    border-radius: ${radius('md')};
-    aspect-ratio: 16 / 9; object-fit: cover;
-    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
-  }
-  article[aria-roledescription="feed-post"] > p { margin: 0; line-height: 1.45; }
-  article[aria-roledescription="feed-post"] > footer[role="toolbar"] {
-    display: flex; gap: ${pad(2)};
-  }
+  /* FeedPost 시각은 widgets/entity/feedPost.ts owner. */
 
-  /* ProductCard — 커머스 상품 카드 */
-  article[aria-roledescription="product-card"] {
-    display: flex; flex-direction: column; gap: ${pad(1.5)};
-    padding: ${pad(2)};
-    border-radius: ${radius('lg')};
-  }
-  article[aria-roledescription="product-card"] > p:first-child { margin: 0; padding: 0; }
-  article[aria-roledescription="product-card"] > p:first-child > img {
-    inline-size: 100%; block-size: auto; display: block;
-    aspect-ratio: 1 / 1; object-fit: cover;
-    border-radius: ${radius('md')};
-    background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
-  }
-  article[aria-roledescription="product-card"] > strong {
-    font-size: var(--ds-text-md); font-weight: 600;
-    overflow: hidden; text-overflow: ellipsis;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  }
-  article[aria-roledescription="product-card"] > p {
-    margin: 0; display: flex; align-items: baseline; gap: ${pad(1.5)};
-  }
-  article[aria-roledescription="product-card"] > p > strong {
-    font-size: var(--ds-text-lg); font-weight: 700;
-  }
-  article[aria-roledescription="product-card"] > p > small > s { color: ${dim(55)}; }
-  article[aria-roledescription="product-card"] > p > mark {
-    background: color-mix(in oklch, ${status('danger')} 14%, transparent);
-    color: ${status('danger')};
-    padding: ${pad(0.25)} ${pad(1)};
-    border-radius: ${radius('pill')};
-    font-size: var(--ds-text-xs); font-weight: 600;
-  }
-  article[aria-roledescription="product-card"] > small { color: ${dim(55)}; font-size: var(--ds-text-xs); }
-  article[aria-roledescription="product-card"] > p[role="list"] {
-    display: flex; flex-wrap: wrap; gap: ${pad(0.5)};
-  }
-  article[aria-roledescription="product-card"] > p[role="list"] > span {
-    background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
-    padding: ${pad(0.25)} ${pad(1)};
-    border-radius: ${radius('pill')};
-    font-size: var(--ds-text-xs);
-  }
-  article[aria-roledescription="product-card"] > button {
-    margin-block-start: auto;
-  }
+  /* ProductCard 시각은 widgets/entity/productCard.ts owner. */
 `

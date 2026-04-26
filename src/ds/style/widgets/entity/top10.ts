@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad } from '../../../fn'
+import { accent, css, dim, font, pad } from '../../../foundations'
 export const top10 = () => css`
   .top-10 {
     counter-reset: rank;

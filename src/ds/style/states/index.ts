@@ -1,4 +1,4 @@
-import { active, disabled, focus, highlighted, hover, selected } from '../../fn'
+import { active, disabled, focus, highlighted, hover, selected } from '../../foundations'
 import { base } from './base'
 import { control, rovingItem } from './selectors'
 

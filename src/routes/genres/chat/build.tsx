@@ -22,7 +22,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'chat-page', label: 'Chat' } },
-      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'chat-menu', 'aria-label': '메뉴', 'data-icon': 'list', 'data-collapse-menu-btn': '' }, content: '' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popoverTarget: 'chat-menu', 'aria-label': '메뉴', 'data-icon': 'list', 'data-collapse-menu-btn': '' }, content: '' } },
       menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'chat-menu', label: 'Chat 메뉴', scrim: true }, content: (
         <>
           <section>

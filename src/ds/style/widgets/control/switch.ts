@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dur, ease, radius, shadow } from '../../../fn'
+import { accent, bg, control, css, dur, ease, radius, shadow } from '../../../foundations'
 export const switchCss = css`
   :where([role="switch"]) {
     --ds-switch-ratio:  1.75;

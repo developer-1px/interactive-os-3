@@ -1,4 +1,4 @@
-import { accent, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../../fn'
+import { accent, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../../foundations'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 /**

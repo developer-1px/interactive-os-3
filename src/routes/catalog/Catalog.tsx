@@ -1,117 +1,134 @@
-/** Catalog — ds ui zone-first 감사 대시보드. master-slave sidebar (FlatLayout). */
+/** Catalog — ds ui 어휘 일람. 사이드바는 의존성 tier 순으로 정렬된 Tree. */
 import { useMemo, useState, type ReactNode } from 'react'
 import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
-  ROOT, type Event, type NormalizedData,
+  ROOT, FOCUS, EXPANDED, type Event, type NormalizedData,
 } from '../../ds'
 import { demos } from './demos'
 import { buildCatalogPage } from './build'
+import { tierOf, tierLabel, tierOrder, type Tier } from './tiers'
 
-const kindLabel: Record<Kind, string> = {
-  collection: 'collection',
-  composite:  'composite',
-  control:    'control',
-  overlay:    'overlay',
-  entity:     'entity',
-  layout:     'layout',
-  drift:      'drift',
+const ALL_ID = 'all'
+const tierId = (t: Tier) => `t:${t}`
+const compId = (name: string) => `c:${name}`
+
+type NavSelection =
+  | { kind: 'all' }
+  | { kind: 'tier'; tier: Tier }
+  | { kind: 'component'; name: string }
+
+const parseSelection = (id: string, byName: Map<string, Contract>): NavSelection => {
+  if (id === ALL_ID) return { kind: 'all' }
+  if (id.startsWith('t:')) return { kind: 'tier', tier: Number(id.slice(2)) as Tier }
+  if (id.startsWith('c:')) {
+    const name = id.slice(2)
+    if (byName.has(name)) return { kind: 'component', name }
+  }
+  return { kind: 'all' }
 }
 
-const kindBlurb: Record<Kind, string> = {
-  collection: 'data-driven roving — CollectionProps={data, onEvent} + useRoving. item 은 closed schema 의 leaf variant.',
-  composite:  'composition roving — children: ReactNode + useRovingDOM. 그룹 단위 Tab stop, 자식은 자유 JSX.',
-  control:    'atomic native — 단일 tabbable element wrap. activate 는 네이티브 button/input 이 담당.',
-  overlay:    'surface — native dialog/popover/details. Escape · backdrop · focus trap 은 플랫폼이 위임.',
-  entity:     'domain content card — 2+ 도메인 힌트 속성. roving 무관, 정보 표현 단위.',
-  layout:     'primitive · decoration — Row/Column/Grid 와 정적 시각화. roving 무관.',
-  drift:      'zone 폴더 외부 — collection/composite/control/overlay/entity/layout 중 하나로 이동',
-}
-
-const kindOrder: Kind[] = ['collection', 'composite', 'control', 'overlay', 'entity', 'layout', 'drift']
-
-type Filter = Kind | 'all'
-
-const navBase = (filter: Filter, grouped: Record<Kind, Contract[]>, total: number): NormalizedData => {
-  const items: { id: Filter; label: string; badge: number }[] = [
-    { id: 'all', label: 'All', badge: total },
-    ...kindOrder.map((k) => ({ id: k, label: kindLabel[k], badge: grouped[k].length })),
-  ]
+const buildNav = (
+  selection: NavSelection,
+  grouped: Record<Tier, Contract[]>,
+  total: number,
+  expanded: Set<string>,
+): NormalizedData => {
   const entities: NormalizedData['entities'] = {
     [ROOT]: { id: ROOT, data: {} },
-    __focus__: { id: '__focus__', data: { id: filter } },
+    [ALL_ID]: { id: ALL_ID, data: { label: 'All', badge: total } },
   }
-  for (const it of items) {
-    entities[it.id] = { id: it.id, data: { label: it.label, badge: it.badge, selected: it.id === filter } }
+  const rels: NormalizedData['relationships'] = { [ROOT]: [ALL_ID] }
+
+  const focusedId =
+    selection.kind === 'all' ? ALL_ID
+    : selection.kind === 'tier' ? tierId(selection.tier)
+    : compId(selection.name)
+
+  for (const t of tierOrder) {
+    const list = grouped[t]
+    if (list.length === 0) continue
+    const tid = tierId(t)
+    entities[tid] = { id: tid, data: { label: `${t}. ${tierLabel[t]}`, badge: list.length } }
+    const compIds: string[] = []
+    for (const c of list) {
+      const cid = compId(c.name)
+      entities[cid] = { id: cid, data: { label: c.name } }
+      compIds.push(cid)
+    }
+    rels[tid] = compIds
+    rels[ROOT].push(tid)
   }
-  return { entities, relationships: { [ROOT]: items.map((i) => i.id) } }
+
+  entities[FOCUS] = { id: FOCUS, data: { id: focusedId } }
+  entities[EXPANDED] = { id: EXPANDED, data: { ids: Array.from(expanded) } }
+
+  return { entities, relationships: rels }
 }
 
 export function Catalog() {
-  const [filter, setFilter] = useState<Filter>('all')
-  const [selected, setSelected] = useState<string | null>(null)
-
   const grouped = useMemo(() => {
-    const m: Record<Kind, Contract[]> = {
-      collection: [], composite: [], control: [], overlay: [], entity: [], layout: [], drift: [],
-    }
-    for (const c of contracts) m[c.kind].push(c)
+    const m: Record<Tier, Contract[]> = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [] }
+    for (const c of contracts) m[tierOf(c.name, c.kind as Kind)].push(c)
+    for (const t of tierOrder) m[t].sort((a, b) => a.name.localeCompare(b.name))
     return m
   }, [])
 
-  const totals = useMemo(() => {
-    const total = contracts.length
-    const canonical = grouped.collection.length
-    const drift = grouped.drift.length
-    const passAll = contracts.filter((c) => c.checks.every((k) => k.pass)).length
-    return { total, canonical, drift, passAll }
-  }, [grouped])
+  const byName = useMemo(() => {
+    const m = new Map<string, Contract>()
+    for (const c of contracts) m.set(c.name, c)
+    return m
+  }, [])
 
-  const visible: Kind[] = filter === 'all' ? kindOrder : [filter as Kind]
-  const visibleZones = visible.filter((k) => grouped[k].length > 0)
-  const headerLabel = filter === 'all' ? 'Catalog' : kindLabel[filter as Kind]
-  const headerBlurb = filter === 'all' ? 'ui 컴포넌트 zone-first 감사' : kindBlurb[filter as Kind]
+  const [selection, setSelection] = useState<NavSelection>({ kind: 'all' })
+  const [expanded] = useState<Set<string>>(() => new Set(tierOrder.map(tierId)))
 
-  const navData0 = useMemo(() => navBase(filter, grouped, totals.total), [filter, grouped, totals.total])
+  const visibleTiers: Tier[] =
+    selection.kind === 'all'
+      ? tierOrder.filter((t) => grouped[t].length > 0)
+      : selection.kind === 'tier'
+      ? [selection.tier]
+      : [tierOf(selection.name, byName.get(selection.name)?.kind as Kind)]
+
+  const focusContract: Contract | null =
+    selection.kind === 'component' ? byName.get(selection.name) ?? null : null
+
+  const headerLabel =
+    selection.kind === 'all' ? 'Catalog'
+    : selection.kind === 'tier' ? `${selection.tier}. ${tierLabel[selection.tier]}`
+    : selection.name
+
+  const navData0 = useMemo(
+    () => buildNav(selection, grouped, contracts.length, expanded),
+    [selection, grouped, expanded],
+  )
   const [navData, navDispatch] = useControlState(navData0)
-  const onNavEvent = (e: Event) =>
+  const onNavEvent = (e: Event) => {
     navigateOnActivate(navData, e).forEach((ev) => {
       navDispatch(ev)
-      if (ev.type === 'activate') setFilter(ev.id as Filter)
+      if (ev.type === 'navigate' || ev.type === 'activate') {
+        setSelection(parseSelection(ev.id, byName))
+      }
     })
+  }
 
   const renderDemo = (name: string): ReactNode => {
     const Render = demos[name]
     return Render ? <Render /> : undefined
   }
 
-  const onCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement
-    const card = target.closest('[data-name]') as HTMLElement | null
-    if (!card) return
-    const n = card.getAttribute('data-name')
-    if (n) setSelected(n === selected ? null : n)
-  }
-
   return (
-    <div onClick={onCardClick} style={{ display: 'contents' }}>
-      <Renderer
-        page={definePage(
-          buildCatalogPage({
-            filter,
-            selectedName: selected,
-            visibleZones,
-            grouped,
-            totals,
-            kindLabel,
-            kindBlurb,
-            headerLabel,
-            headerBlurb,
-            nav: { data: navData, onEvent: onNavEvent },
-            renderDemo,
-          }),
-        )}
-      />
-    </div>
+    <Renderer
+      page={definePage(
+        buildCatalogPage({
+          focus: focusContract,
+          visibleTiers,
+          grouped,
+          headerLabel,
+          nav: { data: navData, onEvent: onNavEvent },
+          renderDemo,
+        }),
+      )}
+    />
   )
 }

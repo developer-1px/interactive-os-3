@@ -1,8 +1,11 @@
 export { Renderer } from './Renderer'
 export { definePage } from './definePage'
+export { defineWidget, type WidgetBuilder } from './defineWidget'
+export { defineLayout, type LayoutBuilder } from './defineLayout'
+export { merge } from './merge'
 export { uiRegistry, resolveUi, type UiComponentName } from './registry'
 export {
-  placementAttrs, validatePage, node,
+  placementAttrs, validatePage, validateFragment, node,
   type AnyNode, type NodeType,
   type RowNode, type ColumnNode, type GridNode,
   type AsideNode, type SectionNode, type HeaderNode, type FooterNode,

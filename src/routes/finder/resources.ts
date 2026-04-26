@@ -1,4 +1,4 @@
-import { defineResource, writeResource } from '../../ds'
+import { defineResource, parentOf, writeResource, ROOT } from '../../ds'
 import { router } from '../../router'
 import {
   loadText,
@@ -36,13 +36,25 @@ export const pinnedRootResource = defineResource<string>({
 })
 
 /** path는 URL이 진실 원천. dispatch({type:'set'})는 router로 위임,
- *  URL → store 역방향은 Finder.tsx의 bridge effect 1회로 채운다. */
+ *  URL → store 역방향은 Finder.tsx의 bridge effect 1회로 채운다.
+ *
+ *  onEvent: ui/ 의 raw event 를 path 변경으로 직접 흡수한다. activate/navigate 는
+ *  대상 id 로, expand 는 open=true 면 자식, false 면 부모 경로로 이동. */
 export const pathResource = defineResource<string>({
   key: () => 'finder/path',
   initial: '/',
   serialize: (_k, v) => {
     const splat = isSmartPath(v) ? v : v.replace(/^\//, '')
     void router.navigate({ to: '/finder/$', params: { _splat: splat } })
+  },
+  onEvent: (e, { data }) => {
+    if (e.type === 'activate' || e.type === 'navigate') return e.id
+    if (e.type === 'expand') {
+      if (e.open) return e.id
+      const parent = parentOf(data, e.id)
+      return !parent || parent === ROOT ? '/' : parent
+    }
+    return undefined
   },
 })
 

@@ -1,9 +1,13 @@
 import { useEffect, useSyncExternalStore } from 'react'
+import type { Event as UiEvent, NormalizedData } from '../core/types'
 
 /**
  * Resource — ui/ `(data, onEvent)`의 데이터 레이어 평행.
  * 모든 데이터 read/write는 `useResource(resource, ...args) → [value, dispatch]` 단일 인터페이스로 흐른다.
  * 종류별 훅(useFsTree/useFsText/useView…)은 만들지 않는다 — 인터페이스 분기는 ds 원칙 위반.
+ *
+ * onEvent 옵션: ui/ event를 직접 수용한다. (e, ctx) => 다음 값 (또는 undefined로 무시).
+ * 도메인 라우트는 더 이상 Event → resource action 매퍼를 매번 작성하지 않는다.
  */
 
 export type ResourceEvent<T> =
@@ -14,12 +18,19 @@ export type ResourceEvent<T> =
 
 export type ResourceDispatch<T> = (e: ResourceEvent<T>) => void
 
+export type ResourceEventRouter<T> = (
+  e: UiEvent,
+  ctx: { value: T | undefined; data: NormalizedData },
+) => T | undefined
+
 export interface Resource<T, Args extends unknown[] = []> {
   key: (...args: Args) => string
   load?: (...args: Args) => T | Promise<T>
   initial?: T | ((...args: Args) => T)
   subscribe?: (key: string, notify: () => void, ...args: Args) => () => void
   serialize?: (key: string, value: T, ...args: Args) => void
+  /** ui/ event → 다음 값 매퍼. flow에서 intent 라우터로 사용. */
+  onEvent?: ResourceEventRouter<T>
 }
 
 type Entry = { value: unknown; loaded: boolean; inflight?: Promise<unknown>; externalUnsub?: () => void; refCount: number }

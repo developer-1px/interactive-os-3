@@ -7,6 +7,8 @@ import { join, relative } from 'node:path'
 const ROOT = new URL('..', import.meta.url).pathname
 const SRC = join(ROOT, 'src')
 const SKIP_DIRS = new Set(['ds', 'controls', 'node_modules', 'dist', '.claude'])
+// 시연/카탈로그 라우트 — raw role/aria 사용이 콘텐츠 본질 (feedback_showcase_route_role_exception)
+const SHOWCASE_FILES = new Set(['src/routes/content/sample.tsx'])
 
 // 심각도 정의 — 위에서부터 먼저 매칭
 const rules = [
@@ -49,6 +51,8 @@ const findings = []
 const counts = { '🔴': 0, '🟡': 0, '🟢': 0 }
 
 for (const file of walk(SRC)) {
+  const rel = relative(ROOT, file)
+  if (SHOWCASE_FILES.has(rel)) continue
   const text = readFileSync(file, 'utf8')
   const lines = text.split('\n')
   for (let i = 0; i < lines.length; i++) {

@@ -23,7 +23,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'split', roledescription: 'feed-page', label: 'Feed' } },
-      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'feed-menu', 'aria-label': '메뉴', 'data-collapse-menu-btn': '' }, content: '☰' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popoverTarget: 'feed-menu', 'aria-label': '메뉴', 'data-collapse-menu-btn': '' }, content: '☰' } },
       menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'feed-menu', label: 'Feed 메뉴', scrim: true }, content: (
         <>
           <section>

@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dur, ease, indicator, onAccent, pad, radius, status } from '../../../fn'
+import { accent, bg, control, css, dur, ease, indicator, onAccent, pad, radius, status } from '../../../foundations'
 export const toggle = () => [
   css`
     [role="checkbox"],

@@ -1,4 +1,4 @@
-import { css } from '../../fn/values'
+import { css } from '../../foundations/primitives/css'
 import type {
   DsPreset,
   Layer,
@@ -84,9 +84,16 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-text-xl:  ${p.text.xl};
     --ds-text-2xl: ${p.text['2xl']};
 
-    --ds-leading:       ${p.leading.normal};
-    --ds-leading-tight: ${p.leading.tight};
-    --ds-tracking:      ${p.leading.tracking};
+    --ds-leading:        ${p.leading.normal};
+    --ds-leading-tight:  ${p.leading.tight};
+    --ds-leading-normal: ${p.leading.normal};
+    --ds-leading-loose:  1.75;
+    --ds-tracking:       ${p.leading.tracking};
+
+    --ds-weight-regular:  400;
+    --ds-weight-medium:   500;
+    --ds-weight-semibold: 600;
+    --ds-weight-bold:     700;
 
     --ds-radius-sm:   ${p.radius.sm};
     --ds-radius-md:   ${p.radius.md};

@@ -1,8 +1,8 @@
-import { accent, css, dur, ease, fg, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, surface } from '../../../fn'
+import { accent, css, dur, ease, fg, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, grouping } from '../../../foundations'
 export const menu = () => [
   css`
     button[popovertarget] {
-      ${surface(1)}
+      ${grouping(1)}
       padding: ${rowPadding(3)};
       border-radius: ${radius('md')};
       font: inherit; color: inherit; cursor: pointer;
@@ -22,7 +22,7 @@ export const menu = () => [
   listReset('[role="menu"]'),
   css`
     [role="menu"] {
-      ${surface(2)}
+      ${grouping(2)}
       padding: ${pad(1)};
       min-width: 180px; width: max-content;
       border-radius: ${radius('md')};

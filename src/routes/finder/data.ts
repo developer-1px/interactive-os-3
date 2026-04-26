@@ -88,43 +88,38 @@ export function formatDate(ms?: number): string {
   return new Date(ms).toLocaleString('ko-KR')
 }
 
-export const SMART_PREFIX = 'smart:'
-/** docs/YYYY/YYYY-MM/YYYY-MM-DD/ 폴더 위계와 동일한 의미.
- *  사건이 일어난 날짜(mtime) 기준 calendar 경계(rolling 24h 아님). */
+/** Smart 그룹 = docs/YYYY/YYYY-MM/YYYY-MM-DD/ 캘린더 폴더로의 직접 alias.
+ *  파일 수집 가상 뷰가 아니라 실제 폴더 경로를 만들어 navigate. 별도 스마트 라우팅 불필요. */
+const pad2 = (n: number) => String(n).padStart(2, '0')
+const ymd = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
+const ym = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`
+
+function todayFolder(): string {
+  const d = new Date()
+  return `/docs/${d.getFullYear()}/${ym(d)}/${ymd(d)}`
+}
+function yesterdayFolder(): string {
+  const d = new Date(); d.setDate(d.getDate() - 1)
+  return `/docs/${d.getFullYear()}/${ym(d)}/${ymd(d)}`
+}
+function thisMonthFolder(): string {
+  const d = new Date()
+  return `/docs/${d.getFullYear()}/${ym(d)}`
+}
+function thisYearFolder(): string {
+  return `/docs/${new Date().getFullYear()}`
+}
+
 export const smartGroups: SmartGroupItem[] = [
-  { id: 'today',     label: '오늘',     path: 'smart:today',     icon: 'inbox' },
-  { id: 'yesterday', label: '어제',     path: 'smart:yesterday', icon: 'archive' },
-  { id: 'thisWeek',  label: '이번 주',  path: 'smart:thisWeek',  icon: 'calendar' },
-  { id: 'thisMonth', label: '이번 달',  path: 'smart:thisMonth', icon: 'calendar-days' },
-  { id: 'thisYear',  label: '올해',     path: 'smart:thisYear',  icon: 'calendar-range' },
+  { id: 'today',     label: '오늘',     path: todayFolder(),     icon: 'inbox' },
+  { id: 'yesterday', label: '어제',     path: yesterdayFolder(), icon: 'archive' },
+  { id: 'thisMonth', label: '이번 달',  path: thisMonthFolder(), icon: 'calendar-days' },
+  { id: 'thisYear',  label: '올해',     path: thisYearFolder(),  icon: 'calendar-range' },
 ]
 
-/** Calendar 경계 — Date 객체로 자연스럽게 계산, mtime ms와 비교. */
-function startOfToday(): number {
-  const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime()
-}
-function startOfThisWeek(): number {
-  // 월요일 시작 (ISO). KST 기준 dayOfWeek: 0=Sun ~ 6=Sat. (mon..sun) 월=1.
-  const d = new Date(); d.setHours(0, 0, 0, 0)
-  const dow = d.getDay()
-  const offsetToMon = (dow + 6) % 7  // Mon=0, Sun=6
-  d.setDate(d.getDate() - offsetToMon)
-  return d.getTime()
-}
-function startOfThisMonth(): number {
-  const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(1); return d.getTime()
-}
-function startOfThisYear(): number {
-  const d = new Date(); d.setHours(0, 0, 0, 0); d.setMonth(0, 1); return d.getTime()
-}
-
-export function isSmartPath(path: string): boolean {
-  return path.startsWith(SMART_PREFIX)
-}
-
-export function smartGroupOf(path: string): SmartGroupItem | undefined {
-  return smartGroups.find((g) => g.path === path)
-}
+/** 더 이상 smart: 가상 경로를 쓰지 않음 — 모든 path 는 실제 폴더. */
+export function isSmartPath(_path: string): boolean { return false }
+export function smartGroupOf(_path: string): SmartGroupItem | undefined { return undefined }
 
 export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean): FsNode[] {
   const out: FsNode[] = []
@@ -136,23 +131,8 @@ export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean
   return out.sort((a, b) => (b.mtime ?? 0) - (a.mtime ?? 0))
 }
 
-/** 각 버킷은 자기 calendar 단위 안의 mtime을 모두 포함(중복 허용).
- *  '오늘 폴더'의 의미: 오늘 calendar day에 일어난 모든 일 — 즉 today는 thisWeek에도, thisMonth에도, thisYear에도 포함된다.
- *  docs/2026/2026-04/2026-04-25/ 가 docs/2026/, docs/2026/2026-04/ 에 모두 속하는 것과 동일. */
-export function smartItems(group: SmartGroupItem['id']): FsNode[] {
-  const t0  = startOfToday()
-  const tW  = startOfThisWeek()
-  const tM  = startOfThisMonth()
-  const tY  = startOfThisYear()
-  const dayMs = 24 * 60 * 60 * 1000
-  const pred =
-    group === 'today'      ? (m: number) => m >= t0 :
-    group === 'yesterday'  ? (m: number) => m >= t0 - dayMs && m < t0 :
-    group === 'thisWeek'   ? (m: number) => m >= tW :
-    group === 'thisMonth'  ? (m: number) => m >= tM :
-    /* thisYear */           (m: number) => m >= tY
-  return collectByAge(currentTree, pred)
-}
+/** smart 그룹은 실제 폴더 경로 alias. 더 이상 가상 파일 수집을 하지 않는다. */
+export function smartItems(_group: SmartGroupItem['id']): FsNode[] { return [] }
 
 export const sidebar: SidebarItem[] = [
   { id: 'root',     label: tree.name, path: '/',            icon: 'home' },

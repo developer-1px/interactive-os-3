@@ -1,4 +1,4 @@
-import { css, radius, surface } from '../../../fn'
+import { css, radius, grouping } from '../../../foundations'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 export const tabPanelCss = css`
@@ -12,7 +12,7 @@ export const carouselCss = css`
     align-items: stretch;
   }
   :where([aria-roledescription="slide"]) {
-    ${surface(1)}
+    ${grouping(1)}
     padding: ${containerPad};
     border-radius: ${radius('sm')};
   }

@@ -1,60 +1,50 @@
 import { useMemo } from 'react'
 import {
   Columns as ColumnsRole,
+  defineFlow,
   expandBranchOnActivate,
   fromTree,
   pathAncestors,
-  parentOf,
-  useControlState,
+  readResource,
+  useFlow,
   useResource,
-  ROOT,
-  type Event,
 } from '../../ds'
 import { walk } from './data'
-import { treeResource } from './resources'
-import { extToIcon, type FsNode } from './types'
+import { pathResource, pinnedRootResource, treeResource } from './resources'
+import { extToIcon } from './types'
 
-export function Columns({
-  chain,
-  rootPath = '/',
-  onNavigate,
-}: {
-  chain: FsNode[]
-  rootPath?: string
-  onNavigate: (path: string) => void
-}) {
-  const currentPath = chain[chain.length - 1]?.path ?? '/'
-  const [tree] = useResource(treeResource)
-  const rootNode = useMemo(() => {
-    if (!tree) return undefined
-    if (rootPath === '/') return tree
-    const c = walk(rootPath)
-    return c[c.length - 1] ?? tree
-  }, [rootPath, tree])
-  const base = useMemo(
-    () =>
-      fromTree(rootNode?.children ?? [], {
-        getId: (n) => n.path,
-        getKids: (n) => n.children,
-        toData: (n) => ({
-          label: n.name,
-          icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
-          selected: n.path === currentPath,
-        }),
-        focusId: currentPath,
-        expandedIds: pathAncestors(currentPath),
-      }),
-    [currentPath, rootNode],
+/** Finder columns flow — URL이 진실 원천. EXPANDED 는 base seed(pathAncestors) 가 owner.
+ *  pinnedRoot 가 reactive deps 에 포함되도록 컴포넌트에서 useMemo 로 flow 를 새로 구성한다.
+ *  module-level flow 정의는 routeTree 순환 import 의 TDZ 도 함께 회피. */
+
+export function Columns() {
+  const [pinned = '/'] = useResource(pinnedRootResource)
+  const flow = useMemo(
+    () => defineFlow<string>({
+      source: pathResource,
+      base: (path = '/') => {
+        const tree = readResource(treeResource)
+        if (!tree) return { entities: {}, relationships: {} }
+        const rootNode = pinned === '/' ? tree : (walk(pinned).at(-1) ?? tree)
+        const c = walk(path)
+        const cwd = c[c.length - 1]?.type === 'dir' ? c[c.length - 1] : c[c.length - 2] ?? tree
+        return fromTree(rootNode.children ?? [], {
+          getId: (n) => n.path,
+          getKids: (n) => n.children,
+          toData: (n) => ({
+            label: n.name,
+            icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
+            selected: n.path === path,
+          }),
+          focusId: cwd?.path ?? path,
+          expandedIds: pathAncestors(path),
+        })
+      },
+      gestures: expandBranchOnActivate,
+      metaScope: ['navigate', 'typeahead'],
+    }),
+    [pinned],
   )
-  const [data, dispatch] = useControlState(base)
-  const onEvent = (raw: Event) =>
-    expandBranchOnActivate(data, raw).forEach((e) => {
-      if (e.type === 'typeahead') dispatch(e)
-      else if (e.type === 'navigate' || e.type === 'activate') onNavigate(e.id)
-      else if (e.type === 'expand') {
-        const parent = parentOf(data, e.id)
-        onNavigate(e.open ? e.id : !parent || parent === ROOT ? rootPath : parent)
-      }
-    })
+  const [data, onEvent] = useFlow(flow)
   return <ColumnsRole data={data} onEvent={onEvent} aria-label="컬럼" />
 }

@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad, radius, status } from '../../../fn'
+import { accent, css, dim, font, pad, radius, status } from '../../../foundations'
 export const barChart = () => css`
   .bar-chart {
     margin: 0;

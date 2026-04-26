@@ -10,18 +10,19 @@ import { glassCss } from './overlay/glass'
 import { feedCss } from './entity/feed'
 import { proseCss } from './entity/prose'
 import { tabPanelCss, carouselCss } from './entity/bar'
-import { badge } from './entity/badge'
+import { highlightMark } from './entity/highlightMark'
 import { barChart } from './entity/barChart'
-import { chipCss } from './entity/chip'
-import { contractCard } from './entity/contractCard'
 import { courseCard } from './entity/courseCard'
 import { display } from './entity/display'
-import { fnCard } from './entity/fnCard'
-import { leakTable } from './entity/leakTable'
 import { legendDot } from './entity/legendDot'
 import { roleCard } from './entity/roleCard'
 import { statCard } from './entity/statCard'
 import { top10 } from './entity/top10'
+import { contractCard } from './entity/contractCard'
+import { postCard } from './entity/postCard'
+import { feedPost } from './entity/feedPost'
+import { messageBubble } from './entity/messageBubble'
+import { productCard } from './entity/productCard'
 import { listboxCss } from './collection/listbox'
 import { orderableCss } from './collection/orderable'
 import { menu } from './collection/menu'
@@ -29,6 +30,7 @@ import { tabs } from './collection/tabs'
 import { tree } from './collection/tree'
 import { grid } from './composite/grid'
 import { toolbar } from './composite/toolbar'
+import { sidebarCss } from './composite/sidebar'
 import { layout } from './layout/layout'
 
 export const widgets = () =>
@@ -39,12 +41,12 @@ export const widgets = () =>
     dialogCss, tooltipCss, detailsCss, glassCss,
     // entity
     feedCss, proseCss(), tabPanelCss, carouselCss,
-    badge(), barChart(), chipCss, contractCard(), courseCard(), display(),
-    fnCard(), leakTable(), legendDot(), roleCard(), statCard(), top10(),
+    highlightMark(), barChart(), courseCard(), display(),
+    legendDot(), roleCard(), statCard(), top10(), contractCard(), postCard(), feedPost(), messageBubble(), productCard(),
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite
-    grid(), toolbar(),
+    grid(), toolbar(), sidebarCss(),
     // layout
     layout(),
   ].join('\n')

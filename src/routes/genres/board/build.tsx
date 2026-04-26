@@ -24,7 +24,7 @@ export function buildBoardPage(s: BoardState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'board-page', label: 'Board' } },
-      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'board-menu', 'aria-label': '채널', 'data-icon': 'list', 'data-collapse-menu-btn': '' }, content: '' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popoverTarget: 'board-menu', 'aria-label': '채널', 'data-icon': 'list', 'data-collapse-menu-btn': '' }, content: '' } },
       menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'board-menu', label: '채널', scrim: true }, content: (
         <section>
           <h3>채널</h3>

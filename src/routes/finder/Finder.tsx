@@ -1,65 +1,70 @@
-import { useEffect } from 'react'
-import { useParams } from '@tanstack/react-router'
-import { useResource } from '../../ds'
-import { walk, isSmartPath, smartGroupOf } from './data'
 import {
-  treeResource, viewResource, pinnedRootResource, pathResource, smartResource,
-} from './resources'
-import { TitleBar } from './TitleBar'
-import { Sidebar } from './Sidebar'
-import { Columns } from './Columns'
-import { ListView } from './ListView'
-import { Preview } from './Preview'
+  Columns as ColumnsRole, Listbox, useFeature,
+  type Event,
+} from '../../ds'
+import { finderFeature } from './finder.feature'
+import { PreviewBody } from './Preview'
+import { formatDate, formatSize } from './data'
+import type { FsNode } from './types'
 
-// Mobile/Desktop 분기는 CSS가 담당 (panes.ts container query). JS는 데스크톱 셸 한 본만.
 export function Finder() {
-  const { _splat } = useParams({ strict: false }) as { _splat?: string }
-  const raw = _splat ?? ''
-  const urlPath = isSmartPath(raw) ? raw : '/' + raw
+  const [view, dispatch] = useFeature(finderFeature)
 
-  // 모든 도메인 데이터는 useResource 단일 인터페이스로만 read/write.
-  useResource(treeResource)
-  const [view, viewDispatch] = useResource(viewResource)
-  const [pinnedRoot, pinDispatch] = useResource(pinnedRootResource)
-  const [path, pathDispatch] = useResource(pathResource)
-
-  // URL → store 역방향 1회 bridge (URL이 진실 원천)
-  useEffect(() => { pathDispatch({ type: 'set', value: urlPath }) }, [urlPath])
-
-  const effectivePath = path ?? urlPath
-  const smart = smartGroupOf(effectivePath)
-  const chain = smart ? [] : walk(effectivePath)
-  const current = smart ? null : chain[chain.length - 1] ?? null
-  const [smartList] = useResource(smartResource, smart?.id ?? 'today')
-
-  const go = (p: string) => pathDispatch({ type: 'set', value: p })
-  const pickSidebar = (p: string) => {
-    if (!isSmartPath(p)) pinDispatch({ type: 'set', value: p })
-    go(p)
+  const onColumns = (e: Event) => {
+    if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
+    else if (e.type === 'expand') dispatch({ type: 'expandCol', id: e.id, open: e.open })
+  }
+  const onRecent = (e: Event) => {
+    if (e.type === 'activate') dispatch({ type: 'activateRec', id: e.id })
+  }
+  const onFav = (e: Event) => {
+    if (e.type === 'activate') dispatch({ type: 'pinFav', id: e.id })
   }
 
-  const listAnchor = current?.type === 'dir' ? current : chain[chain.length - 2] ?? null
-  const favoriteRoot = smart ? '/' : (pinnedRoot ?? '/')
-  const currentView = view ?? 'columns'
-
   return (
-    <main aria-roledescription="finder" aria-label="Finder" data-view={smart ? 'list' : currentView}>
-      <TitleBar
-        path={effectivePath}
-        canBack={!smart && chain.length > 1}
-        onBack={() => go(smart ? '/' : chain[chain.length - 2]?.path ?? '/')}
-        view={smart ? 'list' : currentView}
-        onViewChange={(v) => viewDispatch({ type: 'set', value: v })}
-      />
+    <main aria-roledescription="finder" aria-label="Finder" data-view="columns">
+      <header>
+        <h1>{view.titlebar.path}</h1>
+      </header>
       <section aria-roledescription="body">
-        <Sidebar current={effectivePath} onPick={pickSidebar} />
-        {smart
-          ? <ListView node={null} items={smartList ?? []} currentPath={effectivePath} onNavigate={go} />
-          : currentView === 'columns'
-            ? <Columns chain={chain} rootPath={favoriteRoot} onNavigate={go} />
-            : <ListView node={listAnchor} currentPath={effectivePath} onNavigate={go} />}
-        {!smart && currentView === 'columns' && <Preview node={current} />}
+        <nav aria-roledescription="sidebar" aria-label="사이드바">
+          <Listbox data={view.sidebar.recent} onEvent={onRecent} aria-label="최근" />
+          <Listbox data={view.sidebar.fav}    onEvent={onFav}    aria-label="즐겨찾기" />
+        </nav>
+        <ColumnsRole data={view.columns} onEvent={onColumns} aria-label="컬럼" />
+        <Preview kind={view.preview} />
       </section>
     </main>
+  )
+}
+
+type PreviewVM =
+  | { kind: 'empty' }
+  | { kind: 'dir'; node: FsNode }
+  | { kind: 'image'; node: FsNode; src: string | null }
+  | { kind: 'text'; node: FsNode; text: string | null }
+
+function Preview({ kind }: { kind: PreviewVM }) {
+  const show = kind.kind !== 'empty' && kind.kind !== 'dir'
+  return (
+    <aside aria-roledescription="preview" aria-label="미리보기" aria-hidden={!show}>
+      {show && 'node' in kind && (
+        <>
+          <PreviewBody node={kind.node} />
+          <Meta node={kind.node} />
+        </>
+      )}
+    </aside>
+  )
+}
+
+function Meta({ node }: { node: FsNode }) {
+  return (
+    <dl>
+      <dt>종류</dt><dd>{node.ext || '파일'}</dd>
+      <dt>경로</dt><dd title={node.path}>{node.path}</dd>
+      {node.size != null && <><dt>크기</dt><dd>{formatSize(node.size)}</dd></>}
+      {node.mtime && <><dt>수정일</dt><dd>{formatDate(node.mtime)}</dd></>}
+    </dl>
   )
 }

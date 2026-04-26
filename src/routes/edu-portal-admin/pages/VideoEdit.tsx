@@ -257,29 +257,21 @@ function checkboxRels<K extends string>(prefix: string, state: Record<K, boolean
 function tagChipNodes(prefix: string, items: string[], onRemove: (t: string) => void): NodeMap {
   const out: NodeMap = {}
   for (const t of items) {
-    // 각 chip row는 aria-roledescription="chip" — ds chip 시각 계약(pill + inline × remove) 수신.
-    out[`${prefix}-chip-${t}`] = { id: `${prefix}-chip-${t}`, data: { type: 'Row', flow: 'cluster', roledescription: 'chip' } }
-    out[`${prefix}-chipLbl-${t}`] = { id: `${prefix}-chipLbl-${t}`, data: { type: 'Text', variant: 'body', content: t } }
-    // remove 버튼: 인디케이터는 이모지/글자가 아니라 아이콘이 원칙.
-    // 시각은 chip.ts가 ::before 에 lucide 'x' mask로 그림. content는 비움.
-    out[`${prefix}-chipBtn-${t}`] = {
-      id: `${prefix}-chipBtn-${t}`,
+    // parts/Tag — span[data-part="tag"] + optional × remove. label/onRemove 데이터 주도.
+    out[`${prefix}-chip-${t}`] = {
+      id: `${prefix}-chip-${t}`,
       data: {
-        type: 'Ui', component: 'Button',
-        props: { 'aria-label': `${t} 제거`, onClick: () => onRemove(t) },
-        content: '',
+        type: 'Ui', component: 'Tag',
+        props: { label: t, onRemove: () => onRemove(t), removeLabel: `${t} 제거` },
       },
     }
   }
   return out
 }
 
-function tagChipRels(prefix: string, items: string[]): RelMap {
-  const out: RelMap = {}
-  for (const t of items) {
-    out[`${prefix}-chip-${t}`] = [`${prefix}-chipLbl-${t}`, `${prefix}-chipBtn-${t}`]
-  }
-  return out
+function tagChipRels(_prefix: string, _items: string[]): RelMap {
+  // Tag는 leaf — relationships 없음.
+  return {}
 }
 
 function visibilityRows(

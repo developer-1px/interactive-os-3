@@ -1,4 +1,4 @@
-import { accent, control, css, dim, fg, font, mix, pad, radius, square, status, tint, grouping } from '../../../fn'
+import { accent, control, css, dim, fg, font, mix, pad, radius, square, status, tint, grouping } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -92,6 +92,7 @@ export const layout = () => css`
   /* ── FlatLayout extras ──────────────────────────────────────── */
 
   /* Semantic landmarks as flex containers — aria-roledescription이 있는 pane(Finder body/columns/preview 등)은 panes.ts가 직접 제어하므로 제외. */
+  main:not([aria-roledescription]),
   aside:not([aria-roledescription]),
   section:not([aria-roledescription]),
   header:not([aria-roledescription]),
@@ -152,6 +153,13 @@ export const layout = () => css`
   [data-ds-align="center"]   { align-self: center; }
   [data-ds-align="end"]      { align-self: flex-end; }
   [data-ds-align="stretch"]  { align-self: stretch; }
+
+  /* Container 자식 정렬 — flex/grid 어디든 동일 어휘. safe 키워드로
+     콘텐츠가 컨테이너보다 클 때는 자동 start fallback → 자연 스크롤 유지. */
+  [data-ds-place="center"]  { place-content: safe center; place-items: safe center; }
+  [data-ds-place="start"]   { place-content: safe start;  place-items: safe start; }
+  [data-ds-place="end"]     { place-content: safe end;    place-items: safe end; }
+  [data-ds-place="stretch"] { place-content: stretch; place-items: stretch; }
 
   /* aspect — width 축만 정해진 곳에 height를 비율로 도출. avatar/icon tile 등.
      square는 fn/square로 일관 처리, 그 외는 inline 비율 변수로. */

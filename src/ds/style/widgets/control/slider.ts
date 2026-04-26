@@ -1,4 +1,4 @@
-import { bg, border, control, css, radius, shadow } from '../../../fn'
+import { bg, border, control, css, radius, shadow } from '../../../foundations'
 // input[type="range"] — native role=slider. 토큰 기반 얇은 스타일.
 export const sliderCss = css`
   :where(input[type="range"]) {

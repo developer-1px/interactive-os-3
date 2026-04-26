@@ -1,4 +1,4 @@
-import type { IconToken } from '../../ds/fn/icon'
+import type { IconToken } from '../../ds/foundations/iconography/icon'
 
 declare module 'virtual:fs-tree' {
   export const tree: FsNode

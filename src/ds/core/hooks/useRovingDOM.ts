@@ -6,6 +6,9 @@ import { useEffect, useRef, type KeyboardEvent, type RefObject } from 'react'
  * Arrow/Home/End 네비게이션. Enter/Space/click 은 네이티브 버튼이 활성화.
  */
 
+// 기본 selector — Toolbar/Tabs/Menubar 처럼 자연 tabbable(button) 묶음용.
+// TreeGrid/Listbox 처럼 selected 외 전부 tabindex=-1 인 그룹은 itemSelector 옵션으로
+// 명시 (예: '[role="row"]'). tabindex=-1 도 발견되어야 그룹 normalize 가 가능.
 const TABBABLE =
   'button:not([disabled]):not([tabindex="-2"]),[tabindex]:not([tabindex="-1"]):not([tabindex="-2"]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])'
 
@@ -13,19 +16,22 @@ export interface UseRovingDOMOptions {
   orientation?: 'horizontal' | 'vertical' | 'both'
   homeEnd?: boolean
   wrap?: boolean
+  /** 명시적 item 셀렉터. tabindex=-1 도 포함해서 발견 가능 (TreeGrid/Listbox 류). */
+  itemSelector?: string
 }
 
 export function useRovingDOM<T extends HTMLElement = HTMLDivElement>(
   externalRef?: RefObject<T | null> | null,
-  { orientation = 'horizontal', homeEnd = true, wrap = true }: UseRovingDOMOptions = {},
+  { orientation = 'horizontal', homeEnd = true, wrap = true, itemSelector }: UseRovingDOMOptions = {},
 ) {
   const ownRef = useRef<T>(null)
   const effectiveRef = externalRef ?? ownRef
+  const selector = itemSelector ?? TABBABLE
 
   useEffect(() => {
     const root = effectiveRef.current
     if (!root) return
-    const snap = () => Array.from(root.querySelectorAll<HTMLElement>(TABBABLE))
+    const snap = () => Array.from(root.querySelectorAll<HTMLElement>(selector))
     const items = snap()
     if (items.length > 0 && !items.some((el) => el.tabIndex === 0)) items[0].tabIndex = 0
     items.forEach((el) => { if (el.tabIndex !== 0) el.tabIndex = -1 })
@@ -42,7 +48,7 @@ export function useRovingDOM<T extends HTMLElement = HTMLDivElement>(
   const onKeyDown = (e: KeyboardEvent<T>) => {
     const root = effectiveRef.current
     if (!root) return
-    const items = Array.from(root.querySelectorAll<HTMLElement>(TABBABLE))
+    const items = Array.from(root.querySelectorAll<HTMLElement>(selector))
     if (items.length === 0) return
     const idx = items.indexOf(document.activeElement as HTMLElement)
     const prevKeys = orientation === 'horizontal' ? ['ArrowLeft'] : orientation === 'vertical' ? ['ArrowUp'] : ['ArrowLeft', 'ArrowUp']

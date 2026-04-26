@@ -1,4 +1,4 @@
-import { control, css, dim, fg, font, pad, radius } from '../../../fn'
+import { control, css, dim, fg, font, pad, radius } from '../../../foundations'
 /**
  * Toolbar — 필터·액션을 담는 수평 컨테이너.
  *

@@ -1,4 +1,4 @@
-import { accent, border, css, fg, mix, pad, radius } from '../../../fn'
+import { accent, border, css, dim, fg, font, leading, mix, pad, radius, text, toneTint, weight } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -35,8 +35,8 @@ export const proseCss = () => css`
 
   /* ── headings (modular scale 1.250) ───────────────────── */
   [data-flow="prose"] :is(h1, h2, h3, h4, h5, h6) {
-    line-height: 1.25;
-    font-weight: 700;
+    line-height: ${leading('tight')};
+    font-weight: ${weight('bold')};
     letter-spacing: -0.01em;
     margin: 0;
     color: ${fg()};
@@ -150,6 +150,271 @@ export const proseCss = () => css`
     text-decoration-thickness: from-font;
   }
   [data-flow="prose"] a:hover { text-decoration-thickness: 2px; }
+
+  /* ── inline emphasis ──────────────────────────────────── */
+  [data-flow="prose"] strong { font-weight: ${weight('semibold')}; }
+  [data-flow="prose"] em { font-style: italic; }
+  [data-flow="prose"] mark {
+    background: ${toneTint('warning', 30)};
+    color: ${text('strong')};
+    padding: 0 ${pad(0.25)};
+    border-radius: ${radius('sm')};
+  }
+  [data-flow="prose"] small { font-size: ${font('sm')}; color: ${dim(60)}; }
+  [data-flow="prose"] :is(sub, sup) {
+    font-size: ${font('xs')};
+    line-height: 0;
+    position: relative;
+  }
+  [data-flow="prose"] sup { vertical-align: super; }
+  [data-flow="prose"] sub { vertical-align: sub; }
+
+  /* ── kbd ──────────────────────────────────────────────── */
+  [data-flow="prose"] kbd {
+    font-family: var(--ds-font-mono);
+    font-size: ${font('sm')};
+    padding: ${pad(0.25)} ${pad(0.5)};
+    background: ${toneTint('accent', 12)};
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
+  }
+
+  /* ── description list ─────────────────────────────────── */
+  [data-flow="prose"] dl {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(1)};
+  }
+  [data-flow="prose"] dl > dt { font-weight: ${weight('semibold')}; }
+  [data-flow="prose"] dl > dd {
+    padding-inline-start: ${pad(2)};
+    margin: 0;
+  }
+
+  /* ── figure / figcaption ──────────────────────────────── */
+  [data-flow="prose"] figure { margin: ${pad(2)} 0; }
+  [data-flow="prose"] figcaption {
+    font-size: ${font('sm')};
+    color: ${dim(55)};
+    margin-top: ${pad(0.5)};
+  }
+
+  /* ── address ──────────────────────────────────────────── */
+  [data-flow="prose"] address {
+    font-style: italic;
+    color: ${dim(60)};
+    font-size: ${font('sm')};
+  }
+
+  /* ── cite / dfn ───────────────────────────────────────── */
+  [data-flow="prose"] :is(cite, dfn) { font-style: italic; }
+
+  /* ── q (quote marks via CSS) ──────────────────────────── */
+  [data-flow="prose"] q { quotes: '“' '”' '‘' '’'; }
+  [data-flow="prose"] q::before { content: open-quote; }
+  [data-flow="prose"] q::after  { content: close-quote; }
+
+  /* ── abbr[title] dotted underline ─────────────────────── */
+  [data-flow="prose"] abbr[title] {
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+    cursor: help;
+  }
+
+  /* ── samp / var ───────────────────────────────────────── */
+  [data-flow="prose"] :is(samp, var) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .9em;
+  }
+  [data-flow="prose"] var { font-style: italic; }
+  [data-flow="prose"] samp {
+    background: ${mix('Canvas', 94, 'CanvasText')};
+    padding: 0 ${pad(0.25)};
+    border-radius: ${radius('sm')};
+  }
+
+  /* ── time ─────────────────────────────────────────────── */
+  [data-flow="prose"] time { font-variant-numeric: tabular-nums; }
+
+  /* ── del / ins / s / u ────────────────────────────────── */
+  [data-flow="prose"] del { text-decoration: line-through; color: ${dim(55)}; }
+  [data-flow="prose"] s   { text-decoration: line-through; color: ${dim(60)}; }
+  [data-flow="prose"] ins {
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    background: ${toneTint('success', 14)};
+  }
+  [data-flow="prose"] u   { text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ── bdi / bdo / wbr / br — semantic only, no visual ──── */
+  [data-flow="prose"] :is(bdi, bdo) { unicode-bidi: isolate; }
+
+  /* ── hgroup ───────────────────────────────────────────── */
+  [data-flow="prose"] hgroup {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(0.25)};
+  }
+  [data-flow="prose"] hgroup > :is(h1, h2, h3, h4, h5, h6) { margin: 0; }
+  [data-flow="prose"] hgroup > p { margin: 0; }
+
+  /* ── nav / aside in prose ─────────────────────────────── */
+  [data-flow="prose"] aside {
+    border-inline-start: 3px solid ${border()};
+    padding: ${pad(0.5)} ${pad(1)};
+    color: ${dim(70)};
+    background: ${mix('Canvas', 97, 'CanvasText')};
+    border-radius: 0 ${radius('sm')} ${radius('sm')} 0;
+  }
+
+  /* ── menu (toolbar) ───────────────────────────────────── */
+  [data-flow="prose"] menu {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${pad(0.5)};
+  }
+  [data-flow="prose"] menu > li { margin: 0; }
+
+  /* ── table extras: caption / scope / colgroup ─────────── */
+  [data-flow="prose"] caption {
+    caption-side: top;
+    text-align: start;
+    font-size: ${font('sm')};
+    color: ${dim(60)};
+    padding-block-end: ${pad(0.5)};
+  }
+  [data-flow="prose"] tfoot td {
+    background: ${mix('Canvas', 97, 'CanvasText')};
+    color: ${dim(70)};
+  }
+  [data-flow="prose"] th[scope="row"] {
+    background: ${mix('Canvas', 97, 'CanvasText')};
+    text-align: start;
+  }
+
+  /* ── figure > svg / picture > img ─────────────────────── */
+  [data-flow="prose"] figure > svg {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+    color: ${fg()};
+  }
+  [data-flow="prose"] picture { display: inline-block; }
+  [data-flow="prose"] picture > img {
+    max-inline-size: 100%;
+    block-size: auto;
+    border-radius: ${radius('sm')};
+  }
+
+  /* ── audio / video / iframe / canvas ──────────────────── */
+  [data-flow="prose"] :is(audio, video, iframe, canvas) {
+    max-inline-size: 100%;
+    border-radius: ${radius('sm')};
+  }
+  [data-flow="prose"] :is(video, canvas) { display: block; block-size: auto; }
+  [data-flow="prose"] iframe { border: 1px solid ${border()}; display: block; }
+
+  /* ── details / summary ────────────────────────────────── */
+  [data-flow="prose"] details {
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
+    padding: ${pad(0.5)} ${pad(1)};
+    background: ${mix('Canvas', 97, 'CanvasText')};
+  }
+  [data-flow="prose"] details[open] { background: ${mix('Canvas', 95, 'CanvasText')}; }
+  [data-flow="prose"] details > summary {
+    cursor: pointer;
+    font-weight: ${weight('semibold')};
+    list-style-position: inside;
+  }
+  [data-flow="prose"] details[open] > summary { margin-block-end: ${pad(0.5)}; }
+
+  /* ── output / progress / meter ────────────────────────── */
+  [data-flow="prose"] output {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .9em;
+    padding: 0 ${pad(0.25)};
+    background: ${toneTint('accent', 12)};
+    border-radius: ${radius('sm')};
+  }
+  [data-flow="prose"] :is(progress, meter) {
+    inline-size: 12em;
+    block-size: 0.9em;
+    vertical-align: middle;
+  }
+
+  /* ── form / fieldset / legend / label ─────────────────── */
+  [data-flow="prose"] form {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(1)};
+  }
+  [data-flow="prose"] fieldset {
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
+    padding: ${pad(1)} ${pad(1.5)};
+    margin: 0;
+  }
+  [data-flow="prose"] legend {
+    padding: 0 ${pad(0.5)};
+    font-weight: ${weight('semibold')};
+    font-size: ${font('sm')};
+    color: ${dim(70)};
+  }
+  [data-flow="prose"] label {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(0.5)};
+    cursor: pointer;
+  }
+
+  /* ── input / select / textarea — minimal native + token border ── */
+  [data-flow="prose"] :is(input, select, textarea) {
+    font: inherit;
+    color: ${fg()};
+    background: ${mix('Canvas', 99, 'CanvasText')};
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
+    padding: ${pad(0.35)} ${pad(0.6)};
+    min-block-size: 1.8em;
+  }
+  [data-flow="prose"] textarea { min-block-size: 4em; resize: vertical; }
+  [data-flow="prose"] :is(input, select, textarea):focus-visible {
+    outline: 2px solid ${accent()};
+    outline-offset: 1px;
+  }
+  [data-flow="prose"] :is(input[type="checkbox"], input[type="radio"]) {
+    inline-size: 1em;
+    block-size: 1em;
+    min-block-size: 0;
+    padding: 0;
+    accent-color: ${accent()};
+  }
+  [data-flow="prose"] :is(input[type="range"], input[type="color"]) {
+    padding: 0;
+    accent-color: ${accent()};
+  }
+
+  /* ── button (within prose) ────────────────────────────── */
+  [data-flow="prose"] button {
+    font: inherit;
+    color: ${fg()};
+    background: ${mix('Canvas', 95, 'CanvasText')};
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
+    padding: ${pad(0.35)} ${pad(0.85)};
+    cursor: pointer;
+  }
+  [data-flow="prose"] button:hover { background: ${mix('Canvas', 92, 'CanvasText')}; }
+  [data-flow="prose"] button:focus-visible {
+    outline: 2px solid ${accent()};
+    outline-offset: 1px;
+  }
+
+  /* ── colgroup / col — width hints handled natively ────── */
+  [data-flow="prose"] colgroup, [data-flow="prose"] col { /* native sizing */ }
 
   /* ── mobile (≤600px) — body 17px로 약간 키우고 패딩 축소 ── */
   @media (max-width: ${SHELL_MOBILE_MAX}) {

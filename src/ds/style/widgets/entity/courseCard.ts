@@ -1,25 +1,22 @@
-import { accent, css, dim, font, mix, on, pad, radius, status } from '../../../fn'
-export const courseCard = () => css`
-  .course-card {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: ${pad(3)};
-    padding: ${pad(3)};
-    background: Canvas;
-    border: 1px solid ${dim(8)};
-    border-radius: ${radius('lg')};
-    transition: box-shadow .15s ease, border-color .15s ease;
-  }
-  .course-card:hover {
-    border-color: ${dim(15)};
-    box-shadow: 0 1px 3px ${dim(6)};
-  }
-  .course-card + .course-card { margin-block-start: ${pad(2)}; }
+import { accent, css, dim, font, mix, on, pad, radius, status } from '../../../foundations'
 
-  .course-card > figure {
-    margin: 0;
+/**
+ * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.
+ * 카드 root layout(flex stack/border)은 parts/card.ts owner.
+ */
+export const courseCard = () => css`
+  /* preview 슬롯 — abbr 그라데이션 배지 (작은 정사각). 일반 preview override. */
+  article[data-part="card"][data-card="course"] > [data-slot="preview"] {
+    min-block-size: 0;
     inline-size: 56px; block-size: 56px;
+    padding: 0;
+    border: 0;
+    border-radius: ${radius('md')};
+    align-self: start;
+  }
+  article[data-part="card"][data-card="course"] > [data-slot="preview"] > figure {
+    margin: 0;
+    inline-size: 100%; block-size: 100%;
     border-radius: ${radius('md')};
     display: grid; place-items: center;
     font-size: ${font('sm')};
@@ -28,48 +25,48 @@ export const courseCard = () => css`
     color: ${on('accent')};
     background: linear-gradient(135deg, ${accent()}, ${mix('${accent()}', 70, 'CanvasText')});
   }
-  .course-card[data-tone="success"] > figure {
+  article[data-part="card"][data-card="course"][data-tone="success"] > [data-slot="preview"] > figure {
     color: ${on('success')};
     background: linear-gradient(135deg, ${status('success')}, ${mix(status('success'), 70, 'CanvasText')});
   }
-  .course-card[data-tone="warning"] > figure {
+  article[data-part="card"][data-card="course"][data-tone="warning"] > [data-slot="preview"] > figure {
     color: ${on('warning')};
     background: linear-gradient(135deg, ${status('warning')}, ${mix(status('warning'), 70, 'CanvasText')});
   }
-  .course-card[data-tone="danger"] > figure {
+  article[data-part="card"][data-card="course"][data-tone="danger"] > [data-slot="preview"] > figure {
     color: ${on('danger')};
     background: linear-gradient(135deg, ${status('danger')}, ${mix(status('danger'), 70, 'CanvasText')});
   }
-  .course-card[data-tone="neutral"] > figure {
+  article[data-part="card"][data-card="course"][data-tone="neutral"] > [data-slot="preview"] > figure {
     background: linear-gradient(135deg, ${dim(55)}, ${dim(80)});
   }
 
-  .course-card > div:nth-of-type(1) {
-    min-inline-size: 0;
-    display: flex; flex-direction: column; gap: ${pad(0.5)};
+  /* title 슬롯 — h3 + meta 가로 묶음 */
+  article[data-part="card"][data-card="course"] > [data-slot="title"] > header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: ${pad(2)};
   }
-  .course-card > div:nth-of-type(1) > h3 {
+  article[data-part="card"][data-card="course"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
     margin: 0;
     font-size: ${font('md')};
     font-weight: 700;
     letter-spacing: -0.01em;
   }
-  .course-card > div:nth-of-type(1) > p {
+
+  /* body 슬롯 — desc */
+  article[data-part="card"][data-card="course"] > [data-slot="body"] > p {
     margin: 0;
     font-size: ${font('sm')};
     color: ${dim(60)};
     line-height: 1.5;
   }
 
-  .course-card > div:nth-of-type(2) {
-    display: flex; flex-direction: column; align-items: flex-end;
-    gap: ${pad(1.5)};
-    flex-shrink: 0;
+  /* footer 슬롯 — 최종 수정일 + actions */
+  article[data-part="card"][data-card="course"] > [data-slot="footer"] > footer {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: ${pad(2)};
   }
-  .course-card > div:nth-of-type(2) > div {
-    display: flex; align-items: center; gap: ${pad(1)};
-  }
-  .course-card > div:nth-of-type(2) > small {
+  article[data-part="card"][data-card="course"] > [data-slot="footer"] > footer > small {
     font-size: ${font('xs')};
     color: ${dim(55)};
   }

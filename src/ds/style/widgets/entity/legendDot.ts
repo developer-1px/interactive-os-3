@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad, radius, status } from '../../../fn'
+import { accent, css, dim, font, pad, radius, status } from '../../../foundations'
 export const legendDot = () => css`
   .legend-dot {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};

@@ -1,4 +1,4 @@
-import { accent, control, css, dur, ease, fg, onAccent, pad, radius, square, status, tint } from '../../../fn'
+import { accent, control, css, dur, ease, fg, onAccent, pad, radius, square, status, tint } from '../../../foundations'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
 //  - Button: 체크기(29.5px control-h), radius md, gray-2 서피스, 1px hairline 경계, cursor pointer

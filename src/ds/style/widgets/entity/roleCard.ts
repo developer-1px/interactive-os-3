@@ -1,63 +1,58 @@
-import { css, dim, font, pad, radius } from '../../../fn'
-export const roleCard = () => css`
-  .role-card {
-    display: grid;
-    grid-template-columns: auto auto 1fr auto;
-    align-items: center;
-    gap: ${pad(3)};
-    padding: ${pad(2)} ${pad(3)};
-    background: Canvas;
-    border: 1px solid ${dim(8)};
-    border-radius: ${radius('md')};
-    transition: box-shadow .15s ease, border-color .15s ease;
-  }
-  .role-card:hover {
-    border-color: ${dim(15)};
-    box-shadow: 0 1px 3px ${dim(6)};
-  }
-  .role-card + .role-card { margin-block-start: ${pad(1.5)}; }
+import { css, dim, font, pad } from '../../../foundations'
 
-  button[aria-label*="드래그"] {
+/**
+ * RoleCard slot inner styling — drag handle + icon + 본문/액션.
+ * 카드 root layout(flex stack/border)은 parts/card.ts owner.
+ */
+export const roleCard = () => css`
+  /* preview 슬롯 — drag handle + icon 가로 묶음 (작은 줄). 일반 preview override. */
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] {
+    min-block-size: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    align-self: start;
+  }
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure {
+    margin: 0;
+    display: flex; align-items: center; gap: ${pad(2)};
+  }
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"] {
     padding: ${pad(0.5)};
     background: transparent; border: 0;
     color: ${dim(45)};
     font-size: ${font('lg')};
     line-height: 1;
     cursor: grab;
-    min-block-size: 0; min-inline-size: 0;
   }
-  button[aria-label*="드래그"]:hover { color: ${dim(75)}; }
-  button[aria-label*="드래그"]:active { cursor: grabbing; }
-
-  .role-card > span[aria-hidden="true"] {
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:hover { color: ${dim(75)}; }
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:active { cursor: grabbing; }
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > span {
     font-size: ${font('xl')};
     line-height: 1;
     inline-size: 28px;
     text-align: center;
   }
 
-  .role-card > div:nth-of-type(1) {
-    min-inline-size: 0;
-    display: flex; flex-direction: column; gap: ${pad(0.25)};
+  /* title 슬롯 — h3 + 우측 meta+actions */
+  article[data-part="card"][data-card="role"] > [data-slot="title"] > header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: ${pad(2)};
   }
-  .role-card > div:nth-of-type(1) > h3 {
+  article[data-part="card"][data-card="role"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
     margin: 0;
     font-size: ${font('md')};
     font-weight: 700;
   }
-  .role-card > div:nth-of-type(1) > p {
+  article[data-part="card"][data-card="role"] > [data-slot="title"] > header > div {
+    display: flex; align-items: center; gap: ${pad(1)};
+  }
+
+  /* body 슬롯 — desc */
+  article[data-part="card"][data-card="role"] > [data-slot="body"] > p {
     margin: 0;
     font-size: ${font('sm')};
     color: ${dim(60)};
     line-height: 1.5;
-  }
-
-  .role-card > div:nth-of-type(2) {
-    display: flex; align-items: center;
-    gap: ${pad(2)};
-    flex-shrink: 0;
-  }
-  .role-card > div:nth-of-type(2) > div {
-    display: flex; align-items: center; gap: ${pad(1)};
   }
 `

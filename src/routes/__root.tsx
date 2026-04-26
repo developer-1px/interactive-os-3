@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import { CommandPalette } from '../ds/ui/composite/palette/CommandPalette'
-import { FloatingNav } from '../ds/ui/overlay/FloatingNav'
+import { CommandPalette } from '../ds/ui/6-overlay/palette/CommandPalette'
+import { FloatingNav } from '../ds/ui/6-overlay/FloatingNav'
 
 export const Route = createRootRoute({
   component: () => (

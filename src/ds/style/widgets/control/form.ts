@@ -1,4 +1,4 @@
-import { accent, control, css, dim, dur, ease, fg, font, onAccent, pad, radius, status, tint, tracking } from '../../../fn'
+import { accent, control, css, dim, dur, ease, fg, font, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *

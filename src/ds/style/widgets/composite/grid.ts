@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dim, dur, ease, emphasize, fg, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../fn'
+import { accent, bg, control, css, dim, dur, ease, emphasize, fg, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *

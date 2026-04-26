@@ -1,109 +1,137 @@
+/**
+ * catalog build — sidebar | workspace 셸. 콘텐츠는 의존성 tier 순으로 일자 배치.
+ *
+ *   holyGrail( navSlot:'nav' | contentSlot:'content' )
+ *     ⊕ ( focus 모드 ? catalogFocusCard : catalogTierSection × n )
+ *     ⊕ sidebarAdmin( tier-grouped tree )
+ *
+ * 셸은 ds/layouts/holyGrail 로 수렴 — 자체 entities/relationships 손짜기 ❌.
+ */
 import type { ReactNode } from 'react'
-import { ROOT, type Event, type NormalizedData } from '../../ds'
-import type { Contract, Kind } from 'virtual:ds-contracts'
+import {
+  merge,
+  type Event, type NormalizedData,
+} from '../../ds'
+import { holyGrail } from '../../ds/layouts'
+import { sidebarAdmin } from '../../ds/widgets/sidebar'
+import type { Contract } from 'virtual:ds-contracts'
+import { tierLabel, tierBlurb, type Tier } from './tiers'
 
 export interface CatalogState {
-  filter: Kind | 'all'
-  selectedName: string | null
-  visibleZones: Kind[]
-  grouped: Record<Kind, Contract[]>
-  totals: { total: number; canonical: number; drift: number; passAll: number }
-  kindLabel: Record<Kind, string>
-  kindBlurb: Record<Kind, string>
+  focus: Contract | null
+  visibleTiers: Tier[]
+  grouped: Record<Tier, Contract[]>
   headerLabel: string
-  headerBlurb: string
   nav: { data: NormalizedData; onEvent: (e: Event) => void }
   renderDemo: (name: string) => ReactNode
 }
 
-export function buildCatalogPage(s: CatalogState): NormalizedData {
+const NARROW = '72rem'
+
+/** route-internal content fragment factory — defineLayout/Widget 어디에도 속하지 않는다.
+ *  Section + Header + Texts + Grid + Ui card cluster. Ui leaf 를 포함하므로 defineLayout
+ *  으로 감싸지 않는다 (validation 위반). landmark owner 도 아니라 defineWidget 도 아님. */
+const catalogTierSection = (props: {
+  tier: Tier
+  list: Contract[]
+  renderDemo: (name: string) => ReactNode
+}): NormalizedData => {
+  const { tier, list, renderDemo } = props
+  const sid = `t-${tier}`
+  const hid = `th-${tier}`
+  const gid = `tg-${tier}`
   const entities: NormalizedData['entities'] = {
-    [ROOT]: { id: ROOT, data: {} },
-    page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'catalog-page', label: 'Catalog' } },
-
-    nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: 'Catalog navigation' } },
-    navTitle: { id: 'navTitle', data: { type: 'Text', variant: 'small', content: 'ds Catalog' } },
-    navList: { id: 'navList', data: { type: 'Ui', component: 'Listbox', props: { data: s.nav.data, onEvent: s.nav.onEvent, 'aria-label': 'zone 분류' } } },
-
-    workspace: { id: 'workspace', data: { type: 'Main', flow: 'list', grow: true, label: s.headerLabel } },
-    topbar: { id: 'topbar', data: { type: 'Header', flow: 'cluster' } },
-    topTitleCol: { id: 'topTitleCol', data: { type: 'Column', flow: 'list', grow: true } },
-    topTitle: { id: 'topTitle', data: { type: 'Text', variant: 'h1', content: s.headerLabel } },
-    topBlurb: { id: 'topBlurb', data: { type: 'Text', variant: 'muted', content: s.headerBlurb } },
-    topStats: { id: 'topStats', data: { type: 'Row', flow: 'cluster' } },
-    statTotal:    { id: 'statTotal',    data: { type: 'Text', variant: 'small', content: `총 ${s.totals.total}` } },
-    statCanonical:{ id: 'statCanonical',data: { type: 'Text', variant: 'small', content: `canonical ${s.totals.canonical}` } },
-    statDrift:    { id: 'statDrift',    data: { type: 'Text', variant: 'small', content: `drift ${s.totals.drift}` } },
-    statPass:     { id: 'statPass',     data: { type: 'Text', variant: 'small', content: `통과 ${s.totals.passAll}` } },
-    statRate:     {
-      id: 'statRate',
-      data: {
-        type: 'Text',
-        variant: 'small',
-        content: s.totals.total ? `수렴률 ${Math.round((s.totals.canonical / s.totals.total) * 100)}%` : '수렴률 —',
-      },
+    [sid]: { id: sid, data: { type: 'Section', flow: 'list', label: tierLabel[tier] } },
+    [hid]: { id: hid, data: { type: 'Header', flow: 'cluster' } },
+    [`tt-${tier}`]: { id: `tt-${tier}`, data: { type: 'Text', variant: 'h2', content: `${tier}. ${tierLabel[tier]}` } },
+    [`tc-${tier}`]: { id: `tc-${tier}`, data: { type: 'Text', variant: 'small', content: String(list.length) } },
+    [`tb-${tier}`]: { id: `tb-${tier}`, data: { type: 'Text', variant: 'muted', content: tierBlurb[tier] } },
+    [gid]: { id: gid, data: { type: 'Grid', cols: 3, cardGrid: true } },
+  }
+  const cardIds: string[] = []
+  for (const c of list) {
+    const cid = `card-${c.name}`
+    entities[cid] = cardEntity(c, renderDemo, false)
+    cardIds.push(cid)
+  }
+  return {
+    entities,
+    relationships: {
+      [sid]: [hid, `tb-${tier}`, gid],
+      [hid]: [`tt-${tier}`, `tc-${tier}`],
+      [gid]: cardIds,
     },
+  }
+}
 
-    content: { id: 'content', data: { type: 'Section', flow: 'list', grow: true } },
+/** focus 모드 단일 Ui leaf fragment. */
+const catalogFocusCard = (props: {
+  contract: Contract
+  renderDemo: (name: string) => ReactNode
+}): NormalizedData => ({
+  entities: { [`card-${props.contract.name}`]: cardEntity(props.contract, props.renderDemo, true) },
+  relationships: {},
+})
+
+const cardEntity = (
+  c: Contract,
+  renderDemo: (name: string) => ReactNode,
+  selected: boolean,
+): NormalizedData['entities'][string] => ({
+  id: `card-${c.name}`,
+  data: {
+    type: 'Ui',
+    component: 'ContractCard',
+    props: {
+      name: c.name,
+      file: c.file,
+      role: c.role,
+      propsSignature: c.propsSignature,
+      checks: c.checks,
+      callSites: c.callSites,
+      drift: c.kind === 'drift',
+      selected,
+      'data-name': c.name,
+      demo: renderDemo(c.name),
+    },
+  },
+})
+
+export function buildCatalogPage(s: CatalogState): NormalizedData {
+  const sidebar = sidebarAdmin({
+    id: 'nav',
+    label: 'ds 컴포넌트',
+    tree: s.nav.data,
+    onEvent: s.nav.onEvent,
+  })
+  const shell = holyGrail({
+    label: s.headerLabel,
+    navSlot: 'nav',
+    contentSlot: 'content',
+    narrow: NARROW,
+    roledescription: 'catalog-page',
+  })
+
+  if (s.focus) {
+    const focus = catalogFocusCard({ contract: s.focus, renderDemo: s.renderDemo })
+    return merge(
+      shell,
+      focus,
+      { entities: {}, relationships: { content: [`card-${s.focus.name}`] } },
+      sidebar,
+    )
   }
 
-  const relationships: NormalizedData['relationships'] = {
-    [ROOT]: ['page'],
-    page: ['nav', 'workspace'],
-    nav: ['navTitle', 'navList'],
-    workspace: ['topbar', 'content'],
-    topbar: ['topTitleCol', 'topStats'],
-    topTitleCol: ['topTitle', 'topBlurb'],
-    topStats: ['statTotal', 'statCanonical', 'statDrift', 'statPass', 'statRate'],
-    content: [],
-  }
+  const tiers = s.visibleTiers.filter((t) => s.grouped[t].length > 0)
+  const fragments = tiers.map((t) =>
+    catalogTierSection({ tier: t, list: s.grouped[t], renderDemo: s.renderDemo }),
+  )
+  const contentChildren = tiers.map((t) => `t-${t}`)
 
-  const zoneIds: string[] = []
-  for (const k of s.visibleZones) {
-    const list = s.grouped[k]
-    if (list.length === 0) continue
-    const zid = `z-${k}`
-    const hdr = `zh-${k}`
-    const ttl = `zt-${k}`
-    const cnt = `zc-${k}`
-    const blb = `zb-${k}`
-    const grid = `zg-${k}`
-    entities[zid] = { id: zid, data: { type: 'Section', flow: 'list', label: s.kindLabel[k] } }
-    entities[hdr] = { id: hdr, data: { type: 'Header', flow: 'cluster' } }
-    entities[ttl] = { id: ttl, data: { type: 'Text', variant: 'h2', content: s.kindLabel[k] } }
-    entities[cnt] = { id: cnt, data: { type: 'Text', variant: 'small', content: String(list.length) } }
-    entities[blb] = { id: blb, data: { type: 'Text', variant: 'muted', content: s.kindBlurb[k] } }
-    entities[grid] = { id: grid, data: { type: 'Grid', cols: 3 } }
-    relationships[zid] = [hdr, blb, grid]
-    relationships[hdr] = [ttl, cnt]
-    const cardIds: string[] = []
-    for (const c of list) {
-      const cid = `card-${c.name}`
-      entities[cid] = {
-        id: cid,
-        data: {
-          type: 'Ui',
-          component: 'ContractCard',
-          props: {
-            name: c.name,
-            file: c.file,
-            role: c.role,
-            propsSignature: c.propsSignature,
-            checks: c.checks,
-            callSites: c.callSites,
-            drift: c.kind === 'drift',
-            selected: c.name === s.selectedName,
-            'data-name': c.name,
-            demo: s.renderDemo(c.name),
-          },
-        },
-      }
-      cardIds.push(cid)
-    }
-    relationships[grid] = cardIds
-    zoneIds.push(zid)
-  }
-  relationships.content = zoneIds
-
-  return { entities, relationships }
+  return merge(
+    shell,
+    ...fragments,
+    { entities: {}, relationships: { content: contentChildren } },
+    sidebar,
+  )
 }

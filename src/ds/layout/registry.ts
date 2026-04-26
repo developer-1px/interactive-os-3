@@ -1,113 +1,140 @@
 /**
  * Ui leaf registry — maps `node.data.component` string to a ds/ui component
- * and tags it with its zone (folder = source of truth).
+ * and tags it with its tier (folder = source of truth).
  *
- * Zones (see src/ds/core/INVARIANTS.md):
- *   collection · composite · control · overlay · entity · layout
+ * Tiers (see src/ds/core/INVARIANTS.md):
+ *   1-indicator · 2-action · 3-input · 4-collection · 5-composite ·
+ *   6-overlay · 7-pattern · 8-layout
  */
 import type { ComponentType, ReactNode } from 'react'
-import { Button } from '../ui/control/Button'
-import { Input } from '../ui/control/Input'
-import { Textarea } from '../ui/control/Textarea'
-import { Select } from '../ui/control/Select'
-import { Switch } from '../ui/control/Switch'
-import { Checkbox } from '../ui/control/Checkbox'
-import { Progress, Meter } from '../ui/control/Progress'
-import { Field, FieldLabel, FieldDescription, FieldError } from '../ui/control/Field'
-import { ToolbarButton } from '../ui/control/ToolbarButton'
-import { Toolbar } from '../ui/collection/Toolbar'
-import { TabList, Tab, TabPanel } from '../ui/collection/Tabs'
-import { OrderableList } from '../ui/composite/OrderableList'
-import { DataGrid } from '../ui/composite/DataGrid'
-import { DataGridRow } from '../ui/composite/DataGridRow'
-import { RowGroup } from '../ui/composite/RowGroup'
-import { ColumnHeader } from '../ui/composite/ColumnHeader'
-import { RowHeader } from '../ui/composite/RowHeader'
-import { GridCell } from '../ui/composite/GridCell'
-import { Listbox } from '../ui/collection/Listbox'
-import { Disclosure } from '../ui/overlay/Disclosure'
-import { Dialog } from '../ui/overlay/Dialog'
-import { Sheet } from '../ui/overlay/Sheet'
-import { Popover } from '../ui/overlay/Popover'
-import { Badge } from '../ui/entity/Badge'
-import { StatCard } from '../ui/entity/StatCard'
-import { CourseCard } from '../ui/entity/CourseCard'
-import { RoleCard } from '../ui/entity/RoleCard'
-import { MessageBubble } from '../ui/entity/MessageBubble'
-import { PostCard } from '../ui/entity/PostCard'
-import { FeedPost } from '../ui/entity/FeedPost'
-import { ProductCard } from '../ui/entity/ProductCard'
-import { ContractCard } from '../ui/entity/ContractCard'
-import { FnCard } from '../ui/entity/FnCard'
-import { LeakTable } from '../ui/entity/LeakTable'
-import { LegendDot } from '../ui/layout/LegendDot'
-import { Separator } from '../ui/layout/Separator'
-import { BarChart } from '../ui/layout/BarChart'
-import { Top10List } from '../ui/layout/Top10List'
+import { Button } from '../ui/2-action/Button'
+import { Switch } from '../ui/2-action/Switch'
+import { Progress, Meter } from '../ui/2-action/Progress'
+import { ToolbarButton } from '../ui/2-action/ToolbarButton'
+import { Input } from '../ui/3-input/Input'
+import { SearchBox } from '../ui/3-input/SearchBox'
+import { Slider } from '../ui/3-input/Slider'
+import { Textarea } from '../ui/3-input/Textarea'
+import { Select } from '../ui/3-input/Select'
+import { Checkbox } from '../ui/3-input/Checkbox'
+import { Field, FieldLabel, FieldDescription, FieldError } from '../ui/3-input/Field'
+import { Listbox } from '../ui/4-collection/Listbox'
+import { Tree } from '../ui/4-collection/Tree'
+import { Toolbar } from '../ui/4-collection/Toolbar'
+import { TabList, Tab, TabPanel } from '../ui/4-collection/Tabs'
+import { OrderableList } from '../ui/5-composite/OrderableList'
+import { DataGrid } from '../ui/5-composite/DataGrid'
+import { DataGridRow } from '../ui/5-composite/DataGridRow'
+import { RowGroup } from '../ui/5-composite/RowGroup'
+import { ColumnHeader } from '../ui/5-composite/ColumnHeader'
+import { RowHeader } from '../ui/5-composite/RowHeader'
+import { GridCell } from '../ui/5-composite/GridCell'
+import { Disclosure } from '../ui/6-overlay/Disclosure'
+import { Dialog } from '../ui/6-overlay/Dialog'
+import { Sheet } from '../ui/6-overlay/Sheet'
+import { Popover } from '../ui/6-overlay/Popover'
+import { Badge } from '../ui/1-indicator/Badge'
+import { LegendDot } from '../ui/1-indicator/LegendDot'
+import { Separator } from '../ui/1-indicator/Separator'
+import { Tag } from '../parts/Tag'
+import { StatCard } from '../ui/7-pattern/StatCard'
+import { CourseCard } from '../ui/7-pattern/CourseCard'
+import { RoleCard } from '../ui/7-pattern/RoleCard'
+import { MessageBubble } from '../ui/7-pattern/MessageBubble'
+import { PostCard } from '../ui/7-pattern/PostCard'
+import { FeedPost } from '../ui/7-pattern/FeedPost'
+import { ProductCard } from '../ui/7-pattern/ProductCard'
+import { ContractCard } from '../ui/7-pattern/ContractCard'
+import { Card } from '../parts/Card'
+import { Table } from '../parts/Table'
+import { BarChart } from '../ui/7-pattern/BarChart'
+import { Top10List } from '../ui/7-pattern/Top10List'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>
-export type Zone = 'collection' | 'composite' | 'control' | 'overlay' | 'entity' | 'layout'
+export type Zone =
+  | 'indicator' | 'action' | 'input' | 'collection'
+  | 'composite' | 'overlay' | 'pattern' | 'layout'
 
 export interface UiEntry { component: AnyCmp; zone: Zone }
 
 export const uiRegistry = {
-  // control
-  Button:           { component: Button,           zone: 'control' },
-  Input:            { component: Input,            zone: 'control' },
-  Textarea:         { component: Textarea,         zone: 'control' },
-  Select:           { component: Select,           zone: 'control' },
-  Switch:           { component: Switch,           zone: 'control' },
-  Checkbox:         { component: Checkbox,         zone: 'control' },
-  Progress:         { component: Progress,         zone: 'control' },
-  Meter:            { component: Meter,            zone: 'control' },
-  Field:            { component: Field,            zone: 'control' },
-  FieldLabel:       { component: FieldLabel,       zone: 'control' },
-  FieldDescription: { component: FieldDescription, zone: 'control' },
-  FieldError:       { component: FieldError,       zone: 'control' },
-  ToolbarButton:    { component: ToolbarButton,    zone: 'control' },
-  // composite
-  Toolbar:      { component: Toolbar,      zone: 'composite' },
-  TabList:      { component: TabList,      zone: 'composite' },
-  Tab:          { component: Tab,          zone: 'composite' },
-  TabPanel:     { component: TabPanel,     zone: 'composite' },
-  OrderableList:{ component: OrderableList,zone: 'composite' },
-  DataGrid:     { component: DataGrid,     zone: 'composite' },
-  DataGridRow:  { component: DataGridRow,  zone: 'composite' },
-  RowGroup:     { component: RowGroup,     zone: 'composite' },
-  ColumnHeader: { component: ColumnHeader, zone: 'composite' },
-  RowHeader:    { component: RowHeader,    zone: 'composite' },
-  GridCell:     { component: GridCell,     zone: 'composite' },
+  // indicator
+  Badge:     { component: Badge,     zone: 'indicator' },
+  LegendDot: { component: LegendDot, zone: 'indicator' },
+  Separator: { component: Separator, zone: 'indicator' },
+  Tag:       { component: Tag,       zone: 'indicator' },
+  // action
+  Button:        { component: Button,        zone: 'action' },
+  Switch:        { component: Switch,        zone: 'action' },
+  Progress:      { component: Progress,      zone: 'action' },
+  Meter:         { component: Meter,         zone: 'action' },
+  ToolbarButton: { component: ToolbarButton, zone: 'action' },
+  // input
+  Input:            { component: Input,            zone: 'input' },
+  SearchBox:        { component: SearchBox,        zone: 'input' },
+  Slider:           { component: Slider,           zone: 'input' },
+  Textarea:         { component: Textarea,         zone: 'input' },
+  Select:           { component: Select,           zone: 'input' },
+  Checkbox:         { component: Checkbox,         zone: 'input' },
+  Field:            { component: Field,            zone: 'input' },
+  FieldLabel:       { component: FieldLabel,       zone: 'input' },
+  FieldDescription: { component: FieldDescription, zone: 'input' },
+  FieldError:       { component: FieldError,       zone: 'input' },
   // collection
   Listbox: { component: Listbox, zone: 'collection' },
+  Tree:    { component: Tree,    zone: 'collection' },
+  Toolbar: { component: Toolbar, zone: 'collection' },
+  TabList: { component: TabList, zone: 'collection' },
+  Tab:     { component: Tab,     zone: 'collection' },
+  TabPanel:{ component: TabPanel,zone: 'collection' },
+  // composite
+  OrderableList: { component: OrderableList, zone: 'composite' },
+  DataGrid:      { component: DataGrid,      zone: 'composite' },
+  DataGridRow:   { component: DataGridRow,   zone: 'composite' },
+  RowGroup:      { component: RowGroup,      zone: 'composite' },
+  ColumnHeader:  { component: ColumnHeader,  zone: 'composite' },
+  RowHeader:     { component: RowHeader,     zone: 'composite' },
+  GridCell:      { component: GridCell,      zone: 'composite' },
   // overlay
   Disclosure: { component: Disclosure, zone: 'overlay' },
   Dialog:     { component: Dialog,     zone: 'overlay' },
   Sheet:      { component: Sheet,      zone: 'overlay' },
   Popover:    { component: Popover,    zone: 'overlay' },
-  // entity
-  Badge:      { component: Badge,      zone: 'entity' },
-  StatCard:   { component: StatCard,   zone: 'entity' },
-  CourseCard: { component: CourseCard, zone: 'entity' },
-  RoleCard:   { component: RoleCard,   zone: 'entity' },
-  MessageBubble: { component: MessageBubble, zone: 'entity' },
-  PostCard:      { component: PostCard,      zone: 'entity' },
-  FeedPost:      { component: FeedPost,      zone: 'entity' },
-  ProductCard:   { component: ProductCard,   zone: 'entity' },
-  ContractCard:  { component: ContractCard,  zone: 'entity' },
-  FnCard:        { component: FnCard,        zone: 'entity' },
-  LeakTable:     { component: LeakTable,     zone: 'entity' },
-  // layout
-  LegendDot: { component: LegendDot, zone: 'layout' },
-  Separator: { component: Separator, zone: 'layout' },
-  BarChart:  { component: BarChart,  zone: 'layout' },
-  Top10List: { component: Top10List, zone: 'layout' },
+  // pattern
+  StatCard:      { component: StatCard,      zone: 'pattern' },
+  CourseCard:    { component: CourseCard,    zone: 'pattern' },
+  RoleCard:      { component: RoleCard,      zone: 'pattern' },
+  MessageBubble: { component: MessageBubble, zone: 'pattern' },
+  PostCard:      { component: PostCard,      zone: 'pattern' },
+  FeedPost:      { component: FeedPost,      zone: 'pattern' },
+  ProductCard:   { component: ProductCard,   zone: 'pattern' },
+  ContractCard:  { component: ContractCard,  zone: 'pattern' },
+  Card:          { component: Card,          zone: 'pattern' },
+  Table:         { component: Table,         zone: 'pattern' },
+  BarChart:      { component: BarChart,      zone: 'pattern' },
+  Top10List:     { component: Top10List,     zone: 'pattern' },
 } as const satisfies Record<string, UiEntry>
 
 export type UiComponentName = keyof typeof uiRegistry
 
+/** dev: 미등록 이름이면 throw — 무음 실패 방지 (sound-settings에서 Slider 누락이 이걸로 잡힘). */
+const isDev = (): boolean =>
+  typeof import.meta !== 'undefined' && (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true
+
 export function resolveUi(name: string): AnyCmp | undefined {
-  return uiRegistry[name as UiComponentName]?.component
+  const entry = uiRegistry[name as UiComponentName]
+  if (!entry) {
+    if (isDev()) {
+      throw new Error(
+        `[ds.registry] component "${name}" 미등록. ` +
+        `src/ds/layout/registry.ts 에 추가하거나 이름을 확인. ` +
+        `등록된 이름: ${Object.keys(uiRegistry).join(', ')}`,
+      )
+    }
+    return undefined
+  }
+  return entry.component
 }
 
 export type UiLeafContent = ReactNode

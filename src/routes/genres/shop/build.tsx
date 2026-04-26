@@ -17,7 +17,7 @@ export function buildShopPage(s: ShopState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'shop-page', label: 'Shop' } },
-      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popovertarget: 'shop-menu', 'aria-label': '필터', 'data-icon': 'filter', 'data-collapse-menu-btn': '' }, content: '' } },
+      menuBtn: { id: 'menuBtn', data: { type: 'Ui', component: 'Button', props: { popoverTarget: 'shop-menu', 'aria-label': '필터', 'data-icon': 'filter', 'data-collapse-menu-btn': '' }, content: '' } },
       menuPop: { id: 'menuPop', data: { type: 'Ui', component: 'Popover', props: { id: 'shop-menu', label: '필터', scrim: true } } },
       filters: { id: 'filters', data: { type: 'Aside', flow: 'form', emphasis: 'raised', width: 260, label: '필터' } },
       fHdr: { id: 'fHdr', data: { type: 'Text', variant: 'h3', content: '필터' } },
