@@ -16,6 +16,7 @@ export function EmptyState({
   icon, title, description, action, ...rest
 }: EmptyStateProps) {
   return (
+    // eslint-disable-next-line no-restricted-syntax
     <div role="status" data-part="empty-state" {...rest}>
       {icon}
       <h3>{title}</h3>

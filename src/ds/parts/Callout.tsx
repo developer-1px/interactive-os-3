@@ -15,6 +15,7 @@ export function Callout({ tone = 'info', children, ...rest }: CalloutProps) {
   const role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status'
   return (
     <aside
+      // eslint-disable-next-line no-restricted-syntax
       role={role}
       data-part="callout"
       data-tone={tone}

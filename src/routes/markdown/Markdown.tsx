@@ -10,38 +10,38 @@ export function Markdown() {
   const [html, setHtml] = useState<string | null>(null)
 
   useEffect(() => {
-    if (text == null) { setHtml(null); return }
+    if (text == null) return
     let alive = true
     renderMarkdown(text).then((h) => { if (alive) setHtml(h) })
     return () => { alive = false }
   }, [text])
+  const displayHtml = text == null ? null : html
 
   return (
-    <main aria-roledescription="markdown-app">
+    <main data-part="markdown-app">
       <nav aria-label="경로" data-flow="cluster">
         <Link to="/finder/$" params={{ _splat: '' }}>← Finder</Link>
         <code>{path}</code>
       </nav>
       {text == null ? (
         <article aria-busy="true">로드 중…</article>
-      ) : html == null ? (
+      ) : displayHtml == null ? (
         <article aria-busy="true" />
       ) : (
-        <article data-flow="prose" dangerouslySetInnerHTML={{ __html: html }} />
+        <article data-flow="prose" dangerouslySetInnerHTML={{ __html: displayHtml }} />
       )}
     </main>
   )
 }
 
 function useText(path: string) {
-  const [text, setText] = useState<string | null>(null)
+  const [loaded, setLoaded] = useState<{ path: string; text: string }>()
   useEffect(() => {
     let alive = true
-    setText(null)
-    loadText(path).then((t) => { if (alive) setText(t) })
+    loadText(path).then((t) => { if (alive) setLoaded({ path, text: t }) })
     return () => { alive = false }
   }, [path])
-  return text
+  return loaded?.path === path ? loaded.text : null
 }
 
 async function renderMarkdown(src: string): Promise<string> {

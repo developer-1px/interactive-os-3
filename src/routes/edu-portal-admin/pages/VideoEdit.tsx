@@ -183,11 +183,11 @@ export function VideoEdit() {
 
     tagsWrap: ['tagsLegend', 'tagsList', 'tagInputEl', 'tagsHint'],
     tagsList: tags.map((t) => `tag-chip-${t}`),
-    ...tagChipRels('tag', tags),
+    ...tagChipRels(),
 
     servicesWrap: ['servicesLegend', 'servicesList'],
     servicesList: services.map((t) => `svc-chip-${t}`),
-    ...tagChipRels('svc', services),
+    ...tagChipRels(),
 
     secMedia: ['thumbLabel','thumbFile','thumbNote','docsLabel','docsFile','docsNote','urlWrap'],
     urlWrap: ['urlLegend','urlName','urlAddr','urlAdd'],
@@ -269,7 +269,7 @@ function tagChipNodes(prefix: string, items: string[], onRemove: (t: string) => 
   return out
 }
 
-function tagChipRels(_prefix: string, _items: string[]): RelMap {
+function tagChipRels(): RelMap {
   // Tag는 leaf — relationships 없음.
   return {}
 }

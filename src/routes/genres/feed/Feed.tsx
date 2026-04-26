@@ -66,7 +66,7 @@ export function Feed() {
   const [liked, setLiked] = useState<Set<string>>(new Set())
   const toggle = (id: string) => setLiked((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
   const nav = useFeedNav()
-  const [feedTabsData, feedTabsDispatch] = useControlState(useMemo(feedTabsBase, []))
+  const [feedTabsData, feedTabsDispatch] = useControlState(useMemo(() => feedTabsBase(), []))
   const feedTabs = { data: feedTabsData, onEvent: feedTabsDispatch }
   const rxn: Record<string, { data: NormalizedData; onEvent: (e: Event) => void }> = {}
   for (const p of POSTS) {

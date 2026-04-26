@@ -16,7 +16,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'ol'>, 'children'>
 export function Top10List({ data, ...rest }: CollectionProps<Extra>) {
   const kids = getChildren(data, ROOT)
   return (
-    <ol className="top-10" {...rest}>
+    <ol data-part="top-10" {...rest}>
       {kids.map((id) => {
         const d = data.entities[id]?.data ?? {}
         return (

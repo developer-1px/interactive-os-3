@@ -118,7 +118,9 @@ export const smartGroups: SmartGroupItem[] = [
 ]
 
 /** 더 이상 smart: 가상 경로를 쓰지 않음 — 모든 path 는 실제 폴더. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function isSmartPath(_path: string): boolean { return false }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function smartGroupOf(_path: string): SmartGroupItem | undefined { return undefined }
 
 export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean): FsNode[] {
@@ -132,6 +134,7 @@ export function collectByAge(node: FsNode, predicate: (mtime: number) => boolean
 }
 
 /** smart 그룹은 실제 폴더 경로 alias. 더 이상 가상 파일 수집을 하지 않는다. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function smartItems(_group: SmartGroupItem['id']): FsNode[] { return [] }
 
 export const sidebar: SidebarItem[] = [

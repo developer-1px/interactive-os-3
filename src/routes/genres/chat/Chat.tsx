@@ -57,7 +57,7 @@ export function Chat() {
   const dms = useMemo(() => channels.filter((c) => c.type === 'dm'), [])
   const pubNav = useChannelList(pubs, active, setActive)
   const dmNav = useChannelList(dms, active, setActive)
-  const [mainActionsData, mainActionsDispatch] = useControlState(useMemo(mainActionsBase, []))
+  const [mainActionsData, mainActionsDispatch] = useControlState(useMemo(() => mainActionsBase(), []))
   const mainActions = { data: mainActionsData, onEvent: mainActionsDispatch }
   return (
     <>

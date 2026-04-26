@@ -13,8 +13,7 @@ const PAD: { key: keyof Selection; label: string }[] = [
   { key: 'padLeft', label: 'Padding L' },
 ]
 
-const DIRS = ['horizontal', 'vertical'] as const
-type Dir = typeof DIRS[number]
+type Dir = 'horizontal' | 'vertical'
 
 export function LayoutSection({ sel, set }: {
   sel: Selection
@@ -36,7 +35,7 @@ export function LayoutSection({ sel, set }: {
   }
 
   return (
-    <section aria-roledescription="panel-section" aria-label="Layout">
+    <section data-part="panel-section" aria-label="Layout">
       <h3>Layout</h3>
 
       <Field label="Direction">

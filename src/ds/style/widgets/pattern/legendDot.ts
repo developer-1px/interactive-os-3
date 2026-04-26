@@ -1,18 +1,18 @@
 import { accent, css, dim, font, pad, radius, status } from '../../../foundations'
 export const legendDot = () => css`
-  .legend-dot {
+  [data-part="legend-dot"] {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};
     font-size: ${font('xs')};
     color: ${dim(70)};
   }
-  .legend-dot::before {
+  [data-part="legend-dot"]::before {
     content: ''; display: inline-block;
     inline-size: .65em; block-size: .65em;
     border-radius: ${radius('pill')};
     background: currentColor;
   }
-  .legend-dot[data-tone="info"]    { color: ${accent()}; }
-  .legend-dot[data-tone="success"] { color: ${status('success')}; }
-  .legend-dot[data-tone="warning"] { color: ${status('warning')}; }
-  .legend-dot[data-tone="danger"]  { color: ${status('danger')}; }
+  [data-part="legend-dot"][data-tone="info"]    { color: ${accent()}; }
+  [data-part="legend-dot"][data-tone="success"] { color: ${status('success')}; }
+  [data-part="legend-dot"][data-tone="warning"] { color: ${status('warning')}; }
+  [data-part="legend-dot"][data-tone="danger"]  { color: ${status('danger')}; }
 `

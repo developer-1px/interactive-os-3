@@ -60,13 +60,13 @@ export function Inbox() {
       if (ev.type === 'activate') setFolder(ev.id as FolderId)
     })
 
-  const [listToolsData, listToolsDispatch] = useControlState(useMemo(listToolsBase, []))
+  const [listToolsData, listToolsDispatch] = useControlState(useMemo(() => listToolsBase(), []))
   const onListToolsEvent = (e: Event) => {
     listToolsDispatch(e)
     if (e.type === 'activate' && e.id === 'btnCompose') alert('compose')
   }
 
-  const [detailActionsData, detailActionsDispatch] = useControlState(useMemo(detailActionsBase, []))
+  const [detailActionsData, detailActionsDispatch] = useControlState(useMemo(() => detailActionsBase(), []))
   const onDetailActionsEvent = (e: Event) => detailActionsDispatch(e)
 
   return (

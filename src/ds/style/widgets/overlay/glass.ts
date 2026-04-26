@@ -10,7 +10,7 @@ import { accent, css, hairlineWidth, radius, grouping, tint } from '../../../fou
 // - 색은 그대로, 표면만 교체 (semantic 토큰 재사용)
 export const glassCss = css`
   @media (hover: none) and (pointer: coarse) {
-    :where(button):not([aria-roledescription="actions"] > button) {
+    :where(button):not([data-part="actions"] > button) {
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
@@ -39,7 +39,7 @@ export const glassCss = css`
     /* emphasis="raised" 의 mobile frosted override 는 layout/layout.ts (owner) 가 보유 */
 
     /* popover/dialog 표면 — 동일 frosted, scrim과 어우러져 layered glass */
-    :where([popover][role="dialog"][aria-roledescription="popover"]),
+    :where([popover][role="dialog"][data-part="popover"]),
     :where(dialog) {
       background: color-mix(in oklch, Canvas 72%, transparent);
       -webkit-backdrop-filter: blur(28px) saturate(180%);

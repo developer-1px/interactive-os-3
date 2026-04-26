@@ -15,7 +15,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROOT, type NormalizedData, type Entity, type Event } from '../src/ds'
+import { ROOT, type NormalizedData, type Entity } from '../src/ds'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
@@ -27,7 +27,7 @@ const outDir = resolve(root, '__snapshots__/aria-static')
 
 const emptyNav = () => ({
   data: { entities: { [ROOT]: { id: ROOT, data: {} } }, relationships: {} } as NormalizedData,
-  onEvent: (_: Event) => {},
+  onEvent: () => {},
 })
 const noop = () => {}
 
@@ -78,7 +78,7 @@ const fixtures: Fixture[] = [
 //  - Row/Column/Grid: label|labelledBy 있을 때만 group, 아니면 generic <div>
 const LANDMARK_ANCESTORS = new Set(['Main', 'Nav', 'Aside', 'Section'])
 
-function roleOf(type: string, d: any, ancestorTypes: string[]): string {
+function roleOf(type: string, d: Record<string, unknown>, ancestorTypes: string[]): string {
   const named = Boolean(d.label || d.labelledBy || d.heading)
   switch (type) {
     case 'Main': return 'main'
@@ -96,12 +96,12 @@ function roleOf(type: string, d: any, ancestorTypes: string[]): string {
 
 interface Violation { slug: string; id: string; rule: string; detail: string }
 
-function ariaLabelOf(d: any): string | undefined {
+function ariaLabelOf(d: Record<string, unknown>): string | undefined {
   return d?.label ?? d?.props?.['aria-label']
 }
 
 function formatNode(id: string, ent: Entity | undefined, depth: number, ancestorTypes: string[]): string {
-  const d: any = ent?.data ?? {}
+  const d: Record<string, unknown> = ent?.data ?? {}
   const type = d.type ?? '?'
   const role = roleOf(type, d, ancestorTypes)
   const label = ariaLabelOf(d)
@@ -115,7 +115,7 @@ function formatNode(id: string, ent: Entity | undefined, depth: number, ancestor
 
 function checkNode(slug: string, id: string, ent: Entity | undefined): Violation[] {
   const out: Violation[] = []
-  const d: any = ent?.data ?? {}
+  const d: Record<string, unknown> = ent?.data ?? {}
   const type = d.type
   // R1: landmark 누락 라벨 (Nav/Aside/Section은 label 권장)
   if ((type === 'Nav' || type === 'Aside' || type === 'Section') && !d.label && !d.labelledBy) {
@@ -133,7 +133,7 @@ function checkNode(slug: string, id: string, ent: Entity | undefined): Violation
   return out
 }
 
-function walk(slug: string, page: NormalizedData, jsonMode: boolean): { lines: string[]; violations: Violation[] } {
+function walk(slug: string, page: NormalizedData): { lines: string[]; violations: Violation[] } {
   const lines: string[] = []
   const violations: Violation[] = []
   const seen = new Set<string>()
@@ -141,10 +141,10 @@ function walk(slug: string, page: NormalizedData, jsonMode: boolean): { lines: s
     if (seen.has(id)) { lines.push('  '.repeat(depth) + `↺ cycle ${id}`); return }
     seen.add(id)
     const ent = page.entities[id]
-    const t = (ent?.data as any)?.type
+    const t = (ent?.data as Record<string, unknown>)?.type
     if (id !== ROOT) lines.push(formatNode(id, ent, depth, ancestorTypes))
     // Section.heading 가상 자식 — Renderer가 자동 삽입하는 <h1..h4>
-    const heading = (ent?.data as any)?.heading
+    const heading = (ent?.data as Record<string, unknown>)?.heading
     if (t === 'Section' && heading) {
       lines.push('  '.repeat(depth + 1) + `text:${heading.variant ?? 'h2'} (auto) “${heading.content ?? ''}”  · #${id}-h`)
     }
@@ -171,11 +171,11 @@ async function main() {
   const targets = filter.length ? fixtures.filter(f => filter.includes(f.slug)) : fixtures
   if (WRITE) mkdirSync(outDir, { recursive: true })
 
-  let allViolations: Violation[] = []
+  const allViolations: Violation[] = []
   for (const f of targets) {
     try {
       const page = await f.build()
-      const { lines, violations } = walk(f.slug, page, JSON_MODE)
+      const { lines, violations } = walk(f.slug, page)
       allViolations.push(...violations)
       if (JSON_MODE) {
         for (const v of violations) process.stdout.write(JSON.stringify(v) + '\n')
@@ -185,7 +185,7 @@ async function main() {
         process.stdout.write(body + '\n')
         if (WRITE) writeFileSync(resolve(outDir, `${f.slug}.txt`), body + '\n')
       }
-    } catch (e: any) {
+    } catch (e: Record<string, unknown>) {
       process.stderr.write(`[aria-tree] ✗ ${f.slug}: ${e?.message ?? e}\n`)
     }
   }

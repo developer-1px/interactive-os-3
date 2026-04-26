@@ -66,7 +66,7 @@ function scrollToAnchor(id: string) {
 }
 
 export function Content() {
-  const tree0 = useMemo(buildCatalogTree, [])
+  const tree0 = useMemo(() => buildCatalogTree(), [])
   const [tree, dispatch] = useControlState(tree0)
 
   const onEvent = (e: Event) => {

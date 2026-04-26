@@ -18,7 +18,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'figure'>, 'children'> & {
 export function BarChart({ data, caption, ...rest }: CollectionProps<Extra>) {
   const kids = getChildren(data, ROOT)
   return (
-    <figure className="bar-chart" {...rest}>
+    <figure data-part="bar-chart" {...rest}>
       <dl>
         {kids.map((id) => {
           const d = (data.entities[id]?.data ?? {}) as {

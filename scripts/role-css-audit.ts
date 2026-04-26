@@ -190,11 +190,6 @@ const ROVING_ROLES = new Set([
 ])
 
 const css: string = dsCss
-const hasRoleBase = (role: string) => {
-  if (css.includes(`[role="${role}"]`)) return true
-  const native = NATIVE_FALLBACK[role]
-  return native ? css.includes(native) : false
-}
 
 // role 섹션만 추출 (대략): 해당 role을 포함한 selector를 기준으로 검사.
 // CSS에 `[role="X"]` 셀렉터가 있는 블록이 아니라, CSS 전체 문자열에서

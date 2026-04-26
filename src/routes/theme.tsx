@@ -10,7 +10,7 @@ import { useEffect, useState, type ChangeEvent } from 'react'
  *   - localStorage 영속 → 다른 라우트로 이동해도 같은 테마 유지 (main.tsx에서 boot-time 복원)
  *
  * 원칙:
- *   - inline style 0. classless. 셀렉터는 [aria-roledescription="theme-creator"] scope <style> 1개.
+ *   - inline style 0. classless. 셀렉터는 [data-part="theme-creator"] scope <style> 1개.
  *   - showcase 라우트 raw role 예외만 사용 (메모리: feedback_showcase_route_role_exception)
  *
  * 토큰 출처: src/ds/style/preset/apply.ts — --ds-tone-hue / --ds-tone-chroma /
@@ -56,7 +56,7 @@ const loadOverrides = (): ThemeState => {
 }
 
 const styles = `
-  [aria-roledescription="theme-creator"] {
+  [data-part="theme-creator"] {
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr);
     gap: var(--ds-space, 4px) calc(var(--ds-space) * 8);
@@ -64,7 +64,7 @@ const styles = `
     padding: calc(var(--ds-space) * 6);
     min-height: 100dvh;
   }
-  [aria-roledescription="theme-creator"] > aside {
+  [data-part="theme-creator"] > aside {
     position: sticky;
     top: calc(var(--ds-space) * 6);
     display: flex;
@@ -76,42 +76,42 @@ const styles = `
     border-radius: var(--ds-radius-lg);
     box-shadow: var(--ds-elev-2);
   }
-  [aria-roledescription="theme-creator"] > aside > header {
+  [data-part="theme-creator"] > aside > header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--ds-space) * 3);
   }
-  [aria-roledescription="theme-creator"] > aside > header > h1 {
+  [data-part="theme-creator"] > aside > header > h1 {
     font-size: var(--ds-text-lg);
   }
-  [aria-roledescription="theme-creator"] > aside > section {
+  [data-part="theme-creator"] > aside > section {
     display: flex;
     flex-direction: column;
     gap: calc(var(--ds-space) * 2);
   }
-  [aria-roledescription="theme-creator"] > aside > section > h2 {
+  [data-part="theme-creator"] > aside > section > h2 {
     font-size: var(--ds-text-sm);
     color: var(--ds-muted);
     font-weight: var(--ds-weight-medium);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  [aria-roledescription="theme-creator"] > aside label {
+  [data-part="theme-creator"] > aside label {
     display: flex;
     flex-direction: column;
     gap: calc(var(--ds-space) * 1);
   }
-  [aria-roledescription="theme-creator"] > aside label > span {
+  [data-part="theme-creator"] > aside label > span {
     display: flex;
     justify-content: space-between;
     font-size: var(--ds-text-sm);
   }
-  [aria-roledescription="theme-creator"] > aside label > small {
+  [data-part="theme-creator"] > aside label > small {
     color: var(--ds-muted);
     font-size: var(--ds-text-xs);
   }
-  [aria-roledescription="theme-creator"] > [aria-label="Theme preview"] {
+  [data-part="theme-creator"] > [aria-label="Theme preview"] {
     display: flex;
     flex-direction: column;
     gap: calc(var(--ds-space) * 8);
@@ -119,64 +119,64 @@ const styles = `
     max-width: 720px;
     margin-inline: auto;
   }
-  [aria-roledescription="theme-creator"] > [aria-label="Theme preview"] > section > h2 {
+  [data-part="theme-creator"] > [aria-label="Theme preview"] > section > h2 {
     font-size: var(--ds-text-lg);
     margin-bottom: calc(var(--ds-space) * 3);
   }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] {
+  [data-part="theme-creator"] [aria-label="neutral scale"] {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     gap: calc(var(--ds-space) * 2);
   }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li {
+  [data-part="theme-creator"] [aria-label="neutral scale"] li {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: calc(var(--ds-space) * 1);
   }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li > i {
+  [data-part="theme-creator"] [aria-label="neutral scale"] li > i {
     display: block;
     width: 100%;
     aspect-ratio: 1;
     border-radius: var(--ds-radius-sm);
   }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(1) > i { background: var(--ds-neutral-1); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(2) > i { background: var(--ds-neutral-2); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(3) > i { background: var(--ds-neutral-3); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(4) > i { background: var(--ds-neutral-4); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(5) > i { background: var(--ds-neutral-5); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(6) > i { background: var(--ds-neutral-6); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(7) > i { background: var(--ds-neutral-7); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(8) > i { background: var(--ds-neutral-8); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(9) > i { background: var(--ds-neutral-9); }
-  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li > code {
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(1) > i { background: var(--ds-neutral-1); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(2) > i { background: var(--ds-neutral-2); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(3) > i { background: var(--ds-neutral-3); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(4) > i { background: var(--ds-neutral-4); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(5) > i { background: var(--ds-neutral-5); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(6) > i { background: var(--ds-neutral-6); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(7) > i { background: var(--ds-neutral-7); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(8) > i { background: var(--ds-neutral-8); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li:nth-child(9) > i { background: var(--ds-neutral-9); }
+  [data-part="theme-creator"] [aria-label="neutral scale"] li > code {
     font-size: var(--ds-text-xs);
     color: var(--ds-muted);
   }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] {
+  [data-part="theme-creator"] [aria-label="surface tokens"] {
     display: flex;
     flex-direction: column;
     gap: calc(var(--ds-space) * 2);
   }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li {
+  [data-part="theme-creator"] [aria-label="surface tokens"] li {
     display: flex;
     align-items: center;
     gap: calc(var(--ds-space) * 3);
   }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li > i {
+  [data-part="theme-creator"] [aria-label="surface tokens"] li > i {
     display: inline-block;
     width: 48px;
     height: 32px;
     border-radius: var(--ds-radius-sm);
   }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li[data-token="base"]   > i { background: var(--ds-base); border: 1px solid var(--ds-border); }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li[data-token="bg"]     > i { background: var(--ds-bg);   border: 1px solid var(--ds-border); }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li[data-token="tone"]   > i { background: var(--ds-tone); }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li[data-token="accent"] > i { background: var(--ds-accent); }
-  [aria-roledescription="theme-creator"] [aria-label="surface tokens"] li > small {
+  [data-part="theme-creator"] [aria-label="surface tokens"] li[data-token="base"]   > i { background: var(--ds-base); border: 1px solid var(--ds-border); }
+  [data-part="theme-creator"] [aria-label="surface tokens"] li[data-token="bg"]     > i { background: var(--ds-bg);   border: 1px solid var(--ds-border); }
+  [data-part="theme-creator"] [aria-label="surface tokens"] li[data-token="tone"]   > i { background: var(--ds-tone); }
+  [data-part="theme-creator"] [aria-label="surface tokens"] li[data-token="accent"] > i { background: var(--ds-accent); }
+  [data-part="theme-creator"] [aria-label="surface tokens"] li > small {
     color: var(--ds-muted);
   }
-  [aria-roledescription="theme-creator"] article[aria-label="Sample card"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] {
     background: var(--ds-bg);
     border: 1px solid var(--ds-border);
     border-radius: var(--ds-radius-md);
@@ -186,17 +186,17 @@ const styles = `
     flex-direction: column;
     gap: calc(var(--ds-space) * 3);
   }
-  [aria-roledescription="theme-creator"] article[aria-label="Sample card"] [role="group"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] [role="group"] {
     display: flex;
     gap: calc(var(--ds-space) * 2);
   }
-  [aria-roledescription="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="primary"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="primary"] {
     background: var(--ds-accent);
     color: var(--ds-accent-on);
     padding: calc(var(--ds-space) * 2) calc(var(--ds-space) * 4);
     border-radius: var(--ds-radius-sm);
   }
-  [aria-roledescription="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="secondary"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="secondary"] {
     background: var(--ds-bg);
     border: 1px solid var(--ds-border);
     padding: calc(var(--ds-space) * 2) calc(var(--ds-space) * 4);
@@ -228,7 +228,7 @@ function ThemeCreator() {
     setV((s) => ({ ...s, [k]: Number(e.target.value) }))
 
   return (
-    <article aria-roledescription="theme-creator" aria-label="Theme creator">
+    <article data-part="theme-creator" aria-label="Theme creator">
       <style>{styles}</style>
 
       <aside aria-label="Theme controls">
@@ -305,7 +305,7 @@ function ThemeCreator() {
             <h3>Sample card</h3>
             <p>이 카드는 <code>--ds-bg</code> 위, 페이지는 <code>--ds-base</code> 위. 두 surface의 미세 차이가 깊이를 만든다.</p>
             <p>본문은 <code>--ds-neutral-9</code> (oklch L≈0.30, hue {v.toneHue}°). 진한 검정의 차가운 인상이 사라지고 종이 위 잉크 같은 따뜻함.</p>
-            <div role="group" aria-label="Card actions">
+            <div data-part="actions" aria-label="Card actions">
               <button type="button" data-emphasis="primary">Primary</button>
               <button type="button" data-emphasis="secondary">Secondary</button>
             </div>

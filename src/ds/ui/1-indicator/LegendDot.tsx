@@ -6,5 +6,5 @@ type LegendDotProps = ComponentPropsWithoutRef<'span'> & {
 }
 
 export function LegendDot({ tone = 'neutral', ...rest }: LegendDotProps) {
-  return <span className="legend-dot" data-tone={tone} {...rest} />
+  return <span data-part="legend-dot" data-tone={tone} {...rest} />
 }

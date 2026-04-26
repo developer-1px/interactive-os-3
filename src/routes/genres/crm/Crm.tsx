@@ -33,7 +33,7 @@ export function Crm() {
   const allChecked = rows.length > 0 && rows.every((r) => sel.has(r.id))
   const toggleAll = () => setSel(allChecked ? new Set() : new Set(rows.map((r) => r.id)))
 
-  const [bulkBarData, bulkBarDispatch] = useControlState(useMemo(bulkBarBase, []))
+  const [bulkBarData, bulkBarDispatch] = useControlState(useMemo(() => bulkBarBase(), []))
   const onBulkBar = (e: Event) => {
     bulkBarDispatch(e)
     if (e.type === 'activate') {
@@ -41,7 +41,7 @@ export function Crm() {
       if (found) alert(found[1])
     }
   }
-  const [pageNavData, pageNavDispatch] = useControlState(useMemo(pageNavBase, []))
+  const [pageNavData, pageNavDispatch] = useControlState(useMemo(() => pageNavBase(), []))
 
   return <Renderer page={definePage(buildCrmPage({
     sel, open, q, toggle, toggleAll, setOpen, setQ,
