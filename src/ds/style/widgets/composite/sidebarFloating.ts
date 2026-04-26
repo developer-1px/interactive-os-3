@@ -39,7 +39,16 @@ export const sidebarFloatingCss = () => css`
     opacity: 1;
   }
 
+  /* 닫힌 상태 — sidebar.ts의 display:flex가 specificity 동등으로 polyfill의
+     [popover]:not(.\\:popover-open){display:none}을 덮어쓰는 문제 차단.
+     명시적으로 display:none을 두고 :popover-open / 폴리필 클래스에서만 flex 부활. */
   nav[aria-roledescription="sidebar"][data-state="floating"] {
+    display: none;
+  }
+  nav[aria-roledescription="sidebar"][data-state="floating"]:popover-open,
+  nav[aria-roledescription="sidebar"][data-state="floating"].\\:popover-open {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     inset-block: 0;
     inset-inline-start: 0;
@@ -52,6 +61,7 @@ export const sidebarFloatingCss = () => css`
     --ds-sidebar-w: min(85vw, 320px);
     padding: ${hierarchy.surface};
     gap: ${hierarchy.shell};
+    z-index: 100;
   }
   nav[aria-roledescription="sidebar"][data-state="floating"]::backdrop {
     background: ${tint('CanvasText', 10)};
@@ -59,8 +69,7 @@ export const sidebarFloatingCss = () => css`
   }
 
   @media (min-width: 768px) {
-    [data-ds-floating-nav-trigger],
-    nav[aria-roledescription="sidebar"][data-state="floating"] {
+    [data-ds-floating-nav-trigger] {
       display: none !important;
     }
   }
