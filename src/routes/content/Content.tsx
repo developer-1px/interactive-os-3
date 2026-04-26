@@ -11,7 +11,7 @@
  */
 import { useMemo } from 'react'
 import {
-  Renderer, definePage, sidebarAdmin, useControlState, navigateOnActivate,
+  Renderer, definePage, sidebarAdmin, SidebarAdminFloating, useControlState, navigateOnActivate,
   ROOT, EXPANDED, type Event, type NormalizedData,
 } from '../../ds'
 import { ProseSample } from './sample'
@@ -94,6 +94,7 @@ export function Content() {
   return (
     <div data-ds="Row" style={{ minBlockSize: '100dvh', alignItems: 'stretch' }}>
       <Renderer page={sidebarPage} />
+      <SidebarAdminFloating id="content-sidebar-mobile" label="Content catalog" tree={tree} onEvent={onEvent} />
       <main data-flow="list" style={{ flex: '1 1 0', minInlineSize: 0, overflow: 'auto' }}>
         <article data-flow="prose">
           <ProseSample />

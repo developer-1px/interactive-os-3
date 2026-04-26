@@ -30,6 +30,7 @@ import { tree } from './collection/tree'
 import { grid } from './composite/grid'
 import { toolbar } from './composite/toolbar'
 import { sidebarCss } from './composite/sidebar'
+import { sidebarFloatingCss } from './composite/sidebarFloating'
 import { pageCss } from './composite/page'
 import { layout } from './layout/layout'
 
@@ -46,7 +47,7 @@ export const widgets = () =>
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite
-    grid(), toolbar(), sidebarCss(), pageCss,
+    grid(), toolbar(), sidebarCss(), sidebarFloatingCss(), pageCss,
     // layout
     layout(),
   ].join('\n')
