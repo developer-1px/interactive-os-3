@@ -121,11 +121,23 @@ export const sidebarFloatingCss = () => css`
       padding-inline: 0;
     }
 
-    /* 모바일 hairline 일괄 제거 — 1px sub-pixel이 DPR≥2에서 흐리게 보이는 문제.
-       --ds-hairline 토큰을 0으로 덮어 hairline 기반 border 전체가 사라진다.
-       컨트롤(button/input 등 explicit 1px)은 영향 없음. */
+    /* 모바일 hairline + explicit 1px 일괄 제거 — DPR≥2에서 흐려 보이는 문제.
+       --ds-hairline 토큰 0 + surface 컨테이너 explicit border-width 0.
+       컨트롤(button/input/select/textarea + role="checkbox/radio/switch/option")은
+       affordance 유지를 위해 제외. */
     :root {
       --ds-hairline: 0px;
     }
+    article, section, aside, header, footer, main, nav,
+    figure, blockquote, pre, table, hr,
+    dialog, [popover],
+    [role="dialog"], [role="region"], [role="group"],
+    [role="list"], [role="listitem"],
+    [role="tabpanel"], [role="separator"],
+    [data-ds="Row"], [data-ds="Column"], [data-ds="Grid"] {
+      border-width: 0;
+      box-shadow: none;
+    }
+    hr { background: transparent; }
   }
 `
