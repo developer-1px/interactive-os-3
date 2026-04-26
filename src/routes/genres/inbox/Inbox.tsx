@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   ROOT,
   type Event, type NormalizedData,
 } from '../../../ds'
@@ -69,15 +70,24 @@ export function Inbox() {
   const onDetailActionsEvent = (e: Event) => detailActionsDispatch(e)
 
   return (
-    <Renderer
-      page={definePage(
-        buildInboxPage({
-          folder, selectedId, setFolder, setSelected,
-          folderNav: { data: navData, onEvent: onFolderEvent },
-          listTools: { data: listToolsData, onEvent: onListToolsEvent },
-          detailActions: { data: detailActionsData, onEvent: onDetailActionsEvent },
-        }),
-      )}
-    />
+    <>
+      <Renderer
+        page={definePage(
+          buildInboxPage({
+            folder, selectedId, setFolder, setSelected,
+            folderNav: { data: navData, onEvent: onFolderEvent },
+            listTools: { data: listToolsData, onEvent: onListToolsEvent },
+            detailActions: { data: detailActionsData, onEvent: onDetailActionsEvent },
+          }),
+        )}
+      />
+      <SidebarAdminFloating
+        id="inbox-folders-mobile"
+        label="폴더"
+        tree={navData}
+        onEvent={onFolderEvent}
+        collection="listbox"
+      />
+    </>
   )
 }

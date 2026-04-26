@@ -33,7 +33,7 @@ export function buildInboxPage(s: InboxState): NormalizedData {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
       page: { id: 'page', data: { type: 'Row', flow: 'list', roledescription: 'inbox-page', label: 'Inbox' } },
-      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '폴더' } },
+      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 240, label: '폴더', roledescription: 'sidebar' } },
       navFavTitle: { id: 'navFavTitle', data: { type: 'Text', variant: 'small', content: '즐겨찾기' } },
       folderList: { id: 'folderList', data: { type: 'Ui', component: 'Listbox', props: { data: s.folderNav.data, onEvent: s.folderNav.onEvent, 'aria-label': '폴더' } } },
       navSmartTitle: { id: 'navSmartTitle', data: { type: 'Text', variant: 'small', content: '스마트 메일상자' } },
