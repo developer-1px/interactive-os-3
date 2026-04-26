@@ -8,7 +8,7 @@ import {
   getTree,
   subscribeTree,
 } from './data'
-import { highlightCode } from '@p/fs'
+import { highlightCode, renderMarkdown } from '@p/fs'
 import type { FsNode, ViewMode, SmartGroupId } from '../entities/types'
 
 /** Finder의 모든 데이터는 이 모듈의 Resource 정의를 통해서만 노출된다.
@@ -91,18 +91,3 @@ export const markdownHtmlResource = defineResource<string | null, [string]>({
   },
 })
 
-async function renderMarkdown(src: string): Promise<string> {
-  const { marked } = await import('marked')
-  const renderer = new marked.Renderer()
-  renderer.code = ({ text, lang }) => {
-    const safeLang = lang || 'txt'
-    return `<pre data-lang="${escapeAttr(safeLang)}"><code>${escapeHtml(text)}</code></pre>`
-  }
-  return marked.parse(src, { async: true, renderer })
-}
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
-}
-function escapeAttr(s: string): string {
-  return s.replace(/["&<>]/g, (c) => ({ '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
-}

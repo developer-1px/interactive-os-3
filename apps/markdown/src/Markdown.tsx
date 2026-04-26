@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { marked } from 'marked'
 import { useParams } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { loadText } from '@p/fs'
+import { loadText, renderMarkdown } from '@p/fs'
 
 export function Markdown() {
   const { _splat } = useParams({ strict: false }) as { _splat?: string }
@@ -52,23 +51,3 @@ function useText(path: string) {
   return loaded?.path === path ? loaded.text : null
 }
 
-async function renderMarkdown(src: string): Promise<string> {
-  const renderer = new marked.Renderer()
-  renderer.code = ({ text, lang }) => {
-    const safeLang = lang || 'txt'
-    return `<pre data-lang="${escapeAttr(safeLang)}"><code>${escapeHtml(text)}</code></pre>`
-  }
-  return marked.parse(stripFrontmatter(src), { async: true, renderer })
-}
-
-function stripFrontmatter(src: string): string {
-  const m = src.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/)
-  return m ? src.slice(m[0].length) : src
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
-}
-function escapeAttr(s: string): string {
-  return s.replace(/["&<>]/g, (c) => ({ '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
-}
