@@ -28,9 +28,11 @@ export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'muted' | 'small'
 export type Align = 'start' | 'center' | 'end' | 'stretch'
 
 export type NodeType =
-  | 'Row' | 'Column' | 'Grid'
+  | 'Row' | 'Column' | 'Grid' | 'Split'
   | 'Main' | 'Nav' | 'Aside' | 'Section' | 'Header' | 'Footer'
   | 'Ui' | 'Text'
+
+export type SplitAxis = 'row' | 'column'
 
 export interface ItemPlacement {
   grow?: boolean
@@ -74,6 +76,19 @@ export interface GridNode extends CommonNodeData {
   /** Card 슬롯 row track owner — 자식 article[data-part="card"]가 subgrid로 상속받는다. */
   cardGrid?: boolean
 }
+/**
+ * N-pane resize container. 자식 사이에 separator(드래그 핸들)를 자동 삽입한다.
+ * 항상 full-height. localStorage 영속화 키는 엔티티 id를 그대로 사용한다.
+ */
+export interface SplitNode extends CommonNodeData {
+  type: 'Split'
+  axis?: SplitAxis
+  /** fr 비율 배열. 자식 수와 길이가 다르면 1로 채움. */
+  defaultSizes?: number[]
+  /** px 단위 최소 폭. number면 모든 panel에 동일 적용. */
+  minSizes?: number | number[]
+}
+
 export interface AsideNode extends CommonNodeData {
   type: 'Aside'
   flow?: Flow
@@ -120,7 +135,7 @@ export interface TextNode extends CommonNodeData {
 }
 
 export type AnyNode =
-  | RowNode | ColumnNode | GridNode
+  | RowNode | ColumnNode | GridNode | SplitNode
   | MainNode | NavNode | AsideNode | SectionNode | HeaderNode | FooterNode
   | UiNode | TextNode
 
@@ -191,7 +206,7 @@ export function validateFragment(frag: NormalizedData, kind?: FragmentKind): voi
       if (id !== '__root__') issues.push(`entity "${id}" missing data.type`)
       continue
     }
-    const known: NodeType[] = ['Row','Column','Grid','Main','Nav','Aside','Section','Header','Footer','Ui','Text']
+    const known: NodeType[] = ['Row','Column','Grid','Split','Main','Nav','Aside','Section','Header','Footer','Ui','Text']
     if (!known.includes(t as NodeType)) {
       issues.push(`entity "${id}" unknown type "${t}"`)
       continue
@@ -237,7 +252,7 @@ export function validatePage(page: NormalizedData): void {
       if (id !== '__root__') issues.push(`entity "${id}" missing data.type`)
       continue
     }
-    const known: NodeType[] = ['Row','Column','Grid','Main','Nav','Aside','Section','Header','Footer','Ui','Text']
+    const known: NodeType[] = ['Row','Column','Grid','Split','Main','Nav','Aside','Section','Header','Footer','Ui','Text']
     if (!known.includes(t as NodeType)) issues.push(`entity "${id}" unknown type "${t}"`)
   }
   // cycle detection

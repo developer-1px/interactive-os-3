@@ -16,9 +16,10 @@ import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
   type GridNode, type HeaderNode, type MainNode, type NavNode,
-  type RowNode, type SectionNode, type TextNode, type UiNode,
+  type RowNode, type SectionNode, type SplitNode, type TextNode, type UiNode,
 } from './nodes'
 import { resolveUi } from './registry'
+import { Split } from '../ui/8-layout/Split'
 
 export interface RendererProps {
   page: NormalizedData
@@ -75,6 +76,7 @@ function NodeView({ page, id, pageRoot }: { page: NormalizedData; id: string; pa
     case 'Row':     return <RowView page={page} id={id} d={d} pageRoot={pr} />
     case 'Column':  return <ColumnView page={page} id={id} d={d} pageRoot={pr} />
     case 'Grid':    return <GridView page={page} id={id} d={d} pageRoot={pr} />
+    case 'Split':   return <SplitView page={page} id={id} d={d} pageRoot={pr} />
     case 'Main':    return <MainView page={page} id={id} d={d} pageRoot={pr} />
     case 'Nav':     return <NavView page={page} id={id} d={d} />
     case 'Aside':   return <AsideView page={page} id={id} d={d} />
@@ -100,7 +102,7 @@ function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; 
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -121,7 +123,7 @@ function ColumnView({ page, id, d, pageRoot }: { page: NormalizedData; id: strin
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -144,12 +146,36 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
       <NodeChildren page={page} id={id} />
     </div>
+  )
+}
+
+function SplitView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: SplitNode; pageRoot?: boolean }) {
+  const ph = placementAttrs(d)
+  const { style: phStyle, ...phAttr } = ph
+  const kids = page.relationships[id] ?? []
+  // 엔티티 id를 그대로 localStorage 키로 사용 — 라우트·페이지별 자연 unique.
+  return (
+    <Split
+      id={id}
+      axis={d.axis ?? 'row'}
+      defaultSizes={d.defaultSizes}
+      minSizes={d.minSizes}
+      aria-label={d.label}
+      aria-labelledby={d.labelledBy}
+      data-page-root={pageRoot ? '' : undefined}
+      data-part={d.roledescription}
+      hidden={d.hidden || undefined}
+      style={phStyle}
+      {...phAttr}
+    >
+      {kids.map((childId) => <NodeView key={childId} page={page} id={childId} />)}
+    </Split>
   )
 }
 
@@ -162,7 +188,7 @@ function MainView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -179,7 +205,7 @@ function NavView({ page, id, d }: { page: NormalizedData; id: string; d: NavNode
       data-emphasis={d.emphasis}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -196,7 +222,7 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
       data-emphasis={d.emphasis}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -215,7 +241,7 @@ function SectionView({ page, id, d, pageRoot }: { page: NormalizedData; id: stri
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label && !headingId ? d.label : undefined}
       aria-labelledby={d.labelledBy ?? headingId}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -232,7 +258,7 @@ function HeaderView({ page, id, d }: { page: NormalizedData; id: string; d: Head
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -248,7 +274,7 @@ function FooterView({ page, id, d }: { page: NormalizedData; id: string; d: Foot
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      aria-roledescription={d.roledescription}
+      data-part={d.roledescription}
       hidden={d.hidden || undefined}
       {...ph}
     >
