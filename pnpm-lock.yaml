@@ -110,6 +110,8 @@ importers:
 
   showcase/keyboard: {}
 
+  showcase/playground: {}
+
   showcase/theme: {}
 
 packages:
