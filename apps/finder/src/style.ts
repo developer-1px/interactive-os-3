@@ -204,7 +204,7 @@ export const finderCss = css`
   aside[data-part="preview"] img {
     max-width: 100%; height: auto;
   }
-  aside[data-part="preview"] h2 {
+  aside[data-part="preview"] > header h2 {
     font-size: var(--ds-text-lg); font-weight: 600; word-break: break-all; margin: 0;
   }
   aside[data-part="preview"] dl {

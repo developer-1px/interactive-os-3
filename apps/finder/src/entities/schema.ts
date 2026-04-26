@@ -45,28 +45,28 @@ export type ViewMode = z.infer<typeof ViewModeSchema>
 export const PreviewKindSchema = z.enum(['image', 'markdown', 'code', 'text', 'binary'])
 export type PreviewKind = z.infer<typeof PreviewKindSchema>
 
-// ── Feature state·cmd·VM ─────────────────────────────────────────────────
+// ── Feature state·cmd·VM (spec 에서 파생) ──────────────────────────────
 import { FsNodeSchema } from '@p/fs'
+import { FinderStateSpec, FinderCmdSpec } from './spec'
 
-export const FinderStateSchema = z.object({
-  url: z.string(),
-  pinned: z.string(),
-  mode: ViewModeSchema,
-  query: z.string(),
-})
+/** spec.state 의 { key: { schema } } → z.object({ key: schema }) */
+export const FinderStateSchema = z.object(
+  Object.fromEntries(
+    Object.entries(FinderStateSpec).map(([k, v]) => [k, v.schema]),
+  ) as { [K in keyof typeof FinderStateSpec]: typeof FinderStateSpec[K]['schema'] },
+)
 export type FinderState = z.infer<typeof FinderStateSchema>
 
-export const FinderCmdSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('goto'),        to: z.string() }),
-  z.object({ type: z.literal('pinFav'),      id: z.string() }),
-  z.object({ type: z.literal('setMode'),     mode: ViewModeSchema }),
-  z.object({ type: z.literal('setQuery'),    q: z.string() }),
-  z.object({ type: z.literal('activateCol'), id: z.string() }),
-  z.object({ type: z.literal('expandCol'),   id: z.string(), open: z.boolean() }),
-  z.object({ type: z.literal('activateRec'), id: z.string() }),
-  z.object({ type: z.literal('back') }),
-])
-export type FinderCmd = z.infer<typeof FinderCmdSchema>
+/** spec.cmds 의 { type: { payload } } → discriminatedUnion('type', [...]) */
+const cmdMembers = Object.entries(FinderCmdSpec).map(([type, def]) =>
+  def.payload.extend({ type: z.literal(type) }),
+) as unknown as readonly [z.ZodObject<z.ZodRawShape>, ...z.ZodObject<z.ZodRawShape>[]]
+export const FinderCmdSchema = z.discriminatedUnion('type', cmdMembers)
+
+/** type 별 payload 까지 포함한 정확한 union 타입. */
+export type FinderCmd = {
+  [K in keyof typeof FinderCmdSpec]: { type: K } & z.infer<typeof FinderCmdSpec[K]['payload']>
+}[keyof typeof FinderCmdSpec]
 
 export const PreviewVMSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('empty') }),

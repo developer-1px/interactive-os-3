@@ -25,7 +25,13 @@ import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from
 import { extToIcon } from '../entities/types'
 
 import type { FinderState, FinderCmd, PreviewVM } from '../entities/schema'
+import type { FinderCmdType, FinderViewKey } from '../entities/spec'
 export type { PreviewVM }
+
+/** on 핸들러 타입 — spec.cmds 키 1:1 강제. 추가/삭제 시 양쪽 동시 변경 강제. */
+type CmdReducers = {
+  [K in FinderCmdType]: (s: FinderState, p: Extract<FinderCmd, { type: K }>) => FinderState
+}
 
 const todayPath = smartGroups[0]?.path ?? '/'
 const initial: FinderState = { url: todayPath, pinned: todayPath, mode: 'columns', query: '' }
@@ -147,7 +153,6 @@ export const finderFeature = defineFeature<FinderState, FinderCmd, {
 
   on: {
     goto:        (s, { to })   => ({ ...s, url: to }),
-    // 사이드바 클릭(recent/fav/tag) = "이 항목을 루트로 본다". pinned 와 url 을 함께 옮긴다.
     pinFav:      (s, { id })   => ({ ...s, pinned: id, url: id }),
     setMode:     (s, { mode }) => ({ ...s, mode }),
     setQuery:    (s, { q })    => ({ ...s, query: q }),
@@ -159,7 +164,7 @@ export const finderFeature = defineFeature<FinderState, FinderCmd, {
       const prev = chain[chain.length - 2]?.path ?? '/'
       return { ...s, url: prev }
     },
-  },
+  } satisfies CmdReducers,
 
   query: (s) => ({
     tree:  { key: ['finder', 'tree'],          fn: getTree },
@@ -170,11 +175,14 @@ export const finderFeature = defineFeature<FinderState, FinderCmd, {
   view: viewFn,
 })
 
+/** view 반환 키는 FinderViewSpec 키와 1:1. 누락/잉여 시 타입 에러. */
+type ViewOut = Record<FinderViewKey, unknown>
+
 function viewFn(s: FinderState, q: {
   tree: { data: FsNode | undefined; isLoading: boolean; error: unknown }
   text: { data: string | null | undefined; isLoading: boolean; error: unknown }
   image: { data: string | null | undefined; isLoading: boolean; error: unknown }
-}) {
+}): ViewOut {
   return {
     titlebar: { path: s.url, mode: s.mode, query: s.query, busy: q.text.isLoading || q.image.isLoading },
     toolbar: buildToolbar(s.mode),

@@ -30,3 +30,6 @@ export { default } from './plugin'
 
 // 셸 boot 가 router 를 주입 — finder 자체는 router 인스턴스를 모른다
 export { setFinderNav } from './features/nav'
+
+// devtools — spec ↔ code SSOT inspector (/devtools/finder-spec)
+export { FinderInspector } from './devtools/Inspector'

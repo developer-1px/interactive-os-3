@@ -42,6 +42,7 @@ import { Route as EduPortalAdminVideoOrderRouteImport } from './routes/edu-porta
 import { Route as EduPortalAdminRoleCategoriesRouteImport } from './routes/edu-portal-admin.role-categories'
 import { Route as EduPortalAdminDashboardRouteImport } from './routes/edu-portal-admin.dashboard'
 import { Route as EduPortalAdminCourseCategoriesRouteImport } from './routes/edu-portal-admin.course-categories'
+import { Route as DevtoolsFinderSpecRouteImport } from './routes/devtools.finder-spec'
 import { Route as EduPortalAdminVideosIndexRouteImport } from './routes/edu-portal-admin.videos.index'
 import { Route as MFinderSplatRouteImport } from './routes/m.finder.$'
 import { Route as EduPortalAdminVideosNewRouteImport } from './routes/edu-portal-admin.videos.new'
@@ -215,6 +216,11 @@ const EduPortalAdminCourseCategoriesRoute =
     path: '/course-categories',
     getParentRoute: () => EduPortalAdminRoute,
   } as any)
+const DevtoolsFinderSpecRoute = DevtoolsFinderSpecRouteImport.update({
+  id: '/devtools/finder-spec',
+  path: '/devtools/finder-spec',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EduPortalAdminVideosIndexRoute =
   EduPortalAdminVideosIndexRouteImport.update({
     id: '/',
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
+  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
+  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
+  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/theme'
     | '/tokens'
     | '/wireframes'
+    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
@@ -408,6 +418,7 @@ export interface FileRouteTypes {
     | '/theme'
     | '/tokens'
     | '/wireframes'
+    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/theme'
     | '/tokens'
     | '/wireframes'
+    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
@@ -486,6 +498,7 @@ export interface RootRouteChildren {
   ThemeRoute: typeof ThemeRoute
   TokensRoute: typeof TokensRoute
   WireframesRoute: typeof WireframesRoute
+  DevtoolsFinderSpecRoute: typeof DevtoolsFinderSpecRoute
   FinderSplatRoute: typeof FinderSplatRoute
   MarkdownSplatRoute: typeof MarkdownSplatRoute
   MFinderSplatRoute: typeof MFinderSplatRoute
@@ -724,6 +737,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EduPortalAdminCourseCategoriesRouteImport
       parentRoute: typeof EduPortalAdminRoute
     }
+    '/devtools/finder-spec': {
+      id: '/devtools/finder-spec'
+      path: '/devtools/finder-spec'
+      fullPath: '/devtools/finder-spec'
+      preLoaderRoute: typeof DevtoolsFinderSpecRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/edu-portal-admin/videos/': {
       id: '/edu-portal-admin/videos/'
       path: '/'
@@ -837,6 +857,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThemeRoute: ThemeRoute,
   TokensRoute: TokensRoute,
   WireframesRoute: WireframesRoute,
+  DevtoolsFinderSpecRoute: DevtoolsFinderSpecRoute,
   FinderSplatRoute: FinderSplatRoute,
   MarkdownSplatRoute: MarkdownSplatRoute,
   MFinderSplatRoute: MFinderSplatRoute,

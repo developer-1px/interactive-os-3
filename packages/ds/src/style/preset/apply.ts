@@ -181,6 +181,32 @@ export const toCss = (p: DsPreset): string => {
         --ds-elev-3: ${elevationToShadow(p.elevation[3], k)};
       }
     }` : ''}
+
+    /* ── Mobile token override ─────────────────────────────────────────
+       viewport ≤ ${p.shell.mobileMax} (= phone iframe). 손에 든 시청 거리(~30cm) 보정 +
+       iOS HIG / Material 3 표준 사이즈로 키운다.
+         body          16 → 17px (iOS Body)
+         label         14 → 15px (iOS Subheadline)
+         caption       12 → 13px (iOS Footnote)
+         heading 1     28 → 32px (iOS Title 1 28pt × 1.15 — 모바일 hero 가독성)
+         control-h     32 → 44px (iOS HIG 최소 터치 타깃)
+         tap target  → control-h 같이 키워 Button/Tag/Tab 모두 따라옴 */
+    @media (max-width: ${p.shell.mobileMax}) {
+      :root {
+        /* iOS HIG · Material 3 표준 사이즈 */
+        --ds-text-xs:  13px;
+        --ds-text-sm:  15px;
+        --ds-text-md:  17px;
+        --ds-text-lg:  20px;
+        --ds-text-xl:  24px;
+        --ds-text-2xl: 32px;
+        --ds-control-h: 44px;
+        /* spacing 위계 비례 확장 — density 한 변수로 모든 pad()/hierarchy 토큰 1.5× 키움.
+           atom 2→3, section 4→6, surface 8→12, shell 16→24 — Gestalt 위계 단조성 그대로 보존.
+           desktop 데스크탑 시청거리(60cm) → 모바일 손에 든 거리(~30cm) 보정. */
+        --ds-density: 1.5;
+      }
+    }
   `
 }
 

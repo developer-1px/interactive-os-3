@@ -37,6 +37,7 @@ import { SearchBox } from '@p/ds/ui/3-input/SearchBox'
 import { Slider } from '@p/ds/ui/3-input/Slider'
 import { Select } from '@p/ds/ui/3-input/Select'
 import { Disclosure } from '@p/ds/ui/6-overlay/Disclosure'
+import { auditAll, clearAll } from './hmi-audit'
 
 // ──────────────────────────────────────────────────────────────────────
 // 모바일 골격 — content + 정해진 control. Phone wrapper.
@@ -675,10 +676,49 @@ const wireframesCss = `
 // Page builder
 // ──────────────────────────────────────────────────────────────────────
 
+// ──────────────────────────────────────────────────────────────────────
+// HMI Audit toolbar — 위계 단조 invariant 위반 감지 toggle.
+// ──────────────────────────────────────────────────────────────────────
+
+function HmiBar() {
+  const [report, setReport] = useState<{ total: number; byType: Record<string, number> } | null>(null)
+  const run = () => {
+    // iframe 들이 아직 mount 중일 수 있어 다음 frame 에 실행
+    requestAnimationFrame(() => setReport(auditAll()))
+  }
+  const clear = () => { clearAll(); setReport(null) }
+  return (
+    <div data-part="hmi-bar" style={{
+      display: 'flex', gap: 'calc(var(--ds-space) * 3)', alignItems: 'center',
+      padding: 'calc(var(--ds-space) * 3)',
+      background: 'var(--ds-bg)', border: 'var(--ds-hairline) solid var(--ds-border)',
+      borderRadius: 'var(--ds-radius-md)', fontFamily: 'ui-monospace, monospace',
+      fontSize: 'var(--ds-text-sm)', position: 'sticky', top: 0, zIndex: 10,
+    }}>
+      <strong>HMI Audit</strong>
+      <button type="button" onClick={run} data-emphasis="primary">감사 실행</button>
+      <button type="button" onClick={clear}>지우기</button>
+      {report && (
+        <div style={{ display: 'flex', gap: 'calc(var(--ds-space) * 4)' }}>
+          <span>총 {report.total} 위반</span>
+          <span style={{ color: 'rgb(220,50,60)' }}>● 단조 위반 {report.byType['monotonic-violation']}</span>
+          <span style={{ color: 'rgb(240,160,30)' }}>● redundant padding {report.byType['redundant-padding']}</span>
+          <span style={{ color: 'rgb(80,140,220)' }}>● gap stair {report.byType['gap-stair']}</span>
+        </div>
+      )}
+      <small style={{ marginInlineStart: 'auto', opacity: 0.6 }}>
+        단조 위반 = 자식 padding &gt; 부모 분리 · redundant = 부모/자식 padding 동시 · stair = 형제 padding 불균형
+      </small>
+    </div>
+  )
+}
+
 function buildPage(): NormalizedData {
   const canvas: ReactNode = (
     <div data-part="wf-canvas">
       <style>{wireframesCss}</style>
+
+      <HmiBar />
 
       <Group id="A" title="Chat" lede="MessageBubble · 1:1 대화 thread + 대화 목록 (Avatar + last-message)">
         {Chat_Thread}{Chat_List}
