@@ -84,7 +84,8 @@ export const proseCss = () => css`
   /* ── Headings — 위계 최소화 ladder. h1·h2·h3 만 size 차이, h4~h6 은 본문 size + weight/color/transform 으로 구분.
      dramatic scale 폐기 — LLM 출력 헤딩 폭격에서도 본문 흐름 안정. */
   [data-flow="prose"] :is(h1, h2, h3, h4, h5, h6) {
-    margin: 0;
+    margin-block-end: 0;
+    margin-inline: 0;
     text-wrap: balance;
     color: ${text('strong')};
     line-height: 1.35;

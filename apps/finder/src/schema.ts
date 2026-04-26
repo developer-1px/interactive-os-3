@@ -1,29 +1,13 @@
 import { z } from 'zod'
 import type { IconToken } from '@p/ds/foundations/iconography/icon'
 
-/** finder 도메인 엔티티 zod 스키마 — 진실 원천.
- *  타입은 z.infer로 도출. types.ts의 동명 type/interface는 유산. */
+/** finder 도메인 UI 엔티티 zod 스키마.
+ *  fs entity(FsNode)는 @p/fs/schema 가 owner — 여기서는 finder UI 메타만. */
 
 const iconToken = z.custom<IconToken>((v) => typeof v === 'string')
 
-export const FsNodeSchema: z.ZodType<FsNode> = z.lazy(() => z.object({
-  name: z.string(),
-  path: z.string(),
-  type: z.enum(['dir', 'file']),
-  size: z.number().optional(),
-  mtime: z.number().optional(),
-  ext: z.string().optional(),
-  children: z.array(FsNodeSchema).optional(),
-}))
-export interface FsNode {
-  name: string
-  path: string
-  type: 'dir' | 'file'
-  size?: number
-  mtime?: number
-  ext?: string
-  children?: FsNode[]
-}
+export { FsNodeSchema } from '@p/fs'
+export type { FsNode } from '@p/fs'
 
 export const SidebarItemSchema = z.object({
   id: z.string(),

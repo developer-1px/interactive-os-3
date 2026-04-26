@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { marked } from 'marked'
 import { useParams } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { loadText } from '@apps/finder'
+import { loadText } from '@p/fs'
 
 export function Markdown() {
   const { _splat } = useParams({ strict: false }) as { _splat?: string }

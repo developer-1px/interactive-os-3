@@ -108,6 +108,8 @@ importers:
 
   packages/ds: {}
 
+  packages/fs: {}
+
 packages:
 
   '@babel/code-frame@7.29.0':

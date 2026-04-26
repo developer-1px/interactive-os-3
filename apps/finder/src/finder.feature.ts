@@ -20,7 +20,7 @@ import {
   getTree, loadText, getImageUrl, sidebar as favItems, smartGroups, walk,
   tagGroups, tagItems, isTagPath,
 } from './data'
-import { tagFromPath } from './tagIndex'
+import { tagFromPath } from '@p/fs'
 import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from './types'
 import { extToIcon } from './types'
 

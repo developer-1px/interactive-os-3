@@ -25,6 +25,8 @@
     "paths": {
       "@p/ds": ["packages/ds/src/index.ts"],
       "@p/ds/*": ["packages/ds/src/*"],
+      "@p/fs": ["packages/fs/src/index.ts"],
+      "@p/fs/*": ["packages/fs/src/*"],
       "@p/app": ["packages/app/src/main.tsx"],
       "@p/app/*": ["packages/app/src/*"],
       "@apps/*": ["apps/*/src"]
