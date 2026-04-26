@@ -1,17 +1,27 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
+import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 
 /**
- * Shell wrapper. The outer `<main>/<section>` structure is matched by
- * existing `css/shell/panes.ts` selectors via `data-part`, so
- * it stays JSX for now — page-level FlatLayout runs inside <Outlet />.
- * Sidebar and Topbar are thin adapters kept as JSX shells too; only the
- * route page bodies are rewritten to `definePage + Renderer`.
+ * /edu-portal-admin shell.
+ *
+ * FlatLayout 셸 — Main entity 1개 + AdminShell Ui leaf. shell 내부의 navOpen 토글·
+ * scrim·sidebar·topbar·Outlet 은 G5 원칙대로 단일 Ui leaf 안에 묶여 있다.
  */
 export function EduPortalAdmin() {
-  // mobile drawer는 CSS가 분기. JS는 navOpen 토글만 — 옵션 클릭 시 닫고 싶으면 closeOnNav.
+  const page: NormalizedData = useMemo(() => definePage({
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      shell: { id: 'shell', data: { type: 'Ui', component: 'AdminShell' } },
+    },
+    relationships: { [ROOT]: ['shell'] },
+  }), [])
+  return <Renderer page={page} localRegistry={{ AdminShell }} />
+}
+
+function AdminShell() {
   const [navOpen, setNavOpen] = useState(false)
   return (
     <main

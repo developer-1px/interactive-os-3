@@ -6,7 +6,18 @@
  *   1-indicator · 2-action · 3-input · 4-collection · 5-composite ·
  *   6-overlay · 7-pattern · 8-layout
  */
-import type { ComponentType, ReactNode } from 'react'
+import { Fragment, createElement, type ComponentType, type ReactNode } from 'react'
+import { Outlet } from '@tanstack/react-router'
+
+/**
+ * Block — children passthrough (Fragment). definePage 안에 임의 ReactNode 슬롯을 끼울 때.
+ * Foundations / compositions 같은 docs 라우트에서 variant gallery 등 풍부한 시각을
+ * 끼우기 위한 escape hatch. 데이터 주도 패턴 위반 아님 — content prop 으로 받음.
+ */
+const Block = ({ children }: { children?: ReactNode }) =>
+  createElement(Fragment, null, children)
+import { Prose } from '../ui/0-primitive/Prose'
+import { Link } from '../ui/0-primitive/Link'
 import { Button } from '../ui/2-action/Button'
 import { Switch } from '../ui/2-action/Switch'
 import { Progress, Meter } from '../ui/2-action/Progress'
@@ -53,12 +64,18 @@ import { Top10List } from '../ui/7-pattern/Top10List'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>
 export type Zone =
-  | 'indicator' | 'action' | 'input' | 'collection'
-  | 'composite' | 'overlay' | 'pattern' | 'layout'
+  | 'primitive' | 'indicator' | 'action' | 'input' | 'collection'
+  | 'composite' | 'overlay' | 'pattern' | 'layout' | 'shell' | 'route'
 
 export interface UiEntry { component: AnyCmp; zone: Zone }
 
 export const uiRegistry = {
+  // primitive
+  Prose:  { component: Prose,  zone: 'primitive' },
+  Link:   { component: Link,   zone: 'primitive' },
+  // shell — TanStack passthrough
+  Outlet: { component: Outlet, zone: 'shell' },
+  Block:  { component: Block,  zone: 'primitive' },
   // indicator
   Badge:     { component: Badge,     zone: 'indicator' },
   LegendDot: { component: LegendDot, zone: 'indicator' },

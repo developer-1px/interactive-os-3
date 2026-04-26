@@ -1,6 +1,6 @@
-import { Component, type ComponentType, type ReactNode } from 'react'
+import { Component, useMemo, type ComponentType, type ReactNode } from 'react'
 import * as controls from '../../ds'
-import { Grid } from '../../ds'
+import { Grid, Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
 
 // DS가 자기 자신을 한 장에 전시한다. 컨트롤 하나당 셀 하나.
 // 데이터 소스는 ds index export 자체 — index에 추가되면 자동 반영된다.
@@ -18,23 +18,36 @@ class CellBoundary extends Component<{ children: ReactNode }, { error: string | 
 
 const components = Object.entries(controls)
   .filter(([name, v]) => typeof v === 'function' && /^[A-Z]/.test(name))
-  .sort(([a], [b]) => a.localeCompare(b)) as [string, ComponentType][]
+  .sort(([a], [b]) => a.localeCompare(b)) as Array<[string, ComponentType]>
 
 export function Matrix() {
+  const page: NormalizedData = useMemo(() => definePage({
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      main:   { id: 'main',   data: { type: 'Main',   flow: 'list', label: 'DS Matrix' } },
+      header: { id: 'header', data: { type: 'Header', flow: 'list' } },
+      title:  { id: 'title',  data: { type: 'Text',   variant: 'h1', content: 'DS Matrix' } },
+      desc:   { id: 'desc',   data: { type: 'Text',   variant: 'body', content: `${components.length} components — 시각 일관성·구분을 한 눈에 검사` } },
+      grid:   { id: 'grid',   data: { type: 'Ui',     component: 'DsMatrixGrid' } },
+    },
+    relationships: {
+      [ROOT]: ['main'],
+      main:   ['header', 'grid'],
+      header: ['title', 'desc'],
+    },
+  }), [])
+  return <Renderer page={page} localRegistry={{ DsMatrixGrid }} />
+}
+
+function DsMatrixGrid() {
   return (
-    <main aria-label="DS Matrix">
-      <header>
-        <h1>DS Matrix</h1>
-        <p>{components.length} components — 시각 일관성·구분을 한 눈에 검사</p>
-      </header>
-      <Grid cols={3}>
-        {components.map(([name, C]) => (
-          <figure key={name}>
-            <figcaption>{name}</figcaption>
-            <CellBoundary><C /></CellBoundary>
-          </figure>
-        ))}
-      </Grid>
-    </main>
+    <Grid cols={3}>
+      {components.map(([name, C]) => (
+        <figure key={name}>
+          <figcaption>{name}</figcaption>
+          <CellBoundary><C /></CellBoundary>
+        </figure>
+      ))}
+    </Grid>
   )
 }

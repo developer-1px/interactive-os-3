@@ -9,7 +9,7 @@
  * need arbitrary content can use Text (ReactNode `content`) or Ui with
  * `content`/`props.children`.
  */
-import { createElement, type CSSProperties, type ReactNode } from 'react'
+import { createContext, createElement, useContext, type ComponentType, type CSSProperties, type ReactNode } from 'react'
 import { ROOT, type NormalizedData } from '../core/types'
 import { useDebugTree } from './useDebugTree'
 import {
@@ -21,22 +21,37 @@ import {
 import { resolveUi } from './registry'
 import { Split } from '../ui/8-layout/Split'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyCmp = ComponentType<any>
+
+/**
+ * 라우트 로컬 Ui 레지스트리. ds 레이어가 src/routes 를 import 하지 못하므로
+ * 라우트는 자기 페이지 전용 Ui 를 Renderer 에 prop 으로 주입한다 (G2/G5).
+ */
+const LocalRegistryCtx = createContext<Record<string, AnyCmp> | undefined>(undefined)
+// eslint-disable-next-line react-refresh/only-export-components
+export const useLocalUi = (name: string): AnyCmp | undefined => useContext(LocalRegistryCtx)?.[name]
+
 export interface RendererProps {
   page: NormalizedData
   /** Root id — defaults to ROOT (`__root__`). */
   rootId?: string
+  /** Route-local Ui leaves (registry 에 두기 어려운 라우트 전용 컴포넌트). */
+  localRegistry?: Record<string, AnyCmp>
 }
 
-export function Renderer({ page, rootId = ROOT }: RendererProps) {
+export function Renderer({ page, rootId = ROOT, localRegistry }: RendererProps) {
   useDebugTree(page)
-  if (!page.entities[rootId]) {
-    // Accept single-rooted trees that omit the `__root__` meta entity by
-    // rendering the relationships root directly if present.
-    const rootFromRel = Object.keys(page.relationships)[0]
-    if (!rootFromRel) return null
-    return <NodeChildren page={page} id={rootFromRel} pageRoot />
-  }
-  return <NodeChildren page={page} id={rootId} pageRoot />
+  const tree = (() => {
+    if (!page.entities[rootId]) {
+      const rootFromRel = Object.keys(page.relationships)[0]
+      if (!rootFromRel) return null
+      return <NodeChildren page={page} id={rootFromRel} pageRoot />
+    }
+    return <NodeChildren page={page} id={rootId} pageRoot />
+  })()
+  if (!localRegistry) return tree
+  return <LocalRegistryCtx.Provider value={localRegistry}>{tree}</LocalRegistryCtx.Provider>
 }
 
 function NodeChildren({ page, id, pageRoot }: { page: NormalizedData; id: string; pageRoot?: boolean }) {
@@ -270,7 +285,8 @@ function FooterView({ page, id, d }: { page: NormalizedData; id: string; d: Foot
 // ── leaves ────────────────────────────────────────────────────────
 
 function UiLeaf({ page, id, d }: { page: NormalizedData; id: string; d: UiNode }) {
-  const Cmp = resolveUi(d.component)
+  const local = useLocalUi(d.component)
+  const Cmp = local ?? resolveUi(d.component)
   if (!Cmp) {
     if (typeof window !== 'undefined') {
        

@@ -11,6 +11,7 @@ import { useLayoutEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import {
   Listbox, fromTree, navigateOnActivate, useControlState, type Event,
+  Renderer, definePage, ROOT, type NormalizedData,
 } from '../../ds'
 import {
   getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
@@ -20,7 +21,22 @@ import { extToIcon, type FsNode, type SmartGroupItem } from '../finder/types'
 import { PreviewBody } from '../finder/Preview'
 import { useSidebarNav } from '../finder/useSidebarNav'
 
+/**
+ * /m/finder shell — FlatLayout 셸 + FinderMobileBody Ui leaf.
+ * 본문(useSyncExternalStore·swipe FSM)은 별도 PR에서 useResource 패턴으로 정련 예정.
+ */
 export function FinderMobile() {
+  const page: NormalizedData = useMemo(() => definePage({
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      body: { id: 'body', data: { type: 'Ui', component: 'FinderMobileBody' } },
+    },
+    relationships: { [ROOT]: ['body'] },
+  }), [])
+  return <Renderer page={page} localRegistry={{ FinderMobileBody }} />
+}
+
+export function FinderMobileBody() {
   const navigate = useNavigate()
   const { _splat } = useParams({ strict: false }) as { _splat?: string }
   const raw = _splat ?? ''

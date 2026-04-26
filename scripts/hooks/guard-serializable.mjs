@@ -45,7 +45,10 @@ process.stdin.on('end', () => {
   // 규칙: src/routes/** 페이지는 definePage + Renderer 선언형으로 일원화한다.
   // raw <main>/<section aria-roledescription>로 페이지 레이아웃을 직접 조립하면 차단.
   // 하위 widget 파일(Sidebar/Columns/Preview 등)은 <main>을 쓰지 않으므로 제외된다.
-  if (/\/src\/routes\//.test(file)) {
+  // 라우트 로컬 Ui leaf 파일 — *Body.tsx · *Shell.tsx · *Lab.tsx · *Body/index.tsx 등.
+  // 이들은 entity tree의 Ui leaf 컴포넌트이므로 raw <main> 사용 허용.
+  const isRouteLocalUiLeaf = /\/(?:[A-Z][A-Za-z0-9]*(?:Body|Shell|Lab))\.tsx$/.test(file)
+  if (/\/src\/routes\//.test(file) && !isRouteLocalUiLeaf) {
     const rawShellRe = /<main\b/
     const hasDefinePage = /\bdefinePage\s*\(/
     const nextHasShell = rawShellRe.test(next)
