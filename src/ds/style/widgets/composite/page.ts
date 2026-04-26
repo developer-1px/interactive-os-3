@@ -40,15 +40,24 @@ export const pageCss = css`
   [aria-roledescription="board-page"] [aria-roledescription="board-stream"] {
     overflow-y: auto;
   }
-  /* board-posts — 게시물 collection.
-     post(다른 작성자) ↔ post: L3 section (Continuity로 위계 성립)
-     post-cont(같은 작성자 연속) ↔ 직전: L0 atom (bonded — 한 화자 묶음) */
+  /* board-posts — 게시물 collection (Slack 스타일).
+     post(다른 작성자):  L3 section gap. avatar + header(name+time) + body 풀 렌더.
+     post-cont(같은 작성자 연속):  L0 atom 회수. avatar/header 시각 숨김 (alignment 유지를
+       위해 visibility:hidden — 자리는 보존 → body가 직전과 동일 인덴트로 흐름). */
   [aria-roledescription="board-page"] [aria-roledescription="board-posts"] {
     gap: ${hierarchy.section};
     padding: ${hierarchy.surface} 0;
   }
   [aria-roledescription="board-page"] [aria-roledescription="board-posts"] > [aria-roledescription="post-cont"] {
     margin-block-start: calc(${hierarchy.atom} - ${hierarchy.section});
+  }
+  /* post-cont의 첫 자식 = 아바타(Text strong width:36), 두 번째 = column(name+body).
+     아바타 자리 보존하되 시각 제거. column 안 첫 줄(name+time)도 시각 제거. */
+  [aria-roledescription="post-cont"] > :first-child {
+    visibility: hidden;
+  }
+  [aria-roledescription="post-cont"] > :nth-child(2) > :first-child {
+    display: none;
   }
 
   /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지에서 좁은 viewport시
