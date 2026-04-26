@@ -31,8 +31,8 @@ content 부품은 다른 축이다 — `parts/` 폴더에는 Avatar·Badge·Card
 
 ## 근거
 
-- /Users/user/Desktop/ds/packages/ds/src/ui/ — 8개 layer × 평균 8개 ≈ 60개 수준
-- /Users/user/Desktop/ds/packages/ds/src/parts/index.ts — 18개 content part
+- /Users/user/Desktop/ds/src/ds/ui/ — 8개 layer × 평균 8개 ≈ 60개 수준
+- /Users/user/Desktop/ds/src/ds/parts/index.ts — 18개 content part
 - /Users/user/Desktop/ds/CANONICAL.md:79 (Radix·Base·Ariakit·RAC 최소 2곳 수렴 시 채택)
 - /Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/10_whyNoVariant.md:69-82 (이름이 어휘가 된다)
 

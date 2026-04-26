@@ -28,8 +28,8 @@ design 마이너 변경(예: 마케팅 페이지 hero CTA만 살짝 다르게)�
 
 ## 근거
 
-- /Users/user/Desktop/ds/packages/ds/src/foundations/color/pair.ts — surface별 색 1쌍
-- /Users/user/Desktop/ds/packages/ds/src/foundations/recipes/ — recipe 묶음 패턴
+- /Users/user/Desktop/ds/src/ds/foundations/color/pair.ts — surface별 색 1쌍
+- /Users/user/Desktop/ds/src/ds/foundations/recipes/ — recipe 묶음 패턴
 - /Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/10_whyNoVariant.md:60-67 (4절. surface 소유자 책임)
 - /Users/user/Desktop/ds/CANONICAL.md:58 (color weight·opacity. surface 소유자만 색 보유)
 

@@ -5,11 +5,11 @@
 // 모바일/데스크톱 적응은 CSS @media/@container만으로 처리한다. JS 트리는 단일.
 //
 // 룰:
-//   R1. 라우트 코드(src/routes/**)에서 window.matchMedia 직접 호출 금지.
+//   R1. 라우트 코드(packages/app/src/routes/**)에서 window.matchMedia 직접 호출 금지.
 //        → 모바일/데스크톱 분기는 CSS @media/@container로 처리.
 //   R2. ds widget CSS(packages/ds/src/ui/**)에서 viewport @media (... -width:) 사용 금지.
 //        → 컨텐츠 reflow는 @container 만 허용.
-//   R3. shell CSS(packages/ds/src/style/**, src/routes/**)에서 max-width/min-width 리터럴 폭
+//   R3. shell CSS(packages/ds/src/style/**, packages/app/src/routes/**)에서 max-width/min-width 리터럴 폭
 //        @media를 쓸 때 SHELL_MOBILE_MAX 토큰(${SHELL_MOBILE_MAX} interpolation) 사용 강제.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -40,7 +40,7 @@ const isInStringOrComment = (ln, idx) => {
   const quoteCount = (before.match(/(?<!\\)['"`]/g) ?? []).length
   return quoteCount % 2 === 1
 }
-for (const f of walk(join(ROOT, 'src/routes')).filter(isCode)) {
+for (const f of walk(join(ROOT, 'packages/app/src/routes')).filter(isCode)) {
   const src = readFileSync(f, 'utf8')
   const lines = src.split('\n')
   lines.forEach((ln, i) => {

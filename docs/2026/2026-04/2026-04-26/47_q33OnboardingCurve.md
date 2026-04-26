@@ -33,7 +33,7 @@ ds 자체의 학습 곡선이 가파른 거 아닌가? 신입 온보딩은?
 ## 근거
 
 - /Users/user/Desktop/ds/CANONICAL.md — 정본 매뉴얼 (110줄, 1장)
-- /Users/user/Desktop/ds/packages/ds/src/ui/ — 9층 폴더 그 자체가 카탈로그
+- /Users/user/Desktop/ds/src/ds/ui/ — 9층 폴더 그 자체가 카탈로그
 - 08_projectWhy.md — LLM 친화 = 신입 친화 (LLM이 동료)
 - /content 라우트 — 신입 학습용 시연 카탈로그
 

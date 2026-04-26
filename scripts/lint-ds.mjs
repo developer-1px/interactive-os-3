@@ -8,7 +8,7 @@ const ROOT = new URL('..', import.meta.url).pathname
 const SRC = join(ROOT, 'src')
 const SKIP_DIRS = new Set(['ds', 'controls', 'node_modules', 'dist', '.claude'])
 // 시연/카탈로그 라우트 — raw role/aria 사용이 콘텐츠 본질 (feedback_showcase_route_role_exception)
-const SHOWCASE_FILES = new Set(['src/routes/content/sample.tsx'])
+const SHOWCASE_FILES = new Set(['packages/app/src/routes/content/sample.tsx'])
 
 // 심각도 정의 — 위에서부터 먼저 매칭
 const rules = [

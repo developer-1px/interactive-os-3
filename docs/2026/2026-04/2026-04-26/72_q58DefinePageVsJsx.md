@@ -19,9 +19,9 @@ updated: 2026-04-26
 표면 구조는 같지만 **무엇이 데이터로 환원되는가**가 다르다.
 
 - JSX는 ReactElement를 만든다. 노드에는 함수 reference(컴포넌트 type), closures(prop으로 캡처된 onClick), children fragment가 박힌다 — JSON.stringify 시 깨진다.
-- `definePage`는 `NormalizedData`를 반환한다(`packages/ds/src/layout/definePage.ts:12`). 그냥 객체다. round-trip 가능하다.
+- `definePage`는 `NormalizedData`를 반환한다(`src/ds/layout/definePage.ts:12`). 그냥 객체다. round-trip 가능하다.
 
-이게 가능한 이유는 entity의 `kind` 필드가 **registry lookup key**이기 때문이다. JSX에서 `<Sidebar/>`는 `Sidebar` 컴포넌트 함수 reference를 박지만, `definePage` 안의 `{ id:'sidebar', kind:'Sidebar' }`는 문자열 key 하나만 박는다. Renderer가 `kind` → 컴포넌트를 registry에서 찾는다(`packages/ds/src/layout/registry.ts`).
+이게 가능한 이유는 entity의 `kind` 필드가 **registry lookup key**이기 때문이다. JSX에서 `<Sidebar/>`는 `Sidebar` 컴포넌트 함수 reference를 박지만, `definePage` 안의 `{ id:'sidebar', kind:'Sidebar' }`는 문자열 key 하나만 박는다. Renderer가 `kind` → 컴포넌트를 registry에서 찾는다(`src/ds/layout/registry.ts`).
 
 세 가지가 따라온다.
 
@@ -33,8 +33,8 @@ updated: 2026-04-26
 
 ## 근거
 
-- `/Users/user/Desktop/ds/packages/ds/src/layout/definePage.ts:1-17` — identity wrapper + dev validation
-- `/Users/user/Desktop/ds/packages/ds/src/layout/registry.ts` — kind → component lookup
+- `/Users/user/Desktop/ds/src/ds/layout/definePage.ts:1-17` — identity wrapper + dev validation
+- `/Users/user/Desktop/ds/src/ds/layout/registry.ts` — kind → component lookup
 - `/Users/user/Desktop/ds/CANONICAL.md:7-11` — 선언적 + 직렬화 가능이 정본 통과 조건
 - `/Users/user/Desktop/ds/CANONICAL.md:33` — 앱 레이아웃 정본 = definePage entities tree
 

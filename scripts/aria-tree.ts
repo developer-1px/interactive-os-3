@@ -37,7 +37,7 @@ const fixtures: Fixture[] = [
   {
     slug: 'genres-chat',
     build: async () => {
-      const { buildChatPage } = await import('../src/routes/genres/chat/build')
+      const { buildChatPage } = await import('../packages/app/src/routes/genres/chat/build')
       return buildChatPage({
         active: 'ds', draft: '', stream: {},
         setActive: noop, setDraft: noop, send: noop,
@@ -48,7 +48,7 @@ const fixtures: Fixture[] = [
   {
     slug: 'genres-inbox',
     build: async () => {
-      const { buildInboxPage } = await import('../src/routes/genres/inbox/build')
+      const { buildInboxPage } = await import('../packages/app/src/routes/genres/inbox/build')
       return buildInboxPage({
         folder: 'inbox', selectedId: '',
         setFolder: noop, setSelected: noop,
@@ -59,7 +59,7 @@ const fixtures: Fixture[] = [
   {
     slug: 'genres-feed',
     build: async () => {
-      const { buildFeedPage } = await import('../src/routes/genres/feed/build')
+      const { buildFeedPage } = await import('../packages/app/src/routes/genres/feed/build')
       return buildFeedPage({
         liked: new Set<string>(), toggle: noop,
         nav: emptyNav(),

@@ -131,7 +131,7 @@ for (const file of files) {
 // Resource 단일 인터페이스 — routes/**에서 useSyncExternalStore 직접 호출 금지.
 // 공유 도메인 데이터 read/write는 useResource(resource) 단일 인터페이스로만.
 // 컴포넌트 로컬 useState는 허용 (UI state). 모듈 스코프 store 구독은 useResource로 흡수.
-const ROUTES = join(ROOT, 'src/routes')
+const ROUTES = join(ROOT, 'packages/app/src/routes')
 const walkAll = (dir, out = []) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, e.name)

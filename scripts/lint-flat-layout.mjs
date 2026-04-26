@@ -9,7 +9,7 @@
  * 지정된 모든 페이지 구현 파일은 `<Renderer` 마커를 포함해야 한다.
  *
  * 동작:
- *   1) src/routes/*.tsx 중 `createFileRoute` 를 사용하는 entry 파일을 찾는다.
+ *   1) packages/app/src/routes/*.tsx 중 `createFileRoute` 를 사용하는 entry 파일을 찾는다.
  *   2) 각 entry 의 `component: <Name>` 식별자를 파싱하고,
  *      해당 식별자가 어느 파일에서 import 되었는지 추적한다.
  *   3) 그 파일이 `<Renderer` 마커를 포함하는지 확인한다. 없으면 에러.
@@ -21,7 +21,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 
-const ROUTES = resolve(process.cwd(), 'src/routes')
+const ROUTES = resolve(process.cwd(), 'packages/app/src/routes')
 
 function walk(dir) {
   const out = []

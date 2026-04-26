@@ -28,15 +28,15 @@ export default defineConfig({
     alias: [
       { find: /^@p\/ds$/, replacement: resolve(__dirname, 'packages/ds/src/index.ts') },
       { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
-      { find: /^@p\/app$/, replacement: resolve(__dirname, 'src/main.tsx') },
-      { find: /^@p\/app\//, replacement: resolve(__dirname, 'src/') + '/' },
+      { find: /^@p\/app$/, replacement: resolve(__dirname, 'packages/app/src/main.tsx') },
+      { find: /^@p\/app\//, replacement: resolve(__dirname, 'packages/app/src/') + '/' },
     ],
   },
   plugins: [
     tanstackRouter({
       target: 'react',
-      routesDirectory: 'src/routes',
-      generatedRouteTree: 'src/routeTree.gen.ts',
+      routesDirectory: 'packages/app/src/routes',
+      generatedRouteTree: 'packages/app/src/routeTree.gen.ts',
       autoCodeSplitting: false,
       // 컴포넌트 파일(PascalCase)은 라우트로 해석하지 않는다.
       // 라우트 파일은 모두 lowercase / dot-segment 규약(예: finder.$.tsx)을 따른다.

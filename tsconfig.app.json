@@ -25,10 +25,10 @@
     "paths": {
       "@p/ds": ["packages/ds/src/index.ts"],
       "@p/ds/*": ["packages/ds/src/*"],
-      "@p/app": ["src/main.tsx"],
-      "@p/app/*": ["src/*"]
+      "@p/app": ["packages/app/src/main.tsx"],
+      "@p/app/*": ["packages/app/src/*"]
     }
   },
-  "include": ["src", "packages/ds/src"],
+  "include": ["packages/app/src", "packages/ds/src"],
   "exclude": ["packages/ds/src/build.ts"]
 }

@@ -169,7 +169,7 @@ const scanContracts = (root: string, callSiteCounts: Record<string, number>): Co
 
 const countCallSites = (root: string, names: string[]): Record<string, number> => {
   const out: Record<string, number> = Object.fromEntries(names.map((n) => [n, 0]))
-  const scanDirs = ['src/routes', 'packages/ds/src/widgets', 'packages/ds/src/style/widgets']
+  const scanDirs = ['packages/app/src/routes', 'packages/ds/src/widgets', 'packages/ds/src/style/widgets']
     .map((d) => join(root, d))
     .filter((d) => { try { return statSync(d).isDirectory() } catch { return false } })
   const files = scanDirs.flatMap((d) => walkAll(d))

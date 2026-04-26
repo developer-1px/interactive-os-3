@@ -1,5 +1,5 @@
 // Node ESM loader — Vite 전용 import.meta.glob을 사용하는 모듈을 stub로 치환한다.
-// scripts/aria-tree.ts 가 src/routes/**/build.tsx 를 동적 import 할 때 적용.
+// scripts/aria-tree.ts 가 packages/app/src/routes/**/build.tsx 를 동적 import 할 때 적용.
 //
 // 사용: node --import tsx --loader ./scripts/aria-tree-loader.mjs scripts/aria-tree.ts
 import { fileURLToPath } from 'node:url'

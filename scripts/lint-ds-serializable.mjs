@@ -7,7 +7,7 @@
  *   - inline 화살표 함수 () => 금지 — 핸들러는 onEvent intent ID로 환원
  *   - cloneElement / Children.* 금지 (ds 외에서도)
  *
- * 대상: src/routes/** (ds/ 자체는 lint-ds-contracts 가 본다).
+ * 대상: packages/app/src/routes/** (ds/ 자체는 lint-ds-contracts 가 본다).
  * 트리거 파일: definePage 호출 또는 NormalizedData 반환 빌더를 포함하는 .tsx/.ts.
  *
  * WARN 모드: 위반을 보고하지만 exit 0. 새 위반 차단은 PreToolUse 훅이 담당.
@@ -16,7 +16,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const ROOT = process.cwd()
-const SRC = join(ROOT, 'src/routes')
+const SRC = join(ROOT, 'packages/app/src/routes')
 
 const walk = (dir, out = []) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {

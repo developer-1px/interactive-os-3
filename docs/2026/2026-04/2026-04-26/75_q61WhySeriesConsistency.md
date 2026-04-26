@@ -36,8 +36,8 @@ updated: 2026-04-26
 
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/12_whyDeFactoStandard.md:21-27` — 컴포넌트 이름 층의 학습 분포 논리
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/13_whyDeclarativeSerialization.md` — 메타 어휘(define*, data·onEvent)가 직렬화 원칙에서 유도됨
-- `/Users/user/Desktop/ds/packages/ds/src/core/flow.ts:31-35` — `defineFlow` identity wrapper (외부 표준 없는 자리)
-- `/Users/user/Desktop/ds/packages/ds/src/layout/definePage.ts:12` — `definePage` identity wrapper
+- `/Users/user/Desktop/ds/src/ds/core/flow.ts:31-35` — `defineFlow` identity wrapper (외부 표준 없는 자리)
+- `/Users/user/Desktop/ds/src/ds/layout/definePage.ts:12` — `definePage` identity wrapper
 
 ## 남은 의문
 

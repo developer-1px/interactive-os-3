@@ -32,7 +32,7 @@ bucket 자체는 직렬화된 string ("a"|"b"|"control")이므로 useResource va
 
 - /Users/user/Desktop/ds/CANONICAL.md:21 (C3 분기는 데이터 룩업)
 - /Users/user/Desktop/ds/CANONICAL.md:33 (definePage entities tree 정본)
-- /Users/user/Desktop/ds/packages/ds/src/foundations/color/semantic.ts (semantic token swap 가능 지점)
+- /Users/user/Desktop/ds/src/ds/foundations/color/semantic.ts (semantic token swap 가능 지점)
 
 ## 남은 의문
 

@@ -36,7 +36,7 @@ shadcn/ui는 copy-paste 기반인데 ds와 무엇이 다른가?
 - `/Users/user/Desktop/ds/CANONICAL.md:79` — de facto 2곳 수렴
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/08_projectWhy.md:33-37` — P1~P4
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/10_whyNoVariant.md` — variant 금지 why
-- `/Users/user/Desktop/ds/packages/ds/src/ui/` — ds 컴포넌트가 사용자 레포에 들어 있는 형태 (shadcn과 동형이지만 정본 강제)
+- `/Users/user/Desktop/ds/src/ds/ui/` — ds 컴포넌트가 사용자 레포에 들어 있는 형태 (shadcn과 동형이지만 정본 강제)
 
 ## 남은 의문
 

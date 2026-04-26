@@ -2,7 +2,7 @@
 /**
  * PreToolUse guard — Write/Edit 직전 변경 파일에 직렬화 누수가 있으면 차단.
  *
- * 차단 대상 파일: src/routes/** + packages/ds/src/ui/7-pattern/**
+ * 차단 대상 파일: packages/app/src/routes/** + packages/ds/src/ui/7-pattern/**
  * 새로 들어가는 위반만 막기는 어렵기에, 변경 후 콘텐츠가 정한 패턴을 포함하면 차단.
  * 기존 빨간 파일에는 적용하지 않기 위해 changed-only / 신규 파일만 검사한다.
  *
@@ -42,7 +42,7 @@ process.stdin.on('end', () => {
     if (inNext && !inPrev) violations.push(msg)
   }
 
-  // 규칙: src/routes/** 페이지는 definePage + Renderer 선언형으로 일원화한다.
+  // 규칙: packages/app/src/routes/** 페이지는 definePage + Renderer 선언형으로 일원화한다.
   // raw <main>/<section aria-roledescription>로 페이지 레이아웃을 직접 조립하면 차단.
   // 하위 widget 파일(Sidebar/Columns/Preview 등)은 <main>을 쓰지 않으므로 제외된다.
   // 라우트 로컬 Ui leaf 파일 — *Body.tsx · *Shell.tsx · *Lab.tsx · *Body/index.tsx 등.
@@ -56,7 +56,7 @@ process.stdin.on('end', () => {
     const nextHasDefinePage = hasDefinePage.test(next)
     if (nextHasShell && !nextHasDefinePage && !(prevHasShell && !hasDefinePage.test(prev))) {
       violations.push(
-        'src/routes 페이지는 definePage(entities tree) + Renderer 선언형이 canonical — raw <main>/JSX 조립 금지. ' +
+        'packages/app/src/routes 페이지는 definePage(entities tree) + Renderer 선언형이 canonical — raw <main>/JSX 조립 금지. ' +
         '예) export function Page() { return <Renderer page={definePage({ ... })} /> }'
       )
     }
