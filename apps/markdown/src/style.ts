@@ -5,6 +5,7 @@ import { SHELL_MOBILE_MAX } from '@p/ds/style/preset/breakpoints'
 export const markdownCss = css`
   main[data-part="markdown-app"] {
     display: flex; flex-direction: column; gap: ${pad(3)};
+    inline-size: 100%;
     padding: ${pad(4)} max(${pad(4)}, env(safe-area-inset-left)) ${pad(8)} max(${pad(4)}, env(safe-area-inset-right));
     min-block-size: 100svh;
     overflow-x: hidden;

@@ -26,7 +26,7 @@ export const phone = () => css`
     border: 8px solid ${neutral(9)};
     overflow: hidden;
     display: grid;
-    grid-template-rows: 47px auto 1fr auto 24px;
+    grid-template-rows: 47px 1fr 24px;
     position: relative;
     box-shadow:
       0 1px 0 0 ${neutral(2)} inset,
