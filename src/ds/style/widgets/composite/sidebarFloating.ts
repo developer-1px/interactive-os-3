@@ -1,5 +1,6 @@
 import { css } from '../../../foundations/primitives/css'
 import { neutral, pad, radius, hierarchy, tint } from '../../../foundations'
+import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
  * sidebarFloating — mobile surface of `sidebar/admin` intent.
@@ -96,6 +97,28 @@ export const sidebarFloatingCss = () => css`
   @media (max-width: 767px) {
     nav[aria-roledescription="sidebar"]:not([data-state="floating"]) {
       display: none !important;
+    }
+  }
+
+  /* ── 모바일 컨텐츠 영역 공식화 ─────────────────────────────────────────────
+     모든 라우트의 main 컨텐츠가 viewport 가장자리에 붙지 않도록 hierarchy 토큰으로
+     일괄 적용. L4 surface(pad(2)) inline padding + FAB 클리어런스 block-end 패딩.
+
+     Opt-out: main[data-no-mobile-pad] (이미 자체 padding 가진 라우트는 명시 거부).
+     Opt-out for chat/feed-style stream containers: main[data-stream]도 padding 0.
+     ───────────────────────────────────────────────────────────────────────── */
+  @media (max-width: ${SHELL_MOBILE_MAX}) {
+    main:not([data-no-mobile-pad]):not([data-stream]) {
+      padding-inline: ${hierarchy.surface};
+    }
+    /* FAB(좌하단 56px + pad(4) inset) 위로 본문이 가리지 않도록 main 끝에 여백 추가 */
+    main:not([data-no-mobile-pad]) {
+      padding-block-end: calc(${pad(14)} + ${pad(4)} + ${hierarchy.surface});
+    }
+    /* article[prose]는 이미 자체 padding-inline 가지고 있어 main의 inline padding과
+       이중으로 겹치지 않게 article 안의 inline은 0으로 리셋 */
+    main > article[data-flow="prose"] {
+      padding-inline: 0;
     }
   }
 `
