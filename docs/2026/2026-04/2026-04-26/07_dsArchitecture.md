@@ -19,7 +19,7 @@ ds는 LLM이 화면을 생성할 때 같은 의미가 같은 형태로 환원되
 ## 2. 패키지 토폴로지
 
 ```
-src/ds/
+packages/ds/src/
 ├── core/         타입·이벤트·정규화 데이터 계약 (NormalizedData, Event, ControlProps)
 ├── data.ts       NormalizedData 헬퍼
 ├── palette/      raw scale (gray·pad·elev) — 수치 토큰
@@ -58,7 +58,7 @@ src/ds/
 ui/4-collection 이상의 모든 부품은 children prop을 받지 않는다. 대신 단일 데이터 형태를 받는다.
 
 ```ts
-// src/ds/core/types.ts
+// packages/ds/src/core/types.ts
 export interface Entity {
   id: string
   data?: Record<string, unknown>
@@ -95,7 +95,7 @@ export type Event =
 페이지는 컴포넌트 트리(JSX 조립)가 아니라 `NormalizedData`로 선언된다.
 
 ```ts
-// src/ds/layout/nodes.ts (발췌)
+// packages/ds/src/layout/nodes.ts (발췌)
 export type NodeType =
   | 'Row' | 'Column' | 'Grid' | 'Split'
   | 'Main' | 'Nav' | 'Aside' | 'Section' | 'Header' | 'Footer'
@@ -143,7 +143,7 @@ export default definePage({
 CSS 우선순위는 selector specificity가 아니라 layer 순서로만 결정된다.
 
 ```ts
-// src/ds/index.ts
+// packages/ds/src/index.ts
 export const APPS_LAYER_DECL =
   '@layer reset, states, widgets, parts, content, shell, apps;\n'
 ```
@@ -161,7 +161,7 @@ export const APPS_LAYER_DECL =
 정본 효과:
 
 - **specificity 카운팅 불필요**: `!important`·`#id`·중첩 selector로 우선순위 싸움 안 함. 어느 layer에 속하는지만 본다.
-- **assertUniqueSelectors**: 부팅 시 selector 중복을 throw로 차단한다 (`src/ds/style/assertUnique.ts`). Cascade race는 영구 부채라 새 중복 자체가 금지된다.
+- **assertUniqueSelectors**: 부팅 시 selector 중복을 throw로 차단한다 (`packages/ds/src/style/assertUnique.ts`). Cascade race는 영구 부채라 새 중복 자체가 금지된다.
 - **classless**: 스타일 전용 class는 만들지 않는다. selector는 tag + role + aria + data-* 만.
 
 ## 6. 메커니즘 4 — Token 3-tier (palette · foundations · component)
@@ -174,7 +174,7 @@ palette/  →  foundations/  →  ui·parts·widget
 ```
 
 ```ts
-// src/ds/foundations/layout/container.ts
+// packages/ds/src/foundations/layout/container.ts
 export const container = {
   cell:    '240px',  // 카드 그리드 셀 (Pinterest·Dribbble·Shopify)
   card:    '320px',  // 단일 카드 (Apple App Store)

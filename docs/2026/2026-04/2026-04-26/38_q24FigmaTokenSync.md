@@ -46,8 +46,8 @@ ds는 "tokens가 데이터다"까지만 정본화했고 "Figma와 자동 sync한
 
 ## 근거
 
-- /Users/user/Desktop/ds/src/ds/foundations/color/semantic.ts
-- /Users/user/Desktop/ds/src/ds/palette/ (raw scale 진입점)
+- /Users/user/Desktop/ds/packages/ds/src/foundations/color/semantic.ts
+- /Users/user/Desktop/ds/packages/ds/src/palette/ (raw scale 진입점)
 - /Users/user/Desktop/ds/CANONICAL.md:92-97 (정본 갱신 절차)
 - 메모리 — design-extract 스킬 (실측 추출 — Figma sync와 다름)
 

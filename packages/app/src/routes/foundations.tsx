@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Foundations } from './foundations/Foundations'
+import { Foundations } from '@apps/foundations'
 
 export const Route = createFileRoute('/foundations')({
   component: Foundations,

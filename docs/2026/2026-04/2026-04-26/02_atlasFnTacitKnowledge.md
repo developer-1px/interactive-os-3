@@ -20,7 +20,7 @@ updated: 2026-04-26
 
 ### 순회 대상
 
-- `/atlas` 의 fn 카탈로그 (src/ds/fn/* — color, icon, values 등)
+- `/atlas` 의 fn 카탈로그 (packages/ds/src/fn/* — color, icon, values 등)
 - 각 fn의 시그니처·사용처·왜 함수형으로 만들어졌는지
 
 ### 추출할 축
@@ -47,7 +47,7 @@ updated: 2026-04-26
 
 - [x] `/atlas` 라우트 열어 fn 카탈로그 항목 enumerate (2026-04-26)
 - [x] 진단: content 부품 layer 통째 비어있음 — `ds/parts/` 신설 필요
-- [x] **P1**: `src/ds/parts/` 신설 — Avatar, Badge(CountBadge alias), Tag, Thumbnail, Timestamp, Skeleton, EmptyState, Callout, KeyValue 9개 + 스타일
+- [x] **P1**: `packages/ds/src/parts/` 신설 — Avatar, Badge(CountBadge alias), Tag, Thumbnail, Timestamp, Skeleton, EmptyState, Callout, KeyValue 9개 + 스타일
 - [x] **P2**: atlas Parts 탭 추가 — nav `parts` 항목 + filter 분기 + 9/17 coverage
 - [x] **P3**: entity 폴더 정리 — chip/badge에 deprecation 주석, 14개 분류표
 - [x] **P4**: atlas demos 자기참조화 — inline-style 18→8(본질만), Callout/Skeleton/Badge/Tag/recipes.microLabel 자기 시연

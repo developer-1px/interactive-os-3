@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Inspector } from './inspector/Inspector'
+import { Inspector } from '@apps/inspector'
 
 export const Route = createFileRoute('/inspector')({
   component: Inspector,

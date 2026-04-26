@@ -19,7 +19,7 @@ Radix를 그대로 쓰면 안 되나? 왜 그 위에 또 한 층을 얹나?
 Radix는 **headless primitive**다 — ARIA·키보드·focus는 정확히 풀어주지만, "의미와 시각의 결합"·"데이터 인터페이스"·"조립 형태"는 풀지 않는다. 그 풀리지 않은 결정이 LLM의 비결정성을 만든다.
 
 Radix를 그대로 쓰면 풀리지 않는 것:
-1. **시각**: Radix는 unstyled. 색·간격·shape를 사용자가 매번 결정한다. ds는 foundations 토큰으로 결정 1개 (`src/ds/foundations/`).
+1. **시각**: Radix는 unstyled. 색·간격·shape를 사용자가 매번 결정한다. ds는 foundations 토큰으로 결정 1개 (`packages/ds/src/foundations/`).
 2. **인터페이스 형태**: Radix는 children-driven JSX. `<Menu><Menu.Trigger/><Menu.Content><Menu.Item/></Menu.Content></Menu>`. ds는 `data, onEvent` 단일 인터페이스 (P3, CANONICAL.md:38). 트리 데이터를 LLM이 매번 다른 JSX로 조립할 자유를 차단.
 3. **gesture/intent 분리**: Radix 컴포넌트는 onKeyDown 등이 노출돼 있어 소비자가 분기 코드를 끼워 넣을 여지가 있다. ds는 `ui/`가 activate만 emit, intent 도출은 `ds/core/gesture`로 격리 (CANONICAL.md:39).
 4. **Resource·Flow**: Radix는 데이터 흐름에 의견이 없다. ds는 `useResource`·`defineFlow` 1개로 닫는다 (CANONICAL.md:45-46).
@@ -32,7 +32,7 @@ Radix를 그대로 쓰면 풀리지 않는 것:
 - `/Users/user/Desktop/ds/CANONICAL.md:33` — definePage 정본
 - `/Users/user/Desktop/ds/CANONICAL.md:38-46` — ui 인터페이스, gesture, resource, flow
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/12_whyDeFactoStandard.md:80` — "ds는 표준 + 더 엄격"
-- `/Users/user/Desktop/ds/src/ds/core/` — gesture·feature·hooks 격리 위치
+- `/Users/user/Desktop/ds/packages/ds/src/core/` — gesture·feature·hooks 격리 위치
 
 ## 남은 의문
 

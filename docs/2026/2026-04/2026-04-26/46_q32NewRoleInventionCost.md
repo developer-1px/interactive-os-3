@@ -35,7 +35,7 @@ updated: 2026-04-26
 - /Users/user/Desktop/ds/CANONICAL.md:79 — "Radix·Base·Ariakit·RAC 최소 2곳 수렴 시 채택"
 - /Users/user/Desktop/ds/CANONICAL.md:50 — "사용처 1곳이어도 entity 승격"
 - feedback_minimize_choices_for_llm — 1 role = 1 component
-- /Users/user/Desktop/ds/src/ds/ui/ — 9층 분류
+- /Users/user/Desktop/ds/packages/ds/src/ui/ — 9층 분류
 
 ## 남은 의문
 

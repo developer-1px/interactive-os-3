@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Editor } from './genres/editor/Editor'
+import { Editor } from '@apps/genres/editor/Editor'
 
 export const Route = createFileRoute('/genres/editor')({
   component: Editor,

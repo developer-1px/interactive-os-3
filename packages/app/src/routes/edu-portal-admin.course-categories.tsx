@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { CourseCategory } from './edu-portal-admin/pages/CourseCategory'
+import { CourseCategory } from '@apps/edu-portal-admin/pages/CourseCategory'
 
 export const Route = createFileRoute('/edu-portal-admin/course-categories')({
   component: CourseCategory,

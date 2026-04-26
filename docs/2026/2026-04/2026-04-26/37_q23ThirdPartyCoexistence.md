@@ -42,7 +42,7 @@ react-table은 v8(TanStack Table)이 헤드리스라 흡수 가능. **시각을 
 
 ## 근거
 
-- /Users/user/Desktop/ds/src/ds/ui/0-primitive/CodeBlock.tsx (shiki 흡수, dangerouslySetInnerHTML 격리)
+- /Users/user/Desktop/ds/packages/ds/src/ui/0-primitive/CodeBlock.tsx (shiki 흡수, dangerouslySetInnerHTML 격리)
 - /Users/user/Desktop/ds/CANONICAL.md:52 (신뢰된 HTML payload entity)
 - /Users/user/Desktop/ds/CANONICAL.md:79 (Radix·Base·Ariakit·RAC 수렴 참조)
 - /Users/user/Desktop/ds/src/routes/finder/finder.feature.ts (TanStack 기반 wiring 사례)

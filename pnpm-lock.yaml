@@ -82,7 +82,29 @@ importers:
         specifier: ^8.0.9
         version: 8.0.9(@types/node@24.12.2)(esbuild@0.27.7)(tsx@4.21.0)
 
+  apps/catalog: {}
+
+  apps/content: {}
+
+  apps/ds-matrix: {}
+
+  apps/edu-portal-admin: {}
+
   apps/finder: {}
+
+  apps/foundations: {}
+
+  apps/genres: {}
+
+  apps/inspector: {}
+
+  apps/keyboard: {}
+
+  apps/m.finder: {}
+
+  apps/markdown: {}
+
+  apps/theme: {}
 
   packages/app: {}
 

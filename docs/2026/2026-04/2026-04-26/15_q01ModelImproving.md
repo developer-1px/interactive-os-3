@@ -22,7 +22,7 @@ LLM이 코드를 잘 못 짠다는 게 전제인데, 모델이 더 좋아지면 
 
 초기 모델은 "동작하는 코드를 뽑는다"가 목표였다. 그 시기엔 ds 같은 제약이 부담이다. 하지만 Opus 4.7쯤 되면 동작은 거의 다 한다. 문제는 **"이 코드가 다른 곳에서 짠 코드와 같은 형태인가"**로 옮겨간다. 같은 의도("폼 제출 버튼")에 대해 어떤 세션은 `<Button variant="primary" type="submit">`, 다른 세션은 `<button className="btn-primary">`, 또 다른 세션은 `<SubmitButton>`을 뱉으면 — 동작은 다 하지만 코드베이스가 일관성을 잃는다. 이건 모델 능력이 올라간다고 풀리는 게 아니라, **선택지 자체를 줄여야 풀린다**.
 
-src/ds/ui/2-button-link/ 폴더에 SubmitAction·DangerAction·LinkAction이 별도 export로 있는 이유가 이거다. 모델이 "어떤 버튼을 쓰지?"를 고민하는 게 아니라 "이 의도엔 SubmitAction이지"로 lookup하게 만든다.
+packages/ds/src/ui/2-button-link/ 폴더에 SubmitAction·DangerAction·LinkAction이 별도 export로 있는 이유가 이거다. 모델이 "어떤 버튼을 쓰지?"를 고민하는 게 아니라 "이 의도엔 SubmitAction이지"로 lookup하게 만든다.
 
 **2. context가 무한해도 "쓸 수 있는 표현"이 무한이면 분포가 흐트러진다**
 
@@ -38,7 +38,7 @@ aria 프로젝트 README의 "조작형 UI 런타임"이라는 framing도 같은 
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/08_projectWhy.md:23-27` — "선택지 폭증"이 풀려는 핵심
 - `/Users/user/Desktop/ds/docs/2026/2026-04/2026-04-26/10_whyNoVariant.md:19-23` — N×M×K 분기 논거
 - `/Users/user/Desktop/aria/README.md:9-13` — 조작형 UI 런타임 framing
-- `/Users/user/Desktop/ds/src/ds/ui/` — 1 role = 1 component 실증
+- `/Users/user/Desktop/ds/packages/ds/src/ui/` — 1 role = 1 component 실증
 
 ## 남은 의문
 

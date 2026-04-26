@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Inbox } from './genres/inbox/Inbox'
+import { Inbox } from '@apps/genres/inbox/Inbox'
 
 export const Route = createFileRoute('/genres/inbox')({
   component: Inbox,

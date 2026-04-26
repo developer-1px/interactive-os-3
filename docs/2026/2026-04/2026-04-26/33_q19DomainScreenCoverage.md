@@ -38,8 +38,8 @@ ds 내부 ui/는 ARIA pattern 어휘만. ARIA에 grid·tree·listbox·textbox는
 
 ## 근거
 
-- /Users/user/Desktop/ds/src/ds/ui/0-primitive/CodeBlock.tsx
-- /Users/user/Desktop/ds/src/ds/ui/7-pattern/BarChart.tsx
+- /Users/user/Desktop/ds/packages/ds/src/ui/0-primitive/CodeBlock.tsx
+- /Users/user/Desktop/ds/packages/ds/src/ui/7-pattern/BarChart.tsx
 - /Users/user/Desktop/ds/CANONICAL.md:52 (신뢰된 HTML payload entity)
 - /Users/user/Desktop/ds/CANONICAL.md:69 (`@p/domain-<area>` 패키지 슬롯)
 

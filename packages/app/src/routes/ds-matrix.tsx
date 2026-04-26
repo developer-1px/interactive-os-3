@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Matrix } from './ds-matrix/Matrix'
+import { Matrix } from '@apps/ds-matrix'
 
 export const Route = createFileRoute('/ds-matrix')({
   component: Matrix,

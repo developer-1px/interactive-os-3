@@ -26,8 +26,8 @@ LLM이 이름을 잘못 부르는 건 "이름이 많아서"가 아니라 "같은
 
 ## 근거
 
-- /Users/user/Desktop/ds/src/ds/ui/ — role별 폴더 구조 (총 9층)
-- /Users/user/Desktop/ds/src/ds/parts/index.ts — parts 17개
+- /Users/user/Desktop/ds/packages/ds/src/ui/ — role별 폴더 구조 (총 9층)
+- /Users/user/Desktop/ds/packages/ds/src/parts/index.ts — parts 17개
 - /Users/user/Desktop/ds/CANONICAL.md:79 — "Trigger/GroupLabel/Submenu*/TabPanel 별도 export. Radix·Base·Ariakit·RAC 최소 2곳 수렴 시 채택"
 - /Users/user/Desktop/ds/CANONICAL.md:80 — "prop 이름은 ARIA 그대로. 인위적 통일 금지"
 
