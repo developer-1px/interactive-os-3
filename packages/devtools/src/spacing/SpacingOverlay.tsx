@@ -151,7 +151,7 @@ export function SpacingOverlay() {
   if (!active) {
     return (
       <button type="button" data-spacing-overlay style={styles.toggle} onClick={() => { setActive(true); setPicking(true); setTarget(null) }} aria-label="Spacing inspector 토글">
-        ▣ Spacing
+        <span data-icon="layout-grid" aria-hidden /> Spacing
       </button>
     )
   }
@@ -160,7 +160,7 @@ export function SpacingOverlay() {
   return (
     <>
       <button type="button" data-spacing-overlay style={{ ...styles.toggle, ...styles.toggleActive }} onClick={() => { setActive(false); setPicking(false); setTarget(null) }}>
-        ▣ Spacing · {target ? '재선택' : 'click element'}
+        <span data-icon="layout-grid" aria-hidden /> Spacing · {target ? '재선택' : 'click element'}
       </button>
       {!target && (
         <div data-spacing-overlay style={styles.crosshairCursor} onClick={() => setPicking(true)} />

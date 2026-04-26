@@ -30,6 +30,7 @@ import {
   Row, Column,
   Listbox, TabList, Toolbar, Tree, RadioGroup, CheckboxGroup,
   StatCard, CourseCard, ProductCard, FeedPost, MessageBubble, ContractCard, RoleCard, BarChart, Top10List,
+  LegendDot,
 } from '@p/ds'
 import { Button } from '@p/ds/ui/2-action/Button'
 import { Switch } from '@p/ds/ui/2-action/Switch'
@@ -47,9 +48,10 @@ import type { ScreenDef } from './wireframe-screens'
 // 모바일 골격 — content + 정해진 control. Phone wrapper.
 // ──────────────────────────────────────────────────────────────────────
 
+const TAB_TOKENS = ['home', 'search', 'inbox', 'list', 'settings'] as const
 const tabIcons = (active: number) =>
-  ['◧', '◫', '◉', '☰', '◐'].map((g, i) => (
-    <span key={i} aria-hidden style={{ fontSize: 'var(--ds-text-xl)', color: i === active ? 'var(--ds-accent)' : undefined }}>{g}</span>
+  TAB_TOKENS.map((token, i) => (
+    <span key={token} data-icon={token} aria-hidden style={{ color: i === active ? 'var(--ds-accent)' : undefined }} />
   ))
 
 const Body = ({ children }: { children: ReactNode }) => (
@@ -80,7 +82,7 @@ const Chat_Thread: ScreenDef = {
   render: () => (
     <Phone
       label="thread"
-      topBar={<PhoneTopBar back title="Alex Kim" action="⋯" />}
+      topBar={<PhoneTopBar back title="Alex Kim" action={<span data-icon="more" aria-label="more" />} />}
     >
       <Body>
         <MessageBubble who="Alex" time="9:14" text="오늘 PR 머지 부탁드려요. CI 그린 + 리뷰 2개 받았습니다." />
@@ -91,7 +93,7 @@ const Chat_Thread: ScreenDef = {
       <StickyAction>
         <Row flow="cluster" style={{ alignItems: 'center' }}>
           <Skeleton width="100%" height={36} style={{ borderRadius: 'var(--ds-radius-pill)' }} />
-          <Button data-emphasis="primary">↑</Button>
+          <Button data-emphasis="primary" aria-label="send"><span data-icon="arrow-up" /></Button>
         </Row>
       </StickyAction>
     </Phone>
@@ -108,7 +110,7 @@ const Chat_List: ScreenDef = {
   render: () => (
     <Phone
       label="conversations"
-      topBar={<PhoneTopBar title="Messages" action="✎" />}
+      topBar={<PhoneTopBar title="Messages" action={<span data-icon="edit" aria-label="compose" />} />}
       bottomBar={<PhoneTabBar items={tabIcons(2)} active={2} />}
     >
       <Body>
@@ -148,7 +150,7 @@ const Shop_Browse: ScreenDef = {
   render: () => (
     <Phone
       label="browse"
-      topBar={<PhoneTopBar title="Shop" action="🔍" />}
+      topBar={<PhoneTopBar title="Shop" action={<span data-icon="search" aria-label="search" />} />}
       bottomBar={<PhoneTabBar items={tabIcons(0)} active={0} />}
     >
       <Body>
@@ -230,7 +232,7 @@ const Learn_Catalog: ScreenDef = {
   render: () => (
     <Phone
       label="course catalog"
-      topBar={<PhoneTopBar title="Courses" action="🔍" />}
+      topBar={<PhoneTopBar title="Courses" action={<span data-icon="search" aria-label="search" />} />}
       bottomBar={<PhoneTabBar items={tabIcons(1)} active={1} />}
     >
       <Body>
@@ -262,7 +264,7 @@ const Learn_Detail: ScreenDef = {
   render: () => (
     <Phone
       label="course detail"
-      topBar={<PhoneTopBar back title="Course" action="♡" />}
+      topBar={<PhoneTopBar back title="Course" action={<span data-icon="heart" aria-label="favorite" />} />}
     >
       <Body>
         <Column>
@@ -275,7 +277,7 @@ const Learn_Detail: ScreenDef = {
         <Column flow="list">
           {['1. 타입 시스템 개요', '2. 타입 추론 메커니즘', '3. Generics 입문', '4. 조건부 타입', '5. 매핑 타입'].map(t => (
             <Row key={t} flow="split" style={{ padding: 'calc(var(--ds-space) * 2) 0', borderBlockEnd: 'var(--ds-hairline) solid var(--ds-border)' }}>
-              <span>{t}</span><small style={{ opacity: 0.5 }}>›</small>
+              <span>{t}</span><span data-icon="chevron-right" style={{ opacity: 0.5 }} aria-hidden />
             </Row>
           ))}
         </Column>
@@ -299,7 +301,7 @@ const Feed_Timeline: ScreenDef = {
   render: () => (
     <Phone
       label="feed"
-      topBar={<PhoneTopBar title="Feed" action="✎" />}
+      topBar={<PhoneTopBar title="Feed" action={<span data-icon="edit" aria-label="compose" />} />}
       bottomBar={<PhoneTabBar items={tabIcons(0)} active={0} />}
     >
       <Body>
@@ -340,7 +342,7 @@ const Dash_Overview: ScreenDef = {
   render: () => (
     <Phone
       label="dashboard"
-      topBar={<PhoneTopBar title="Dashboard" action="⋯" />}
+      topBar={<PhoneTopBar title="Dashboard" action={<span data-icon="more" aria-label="more" />} />}
       bottomBar={<PhoneTabBar items={tabIcons(3)} active={3} />}
     >
       <Body>
@@ -422,7 +424,7 @@ const Contract_Audit: ScreenDef = {
   render: () => (
     <Phone
       label="contract audit"
-      topBar={<PhoneTopBar back title="Contracts" action="🔍" />}
+      topBar={<PhoneTopBar back title="Contracts" action={<span data-icon="search" aria-label="search" />} />}
     >
       <Body>
         <Row flow="cluster"><Tag label="passing 12" /><Tag label="failing 2" /><Tag label="warn 3" /></Row>
@@ -469,13 +471,13 @@ const Roles_Sortable: ScreenDef = {
   render: () => (
     <Phone
       label="roles"
-      topBar={<PhoneTopBar back title="Roles" action="+" />}
+      topBar={<PhoneTopBar back title="Roles" action={<span data-icon="plus" aria-label="add" />} />}
     >
       <Body>
-        <RoleCard icon={<span aria-hidden>👑</span>} name="Owner"   desc="모든 권한"        meta={<small>1 명</small>} />
-        <RoleCard icon={<span aria-hidden>🛠</span>} name="Admin"   desc="설정 · 멤버 관리"  meta={<small>3 명</small>} />
-        <RoleCard icon={<span aria-hidden>✍️</span>} name="Editor"  desc="콘텐츠 작성 · 편집" meta={<small>12 명</small>} />
-        <RoleCard icon={<span aria-hidden>👁</span>} name="Viewer"  desc="읽기 전용"        meta={<small>48 명</small>} />
+        <RoleCard icon={<span data-icon="star" aria-hidden />} name="Owner"   desc="모든 권한"        meta={<small>1 명</small>} />
+        <RoleCard icon={<span data-icon="settings" aria-hidden />} name="Admin"   desc="설정 · 멤버 관리"  meta={<small>3 명</small>} />
+        <RoleCard icon={<span data-icon="edit" aria-hidden />} name="Editor"  desc="콘텐츠 작성 · 편집" meta={<small>12 명</small>} />
+        <RoleCard icon={<span data-icon="user" aria-hidden />} name="Viewer"  desc="읽기 전용"        meta={<small>48 명</small>} />
       </Body>
       <StickyAction><PrimaryButton>변경 저장</PrimaryButton></StickyAction>
     </Phone>
@@ -661,7 +663,7 @@ const Detail_Order: ScreenDef = {
   patterns: ['breadcrumb', 'progress-tracker', 'key-value-list', 'sticky-action-cta', 'top-bar-back-action'],
   parts: ['Phone', 'PhoneTopBar', 'Breadcrumb', 'Heading', 'Tag', 'CountBadge', 'ProgressBar', 'KeyValue', 'Code', 'Link', 'Button', 'Row'],
   render: () => (
-    <Phone label="order detail" topBar={<PhoneTopBar back title="주문 #482" action="⋯" />}>
+    <Phone label="order detail" topBar={<PhoneTopBar back title="주문 #482" action={<span data-icon="more" aria-label="more" />} />}>
       <Body>
         <Breadcrumb items={[
           { label: 'Shop', href: '#' },
@@ -680,7 +682,7 @@ const Detail_Order: ScreenDef = {
         ]} />
         <Heading level="h3">추적 코드</Heading>
         <Code>TRK-9F-482-A1B2C3</Code>
-        <Link href="#">배송 상태 자세히 보기 ›</Link>
+        <Link href="#">배송 상태 자세히 보기 <span data-icon="chevron-right" aria-hidden /></Link>
       </Body>
       <StickyAction><PrimaryButton>주문 확정</PrimaryButton></StickyAction>
     </Phone>
@@ -917,9 +919,9 @@ function HmiBar() {
       {report && (
         <div style={{ display: 'flex', gap: 'calc(var(--ds-space) * 4)' }}>
           <span>총 {report.total} 위반</span>
-          <span style={{ color: 'rgb(220,50,60)' }}>● 단조 위반 {report.byType['monotonic-violation']}</span>
-          <span style={{ color: 'rgb(240,160,30)' }}>● redundant padding {report.byType['redundant-padding']}</span>
-          <span style={{ color: 'rgb(80,140,220)' }}>● gap stair {report.byType['gap-stair']}</span>
+          <span><LegendDot tone="danger" /> 단조 위반 {report.byType['monotonic-violation']}</span>
+          <span><LegendDot tone="warning" /> redundant padding {report.byType['redundant-padding']}</span>
+          <span><LegendDot tone="info" /> gap stair {report.byType['gap-stair']}</span>
         </div>
       )}
       <small style={{ marginInlineStart: 'auto', opacity: 0.6 }}>

@@ -74,9 +74,11 @@ const MobileShell = ({ topBar, body, action, tabBar }: {
   </div>
 )
 
+// PhoneTabBar 5칸 — ds canonical 토큰 (이모지·특수기호 금지).
+const TAB_TOKENS = ['home', 'search', 'inbox', 'list', 'settings'] as const
 const tabIcons = (active: number) =>
-  ['◧', '◫', '◉', '☰', '◐'].map((g, i) => (
-    <span key={i} aria-hidden style={{ fontSize: 'var(--ds-text-xl)', color: i === active ? 'var(--ds-accent)' : undefined }}>{g}</span>
+  TAB_TOKENS.map((token, i) => (
+    <span key={token} data-icon={token} aria-hidden style={{ color: i === active ? 'var(--ds-accent)' : undefined }} />
   ))
 
 // ──────────────────────────────────────────────────────────────────────
@@ -92,7 +94,7 @@ const chatThread: ScreenDef = {
   parts: ['PhoneTopBar', 'MessageBubble', 'Skeleton', 'Button', 'Row'],
   render: () => (
     <MobileShell
-      topBar={<PhoneTopBar back title="Alex Kim" action="⋯" />}
+      topBar={<PhoneTopBar back title="Alex Kim" action={<span data-icon="more" aria-label="more" />} />}
       body={<>
         <MessageBubble who="Alex" time="9:14" text="오늘 PR 머지 부탁드려요. CI 그린 + 리뷰 2개 받았습니다." />
         <MessageBubble who="me" time="9:18" me text="확인하고 오후 2시쯤 머지할게요. 그 전에 staging 한 번 돌려보고요." />
@@ -101,7 +103,7 @@ const chatThread: ScreenDef = {
       </>}
       action={<Row flow="cluster" style={{ alignItems: 'center' }}>
         <Skeleton width="100%" height={36} style={{ borderRadius: 'var(--ds-radius-pill)' }} />
-        <Button data-emphasis="primary">↑</Button>
+        <Button data-emphasis="primary" aria-label="send"><span data-icon="arrow-up" /></Button>
       </Row>}
     />
   ),
@@ -116,7 +118,7 @@ const conversationsList: ScreenDef = {
   parts: ['PhoneTopBar', 'PhoneTabBar', 'Avatar', 'Row', 'Column'],
   render: () => (
     <MobileShell
-      topBar={<PhoneTopBar title="Messages" action="✎" />}
+      topBar={<PhoneTopBar title="Messages" action={<span data-icon="edit" aria-label="compose" />} />}
       tabBar={<PhoneTabBar items={tabIcons(2)} active={2} />}
       body={<>
         {[
@@ -246,7 +248,7 @@ const detailOrder: ScreenDef = {
   parts: ['PhoneTopBar', 'Breadcrumb', 'Heading', 'Tag', 'CountBadge', 'ProgressBar', 'KeyValue', 'Code', 'Link', 'Button', 'Row'],
   render: () => (
     <MobileShell
-      topBar={<PhoneTopBar back title="주문 #482" action="⋯" />}
+      topBar={<PhoneTopBar back title="주문 #482" action={<span data-icon="more" aria-label="more" />} />}
       body={<>
         <Breadcrumb items={[
           { label: 'Shop', href: '#' },

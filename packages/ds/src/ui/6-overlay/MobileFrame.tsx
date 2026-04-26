@@ -93,7 +93,7 @@ export function MobileFrame({ children }: { children: ReactNode }) {
               <option key={d.id} value={d.id}>{d.label} ({d.w}×{d.h})</option>
             ))}
           </select>
-          <button type="button" onClick={() => setState((s) => ({ ...s, on: false }))} aria-label="Exit mobile frame">✕</button>
+          <button type="button" onClick={() => setState((s) => ({ ...s, on: false }))} aria-label="Exit mobile frame"><span data-icon="x" aria-hidden /></button>
         </header>
         <div
           data-ds-dev="mobile-viewport"
@@ -122,7 +122,7 @@ function MobileToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
         aria-label="Toggle mobile frame (⌘⇧M)"
         title="Toggle mobile frame (⌘⇧M)"
         onClick={onToggle}
-      >▭</button>
+      ><span data-icon="layout-grid" aria-hidden /></button>
     </>
   )
 }
