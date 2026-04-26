@@ -24,31 +24,8 @@ import { tagFromPath } from '@p/fs'
 import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from '../entities/types'
 import { extToIcon } from '../entities/types'
 
-// ── Commands ────────────────────────────────────────────────────────────
-type Cmd =
-  | { type: 'goto';        to: string }
-  | { type: 'pinFav';      id: string }
-  | { type: 'setMode';     mode: ViewMode }
-  | { type: 'setQuery';    q: string }
-  | { type: 'activateCol'; id: string }
-  | { type: 'expandCol';   id: string; open: boolean }
-  | { type: 'activateRec'; id: string }
-  | { type: 'back' }
-
-// ── State ───────────────────────────────────────────────────────────────
-interface FinderState {
-  url: string
-  pinned: string
-  mode: ViewMode
-  query: string
-}
-
-// ── Preview ViewModel ───────────────────────────────────────────────────
-export type PreviewVM =
-  | { kind: 'empty' }
-  | { kind: 'dir'; node: FsNode }
-  | { kind: 'image'; node: FsNode; src: string | null }
-  | { kind: 'text'; node: FsNode; text: string | null }
+import type { FinderState, FinderCmd, PreviewVM } from '../entities/schema'
+export type { PreviewVM }
 
 const todayPath = smartGroups[0]?.path ?? '/'
 const initial: FinderState = { url: todayPath, pinned: todayPath, mode: 'columns', query: '' }
@@ -161,7 +138,7 @@ const buildPreview = (
 }
 
 // ── Feature ─────────────────────────────────────────────────────────────
-export const finderFeature = defineFeature<FinderState, Cmd, {
+export const finderFeature = defineFeature<FinderState, FinderCmd, {
   tree:  QuerySpec<FsNode>
   text:  QuerySpec<string | null>
   image: QuerySpec<string | null>

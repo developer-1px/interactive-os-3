@@ -44,3 +44,34 @@ export type ViewMode = z.infer<typeof ViewModeSchema>
 
 export const PreviewKindSchema = z.enum(['image', 'markdown', 'code', 'text', 'binary'])
 export type PreviewKind = z.infer<typeof PreviewKindSchema>
+
+// ── Feature state·cmd·VM ─────────────────────────────────────────────────
+import { FsNodeSchema } from '@p/fs'
+
+export const FinderStateSchema = z.object({
+  url: z.string(),
+  pinned: z.string(),
+  mode: ViewModeSchema,
+  query: z.string(),
+})
+export type FinderState = z.infer<typeof FinderStateSchema>
+
+export const FinderCmdSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('goto'),        to: z.string() }),
+  z.object({ type: z.literal('pinFav'),      id: z.string() }),
+  z.object({ type: z.literal('setMode'),     mode: ViewModeSchema }),
+  z.object({ type: z.literal('setQuery'),    q: z.string() }),
+  z.object({ type: z.literal('activateCol'), id: z.string() }),
+  z.object({ type: z.literal('expandCol'),   id: z.string(), open: z.boolean() }),
+  z.object({ type: z.literal('activateRec'), id: z.string() }),
+  z.object({ type: z.literal('back') }),
+])
+export type FinderCmd = z.infer<typeof FinderCmdSchema>
+
+export const PreviewVMSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('empty') }),
+  z.object({ kind: z.literal('dir'),   node: FsNodeSchema }),
+  z.object({ kind: z.literal('image'), node: FsNodeSchema, src: z.string().nullable() }),
+  z.object({ kind: z.literal('text'),  node: FsNodeSchema, text: z.string().nullable() }),
+])
+export type PreviewVM = z.infer<typeof PreviewVMSchema>
