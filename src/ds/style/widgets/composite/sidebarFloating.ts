@@ -1,5 +1,5 @@
 import { css } from '../../../foundations/primitives/css'
-import { neutral, pad, radius, hierarchy, tint } from '../../../foundations'
+import { gray, pad, radius, hierarchy, tint } from '../../../foundations'
 
 /**
  * sidebarFloating — mobile surface of `sidebar/admin` intent.
@@ -24,8 +24,8 @@ export const sidebarFloatingCss = () => css`
     inline-size: ${pad(14)};
     block-size: ${pad(14)};
     border-radius: ${radius('full')};
-    border: 1px solid ${neutral(3)};
-    background: ${neutral(0)};
+    border: 1px solid ${gray(3)};
+    background: ${gray(0)};
     box-shadow: var(--ds-elev-2);
     display: inline-flex;
     align-items: center;
@@ -47,7 +47,7 @@ export const sidebarFloatingCss = () => css`
     inline-size: min(85vw, 320px);
     margin: 0;
     border: 0;
-    border-inline-end: 1px solid ${neutral(3)};
+    border-inline-end: 1px solid ${gray(3)};
     box-shadow: var(--ds-elev-3);
     --ds-sidebar-w: min(85vw, 320px);
     padding: ${hierarchy.surface};
