@@ -9,9 +9,9 @@
  * need arbitrary content can use Text (ReactNode `content`) or Ui with
  * `content`/`props.children`.
  */
-import { createElement, useEffect, type CSSProperties, type ReactNode } from 'react'
+import { createElement, type CSSProperties, type ReactNode } from 'react'
 import { ROOT, type NormalizedData } from '../core/types'
-import { printTree, printHeadingOutline } from '../debug'
+import { useDebugTree } from './useDebugTree'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
@@ -37,22 +37,6 @@ export function Renderer({ page, rootId = ROOT }: RendererProps) {
     return <NodeChildren page={page} id={rootFromRel} pageRoot />
   }
   return <NodeChildren page={page} id={rootId} pageRoot />
-}
-
-function useDebugTree(page: NormalizedData) {
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('debug') !== 'tree') return
-     
-    console.groupCollapsed('%c[FlatLayout] hierarchy', 'color:#888')
-     
-    console.log(printTree(page))
-     
-    console.log('\n=== HEADING OUTLINE ===\n' + printHeadingOutline(page))
-     
-    console.groupEnd()
-  }, [page])
 }
 
 function NodeChildren({ page, id, pageRoot }: { page: NormalizedData; id: string; pageRoot?: boolean }) {
