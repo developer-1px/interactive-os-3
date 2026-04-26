@@ -104,6 +104,7 @@ export function Split({
 
   // 자식 수 변화 시 sizes 길이 재정합
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 자식 수 변화에 sizes 배열 길이 동기
     setSizes(prev => {
       if (prev.length === n) return prev
       if (n === 0) return []

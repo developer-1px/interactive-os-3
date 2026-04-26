@@ -21,8 +21,8 @@ import { postCard } from './pattern/postCard'
 import { feedPost } from './pattern/feedPost'
 import { messageBubble } from './pattern/messageBubble'
 import { productCard } from './pattern/productCard'
-import { contractCard } from './pattern/contractCard'
-import { proseCss } from './pattern/prose'
+// contractCard / prose 는 content layer owner — src/ds/index.ts 가 등록한다.
+// 여기 두 번 등록하면 cascade race → assertUniqueSelectors throw (#ec0ee60 회귀 차단).
 import { listboxCss } from './collection/listbox'
 import { orderableCss } from './collection/orderable'
 import { menu } from './collection/menu'
@@ -46,7 +46,6 @@ export const widgets = () =>
     feedCss, tabPanelCss, carouselCss,
     highlightMark(), barChart(), courseCard(), display(),
     legendDot(), roleCard(), statCard(), top10(), postCard(), feedPost(), messageBubble(), productCard(),
-    contractCard(), proseCss(),
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite

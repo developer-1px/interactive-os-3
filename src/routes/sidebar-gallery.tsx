@@ -12,6 +12,7 @@ import {
   type NormalizedData,
 } from '../ds'
 
+// eslint-disable-next-line react-refresh/only-export-components
 function SidebarGallery() {
   const adminTree = useMemo(() => sampleSidebarTree({ seed: 7 }), [])
   const brainwaveTree = useMemo(() => sampleSidebarTree({ seed: 21, sections: 3 }), [])

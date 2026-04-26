@@ -60,6 +60,7 @@ export function VideoOrder() {
   )
   const [baseline, setBaseline] = useState(orders)
 
+  // eslint-disable-next-line react-hooks/purity -- "isNew" 라벨링용 시각 — frame 단위 정확도 충분
   const now = Date.now()
   const order = current ? orders[current.id] ?? [] : []
   const items = useMemo(

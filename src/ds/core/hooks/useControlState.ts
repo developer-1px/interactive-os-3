@@ -33,6 +33,7 @@ export function useControlState(base: NormalizedData): [NormalizedData, (e: Even
   const data = useMemo<NormalizedData>(() => {
     const entities = { ...base.entities, ...meta.entities }
     for (const k of SEED_KEYS) {
+      // eslint-disable-next-line react-hooks/refs -- touched는 dispatch에서만 추가되는 idempotent set
       if (!touched.current.has(k) && base.entities[k]) entities[k] = base.entities[k]
     }
     return {
