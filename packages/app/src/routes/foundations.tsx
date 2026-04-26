@@ -1,7 +1,0 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Foundations } from '@showcase/foundations'
-
-export const Route = createFileRoute('/foundations')({
-  component: Foundations,
-  staticData: { palette: { label: 'Foundations', to: '/foundations' } },
-})

@@ -44,21 +44,23 @@ export const POSTS: Post[] = Array.from({ length: 8 }, (_, i) => {
 })
 
 export const NAV = [
-  ['navHome','홈','home','🏠 홈',true],
-  ['navExp','탐색','compass','🧭 탐색',false],
-  ['navNot','알림','bell','🔔 알림',false],
-  ['navProf','프로필','user','👤 프로필',false],
+  ['navHome', '홈', 'home', '홈', true],
+  ['navExp', '탐색', 'search', '탐색', false],
+  ['navNot', '알림', 'inbox', '알림', false],
+  ['navProf', '프로필', 'user', '프로필', false],
 ] as const
 
-export const TRENDS = [
-  '#ds-커버리지 · 128 posts',
-  '#flatlayout · 64 posts',
-  '#2026-tone · 42 posts',
-  '#container-query · 31 posts',
-  '#aria-first · 24 posts',
+export interface Trend { tag: string; count: number }
+export const TRENDS: Trend[] = [
+  { tag: 'ds-커버리지', count: 128 },
+  { tag: 'flatlayout', count: 64 },
+  { tag: '2026-tone', count: 42 },
+  { tag: 'container-query', count: 31 },
+  { tag: 'aria-first', count: 24 },
 ]
 
-export const SUGGESTIONS = Array.from({ length: 5 }, () => {
-  const handle = '@' + faker.internet.username().toLowerCase().slice(0, 12)
-  return `📌 ${handle}`
-})
+export interface Suggestion { handle: string; name: string }
+export const SUGGESTIONS: Suggestion[] = Array.from({ length: 5 }, () => ({
+  handle: '@' + faker.internet.username().toLowerCase().slice(0, 12),
+  name: faker.person.fullName(),
+}))
