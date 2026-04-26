@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { dsCss, wrapAppsLayer } from '@p/ds'
 import { catalogCss } from '@showcase/catalog'
+import { canvasCss } from '@showcase/canvas'
 import { finderCss } from '@apps/finder'
 import { finderMobileCss } from '@apps/finder'
 import { inspectorCss } from '@showcase/inspector'
@@ -12,7 +13,7 @@ import { markdownCss } from '@apps/markdown'
 import { inboxCss, chatCss, feedCss } from '@apps/genres'
 
 const appsCss = wrapAppsLayer([
-  inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, markdownCss, inboxCss, chatCss, feedCss,
+  inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, markdownCss, inboxCss, chatCss, feedCss,
 ])
 import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/style/preset'
 import { onShortcut } from '@p/ds/core/hooks/useShortcut'

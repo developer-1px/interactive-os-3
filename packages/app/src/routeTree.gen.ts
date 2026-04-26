@@ -17,12 +17,10 @@ import { Route as SidebarGalleryRouteImport } from './routes/sidebar-gallery'
 import { Route as KeyboardRouteImport } from './routes/keyboard'
 import { Route as InspectorRouteImport } from './routes/inspector'
 import { Route as GenresRouteImport } from './routes/genres'
-import { Route as FoundationsRouteImport } from './routes/foundations'
 import { Route as EduPortalAdminRouteImport } from './routes/edu-portal-admin'
-import { Route as DsMatrixRouteImport } from './routes/ds-matrix'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as CompositionsRouteImport } from './routes/compositions'
-import { Route as CatalogRouteImport } from './routes/catalog'
+import { Route as CanvasRouteImport } from './routes/canvas'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GenresIndexRouteImport } from './routes/genres.index'
 import { Route as EduPortalAdminIndexRouteImport } from './routes/edu-portal-admin.index'
@@ -88,19 +86,9 @@ const GenresRoute = GenresRouteImport.update({
   path: '/genres',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FoundationsRoute = FoundationsRouteImport.update({
-  id: '/foundations',
-  path: '/foundations',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EduPortalAdminRoute = EduPortalAdminRouteImport.update({
   id: '/edu-portal-admin',
   path: '/edu-portal-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DsMatrixRoute = DsMatrixRouteImport.update({
-  id: '/ds-matrix',
-  path: '/ds-matrix',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContentRoute = ContentRouteImport.update({
@@ -113,9 +101,9 @@ const CompositionsRoute = CompositionsRouteImport.update({
   path: '/compositions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CatalogRoute = CatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
+const CanvasRoute = CanvasRouteImport.update({
+  id: '/canvas',
+  path: '/canvas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -246,12 +234,10 @@ const EduPortalAdminVideosIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/catalog': typeof CatalogRoute
+  '/canvas': typeof CanvasRoute
   '/compositions': typeof CompositionsRoute
   '/content': typeof ContentRoute
-  '/ds-matrix': typeof DsMatrixRoute
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
-  '/foundations': typeof FoundationsRoute
   '/genres': typeof GenresRouteWithChildren
   '/inspector': typeof InspectorRoute
   '/keyboard': typeof KeyboardRoute
@@ -286,11 +272,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/catalog': typeof CatalogRoute
+  '/canvas': typeof CanvasRoute
   '/compositions': typeof CompositionsRoute
   '/content': typeof ContentRoute
-  '/ds-matrix': typeof DsMatrixRoute
-  '/foundations': typeof FoundationsRoute
   '/inspector': typeof InspectorRoute
   '/keyboard': typeof KeyboardRoute
   '/sidebar-gallery': typeof SidebarGalleryRoute
@@ -324,12 +308,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/catalog': typeof CatalogRoute
+  '/canvas': typeof CanvasRoute
   '/compositions': typeof CompositionsRoute
   '/content': typeof ContentRoute
-  '/ds-matrix': typeof DsMatrixRoute
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
-  '/foundations': typeof FoundationsRoute
   '/genres': typeof GenresRouteWithChildren
   '/inspector': typeof InspectorRoute
   '/keyboard': typeof KeyboardRoute
@@ -366,12 +348,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/catalog'
+    | '/canvas'
     | '/compositions'
     | '/content'
-    | '/ds-matrix'
     | '/edu-portal-admin'
-    | '/foundations'
     | '/genres'
     | '/inspector'
     | '/keyboard'
@@ -406,11 +386,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/catalog'
+    | '/canvas'
     | '/compositions'
     | '/content'
-    | '/ds-matrix'
-    | '/foundations'
     | '/inspector'
     | '/keyboard'
     | '/sidebar-gallery'
@@ -443,12 +421,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/catalog'
+    | '/canvas'
     | '/compositions'
     | '/content'
-    | '/ds-matrix'
     | '/edu-portal-admin'
-    | '/foundations'
     | '/genres'
     | '/inspector'
     | '/keyboard'
@@ -484,12 +460,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CatalogRoute: typeof CatalogRoute
+  CanvasRoute: typeof CanvasRoute
   CompositionsRoute: typeof CompositionsRoute
   ContentRoute: typeof ContentRoute
-  DsMatrixRoute: typeof DsMatrixRoute
   EduPortalAdminRoute: typeof EduPortalAdminRouteWithChildren
-  FoundationsRoute: typeof FoundationsRoute
   GenresRoute: typeof GenresRouteWithChildren
   InspectorRoute: typeof InspectorRoute
   KeyboardRoute: typeof KeyboardRoute
@@ -562,25 +536,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GenresRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/foundations': {
-      id: '/foundations'
-      path: '/foundations'
-      fullPath: '/foundations'
-      preLoaderRoute: typeof FoundationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/edu-portal-admin': {
       id: '/edu-portal-admin'
       path: '/edu-portal-admin'
       fullPath: '/edu-portal-admin'
       preLoaderRoute: typeof EduPortalAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ds-matrix': {
-      id: '/ds-matrix'
-      path: '/ds-matrix'
-      fullPath: '/ds-matrix'
-      preLoaderRoute: typeof DsMatrixRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/content': {
@@ -597,11 +557,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompositionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/catalog': {
-      id: '/catalog'
-      path: '/catalog'
-      fullPath: '/catalog'
-      preLoaderRoute: typeof CatalogRouteImport
+    '/canvas': {
+      id: '/canvas'
+      path: '/canvas'
+      fullPath: '/canvas'
+      preLoaderRoute: typeof CanvasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -843,12 +803,10 @@ const GenresRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CatalogRoute: CatalogRoute,
+  CanvasRoute: CanvasRoute,
   CompositionsRoute: CompositionsRoute,
   ContentRoute: ContentRoute,
-  DsMatrixRoute: DsMatrixRoute,
   EduPortalAdminRoute: EduPortalAdminRouteWithChildren,
-  FoundationsRoute: FoundationsRoute,
   GenresRoute: GenresRouteWithChildren,
   InspectorRoute: InspectorRoute,
   KeyboardRoute: KeyboardRoute,
