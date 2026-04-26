@@ -1,4 +1,4 @@
-import { MessageBubble } from './MessageBubble'
+import { MessageBubble } from '../MessageBubble'
 
 export default function MessageBubbleDemo() {
   return (

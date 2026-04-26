@@ -1,4 +1,4 @@
-import { Split } from './Split'
+import { Split } from '../Split'
 
 export default function SplitDemo() {
   const cellStyle = {
