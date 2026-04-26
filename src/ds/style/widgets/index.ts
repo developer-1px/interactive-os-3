@@ -17,7 +17,6 @@ import { legendDot } from './pattern/legendDot'
 import { roleCard } from './pattern/roleCard'
 import { statCard } from './pattern/statCard'
 import { top10 } from './pattern/top10'
-import { contractCard } from './pattern/contractCard'
 import { postCard } from './pattern/postCard'
 import { feedPost } from './pattern/feedPost'
 import { messageBubble } from './pattern/messageBubble'
@@ -43,7 +42,7 @@ export const widgets = () =>
     // pattern
     feedCss, tabPanelCss, carouselCss,
     highlightMark(), barChart(), courseCard(), display(),
-    legendDot(), roleCard(), statCard(), top10(), contractCard(), postCard(), feedPost(), messageBubble(), productCard(),
+    legendDot(), roleCard(), statCard(), top10(), postCard(), feedPost(), messageBubble(), productCard(),
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite

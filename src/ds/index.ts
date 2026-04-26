@@ -6,6 +6,7 @@ import { breakpointsCss } from './style/seed/breakpoints'
 import { widgets } from './style/widgets'
 import { parts } from './style/parts'
 import { proseCss } from './style/widgets/pattern/prose'
+import { contractCard } from './style/widgets/pattern/contractCard'
 import { iconVars, iconIndicator } from './foundations/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
@@ -41,6 +42,9 @@ const segments: ReadonlyArray<readonly [string, string]> = [
   ['widgets', wrap('widgets', widgets())],
   ['parts', wrap('parts', parts())],
   ['content/prose', wrap('content', proseCss())],
+  /* contractCard 는 parts/Card primitive 의 [data-slot] display:block 을 override
+     해야 하므로 content layer (parts 보다 후순위) 에 둔다. */
+  ['content/contractCard', wrap('content', contractCard())],
   ['shell', wrap('shell', shell())],
 ] as const
 
