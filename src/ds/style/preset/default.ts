@@ -17,7 +17,7 @@ export const defaultPreset: DsPreset = {
     // Light/dark 모두에서 일관된 계층 — Canvas/CanvasText를 기준으로 단계적 mix.
     // 숫자가 높을수록 CanvasText(전경)에 가까워진다 = 더 강한 대비.
     //
-    // gray 1~9 곡선은 apply.ts가 var(--ds-tone) 기반으로 일괄 계산 (drift 방지).
+    // neutral 1~9 곡선은 apply.ts가 var(--ds-tone) 기반으로 일괄 계산 (drift 방지).
     // 톤 자체를 갈고 싶으면 seed.toneHue / seed.toneChroma 조정.
   },
   space: { unit: '4px' },

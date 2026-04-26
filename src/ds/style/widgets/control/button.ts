@@ -1,7 +1,7 @@
-import { accent, control, css, dur, ease, fg, onAccent, pad, radius, square, status, tint } from '../../../foundations'
+import { accent, control, css, dur, ease, neutral, onAccent, pad, radius, square, status, tint } from '../../../foundations'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
-//  - Button: 체크기(29.5px control-h), radius md, gray-2 서피스, 1px hairline 경계, cursor pointer
+//  - Button: 체크기(29.5px control-h), radius md, neutral-2 서피스, 1px hairline 경계, cursor pointer
 // 두 축(크기 × 경계)으로 한눈에 구분되도록 button에 keyline을 부여한다.
 
 /**
@@ -11,7 +11,7 @@ import { accent, control, css, dur, ease, fg, onAccent, pad, radius, square, sta
  * 1. Primary — `[aria-roledescription="actions"] > button` (페이지 top-level CTA 영역)
  *    → accent fill, onAccent 텍스트. "이 화면에서 해야 할 주된 행동" 신호.
  * 2. Default — 일반 <button> (grid 셀, 폼, 툴바 등)
- *    → gray-2 서피스 + 경계 없음 + accent hover. "눌릴 수 있음"은 알지만 첫 눈길은 아님.
+ *    → neutral-2 서피스 + 경계 없음 + accent hover. "눌릴 수 있음"은 알지만 첫 눈길은 아님.
  * 3. Ghost — 이미 state.ts base가 주는 기본 (transparent bg + controlBox).
  *    variant로 옵트인 없음 — 모든 button은 2번에 기본 해당.
  *
@@ -22,7 +22,7 @@ export const buttonCss = css`
   /* ── 기본 (= secondary/default) ───────────────────────────────
      base.ts의 controlBox 위에 얕은 서피스와 경계 없는 hover 신호만 얹는다. */
   :where(button:not([aria-roledescription="actions"] > button)) {
-    background: ${fg(2)};
+    background: ${neutral(2)};
     color: inherit;
     border: 1px solid ${control('border')};
     border-radius: ${radius('md')};

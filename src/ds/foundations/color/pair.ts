@@ -63,7 +63,7 @@ export const pair = ({ bg, fg }: { bg: string; fg: string }) => css`
 /**
  * mute — item을 약화한다. *색이 아니라* opacity로. surface가 어떤 색이어도 자동 따라옴.
  *
- * 왜 색이 아닌가: cell/item에 `color: gray-N`을 박으면 surface(부모)가 background를
+ * 왜 색이 아닌가: cell/item에 `color: neutral-N`을 박으면 surface(부모)가 background를
  * 뒤집는 순간 대비가 깨진다. opacity는 currentColor에 알파를 곱하므로 surface 무관.
  *
  * 레벨:

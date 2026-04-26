@@ -14,19 +14,13 @@
  */
 
 // ── 값 접근자 (palette tier) ─────────────────────────────────────────────
-export type Gray = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+export type Neutral = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 /**
- * gray scale — 1(가장 약함) ~ 9(가장 강함). raw scale, semantic.ts 내부에서만.
- * @demo type=color fn=gray args=[5]
+ * neutral scale — 1(가장 약함) ~ 9(가장 강함). raw scale, semantic.ts 내부에서만.
+ * @demo type=color fn=neutral args=[5]
  */
-export const gray = (n: Gray = 9) => `var(--ds-gray-${n})`
-
-/**
- * 별칭 — 기존 호출처(widget) 호환. **새 코드는 semantic.ts의 text/surfaceMuted/borderLevel 사용.**
- * @demo type=color fn=fg args=[8]
- */
-export const fg = gray
+export const neutral = (n: Neutral = 9) => `var(--ds-neutral-${n})`
 
 // ── 변환 수식 (utility, palette·semantic 양쪽에서 사용) ─────────────────
 /**
@@ -37,7 +31,7 @@ export const tint      = (color: string, pct: number) =>
   `color-mix(in oklab, ${color} ${pct}%, transparent)`
 
 /**
- * 두 색 사이 보간 — gray 단계 파생이나 커스텀 mix용
+ * 두 색 사이 보간 — neutral 단계 파생이나 커스텀 mix용
  * @demo type=color fn=mix args=["var(--ds-accent)",50,"Canvas"]
  */
 export const mix       = (a: string, pct: number, b: string = 'Canvas') =>

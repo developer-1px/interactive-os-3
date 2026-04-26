@@ -1,4 +1,4 @@
-import { accent, control, css, dim, fg, font, mix, pad, radius, square, status, tint, grouping } from '../../../foundations'
+import { accent, control, css, dim, neutral, font, mix, pad, radius, square, status, tint, grouping } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -103,7 +103,7 @@ export const layout = () => css`
   }
   aside:not([aria-roledescription]) {
     flex: none;
-    background: ${fg(1)};
+    background: ${neutral(1)};
     border: 1px solid ${control('border')};
     border-inline-start: 3px solid ${tint(accent(), 45)};
     border-radius: ${radius('lg')};

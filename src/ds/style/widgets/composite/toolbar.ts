@@ -1,4 +1,4 @@
-import { control, css, dim, fg, font, pad, radius } from '../../../foundations'
+import { control, css, dim, neutral, font, pad, radius } from '../../../foundations'
 /**
  * Toolbar — 필터·액션을 담는 수평 컨테이너.
  *
@@ -7,12 +7,12 @@ import { control, css, dim, fg, font, pad, radius } from '../../../foundations'
  * - 읽기 텍스트 (p[data-variant], span): dim + margin-inline-start: auto로
  *   오른쪽 밀어내 "정보 요약" 블록으로 분리
  * - separator: 그룹 경계 신호
- * - 컨테이너 자체: gray-1 서피스 + radius로 "이건 한 묶음"이라는 괄호 역할
+ * - 컨테이너 자체: neutral-1 서피스 + radius로 "이건 한 묶음"이라는 괄호 역할
  */
 export const toolbar = () => css`
   [role="toolbar"] {
     padding: ${pad(1.5)} ${pad(2)};
-    background: ${fg(1)};
+    background: ${neutral(1)};
     border-radius: ${radius('md')};
     row-gap: ${pad(1.5)};
   }
@@ -37,7 +37,7 @@ export const toolbar = () => css`
   [role="toolbar"] > [role="separator"][aria-orientation="vertical"] {
     inline-size: 1px;
     block-size: calc(${control('h')} * 0.6);
-    background: ${fg(3)};
+    background: ${neutral(3)};
     align-self: center;
   }
 
@@ -49,7 +49,7 @@ export const toolbar = () => css`
     align-items: center;
     gap: ${pad(0.25)};
     padding: ${pad(0.5)};
-    background: ${fg(2)};
+    background: ${neutral(2)};
     border-radius: ${radius('pill')};
   }
   [role="toolbar"] > [role="group"] > button {
@@ -58,6 +58,6 @@ export const toolbar = () => css`
     border-radius: ${radius('pill')};
   }
   [role="toolbar"] > [role="group"] > button:hover:not(:disabled) {
-    background: ${fg(3)};
+    background: ${neutral(3)};
   }
 `

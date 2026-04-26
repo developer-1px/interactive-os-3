@@ -1,5 +1,5 @@
 import {
-  accent, border, codeSurface, css, fg, hairlineWidth,
+  accent, border, codeSurface, css, neutral, hairlineWidth,
   leading, pad, proximity, radius,
   text, toneTint, trackingScale, underlineOffset, weight,
 } from '../../../foundations'
@@ -12,7 +12,7 @@ import {
  *
  * 시각 어휘 4단:
  *   text('strong')  — h1·h2, strong, code
- *   fg()            — body, h3·h4
+ *   neutral()            — body, h3·h4
  *   text('subtle')  — h5, blockquote, em-color (italic 자체로 충분)
  *   text('mute')    — h6, caption, small, marker
  *
@@ -29,7 +29,7 @@ export const proseCss = () => css`
     font-size: 16px;
     /* 한국어 본문은 1.65 — 영문 1.75보다 살짝 조밀해야 단락이 한 묶음으로 읽힌다. */
     line-height: 1.65;
-    color: ${fg()};
+    color: ${neutral()};
     word-break: keep-all;
     overflow-wrap: anywhere;
     text-wrap: pretty;

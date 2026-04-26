@@ -27,7 +27,7 @@ export type DsPreset = {
     toneChroma?: number
     /** hued chip이 CanvasText에 섞이는 비율 (0~100). 미설정 시 18 (감지 임계). */
     toneTint?: number
-    /** gray 1~9 곡선 배율. 0.5~1.6 권장. 1=default, <1=soft 대비, >1=punchy 대비. */
+    /** neutral 1~9 곡선 배율. 0.5~1.6 권장. 1=default, <1=soft 대비, >1=punchy 대비. */
     stepScale?: number
   }
   color: {
@@ -48,9 +48,9 @@ export type DsPreset = {
     warningOn?: TokenRef  // 기본 '#000' (warning은 밝은 톤이라 검정이 안전)
     danger?: TokenRef
     dangerOn?: TokenRef   // 기본 '#fff'
-    // Gray scale — 1(가장 약한 tint) ~ 9(가장 강한 텍스트)로 계층. muted/border는
+    // Neutral scale — 1(가장 약한 tint) ~ 9(가장 강한 텍스트)로 계층. muted/border는
     // 이 스케일에서 파생 가능. preset에 없으면 CanvasText 기반 color-mix로 폴백.
-    gray?: Partial<Record<'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9', TokenRef>>
+    neutral?: Partial<Record<'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9', TokenRef>>
     traffic?: { close: TokenRef; min: TokenRef; max: TokenRef }
   }
   space: { unit: string }
@@ -58,6 +58,22 @@ export type DsPreset = {
   text: Record<TextScale, string>
   font: { sans: string; mono: string }
   leading: { normal: number; tight: number; tracking: string }
+  /** Heading ladder — h1~h6 size·leading. preset 갈아끼우면 모든 prose/parts 헤딩 자동 따라옴.
+   *  미정의 시 default ladder (1.5em / 1.25em / 1.125em / 1em / 1em / 1em). */
+  heading?: {
+    size?: [string, string, string, string, string, string]
+    leading?: [string, string, string, string, string, string]
+  }
+  /** letter-spacing scale — heading dramatic tight + uppercase caps.
+   *  미정의 시 default (-0.02em..0.06em). */
+  tracking?: {
+    tightest?: string
+    tighter?: string
+    tight?: string
+    normal?: string
+    wide?: string
+    caps?: string
+  }
   elevation: Record<ElevationLevel, Layer[]>
   shell: {
     inset: string

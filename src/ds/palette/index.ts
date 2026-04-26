@@ -4,7 +4,7 @@
  * de facto Material 3 / Carbon: ref tokens(raw scale) vs sys tokens(semantic role) 2층.
  * 이 레이어의 export는 인자가 숫자(scale 인덱스)인 raw 함수만.
  *
- *   color.ts  → gray, fg, tint, mix, dim
+ *   color.ts  → neutral, fg, tint, mix, dim
  *   space.ts  → pad, rowPadding, level
  *   elev.ts   → elev
  *

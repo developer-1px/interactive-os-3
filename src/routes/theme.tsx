@@ -123,33 +123,33 @@ const styles = `
     font-size: var(--ds-text-lg);
     margin-bottom: calc(var(--ds-space) * 3);
   }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] {
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     gap: calc(var(--ds-space) * 2);
   }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li {
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: calc(var(--ds-space) * 1);
   }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li > i {
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li > i {
     display: block;
     width: 100%;
     aspect-ratio: 1;
     border-radius: var(--ds-radius-sm);
   }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(1) > i { background: var(--ds-gray-1); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(2) > i { background: var(--ds-gray-2); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(3) > i { background: var(--ds-gray-3); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(4) > i { background: var(--ds-gray-4); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(5) > i { background: var(--ds-gray-5); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(6) > i { background: var(--ds-gray-6); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(7) > i { background: var(--ds-gray-7); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(8) > i { background: var(--ds-gray-8); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li:nth-child(9) > i { background: var(--ds-gray-9); }
-  [aria-roledescription="theme-creator"] [aria-label="gray scale"] li > code {
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(1) > i { background: var(--ds-neutral-1); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(2) > i { background: var(--ds-neutral-2); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(3) > i { background: var(--ds-neutral-3); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(4) > i { background: var(--ds-neutral-4); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(5) > i { background: var(--ds-neutral-5); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(6) > i { background: var(--ds-neutral-6); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(7) > i { background: var(--ds-neutral-7); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(8) > i { background: var(--ds-neutral-8); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li:nth-child(9) > i { background: var(--ds-neutral-9); }
+  [aria-roledescription="theme-creator"] [aria-label="neutral scale"] li > code {
     font-size: var(--ds-text-xs);
     color: var(--ds-muted);
   }
@@ -257,7 +257,7 @@ function ThemeCreator() {
           <label>
             <span><strong>stepScale</strong><output>{v.stepScale.toFixed(2)}</output></span>
             <input type="range" min={0.5} max={1.6} step={0.01} value={v.stepScale} onChange={upd('stepScale')} />
-            <small>gray 1~9 대비 곡선 배율. &lt;1=soft · 1=기본 · &gt;1=punchy</small>
+            <small>neutral 1~9 대비 곡선 배율. &lt;1=soft · 1=기본 · &gt;1=punchy</small>
           </label>
         </section>
 
@@ -282,7 +282,7 @@ function ThemeCreator() {
       <section aria-label="Theme preview">
         <section aria-labelledby="ctl-grays">
           <h2 id="ctl-grays">Neutral palette</h2>
-          <ul aria-label="gray scale">
+          <ul aria-label="neutral scale">
             {([1,2,3,4,5,6,7,8,9] as const).map((n) => (
               <li key={n}><i aria-hidden /><code>{n}</code></li>
             ))}
@@ -304,7 +304,7 @@ function ThemeCreator() {
           <article aria-label="Sample card">
             <h3>Sample card</h3>
             <p>이 카드는 <code>--ds-bg</code> 위, 페이지는 <code>--ds-base</code> 위. 두 surface의 미세 차이가 깊이를 만든다.</p>
-            <p>본문은 <code>--ds-gray-9</code> (oklch L≈0.30, hue {v.toneHue}°). 진한 검정의 차가운 인상이 사라지고 종이 위 잉크 같은 따뜻함.</p>
+            <p>본문은 <code>--ds-neutral-9</code> (oklch L≈0.30, hue {v.toneHue}°). 진한 검정의 차가운 인상이 사라지고 종이 위 잉크 같은 따뜻함.</p>
             <div role="group" aria-label="Card actions">
               <button type="button" data-emphasis="primary">Primary</button>
               <button type="button" data-emphasis="secondary">Secondary</button>

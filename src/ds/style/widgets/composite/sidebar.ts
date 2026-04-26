@@ -1,5 +1,4 @@
-import { css, dim, fg, hierarchy, microLabel, pad, radius } from '../../../foundations'
-import { gray } from '../../../palette/color'
+import { css, dim, neutral, hierarchy, microLabel, pad, radius } from '../../../foundations'
 
 /**
  * Sidebar — nav[aria-roledescription="sidebar"] surface only.
@@ -24,7 +23,7 @@ export const sidebarCss = () => css`
   nav[aria-roledescription="sidebar"] {
     width: var(--ds-sidebar-w); flex: none;
     overflow-y: auto; overflow-x: hidden;
-    background: ${fg(1)};
+    background: ${neutral(1)};
     display: flex; flex-direction: column;
     /* L4 surface — sidebar 자체 padding (Figure/Ground). */
     padding: ${hierarchy.surface};
@@ -74,7 +73,7 @@ export const sidebarCss = () => css`
     gap: ${pad(2)};
     padding: ${pad(2)};
     border-radius: ${radius('md')};
-    background: ${fg(2)};
+    background: ${neutral(2)};
     font-size: var(--ds-text-sm);
   }
   nav[aria-roledescription="sidebar"] > footer > small {
@@ -98,7 +97,7 @@ export const sidebarCss = () => css`
      키보드 진입/선택은 axes 측에서 disabled로 차단. 시각만 microLabel. */
   nav[aria-roledescription="sidebar"] [role="tree"] li[role="none"][data-group-label] {
     ${microLabel()}
-    color: ${gray(6)};
+    color: ${neutral(6)};
     pointer-events: none;
     padding-block: ${pad(2)} ${pad(1)};
     padding-inline-start: ${pad(2)};

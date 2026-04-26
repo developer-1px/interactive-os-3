@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dim, dur, ease, emphasize, fg, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../foundations'
+import { accent, bg, control, css, dim, dur, ease, emphasize, neutral, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -12,7 +12,7 @@ export const grid = () => [
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      color: ${fg()};
+      color: ${neutral()};
       font: inherit;
     }
 
@@ -20,7 +20,7 @@ export const grid = () => [
     [role="rowgroup"] { display: table-row-group; }
 
     /* 행 사이 hairline — 긴 데이터 테이블은 가로 가이드선이 스캔에 필수.
-       gray-2로 아주 얇게, columnheader 경계는 gray-3로 살짝 더 진하게. */
+       neutral-2로 아주 얇게, columnheader 경계는 neutral-3로 살짝 더 진하게. */
     [role="grid"] [role="row"],
     [role="treegrid"] [role="row"] {
       transition: background-color ${dur('base')} ${ease('out')},
@@ -30,7 +30,7 @@ export const grid = () => [
     [role="grid"] [role="rowheader"],
     [role="treegrid"] [role="gridcell"],
     [role="treegrid"] [role="rowheader"] {
-      border-block-end: 1px solid ${fg(2)};
+      border-block-end: 1px solid ${neutral(2)};
     }
     [role="grid"] [role="columnheader"],
     [role="treegrid"] [role="columnheader"] {
@@ -102,7 +102,7 @@ export const grid = () => [
     [role="treegrid"][data-density="compact"] [role="rowheader"],
     [role="grid"][data-density="compact"] [role="gridcell"],
     [role="grid"][data-density="compact"] [role="rowheader"] {
-      border-block-end-color: ${fg(1)};
+      border-block-end-color: ${neutral(1)};
     }
     /* selected 행 — edge-to-edge accent fill, lead bar 제거(Finder는 풀폭) */
     [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"],

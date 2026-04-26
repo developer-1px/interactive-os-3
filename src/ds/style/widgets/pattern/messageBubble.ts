@@ -1,4 +1,4 @@
-import { css, fg, pad, radius } from '../../../foundations'
+import { css, neutral, pad, radius } from '../../../foundations'
 
 /**
  * MessageBubble slot inner styling — DM 1:1 채팅 버블.
@@ -13,7 +13,7 @@ export const messageBubble = () => css`
   }
   article[data-part="card"][data-card="message"][data-side="other"] {
     align-self: flex-start;
-    background: ${fg(2)};
+    background: ${neutral(2)};
     border-end-start-radius: ${radius('sm')};
   }
   article[data-part="card"][data-card="message"][data-side="me"] {

@@ -1,10 +1,9 @@
 /**
- * layout/ — 박스 모양·정렬 mixin + 위계 토큰.
+ * layout/ — 박스 모양·정렬 mixin.
  *   square.ts    → mixin: square(sel)    — 정사각 박스(아이콘 버튼 등).
  *   listReset.ts → mixin: listReset(sel) — ul/ol 기본 marker·padding 제거.
- *   hierarchy.ts → token: hierarchy.{atom,group,section,surface,shell}
- *                  — 재귀 Proximity 위계 (Gestalt sys layer).
+ *
+ * Note: hierarchy 는 spacing/ 도메인으로 이전됐다 (간격 시맨틱).
  */
 export * from './square'
 export * from './listReset'
-export * from './hierarchy'

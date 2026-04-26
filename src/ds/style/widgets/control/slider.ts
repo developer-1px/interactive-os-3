@@ -1,6 +1,6 @@
 import { bg, border, control, css, radius, shadow } from '../../../foundations'
 // input[type="range"] — native role=slider. DS 토큰 기반 풀 커스텀 (native와 섞지 않음).
-//   track:  4px channel — control-channel(gray-4) 위에 thumb까지 accent fill로 진행도 표시
+//   track:  4px channel — control-channel(neutral-4) 위에 thumb까지 accent fill로 진행도 표시
 //   thumb:  control('h') 정사각 원, bg + control-border + elev-1
 //   accent-color로 WebKit/Firefox 모두 native progress fill 색을 한 번에 잡음
 export const sliderCss = css`

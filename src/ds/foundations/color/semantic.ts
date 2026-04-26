@@ -2,14 +2,14 @@
  * Semantic tier — 의미 토큰. **widget이 색을 만질 때 사용하는 유일한 인터페이스.**
  *
  * de facto 3-tier (Material 3 / Radix / Primer / Spectrum):
- *   palette (raw gray-N) → **semantic (이 파일)** → component
+ *   palette (raw neutral-N) → **semantic (이 파일)** → component
  *
  * 원칙:
- *   - 의미로 고른다, 숫자로 고르지 않는다. (`text('mute')` ✅, `gray(6)` ❌ in widget)
+ *   - 의미로 고른다, 숫자로 고르지 않는다. (`text('mute')` ✅, `neutral(6)` ❌ in widget)
  *   - 페어가 필요한 곳은 fn/pair.ts의 tone/pair/mute/emphasize.
  *   - 단독 색 토큰만 여기.
  */
-import { gray, type Gray } from '../../palette/color'
+import { neutral, type Neutral } from '../../palette/color'
 
 // ── Text — 텍스트 색 의미 토큰 ──────────────────────────────────────────
 /**
@@ -26,36 +26,43 @@ import { gray, type Gray } from '../../palette/color'
 /** @demo type=color fn=text args=["default"] */
 export const text = (role: 'default' | 'strong' | 'subtle' | 'mute' | 'inverse' = 'default') => {
   switch (role) {
-    case 'strong':  return gray(9)
-    case 'default': return gray(8)
-    case 'subtle':  return gray(7)
-    case 'mute':    return gray(6)
+    case 'strong':  return neutral(9)
+    case 'default': return neutral(8)
+    case 'subtle':  return neutral(7)
+    case 'mute':    return neutral(6)
     case 'inverse': return 'Canvas'
   }
 }
 
 // ── Surface — 약한 surface 배경 (panel/banner/chip 등) ──────────────────
 /**
- * surfaceMuted level — 본 surface 위에 얹는 약한 background.
- *   1 = 가장 약함 (panel/sidebar 배경)
- *   2 = 중간 (chip·banner 배경)
- *   3 = 좀 더 진함 (raised section, hover bg)
+ * surface(role) — 본 surface 위에 얹는 배경.
+ *   'subtle' = 가장 약함 (panel/sidebar 배경)
+ *   'muted'  = 중간 (chip·banner 배경)
+ *   'raised' = 좀 더 진함 (raised section, hover bg)
  *
  * 페어 필요 시 fn/pair.ts의 pair({ bg, fg }) 사용.
+ * @demo type=color fn=surface args=["subtle"]
  */
-/** @demo type=color fn=surfaceMuted args=[1] */
-export const surfaceMuted = (level: 1 | 2 | 3 = 1) => gray(level as Gray)
+export const surface = (role: 'subtle' | 'muted' | 'raised' = 'subtle') => {
+  const map = { subtle: 1, muted: 2, raised: 3 } as const
+  return neutral(map[role] as Neutral)
+}
 
 // ── Border — 위계별 경계선 ──────────────────────────────────────────────
 /**
- * borderLevel:
- *   1 = hairline (가장 흐림 — compact 행 구분)
- *   2 = default (표 hairline, divider)
- *   3 = emphasis (강조 경계)
- *   4 = dashed-drop (drop zone 점선)
+ * border(role) — 위계별 경계선. 인자 없으면 default (var(--ds-border)).
+ *   'subtle' = hairline (가장 흐림 — compact 행 구분)
+ *   'default' = 표 hairline, divider (= 인자 없는 호출과 동일 의미)
+ *   'strong'  = 강조 경계
+ *   'emphatic' = drop-zone 등 가장 강한 점선
+ * @demo type=color fn=border args=["default"]
  */
-/** @demo type=color fn=borderLevel args=[2] */
-export const borderLevel = (level: 1 | 2 | 3 | 4 = 2) => gray(level as Gray)
+export const border = (role?: 'subtle' | 'default' | 'strong' | 'emphatic') => {
+  if (!role || role === 'default') return `var(--ds-border)`
+  const map = { subtle: 1, strong: 3, emphatic: 4 } as const
+  return neutral(map[role] as Neutral)
+}
 
 // ── 기존 semantic 토큰 (palette.ts에서 이전) ────────────────────────────
 /** @demo type=color fn=accent */
@@ -67,8 +74,6 @@ export type StatusTone = 'success' | 'warning' | 'danger'
 /** @demo type=color fn=status args=["success"] */
 export const status    = (t: StatusTone) => `var(--ds-${t})`
 
-/** @demo type=color fn=border */
-export const border    = () => `var(--ds-border)`
 /** @demo type=color fn=muted */
 export const muted     = () => `var(--ds-muted)`
 /** @demo type=color fn=bg */

@@ -1,4 +1,4 @@
-import { accent, control, css, dim, dur, ease, fg, font, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
+import { accent, control, css, dim, dur, ease, neutral, font, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -9,7 +9,7 @@ import { accent, control, css, dim, dur, ease, fg, font, onAccent, pad, radius, 
  *   4. Field <label>                               — 필드 개별 라벨. 작고 weight 600.
  *   5. FieldDescription <p>                        — 보조 설명. sm + dim(55).
  *
- * Aside(게시 설정 측면 패널)는 gray-1 서피스 + radius로 main 폼과 시각 분리.
+ * Aside(게시 설정 측면 패널)는 neutral-1 서피스 + radius로 main 폼과 시각 분리.
  */
 export const formCss = css`
   /* ── 2026 form 읽기 폭 제약 ─────────────────────────────────────────
@@ -57,8 +57,8 @@ export const formCss = css`
   :where(input[type="file"]) {
     inline-size: 100%;
     padding: ${pad(3)};
-    background: ${fg(1)};
-    border: 1px dashed ${fg(4)};
+    background: ${neutral(1)};
+    border: 1px dashed ${neutral(4)};
     border-radius: ${radius('md')};
     font-size: ${font('sm')};
     color: ${dim(65)};

@@ -1,4 +1,4 @@
-import { css, pad, fg, radius, microLabel, dim, grouping, tint } from '../../ds/foundations'
+import { css, pad, neutral, radius, microLabel, dim, grouping, tint } from '../../ds/foundations'
 
 // Finder 모바일 — iOS Files 식 drill-down + TikTok 세로 스냅 스와이퍼 + FloatingNav FAB.
 // 라우트 컴포넌트가 isMobile 분기로 FinderMobile을 렌더하므로 CSS는 자기 root만 잡는다.
@@ -17,7 +17,7 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     padding: ${pad(2)} ${pad(3)};
     border-block-end: var(--ds-hairline) solid var(--ds-border);
-    background: ${fg(1)};
+    background: ${neutral(1)};
   }
   main[aria-roledescription="finder-mobile"] > header > button {
     inline-size: 2rem; block-size: 2rem;
@@ -101,8 +101,8 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     background: linear-gradient(
       to bottom,
-      color-mix(in oklch, ${fg(1)} 96%, transparent) 30%,
-      color-mix(in oklch, ${fg(1)} 70%, transparent) 70%,
+      color-mix(in oklch, ${neutral(1)} 96%, transparent) 30%,
+      color-mix(in oklch, ${neutral(1)} 70%, transparent) 70%,
       transparent
     );
   }
@@ -118,8 +118,8 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     background: linear-gradient(
       to top,
-      color-mix(in oklch, ${fg(1)} 96%, transparent) 30%,
-      color-mix(in oklch, ${fg(1)} 70%, transparent) 70%,
+      color-mix(in oklch, ${neutral(1)} 96%, transparent) 30%,
+      color-mix(in oklch, ${neutral(1)} 70%, transparent) 70%,
       transparent
     );
   }

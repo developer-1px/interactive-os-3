@@ -1,4 +1,4 @@
-import { css, pad, dim, microLabel, status, fg, radius, grouping } from '../../ds/foundations'
+import { css, pad, dim, microLabel, status, neutral, radius, grouping } from '../../ds/foundations'
 import { SHELL_MOBILE_MAX } from '../../ds/style/preset/breakpoints'
 
 // Catalog — ds ui zone-first 감사 대시보드.
@@ -144,7 +144,7 @@ export const catalogCss = css`
     display: flex; flex-direction: column; gap: ${pad(3)};
     flex: 0 0 var(--ds-preview-w, 480px);
     border-inline-start: var(--ds-hairline) solid var(--ds-border);
-    background: ${fg(1)};
+    background: ${neutral(1)};
     padding: ${pad(4)};
     overflow-y: auto;
   }
