@@ -64,6 +64,7 @@ function SidebarGallery() {
         type="button"
         aria-pressed={collapsed}
         onClick={() => setCollapsed((v) => !v)}
+        // eslint-disable-next-line no-restricted-syntax -- showcase 라우트 inline 토글
         style={{ position: 'fixed', insetBlockEnd: 16, insetInlineEnd: 16, zIndex: 10 }}
       >
         {collapsed ? '↔ Expand' : '↤ Collapse'} (4번째 sidebar)

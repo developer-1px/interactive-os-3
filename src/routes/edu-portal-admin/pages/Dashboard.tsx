@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- TODO: entity content의 inline style을 ds Text 변형/widget으로 이전 */
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, Badge, fromList, type NormalizedData } from '../../../ds'

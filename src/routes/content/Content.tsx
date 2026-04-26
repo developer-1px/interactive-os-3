@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- showcase 라우트: shell layout inline 허용 */
 /**
  * /content — prose 시맨틱 태그 전수 검증 페이지.
  *

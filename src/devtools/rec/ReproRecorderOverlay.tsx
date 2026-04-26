@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- devtools overlay: 인스펙터 외부 fixed-position UI */
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { createReproRecorder } from './createReproRecorder'
 

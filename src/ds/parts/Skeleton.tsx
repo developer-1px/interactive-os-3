@@ -13,6 +13,7 @@ export function Skeleton({ width, height, style, ...rest }: SkeletonProps) {
     <span
       data-part="skeleton"
       aria-hidden="true"
+      // eslint-disable-next-line no-restricted-syntax -- 호출자 주도 runtime 크기 (caller dimension)
       style={{ inlineSize: width, blockSize: height, ...style }}
       {...rest}
     />
