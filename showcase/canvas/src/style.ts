@@ -319,7 +319,7 @@ export const canvasCss = css`
     text-align: center;
   }
 
-  /* detail panel — viewport 우하단 floating, zoom-pan transform 영향 안 받음 */
+  /* detail panel — viewport 우하단 floating wrapper만. 내부는 ds parts/Card. */
   [data-part="canvas-detail"] {
     position: fixed;
     right: 24px;
@@ -327,69 +327,6 @@ export const canvasCss = css`
     width: 360px;
     max-height: calc(100vh - 48px);
     overflow: auto;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.18), 0 1px 0 rgba(0,0,0,0.04);
-    padding: ${pad(4)} ${pad(5)} ${pad(5)};
     z-index: 10;
-    font: 400 13px system-ui;
-    color: ${neutral(9)};
-  }
-  [data-part="canvas-detail-head"] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: ${pad(3)};
-  }
-  [data-part="canvas-detail-head"] > strong {
-    font: 700 16px system-ui;
-    letter-spacing: -0.01em;
-  }
-  [data-part="canvas-detail-close"] {
-    appearance: none;
-    background: transparent;
-    border: none;
-    font: 400 20px system-ui;
-    color: #999;
-    cursor: pointer;
-    line-height: 1;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-  [data-part="canvas-detail-close"]:hover { background: #f0f0f0; color: #333; }
-  [data-part="canvas-detail-body"] {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: ${pad(2)} ${pad(4)};
-    margin: 0;
-  }
-  [data-part="canvas-detail-body"] > dt {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    align-self: start;
-    padding-top: 2px;
-  }
-  [data-part="canvas-detail-body"] > dd {
-    margin: 0;
-    color: ${neutral(9)};
-  }
-  [data-part="canvas-detail-body"] small {
-    color: #aaa;
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    margin-left: 4px;
-  }
-  [data-part="canvas-detail-body"] code {
-    display: block;
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    background: #f7f7f7;
-    color: #1e1e1e;
-    padding: 8px 10px;
-    border-radius: 4px;
-    word-break: break-all;
-    line-height: 1.4;
   }
 `

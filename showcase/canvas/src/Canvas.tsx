@@ -9,8 +9,10 @@
  * 새 자산을 추가하면 (export + @demo 태그 또는 _demos/<Name>.demo.tsx) 이 페이지에
  * 즉시 등장한다 — 등록부 0개. 흡수 통합: /catalog · /foundations 라우트 대체.
  */
-import { useState, type ComponentType, type ReactNode } from 'react'
+import { useMemo, useState, type ComponentType, type ReactNode } from 'react'
 import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
+import { ROOT, useControlState, type NormalizedData } from '@p/ds'
+import { Card, Heading, KeyValue, Code } from '@p/ds/parts'
 import { audit } from 'virtual:ds-audit'
 import { demos as catalogDemos } from '@showcase/catalog'
 import { TokenCard, TypeSpecimen } from './TokenCard'
@@ -360,34 +362,37 @@ export function Canvas() {
 
       {selectedMeta && (
         <aside data-part="canvas-detail" aria-label={`${selectedMeta.name} 상세`}>
-          <header data-part="canvas-detail-head">
-            <strong>{selectedMeta.name}</strong>
-            <button
-              type="button"
-              data-part="canvas-detail-close"
-              onClick={() => setSelected(null)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
-          </header>
-          <dl data-part="canvas-detail-body">
-            <dt>Lane</dt>
-            <dd>
-              {selectedLaneLabel?.label ?? selectedMeta.lane}
-              <small> · {selectedMeta.lane}</small>
-            </dd>
-            {selectedLaneLabel?.standard && (
-              <>
-                <dt>Standard</dt>
-                <dd>≈ {selectedLaneLabel.standard}</dd>
-              </>
-            )}
-            <dt>Import</dt>
-            <dd>
-              <code>{`import { ${selectedMeta.name} } from '${selectedMeta.importPath}'`}</code>
-            </dd>
-          </dl>
+          <Card
+            slots={{
+              title: <Heading level={3}>{selectedMeta.name}</Heading>,
+              meta: (
+                <span>
+                  {selectedLaneLabel?.label ?? selectedMeta.lane}
+                  {selectedLaneLabel?.standard && <> · ≈ {selectedLaneLabel.standard}</>}
+                </span>
+              ),
+              body: (
+                <KeyValue
+                  items={[
+                    { key: 'Lane', value: selectedMeta.lane },
+                    {
+                      key: 'Import',
+                      value: <Code>{`import { ${selectedMeta.name} } from '${selectedMeta.importPath}'`}</Code>,
+                    },
+                  ]}
+                />
+              ),
+              footer: (
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setSelected(null) }}
+                  aria-label="닫기"
+                >
+                  닫기
+                </a>
+              ),
+            }}
+          />
         </aside>
       )}
     </div>
