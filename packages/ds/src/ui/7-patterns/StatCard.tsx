@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import { Card } from '../../parts/Card'
-import { Badge, type BadgeTone } from '../1-indicator/Badge'
+import { Badge, type BadgeTone } from '../1-status/Badge'
 import { Heading } from '../../parts/Heading'
 
 /**

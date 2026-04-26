@@ -7,7 +7,7 @@ import {
 import { composeAxes, navigate } from '../../core/axes'
 import { useRoving } from '../../core/hooks/useRoving'
 import { ToolbarButton } from '../2-action/ToolbarButton'
-import { Separator } from '../1-indicator/Separator'
+import { Separator } from '../0-primitives/Separator'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
