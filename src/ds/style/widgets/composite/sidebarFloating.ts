@@ -120,5 +120,12 @@ export const sidebarFloatingCss = () => css`
     main > article[data-flow="prose"] {
       padding-inline: 0;
     }
+
+    /* 모바일 hairline 일괄 제거 — 1px sub-pixel이 DPR≥2에서 흐리게 보이는 문제.
+       --ds-hairline 토큰을 0으로 덮어 hairline 기반 border 전체가 사라진다.
+       컨트롤(button/input 등 explicit 1px)은 영향 없음. */
+    :root {
+      --ds-hairline: 0px;
+    }
   }
 `
