@@ -1,0 +1,25 @@
+/** @apps/finder — finder 앱 패키지의 공개 표면.
+ *
+ *  라우트 진입(packages/app/src/routes/finder.$.tsx)과 다른 앱(markdown·m.finder)이
+ *  이 barrel 만 import 한다. 내부 구현(*.feature, resources, schema 등)은
+ *  apps/finder/src 안에 격리. */
+
+export { Finder } from './Finder'
+export { PreviewBody, PreviewPane } from './Preview'
+export { useSidebarNav } from './useSidebarNav'
+
+// 데이터 source — markdown·m.finder 가 사용
+export {
+  getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
+  formatDate, formatSize, loadText,
+} from './data'
+
+// 타입·헬퍼 — m.finder 가 사용
+export { extToIcon } from './types'
+export type { FsNode, SmartGroupItem } from './types'
+
+// 스타일 — main.tsx 가 사용
+export { finderCss } from './style'
+
+// plugin manifest — packages/app/src/app/plugins.ts 가 사용
+export { default } from './plugin'

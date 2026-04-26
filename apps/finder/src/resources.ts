@@ -1,5 +1,5 @@
 import { defineResource, parentOf, writeResource, ROOT } from '@p/ds'
-import { router } from '../../router'
+import { router } from '@p/app/router'
 import {
   loadText,
   getImageUrl,
