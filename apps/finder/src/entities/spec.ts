@@ -11,7 +11,11 @@
  *  - view 출력 추가 → viewFn 반환 키 동시 변경
  */
 import { z } from 'zod'
-import { ViewModeSchema } from './schema'
+
+/** ViewModeSchema 는 spec 이 owner — schema.ts 가 re-export.
+ *  (schema↔spec 순환 import 방지 — spec 이 더 base layer) */
+export const ViewModeSchema = z.enum(['icons', 'list', 'columns', 'gallery'])
+export type ViewMode = z.infer<typeof ViewModeSchema>
 
 // ── State ────────────────────────────────────────────────────────────────
 export const FinderStateSpec = {

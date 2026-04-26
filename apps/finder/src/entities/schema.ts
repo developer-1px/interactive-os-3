@@ -39,8 +39,8 @@ export const TagGroupItemSchema = z.object({
 })
 export type TagGroupItem = z.infer<typeof TagGroupItemSchema>
 
-export const ViewModeSchema = z.enum(['icons', 'list', 'columns', 'gallery'])
-export type ViewMode = z.infer<typeof ViewModeSchema>
+// ViewModeSchema 는 spec.ts 가 owner (schema↔spec 순환 import 방지)
+export { ViewModeSchema, type ViewMode } from './spec'
 
 export const PreviewKindSchema = z.enum(['image', 'markdown', 'code', 'text', 'binary'])
 export type PreviewKind = z.infer<typeof PreviewKindSchema>
