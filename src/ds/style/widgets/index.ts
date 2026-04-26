@@ -21,6 +21,8 @@ import { postCard } from './pattern/postCard'
 import { feedPost } from './pattern/feedPost'
 import { messageBubble } from './pattern/messageBubble'
 import { productCard } from './pattern/productCard'
+import { contractCard } from './pattern/contractCard'
+import { proseCss } from './pattern/prose'
 import { listboxCss } from './collection/listbox'
 import { orderableCss } from './collection/orderable'
 import { menu } from './collection/menu'
@@ -32,6 +34,7 @@ import { sidebarCss } from './composite/sidebar'
 import { sidebarFloatingCss } from './composite/sidebarFloating'
 import { pageCss } from './composite/page'
 import { layout } from './layout/layout'
+import { splitCss } from './layout/split'
 
 export const widgets = () =>
   [
@@ -43,10 +46,11 @@ export const widgets = () =>
     feedCss, tabPanelCss, carouselCss,
     highlightMark(), barChart(), courseCard(), display(),
     legendDot(), roleCard(), statCard(), top10(), postCard(), feedPost(), messageBubble(), productCard(),
+    contractCard(), proseCss(),
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite
     grid(), toolbar(), sidebarCss(), sidebarFloatingCss(), pageCss,
     // layout
-    layout(),
+    layout(), splitCss(),
   ].join('\n')
