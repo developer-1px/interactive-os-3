@@ -15,7 +15,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROOT, type NormalizedData, type Entity } from '../src/ds'
+import { ROOT, type NormalizedData, type Entity } from '../packages/ds/src'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')

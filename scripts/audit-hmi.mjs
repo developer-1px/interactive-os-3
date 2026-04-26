@@ -5,7 +5,7 @@
  * 목적: prose 등 컨테이너의 CSS 규칙에서 selector depth 별 분리 강도(sep) 를
  *       추출하고 "자손 그룹의 sep ≤ 조상 그룹의 sep" 단조성 위반을 보고.
  *
- * 입력: src/ds/style/widgets/pattern/prose.ts (또는 인자로 지정)
+ * 입력: packages/ds/src/style/widgets/pattern/prose.ts (또는 인자로 지정)
  * 출력: 위반 목록 + 점수 표
  *
  * 점수 채널:
@@ -116,7 +116,7 @@ function scoreBody(body) {
 }
 
 function main() {
-  const file = process.argv[2] || 'src/ds/style/widgets/pattern/prose.ts'
+  const file = process.argv[2] || 'packages/ds/src/style/widgets/pattern/prose.ts'
   const path = resolve(process.cwd(), file)
   if (!existsSync(path)) {
     console.error('파일 없음:', path)

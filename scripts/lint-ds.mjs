@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ds 위반 린트 — 앱 코드에서 escape hatch / classless 위반 / inline-style 스캔.
-// 제외: src/ds/ (생성 규약), src/controls/ (ds 부품 정의 자체).
+// 제외: packages/ds/src/ (생성 규약), src/controls/ (ds 부품 정의 자체).
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 

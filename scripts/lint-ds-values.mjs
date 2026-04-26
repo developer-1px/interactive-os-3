@@ -10,14 +10,14 @@ import { scanText } from './lib/ds-value-rules.mjs'
 const ROOT = new URL('..', import.meta.url).pathname
 
 const SCAN = [
-  'src/ds/style/widgets',
-  'src/ds/style/shell',
-  'src/ds/style/states.ts',
+  'packages/ds/src/style/widgets',
+  'packages/ds/src/style/shell',
+  'packages/ds/src/style/states.ts',
 ]
 
 const SKIP_PATHS = [
-  'src/ds/fn',
-  'src/ds/style/preset',
+  'packages/ds/src/fn',
+  'packages/ds/src/style/preset',
 ]
 
 function* walk(p) {

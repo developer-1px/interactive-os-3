@@ -3,9 +3,9 @@
  * PreToolUse guard — Write/Edit 직전 변경 콘텐츠가 ds raw-value 룰을 위반하면 차단.
  *
  * 차단 범위 (lint-ds-values와 동일):
- *  - src/ds/style/widgets/**, src/ds/style/shell/**, src/ds/style/states.ts
+ *  - packages/ds/src/style/widgets/**, packages/ds/src/style/shell/**, packages/ds/src/style/states.ts
  * 제외:
- *  - src/ds/fn/**, src/ds/style/preset/** (토큰 정의 소스)
+ *  - packages/ds/src/fn/**, packages/ds/src/style/preset/** (토큰 정의 소스)
  *
  * 룰: scripts/lib/ds-value-rules.mjs (hex / raw-color / raw-mask / radius-literal)
  *

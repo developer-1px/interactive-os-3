@@ -30,7 +30,7 @@ const parseDemoTag = (raw: string): DemoSpec | undefined => {
 
 export const parseExports = (root: string): FoundationExport[] => {
   // ref(palette/) + sys(foundations/) 두 레이어 모두 카탈로그.
-  const dirs = ['src/ds/palette', 'src/ds/foundations'].map((d) => join(root, d))
+  const dirs = ['packages/ds/src/palette', 'packages/ds/src/foundations'].map((d) => join(root, d))
   const files = dirs
     .filter((d) => { try { return statSync(d).isDirectory() } catch { return false } })
     .flatMap((d) => walk(d))
@@ -90,7 +90,7 @@ export const parseExports = (root: string): FoundationExport[] => {
 
 export const indexCallSites = (root: string, names: string[]): Record<string, CallSite[]> => {
   const out: Record<string, CallSite[]> = Object.fromEntries(names.map((n) => [n, []]))
-  const scanDirs = ['src/ds/style/widgets', 'src/ds/ui', 'src/ds/style/shell', 'src/ds/style/states']
+  const scanDirs = ['packages/ds/src/style/widgets', 'packages/ds/src/ui', 'packages/ds/src/style/shell', 'packages/ds/src/style/states']
     .map((d) => join(root, d))
     .filter((d) => {
       try { return statSync(d).isDirectory() } catch { return false }
@@ -130,7 +130,7 @@ const VAR_DIRECT_RE = /var\(\s*--ds-[\w-]+/
 const COLOR_KEYWORDS = /\b(?:rgb|rgba|hsl|hsla|oklch|oklab)\s*\(/
 
 export const detectLeaks = (root: string): Leak[] => {
-  const widgetsDir = join(root, 'src/ds/style/widgets')
+  const widgetsDir = join(root, 'packages/ds/src/style/widgets')
   if (!statSync(widgetsDir).isDirectory()) return []
   const files = walk(widgetsDir)
   const out: Leak[] = []

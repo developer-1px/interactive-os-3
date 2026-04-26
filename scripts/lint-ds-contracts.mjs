@@ -13,7 +13,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, basename } from 'node:path'
 
 const ROOT = process.cwd()
-const UI = join(ROOT, 'src/ds/ui')
+const UI = join(ROOT, 'packages/ds/src/ui')
 
 const walk = (dir, out = []) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {

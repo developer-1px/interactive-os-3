@@ -60,7 +60,7 @@ function pickRoutes(files) {
   // catalog 는 항상 — "DS 진화"의 대표 프레임
   const picked = new Map()
   picked.set('catalog', ROUTES[0])
-  const dsChanged = files.some(f => f.startsWith('src/ds/'))
+  const dsChanged = files.some(f => f.startsWith('packages/ds/src/'))
   // ds/** 바뀌면 catalog 1장으로 충분 (역인덱스)
   // routes/<slug>/** 바뀐 라우트는 추가로
   for (const f of files) {

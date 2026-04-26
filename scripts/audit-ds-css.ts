@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * dsCss 감사 — src/ds/style/** 의 css 템플릿 리터럴을 추출해
+ * dsCss 감사 — packages/ds/src/style/** 의 css 템플릿 리터럴을 추출해
  * 중복 selector / 중복 declaration block / 깊은 descendant chain 을 보고.
  *
  * 외부 추상 도입 없이 기존 단일-stylesheet 구조를 그대로 입력으로 삼는다.
@@ -21,10 +21,10 @@ import {
   normDecls,
   depthOf,
   type Rule as SharedRule,
-} from '../src/ds/style/audit'
+} from '../packages/ds/src/style/audit'
 
 const ROOT = new URL('..', import.meta.url).pathname
-const STYLE_ROOT = join(ROOT, 'src/ds/style')
+const STYLE_ROOT = join(ROOT, 'packages/ds/src/style')
 
 type Rule = SharedRule & { file: string }
 

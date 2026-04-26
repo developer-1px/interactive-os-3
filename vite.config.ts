@@ -26,7 +26,7 @@ export default defineConfig({
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
   resolve: {
     alias: {
-      '@p/ds': resolve(__dirname, 'src/ds/index.ts'),
+      '@p/ds': resolve(__dirname, 'packages/ds/src/index.ts'),
       '@p/app': resolve(__dirname, 'src/main.tsx'),
     },
   },

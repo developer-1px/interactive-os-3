@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * css 누락 감지 — src/ds/style/widgets/** 아래 css 정의 파일이 widgets/index.ts에 등록되지 않은 경우를 차단.
+ * css 누락 감지 — packages/ds/src/style/widgets/** 아래 css 정의 파일이 widgets/index.ts에 등록되지 않은 경우를 차단.
  *
  * widgets/index.ts 가 등록한 css 함수만 widgets() 결과에 포함되므로,
  * 파일이 존재해도 index.ts 에서 import 되지 않으면 런타임에 스타일이 사라진다 (unstyled widget).
@@ -14,7 +14,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const ROOT = new URL('..', import.meta.url).pathname
-const WIDGETS = join(ROOT, 'src/ds/style/widgets')
+const WIDGETS = join(ROOT, 'packages/ds/src/style/widgets')
 const INDEX = join(WIDGETS, 'index.ts')
 
 function walk(dir) {
@@ -53,8 +53,8 @@ if (argv.length > 0) {
 if (report.length === 0) process.exit(0)
 
 console.error('🔴 css 누락 — widgets/index.ts에 등록되지 않은 css 정의 파일:')
-for (const rel of report) console.error(`   - src/ds/style/widgets/${rel.replace(/^\.\//, '')}.ts`)
+for (const rel of report) console.error(`   - packages/ds/src/style/widgets/${rel.replace(/^\.\//, '')}.ts`)
 console.error('')
-console.error('가이드: src/ds/style/widgets/index.ts 상단에 import 추가 + widgets() 배열에 호출 추가.')
+console.error('가이드: packages/ds/src/style/widgets/index.ts 상단에 import 추가 + widgets() 배열에 호출 추가.')
 console.error('       파일이 더 이상 필요 없다면 삭제. (오프 상태로 남기지 말 것)')
 process.exit(1)

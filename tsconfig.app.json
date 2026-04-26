@@ -23,12 +23,12 @@
 
     "baseUrl": ".",
     "paths": {
-      "@p/ds": ["src/ds/index.ts"],
-      "@p/ds/*": ["src/ds/*"],
+      "@p/ds": ["packages/ds/src/index.ts"],
+      "@p/ds/*": ["packages/ds/src/*"],
       "@p/app": ["src/main.tsx"],
       "@p/app/*": ["src/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["src/ds/build.ts"]
+  "include": ["src", "packages/ds/src"],
+  "exclude": ["packages/ds/src/build.ts"]
 }

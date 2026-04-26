@@ -38,7 +38,7 @@ const CONTAINER_ROLES = new Set([
 ])
 
 // ── ① state selector 커버리지 수집 ──────────────────────────────────────
-const SELECTORS_FILE = join(ROOT, 'src/ds/style/states/selectors.ts')
+const SELECTORS_FILE = join(ROOT, 'packages/ds/src/style/states/selectors.ts')
 const selectorsText = readFileSync(SELECTORS_FILE, 'utf8')
 const registeredRoles = new Set()
 // [role="X"] + optional [attr] 꼬리 (조건부 커버도 커버로 인정 — 예: columnheader[aria-sort])
@@ -51,7 +51,7 @@ const nativeControls = new Set(['button', 'input', 'select', 'textarea'])
 // ── ② ds UI 레이어에서 role=X가 어떤 DOM 원소로 emit되는지 수집 ─────────
 // <button role="switch"> 라면 switch는 native control 로 state 커버됨.
 // <div role="radio"> 라면 control 셀렉터 밖 → 커버리지 구멍.
-const UI_DIR = join(ROOT, 'src/ds/ui')
+const UI_DIR = join(ROOT, 'packages/ds/src/ui')
 function* walkTsx(dir) {
   for (const n of readdirSync(dir)) {
     const p = join(dir, n)
@@ -78,7 +78,7 @@ for (const file of walkTsx(UI_DIR)) {
 }
 
 // ── ③ style/widgets 에서 선언된 role 수집 ──────────────────────────────
-const WIDGETS_DIR = join(ROOT, 'src/ds/style/widgets')
+const WIDGETS_DIR = join(ROOT, 'packages/ds/src/style/widgets')
 const widgetRoles = new Map() // role -> Set<file>
 for (const file of walkTsx(WIDGETS_DIR)) {
   const text = readFileSync(file, 'utf8')

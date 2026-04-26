@@ -12,7 +12,7 @@ import type { Plugin } from 'vite'
  *       체크리스트로 점수화해 Catalog 페이지에 공급한다.
  */
 
-// Tier = 폴더 경로 (단일 진실 원천, src/ds/core/INVARIANTS.md 참조).
+// Tier = 폴더 경로 (단일 진실 원천, packages/ds/src/core/INVARIANTS.md 참조).
 // 폴더는 `N-<kind>` 포맷 (예: 1-indicator, 8-layout) — 숫자가 의존성 위계를 명시.
 // drift = ui/ 직속 또는 미분류 폴더 — lint 또는 tier 폴더로 이동 대상.
 export type Kind =
@@ -134,7 +134,7 @@ const buildChecks = (src: string, kind: Kind): ContractCheck[] => {
 }
 
 const scanContracts = (root: string, callSiteCounts: Record<string, number>): Contract[] => {
-  const uiDir = join(root, 'src/ds/ui')
+  const uiDir = join(root, 'packages/ds/src/ui')
   const files = walk(uiDir)
   const out: Contract[] = []
 
@@ -169,7 +169,7 @@ const scanContracts = (root: string, callSiteCounts: Record<string, number>): Co
 
 const countCallSites = (root: string, names: string[]): Record<string, number> => {
   const out: Record<string, number> = Object.fromEntries(names.map((n) => [n, 0]))
-  const scanDirs = ['src/routes', 'src/ds/widgets', 'src/ds/style/widgets']
+  const scanDirs = ['src/routes', 'packages/ds/src/widgets', 'packages/ds/src/style/widgets']
     .map((d) => join(root, d))
     .filter((d) => { try { return statSync(d).isDirectory() } catch { return false } })
   const files = scanDirs.flatMap((d) => walkAll(d))
@@ -206,7 +206,7 @@ const walkAll = (dir: string, out: string[] = []): string[] => {
 }
 
 export const buildContracts = (root: string): Contract[] => {
-  const uiDir = join(root, 'src/ds/ui')
+  const uiDir = join(root, 'packages/ds/src/ui')
   const files = walk(uiDir)
   const names: string[] = []
   for (const f of files) {

@@ -7,9 +7,9 @@
 // 룰:
 //   R1. 라우트 코드(src/routes/**)에서 window.matchMedia 직접 호출 금지.
 //        → 모바일/데스크톱 분기는 CSS @media/@container로 처리.
-//   R2. ds widget CSS(src/ds/ui/**)에서 viewport @media (... -width:) 사용 금지.
+//   R2. ds widget CSS(packages/ds/src/ui/**)에서 viewport @media (... -width:) 사용 금지.
 //        → 컨텐츠 reflow는 @container 만 허용.
-//   R3. shell CSS(src/ds/style/**, src/routes/**)에서 max-width/min-width 리터럴 폭
+//   R3. shell CSS(packages/ds/src/style/**, src/routes/**)에서 max-width/min-width 리터럴 폭
 //        @media를 쓸 때 SHELL_MOBILE_MAX 토큰(${SHELL_MOBILE_MAX} interpolation) 사용 강제.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -52,7 +52,7 @@ for (const f of walk(join(ROOT, 'src/routes')).filter(isCode)) {
 }
 
 // R2 — ds/ui에서 viewport @media (max|min-width) 금지
-const dsUiFiles = walk(join(ROOT, 'src/ds/ui')).filter(isCode)
+const dsUiFiles = walk(join(ROOT, 'packages/ds/src/ui')).filter(isCode)
 for (const f of dsUiFiles) {
   const src = readFileSync(f, 'utf8')
   const lines = src.split('\n')
@@ -65,7 +65,7 @@ for (const f of dsUiFiles) {
 
 // R3 — shell CSS에서 폭 리터럴 @media 사용 시 토큰 강제 (단순 휴리스틱)
 const shellFiles = [
-  ...walk(join(ROOT, 'src/ds/style')).filter(isCode),
+  ...walk(join(ROOT, 'packages/ds/src/style')).filter(isCode),
 ]
 for (const f of shellFiles) {
   const src = readFileSync(f, 'utf8')

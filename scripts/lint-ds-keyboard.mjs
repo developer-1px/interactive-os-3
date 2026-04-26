@@ -19,7 +19,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join, relative, basename } from 'node:path'
 
 const ROOT_DIR = process.cwd()
-const UI = join(ROOT_DIR, 'src/ds/ui')
+const UI = join(ROOT_DIR, 'packages/ds/src/ui')
 
 const ROVING_ROLES = new Set([
   'menu', 'menubar', 'listbox', 'tree', 'treegrid',

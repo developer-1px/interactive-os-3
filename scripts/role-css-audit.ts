@@ -10,7 +10,7 @@
 // (selectors.ts의 flexItem/subgridItem/rovingItem 같은 이름도 텍스트에 그대로 등장)
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-const STYLE_ROOT = new URL('../src/ds/style', import.meta.url).pathname
+const STYLE_ROOT = new URL('../packages/ds/src/style', import.meta.url).pathname
 function collect(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
     const p = join(dir, name)
@@ -79,7 +79,7 @@ dsCss += '\n' + synthetic.join('\n')
 // ui/가 emit하는 role을 역스캔 — 코드가 role=X를 내보내는데 CSS가 모르면 그게 갭.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-const UI_ROOT = new URL('../src/ds/ui', import.meta.url).pathname
+const UI_ROOT = new URL('../packages/ds/src/ui', import.meta.url).pathname
 const emittedRoles = new Set<string>()
 const emitters: Record<string, string[]> = {}
 function walk(dir: string) {
