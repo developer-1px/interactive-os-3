@@ -1,4 +1,4 @@
-import { css, pad, dim, radius, tint } from '../../../foundations'
+import { css, pad, dim, radius, tint, hierarchy } from '../../../foundations'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
@@ -40,9 +40,15 @@ export const pageCss = css`
   [aria-roledescription="board-page"] [aria-roledescription="board-stream"] {
     overflow-y: auto;
   }
+  /* board-posts — 게시물 collection.
+     post(다른 작성자) ↔ post: L3 section (Continuity로 위계 성립)
+     post-cont(같은 작성자 연속) ↔ 직전: L0 atom (bonded — 한 화자 묶음) */
   [aria-roledescription="board-page"] [aria-roledescription="board-posts"] {
-    gap: 0;
-    padding: ${pad(2)} 0;
+    gap: ${hierarchy.section};
+    padding: ${hierarchy.surface} 0;
+  }
+  [aria-roledescription="board-page"] [aria-roledescription="board-posts"] > [aria-roledescription="post-cont"] {
+    margin-block-start: calc(${hierarchy.atom} - ${hierarchy.section});
   }
 
   /* Side-collapse 패턴 — Row[side|main|right] 구조 페이지에서 좁은 viewport시
@@ -52,8 +58,9 @@ export const pageCss = css`
     container-name: collapse-sides;
     align-items: stretch;
     justify-content: flex-start;
-    padding: ${pad(4)};
-    gap: ${pad(4)};
+    /* L5 shell — surface↔surface (sidebar↔main 간격, 페이지 외곽). hierarchy 공식 정합. */
+    padding: ${hierarchy.shell};
+    gap: ${hierarchy.shell};
     min-height: 100dvh;
     box-sizing: border-box;
   }
@@ -70,8 +77,9 @@ export const pageCss = css`
       width: 100%; min-width: 0;
     }
     [aria-roledescription$="-page"] {
-      padding: ${pad(2)};
-      gap: ${pad(2)};
+      /* mobile: L4 surface로 스텝다운 (shell이 좁은 viewport에 비해 과함) */
+      padding: ${hierarchy.surface};
+      gap: ${hierarchy.surface};
       max-width: 640px; margin-inline: auto;
     }
   }
