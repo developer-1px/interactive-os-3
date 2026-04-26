@@ -1,10 +1,20 @@
 import { defineConfig } from 'vite'
+import { copyFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import fsTree from './vite-plugin-fs'
 import dsAudit from './vite-plugin-ds-audit'
 import dsContracts from './vite-plugin-ds-contracts'
 import { inspectorPlugin } from './vite-plugin-inspector'
+
+const spaFallback = () => ({
+  name: 'spa-404-fallback',
+  closeBundle() {
+    const dist = resolve(__dirname, 'dist')
+    copyFileSync(resolve(dist, 'index.html'), resolve(dist, '404.html'))
+  },
+})
 
 export default defineConfig({
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
@@ -23,5 +33,6 @@ export default defineConfig({
     fsTree(),
     dsAudit(),
     dsContracts(),
+    spaFallback(),
   ],
 })
