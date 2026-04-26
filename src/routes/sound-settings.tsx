@@ -272,6 +272,7 @@ export function SoundSettings() {
   return <Renderer page={definePage(page)} />
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Route = createFileRoute('/sound-settings')({
   component: SoundSettings,
   staticData: { palette: { label: 'macOS · 사운드 설정', to: '/sound-settings' } },

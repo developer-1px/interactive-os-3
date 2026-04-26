@@ -15,7 +15,7 @@ export function ListView({
 }) {
   const kids = items ?? node?.children ?? []
   return (
-    <section aria-roledescription="list-view">
+    <section data-part="list-view">
     <TreeGrid aria-label="목록뷰" aria-rowcount={kids.length} data-density="compact">
       <colgroup>
         <col data-col="name" />

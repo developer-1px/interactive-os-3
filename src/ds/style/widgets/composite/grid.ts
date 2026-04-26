@@ -1,4 +1,4 @@
-import { accent, bg, border, control, css, dim, dur, ease, emphasize, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone } from '../../../foundations'
+import { accent, bg, border, control, css, dim, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone } from '../../../foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -154,7 +154,7 @@ export const grid = () => [
       color: ${accent()};
     }
     [role="columnheader"] > button:focus-visible {
-      outline: 2px solid ${accent()};
+      outline: ${focusRingWidth()} solid ${accent()};
       outline-offset: 2px;
       border-radius: ${pad(0.5)};
     }
@@ -178,7 +178,7 @@ export const grid = () => [
       text-decoration-thickness: 1.5px;
     }
     [role="gridcell"] a[href]:focus-visible {
-      outline: 2px solid ${accent()};
+      outline: ${focusRingWidth()} solid ${accent()};
       outline-offset: 2px;
       border-radius: ${pad(0.5)};
     }
@@ -188,12 +188,12 @@ export const grid = () => [
       border-radius: ${radius('md')};
     }
     [role="gridcell"] a[href]:has(> img):hover {
-      outline: 2px solid ${accent()};
+      outline: ${focusRingWidth()} solid ${accent()};
       outline-offset: 2px;
       text-decoration: none;
     }
     [role="gridcell"] a[href]:has(> img):focus-visible {
-      outline: 2px solid ${accent()};
+      outline: ${focusRingWidth()} solid ${accent()};
       outline-offset: 2px;
     }
 

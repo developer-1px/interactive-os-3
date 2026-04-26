@@ -11,6 +11,7 @@ type FieldContextValue = {
 
 const FieldContext = createContext<FieldContextValue | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useField(): FieldContextValue | null {
   return useContext(FieldContext)
 }
@@ -34,7 +35,7 @@ export function Field({ required = false, invalid = false, children, ...rest }: 
     <FieldContext.Provider value={value}>
       <div
         role="group"
-        aria-roledescription="field"
+        data-part="field"
         aria-required={required || undefined}
         aria-invalid={invalid || undefined}
         {...rest}

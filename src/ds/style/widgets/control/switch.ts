@@ -1,12 +1,12 @@
 import { accent, bg, control, css, dur, ease, radius, shadow } from '../../../foundations'
 export const switchCss = css`
   :where([role="switch"]) {
-    --ds-switch-ratio:  1.75;
-    --ds-switch-pad:    3px;
-    --ds-switch-thumb:  calc(${control('h')} - var(--ds-switch-pad) * 2);
-    --ds-switch-travel: calc(${control('h')} * (var(--ds-switch-ratio) - 1));
-    width: calc(${control('h')} * var(--ds-switch-ratio));
-    padding: var(--ds-switch-pad);
+    --switch-ratio:  1.75;
+    --switch-pad:    3px;
+    --switch-thumb:  calc(${control('h')} - var(--switch-pad) * 2);
+    --switch-travel: calc(${control('h')} * (var(--switch-ratio) - 1));
+    width: calc(${control('h')} * var(--switch-ratio));
+    padding: var(--switch-pad);
     border-radius: ${radius('pill')};
     background: ${control('channel')};
     min-height: auto; block-size: ${control('h')};
@@ -21,8 +21,8 @@ export const switchCss = css`
   }
   :where([role="switch"])::before {
     content: '';
-    width: var(--ds-switch-thumb);
-    height: var(--ds-switch-thumb);
+    width: var(--switch-thumb);
+    height: var(--switch-thumb);
     border-radius: 50%;
     background: ${bg()};
     box-shadow: ${shadow()};
@@ -30,6 +30,6 @@ export const switchCss = css`
   }
   :where([role="switch"])[aria-checked="true"] { background: ${accent()}; }
   :where([role="switch"])[aria-checked="true"]::before {
-    transform: translateX(var(--ds-switch-travel));
+    transform: translateX(var(--switch-travel));
   }
 `

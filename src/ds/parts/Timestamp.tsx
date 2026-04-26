@@ -10,6 +10,7 @@ const toDate = (v: Date | string | number): Date =>
   v instanceof Date ? v : new Date(v)
 
 /** formatRelative — 짧은 상대 시간. en-US 베이스 ("3m", "2h", "5d"). */
+// eslint-disable-next-line react-refresh/only-export-components
 export const formatRelative = (v: Date | string | number, now: Date = new Date()): string => {
   const d = toDate(v)
   const diff = (now.getTime() - d.getTime()) / 1000

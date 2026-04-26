@@ -40,7 +40,7 @@ ds.css 추가: [src/ds/css/widgets/slider.ts](src/ds/css/widgets/slider.ts) — 
 
 ### ✅ 추출: `Field` (label+control+unit)
 - 20+회 반복 → [Field.tsx](src/inspector/Field.tsx)
-- ds 승격 후보지만 `aria-roledescription` 기반이라 role 신설은 과함. 앱 로컬 유지
+- ds 승격 후보지만 `data-part` 기반이라 role 신설은 과함. 앱 로컬 유지
 
 ### 🟡 반복 중: color dual-input (ColorInput + Input)
 - Fill/Stroke 2곳. 3번째(effect별 색상)가 생기면 `ColorField`로 승격
@@ -54,7 +54,7 @@ ds.css 추가: [src/ds/css/widgets/slider.ts](src/ds/css/widgets/slider.ts) — 
 | invariant | 결과 |
 |---|---|
 | classless (ARIA + tag only) | ✅ Inspector·신규 컴포넌트 전부 className 0 |
-| no escape hatches (raw `role=`) | ✅ `aria-roledescription`만 사용 (Field의 field/control/unit), 실 role 신설 없음 |
+| no escape hatches (raw `role=`) | ✅ `data-part`만 사용 (Field의 field/control/unit), 실 role 신설 없음 |
 | ds.css 제너레이터 경유 | ✅ slider/color는 [src/ds/css/widgets/slider.ts](src/ds/css/widgets/slider.ts)에 추가 |
 | 업계 수렴 우선 (native HTML) | ✅ spinbutton/slider/textbox/combobox 전부 native 경로로 |
 | prop = ARIA 그대로 | ✅ value/min/max/step 네이티브 그대로 전달 |

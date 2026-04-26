@@ -15,7 +15,7 @@ import {
  */
 export function Keyboard() {
   return (
-    <main aria-roledescription="keyboard-test" aria-label="키보드 인터랙션 검증">
+    <main data-part="keyboard-test" aria-label="키보드 인터랙션 검증">
       <header>
         <h1>키보드 테스트</h1>
         <p>각 ds 부품에 포커스를 주고 화살표·Enter·Space·Esc·Home/End·문자 입력(typeahead)을 시도하세요.
@@ -59,7 +59,7 @@ function FocusTracker() {
     }
   }, [])
   return (
-    <dl aria-roledescription="focus-tracker" aria-label="현재 포커스">
+    <dl data-part="focus-tracker" aria-label="현재 포커스">
       <dt>tag</dt><dd>{info.tag}</dd>
       <dt>role</dt><dd>{info.role}</dd>
       <dt>label</dt><dd>{info.label}</dd>
@@ -99,12 +99,12 @@ function FixtureFrame({ children }: { children: React.ReactNode }) {
       el.removeEventListener('focusout', onOut)
     }
   }, [])
-  return <div ref={ref} aria-roledescription="fixture" data-focused={hasFocus || undefined}>{children}</div>
+  return <div ref={ref} data-part="fixture" data-focused={hasFocus || undefined}>{children}</div>
 }
 
 function ShortcutTable({ rows }: { rows: ReadonlyArray<readonly [string, string]> }) {
   return (
-    <table aria-roledescription="key-map">
+    <table data-part="key-map">
       <thead><tr><th scope="col">key</th><th scope="col">action</th></tr></thead>
       <tbody>
         {rows.map(([k, a]) => (

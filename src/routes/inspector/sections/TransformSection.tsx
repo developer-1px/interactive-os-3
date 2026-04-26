@@ -15,7 +15,7 @@ export function TransformSection({ sel, set }: {
   set: (patch: Partial<Selection>) => void
 }) {
   return (
-    <section aria-roledescription="panel-section" aria-label="Transform">
+    <section data-part="panel-section" aria-label="Transform">
       <h3>Transform</h3>
       {FIELDS.map((f) => (
         <Field key={f.key} label={f.label} unit={f.unit} htmlFor={`tf-${f.key}`}>

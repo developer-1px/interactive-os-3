@@ -50,7 +50,7 @@ export const tooltipCss = css`
      centered 강제 풀고, padding/border-radius만 기본값. 위치는 소비 측이 결정.
      [popover]는 modal <dialog>와 달리 ::backdrop을 만들지 않으므로 scrim 옵션 시
      body::before로 dim layer를 깐다 (popover는 top layer라 scrim 위에 떠 있음). */
-  [popover][role="dialog"][aria-roledescription="popover"] {
+  [popover][role="dialog"][data-part="popover"] {
     ${grouping(3)}
     background-color: ${bg()};
     color: inherit;

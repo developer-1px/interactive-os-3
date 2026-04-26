@@ -112,7 +112,7 @@ function bodyRowNodes(items: typeof videos) {
     // 썸네일 — 영상 목록의 주 시각. <a>로 감싸서 pressable 신호 확보.
     out[`c-${v.id}-thumb`] = { id: `c-${v.id}-thumb`, data: {
       type: 'Ui', component: 'GridCell',
-      content: <a href={detailHref} aria-label={`${v.title} 수정`}><img src={thumbUrl(v.id)} alt="" width={120} height={68} loading="lazy" style={{ display: 'block', borderRadius: 'var(--ds-radius-md)', objectFit: 'cover', background: 'var(--ds-neutral-2)' }} /></a>,
+      content: <a href={detailHref} aria-label={`${v.title} 수정`}><img src={thumbUrl(v.id)} alt="" width={120} height={68} loading="lazy" style={{ display: 'block', borderRadius: 'var(--ds-radius-md)', objectFit: 'cover', background: 'var(--ds-base)' }} /></a>,
     } }
 
     // title은 pressable link (상세로), duration은 읽기 전용 메타.
@@ -120,27 +120,27 @@ function bodyRowNodes(items: typeof videos) {
       type: 'Ui', component: 'GridCell',
       content: <>
         <a href={detailHref} style={{ display: 'block', fontWeight: 600, marginBlockEnd: 2 }}>{v.title}</a>
-        <small style={{ color: 'var(--ds-neutral-5)', fontVariantNumeric: 'tabular-nums' }}>{v.duration}</small>
+        <small style={{ color: 'var(--ds-muted)', fontVariantNumeric: 'tabular-nums' }}>{v.duration}</small>
       </>,
     } }
 
     out[`c-${v.id}-level`]  = { id: `c-${v.id}-level`,  data: { type: 'Ui', component: 'GridCell' } }
     out[`b-${v.id}-level`]  = { id: `b-${v.id}-level`,  data: { type: 'Ui', component: 'Badge', props: { tone: LEVEL_TONE[v.level] ?? 'neutral' }, content: v.level } }
 
-    out[`c-${v.id}-roles`]  = { id: `c-${v.id}-roles`,  data: { type: 'Ui', component: 'GridCell', content: <span style={{ color: 'var(--ds-neutral-6)' }}>{v.roles.join(', ')}</span> } }
+    out[`c-${v.id}-roles`]  = { id: `c-${v.id}-roles`,  data: { type: 'Ui', component: 'GridCell', content: <span style={{ color: 'var(--ds-muted)' }}>{v.roles.join(', ')}</span> } }
 
     out[`c-${v.id}-enrolled`] = { id: `c-${v.id}-enrolled`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: v.enrolled } }
 
     // completion → Progress + % (폭 120px로 확장해 시각 신호 충분히)
     out[`c-${v.id}-completion`] = { id: `c-${v.id}-completion`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
       content: v.completion == null
-        ? <span style={{ color: 'var(--ds-neutral-5)' }}>—</span>
+        ? <span style={{ color: 'var(--ds-muted)' }}>—</span>
         : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, justifyContent: 'flex-end' }}><progress value={v.completion} max={100} aria-label={`완료율 ${v.completion}%`} style={{ inlineSize: 120 }} /><strong>{v.completion}%</strong></span>,
     } }
 
     out[`c-${v.id}-rating`] = { id: `c-${v.id}-rating`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
       content: v.rating == null
-        ? <span style={{ color: 'var(--ds-neutral-5)' }}>—</span>
+        ? <span style={{ color: 'var(--ds-muted)' }}>—</span>
         : <span data-icon="star" aria-label={`별점 ${v.rating}`}>{v.rating}</span>,
     } }
 
@@ -149,11 +149,11 @@ function bodyRowNodes(items: typeof videos) {
 
     out[`c-${v.id}-visible`] = { id: `c-${v.id}-visible`, data: { type: 'Ui', component: 'GridCell',
       content: v.visible
-        ? <span style={{ color: 'var(--ds-neutral-6)' }}>노출</span>
-        : <span style={{ color: 'var(--ds-neutral-4)' }}>숨김</span>,
+        ? <span style={{ color: 'var(--ds-fg)' }}>노출</span>
+        : <span style={{ color: 'var(--ds-muted)' }}>숨김</span>,
     } }
 
-    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: <span style={{ color: 'var(--ds-neutral-6)' }}>{v.createdAt}</span> } }
+    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: <span style={{ color: 'var(--ds-muted)' }}>{v.createdAt}</span> } }
 
     out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell' } }
     out[`b-${v.id}-manage`] = { id: `b-${v.id}-manage`, data: { type: 'Ui', component: 'Button', content: '수정' } }

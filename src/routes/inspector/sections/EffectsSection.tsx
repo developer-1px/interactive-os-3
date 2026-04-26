@@ -17,7 +17,7 @@ export function EffectsSection({ sel, set }: {
     })
 
   return (
-    <section aria-roledescription="panel-section" aria-label="Effects">
+    <section data-part="panel-section" aria-label="Effects">
       <h3>Effects</h3>
       {sel.effects.map((e) => (
         <Field key={e.id} label={e.label}>

@@ -50,7 +50,7 @@ export function FinderMobile() {
   }, [path, smart, current])
 
   return (
-    <main aria-roledescription="finder-mobile" aria-label="Finder">
+    <main data-part="finder-mobile" aria-label="Finder">
       {!isFile && (
         <header>
           {parent !== null && (
@@ -81,7 +81,7 @@ export function FinderMobile() {
 function Home() {
   const { recent, fav } = useSidebarNav()
   return (
-    <section aria-roledescription="finder-home">
+    <section data-part="finder-home">
       <section>
         <h2>최근</h2>
         <Listbox data={recent.data} onEvent={recent.onEvent} aria-label="최근" />
@@ -115,7 +115,7 @@ function DirList({ node, onNavigate }: { node: FsNode; onNavigate: (p: string) =
     })
   if (kids.length === 0) return <Empty note="비어있는 폴더" />
   return (
-    <section aria-roledescription="finder-dir">
+    <section data-part="finder-dir">
       <Listbox data={data} onEvent={onEvent} aria-label={node.name} />
     </section>
   )
@@ -139,7 +139,7 @@ function SmartList({
     })
   if (items.length === 0) return <Empty note={`${group.label}에 항목 없음`} />
   return (
-    <section aria-roledescription="finder-smart">
+    <section data-part="finder-smart">
       <Listbox data={data} onEvent={onEvent} aria-label={group.label} />
     </section>
   )
@@ -148,7 +148,7 @@ function SmartList({
 /** TikTok식 세로 스냅 스와이퍼 — 형제 파일을 한 화면씩 풀-블리드로 쌓는다.
  *  스크롤은 CSS scroll-snap이 담당. JS는 진입 시 현재 파일로 1회 점프만 한다(클릭 driven).
  *  IO/scroll로 URL을 동기화하지 않는다 — 덜그덕 방지 (memory: feedback_mobile_js_boundary).
- *  스타일은 panes.ts `[aria-roledescription="finder-tiktok|finder-file|finder-tiktok-*"]`. */
+ *  스타일은 panes.ts `[data-part="finder-tiktok|finder-file|finder-tiktok-*"]`. */
 function FilesSwiper({
   files, initialPath, onBack,
 }: { files: FsNode[]; initialPath: string; onBack?: () => void }) {
@@ -162,26 +162,26 @@ function FilesSwiper({
     target?.scrollIntoView({ block: 'start' })
   }, [initialPath])
   return (
-    <section ref={ref} aria-roledescription="finder-tiktok">
+    <section ref={ref} data-part="finder-tiktok">
       {files.map((f) => (
         <article
           key={f.path}
           data-path={f.path}
-          aria-roledescription="finder-file"
+          data-part="finder-file"
           aria-label={f.name}
         >
-          <figure aria-roledescription="preview-fill">
+          <figure data-part="preview-fill">
             <PreviewBody node={f} />
           </figure>
 
-          <header aria-roledescription="finder-tiktok-top">
+          <header data-part="finder-tiktok-top">
             {onBack && (
               <button type="button" data-icon="chevron-left" aria-label="뒤로" onClick={onBack} />
             )}
             <strong title={f.name}>{f.name}</strong>
           </header>
 
-          <aside aria-roledescription="finder-tiktok-bottom" aria-label={`${f.name} 정보`}>
+          <aside data-part="finder-tiktok-bottom" aria-label={`${f.name} 정보`}>
             <mark data-tone="info">{(f.ext ?? 'file').toUpperCase()}</mark>
             {f.size != null && <small>{formatSize(f.size)}</small>}
             {f.mtime && <small>{formatDate(f.mtime)}</small>}
@@ -195,7 +195,7 @@ function FilesSwiper({
 
 function Empty({ note }: { note?: string } = {}) {
   return (
-    <section aria-roledescription="finder-empty">
+    <section data-part="finder-empty">
       <p>{note ?? '표시할 항목이 없습니다'}</p>
     </section>
   )

@@ -1,4 +1,4 @@
-import { accent, border, css, dim, dur, ease, hairlineWidth, pad, radius, tint } from '../../../foundations'
+import { accent, border, css, dim, dur, ease, focusRingWidth, hairlineWidth, pad, radius, tint } from '../../../foundations'
 /**
  * Tabs — 보편적 탭 어포던스.
  *
@@ -21,7 +21,7 @@ export const tabs = () => css`
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"] {
     padding: ${pad(1.5)} ${pad(3)};
-    border-bottom: 2px solid transparent;
+    border-bottom: ${focusRingWidth()} solid transparent;
     margin-bottom: -1px;
     color: ${dim(65)};
     background: transparent;
@@ -49,7 +49,7 @@ export const tabs = () => css`
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"] {
     padding: ${pad(1.5)} ${pad(3)};
-    border-inline-end: 2px solid transparent;
+    border-inline-end: ${focusRingWidth()} solid transparent;
     margin-inline-end: -1px;
     color: ${dim(65)};
     background: transparent;
@@ -77,7 +77,7 @@ export const tabs = () => css`
     padding: ${pad(3)} 0;
   }
   [role="tabpanel"]:focus-visible {
-    outline: 2px solid ${accent()};
+    outline: ${focusRingWidth()} solid ${accent()};
     outline-offset: 2px;
     border-radius: ${radius('sm')};
   }

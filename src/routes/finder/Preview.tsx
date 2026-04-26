@@ -12,7 +12,7 @@ import type { PreviewVM } from './finder.feature'
 export function PreviewPane({ vm }: { vm: PreviewVM }) {
   const show = vm.kind !== 'empty'
   return (
-    <aside aria-roledescription="preview" aria-label="미리보기" aria-hidden={!show}>
+    <aside data-part="preview" aria-label="미리보기" aria-hidden={!show}>
       {show && 'node' in vm && (
         <>
           {vm.kind === 'dir'

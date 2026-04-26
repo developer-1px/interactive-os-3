@@ -138,8 +138,8 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-tracking-caps:     ${p.tracking?.caps     ?? '0.06em'};
 
     /* focus-ring 두께 — outline / active indicator / thumb 강조선 공통.
-       hairline(--ds-hairline)보다 한 단 두꺼운 강조 테두리. */
-    --ds-focus-ring-w: 2px;
+       hairline(--ds-hairline)보다 한 단 두꺼운 강조 테두리. preset.focusRingWidth 가 owner. */
+    --ds-focus-ring-w: ${p.focusRingWidth ?? '2px'};
 
     --ds-radius-sm:   ${p.radius.sm};
     --ds-radius-md:   ${p.radius.md};

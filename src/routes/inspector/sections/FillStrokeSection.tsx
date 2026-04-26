@@ -24,7 +24,7 @@ export function FillSection({ sel, set }: {
   set: (patch: Partial<Selection>) => void
 }) {
   return (
-    <section aria-roledescription="panel-section" aria-label="Fill">
+    <section data-part="panel-section" aria-label="Fill">
       <h3>Fill</h3>
       <ColorRow label="Color" id="fl-c" value={sel.fill} onChange={(fill) => set({ fill })} />
     </section>
@@ -36,7 +36,7 @@ export function StrokeSection({ sel, set }: {
   set: (patch: Partial<Selection>) => void
 }) {
   return (
-    <section aria-roledescription="panel-section" aria-label="Stroke">
+    <section data-part="panel-section" aria-label="Stroke">
       <h3>Stroke</h3>
       <ColorRow label="Color" id="st-c" value={sel.strokeColor} onChange={(strokeColor) => set({ strokeColor })} />
       <Field label="Width" unit="px" htmlFor="st-w">

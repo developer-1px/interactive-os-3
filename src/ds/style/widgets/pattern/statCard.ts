@@ -1,4 +1,4 @@
-import { css, dim, font, icon, mix, pad, status, tint } from '../../../foundations'
+import { css, dim, font, hairlineWidth, icon, mix, pad, status, tint } from '../../../foundations'
 
 /**
  * StatCard slot inner styling — Card primitive 슬롯 안의 KPI 특화 시각만.
@@ -9,7 +9,7 @@ import { css, dim, font, icon, mix, pad, status, tint } from '../../../foundatio
 export const statCard = () => css`
   /* alert tone — 카드 root 강조 */
   article[data-part="card"][data-card="stat"][data-tone="alert"] {
-    border: 1px solid ${tint(status('danger'), 40)};
+    border: ${hairlineWidth()} solid ${tint(status('danger'), 40)};
     background: ${mix(status('danger'), 4)};
   }
 

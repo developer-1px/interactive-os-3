@@ -13,27 +13,27 @@ import { containerPad, slotGap } from '../../seed/keyline'
  * 핸들 button 의 hit target 은 --ds-control-h 로 보장한다.
  */
 export const orderableCss = () => css`
-  ${listReset(`ol[aria-roledescription="orderable"]`)}
-  ol[aria-roledescription="orderable"] {
+  ${listReset(`ol[data-part="orderable"]`)}
+  ol[data-part="orderable"] {
     display: flex;
     flex-direction: column;
     padding: ${containerPad};
   }
 
-  ol[aria-roledescription="orderable"] > li {
+  ol[data-part="orderable"] > li {
     display: flex;
     align-items: center;
     gap: ${slotGap};
     padding-block: ${pad(1)};
     transition: background ${dur('base')} ${ease('out')};
   }
-  ${hairline(`ol[aria-roledescription="orderable"] > li`)}
-  ol[aria-roledescription="orderable"] > li:hover {
+  ${hairline(`ol[data-part="orderable"] > li`)}
+  ol[data-part="orderable"] > li:hover {
     background: ${tint(accent(), 6)};
   }
 
   /* primary label — flex:1 + truncate */
-  ol[aria-roledescription="orderable"] > li > span {
+  ol[data-part="orderable"] > li > span {
     flex: 1;
     min-inline-size: 0;
     overflow: hidden;
@@ -45,33 +45,33 @@ export const orderableCss = () => css`
      base.ts controlBox + button.ts square('button[data-icon]:empty') 가 정사각형
      축과 가운데 정렬을 자동 적용한다. cell-level은 color: inherit + opacity로 약화/복귀
      (mute primitive). surface flip 시 대비 안전. */
-  ol[aria-roledescription="orderable"] > li > button {
+  ol[data-part="orderable"] > li > button {
     cursor: grab;
     background: transparent;
     border-color: transparent;
     color: inherit;
     ${mute(3)}
   }
-  ol[aria-roledescription="orderable"] > li > button:hover {
+  ol[data-part="orderable"] > li > button:hover {
     opacity: 1;
   }
 
   /* trail slot — 시각·메타·우측 정렬 */
-  ol[aria-roledescription="orderable"] > li > small {
+  ol[data-part="orderable"] > li > small {
     color: inherit;
     ${mute(2)}
     font-variant-numeric: tabular-nums;
   }
 
   /* drag 상태 시각 */
-  ol[aria-roledescription="orderable"] > li[data-dragging] {
+  ol[data-part="orderable"] > li[data-dragging] {
     opacity: 0.4;
     cursor: grabbing;
   }
-  ol[aria-roledescription="orderable"] > li[data-dragging] > button {
+  ol[data-part="orderable"] > li[data-dragging] > button {
     cursor: grabbing;
   }
-  ol[aria-roledescription="orderable"] > li[data-drop-over] {
+  ol[data-part="orderable"] > li[data-drop-over] {
     box-shadow: inset 0 2px 0 0 ${accent()};
   }
 `

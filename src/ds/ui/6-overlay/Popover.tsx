@@ -25,7 +25,7 @@ export function Popover({ id, label, mode = 'auto', scrim, children }: PopoverPr
       popover={mode}
       role="dialog"
       aria-label={label}
-      aria-roledescription="popover"
+      data-part="popover"
       data-ds-scrim={scrim ? '' : undefined}
     >
       {children}

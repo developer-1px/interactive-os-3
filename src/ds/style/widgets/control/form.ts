@@ -1,4 +1,4 @@
-import { accent, border, control, css, dim, dur, ease, font, hairlineWidth, neutral, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
+import { accent, border, control, css, dim, dur, ease, focusRingWidth, font, hairlineWidth, neutral, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -21,7 +21,7 @@ export const formCss = css`
   }
 
   /* ── Field — 기본은 세로 스택. 라벨이 위, 컨트롤이 아래, 설명이 그 아래 ───── */
-  [role="group"][aria-roledescription="field"] {
+  [role="group"][data-part="field"] {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -29,26 +29,26 @@ export const formCss = css`
     min-inline-size: 0;
     grid-template-columns: none;
   }
-  [role="group"][aria-roledescription="field"] > label {
+  [role="group"][data-part="field"] > label {
     font-size: ${font('sm')};
     font-weight: 600;
     color: ${dim(85)};
     line-height: 1.3;
   }
-  [role="group"][aria-roledescription="field"][aria-required="true"] > label::after {
+  [role="group"][data-part="field"][aria-required="true"] > label::after {
     content: ' *';
     color: ${status('danger')};
     font-weight: 400;
   }
-  [role="group"][aria-roledescription="field"] > p {
+  [role="group"][data-part="field"] > p {
     font-size: ${font('xs')};
     color: ${dim(55)};
     margin: 0;
     line-height: 1.4;
   }
-  [role="group"][aria-roledescription="field"] > input,
-  [role="group"][aria-roledescription="field"] > select,
-  [role="group"][aria-roledescription="field"] > textarea {
+  [role="group"][data-part="field"] > input,
+  [role="group"][data-part="field"] > select,
+  [role="group"][data-part="field"] > textarea {
     inline-size: 100%;
   }
 
@@ -58,7 +58,7 @@ export const formCss = css`
     inline-size: 100%;
     padding: ${pad(3)};
     background: ${neutral(1)};
-    border: 1px dashed ${neutral(4)};
+    border: ${hairlineWidth()} dashed ${neutral(4)};
     border-radius: ${radius('md')};
     font-size: ${font('sm')};
     color: ${dim(65)};
@@ -71,7 +71,7 @@ export const formCss = css`
     border-color: ${tint(accent(), 50)};
   }
   :where(input[type="file"]):focus-visible {
-    outline: 2px solid ${accent()};
+    outline: ${focusRingWidth()} solid ${accent()};
     outline-offset: 2px;
     border-color: ${accent()};
   }
@@ -110,28 +110,28 @@ export const formCss = css`
     color: ${dim(85)};
   }
 
-  /* ── fieldset (aria-roledescription="fieldset"로 감싼 Column) ──────────
+  /* ── fieldset (data-part="fieldset"로 감싼 Column) ──────────
      legend는 Field label보다 강하게 (md + weight 700) — "이 밑의 것들은 한 묶음".
      Field와 시각적으로 겹치지 않도록 legend 밑에 breathing + 다음 필드와의 간격 확보. */
-  [aria-roledescription="fieldset"] {
+  [data-part="fieldset"] {
     gap: ${pad(1.5)};
     margin-block-end: ${pad(2)};
   }
-  [aria-roledescription="fieldset"] > :where(strong, p):first-child {
+  [data-part="fieldset"] > :where(strong, p):first-child {
     font-size: ${font('md')};
     font-weight: 700;
     color: ${dim(90)};
     margin: 0 0 ${pad(0.5)};
     letter-spacing: ${tracking()};
   }
-  [aria-roledescription="fieldset"] > :where(strong, p):first-child > small {
+  [data-part="fieldset"] > :where(strong, p):first-child > small {
     font-weight: 400;
     font-size: ${font('sm')};
     color: ${dim(55)};
     margin-inline-start: ${pad(0.5)};
   }
 
-  /* generic aside (no aria-roledescription) 의 surface·내부 리듬·danger 톤 은 layout/layout.ts (owner) 가 보유 */
+  /* generic aside (no data-part) 의 surface·내부 리듬·danger 톤 은 layout/layout.ts (owner) 가 보유 */
 
   /* ── 체크박스 row — Row flow="cluster"로 Checkbox + Text 쌍을 감쌀 때 ─── */
   [data-ds="Row"][data-flow="cluster"]:has(> [role="checkbox"], > [role="radio"], > [role="switch"]) {

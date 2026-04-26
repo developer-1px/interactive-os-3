@@ -9,10 +9,11 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
  * - 호출자가 slots prop으로 ReactNode 주입, slotOrder로 DOM 순서 결정
  *
  * 셀렉터 namespace: `data-part="card"` + 슬롯 자식의 `data-slot="<name>"`.
- * (memory: ds/parts layer · No aria-roledescription namespace)
+ * (memory: ds/parts layer · No data-part namespace)
  */
 export type CardSlot = 'preview' | 'title' | 'meta' | 'body' | 'checks' | 'footer'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const CARD_SLOT_ORDER: CardSlot[] = ['preview', 'title', 'meta', 'body', 'checks', 'footer']
 
 type CardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {

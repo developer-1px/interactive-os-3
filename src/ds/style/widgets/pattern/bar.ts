@@ -6,12 +6,12 @@ export const tabPanelCss = css`
 `
 
 export const carouselCss = css`
-  :where(section[aria-roledescription="carousel"]) {
+  :where(section[data-part="carousel"]) {
     display: flex;
     gap: ${slotGap};
     align-items: stretch;
   }
-  :where([aria-roledescription="slide"]) {
+  :where([data-part="slide"]) {
     ${grouping(1)}
     padding: ${containerPad};
     border-radius: ${radius('sm')};

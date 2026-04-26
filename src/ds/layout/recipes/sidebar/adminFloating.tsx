@@ -11,7 +11,7 @@
  *
  * 책임 경계:
  *   - 트리거 = button[popovertarget]. 토글은 native popover API 소유.
- *   - 오버레이 = nav[popover][aria-roledescription="sidebar"][data-state="floating"]
+ *   - 오버레이 = nav[popover][data-part="sidebar"][data-state="floating"]
  *     — 기존 sidebar surface CSS 그대로 재사용, 폭/위치만 override.
  *   - viewport 분기는 CSS만 (feedback_mobile_js_boundary).
  *
@@ -45,7 +45,7 @@ export function SidebarAdminFloating({
         id={popId}
         popover="auto"
         aria-label={label}
-        aria-roledescription="sidebar"
+        data-part="sidebar"
         data-state="floating"
       >
         <header>

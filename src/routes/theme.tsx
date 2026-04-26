@@ -316,6 +316,7 @@ function ThemeCreator() {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Route = createFileRoute('/theme')({
   component: ThemeCreator,
   staticData: { palette: { label: 'Theme Creator', to: '/theme' } },

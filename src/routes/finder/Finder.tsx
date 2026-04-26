@@ -17,13 +17,13 @@ export function Finder() {
   }
 
   return (
-    <main aria-roledescription="finder" aria-label="Finder" data-view="columns">
+    <main data-part="finder" aria-label="Finder" data-view="columns">
       <header>
-        <div aria-roledescription="window-controls" aria-label="창 컨트롤"><span /><span /><span /></div>
+        <div data-part="window-controls" aria-label="창 컨트롤"><span /><span /><span /></div>
         <h1>{view.titlebar.path}</h1>
       </header>
-      <section aria-roledescription="body">
-        <nav aria-roledescription="sidebar" aria-label="사이드바">
+      <section data-part="body">
+        <nav data-part="sidebar" aria-label="사이드바">
           <section aria-labelledby="sidebar-recent">
             <h3 id="sidebar-recent">최근 항목</h3>
             <Listbox data={view.sidebar.recent} onEvent={onRecent} aria-labelledby="sidebar-recent" />

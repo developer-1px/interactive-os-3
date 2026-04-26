@@ -41,7 +41,7 @@ export function TitleBar({
   }
   return (
     <header>
-      <div aria-roledescription="window-controls" aria-label="창 컨트롤">
+      <div data-part="window-controls" aria-label="창 컨트롤">
         <span /><span /><span />
       </div>
       <button type="button" onClick={onBack} aria-disabled={!canBack || undefined} aria-label="뒤로">‹</button>

@@ -16,7 +16,7 @@ export const DIGEST_OPTS: Array<[Digest, string]> = [
  * Form-field 행: 좌측 라벨/설명 + 우측 컨트롤.
  *
  * 의미(group=Field) + 레이아웃(Row/Column)을 분리한다.
- *  - `id`        — Field (role=group, aria-roledescription=field)
+ *  - `id`        — Field (role=group, data-part=field)
  *  - `${id}Row`  — Row(flow=split) 가로 분배
  *  - `${id}L`    — 좌측 Column(flow=list)
  *  - `${id}Lbl`  — FieldLabel (semantic label, strong 대체)

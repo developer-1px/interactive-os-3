@@ -65,7 +65,7 @@ export function OrderableList({ data, onReorder, numbered, ...rest }: OrderableL
   const onItemDragEnd = () => { setDragId(null); setOverId(null) }
 
   return (
-    <ol aria-roledescription="orderable" {...rest}>
+    <ol data-part="orderable" {...rest}>
       {ids.map((id, i) => {
         const d = data.entities[id]?.data ?? {}
         const isDragging = dragId === id

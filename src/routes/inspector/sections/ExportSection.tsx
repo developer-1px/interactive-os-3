@@ -15,7 +15,7 @@ export function ExportSection({ sel, set }: {
     set({ exports: [...sel.exports, { id: `x${Date.now()}`, scale: 1, format: 'PNG' }] })
 
   return (
-    <section aria-roledescription="panel-section" aria-label="Export">
+    <section data-part="panel-section" aria-label="Export">
       <h3>Export</h3>
       {sel.exports.map((x) => (
         <Field key={x.id} label={`×${x.scale}`}>

@@ -23,23 +23,23 @@ export const layout = () => css`
   [data-ds="Row"]    { flex-direction: row; }
   [data-ds="Column"] { flex-direction: column; }
 
-  /* Grid는 cols를 "넓을 때의 목표 열 수"로, --ds-grid-min을 "한 셀의 최소 폭"으로 사용.
+  /* Grid는 cols를 "넓을 때의 목표 열 수"로, --grid-min을 "한 셀의 최소 폭"으로 사용.
      auto-fit + minmax(max(grid-min, 100%/cols), 1fr) → 넓으면 정확히 cols 열,
      좁아지면 grid-min 기준으로 자연 reflow. 모바일에서 1열까지 자동 수렴. */
   [data-ds="Grid"] {
     display: grid;
     grid-template-columns: repeat(
       auto-fit,
-      minmax(max(var(--ds-grid-min, 16rem), 100% / var(--ds-cols, 2) - 0.01px), 1fr)
+      minmax(max(var(--grid-min, 16rem), 100% / var(--grid-cols, 2) - 0.01px), 1fr)
     );
     min-inline-size: 0;
   }
-  [data-ds="Grid"][data-cols="1"]  { --ds-cols: 1;  --ds-grid-min: 100%;  }
-  [data-ds="Grid"][data-cols="2"]  { --ds-cols: 2;  --ds-grid-min: 18rem; }
-  [data-ds="Grid"][data-cols="3"]  { --ds-cols: 3;  --ds-grid-min: 14rem; }
-  [data-ds="Grid"][data-cols="4"]  { --ds-cols: 4;  --ds-grid-min: 12rem; }
-  [data-ds="Grid"][data-cols="6"]  { --ds-cols: 6;  --ds-grid-min: 8rem;  }
-  [data-ds="Grid"][data-cols="12"] { --ds-cols: 12; --ds-grid-min: 4rem;  }
+  [data-ds="Grid"][data-cols="1"]  { --grid-cols: 1;  --grid-min: 100%;  }
+  [data-ds="Grid"][data-cols="2"]  { --grid-cols: 2;  --grid-min: 18rem; }
+  [data-ds="Grid"][data-cols="3"]  { --grid-cols: 3;  --grid-min: 14rem; }
+  [data-ds="Grid"][data-cols="4"]  { --grid-cols: 4;  --grid-min: 12rem; }
+  [data-ds="Grid"][data-cols="6"]  { --grid-cols: 6;  --grid-min: 8rem;  }
+  [data-ds="Grid"][data-cols="12"] { --grid-cols: 12; --grid-min: 4rem;  }
 
   /* ── flow — one enum chooses gap + alignment bundle ───
      data-flow는 Renderer가 Row/Column/Grid/Aside/Section/Header/Footer에만 주입한다. */
@@ -91,17 +91,17 @@ export const layout = () => css`
 
   /* ── FlatLayout extras ──────────────────────────────────────── */
 
-  /* Semantic landmarks as flex containers — aria-roledescription이 있는 pane(Finder body/columns/preview 등)은 panes.ts가 직접 제어하므로 제외. */
-  main:not([aria-roledescription]),
-  aside:not([aria-roledescription]),
-  section:not([aria-roledescription]),
-  header:not([aria-roledescription]),
-  footer:not([aria-roledescription]) {
+  /* Semantic landmarks as flex containers — data-part이 있는 pane(Finder body/columns/preview 등)은 panes.ts가 직접 제어하므로 제외. */
+  main:not([data-part]),
+  aside:not([data-part]),
+  section:not([data-part]),
+  header:not([data-part]),
+  footer:not([data-part]) {
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
   }
-  aside:not([aria-roledescription]) {
+  aside:not([data-part]) {
     flex: none;
     background: ${neutral(1)};
     border: ${hairlineWidth()} solid ${control('border')};
@@ -111,34 +111,34 @@ export const layout = () => css`
     gap: ${pad(3)};
   }
   /* aside 내부 본문 리스트 — Text[body] 안에 와도 읽기 리듬 유지 */
-  aside:not([aria-roledescription]) :where(ul, ol) {
+  aside:not([data-part]) :where(ul, ol) {
     margin: 0; padding-inline-start: ${pad(4)};
     display: flex; flex-direction: column; gap: ${pad(1.5)};
   }
-  aside:not([aria-roledescription]) :where(li) { line-height: 1.55; }
+  aside:not([data-part]) :where(li) { line-height: 1.55; }
   /* dl 형태의 미니 stats — dl > div 그룹, 가로 배치 */
-  aside:not([aria-roledescription]) :where(dl) {
+  aside:not([data-part]) :where(dl) {
     margin: 0;
     display: flex; flex-direction: column; gap: ${pad(1)};
   }
-  aside:not([aria-roledescription]) :where(dl) > div {
+  aside:not([data-part]) :where(dl) > div {
     display: flex; align-items: center; justify-content: space-between;
     gap: ${pad(2)};
   }
-  aside:not([aria-roledescription]) :where(dl) :where(dt, dd) {
+  aside:not([data-part]) :where(dl) :where(dt, dd) {
     margin: 0;
     font-size: ${font('sm')};
   }
-  aside:not([aria-roledescription]) :where(dl) :where(dd) {
+  aside:not([data-part]) :where(dl) :where(dd) {
     color: ${dim(60)};
     font-variant-numeric: tabular-nums;
   }
-  aside:not([aria-roledescription]) > section { gap: ${pad(2)}; }
-  aside:not([aria-roledescription]) > section + section {
+  aside:not([data-part]) > section { gap: ${pad(2)}; }
+  aside:not([data-part]) > section + section {
     padding-top: ${pad(3)};
     border-top: ${hairlineWidth()} solid ${control('border')};
   }
-  aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
+  aside:not([data-part]) > section[data-part="danger"] > h3:first-child {
     color: ${status('danger')};
   }
   header[data-flow="split"],
@@ -164,7 +164,7 @@ export const layout = () => css`
   /* aspect — width 축만 정해진 곳에 height를 비율로 도출. avatar/icon tile 등.
      square는 fn/square로 일관 처리, 그 외는 inline 비율 변수로. */
   ${square('[data-ds-aspect="square"]')}
-  [data-ds-aspect]:not([data-ds-aspect="square"]) { aspect-ratio: var(--ds-aspect, 1); }
+  [data-ds-aspect]:not([data-ds-aspect="square"]) { aspect-ratio: var(--aspect, 1); }
 
   /* Text variants — semantic tags already carry weight, these only bundle
      spacing/opacity. Renderer always attaches data-variant to Text leaves. */

@@ -29,7 +29,7 @@ const base: NormalizedData = {
 export function AlignSection() {
   const [data, onEvent] = useControlState(base)
   return (
-    <section aria-roledescription="panel-section" aria-label="Align">
+    <section data-part="panel-section" aria-label="Align">
       <Toolbar data={data} onEvent={onEvent} aria-label="Align" />
     </section>
   )

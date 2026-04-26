@@ -12,7 +12,7 @@ export function AppearanceSection({ sel, set }: {
   set: (patch: Partial<Selection>) => void
 }) {
   return (
-    <section aria-roledescription="panel-section" aria-label="Appearance">
+    <section data-part="panel-section" aria-label="Appearance">
       <h3>Appearance</h3>
       <Field label="Opacity" unit="%" htmlFor="ap-op">
         <Slider

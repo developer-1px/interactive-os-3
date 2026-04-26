@@ -11,10 +11,10 @@ export function Field({
   children: ReactNode
 }) {
   return (
-    <div aria-roledescription="field">
+    <div data-part="field">
       <label htmlFor={htmlFor}>{label}</label>
-      <div aria-roledescription="control">{children}</div>
-      {unit ? <span aria-roledescription="unit">{unit}</span> : null}
+      <div data-part="control">{children}</div>
+      {unit ? <span data-part="unit">{unit}</span> : null}
     </div>
   )
 }

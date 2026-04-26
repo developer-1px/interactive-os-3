@@ -12,7 +12,7 @@ import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
  *   - desktop(min-width:768px): trigger 숨김. 일반 sidebar 표시.
  *   - mobile(max-width:767px):  일반 sidebar 숨김. trigger 표시.
  *
- * 메인 sidebar.ts의 nav[aria-roledescription="sidebar"] 규칙은 [data-state="floating"]
+ * 메인 sidebar.ts의 nav[data-part="sidebar"] 규칙은 [data-state="floating"]
  * 셀렉터로 폭/위치만 override (background/padding/gap/item style 모두 재사용).
  */
 export const sidebarFloatingCss = () => css`
@@ -62,11 +62,11 @@ export const sidebarFloatingCss = () => css`
   /* 닫힌 상태 — sidebar.ts의 display:flex가 specificity 동등으로 polyfill의
      [popover]:not(.\\:popover-open){display:none}을 덮어쓰는 문제 차단.
      명시적으로 display:none을 두고 :popover-open / 폴리필 클래스에서만 flex 부활. */
-  nav[aria-roledescription="sidebar"][data-state="floating"] {
+  nav[data-part="sidebar"][data-state="floating"] {
     display: none;
   }
-  nav[aria-roledescription="sidebar"][data-state="floating"]:popover-open,
-  nav[aria-roledescription="sidebar"][data-state="floating"].\\:popover-open {
+  nav[data-part="sidebar"][data-state="floating"]:popover-open,
+  nav[data-part="sidebar"][data-state="floating"].\\:popover-open {
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -83,7 +83,7 @@ export const sidebarFloatingCss = () => css`
     gap: ${hierarchy.shell};
     z-index: 100;
   }
-  nav[aria-roledescription="sidebar"][data-state="floating"]::backdrop {
+  nav[data-part="sidebar"][data-state="floating"]::backdrop {
     background: ${tint('CanvasText', 10)};
     backdrop-filter: blur(8px);
   }
@@ -94,7 +94,7 @@ export const sidebarFloatingCss = () => css`
     }
   }
   @media (max-width: 767px) {
-    nav[aria-roledescription="sidebar"]:not([data-state="floating"]) {
+    nav[data-part="sidebar"]:not([data-state="floating"]) {
       display: none !important;
     }
   }
@@ -144,7 +144,7 @@ export const sidebarFloatingCss = () => css`
        hairline ring(4% alpha)이 sub-pixel 흐림 없이 "옆 표면과 분리"를 표현. */
     [data-emphasis="raised"],
     article[data-flow="prose"],
-    [popover][role="dialog"][aria-roledescription="popover"],
+    [popover][role="dialog"][data-part="popover"],
     dialog:not([data-ds-sheet]) {
       box-shadow:
         0 0 0 1px ${tint('CanvasText', 5)},

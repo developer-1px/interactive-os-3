@@ -7,6 +7,13 @@ import { css } from '../primitives/css'
 export const hairlineWidth = () => `var(--ds-hairline)`
 
 /**
+ * focus-ring thickness scalar — outline·active indicator·slider thumb 등 강조 테두리.
+ * preset --ds-focus-ring-w (default 2px) 발행값 참조.
+ * @demo type=value fn=focusRingWidth
+ */
+export const focusRingWidth = () => `var(--ds-focus-ring-w, 2px)`
+
+/**
  * Hairline divider — 리스트 행 사이 분리선.
  *
  * 색·두께·last-child(또는 first-child) 미적용을 한 곳에 박아 모든 widget 이

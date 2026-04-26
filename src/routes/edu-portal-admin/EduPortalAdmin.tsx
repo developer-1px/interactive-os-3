@@ -5,7 +5,7 @@ import { Topbar } from './Topbar'
 
 /**
  * Shell wrapper. The outer `<main>/<section>` structure is matched by
- * existing `css/shell/panes.ts` selectors via `aria-roledescription`, so
+ * existing `css/shell/panes.ts` selectors via `data-part`, so
  * it stays JSX for now — page-level FlatLayout runs inside <Outlet />.
  * Sidebar and Topbar are thin adapters kept as JSX shells too; only the
  * route page bodies are rewritten to `definePage + Renderer`.
@@ -15,36 +15,36 @@ export function EduPortalAdmin() {
   const [navOpen, setNavOpen] = useState(false)
   return (
     <main
-      aria-roledescription="edu-portal-admin-app"
+      data-part="edu-portal-admin-app"
       aria-label="교육 포털 관리도구"
       data-nav-open={navOpen ? 'true' : undefined}
       onClickCapture={(e) => {
         if (!navOpen) return
         const t = e.target as HTMLElement
-        if (t.closest('nav[aria-roledescription="sidebar"] [role="treeitem"]')) setNavOpen(false)
+        if (t.closest('nav[data-part="sidebar"] [role="treeitem"]')) setNavOpen(false)
       }}
     >
-      <section aria-roledescription="body">
+      <section data-part="body">
         <Sidebar />
         {navOpen && (
           <button
             type="button"
-            aria-roledescription="scrim"
+            data-part="scrim"
             aria-label="메뉴 닫기"
             onClick={() => setNavOpen(false)}
           />
         )}
-        <section aria-roledescription="workspace">
+        <section data-part="workspace">
           <button
             type="button"
             aria-label="메뉴 열기"
             aria-expanded={navOpen}
-            aria-roledescription="nav-toggle"
+            data-part="nav-toggle"
             data-icon="menu"
             onClick={() => setNavOpen((v) => !v)}
           />
           <Topbar />
-          <section aria-roledescription="content">
+          <section data-part="content">
             <Outlet />
           </section>
         </section>

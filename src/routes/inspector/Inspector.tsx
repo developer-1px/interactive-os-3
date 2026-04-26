@@ -14,17 +14,17 @@ export function Inspector() {
   const set = (patch: Partial<Selection>) => setSel((s) => ({ ...s, ...patch }))
 
   return (
-    <main aria-roledescription="inspector-app" aria-label="Inspector">
+    <main data-part="inspector-app" aria-label="Inspector">
       <header>
-        <div aria-roledescription="window-controls" aria-label="창 컨트롤">
+        <div data-part="window-controls" aria-label="창 컨트롤">
           <span /><span /><span />
         </div>
         <h1>Inspector — {sel.name}</h1>
       </header>
 
-      <section aria-roledescription="body">
+      <section data-part="body">
         <Canvas sel={sel} />
-        <aside aria-roledescription="panel" aria-label="Properties">
+        <aside data-part="panel" aria-label="Properties">
           <AlignSection />
           <TransformSection sel={sel} set={set} />
           <LayoutSection sel={sel} set={set} />

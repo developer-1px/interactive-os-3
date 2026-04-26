@@ -55,6 +55,9 @@ export type DsPreset = {
   }
   space: { unit: string }
   radius: Record<RadiusScale, string>
+  /** 강조 테두리 두께 — focus-ring · active indicator · slider thumb 공통.
+   *  hairline(border 토큰)보다 한 단 두꺼운 ladder. 미정의 시 default '2px'. */
+  focusRingWidth?: string
   text: Record<TextScale, string>
   font: { sans: string; mono: string }
   leading: { normal: number; tight: number; tracking: string }

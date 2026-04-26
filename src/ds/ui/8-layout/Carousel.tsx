@@ -1,20 +1,20 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 // @slot children — Carousel/Slide 모두 wrapper content (Slide 컴포저블)
-type CarouselProps = Omit<ComponentPropsWithoutRef<'section'>, 'aria-roledescription'> & {
+type CarouselProps = Omit<ComponentPropsWithoutRef<'section'>, 'data-part'> & {
   label: string
   children: ReactNode
 }
 
 export function Carousel({ label, children, ...rest }: CarouselProps) {
   return (
-    <section aria-roledescription="carousel" aria-label={label} {...rest}>
+    <section data-part="carousel" aria-label={label} {...rest}>
       {children}
     </section>
   )
 }
 
-type SlideProps = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'aria-roledescription'> & {
+type SlideProps = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'data-part'> & {
   label: string
   posinset: number
   setsize: number
@@ -25,7 +25,7 @@ export function Slide({ label, posinset, setsize, children, ...rest }: SlideProp
   return (
     <div
       role="group"
-      aria-roledescription="slide"
+      data-part="slide"
       aria-label={`${label} (${posinset} of ${setsize})`}
       {...rest}
     >

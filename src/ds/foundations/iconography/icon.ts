@@ -1,4 +1,5 @@
 import { css } from '../primitives/css'
+import { hairlineWidth } from '../shape/hairline'
 
 // lucide-static v1.9.0 — 각 SVG 는 별도 asset 파일로 emit (Vite `?url`).
 // JS 번들엔 URL 문자열만, SVG 본문은 브라우저가 mask-image 페인트 시점에 lazy fetch.
@@ -115,7 +116,7 @@ export const iconIndicator = () => css`
   [data-icon]:not(${tokens.map((t) => `[data-icon="${t}"]`).join(', ')})::before {
     background-color: transparent;
     background-image: repeating-linear-gradient(45deg, #e11 0 3px, transparent 3px 6px);
-    outline: 1px dashed #e11;
+    outline: ${hairlineWidth()} dashed #e11;
     opacity: 1;
   }
 ${tokens

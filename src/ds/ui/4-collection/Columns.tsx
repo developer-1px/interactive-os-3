@@ -23,12 +23,12 @@ export function Columns({ data, onEvent, autoFocus, ...rest }: ColumnsProps) {
   const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
 
   return (
-    <section aria-roledescription="columns" {...delegate} {...rest}>
+    <section data-part="columns" {...delegate} {...rest}>
       {chainFrom(data, expanded).map((parent) => {
         const kids = getChildren(data, parent)
         const label = parent === ROOT ? 'root' : getLabel(data, parent)
         return (
-          <nav key={parent} aria-roledescription="column" aria-label={label}>
+          <nav key={parent} data-part="column" aria-label={label}>
             <ul role="listbox">
               {kids.map((id, i) => {
                 const hasKids = getChildren(data, id).length > 0

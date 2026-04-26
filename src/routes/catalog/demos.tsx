@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- catalog 데모 registry: 컴포넌트 + demos 맵 단일 파일 패턴 */
 import { useState, type ReactNode } from 'react'
 import {
   Menu, Listbox, Tree, Columns, Top10List, BarChart, StatCard, CourseCard, RoleCard,

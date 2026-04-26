@@ -54,7 +54,7 @@ export const detailsCss = css`
     margin-block-start: -1px;
     padding: ${pad(2)};
     background: transparent;
-    border: 1px dashed ${border()};
+    border: ${hairlineWidth()} dashed ${border()};
     border-radius: ${radius('sm')};
     border-top-left-radius: 0; border-top-right-radius: 0;
     color: inherit; opacity: .7;

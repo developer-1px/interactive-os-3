@@ -1,4 +1,4 @@
-import { accent, css, pad, radius } from '../../../foundations'
+import { accent, css, focusRingWidth, pad, radius } from '../../../foundations'
 import { slotGap } from '../../seed/keyline'
 
 export const feedCss = css`
@@ -10,7 +10,7 @@ export const feedCss = css`
   :where([role="feed"]) article > div { display: grid; row-gap: ${pad(0.5)}; min-width: 0; }
   :where([role="feed"]) header { display: flex; gap: ${slotGap}; align-items: baseline; }
   :where([role="feed"]) article:focus-visible {
-    outline: 2px solid ${accent()};
+    outline: ${focusRingWidth()} solid ${accent()};
     outline-offset: 2px;
     border-radius: ${radius('sm')};
   }

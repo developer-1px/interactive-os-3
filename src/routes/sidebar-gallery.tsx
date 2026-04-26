@@ -73,6 +73,7 @@ function SidebarGallery() {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Route = createFileRoute('/sidebar-gallery')({
   component: SidebarGallery,
   staticData: { palette: { label: 'Sidebar Gallery', to: '/sidebar-gallery' } },
