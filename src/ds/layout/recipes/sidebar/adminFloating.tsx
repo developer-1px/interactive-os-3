@@ -48,11 +48,17 @@ export function SidebarAdminFloating({
         aria-roledescription="sidebar"
         data-state="floating"
       >
-        {brand && (
-          <header>
-            <strong>{brand}</strong>
-          </header>
-        )}
+        <header>
+          <button
+            type="button"
+            popoverTarget={popId}
+            popoverTargetAction="hide"
+            aria-label="뒤로"
+            data-icon="chevron-left"
+            data-ds-floating-nav-back
+          />
+          {brand && <strong>{brand}</strong>}
+        </header>
         <Collection data={tree} onEvent={onEvent} aria-label={label} />
       </nav>
     </>

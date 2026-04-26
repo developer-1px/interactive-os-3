@@ -42,7 +42,7 @@ export function buildChatPage(s: ChatState): NormalizedData {
           </section>
         </>
       ) } },
-      side: { id: 'side', data: { type: 'Nav', flow: 'list', width: 240, label: '채널·DM' } },
+      side: { id: 'side', data: { type: 'Nav', flow: 'list', width: 240, label: '채널·DM', roledescription: 'sidebar' } },
       pubList: { id: 'pubList', data: { type: 'Ui', component: 'Listbox', props: { data: s.pubNav.data, onEvent: s.pubNav.onEvent, 'aria-label': '채널' } } },
       dmList: { id: 'dmList', data: { type: 'Ui', component: 'Listbox', props: { data: s.dmNav.data, onEvent: s.dmNav.onEvent, 'aria-label': 'DM' } } },
       main: { id: 'main', data: { type: 'Main', flow: 'list', grow: true, label: '메시지' } },

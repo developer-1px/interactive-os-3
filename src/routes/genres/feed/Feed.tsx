@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
+  SidebarAdminFloating,
   type Event, type NormalizedData,
 } from '../../../ds'
 import { NAV, POSTS } from './data'
@@ -72,5 +73,16 @@ export function Feed() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     rxn[p.id] = useRxn(p.id, p.likes, p.comments, p.shared, liked.has(p.id), () => toggle(p.id))
   }
-  return <Renderer page={definePage(buildFeedPage({ liked, toggle, nav, feedTabs, rxn }))} />
+  return (
+    <>
+      <Renderer page={definePage(buildFeedPage({ liked, toggle, nav, feedTabs, rxn }))} />
+      <SidebarAdminFloating
+        id="feed-nav-mobile"
+        label="피드 내비게이션"
+        tree={nav.data}
+        onEvent={nav.onEvent}
+        collection="listbox"
+      />
+    </>
+  )
 }

@@ -39,6 +39,26 @@ export const sidebarFloatingCss = () => css`
     opacity: 1;
   }
 
+  /* 뒤로 버튼 — popoverTargetAction="hide"로 popover 닫음. backdrop 탭이 모바일에서
+     직관적이지 않으므로 명시적 affordance 제공. */
+  [data-ds-floating-nav-back] {
+    inline-size: ${pad(8)};
+    block-size: ${pad(8)};
+    border: 0;
+    background: transparent;
+    border-radius: ${radius('md')};
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  [data-ds-floating-nav-back][data-icon]::before {
+    margin: 0;
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    opacity: 1;
+  }
+
   /* 닫힌 상태 — sidebar.ts의 display:flex가 specificity 동등으로 polyfill의
      [popover]:not(.\\:popover-open){display:none}을 덮어쓰는 문제 차단.
      명시적으로 display:none을 두고 :popover-open / 폴리필 클래스에서만 flex 부활. */

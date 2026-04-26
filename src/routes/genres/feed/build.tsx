@@ -40,7 +40,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
           </section>
         </>
       ) } },
-      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 220, label: '피드 내비게이션' } },
+      nav: { id: 'nav', data: { type: 'Nav', flow: 'list', emphasis: 'sunk', width: 220, label: '피드 내비게이션', roledescription: 'sidebar' } },
       navList: { id: 'navList', data: { type: 'Ui', component: 'Listbox',
         props: { data: s.nav.data, onEvent: s.nav.onEvent, 'aria-label': '피드 내비게이션' } } },
       composeBtn: { id: 'composeBtn', data: { type: 'Ui', component: 'Button', props: { onClick: () => alert('글쓰기') }, content: '＋ 글쓰기' } },

@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
+  SidebarAdminFloating,
   type Event, type NormalizedData,
 } from '../../../ds'
 import { ROOT } from '../../../ds'
@@ -59,10 +60,19 @@ export function Chat() {
   const [mainActionsData, mainActionsDispatch] = useControlState(useMemo(mainActionsBase, []))
   const mainActions = { data: mainActionsData, onEvent: mainActionsDispatch }
   return (
-    <Renderer
-      page={definePage(
-        buildChatPage({ active, draft, stream, setActive, setDraft, send, pubNav, dmNav, mainActions }),
-      )}
-    />
+    <>
+      <Renderer
+        page={definePage(
+          buildChatPage({ active, draft, stream, setActive, setDraft, send, pubNav, dmNav, mainActions }),
+        )}
+      />
+      <SidebarAdminFloating
+        id="chat-channels-mobile"
+        label="채널"
+        tree={pubNav.data}
+        onEvent={pubNav.onEvent}
+        collection="listbox"
+      />
+    </>
   )
 }
