@@ -14,14 +14,14 @@
  * 원칙 — 모바일은 *content + 정해진 control* 만 (FlatLayout 친화):
  *   - device chrome      = ds/parts/Phone (PhoneTopBar, PhoneTabBar)
  *   - layout primitive   = ds/ui/8-layout (Row, Column)
- *   - content widget     = ds/ui/7-pattern (StatCard, ProductCard, ...)
- *   - composite control  = ds/ui/4-collection (Listbox, TabList, Toolbar)
+ *   - content widget     = ds/ui/7-patterns (StatCard, ProductCard, ...)
+ *   - composite control  = ds/ui/4-selection (Listbox, TabList, Toolbar)
  *   - 인라인 <div style>  = 0
  *
  * 메타 — Mobbin 식 다축 (app · flow · category · patterns · parts) 을 ScreenDef 로
  * 부착하여 byApp/byFlow/byPattern/byPart derived view 가 자동 도출되게 한다.
  */
-import { useState, type ReactNode } from 'react'
+import { cloneElement, isValidElement, useState, type ReactElement, type ReactNode } from 'react'
 import {
   ROOT, Renderer, definePage, fromList, type NormalizedData,
   Phone, PhoneTopBar, PhoneTabBar,
@@ -429,7 +429,7 @@ const Contract_Audit: ScreenDef = {
       <Body>
         <Row flow="cluster"><Tag label="passing 12" /><Tag label="failing 2" /><Tag label="warn 3" /></Row>
         <ContractCard
-          name="Listbox" file="ds/ui/4-collection/Listbox.tsx" role="listbox"
+          name="Listbox" file="ds/ui/4-selection/Listbox.tsx" role="listbox"
           propsSignature="(data, onEvent, autoFocus?)"
           callSites={14}
           badgeTone="good"
@@ -441,7 +441,7 @@ const Contract_Audit: ScreenDef = {
           ]}
         />
         <ContractCard
-          name="MessageBubble" file="ds/ui/7-pattern/MessageBubble.tsx" role="content"
+          name="MessageBubble" file="ds/ui/7-patterns/MessageBubble.tsx" role="content"
           propsSignature="(who, time, text, me?)"
           callSites={6}
           badgeTone="warn"
@@ -824,6 +824,26 @@ export const byPattern = () => groupBy('patterns')
 export const byPart    = () => groupBy('parts')
 
 // ──────────────────────────────────────────────────────────────────────
+// Group 정의 — 카탈로그 chapter. desktop/mobile shell 양쪽이 같은 데이터 소비.
+// ──────────────────────────────────────────────────────────────────────
+
+type GroupDef = { id: string; title: string; lede: string; screens: ScreenDef[] }
+const GROUP_DEFS: GroupDef[] = [
+  { id: 'A', title: 'Chat',       lede: 'MessageBubble · 1:1 대화 thread + 대화 목록 (Avatar + last-message)',                              screens: [Chat_Thread, Chat_List] },
+  { id: 'B', title: 'Shopping',   lede: 'ProductCard · 카테고리 picker (TabList) + 상품 grid + 장바구니 + 빈 상태',                          screens: [Shop_Browse, Shop_Cart, Shop_Empty] },
+  { id: 'C', title: 'Learning',   lede: 'CourseCard · 레벨 picker (TabList) + 코스 catalog + 코스 상세 (커리큘럼)',                           screens: [Learn_Catalog, Learn_Detail] },
+  { id: 'D', title: 'Feed',       lede: 'FeedPost · timeline. 좋아요 · 댓글 · 공유 toolbar 자체 내장.',                                       screens: [Feed_Timeline] },
+  { id: 'E', title: 'Dashboard',  lede: 'StatCard 2×2 KPI grid + BarChart 주간 트래픽 + Top10List 라우트별 인기.',                            screens: [Dash_Overview, Dash_Top] },
+  { id: 'F', title: 'Contracts',  lede: 'ContractCard · ds 컴포넌트 계약 감사 (검사 목록 · pass/fail · 호출 사이트).',                        screens: [Contract_Audit] },
+  { id: 'G', title: 'Roles',      lede: 'RoleCard · 정렬 가능한 권한 row.',                                                                  screens: [Roles_Sortable] },
+  { id: 'H', title: 'Settings',   lede: 'Switch · Slider · Select · RadioGroup · CheckboxGroup — 모바일 환경 설정.',                          screens: [Settings_Preferences] },
+  { id: 'I', title: 'Forms',      lede: 'Field · Input · Textarea · SearchBox · validation tone (danger / success).',                        screens: [Form_Compose, Form_Validation, Form_Search] },
+  { id: 'J', title: 'Detail',     lede: 'Breadcrumb · KeyValue · Code · Link · ProgressBar — 주문 상세 같은 정보 페이지.',                    screens: [Detail_Order] },
+  { id: 'K', title: 'Overlay',    lede: 'Disclosure · Dialog · Sheet · Popover — 모달/접힘/플로팅 표면.',                                     screens: [Overlay_FAQ] },
+  { id: 'L', title: 'States',     lede: 'EmptyState · Callout · Skeleton 로 빈 상태 / 에러 / 로딩 시연.',                                     screens: [State_Empty, State_Error, State_Loading] },
+]
+
+// ──────────────────────────────────────────────────────────────────────
 // Group — section ((A) Chat 등)
 // ──────────────────────────────────────────────────────────────────────
 
@@ -890,6 +910,69 @@ const wireframesCss = `
   }
 `
 
+// 모바일 shell — TikTok 식 vertical snap feed. device chrome 제거 (viewport = device).
+const wireframesMobileCss = `
+  [data-part="wf-feed"] {
+    block-size: 100dvh;
+    inline-size: 100vw;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
+    background: var(--ds-bg);
+  }
+  [data-part="wf-feed"] > * {
+    block-size: 100dvh;
+    inline-size: 100vw;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  [data-part="wf-feed-title"] {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: calc(var(--ds-space) * 8);
+    background: var(--ds-neutral-1);
+  }
+  [data-part="wf-feed-title"] strong {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: var(--ds-text-2xl);
+    font-weight: var(--ds-weight-regular);
+    color: color-mix(in oklab, currentColor 55%, transparent);
+    letter-spacing: 0.08em;
+  }
+  [data-part="wf-feed-title"] h2 {
+    margin: 0;
+    font-size: var(--ds-text-3xl);
+    font-weight: var(--ds-weight-regular);
+    letter-spacing: -0.02em;
+  }
+  [data-part="wf-feed-title"] p {
+    margin: 0;
+    font-size: var(--ds-text-md);
+    color: color-mix(in oklab, currentColor 60%, transparent);
+    max-inline-size: 36ch;
+  }
+  /* device chrome 제거 — phone wrapper 는 그대로 두되 figure/frame chrome 만 풀고 screen 만 풀스크린. */
+  [data-part="wf-feed"] [data-part="phone"] { all: unset; display: contents; }
+  [data-part="wf-feed"] [data-part="phone"] > figcaption { display: none; }
+  [data-part="wf-feed"] [data-part="phone-frame"] {
+    all: unset;
+    display: grid;
+    grid-template-rows: 1fr;
+    block-size: 100dvh;
+    inline-size: 100vw;
+    background: var(--ds-bg);
+  }
+  [data-part="wf-feed"] [data-part="phone-status"],
+  [data-part="wf-feed"] [data-part="phone-home"] { display: none; }
+  [data-part="wf-feed"] [data-part="phone-screen"] {
+    block-size: 100dvh;
+    inline-size: 100vw;
+    overflow: hidden;
+  }
+  [data-part="wf-feed"] [data-mobile-shell] { block-size: 100dvh; }
+`
+
 // ──────────────────────────────────────────────────────────────────────
 // Page builder
 // ──────────────────────────────────────────────────────────────────────
@@ -931,60 +1014,18 @@ function HmiBar() {
   )
 }
 
-function buildPage(): NormalizedData {
+function buildDesktopPage(): NormalizedData {
   const canvas: ReactNode = (
-    <div data-part="wf-canvas">
+    <div data-part="wf-canvas" data-shell="desktop">
       <style>{wireframesCss}</style>
 
       <HmiBar />
 
-      <Group id="A" title="Chat" lede="MessageBubble · 1:1 대화 thread + 대화 목록 (Avatar + last-message)">
-        {Chat_Thread.render()}{Chat_List.render()}
-      </Group>
-
-      <Group id="B" title="Shopping" lede="ProductCard · 카테고리 picker (TabList) + 상품 grid + 장바구니 + 빈 상태">
-        {Shop_Browse.render()}{Shop_Cart.render()}{Shop_Empty.render()}
-      </Group>
-
-      <Group id="C" title="Learning" lede="CourseCard · 레벨 picker (TabList) + 코스 catalog + 코스 상세 (커리큘럼)">
-        {Learn_Catalog.render()}{Learn_Detail.render()}
-      </Group>
-
-      <Group id="D" title="Feed" lede="FeedPost · timeline. 좋아요 · 댓글 · 공유 toolbar 자체 내장.">
-        {Feed_Timeline.render()}
-      </Group>
-
-      <Group id="E" title="Dashboard" lede="StatCard 2×2 KPI grid + BarChart 주간 트래픽 + Top10List 라우트별 인기.">
-        {Dash_Overview.render()}{Dash_Top.render()}
-      </Group>
-
-      <Group id="F" title="Contracts" lede="ContractCard · ds 컴포넌트 계약 감사 (검사 목록 · pass/fail · 호출 사이트).">
-        {Contract_Audit.render()}
-      </Group>
-
-      <Group id="G" title="Roles" lede="RoleCard · 정렬 가능한 권한 row.">
-        {Roles_Sortable.render()}
-      </Group>
-
-      <Group id="H" title="Settings" lede="Switch · Slider · Select · RadioGroup · CheckboxGroup — 모바일 환경 설정.">
-        {Settings_Preferences.render()}
-      </Group>
-
-      <Group id="I" title="Forms" lede="Field · Input · Textarea · SearchBox · validation tone (danger / success).">
-        {Form_Compose.render()}{Form_Validation.render()}{Form_Search.render()}
-      </Group>
-
-      <Group id="J" title="Detail" lede="Breadcrumb · KeyValue · Code · Link · ProgressBar — 주문 상세 같은 정보 페이지.">
-        {Detail_Order.render()}
-      </Group>
-
-      <Group id="K" title="Overlay" lede="Disclosure · Dialog · Sheet · Popover — 모달/접힘/플로팅 표면.">
-        {Overlay_FAQ.render()}
-      </Group>
-
-      <Group id="L" title="States" lede="EmptyState · Callout · Skeleton 로 빈 상태 / 에러 / 로딩 시연.">
-        {State_Empty.render()}{State_Error.render()}{State_Loading.render()}
-      </Group>
+      {GROUP_DEFS.map((g) => (
+        <Group key={g.id} id={g.id} title={g.title} lede={g.lede}>
+          {g.screens.map((s) => <span key={s.id}>{s.render()}</span>)}
+        </Group>
+      ))}
     </div>
   )
 
@@ -1007,7 +1048,54 @@ function buildPage(): NormalizedData {
   }
 }
 
+// 모바일 — TikTok 식 snap feed. Group header 와 각 screen 모두 1 snap = 1 화면.
+// device chrome 없이 viewport 자체가 device. ScreenDef.render() 의 <Phone/> 에 cloneElement
+// 로 bare={true} 주입 — iframe 우회 + CSS 로 figure/frame chrome 풀스크린화.
+function buildMobilePage(): NormalizedData {
+  const items: ReactNode[] = []
+  for (const g of GROUP_DEFS) {
+    items.push(
+      <section key={`title-${g.id}`} data-part="wf-feed-title">
+        <Column style={{ gap: 'calc(var(--ds-space) * 3)' }}>
+          <strong>({g.id})</strong>
+          <h2>{g.title}</h2>
+          <p>{g.lede}</p>
+        </Column>
+      </section>,
+    )
+    for (const s of g.screens) {
+      const el = s.render()
+      const bareEl = isValidElement(el)
+        ? cloneElement(el as ReactElement<{ bare?: boolean }>, { bare: true })
+        : el
+      items.push(<div key={s.id} data-screen={s.id}>{bareEl}</div>)
+    }
+  }
+
+  const canvas: ReactNode = (
+    <div data-part="wf-feed" data-shell="mobile">
+      <style>{wireframesMobileCss}</style>
+      {items}
+    </div>
+  )
+
+  return {
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      page: { id: 'page', data: { type: 'Main', flow: 'stack', label: 'Wireframes' } },
+      canvasBlock: { id: 'canvasBlock', data: { type: 'Ui', component: 'Block', content: canvas } },
+    },
+    relationships: {
+      [ROOT]: ['page'],
+      page: ['canvasBlock'],
+    },
+  }
+}
+
+// Bootstrap-time device pick — 1회 읽기, 구독 없음. resize 시 재계산 안 함 (페이지 새로고침).
+const IS_MOBILE = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches
+
 export function Wireframes() {
-  const [data] = useState(buildPage)
+  const [data] = useState(IS_MOBILE ? buildMobilePage : buildDesktopPage)
   return <Renderer page={definePage(data)} />
 }
