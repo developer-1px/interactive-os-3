@@ -9,3 +9,4 @@
  */
 export * from './proximity'
 export * from './hierarchy'
+export * from './score'
