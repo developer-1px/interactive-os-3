@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { FinderMobile } from '@apps/m.finder'
+import { FinderMobile } from '@apps/finder'
 
 export const Route = createFileRoute('/m/finder/$')({
   component: FinderMobile,

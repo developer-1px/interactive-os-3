@@ -21,5 +21,9 @@ export type { FsNode, SmartGroupItem } from './types'
 // 스타일 — main.tsx 가 사용
 export { finderCss } from './style'
 
+// 모바일 변형 (/m/finder/$ 라우트 진입)
+export { FinderMobile } from './mobile/FinderMobile'
+export { finderMobileCss } from './mobile/style'
+
 // plugin manifest — packages/app/src/app/plugins.ts 가 사용
 export { default } from './plugin'

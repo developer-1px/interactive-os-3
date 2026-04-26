@@ -16,9 +16,10 @@ import {
 import {
   getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
   formatDate, formatSize,
-  extToIcon, type FsNode, type SmartGroupItem,
-  PreviewBody, useSidebarNav,
-} from '@apps/finder'
+} from '../data'
+import { extToIcon, type FsNode, type SmartGroupItem } from '../types'
+import { PreviewBody } from '../Preview'
+import { useSidebarNav } from '../useSidebarNav'
 
 /**
  * /m/finder shell — FlatLayout 셸 + FinderMobileBody Ui leaf.

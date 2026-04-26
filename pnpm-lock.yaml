@@ -100,8 +100,6 @@ importers:
 
   apps/keyboard: {}
 
-  apps/m.finder: {}
-
   apps/markdown: {}
 
   apps/theme: {}
