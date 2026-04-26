@@ -3,7 +3,7 @@ import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import {
   videos, roleCategories, certCategories,
   LEVEL_TONE, STATUS_TONE, type VideoRow,
-} from '../data'
+} from '../entities/data'
 
 type Mode = 'role' | 'cert'
 

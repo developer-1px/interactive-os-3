@@ -4,7 +4,7 @@ import {
   Renderer, definePage, sidebarAdmin, useControlState, navigateOnActivate,
   ROOT, EXPANDED, type Event, type NormalizedData,
 } from '@p/ds'
-import { activePage, navItems, PAGE_PATHS, type PageId } from './data'
+import { activePage, navItems, PAGE_PATHS, type PageId } from '../entities/data'
 
 const SECTIONS = ['메인', '콘텐츠', '설정'] as const
 

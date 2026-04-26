@@ -1,6 +1,6 @@
 import { useRouter, useRouterState } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { activePage, PAGE_PATHS, PAGE_TITLES } from './data'
+import { activePage, PAGE_PATHS, PAGE_TITLES } from '../entities/data'
 
 /**
  * EPA Topbar.

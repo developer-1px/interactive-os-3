@@ -25,7 +25,7 @@ export function Markdown() {
     return definePage({
       entities: {
         [ROOT]: { id: ROOT, data: {} },
-        main: { id: 'main', data: { type: 'Main', flow: 'list', roledescription: 'markdown-app', label: 'Markdown 뷰어' } },
+        main: { id: 'main', data: { type: 'Main', flow: 'prose', roledescription: 'markdown-app', label: 'Markdown 뷰어' } },
         nav:  { id: 'nav',  data: { type: 'Nav',  flow: 'cluster', label: '경로' } },
         backLink: { id: 'backLink', data: { type: 'Ui', component: 'Link', props: { to: '/finder/$', params: { _splat: '' }, label: '← Finder' } } },
         pathText: { id: 'pathText', data: { type: 'Text', variant: 'small', content: path } },

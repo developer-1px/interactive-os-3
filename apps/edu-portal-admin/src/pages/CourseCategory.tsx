@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '@p/ds'
-import { certCategories as initial, type CertCategory } from '../data'
+import { certCategories as initial, type CertCategory } from '../entities/data'
 
 type Tone = 'success' | 'info' | 'warning' | 'danger' | 'neutral'
 

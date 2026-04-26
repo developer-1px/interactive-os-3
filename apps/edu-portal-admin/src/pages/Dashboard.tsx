@@ -2,8 +2,8 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, Badge, fromList, type NormalizedData } from '@p/ds'
-import { kpi, videos } from '../data'
-import { PAGE_PATHS } from '../data'
+import { kpi, videos } from '../entities/data'
+import { PAGE_PATHS } from '../entities/data'
 
 type Period = 'daily' | 'weekly' | 'quarterly' | 'custom'
 const PERIOD_LABELS: Record<Period, string> = {

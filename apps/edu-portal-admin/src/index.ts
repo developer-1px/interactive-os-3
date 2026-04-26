@@ -1,4 +1,4 @@
-export * from './EduPortalAdmin'
-export * from './Sidebar'
-export * from './Topbar'
+export * from './widgets/EduPortalAdmin'
+export * from './widgets/Sidebar'
+export * from './widgets/Topbar'
 export * from './style'

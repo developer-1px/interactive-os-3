@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '@p/ds'
-import { roleCategories as initial, type RoleCategory as RoleCategoryT } from '../data'
+import { roleCategories as initial, type RoleCategory as RoleCategoryT } from '../entities/data'
 
 export function RoleCategory() {
   const [list, setList] = useState(initial)
