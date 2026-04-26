@@ -17,6 +17,7 @@ import { Outlet } from '@tanstack/react-router'
 const Block = ({ children }: { children?: ReactNode }) =>
   createElement(Fragment, null, children)
 import { Prose } from '../ui/0-primitive/Prose'
+import { CodeBlock } from '../ui/0-primitive/CodeBlock'
 import { Link } from '../ui/0-primitive/Link'
 import { Button } from '../ui/2-action/Button'
 import { Switch } from '../ui/2-action/Switch'
@@ -71,8 +72,9 @@ export interface UiEntry { component: AnyCmp; zone: Zone }
 
 export const uiRegistry = {
   // primitive
-  Prose:  { component: Prose,  zone: 'primitive' },
-  Link:   { component: Link,   zone: 'primitive' },
+  Prose:     { component: Prose,     zone: 'primitive' },
+  CodeBlock: { component: CodeBlock, zone: 'primitive' },
+  Link:      { component: Link,      zone: 'primitive' },
   // shell — TanStack passthrough
   Outlet: { component: Outlet, zone: 'shell' },
   Block:  { component: Block,  zone: 'primitive' },

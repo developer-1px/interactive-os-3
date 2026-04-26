@@ -1,4 +1,4 @@
-import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell } from '../../ds'
+import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell, activateProps } from '../../ds'
 import { formatDate, formatSize } from './data'
 import { extToIcon, type FsNode } from './types'
 
@@ -42,13 +42,7 @@ export function ListView({
               posinset={i + 1}
               setsize={kids.length}
               selected={selected}
-              onClick={() => onNavigate(n.path)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  onNavigate(n.path)
-                }
-              }}
+              {...activateProps(() => onNavigate(n.path))}
             >
               <GridCell data-icon={n.type === 'dir' ? 'dir' : extToIcon(n.ext)}>
                 <span>{n.name}</span>

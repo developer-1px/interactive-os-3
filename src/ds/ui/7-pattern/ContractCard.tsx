@@ -43,6 +43,7 @@ export function ContractCard({
 
   return (
     <Card
+      data-card="contract"
       slots={{
         preview: <figure aria-label={`${name} 예시`}>{demo ?? <Heading level="caption">demo TBD</Heading>}</figure>,
         title: (

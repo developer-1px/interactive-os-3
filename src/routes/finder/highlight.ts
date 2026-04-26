@@ -21,10 +21,13 @@ export async function highlightCode(code: string, lang: string): Promise<string>
   const loaded = h.getLoadedLanguages()
   const use = loaded.includes(lang as never) ? lang : 'txt'
   try {
-    return h.codeToHtml(code, {
+    const html = h.codeToHtml(code, {
       lang: use,
       themes: { light: 'github-light', dark: 'github-dark' },
     })
+    // shiki는 <pre class="shiki"><code>…</code></pre> 형태를 반환하지만
+    // 우리 CodeView가 이미 <pre>로 감싸므로 outer <pre>를 벗겨 중첩을 제거한다.
+    return html.replace(/^<pre[^>]*>/, '').replace(/<\/pre>$/, '')
   } catch {
     return ''
   }

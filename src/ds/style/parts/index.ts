@@ -14,6 +14,7 @@ import { link } from './link'
 import { code } from './code'
 import { progress } from './progress'
 import { breadcrumb } from './breadcrumb'
+import { phone } from './phone'
 
 export const parts = () =>
   [
@@ -33,4 +34,5 @@ export const parts = () =>
     code(),
     progress(),
     breadcrumb(),
+    phone(),
   ].join('\n')

@@ -3,9 +3,86 @@ import { css, pad, icon } from '../../ds/foundations'
 // Finder desktop — sidebar / columns / list-view / preview.
 // (sidebar surface 자체는 widgets/composite/sidebar.ts owner.)
 export const finderCss = css`
-  /* columns: 내용 자연 폭만 사용. 넘치면 자체 가로 스크롤. */
+  /* chrome 없는 finder shell — 풀뷰포트 컨테이너 + body flex */
+  main[data-part="finder"] {
+    position: fixed; inset: 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    container-type: inline-size; container-name: shell;
+  }
+  main[data-part="finder"] > [data-part="body"] {
+    flex: 1; min-height: 0;
+  }
+  /* 3-pane 구조 — 각 pane은 toolbar(top) + body 세로 스택.
+     pane-toolbar 높이는 토큰 1개로 통일하여 가로 키라인을 일치시킨다 (균형/대칭). */
+  main[data-part="finder"] section[data-part="pane"] {
+    display: flex; flex-direction: column;
+    min-width: 0; min-height: 0; overflow: hidden;
+    border: var(--ds-hairline) solid var(--ds-border);
+    border-radius: ${pad(1.5)};
+    background: color-mix(in oklch, Canvas 98%, CanvasText 2%);
+  }
+  /* Split separator 항상 보이는 미세 hairline — 패널 사이 구분 명확 */
+  main[data-part="finder"] [data-ds="Split"][data-axis="row"] > [role="separator"][data-ds-handle]::before {
+    opacity: 0.5;
+  }
+  /* finder-main — Split 우측 트랙 내부에서 columns(auto) + preview(1fr) grid.
+     columns pane은 컬럼 내용 만큼만 차지하고, preview pane이 남는 공간을 흡수. */
+  main[data-part="finder"] [data-part="finder-main"] {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    min-width: 0; min-height: 0; overflow: hidden;
+    gap: ${pad(1)};
+  }
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] {
+    flex: none;
+    display: flex; align-items: center; gap: ${pad(2)};
+    padding-inline: ${pad(2)};
+    block-size: var(--ds-control-h);
+    background: transparent;
+    border: 0;
+  }
+  /* 내부 Toolbar 컴포넌트의 자체 surface(padding/bg/radius)를 무력화 —
+     pane-toolbar zone이 단일 컨테이너 역할을 하므로 중복 시각 계층 제거.
+     모든 컨트롤(button, input)을 control('h')로 통일하여 가로 키라인에 정렬. */
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] [role="toolbar"] {
+    display: flex; gap: ${pad(0.5)};
+    padding: 0; background: transparent; border-radius: 0; row-gap: 0;
+  }
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] button,
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] input {
+    block-size: var(--ds-control-h);
+    line-height: 1;
+    box-sizing: border-box;
+  }
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] form[role="search"] {
+    margin-inline-start: auto;
+    display: flex; align-items: center; flex: 1;
+  }
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] input[type="search"] {
+    inline-size: 100%;
+  }
+  /* sidebar 접기 버튼 — control-h 정사각, ghost */
+  main[data-part="finder"] section[data-pane="sidebar"] > header[data-part="pane-toolbar"] > button {
+    aspect-ratio: 1;
+    border: 0; background: transparent; cursor: pointer;
+    border-radius: ${pad(1)};
+  }
+  main[data-part="finder"] section[data-pane="sidebar"] > header[data-part="pane-toolbar"] > button:hover {
+    background: color-mix(in oklch, Canvas 92%, CanvasText 8%);
+  }
+  /* pane body — toolbar 아래 영역 1fr */
+  main[data-part="finder"] section[data-pane="sidebar"] > nav[data-part="sidebar"],
+  main[data-part="finder"] section[data-pane="columns"] > section[data-part="columns"],
+  main[data-part="finder"] section[data-pane="preview"] > aside[data-part="preview"] {
+    flex: 1 1 0; min-height: 0; min-width: 0;
+  }
+  /* sidebar nav은 Split 트랙 폭에 맞춰 — 고정폭 토큰 해제 */
+  main[data-part="finder"] section[data-pane="sidebar"] > nav[data-part="sidebar"] {
+    width: auto;
+  }
+  /* columns: 자기 pane 내에서만 가로 스크롤 */
   section[data-part="columns"] {
-    flex: 0 1 auto; display: flex; overflow: auto; min-width: 0;
+    display: flex; overflow: auto;
   }
   /* list-view: columns와 달리 자기 폭을 자연스럽게 채우되 preview와 공유.
      basis 자동 + 1단계 grow → preview의 min-width(var(--ds-preview-w))가 보장되는
@@ -70,9 +147,18 @@ export const finderCss = css`
   aside[data-part="preview"] > header > hgroup { display: grid; gap: ${pad(0.5)}; }
   aside[data-part="preview"] > header > hgroup > p { opacity: .6; margin: 0; font-size: var(--ds-text-sm); }
   /* L1 desktop Finder layout — preview에 min-width를 부여하는 책임은 여기. */
-  main[data-part="finder"] > section[data-part="body"] > aside[data-part="preview"] {
-    flex: 1 1 0;
-    min-width: var(--ds-preview-w);
+  main[data-part="finder"] section[data-pane="preview"] > aside[data-part="preview"] {
+    min-width: 0;
+  }
+  /* preview 컨텐츠 — 가독 폭 max + 중앙 정렬 (header/article/dl/pre 모두) */
+  aside[data-part="preview"] > header,
+  aside[data-part="preview"] > article,
+  aside[data-part="preview"] > dl,
+  aside[data-part="preview"] > pre,
+  aside[data-part="preview"] > h2 {
+    width: 100%;
+    max-width: var(--ds-prose-w, 72ch);
+    margin-inline: auto;
   }
   /* preview 내부 코드/이미지는 자기 폭 안에서 해결 — preview 자체에 가로 스크롤 금지 */
   aside[data-part="preview"] > pre,

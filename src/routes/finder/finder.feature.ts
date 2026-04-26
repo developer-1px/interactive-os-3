@@ -50,7 +50,8 @@ export type PreviewVM =
   | { kind: 'image'; node: FsNode; src: string | null }
   | { kind: 'text'; node: FsNode; text: string | null }
 
-const initial: FinderState = { url: '/', pinned: '/', mode: 'columns', query: '' }
+const todayPath = smartGroups[0]?.path ?? '/'
+const initial: FinderState = { url: todayPath, pinned: todayPath, mode: 'columns', query: '' }
 
 // ── 헬퍼 ─────────────────────────────────────────────────────────────────
 const parentPath = (p: string): string => {

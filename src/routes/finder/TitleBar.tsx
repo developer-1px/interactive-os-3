@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import {
   Toolbar, ROOT, FOCUS, useControlState,
   type NormalizedData, type Event,
@@ -13,6 +12,22 @@ const VIEW_ITEMS: { id: ViewMode; icon: string; label: string }[] = [
   { id: 'gallery', icon: 'gallery-vertical', label: '갤러리' },
 ]
 
+const buildViewToolbar = (view: ViewMode): NormalizedData => ({
+  entities: {
+    [ROOT]: { id: ROOT, data: {} },
+    ...Object.fromEntries(VIEW_ITEMS.map((v) => [
+      v.id, { id: v.id, data: { label: v.label, icon: v.icon, pressed: view === v.id } },
+    ])),
+    [FOCUS]: { id: FOCUS, data: { id: view } },
+  },
+  relationships: { [ROOT]: VIEW_ITEMS.map((v) => v.id) },
+})
+
+const titleOf = (path: string) => {
+  const smart = smartGroupOf(path)
+  return smart ? `최근 — ${smart.label}` : (path.split('/').filter(Boolean).pop() ?? 'root')
+}
+
 export function TitleBar({
   path, onBack, canBack, view, onViewChange,
 }: {
@@ -22,19 +37,8 @@ export function TitleBar({
   view: ViewMode
   onViewChange: (v: ViewMode) => void
 }) {
-  const smart = smartGroupOf(path)
-  const name = smart ? `최근 — ${smart.label}` : (path.split('/').filter(Boolean).pop() ?? 'root')
-  const base = useMemo<NormalizedData>(() => ({
-    entities: {
-      [ROOT]: { id: ROOT, data: {} },
-      ...Object.fromEntries(VIEW_ITEMS.map((v) => [
-        v.id, { id: v.id, data: { label: v.label, icon: v.icon, pressed: view === v.id } },
-      ])),
-      [FOCUS]: { id: FOCUS, data: { id: view } },
-    },
-    relationships: { [ROOT]: VIEW_ITEMS.map((v) => v.id) },
-  }), [view])
-  const [data, dispatch] = useControlState(base)
+  const name = titleOf(path)
+  const [data, dispatch] = useControlState(buildViewToolbar(view))
   const onEvent = (e: Event) => {
     dispatch(e)
     if (e.type === 'activate') onViewChange(e.id as ViewMode)

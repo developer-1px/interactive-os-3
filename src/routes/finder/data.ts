@@ -1,9 +1,12 @@
 import { tree as initialTree } from 'virtual:fs-tree'
 import type { FsNode, SidebarItem, SmartGroupItem, TagGroupItem } from './types'
+import { FsNodeSchema } from './schema'
 import { allTags, entriesByTag, tagPath, isTagPath as _isTagPath } from './tagIndex'
 import { extToIcon } from './types'
 
-let currentTree: FsNode = (import.meta.hot?.data.tree as FsNode | undefined) ?? initialTree
+// virtual:fs-tree 는 외부 데이터 경계 — zod parse 로 진입 검증.
+const parseTree = (raw: unknown): FsNode => FsNodeSchema.parse(raw)
+let currentTree: FsNode = (import.meta.hot?.data.tree as FsNode | undefined) ?? parseTree(initialTree)
 const listeners: Set<() => void> = (import.meta.hot?.data.listeners as Set<() => void> | undefined) ?? new Set()
 if (import.meta.hot) {
   import.meta.hot.data.listeners = listeners
@@ -18,7 +21,8 @@ export function subscribeTree(l: () => void): () => void {
 }
 
 if (import.meta.hot) {
-  import.meta.hot.on('fs-tree:update', (next: FsNode) => {
+  import.meta.hot.on('fs-tree:update', (raw: unknown) => {
+    const next = parseTree(raw)
     currentTree = next
     if (import.meta.hot) import.meta.hot.data.tree = next
     listeners.forEach((l) => l())

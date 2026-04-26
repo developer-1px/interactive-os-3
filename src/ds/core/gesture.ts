@@ -35,3 +35,18 @@ export const expandBranchOnActivate: GestureHelper = (d, e) => {
 // 헬퍼 조합. 왼쪽부터 차례로 통과.
 export const composeGestures = (...fns: GestureHelper[]): GestureHelper =>
   (d, e) => fns.reduce<Event[]>((evs, fn) => evs.flatMap((ev) => fn(d, ev)), [e])
+
+// JSX-children 스타일 row/cell 등 (data, onEvent) 흐름 밖의 DOM 요소를 위한 활성화 헬퍼.
+// 클릭과 Enter/Space 키를 단일 activate 콜백으로 합류시킨다.
+// gesture/intent 분리 원칙의 DOM 측 entry — 소비자는 onActivate 1개만 다룬다.
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react'
+
+export const activateProps = (onActivate: () => void) => ({
+  onClick: (_e: ReactMouseEvent) => onActivate(),
+  onKeyDown: (e: ReactKeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onActivate()
+    }
+  },
+})

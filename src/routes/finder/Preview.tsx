@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useResource } from '../../ds'
+import { CodeBlock } from '../../ds/ui/0-primitive/CodeBlock'
+import { Prose } from '../../ds/ui/0-primitive/Prose'
 import { formatDate, formatSize } from './data'
 import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,
@@ -86,7 +88,7 @@ function CodeView({ node }: { node: FsNode }) {
   const [html] = useResource(codeHtmlResource, node.path, lang)
   if (text == null) return <pre aria-busy="true" />
   if (html == null) return <pre data-lang={lang}>{text}</pre>
-  return <pre data-lang={lang} dangerouslySetInnerHTML={{ __html: html }} />
+  return <CodeBlock lang={lang} html={html} />
 }
 
 function MarkdownView({ node }: { node: FsNode }) {
@@ -97,7 +99,7 @@ function MarkdownView({ node }: { node: FsNode }) {
       <nav aria-label="마크다운 액션">
         <Link to="/markdown/$" params={{ _splat: node.path.replace(/^\//, '') }}>전체 화면으로 열기 ↗</Link>
       </nav>
-      <article data-flow="prose" dangerouslySetInnerHTML={{ __html: html }} />
+      <Prose html={html} />
     </>
   )
 }

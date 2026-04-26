@@ -19,7 +19,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@p/ds": ["src/ds/index.ts"],
+      "@p/ds/*": ["src/ds/*"],
+      "@p/app": ["src/main.tsx"],
+      "@p/app/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["src/ds/build.ts"]

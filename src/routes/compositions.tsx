@@ -392,16 +392,24 @@ const stateRow = (state: 'empty' | 'loading' | 'error' | 'partial' | 'done'): Re
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// VariantRow — 라벨 + data-stage 마커로 ds 가 폭 보장 (layout.ts).
+// Frame — Figma 의 frame. 라벨 chip 위 + bordered surface 안에 컨텐츠.
 //   stage="chat"=360 / "feed"=600 / "list"=720 / "form"=420 / "grid"=240 / "card"=320
+// 캔버스 위에 family 별로 flex-wrap 가로 배치 (layout.ts CSS).
 // ──────────────────────────────────────────────────────────────────────
 
 type Stage = 'chat' | 'feed' | 'list' | 'form' | 'grid' | 'card' | 'reading' | 'panel'
 
-const VariantRow = ({ label, stage, children }: { label: string; stage: Stage; children: ReactNode }) => (
-  <section aria-label={label} data-part="variant-row">
-    <small>{label}</small>
+const Frame = ({ label, stage, children }: { label: string; stage: Stage; children: ReactNode }) => (
+  <figure aria-label={label} data-part="frame">
+    <figcaption data-part="frame-label">{label}</figcaption>
     <div data-stage={stage}>{children}</div>
+  </figure>
+)
+
+const Family = ({ title, children }: { title: string; children: ReactNode }) => (
+  <section data-part="canvas-family">
+    <h2>{title}</h2>
+    <div data-part="frames">{children}</div>
   </section>
 )
 
@@ -411,115 +419,96 @@ const VariantRow = ({ label, stage, children }: { label: string; stage: Stage; c
 
 function buildPage(): NormalizedData {
   const cardVariants: ReactNode = (<>
-    <VariantRow label="post / 일반"   stage="feed">{postCardVariant(false, '유용태', '2분 전', 'recursive Proximity 가 잘 보이는 화면을 만들었다. shell·surface·section·atom 4단을 한 카드 안에서 다 시연 가능. PR #482 에 올렸으니 리뷰 부탁드려요.', 'https://i.pravatar.cc/64?u=teo')}</VariantRow>
-    <VariantRow label="post / 연속"   stage="feed">{postCardVariant(true, '', '', '같은 사람의 두 번째 메시지 — avatar 와 header 시각 숨김 (Slack 패턴). Gestalt similarity 가 두 행을 한 묶음으로 묶음.', '')}</VariantRow>
-    <VariantRow label="message / other" stage="chat">{messageBubble('other', 'Alex', '오늘 PR 머지 부탁드려요. CI 그린 + 리뷰 2개 받았습니다.', '오전 9:14')}</VariantRow>
-    <VariantRow label="message / me"    stage="chat">{messageBubble('me', 'me', '확인하고 오후 2시쯤 머지할게요. 그 전에 staging 한 번 돌려보고요.', '오전 9:18')}</VariantRow>
-    <VariantRow label="stat / 기본"    stage="grid">{statCardVariant('월간 활성 사용자', '12,438', '+8.2% vs 전월')}</VariantRow>
-    <VariantRow label="stat / alert"   stage="grid">{statCardVariant('에러율', '3.4%', '+2.1% vs 전월', 'alert')}</VariantRow>
-    <VariantRow label="product"        stage="grid">{productCardVariant('Mechanical Keyboard', '₩189,000', 'https://picsum.photos/seed/kbd/240/180', '신상')}</VariantRow>
-    <VariantRow label="course"         stage="card">{courseCardVariant('TypeScript 심화 — 타입 추론과 generics', 'Sora Park', '중급', 240)}</VariantRow>
+    <Frame label="post / 일반"   stage="feed">{postCardVariant(false, '유용태', '2분 전', 'recursive Proximity 가 잘 보이는 화면을 만들었다. shell·surface·section·atom 4단을 한 카드 안에서 다 시연 가능. PR #482 에 올렸으니 리뷰 부탁드려요.', 'https://i.pravatar.cc/64?u=teo')}</Frame>
+    <Frame label="post / 연속"   stage="feed">{postCardVariant(true, '', '', '같은 사람의 두 번째 메시지 — avatar 와 header 시각 숨김 (Slack 패턴). Gestalt similarity 가 두 행을 한 묶음으로 묶음.', '')}</Frame>
+    <Frame label="message / other" stage="chat">{messageBubble('other', 'Alex', '오늘 PR 머지 부탁드려요. CI 그린 + 리뷰 2개 받았습니다.', '오전 9:14')}</Frame>
+    <Frame label="message / me"    stage="chat">{messageBubble('me', 'me', '확인하고 오후 2시쯤 머지할게요. 그 전에 staging 한 번 돌려보고요.', '오전 9:18')}</Frame>
+    <Frame label="stat / 기본"    stage="grid">{statCardVariant('월간 활성 사용자', '12,438', '+8.2% vs 전월')}</Frame>
+    <Frame label="stat / alert"   stage="grid">{statCardVariant('에러율', '3.4%', '+2.1% vs 전월', 'alert')}</Frame>
+    <Frame label="product"        stage="grid">{productCardVariant('Mechanical Keyboard', '₩189,000', 'https://picsum.photos/seed/kbd/240/180', '신상')}</Frame>
+    <Frame label="course"         stage="card">{courseCardVariant('TypeScript 심화 — 타입 추론과 generics', 'Sora Park', '중급', 240)}</Frame>
   </>)
 
   const inboxVariants: ReactNode = (<>
-    <VariantRow label="unread"     stage="list">{inboxRow('unread', '김지민', '회의 자료 검토', 'PR #482 리뷰 부탁드립니다. CI 통과 + 리뷰어 2명 지정 완료.', '14:32')}</VariantRow>
-    <VariantRow label="read"       stage="list">{inboxRow('read', '박서연', '점심 약속', '오늘 점심 같이 드실래요? 1층 한식당 가려고요.', '12:18')}</VariantRow>
-    <VariantRow label="starred"    stage="list">{inboxRow('starred', '이준호', '디자인 시안', '새 토큰 ladder 좋네요. atom→shell 5단이 깔끔합니다.', '11:04')}</VariantRow>
-    <VariantRow label="threaded"   stage="list">{inboxRow('threaded', '최민지', 'RFC: focus-ring', '4명이 답글을 남겼습니다. 합의 도출 중.', '10:55')}</VariantRow>
-    <VariantRow label="attachment" stage="list">{inboxRow('attachment', '강예나', '월간 리포트', '4월 리포트 첨부드립니다. report-2026-04.pdf (2.1MB)', '09:42')}</VariantRow>
-    <VariantRow label="system"     stage="list">{inboxRow('system', 'system', '비밀번호 변경 알림', '계정 비밀번호가 변경되었습니다. 본인이 아니면 즉시 신고하세요.', '08:30')}</VariantRow>
+    <Frame label="unread"     stage="list">{inboxRow('unread', '김지민', '회의 자료 검토', 'PR #482 리뷰 부탁드립니다. CI 통과 + 리뷰어 2명 지정 완료.', '14:32')}</Frame>
+    <Frame label="read"       stage="list">{inboxRow('read', '박서연', '점심 약속', '오늘 점심 같이 드실래요? 1층 한식당 가려고요.', '12:18')}</Frame>
+    <Frame label="starred"    stage="list">{inboxRow('starred', '이준호', '디자인 시안', '새 토큰 ladder 좋네요. atom→shell 5단이 깔끔합니다.', '11:04')}</Frame>
+    <Frame label="threaded"   stage="list">{inboxRow('threaded', '최민지', 'RFC: focus-ring', '4명이 답글을 남겼습니다. 합의 도출 중.', '10:55')}</Frame>
+    <Frame label="attachment" stage="list">{inboxRow('attachment', '강예나', '월간 리포트', '4월 리포트 첨부드립니다. report-2026-04.pdf (2.1MB)', '09:42')}</Frame>
+    <Frame label="system"     stage="list">{inboxRow('system', 'system', '비밀번호 변경 알림', '계정 비밀번호가 변경되었습니다. 본인이 아니면 즉시 신고하세요.', '08:30')}</Frame>
   </>)
 
   const fieldVariants: ReactNode = (<>
-    <VariantRow label="basic"    stage="form">{field('basic', '이름', 'Jane Doe')}</VariantRow>
-    <VariantRow label="required" stage="form">{field('required', '이메일', 'jane@example.com', '필수 입력입니다.')}</VariantRow>
-    <VariantRow label="help"     stage="form">{field('help', '사용자명', 'username', '소문자·숫자·하이픈 3-20자')}</VariantRow>
-    <VariantRow label="error"    stage="form">{field('error', '이메일', 'jane@example.com')}</VariantRow>
-    <VariantRow label="success"  stage="form">{field('success', '이메일', 'jane@example.com')}</VariantRow>
-    <VariantRow label="disabled" stage="form">{field('disabled', '회원 ID', '자동 생성', '가입 시 자동 부여')}</VariantRow>
+    <Frame label="basic"    stage="form">{field('basic', '이름', 'Jane Doe')}</Frame>
+    <Frame label="required" stage="form">{field('required', '이메일', 'jane@example.com', '필수 입력입니다.')}</Frame>
+    <Frame label="help"     stage="form">{field('help', '사용자명', 'username', '소문자·숫자·하이픈 3-20자')}</Frame>
+    <Frame label="error"    stage="form">{field('error', '이메일', 'jane@example.com')}</Frame>
+    <Frame label="success"  stage="form">{field('success', '이메일', 'jane@example.com')}</Frame>
+    <Frame label="disabled" stage="form">{field('disabled', '회원 ID', '자동 생성', '가입 시 자동 부여')}</Frame>
   </>)
 
   const proseVariants: ReactNode = (<>
-    <VariantRow label="hero"    stage="reading">{proseHero()}</VariantRow>
-    <VariantRow label="table"   stage="reading">{proseTable()}</VariantRow>
-    <VariantRow label="callout" stage="reading">{proseCallout()}</VariantRow>
-    <VariantRow label="code"    stage="reading">{proseCode()}</VariantRow>
+    <Frame label="hero"    stage="reading">{proseHero()}</Frame>
+    <Frame label="table"   stage="reading">{proseTable()}</Frame>
+    <Frame label="callout" stage="reading">{proseCallout()}</Frame>
+    <Frame label="code"    stage="reading">{proseCode()}</Frame>
   </>)
 
   const stateVariants: ReactNode = (<>
-    <VariantRow label="empty"          stage="list">{stateRow('empty')}</VariantRow>
-    <VariantRow label="loading"        stage="list">{stateRow('loading')}</VariantRow>
-    <VariantRow label="error"          stage="panel">{stateRow('error')}</VariantRow>
-    <VariantRow label="partial"        stage="list">{stateRow('partial')}</VariantRow>
-    <VariantRow label="done (KeyValue)" stage="form">{stateRow('done')}</VariantRow>
+    <Frame label="empty"          stage="list">{stateRow('empty')}</Frame>
+    <Frame label="loading"        stage="list">{stateRow('loading')}</Frame>
+    <Frame label="error"          stage="panel">{stateRow('error')}</Frame>
+    <Frame label="partial"        stage="list">{stateRow('partial')}</Frame>
+    <Frame label="done (KeyValue)" stage="form">{stateRow('done')}</Frame>
   </>)
 
   const authVariants: ReactNode = (<>
-    <VariantRow label="login"           stage="form">{loginCard()}</VariantRow>
-    <VariantRow label="signup"          stage="form">{signupCard()}</VariantRow>
-    <VariantRow label="reset password"  stage="form">{resetCard()}</VariantRow>
-    <VariantRow label="2FA / OTP"       stage="form">{otpCard()}</VariantRow>
+    <Frame label="login"           stage="panel">{loginCard()}</Frame>
+    <Frame label="signup"          stage="panel">{signupCard()}</Frame>
+    <Frame label="reset password"  stage="panel">{resetCard()}</Frame>
+    <Frame label="2FA / OTP"       stage="panel">{otpCard()}</Frame>
   </>)
 
   const contentCardVariants: ReactNode = (<>
-    <VariantRow label="article preview" stage="card">{articleCard()}</VariantRow>
-    <VariantRow label="profile"         stage="card">{profileCard()}</VariantRow>
-    <VariantRow label="pricing / free"  stage="card">{pricingCard('free')}</VariantRow>
-    <VariantRow label="pricing / pro ★" stage="card">{pricingCard('pro', true)}</VariantRow>
-    <VariantRow label="pricing / team"  stage="card">{pricingCard('team')}</VariantRow>
-    <VariantRow label="settings panel"  stage="form">{settingsPanel()}</VariantRow>
-    <VariantRow label="confirm / 기본"  stage="panel">{confirmDialog('default')}</VariantRow>
-    <VariantRow label="confirm / danger" stage="panel">{confirmDialog('danger')}</VariantRow>
+    <Frame label="article preview" stage="card">{articleCard()}</Frame>
+    <Frame label="profile"         stage="card">{profileCard()}</Frame>
+    <Frame label="pricing / free"  stage="card">{pricingCard('free')}</Frame>
+    <Frame label="pricing / pro ★" stage="card">{pricingCard('pro', true)}</Frame>
+    <Frame label="pricing / team"  stage="card">{pricingCard('team')}</Frame>
+    <Frame label="settings panel"  stage="form">{settingsPanel()}</Frame>
+    <Frame label="confirm / 기본"  stage="panel">{confirmDialog('default')}</Frame>
+    <Frame label="confirm / danger" stage="panel">{confirmDialog('danger')}</Frame>
   </>)
+
+  // Figma 캔버스 — family 별 frame 들을 한 캔버스 위에 가로 wrap 으로 배치
+  const canvas: ReactNode = (
+    <div data-part="canvas">
+      <Family title="1. Card 변형 (8 patterns)">{cardVariants}</Family>
+      <Family title="2. Inbox row (6 states)">{inboxVariants}</Family>
+      <Family title="3. Field (6 variants)">{fieldVariants}</Family>
+      <Family title="4. Prose / Markdown (4 layouts)">{proseVariants}</Family>
+      <Family title="5. Pattern-level states (Carbon 시그니처)">{stateVariants}</Family>
+      <Family title="6. 인증 폼 (4 patterns)">{authVariants}</Family>
+      <Family title="7. 보편 콘텐츠 카드 (8 patterns)">{contentCardVariants}</Family>
+    </div>
+  )
 
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Main', flow: 'list', label: '복합 조립 갤러리' } },
+      // Figma 캔버스는 메인 컨텐츠 폭 제약 풀고 viewport full
+      page: { id: 'page', data: { type: 'Main', flow: 'split', label: '복합 조립 갤러리' } },
 
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'cluster' } },
-      hdrTitle: { id: 'hdrTitle', data: { type: 'Text', variant: 'h1', content: '복합 조립 갤러리' } },
-      hdrSub: { id: 'hdrSub', data: { type: 'Text', variant: 'small', content: '같은 primitive 가 어떻게 다른 조립으로 변주되는가 — variant matrix.' } },
+      hdrTitle: { id: 'hdrTitle', data: { type: 'Text', variant: 'h1', content: '복합 조립 캔버스' } },
+      hdrSub: { id: 'hdrSub', data: { type: 'Text', variant: 'small', content: '같은 primitive 가 어떻게 다른 조립으로 변주되는가 — Figma frame 처럼.' } },
 
-      sec1: { id: 'sec1', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '1. Card 변형 (8 patterns)' } } },
-      sec1Note: { id: 'sec1Note', data: { type: 'Text', variant: 'small', content: '같은 article[data-part="card"] 가 data-card 마커 + 슬롯 조합으로 8가지 시각.' } },
-      sec1Body: { id: 'sec1Body', data: { type: 'Ui', component: 'Block', content: cardVariants } },
-
-      sec2: { id: 'sec2', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '2. Inbox row 변형 (6 states)' } } },
-      sec2Note: { id: 'sec2Note', data: { type: 'Text', variant: 'small', content: '메일 행 — read/unread/starred/threaded/attachment/system. 같은 grid 안에서 차이가 드러난다 (Gestalt similarity).' } },
-      sec2Body: { id: 'sec2Body', data: { type: 'Ui', component: 'Block', content: inboxVariants } },
-
-      sec3: { id: 'sec3', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '3. Field 변형 (6 variants)' } } },
-      sec3Note: { id: 'sec3Note', data: { type: 'Text', variant: 'small', content: '같은 [role="group"][data-part="field"] 골격 — basic/required/help/error/success/disabled.' } },
-      sec3Body: { id: 'sec3Body', data: { type: 'Ui', component: 'Block', content: fieldVariants } },
-
-      sec4: { id: 'sec4', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '4. Prose / Markdown 블록 (4 layouts)' } } },
-      sec4Note: { id: 'sec4Note', data: { type: 'Text', variant: 'small', content: 'data-flow="prose" 한 어휘로 hero / table / callout / code 4가지 다른 조립.' } },
-      sec4Body: { id: 'sec4Body', data: { type: 'Ui', component: 'Block', content: proseVariants } },
-
-      sec5: { id: 'sec5', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '5. Pattern-level states (Carbon 시그니처)' } } },
-      sec5Note: { id: 'sec5Note', data: { type: 'Text', variant: 'small', content: 'collection 패턴은 default 만으로 부족 — empty/loading/error/partial/done ladder 가 1급 시민.' } },
-      sec5Body: { id: 'sec5Body', data: { type: 'Ui', component: 'Block', content: stateVariants } },
-
-      sec6: { id: 'sec6', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '6. 인증 폼 (4 patterns)' } } },
-      sec6Note: { id: 'sec6Note', data: { type: 'Text', variant: 'small', content: '로그인 / 가입 / 재설정 / 2FA — 같은 카드 surface + heading + 필드 stack + primary CTA + 보조 링크 골격.' } },
-      sec6Body: { id: 'sec6Body', data: { type: 'Ui', component: 'Block', content: authVariants } },
-
-      sec7: { id: 'sec7', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '7. 보편 콘텐츠 카드 (8 patterns)' } } },
-      sec7Note: { id: 'sec7Note', data: { type: 'Text', variant: 'small', content: 'Article preview / Profile / Pricing 3종 / Settings panel / Confirm dialog 2종.' } },
-      sec7Body: { id: 'sec7Body', data: { type: 'Ui', component: 'Block', content: contentCardVariants } },
+      canvasBlock: { id: 'canvasBlock', data: { type: 'Ui', component: 'Block', content: canvas } },
     },
     relationships: {
       [ROOT]: ['page'],
-      page: ['hdr', 'sec1', 'sec2', 'sec3', 'sec4', 'sec5', 'sec6', 'sec7'],
+      page: ['hdr', 'canvasBlock'],
       hdr: ['hdrTitle', 'hdrSub'],
-      sec1: ['sec1Note', 'sec1Body'],
-      sec2: ['sec2Note', 'sec2Body'],
-      sec3: ['sec3Note', 'sec3Body'],
-      sec4: ['sec4Note', 'sec4Body'],
-      sec5: ['sec5Note', 'sec5Body'],
-      sec6: ['sec6Note', 'sec6Body'],
-      sec7: ['sec7Note', 'sec7Body'],
     },
   }
 }

@@ -16,3 +16,4 @@ export function Code({ children, ...rest }: CodeProps) {
 export function Kbd({ children, ...rest }: KbdProps) {
   return <kbd data-part="kbd" {...rest}>{children}</kbd>
 }
+

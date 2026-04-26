@@ -21,6 +21,12 @@ import { onShortcut } from './ds/core/hooks/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
+import { plugins } from './app/plugins'
+import { composeRegistry } from './app/registry'
+
+// plugin manifest 합산 — widgets/middlewares/capabilities 를 ds registry 에 주입.
+// 부작용은 즉시(import 시점) — Renderer 첫 렌더 전에 완료되어야 함.
+void composeRegistry(plugins)
 
 const styleEl = document.createElement('style')
 styleEl.setAttribute('data-ds', '')

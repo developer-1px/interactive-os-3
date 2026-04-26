@@ -1,32 +1,19 @@
 import type { IconToken } from '../../ds/foundations/iconography/icon'
+import type { FsNode, PreviewKind } from './schema'
+
+export type {
+  FsNode, SidebarItem, SmartGroupId, SmartGroupItem,
+  TagGroupItem, ViewMode, PreviewKind,
+} from './schema'
+export {
+  FsNodeSchema, SidebarItemSchema, SmartGroupIdSchema, SmartGroupItemSchema,
+  TagGroupItemSchema, ViewModeSchema, PreviewKindSchema,
+} from './schema'
 
 declare module 'virtual:fs-tree' {
   export const tree: FsNode
   export const rootPath: string
 }
-
-export type FsNode = {
-  name: string
-  path: string
-  type: 'dir' | 'file'
-  size?: number
-  mtime?: number
-  ext?: string
-  children?: FsNode[]
-}
-
-export type SidebarItem = { id: string; label: string; path: string; icon: IconToken }
-
-export type SmartGroupId = 'today' | 'yesterday' | 'thisWeek' | 'thisMonth' | 'thisYear'
-export type SmartGroupItem = { id: SmartGroupId; label: string; path: string; icon: IconToken }
-
-/** Tag 가상 폴더 — frontmatter.tags 기반. id는 tag 문자열 자체.
- *  path는 `/_tag/<encoded>` (tagIndex.tagPath 참고). */
-export type TagGroupItem = { id: string; label: string; path: string; icon: IconToken; count: number }
-
-export type ViewMode = 'icons' | 'list' | 'columns' | 'gallery'
-
-export type PreviewKind = 'image' | 'markdown' | 'code' | 'text' | 'binary'
 
 const IMAGE_EXT = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'])
 const MARKDOWN_EXT = new Set(['md', 'mdx'])

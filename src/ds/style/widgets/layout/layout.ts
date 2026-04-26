@@ -1,4 +1,4 @@
-import { accent, control, css, dim, font, grouping, hairlineWidth, mix, neutral, pad, radius, square, status, tint } from '../../../foundations'
+import { accent, container, control, css, dim, font, grouping, hairlineWidth, hierarchy, mix, neutral, pad, radius, square, status, tint } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -94,22 +94,66 @@ export const layout = () => css`
      Main / Column 이 page-root 인 단일 컨텐츠 라우트는 *읽기 폭* 으로 제약 +
      viewport 가 더 넓으면 자동 가운데 정렬. flow 가 의도하는 컨텐츠 종류에 따라
      ladder. 외부 수렴 (Notion 680, GitHub 720, Twitter 600, Slack 480). */
-  :where(main, [data-ds="Column"])[data-page-root][data-flow="form"]    { max-inline-size: 720px; margin-inline: auto; }
-  :where(main, [data-ds="Column"])[data-page-root][data-flow="list"]    { max-inline-size: 720px; margin-inline: auto; }
-  :where(main, [data-ds="Column"])[data-page-root][data-flow="prose"]   { max-inline-size: 680px; margin-inline: auto; }
+  :where(main, [data-ds="Column"])[data-page-root][data-flow="form"]    { max-inline-size: ${container.list};    margin-inline: auto; }
+  :where(main, [data-ds="Column"])[data-page-root][data-flow="list"]    { max-inline-size: ${container.list};    margin-inline: auto; }
+  :where(main, [data-ds="Column"])[data-page-root][data-flow="prose"]   { max-inline-size: ${container.reading}; margin-inline: auto; }
 
-  /* ── Stage width tokens — 카드/패턴 변형이 *실제 사는 환경의 폭* 으로 제약.
-     벤더 수렴: chat=360 (모바일 메신저), feed=600 (X/Threads), list=720 (Inbox),
-     form=420 (단일 필드), grid=240 (카드 그리드 셀), reading=680 (Notion).
-     showcase / docs 라우트가 variant 를 그 환경 안에서 미리보기 할 때 쓴다. */
-  [data-stage="chat"]    { inline-size: 360px; max-inline-size: 100%; }
-  [data-stage="feed"]    { inline-size: 600px; max-inline-size: 100%; }
-  [data-stage="list"]    { inline-size: 720px; max-inline-size: 100%; }
-  [data-stage="form"]    { inline-size: 420px; max-inline-size: 100%; }
-  [data-stage="grid"]    { inline-size: 240px; max-inline-size: 100%; }
-  [data-stage="card"]    { inline-size: 320px; max-inline-size: 100%; }
-  [data-stage="reading"] { inline-size: 680px; max-inline-size: 100%; }
-  [data-stage="panel"]   { inline-size: 480px; max-inline-size: 100%; }
+  /* ── Figma-like canvas — recursive Proximity 적용
+     단조 증가 (atom < surface < shell < canvas):
+       atom    2px  → label ↔ stage          (intra-frame)
+       surface 8px  → h2 ↔ frames row        (intra-family)
+       shell  16px  → frame ↔ frame, canvas inner padding (intra-row, surface)
+       64px         → family ↔ family        (inter-family, canvas 전용 큰 호흡) */
+  [data-part="canvas"] {
+    background: var(--ds-neutral-1);
+    background-image:
+      radial-gradient(circle, color-mix(in oklch, var(--ds-fg) 12%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border-radius: var(--ds-radius-lg);
+    padding: ${hierarchy.shell};                    /* L5 surface inner */
+    display: flex; flex-direction: column;
+    gap: calc(${hierarchy.shell} * 4);              /* family ↔ family — major break */
+  }
+  [data-part="canvas-family"] {
+    display: flex; flex-direction: column;
+    gap: ${hierarchy.surface};                      /* L4 h2 ↔ frames */
+  }
+  [data-part="canvas-family"] > h2 {
+    font-size: var(--ds-text-lg);
+    font-weight: 600;
+    margin: 0;
+    color: var(--ds-fg);
+    letter-spacing: -0.01em;
+  }
+  [data-part="canvas-family"] > [data-part="frames"] {
+    display: flex; flex-wrap: wrap;
+    gap: ${hierarchy.shell};                        /* L5 frame ↔ frame, peers */
+    align-items: flex-start;
+  }
+  [data-part="frame"] {
+    display: flex; flex-direction: column;
+    gap: ${hierarchy.atom};                         /* L0 label ↔ stage */
+    margin: 0;
+  }
+  [data-part="frame"] > [data-part="frame-label"] {
+    font-size: var(--ds-text-xs);
+    color: var(--ds-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Stage width — foundations/layout/container 토큰 1:1 매핑.
+     stage 어휘 = 컴포넌트가 사는 *환경* 이름 (chat / feed / reading 등).
+     모든 폭은 container.* 가 owner — raw px 직접 쓰지 않는다. */
+  [data-stage="grid"],
+  [data-stage="cell"]    { inline-size: ${container.cell};    max-inline-size: 100%; }
+  [data-stage="card"]    { inline-size: ${container.card};    max-inline-size: 100%; }
+  [data-stage="chat"]    { inline-size: ${container.chat};    max-inline-size: 100%; }
+  [data-stage="form"]    { inline-size: ${container.form};    max-inline-size: 100%; }
+  [data-stage="panel"]   { inline-size: ${container.panel};   max-inline-size: 100%; }
+  [data-stage="feed"]    { inline-size: ${container.feed};    max-inline-size: 100%; }
+  [data-stage="reading"] { inline-size: ${container.reading}; max-inline-size: 100%; }
+  [data-stage="list"]    { inline-size: ${container.list};    max-inline-size: 100%; }
 
   /* ── FlatLayout extras ──────────────────────────────────────── */
 

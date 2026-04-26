@@ -31,17 +31,19 @@ export const inspectorCss = css`
     ${microLabel()}
     margin: 0;
   }
-  [data-part="field"] {
+  /* Inspector 패널 내부 field — label·control·unit 가로 정렬 (전역 form Field 와 다른 변형).
+     selector를 inspector-app 안으로 스코프하지 않으면 다른 라우트의 Field 가 모두 grid 로 깨진다. */
+  main[data-part="inspector-app"] [data-part="field"] {
     display: grid;
     grid-template-columns: 5rem 1fr auto;
     align-items: center; gap: ${pad(2)};
   }
-  [data-part="field"] > label { opacity: .6; font-size: var(--ds-text-sm); }
-  [data-part="field"] > [data-part="control"] {
+  main[data-part="inspector-app"] [data-part="field"] > label { opacity: .6; font-size: var(--ds-text-sm); }
+  main[data-part="inspector-app"] [data-part="field"] > [data-part="control"] {
     display: flex; align-items: center; gap: ${pad(1)}; min-width: 0;
   }
-  [data-part="field"] > [data-part="control"] > * { min-width: 0; flex: 1; }
-  [data-part="field"] > [data-part="unit"] {
+  main[data-part="inspector-app"] [data-part="field"] > [data-part="control"] > * { min-width: 0; flex: 1; }
+  main[data-part="inspector-app"] [data-part="field"] > [data-part="unit"] {
     opacity: .5; font-size: var(--ds-text-sm); min-width: 1.5em; text-align: end;
   }
 

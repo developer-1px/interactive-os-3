@@ -14,6 +14,8 @@ import { productCard } from './style/widgets/pattern/productCard'
 import { courseCard } from './style/widgets/pattern/courseCard'
 import { roleCard } from './style/widgets/pattern/roleCard'
 import { feedPost } from './style/widgets/pattern/feedPost'
+import { inboxRow } from './style/widgets/pattern/inboxRow'
+import { authCard } from './style/widgets/pattern/authCard'
 import { iconVars, iconIndicator } from './foundations/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
@@ -60,6 +62,8 @@ const segments: ReadonlyArray<readonly [string, string]> = [
   ['content/courseCard',    wrap('content', courseCard())],
   ['content/roleCard',      wrap('content', roleCard())],
   ['content/feedPost',      wrap('content', feedPost())],
+  ['content/inboxRow',      wrap('content', inboxRow())],
+  ['content/authCard',      wrap('content', authCard())],
   ['shell', wrap('shell', shell())],
 ] as const
 
@@ -92,8 +96,15 @@ export {
   activateOnNavigate,
   expandBranchOnActivate,
   composeGestures,
+  activateProps,
   type GestureHelper,
 } from './core/gesture'
+export {
+  defineMiddleware,
+  type Middleware, type Phase,
+  type PreDispatchCtx, type PostDispatchCtx, type ResourceCtx,
+} from './core/middleware'
+export { definePlugin, type PluginManifest } from './plugin'
 // 1-indicator — 시각 토큰. 다른 컴포넌트의 슬롯으로 들어감.
 export * from './ui/1-indicator/Badge'
 export * from './ui/1-indicator/Separator'
@@ -169,7 +180,8 @@ export * from './ui/8-layout/Carousel'
 export {
   Renderer, definePage, defineWidget, defineLayout, merge,
   uiRegistry, resolveUi, placementAttrs, validatePage, validateFragment, node,
-  type UiComponentName, type AnyNode, type NodeType,
+  type UiComponentName, type UiEntry, type Zone,
+  type AnyNode, type NodeType,
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,
   type GridNode as LayoutGridNode, type AsideNode, type SectionNode,
   type HeaderNode, type FooterNode, type UiNode, type TextNode,
@@ -195,3 +207,4 @@ export { Progress as ProgressBar } from './parts/Progress'
 export * from './parts/Breadcrumb'
 export * from './parts/Card'
 export * from './parts/Table'
+export * from './parts/Phone'
