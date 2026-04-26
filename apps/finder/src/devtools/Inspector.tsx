@@ -17,7 +17,13 @@ import type { FinderState, FinderCmd } from '../entities/schema'
 import { finderFeature } from '../features/feature'
 import { runChecks } from './checks'
 
-const initial: FinderState = { url: '/', pinned: '/', mode: 'columns', query: '' }
+const initial: FinderState = {
+  url: '/', pinned: '/', mode: 'columns',
+  sort: { key: 'name', dir: 'asc' },
+  group: 'none',
+  filter: { q: '', exts: [], tags: [] },
+  showHidden: false,
+}
 
 const reducer = (s: FinderState, c: FinderCmd): FinderState =>
   finderFeature.on[c.type](s as never, c as never) as FinderState
@@ -26,11 +32,15 @@ const samplePayload: { [K in FinderCmdType]: Extract<FinderCmd, { type: K }> } =
   goto:        { type: 'goto', to: '/a/b' },
   pinFav:      { type: 'pinFav', id: '/x' },
   setMode:     { type: 'setMode', mode: 'list' },
-  setQuery:    { type: 'setQuery', q: 'hello' },
+  setSort:     { type: 'setSort', key: 'name', dir: 'asc' },
+  toggleSort:  { type: 'toggleSort', key: 'name' },
+  setGroup:    { type: 'setGroup', g: 'kind' },
+  setFilter:   { type: 'setFilter', q: 'hello' },
   activateCol: { type: 'activateCol', id: '/a/b/c' },
   activateRec: { type: 'activateRec', id: '/today' },
   expandCol:   { type: 'expandCol', id: '/a/b', open: true },
-  back:        { type: 'back' },
+  back:         { type: 'back' } as Extract<FinderCmd, { type: 'back' }>,
+  toggleHidden: { type: 'toggleHidden' } as Extract<FinderCmd, { type: 'toggleHidden' }>,
 }
 
 export function FinderInspector() {
@@ -94,7 +104,7 @@ export function FinderInspector() {
               <tr key={c.index} style={{ background: c.pass ? 'transparent' : 'rgba(255,80,80,0.1)' }}>
                 <td>{c.index}</td>
                 <td>{c.spec}</td>
-                <td>{c.pass ? '✅' : '❌'}</td>
+                <td><span data-icon={c.pass ? "check" : "x"} aria-label={c.pass ? "pass" : "fail"} /></td>
                 <td><code>{c.detail}</code></td>
               </tr>
             ))}

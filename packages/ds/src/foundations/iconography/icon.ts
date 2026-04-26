@@ -58,6 +58,7 @@ const tokens = [
   'heart', 'message-circle', 'share', 'more',
   'calendar', 'calendar-days', 'calendar-range',
   'grip-vertical', 'chevron-left',
+  'code', 'wrench', 'shield', 'bot',
 ] as const
 
 export type IconToken = (typeof tokens)[number]

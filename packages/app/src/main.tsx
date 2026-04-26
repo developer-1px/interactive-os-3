@@ -18,7 +18,7 @@ import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/style/preset'
 import { onShortcut } from '@p/ds/core/hooks/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
-import { ReproRecorderOverlay } from '@p/devtools'
+import { ReproRecorderOverlay, SpacingOverlay } from '@p/devtools'
 import { plugins } from './boot/plugins'
 import { composeRegistry } from './boot/registry'
 import { setFinderNav } from '@apps/finder'
@@ -73,5 +73,6 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
     <ReproRecorderOverlay />
+    <SpacingOverlay />
   </StrictMode>,
 )

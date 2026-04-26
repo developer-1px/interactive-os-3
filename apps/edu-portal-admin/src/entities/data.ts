@@ -138,10 +138,10 @@ export interface RoleCategory {
 }
 
 export const roleCategories: RoleCategory[] = [
-  { id: 'dev', name: '클라우드 개발자 과정', desc: 'NCP API·SDK·DevOps 도구를 활용한 클라우드 네이티브 개발', icon: '💻', videoIds: ['v4', 'v1', 'v5'], visible: true },
-  { id: 'eng', name: '클라우드 엔지니어 과정', desc: '서버·네트워크·스토리지 구성 및 클라우드 인프라 운영 관리', icon: '🔧', videoIds: ['v6', 'v7', 'v8'], visible: true },
-  { id: 'sec', name: '클라우드 보안 과정', desc: 'NCP 보안 서비스 활용 및 클라우드 환경 보안 정책 수립', icon: '🛡', videoIds: ['v8', 'v2'], visible: false },
-  { id: 'ai',  name: '생성형 AI 과정', desc: 'HyperCLOVA X 및 AI API를 활용한 생성형 AI 서비스 개발', icon: '🤖', videoIds: ['v9', 'v3'], visible: true },
+  { id: 'dev', name: '클라우드 개발자 과정', desc: 'NCP API·SDK·DevOps 도구를 활용한 클라우드 네이티브 개발', icon: 'code', videoIds: ['v4', 'v1', 'v5'], visible: true },
+  { id: 'eng', name: '클라우드 엔지니어 과정', desc: '서버·네트워크·스토리지 구성 및 클라우드 인프라 운영 관리', icon: 'wrench', videoIds: ['v6', 'v7', 'v8'], visible: true },
+  { id: 'sec', name: '클라우드 보안 과정', desc: 'NCP 보안 서비스 활용 및 클라우드 환경 보안 정책 수립', icon: 'shield', videoIds: ['v8', 'v2'], visible: false },
+  { id: 'ai',  name: '생성형 AI 과정', desc: 'HyperCLOVA X 및 AI API를 활용한 생성형 AI 서비스 개발', icon: 'bot', videoIds: ['v9', 'v3'], visible: true },
 ]
 
 export interface CertCategory {
