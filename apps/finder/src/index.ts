@@ -25,5 +25,8 @@ export { finderCss } from './style'
 export { FinderMobile } from './mobile/FinderMobile'
 export { finderMobileCss } from './mobile/style'
 
-// plugin manifest — packages/app/src/app/plugins.ts 가 사용
+// plugin manifest — packages/app/src/boot/plugins.ts 가 사용
 export { default } from './plugin'
+
+// 셸 boot 가 router 를 주입 — finder 자체는 router 인스턴스를 모른다
+export { setFinderNav } from './nav'

@@ -1,5 +1,5 @@
 import { defineResource, parentOf, writeResource, ROOT } from '@p/ds'
-import { router } from '@p/app/router'
+import { finderNavigate } from './nav'
 import {
   loadText,
   getImageUrl,
@@ -45,7 +45,7 @@ export const pathResource = defineResource<string>({
   initial: '/',
   serialize: (_k, v) => {
     const splat = isSmartPath(v) ? v : v.replace(/^\//, '')
-    void router.navigate({ to: '/finder/$', params: { _splat: splat } })
+    finderNavigate(splat)
   },
   onEvent: (e, { data }) => {
     if (e.type === 'activate' || e.type === 'navigate') return e.id

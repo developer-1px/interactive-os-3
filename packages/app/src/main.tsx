@@ -21,10 +21,16 @@ import { router } from './router'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { plugins } from './boot/plugins'
 import { composeRegistry } from './boot/registry'
+import { setFinderNav } from '@apps/finder'
 
 // plugin manifest 합산 — widgets/middlewares/capabilities 를 ds registry 에 주입.
 // 부작용은 즉시(import 시점) — Renderer 첫 렌더 전에 완료되어야 함.
 void composeRegistry(plugins)
+
+// finder 의 navigation 추상화에 셸 router 주입 (의존 inversion).
+setFinderNav((splat) => {
+  void router.navigate({ to: '/finder/$', params: { _splat: splat } })
+})
 
 const styleEl = document.createElement('style')
 styleEl.setAttribute('data-ds', '')
