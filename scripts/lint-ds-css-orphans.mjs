@@ -28,15 +28,22 @@ function walk(dir) {
   return out
 }
 
+// 등록부는 두 군데일 수 있다:
+//   1. widgets/index.ts — widgets() cascade layer 등록
+//   2. packages/ds/src/index.ts — content cascade layer 등록 (parts 보다 후순위)
+// 둘 중 하나라도 import 되면 런타임에 스타일 살아있음.
 const indexSrc = readFileSync(INDEX, 'utf8')
+const dsRootIndexSrc = readFileSync(join(ROOT, 'packages/ds/src/index.ts'), 'utf8')
 const files = walk(WIDGETS)
 
 const orphans = []
 for (const file of files) {
-  const rel = './' + relative(WIDGETS, file).replace(/\.ts$/, '')
-  const importRe = new RegExp(`from\\s+['"]${rel.replace(/[.+]/g, '\\$&')}['"]`)
-  if (!importRe.test(indexSrc)) {
-    orphans.push(rel)
+  const relWidgets = './' + relative(WIDGETS, file).replace(/\.ts$/, '')
+  const relDsRoot = './style/widgets/' + relative(WIDGETS, file).replace(/\.ts$/, '')
+  const widgetsRe = new RegExp(`from\\s+['"]${relWidgets.replace(/[.+]/g, '\\$&')}['"]`)
+  const rootRe = new RegExp(`from\\s+['"]${relDsRoot.replace(/[.+]/g, '\\$&')}['"]`)
+  if (!widgetsRe.test(indexSrc) && !rootRe.test(dsRootIndexSrc)) {
+    orphans.push(relWidgets)
   }
 }
 

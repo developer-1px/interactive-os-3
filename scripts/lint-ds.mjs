@@ -1,14 +1,24 @@
 #!/usr/bin/env node
 // ds 위반 린트 — 앱 코드에서 escape hatch / classless 위반 / inline-style 스캔.
 // 제외: packages/ds/src/ (생성 규약), src/controls/ (ds 부품 정의 자체).
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const ROOT = new URL('..', import.meta.url).pathname
-const SRC = join(ROOT, 'src')
+// 모노레포 — 앱 코드를 가진 모든 워크스페이스 src/ 스캔
+const SRC_ROOTS = [
+  join(ROOT, 'packages/app/src'),
+  ...readdirIfExists(join(ROOT, 'apps')).map((n) => join(ROOT, 'apps', n, 'src')).filter(existsSync),
+  ...readdirIfExists(join(ROOT, 'showcase')).map((n) => join(ROOT, 'showcase', n, 'src')).filter(existsSync),
+]
+function readdirIfExists(p) { try { return readdirSync(p) } catch { return [] } }
 const SKIP_DIRS = new Set(['ds', 'controls', 'node_modules', 'dist', '.claude'])
 // 시연/카탈로그 라우트 — raw role/aria 사용이 콘텐츠 본질 (feedback_showcase_route_role_exception)
-const SHOWCASE_FILES = new Set(['packages/app/src/routes/content/sample.tsx'])
+const SHOWCASE_FILES = new Set([
+  'showcase/content/src/sample.tsx',
+  'showcase/canvas/src/Canvas.tsx',
+  'showcase/canvas/src/partsAutoDemos.tsx',
+])
 
 // 심각도 정의 — 위에서부터 먼저 매칭
 const rules = [
@@ -50,20 +60,22 @@ function* walk(dir) {
 const findings = []
 const counts = { '🔴': 0, '🟡': 0, '🟢': 0 }
 
-for (const file of walk(SRC)) {
-  const rel = relative(ROOT, file)
-  if (SHOWCASE_FILES.has(rel)) continue
-  const text = readFileSync(file, 'utf8')
-  const lines = text.split('\n')
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    const trimmed = line.trim()
-    if (trimmed.startsWith('//') || trimmed.startsWith('*')) continue
-    for (const r of rules) {
-      if (r.test(line)) {
-        findings.push({ level: r.level, kind: r.kind, file, ln: i + 1, hint: r.hint, snippet: trimmed.slice(0, 80) })
-        counts[r.level]++
-        break
+for (const root of SRC_ROOTS) {
+  for (const file of walk(root)) {
+    const rel = relative(ROOT, file)
+    if (SHOWCASE_FILES.has(rel)) continue
+    const text = readFileSync(file, 'utf8')
+    const lines = text.split('\n')
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      const trimmed = line.trim()
+      if (trimmed.startsWith('//') || trimmed.startsWith('*')) continue
+      for (const r of rules) {
+        if (r.test(line)) {
+          findings.push({ level: r.level, kind: r.kind, file, ln: i + 1, hint: r.hint, snippet: trimmed.slice(0, 80) })
+          counts[r.level]++
+          break
+        }
       }
     }
   }

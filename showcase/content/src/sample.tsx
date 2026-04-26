@@ -308,9 +308,7 @@ export const headingLeading = (n: 1|2|3|4|5|6) =>
         <nav aria-label="관련 문서">
           <p>
             <strong>관련 글</strong>:{' '}
-            <a href="/foundations">Foundations 12 도메인</a> ·{' '}
-            <a href="/foundations#typography">Typography 토큰</a> ·{' '}
-            <a href="/atlas">컴포넌트 카탈로그</a>
+            <a href="/canvas">Foundations · Components 자산 카탈로그 (Canvas)</a>
           </p>
         </nav>
         <p>
