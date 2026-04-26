@@ -1,5 +1,5 @@
 /** /keyboard 페이지 — 공용 샘플 데이터 + ControlState 훅. */
-import { fromList, fromTree, useControlState } from '../../ds'
+import { fromList, fromTree, useControlState } from '@p/ds'
 
 export const sampleTree = [
   { id: 'eng', label: '엔지니어링', kids: [

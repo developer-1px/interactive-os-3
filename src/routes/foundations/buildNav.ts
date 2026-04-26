@@ -1,5 +1,5 @@
 /** Foundations 페이지 sidebar/preset toolbar 용 NormalizedData 빌더. */
-import { ROOT, type NormalizedData } from '../../ds'
+import { ROOT, type NormalizedData } from '@p/ds'
 import type { AuditData } from 'virtual:ds-audit'
 
 export const navBase = (

@@ -1,6 +1,6 @@
 /** Shop — Commerce PLP: 필터 사이드바 + 카드 그리드. */
 import { useState } from 'react'
-import { Renderer, definePage } from '../../../ds'
+import { Renderer, definePage } from '@p/ds'
 import { buildShopPage } from './build'
 
 export function Shop() {

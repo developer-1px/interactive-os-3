@@ -2,7 +2,7 @@
  * Genres hub — 보편 FE 장르 8종을 한 곳에서 열람.
  * 각 장르 페이지는 현재 ds로 어디까지 커버되는지를 검증한다.
  */
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 
 const entries: Array<{ id: string; title: string; blurb: string; to: string; state: 'done' | 'todo' }> = [
   { id: 'inbox',     title: 'Inbox (Gmail)',          blurb: '좌 폴더 · 중앙 리스트 · 우 디테일 3열 split',    to: '/genres/inbox',     state: 'done' },

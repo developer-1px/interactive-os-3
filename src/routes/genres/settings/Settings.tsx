@@ -4,7 +4,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   type Event, type NormalizedData,
-} from '../../../ds'
+} from '@p/ds'
 import { SECTIONS, type Digest, type SectionId } from './data'
 import { buildSettingsPage } from './build'
 

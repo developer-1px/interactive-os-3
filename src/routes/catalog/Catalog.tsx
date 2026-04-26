@@ -5,7 +5,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   ROOT, FOCUS, EXPANDED, type Event, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 import { demos } from './demos'
 import { buildCatalogPage } from './build'
 import { tierOf, tierLabel, tierOrder, type Tier } from './tiers'

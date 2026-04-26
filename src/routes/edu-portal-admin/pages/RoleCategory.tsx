@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '@p/ds'
 import { roleCategories as initial, type RoleCategory as RoleCategoryT } from '../data'
 
 export function RoleCategory() {

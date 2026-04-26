@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { INITIAL, MEMBERS, activeLabel, statusLabel, statusTone, type Msg } from './data'
 
 export interface ChatState {

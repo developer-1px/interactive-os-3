@@ -1,4 +1,4 @@
-import { Button, NumberInput, Select } from '../../../ds'
+import { Button, NumberInput, Select } from '@p/ds'
 import { Field } from '../Field'
 import type { ExportFormat, Selection } from '../types'
 

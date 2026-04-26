@@ -14,7 +14,7 @@ import { useMemo } from 'react'
 import {
   Renderer, definePage, sidebarAdmin, SidebarAdminFloating, useControlState, navigateOnActivate,
   ROOT, EXPANDED, type Event, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 import { ProseSample } from './sample'
 
 const HTML_GROUPS: { id: string; label: string }[] = [

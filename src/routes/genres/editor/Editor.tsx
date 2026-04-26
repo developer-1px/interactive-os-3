@@ -4,7 +4,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
   SidebarAdminFloating,
   type Event, type NormalizedData,
-} from '../../../ds'
+} from '@p/ds'
 import { FMT_ACTS, INITIAL, type Block, type BlockKind } from './data'
 import { buildEditorPage } from './build'
 

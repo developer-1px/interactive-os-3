@@ -10,7 +10,7 @@ import {
   Carousel, Slide,
   Row, Column,
   fromTree, fromList, useControlState, ROOT, FOCUS, EXPANDED, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 
 /**
  * Catalog demos — data 기반 ui 컴포넌트의 시각 검증용 라이브 예시.
@@ -401,7 +401,7 @@ const routeDemos = import.meta.glob('./demos/*.tsx', { eager: true }) as Record<
   string,
   { default: () => ReactNode }
 >
-const colocatedDemos = import.meta.glob('../../ds/ui/**/*.demo.tsx', { eager: true }) as Record<
+const colocatedDemos = import.meta.glob('@p/ds/ui/**/*.demo.tsx', { eager: true }) as Record<
   string,
   { default: () => ReactNode }
 >

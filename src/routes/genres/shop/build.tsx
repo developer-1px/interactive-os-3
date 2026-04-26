@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '../../../ds'
+import { ROOT, type NormalizedData } from '@p/ds'
 import { ALL_BRANDS, CARD_KEYS, RATING_OPTS, SORT_OPTS, applyFilters, type FilterState } from './data'
 import { card } from './card'
 

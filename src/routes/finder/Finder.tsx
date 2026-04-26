@@ -1,4 +1,4 @@
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { FinderBody } from './FinderBody'
 
 /**

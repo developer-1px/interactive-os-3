@@ -1,4 +1,4 @@
-import { Button, Switch } from '../../../ds'
+import { Button, Switch } from '@p/ds'
 import { Field } from '../Field'
 import type { Selection } from '../types'
 

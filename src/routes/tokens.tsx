@@ -22,7 +22,7 @@
  */
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState, type ReactNode } from 'react'
-import { ROOT, Renderer, definePage, type NormalizedData } from '../ds'
+import { ROOT, Renderer, definePage, type NormalizedData } from '@p/ds'
 
 // ──────────────────────────────────────────────────────────────────────
 // Color — Tailwind / Radix grid: 큰 swatch

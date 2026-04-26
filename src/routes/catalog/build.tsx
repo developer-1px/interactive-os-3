@@ -11,9 +11,9 @@ import type { ReactNode } from 'react'
 import {
   merge,
   type Event, type NormalizedData,
-} from '../../ds'
-import { holyGrail } from '../../ds/layout/recipes'
-import { sidebarAdmin } from '../../ds/layout/recipes/sidebar'
+} from '@p/ds'
+import { holyGrail } from '@p/ds/layout/recipes'
+import { sidebarAdmin } from '@p/ds/layout/recipes/sidebar'
 import type { Contract } from 'virtual:ds-contracts'
 import { tierLabel, tierBlurb, type Tier } from './tiers'
 

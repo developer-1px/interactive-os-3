@@ -1,8 +1,8 @@
 /** Foundations 페이지 — FnCard slots 매핑 + LEAK_COLUMNS 정의. */
 import { createElement, type ReactNode } from 'react'
 import type { AuditData } from 'virtual:ds-audit'
-import type { TableColumn } from '../../ds/parts/Table'
-import type { CardSlot } from '../../ds/parts/Card'
+import type { TableColumn } from '@p/ds/parts/Table'
+import type { CardSlot } from '@p/ds/parts/Card'
 
 // FnCard → Card slots 매핑.
 // guard-serializable: entity data 안 `title:` `body:` `footer:` 키에 JSX 리터럴 ❌.

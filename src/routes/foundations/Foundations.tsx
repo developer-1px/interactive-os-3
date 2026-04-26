@@ -5,8 +5,8 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   type Event,
-} from '../../ds'
-import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '../../ds/style/preset'
+} from '@p/ds'
+import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '@p/ds/style/preset'
 import { buildFoundationsPage, navBase, presetToolsBase } from './build'
 import { DemoStyles, renderDemoFromSpec } from './demoRenderers'
 

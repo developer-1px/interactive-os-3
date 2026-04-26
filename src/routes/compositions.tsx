@@ -11,8 +11,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, type ReactNode } from 'react'
-import { ROOT, Renderer, definePage, type NormalizedData } from '../ds'
-import { Avatar, Badge, Tag, Callout, EmptyState, Skeleton, KeyValue } from '../ds/parts'
+import { ROOT, Renderer, definePage, type NormalizedData } from '@p/ds'
+import { Avatar, Badge, Tag, Callout, EmptyState, Skeleton, KeyValue } from '@p/ds/parts'
 
 const todayAt = (hhmm: string): number => {
   const [h, m] = hhmm.split(':').map(Number)

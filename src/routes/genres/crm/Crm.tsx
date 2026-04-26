@@ -1,6 +1,6 @@
 /** CRM — 대량 테이블 + bulk action + drawer. */
 import { useMemo, useState } from 'react'
-import { Renderer, definePage, ROOT, useControlState, type Event, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, useControlState, type Event, type NormalizedData } from '@p/ds'
 import { BULK_ACTS, CONTACTS } from './data'
 import { buildCrmPage } from './build'
 

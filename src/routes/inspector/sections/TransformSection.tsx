@@ -1,4 +1,4 @@
-import { NumberInput } from '../../../ds'
+import { NumberInput } from '@p/ds'
 import { Field } from '../Field'
 import type { Selection } from '../types'
 

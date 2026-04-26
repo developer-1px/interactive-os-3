@@ -1,7 +1,7 @@
 import {
   Toolbar, ROOT, FOCUS, useControlState,
   type NormalizedData, type Event,
-} from '../../ds'
+} from '@p/ds'
 import { smartGroupOf } from './data'
 import type { ViewMode } from './types'
 

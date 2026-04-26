@@ -1,4 +1,4 @@
-import { Toolbar, ROOT, FOCUS, type NormalizedData, useControlState } from '../../../ds'
+import { Toolbar, ROOT, FOCUS, type NormalizedData, useControlState } from '@p/ds'
 
 const H = [
   { id: 'left', icon: 'align-left', label: 'Align left' },

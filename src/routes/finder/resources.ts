@@ -1,4 +1,4 @@
-import { defineResource, parentOf, writeResource, ROOT } from '../../ds'
+import { defineResource, parentOf, writeResource, ROOT } from '@p/ds'
 import { router } from '../../router'
 import {
   loadText,

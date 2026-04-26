@@ -5,8 +5,8 @@ import {
   Toolbar,
   useFeature,
   type Event,
-} from '../../ds'
-import { Split } from '../../ds/ui/8-layout/Split'
+} from '@p/ds'
+import { Split } from '@p/ds/ui/8-layout/Split'
 import { finderFeature } from './finder.feature'
 import { PreviewPane } from './Preview'
 import type { ViewMode } from './types'

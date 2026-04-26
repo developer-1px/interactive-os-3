@@ -3,7 +3,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   type Event, type NormalizedData,
-} from '../../../ds'
+} from '@p/ds'
 import { channels } from './data'
 import { buildBoardPage } from './build'
 

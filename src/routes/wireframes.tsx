@@ -27,8 +27,8 @@ import {
   Row, Column,
   Listbox, TabList, Toolbar,
   StatCard, CourseCard, ProductCard, FeedPost, MessageBubble, ContractCard, RoleCard, BarChart, Top10List,
-} from '../ds'
-import { Button } from '../ds/ui/2-action/Button'
+} from '@p/ds'
+import { Button } from '@p/ds/ui/2-action/Button'
 
 // ──────────────────────────────────────────────────────────────────────
 // 모바일 골격 — content + 정해진 control. Phone wrapper.

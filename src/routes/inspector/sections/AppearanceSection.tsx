@@ -1,4 +1,4 @@
-import { NumberInput, Select, Slider } from '../../../ds'
+import { NumberInput, Select, Slider } from '@p/ds'
 import { Field } from '../Field'
 import type { BlendMode, Selection } from '../types'
 

@@ -4,7 +4,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
   SidebarAdminFloating,
   type Event, type NormalizedData,
-} from '../../../ds'
+} from '@p/ds'
 import { NAV, POSTS } from './data'
 import { buildFeedPage } from './build'
 

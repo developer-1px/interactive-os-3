@@ -1,7 +1,7 @@
 import { createElement, type ReactNode } from 'react'
-import { ROOT, type Event, type NormalizedData } from '../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import type { AuditData } from 'virtual:ds-audit'
-import type { TableColumn } from '../../ds/parts/Table'
+import type { TableColumn } from '@p/ds/parts/Table'
 import { PARTS, COVERAGE_NOTE } from './partsCatalog'
 import { fnCardSlots, LEAK_COLUMNS } from './cardSlots'
 

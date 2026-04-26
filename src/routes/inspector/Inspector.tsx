@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { Canvas } from './Canvas'
 import { initialSelection, type Selection } from './types'
 import { AlignSection } from './sections/AlignSection'

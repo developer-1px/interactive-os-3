@@ -5,7 +5,7 @@ import {
   Toolbar, TabList, TabPanel,
   Combobox, Select,
   fromList, useControlState, ROOT, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 import { sampleList, getId, toData, useListData, useTreeData } from './sample'
 
 export function MenuFixture() {

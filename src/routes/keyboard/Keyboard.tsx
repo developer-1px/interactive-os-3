@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { KeyboardLab } from './KeyboardLab'
 
 /**

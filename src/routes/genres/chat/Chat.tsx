@@ -4,8 +4,8 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   type Event, type NormalizedData,
-} from '../../../ds'
-import { ROOT } from '../../../ds'
+} from '@p/ds'
+import { ROOT } from '@p/ds'
 import { ACTS, INITIAL, channels, now, type Channel, type Msg } from './data'
 import { buildChatPage } from './build'
 

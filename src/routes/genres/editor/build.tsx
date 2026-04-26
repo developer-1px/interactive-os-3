@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { BLOCK_OPTS, type Block, type BlockKind } from './data'
 
 export interface EditorState {

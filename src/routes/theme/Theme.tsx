@@ -5,7 +5,7 @@
  * 라우트 전용 시각화 묶음이라 단일 Ui leaf 로 둔다 (G2 — 추후 공용 부품으로 정련).
  */
 import { useMemo } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { ThemeCreatorBody } from './ThemeCreatorBody'
 
 export function ThemeCreator() {

@@ -1,6 +1,6 @@
 /** Analytics v2 — KPI + 차트 + Top 리스트. */
 import { useMemo, useState } from 'react'
-import { Renderer, definePage, ROOT, useControlState, type Event, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, useControlState, type Event, type NormalizedData } from '@p/ds'
 import { RANGES, type Range } from './data'
 import { buildAnalyticsPage } from './build'
 

@@ -1,4 +1,4 @@
-import { Listbox } from '../../ds'
+import { Listbox } from '@p/ds'
 import { useSidebarNav } from './useSidebarNav'
 
 export function Sidebar() {

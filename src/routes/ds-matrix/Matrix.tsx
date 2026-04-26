@@ -1,6 +1,6 @@
 import { Component, useMemo, type ComponentType, type ReactNode } from 'react'
-import * as controls from '../../ds'
-import { Grid, Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import * as controls from '@p/ds'
+import { Grid, Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 
 // DS가 자기 자신을 한 장에 전시한다. 컨트롤 하나당 셀 하나.
 // 데이터 소스는 ds index export 자체 — index에 추가되면 자동 반영된다.

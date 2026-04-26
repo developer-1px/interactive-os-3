@@ -1,4 +1,4 @@
-import { Badge, ROOT, type Event, type NormalizedData } from '../../../ds'
+import { Badge, ROOT, type Event, type NormalizedData } from '@p/ds'
 import { CONTACTS, HEADS, stageTone, type Contact } from './data'
 
 export interface CrmState {

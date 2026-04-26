@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { MESSAGES, folders, labelTone, type FolderId } from './data'
 
 const currentFolderLabel = (f: FolderId) => folders.find((x) => x.id === f)?.label ?? '메일'

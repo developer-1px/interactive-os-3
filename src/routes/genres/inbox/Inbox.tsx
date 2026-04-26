@@ -5,7 +5,7 @@ import {
   SidebarAdminFloating,
   ROOT,
   type Event, type NormalizedData,
-} from '../../../ds'
+} from '@p/ds'
 import { buildInboxPage } from './build'
 import { folders, ACTS, type FolderId } from './data'
 

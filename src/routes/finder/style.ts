@@ -1,4 +1,4 @@
-import { css, pad, icon } from '../../ds/foundations'
+import { css, pad, icon } from '@p/ds/foundations'
 
 // Finder desktop — sidebar / columns / list-view / preview.
 // (sidebar surface 자체는 widgets/composite/sidebar.ts owner.)

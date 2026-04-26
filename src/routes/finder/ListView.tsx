@@ -1,4 +1,4 @@
-import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell, activateProps } from '../../ds'
+import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell, activateProps } from '@p/ds'
 import { formatDate, formatSize } from './data'
 import { extToIcon, type FsNode } from './types'
 

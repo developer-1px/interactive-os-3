@@ -6,7 +6,7 @@ import {
   pathAncestors,
   readResource,
   useFlow,
-} from '../../ds'
+} from '@p/ds'
 import { walk } from './data'
 import { pathResource, pinnedRootResource, treeResource } from './resources'
 import { extToIcon } from './types'

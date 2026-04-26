@@ -1,5 +1,5 @@
-import { css } from '../../../ds/foundations'
-import { SHELL_MOBILE_MAX } from '../../../ds/style/preset/breakpoints'
+import { css } from '@p/ds/foundations'
+import { SHELL_MOBILE_MAX } from '@p/ds/style/preset/breakpoints'
 
 // feed 모바일 — 메인 = 피드 카드 컬럼만. 추천 aside 숨김. nav는 좌하단 FAB.
 export const feedCss = css`

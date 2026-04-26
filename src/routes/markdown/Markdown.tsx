@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { marked } from 'marked'
 import { useParams } from '@tanstack/react-router'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { loadText } from '../finder/data'
 
 export function Markdown() {

@@ -12,7 +12,7 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import {
   Listbox, fromTree, navigateOnActivate, useControlState, type Event,
   Renderer, definePage, ROOT, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 import {
   getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
   formatDate, formatSize,

@@ -1,4 +1,4 @@
-import type { IconToken } from '../../ds/foundations/iconography/icon'
+import type { IconToken } from '@p/ds/foundations/iconography/icon'
 import type { FsNode, PreviewKind } from './schema'
 
 export type {

@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { NAV, POSTS, SUGGESTIONS, TRENDS } from './data'
 
 export interface FeedState {

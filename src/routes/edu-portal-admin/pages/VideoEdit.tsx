@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Renderer, definePage, ROOT } from '../../../ds'
+import { Renderer, definePage, ROOT } from '@p/ds'
 import {
   fieldNode, checkboxRows, checkboxRels,
   tagChipNodes, tagChipRels, visibilityRows, visibilityRels,

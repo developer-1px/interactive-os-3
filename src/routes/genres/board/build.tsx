@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { POSTS, channels, activeLabel } from './data'
 
 export interface BoardState {

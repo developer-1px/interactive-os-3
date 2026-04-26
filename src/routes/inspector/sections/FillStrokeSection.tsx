@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import {
   ColorInput, Input, NumberInput, Toolbar, ROOT, FOCUS, useControlState,
   type NormalizedData, type Event,
-} from '../../../ds'
+} from '@p/ds'
 import { Field } from '../Field'
 import type { Selection, StrokeStyle } from '../types'
 

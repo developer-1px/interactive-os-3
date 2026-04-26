@@ -10,7 +10,7 @@ import {
   useControlState,
   type Event as DsEvent,
   type NormalizedData,
-} from '../ds'
+} from '@p/ds'
 
 // eslint-disable-next-line react-refresh/only-export-components
 function SidebarGallery() {

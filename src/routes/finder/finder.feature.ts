@@ -15,7 +15,7 @@ import {
   ROOT,
   type NormalizedData,
   type QuerySpec,
-} from '../../ds'
+} from '@p/ds'
 import {
   getTree, loadText, getImageUrl, sidebar as favItems, smartGroups, walk,
   tagGroups, tagItems, isTagPath,

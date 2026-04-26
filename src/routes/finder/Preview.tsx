@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import { useResource } from '../../ds'
-import { CodeBlock } from '../../ds/ui/0-primitive/CodeBlock'
-import { Prose } from '../../ds/ui/0-primitive/Prose'
+import { useResource } from '@p/ds'
+import { CodeBlock } from '@p/ds/ui/0-primitive/CodeBlock'
+import { Prose } from '@p/ds/ui/0-primitive/Prose'
 import { formatDate, formatSize } from './data'
 import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,

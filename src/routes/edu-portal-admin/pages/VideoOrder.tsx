@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import {
   videos, roleCategories, certCategories,
   LEVEL_TONE, STATUS_TONE, type VideoRow,

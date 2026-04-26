@@ -16,7 +16,7 @@ import {
   useControlState,
   type Event as DsEvent,
   type NormalizedData,
-} from '../ds'
+} from '@p/ds'
 
 type SidebarId =
   | 'sound-root' | 'airplay' | 'alerts' | 'volume' | 'output-device' | 'balance'

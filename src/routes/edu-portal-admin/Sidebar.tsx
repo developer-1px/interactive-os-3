@@ -3,7 +3,7 @@ import { useRouter, useRouterState } from '@tanstack/react-router'
 import {
   Renderer, definePage, sidebarAdmin, useControlState, navigateOnActivate,
   ROOT, EXPANDED, type Event, type NormalizedData,
-} from '../../ds'
+} from '@p/ds'
 import { activePage, navItems, PAGE_PATHS, type PageId } from './data'
 
 const SECTIONS = ['메인', '콘텐츠', '설정'] as const

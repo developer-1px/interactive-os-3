@@ -1,4 +1,4 @@
-import { ROOT, fromList, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, fromList, type Event, type NormalizedData } from '@p/ds'
 import { kpis, regionBars, sources, weekBars, type Range } from './data'
 
 export interface AnalyticsState {

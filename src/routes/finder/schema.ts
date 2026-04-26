@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { IconToken } from '../../ds/foundations/iconography/icon'
+import type { IconToken } from '@p/ds/foundations/iconography/icon'
 
 /** finder 도메인 엔티티 zod 스키마 — 진실 원천.
  *  타입은 z.infer로 도출. types.ts의 동명 type/interface는 유산. */

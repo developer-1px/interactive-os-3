@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax -- TODO: 셀 inline style을 ds Text 변형/widget으로 이전 */
 import { useState } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '../../../ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { videos, LEVEL_TONE, STATUS_TONE } from '../data'
 
 type SortKey = 'title' | 'enrolled' | 'completion' | 'createdAt'

@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '../../../ds'
+import { ROOT, type Event, type NormalizedData } from '@p/ds'
 import { DIGEST_OPTS, sectionLabel, splitRow, splitRowRels, type Digest, type SectionId } from './data'
 
 export interface SettingsState {
