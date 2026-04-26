@@ -1,17 +1,13 @@
 import { highlightMark } from './highlightMark'
 import { legendDot } from './legendDot'
-import { statCard } from './statCard'
 import { barChart } from './barChart'
 import { top10 } from './top10'
-import { courseCard } from './courseCard'
-import { roleCard } from './roleCard'
 
+// statCard / courseCard / roleCard 는 src/ds/index.ts 에서 content layer 로 등록.
+// 여기 두 번 등록하면 cascade race → assertUniqueSelectors throw.
 export const display = () => [
   highlightMark(),
   legendDot(),
-  statCard(),
   barChart(),
   top10(),
-  courseCard(),
-  roleCard(),
 ].join('\n')

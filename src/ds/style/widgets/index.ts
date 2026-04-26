@@ -11,18 +11,12 @@ import { feedCss } from './pattern/feed'
 import { tabPanelCss, carouselCss } from './pattern/bar'
 import { highlightMark } from './pattern/highlightMark'
 import { barChart } from './pattern/barChart'
-import { courseCard } from './pattern/courseCard'
 import { display } from './pattern/display'
 import { legendDot } from './pattern/legendDot'
-import { roleCard } from './pattern/roleCard'
-import { statCard } from './pattern/statCard'
 import { top10 } from './pattern/top10'
-import { postCard } from './pattern/postCard'
-import { feedPost } from './pattern/feedPost'
-import { messageBubble } from './pattern/messageBubble'
-import { productCard } from './pattern/productCard'
-// contractCard / prose 는 content layer owner — src/ds/index.ts 가 등록한다.
-// 여기 두 번 등록하면 cascade race → assertUniqueSelectors throw (#ec0ee60 회귀 차단).
+// contractCard / prose / Card 변형 (postCard · messageBubble · statCard · productCard ·
+// courseCard · roleCard · feedPost) 는 content layer owner — src/ds/index.ts 가 등록.
+// 여기 두 번 등록하면 cascade race → assertUniqueSelectors throw.
 import { listboxCss } from './collection/listbox'
 import { orderableCss } from './collection/orderable'
 import { menu } from './collection/menu'
@@ -44,8 +38,11 @@ export const widgets = () =>
     dialogCss, tooltipCss, detailsCss, glassCss,
     // pattern
     feedCss, tabPanelCss, carouselCss,
-    highlightMark(), barChart(), courseCard(), display(),
-    legendDot(), roleCard(), statCard(), top10(), postCard(), feedPost(), messageBubble(), productCard(),
+    highlightMark(), barChart(), display(),
+    legendDot(), top10(),
+    /* data-card="*" 패턴 (postCard·messageBubble·statCard·productCard·courseCard·
+       roleCard·feedPost·contractCard) 은 src/ds/index.ts 에서 content layer 로 등록.
+       parts/Card primitive override 가 필요하므로 widgets layer 로는 불충분. */
     // collection
     listboxCss(), orderableCss(), menu(), tabs(), tree(),
     // composite

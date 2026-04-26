@@ -7,15 +7,29 @@ import { css, dim, pad, radius, tint } from '../../../foundations'
  * data-card="post" 마커 + data-cont (연속 메시지) 변형.
  */
 export const postCard = () => css`
-  /* root — 게시판 전용 시각 (flat 한 줄, 호버시 배경 강조) */
+  /* root — 게시판 전용 시각 (flat 한 줄, 호버시 배경 강조).
+     Slack 패턴: avatar | (title 위 + body 아래) — grid template areas 가 의도. */
   article[data-part="card"][data-card="post"] {
     border: 0;
     border-radius: 0;
     padding: ${pad(0.5)} ${pad(2)};
-    flex-direction: row;
-    align-items: flex-start;
-    gap: ${pad(2)};
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    grid-template-areas:
+      "preview title"
+      "preview body";
+    column-gap: ${pad(2)};
+    row-gap: ${pad(0.25)};
+    align-items: start;
     transition: background var(--ds-dur-fast) var(--ds-ease-out);
+  }
+  article[data-part="card"][data-card="post"] > [data-slot="preview"] { grid-area: preview; }
+  article[data-part="card"][data-card="post"] > [data-slot="title"]   { grid-area: title; }
+  article[data-part="card"][data-card="post"] > [data-slot="body"]    { grid-area: body; }
+  /* 연속 post — title 행 collapse, avatar 만 자리 유지(visibility hidden) */
+  article[data-part="card"][data-card="post"][data-cont] {
+    grid-template-areas: "preview body";
+    grid-template-rows: auto;
   }
   article[data-part="card"][data-card="post"]:not([data-cont]) { padding-top: ${pad(2)}; }
   article[data-part="card"][data-card="post"]:hover {
@@ -49,10 +63,10 @@ export const postCard = () => css`
     background: transparent;
   }
 
-  /* title/body — 본문 컬럼 (root flex-direction:row 라서 슬롯 그룹은 flex-direction:column) */
+  /* title/body — grid template areas 가 위치 잡음. min-width 0 만 안전 보장. */
   article[data-part="card"][data-card="post"] > [data-slot="title"],
   article[data-part="card"][data-card="post"] > [data-slot="body"] {
-    flex: 1; min-inline-size: 0;
+    min-inline-size: 0;
   }
   article[data-part="card"][data-card="post"] > [data-slot="title"] > strong {
     font-size: var(--ds-text-md);

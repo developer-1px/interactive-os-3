@@ -7,6 +7,13 @@ import { widgets } from './style/widgets'
 import { parts } from './style/parts'
 import { proseCss } from './style/widgets/pattern/prose'
 import { contractCard } from './style/widgets/pattern/contractCard'
+import { postCard } from './style/widgets/pattern/postCard'
+import { messageBubble } from './style/widgets/pattern/messageBubble'
+import { statCard } from './style/widgets/pattern/statCard'
+import { productCard } from './style/widgets/pattern/productCard'
+import { courseCard } from './style/widgets/pattern/courseCard'
+import { roleCard } from './style/widgets/pattern/roleCard'
+import { feedPost } from './style/widgets/pattern/feedPost'
 import { iconVars, iconIndicator } from './foundations/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
@@ -42,9 +49,17 @@ const segments: ReadonlyArray<readonly [string, string]> = [
   ['widgets', wrap('widgets', widgets())],
   ['parts', wrap('parts', parts())],
   ['content/prose', wrap('content', proseCss())],
-  /* contractCard 는 parts/Card primitive 의 [data-slot] display:block 을 override
-     해야 하므로 content layer (parts 보다 후순위) 에 둔다. */
-  ['content/contractCard', wrap('content', contractCard())],
+  /* Card 변형 slot CSS 는 parts/Card primitive 를 override 해야 하므로 content layer
+     (parts 보다 후순위). 모든 data-card="*" 패턴이 여기. (이전엔 contractCard 만
+     content 였고 나머지는 widgets 에 있어 parts 에 깔림 — 이번 PR 에서 일괄 수렴) */
+  ['content/contractCard',  wrap('content', contractCard())],
+  ['content/postCard',      wrap('content', postCard())],
+  ['content/messageBubble', wrap('content', messageBubble())],
+  ['content/statCard',      wrap('content', statCard())],
+  ['content/productCard',   wrap('content', productCard())],
+  ['content/courseCard',    wrap('content', courseCard())],
+  ['content/roleCard',      wrap('content', roleCard())],
+  ['content/feedPost',      wrap('content', feedPost())],
   ['shell', wrap('shell', shell())],
 ] as const
 

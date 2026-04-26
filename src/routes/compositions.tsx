@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components -- showcase 라우트 갤러리: 컴포넌트 + 헬퍼 함수 한 파일 */
+/* eslint-disable react-refresh/only-export-components, no-restricted-syntax -- showcase 라우트 갤러리: 컴포넌트 + 헬퍼 함수 한 파일, role/style/aria 의도적 변형 시연 */
 /**
  * /compositions — 복합 부품의 조립 변형 갤러리.
  *
@@ -43,10 +43,11 @@ const postCardVariant = (cont: boolean, who: string, time: string, body: string,
   </article>
 )
 
+// eslint-disable-next-line no-restricted-syntax -- showcase: stat value 큰 글자 강조 (display 변형 대체 토큰 부재)
 const statCardVariant = (label: string, value: string, delta: string, tone?: 'alert'): ReactNode => (
   <article data-part="card" data-card="stat" {...(tone && { 'data-tone': tone })}>
     <div data-slot="title"><header><strong>{label}</strong>{tone === 'alert' && <Badge tone="danger" label="alert" />}</header></div>
-    <div data-slot="meta"><strong>{value}</strong></div>
+    <div data-slot="meta"><strong style={{ fontSize: '2em', fontVariantNumeric: 'tabular-nums' }}>{value}</strong></div>
     <div data-slot="footer"><small>{delta}</small></div>
   </article>
 )
@@ -160,6 +161,222 @@ const sidebarSurface = css\`
 )
 
 // ──────────────────────────────────────────────────────────────────────
+// 인증 폼 — 로그인 / 가입 / 비번 재설정 / OAuth picker
+// 보편 패턴: 카드 surface + heading + 필드 stack + primary CTA + 보조 링크
+// ──────────────────────────────────────────────────────────────────────
+
+const oauthRow = (): ReactNode => (
+  <div role="group" aria-label="소셜 로그인" data-part="oauth-row">
+    <button type="button"><span data-icon="user" aria-hidden /> Google 로 계속</button>
+    <button type="button"><span data-icon="hash" aria-hidden /> GitHub 로 계속</button>
+  </div>
+)
+
+const divider = (label: string): ReactNode => (
+  <div role="separator" data-part="text-divider" aria-label={label}><small>{label}</small></div>
+)
+
+const loginCard = (): ReactNode => (
+  <article data-part="card" data-card="auth" aria-labelledby="login-h">
+    <div data-slot="title">
+      <header>
+        <h2 id="login-h">로그인</h2>
+        <small>계정으로 다시 시작하세요.</small>
+      </header>
+    </div>
+    <div data-slot="body">
+      <form>
+        {oauthRow()}
+        {divider('또는 이메일로')}
+        {field('basic', '이메일', 'jane@example.com')}
+        {field('basic', '비밀번호', '••••••••')}
+        <div data-part="row-split">
+          <label><input type="checkbox" defaultChecked /> 로그인 유지</label>
+          <a href="#">비밀번호 찾기</a>
+        </div>
+        <button type="submit" data-emphasis="primary">로그인</button>
+      </form>
+    </div>
+    <div data-slot="footer">
+      <small>처음 오셨나요? <a href="#">계정 만들기</a></small>
+    </div>
+  </article>
+)
+
+const signupCard = (): ReactNode => (
+  <article data-part="card" data-card="auth" aria-labelledby="signup-h">
+    <div data-slot="title">
+      <header>
+        <h2 id="signup-h">계정 만들기</h2>
+        <small>30초면 끝납니다.</small>
+      </header>
+    </div>
+    <div data-slot="body">
+      <form>
+        {field('basic', '이름', 'Jane Doe')}
+        {field('basic', '이메일', 'jane@example.com')}
+        {field('help', '비밀번호', '8자 이상', '대소문자·숫자·특수문자 조합 권장')}
+        <label><input type="checkbox" /> <small><a href="#">이용약관</a> 과 <a href="#">개인정보 처리방침</a> 에 동의합니다.</small></label>
+        <button type="submit" data-emphasis="primary">가입하기</button>
+      </form>
+    </div>
+    <div data-slot="footer">
+      <small>이미 계정이 있나요? <a href="#">로그인</a></small>
+    </div>
+  </article>
+)
+
+const resetCard = (): ReactNode => (
+  <article data-part="card" data-card="auth" aria-labelledby="reset-h">
+    <div data-slot="title">
+      <header>
+        <h2 id="reset-h">비밀번호 재설정</h2>
+        <small>가입한 이메일로 재설정 링크를 보내드립니다.</small>
+      </header>
+    </div>
+    <div data-slot="body">
+      <form>
+        {field('required', '이메일', 'jane@example.com')}
+        <button type="submit" data-emphasis="primary">재설정 링크 받기</button>
+      </form>
+    </div>
+    <div data-slot="footer"><small><a href="#">← 로그인으로 돌아가기</a></small></div>
+  </article>
+)
+
+const otpCard = (): ReactNode => (
+  <article data-part="card" data-card="auth" aria-labelledby="otp-h">
+    <div data-slot="title">
+      <header>
+        <h2 id="otp-h">2단계 인증</h2>
+        <small>jane@example.com 으로 보낸 6자리 코드를 입력하세요.</small>
+      </header>
+    </div>
+    <div data-slot="body">
+      <form>
+        <div role="group" aria-label="OTP 6자리" data-part="otp-row">
+          {[0,1,2,3,4,5].map((i) => (
+            <input key={i} type="text" inputMode="numeric" maxLength={1} aria-label={`자리 ${i+1}`} />
+          ))}
+        </div>
+        <button type="submit" data-emphasis="primary">확인</button>
+        <small>코드를 못 받으셨나요? <a href="#">다시 보내기</a> (45초)</small>
+      </form>
+    </div>
+  </article>
+)
+
+// ──────────────────────────────────────────────────────────────────────
+// 보편 콘텐츠 카드 — Article / Profile / Pricing / Team
+// ──────────────────────────────────────────────────────────────────────
+
+const articleCard = (): ReactNode => (
+  <article data-part="card" data-card="article">
+    <div data-slot="preview">
+      <img src="https://picsum.photos/seed/article/640/360" alt="" loading="lazy" />
+    </div>
+    <div data-slot="meta"><Tag label="디자인" /><small> · 5분 읽기</small></div>
+    <div data-slot="title"><h3>recursive Proximity — 위계가 곧 spacing 이다</h3></div>
+    <div data-slot="body"><p>Gestalt 의 가장 단순한 표현. atom→cluster→section→surface→shell 5단이 어떻게 한 화면 안에서 작동하는지.</p></div>
+    <div data-slot="footer">
+      <Avatar alt="유용태" initial="유" />
+      <small>유용태 · <time dateTime="2026-04-26">4월 26일</time></small>
+    </div>
+  </article>
+)
+
+const profileCard = (): ReactNode => (
+  <article data-part="card" data-card="profile">
+    <div data-slot="preview">
+      <img src="https://i.pravatar.cc/240?u=jane" alt="" />
+    </div>
+    <div data-slot="title">
+      <h3>Jane Doe</h3>
+      <small>Senior Product Designer · Seoul</small>
+    </div>
+    <div data-slot="body"><p>디자인 시스템과 접근성을 다룹니다. 최근에는 OKLCH 색 공간과 recursive proximity 에 빠져 있습니다.</p></div>
+    <div data-slot="meta">
+      <Tag label="design-systems" /> <Tag label="a11y" /> <Tag label="frontend" />
+    </div>
+    <div data-slot="footer">
+      <button type="button" data-emphasis="primary">팔로우</button>
+      <button type="button">메시지</button>
+    </div>
+  </article>
+)
+
+const pricingCard = (tier: 'free' | 'pro' | 'team', highlighted?: boolean): ReactNode => {
+  const data = {
+    free: { name: 'Free',  price: '₩0',       per: '영구 무료', cta: '시작하기',
+            features: ['프로젝트 3개', '월 1,000 요청', '커뮤니티 지원'] },
+    pro:  { name: 'Pro',   price: '₩19,000',  per: '/월',      cta: 'Pro 시작',
+            features: ['프로젝트 무제한', '월 50,000 요청', '이메일 지원', '버전 히스토리 30일'] },
+    team: { name: 'Team',  price: '₩49,000',  per: '/사용자/월', cta: '팀 만들기',
+            features: ['Pro 의 모든 것', '월 무제한 요청', 'SSO·SCIM', '전용 매니저', 'SLA 99.9%'] },
+  }[tier]
+  return (
+    <article data-part="card" data-card="pricing" aria-current={highlighted ? 'true' : undefined}>
+      <div data-slot="title">
+        <header>
+          <h3>{data.name}</h3>
+          {highlighted && <Badge tone="success" label="추천" />}
+        </header>
+      </div>
+      <div data-slot="meta">
+        <strong>{data.price}</strong> <small>{data.per}</small>
+      </div>
+      <div data-slot="checks">
+        <ul>{data.features.map((f) => <li key={f}><span data-icon="check" aria-hidden />{f}</li>)}</ul>
+      </div>
+      <div data-slot="footer">
+        <button type="button" data-emphasis={highlighted ? 'primary' : undefined}>{data.cta}</button>
+      </div>
+    </article>
+  )
+}
+
+const settingsPanel = (): ReactNode => (
+  <article data-part="card" data-card="settings" aria-labelledby="settings-h">
+    <div data-slot="title">
+      <header>
+        <h2 id="settings-h">계정 설정</h2>
+        <small>프로필과 알림 설정을 관리합니다.</small>
+      </header>
+    </div>
+    <div data-slot="body">
+      <form>
+        <fieldset>
+          <legend>프로필</legend>
+          {field('basic', '이름', 'Jane Doe')}
+          {field('help', '핸들', '@jane', '소문자·숫자·하이픈 3-20자')}
+        </fieldset>
+        <fieldset>
+          <legend>알림</legend>
+          <label><input type="checkbox" defaultChecked /> 이메일 알림 받기</label>
+          <label><input type="checkbox" defaultChecked /> 답글 알림</label>
+          <label><input type="checkbox" /> 마케팅 이메일</label>
+        </fieldset>
+      </form>
+    </div>
+    <div data-slot="footer">
+      <button type="button">취소</button>
+      <button type="button" data-emphasis="primary">저장</button>
+    </div>
+  </article>
+)
+
+const confirmDialog = (tone: 'default' | 'danger'): ReactNode => (
+  <article data-part="card" data-card="confirm" data-tone={tone === 'danger' ? 'alert' : undefined} role="alertdialog" aria-labelledby="confirm-h" aria-describedby="confirm-d">
+    <div data-slot="title"><h3 id="confirm-h">{tone === 'danger' ? '계정을 삭제하시겠어요?' : '저장하시겠어요?'}</h3></div>
+    <div data-slot="body"><p id="confirm-d">{tone === 'danger' ? '이 작업은 되돌릴 수 없습니다. 모든 데이터가 즉시 삭제됩니다.' : '변경 사항을 저장합니다. 다른 사용자에게 즉시 반영됩니다.'}</p></div>
+    <div data-slot="footer">
+      <button type="button">취소</button>
+      <button type="button" data-emphasis="primary" data-tone={tone === 'danger' ? 'danger' : undefined}>{tone === 'danger' ? '영구 삭제' : '저장'}</button>
+    </div>
+  </article>
+)
+
+// ──────────────────────────────────────────────────────────────────────
 // Pattern-level states
 // ──────────────────────────────────────────────────────────────────────
 
@@ -175,48 +392,18 @@ const stateRow = (state: 'empty' | 'loading' | 'error' | 'partial' | 'done'): Re
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// Stage + VariantRow — 변형을 *실제로 사는 환경의 폭/규격* 으로 제약.
-// (Refactoring UI · TailwindUI 수렴: floating-in-void 금지, working chrome 안에)
+// VariantRow — 라벨 + data-stage 마커로 ds 가 폭 보장 (layout.ts).
+//   stage="chat"=360 / "feed"=600 / "list"=720 / "form"=420 / "grid"=240 / "card"=320
 // ──────────────────────────────────────────────────────────────────────
 
-/** 각 family 가 production 에서 실제로 점유하는 폭. */
-const STAGE_WIDTH = {
-  chat:    '360px',  // 모바일 메신저 폭
-  feed:    '600px',  // X/Threads 메인 컬럼 폭
-  list:    '720px',  // Inbox row 가독 폭
-  form:    '420px',  // 폼 필드 폭
-  grid:    '240px',  // 카드 그리드 셀 폭
-  card:    '320px',  // 큰 단일 카드
-  reading: '680px',  // 본문 읽기 폭 (Medium·Notion 수렴)
-  panel:   '480px',  // 사이드 패널 폭
-} as const
-type StageKey = keyof typeof STAGE_WIDTH
+type Stage = 'chat' | 'feed' | 'list' | 'form' | 'grid' | 'card' | 'reading' | 'panel'
 
-/* eslint-disable no-restricted-syntax -- showcase: stage 폭 제약은 inline style 가 가장 간단 */
-const Stage = ({ kind, children }: { kind: StageKey; children: ReactNode }) => (
-  <div data-stage={kind} style={{ inlineSize: STAGE_WIDTH[kind], maxInlineSize: '100%' }}>
-    {children}
-  </div>
-)
-
-const VariantRow = ({ label, kind, children }: { label: string; kind: StageKey; children: ReactNode }) => (
-  <section
-    aria-label={label}
-    data-part="variant-row"
-    style={{
-      display: 'grid',
-      gridTemplateColumns: '180px 1fr',
-      alignItems: 'start',
-      gap: 'var(--ds-space)',
-      paddingBlock: 'calc(var(--ds-space) * 1.5)',
-      borderBlockEnd: 'var(--ds-hairline) solid var(--ds-border)',
-    }}
-  >
-    <small style={{ color: 'var(--ds-muted)', fontVariantNumeric: 'tabular-nums' }}>{label}</small>
-    <Stage kind={kind}>{children}</Stage>
+const VariantRow = ({ label, stage, children }: { label: string; stage: Stage; children: ReactNode }) => (
+  <section aria-label={label} data-part="variant-row">
+    <small>{label}</small>
+    <div data-stage={stage}>{children}</div>
   </section>
 )
-/* eslint-enable no-restricted-syntax */
 
 // ──────────────────────────────────────────────────────────────────────
 // Page builder
@@ -224,53 +411,71 @@ const VariantRow = ({ label, kind, children }: { label: string; kind: StageKey; 
 
 function buildPage(): NormalizedData {
   const cardVariants: ReactNode = (<>
-    <VariantRow label="post / 일반">{postCardVariant(false, '유용태', '2분 전', 'recursive Proximity 가 잘 보이는 화면을 만들었다.', 'https://i.pravatar.cc/64?u=teo')}</VariantRow>
-    <VariantRow label="post / 연속">{postCardVariant(true, '', '', '같은 사람의 두 번째 메시지 — avatar/header 시각 숨김 (Slack 패턴).', '')}</VariantRow>
-    <VariantRow label="message / other">{messageBubble('other', 'Alex', '오늘 PR 머지 부탁해요.', '오전 9:14')}</VariantRow>
-    <VariantRow label="message / me">{messageBubble('me', 'me', '확인하고 오후에 머지할게요!', '오전 9:18')}</VariantRow>
-    <VariantRow label="stat / 기본">{statCardVariant('월간 활성 사용자', '12,438', '+8.2% vs 전월')}</VariantRow>
-    <VariantRow label="stat / alert">{statCardVariant('에러율', '3.4%', '+2.1% vs 전월', 'alert')}</VariantRow>
-    <VariantRow label="product">{productCardVariant('Mechanical Keyboard', '₩189,000', 'https://picsum.photos/seed/kbd/240/180', '신상')}</VariantRow>
-    <VariantRow label="course">{courseCardVariant('TypeScript 심화', 'Sora Park', '중급', 240)}</VariantRow>
+    <VariantRow label="post / 일반"   stage="feed">{postCardVariant(false, '유용태', '2분 전', 'recursive Proximity 가 잘 보이는 화면을 만들었다. shell·surface·section·atom 4단을 한 카드 안에서 다 시연 가능. PR #482 에 올렸으니 리뷰 부탁드려요.', 'https://i.pravatar.cc/64?u=teo')}</VariantRow>
+    <VariantRow label="post / 연속"   stage="feed">{postCardVariant(true, '', '', '같은 사람의 두 번째 메시지 — avatar 와 header 시각 숨김 (Slack 패턴). Gestalt similarity 가 두 행을 한 묶음으로 묶음.', '')}</VariantRow>
+    <VariantRow label="message / other" stage="chat">{messageBubble('other', 'Alex', '오늘 PR 머지 부탁드려요. CI 그린 + 리뷰 2개 받았습니다.', '오전 9:14')}</VariantRow>
+    <VariantRow label="message / me"    stage="chat">{messageBubble('me', 'me', '확인하고 오후 2시쯤 머지할게요. 그 전에 staging 한 번 돌려보고요.', '오전 9:18')}</VariantRow>
+    <VariantRow label="stat / 기본"    stage="grid">{statCardVariant('월간 활성 사용자', '12,438', '+8.2% vs 전월')}</VariantRow>
+    <VariantRow label="stat / alert"   stage="grid">{statCardVariant('에러율', '3.4%', '+2.1% vs 전월', 'alert')}</VariantRow>
+    <VariantRow label="product"        stage="grid">{productCardVariant('Mechanical Keyboard', '₩189,000', 'https://picsum.photos/seed/kbd/240/180', '신상')}</VariantRow>
+    <VariantRow label="course"         stage="card">{courseCardVariant('TypeScript 심화 — 타입 추론과 generics', 'Sora Park', '중급', 240)}</VariantRow>
   </>)
 
   const inboxVariants: ReactNode = (<>
-    <VariantRow label="unread">{inboxRow('unread', '김지민', '회의 자료 검토', 'PR #482 리뷰 부탁드립니다.', '14:32')}</VariantRow>
-    <VariantRow label="read">{inboxRow('read', '박서연', '점심 약속', '오늘 점심 같이 드실래요?', '12:18')}</VariantRow>
-    <VariantRow label="starred">{inboxRow('starred', '이준호', '디자인 시안', '새 토큰 ladder 좋네요.', '11:04')}</VariantRow>
-    <VariantRow label="threaded">{inboxRow('threaded', '최민지', 'RFC: focus-ring', '4명이 답글을 남겼습니다.', '10:55')}</VariantRow>
-    <VariantRow label="attachment">{inboxRow('attachment', '강예나', '월간 리포트', '4월 리포트 첨부드립니다.', '09:42')}</VariantRow>
-    <VariantRow label="system">{inboxRow('system', 'system', '비밀번호 변경 알림', '계정 비밀번호가 변경되었습니다.', '08:30')}</VariantRow>
+    <VariantRow label="unread"     stage="list">{inboxRow('unread', '김지민', '회의 자료 검토', 'PR #482 리뷰 부탁드립니다. CI 통과 + 리뷰어 2명 지정 완료.', '14:32')}</VariantRow>
+    <VariantRow label="read"       stage="list">{inboxRow('read', '박서연', '점심 약속', '오늘 점심 같이 드실래요? 1층 한식당 가려고요.', '12:18')}</VariantRow>
+    <VariantRow label="starred"    stage="list">{inboxRow('starred', '이준호', '디자인 시안', '새 토큰 ladder 좋네요. atom→shell 5단이 깔끔합니다.', '11:04')}</VariantRow>
+    <VariantRow label="threaded"   stage="list">{inboxRow('threaded', '최민지', 'RFC: focus-ring', '4명이 답글을 남겼습니다. 합의 도출 중.', '10:55')}</VariantRow>
+    <VariantRow label="attachment" stage="list">{inboxRow('attachment', '강예나', '월간 리포트', '4월 리포트 첨부드립니다. report-2026-04.pdf (2.1MB)', '09:42')}</VariantRow>
+    <VariantRow label="system"     stage="list">{inboxRow('system', 'system', '비밀번호 변경 알림', '계정 비밀번호가 변경되었습니다. 본인이 아니면 즉시 신고하세요.', '08:30')}</VariantRow>
   </>)
 
   const fieldVariants: ReactNode = (<>
-    <VariantRow label="basic">{field('basic', '이름', 'Jane Doe')}</VariantRow>
-    <VariantRow label="required">{field('required', '이메일', 'jane@example.com', '필수 입력입니다.')}</VariantRow>
-    <VariantRow label="help">{field('help', '사용자명', 'username', '소문자·숫자·하이픈 3-20자')}</VariantRow>
-    <VariantRow label="error">{field('error', '이메일', 'jane@example.com')}</VariantRow>
-    <VariantRow label="success">{field('success', '이메일', 'jane@example.com')}</VariantRow>
-    <VariantRow label="disabled">{field('disabled', '회원 ID', '자동 생성', '가입 시 자동 부여')}</VariantRow>
+    <VariantRow label="basic"    stage="form">{field('basic', '이름', 'Jane Doe')}</VariantRow>
+    <VariantRow label="required" stage="form">{field('required', '이메일', 'jane@example.com', '필수 입력입니다.')}</VariantRow>
+    <VariantRow label="help"     stage="form">{field('help', '사용자명', 'username', '소문자·숫자·하이픈 3-20자')}</VariantRow>
+    <VariantRow label="error"    stage="form">{field('error', '이메일', 'jane@example.com')}</VariantRow>
+    <VariantRow label="success"  stage="form">{field('success', '이메일', 'jane@example.com')}</VariantRow>
+    <VariantRow label="disabled" stage="form">{field('disabled', '회원 ID', '자동 생성', '가입 시 자동 부여')}</VariantRow>
   </>)
 
   const proseVariants: ReactNode = (<>
-    <VariantRow label="hero">{proseHero()}</VariantRow>
-    <VariantRow label="table">{proseTable()}</VariantRow>
-    <VariantRow label="callout">{proseCallout()}</VariantRow>
-    <VariantRow label="code">{proseCode()}</VariantRow>
+    <VariantRow label="hero"    stage="reading">{proseHero()}</VariantRow>
+    <VariantRow label="table"   stage="reading">{proseTable()}</VariantRow>
+    <VariantRow label="callout" stage="reading">{proseCallout()}</VariantRow>
+    <VariantRow label="code"    stage="reading">{proseCode()}</VariantRow>
   </>)
 
   const stateVariants: ReactNode = (<>
-    <VariantRow label="empty">{stateRow('empty')}</VariantRow>
-    <VariantRow label="loading">{stateRow('loading')}</VariantRow>
-    <VariantRow label="error">{stateRow('error')}</VariantRow>
-    <VariantRow label="partial">{stateRow('partial')}</VariantRow>
-    <VariantRow label="done (KeyValue)">{stateRow('done')}</VariantRow>
+    <VariantRow label="empty"          stage="list">{stateRow('empty')}</VariantRow>
+    <VariantRow label="loading"        stage="list">{stateRow('loading')}</VariantRow>
+    <VariantRow label="error"          stage="panel">{stateRow('error')}</VariantRow>
+    <VariantRow label="partial"        stage="list">{stateRow('partial')}</VariantRow>
+    <VariantRow label="done (KeyValue)" stage="form">{stateRow('done')}</VariantRow>
+  </>)
+
+  const authVariants: ReactNode = (<>
+    <VariantRow label="login"           stage="form">{loginCard()}</VariantRow>
+    <VariantRow label="signup"          stage="form">{signupCard()}</VariantRow>
+    <VariantRow label="reset password"  stage="form">{resetCard()}</VariantRow>
+    <VariantRow label="2FA / OTP"       stage="form">{otpCard()}</VariantRow>
+  </>)
+
+  const contentCardVariants: ReactNode = (<>
+    <VariantRow label="article preview" stage="card">{articleCard()}</VariantRow>
+    <VariantRow label="profile"         stage="card">{profileCard()}</VariantRow>
+    <VariantRow label="pricing / free"  stage="card">{pricingCard('free')}</VariantRow>
+    <VariantRow label="pricing / pro ★" stage="card">{pricingCard('pro', true)}</VariantRow>
+    <VariantRow label="pricing / team"  stage="card">{pricingCard('team')}</VariantRow>
+    <VariantRow label="settings panel"  stage="form">{settingsPanel()}</VariantRow>
+    <VariantRow label="confirm / 기본"  stage="panel">{confirmDialog('default')}</VariantRow>
+    <VariantRow label="confirm / danger" stage="panel">{confirmDialog('danger')}</VariantRow>
   </>)
 
   return {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Column', flow: 'form' } },
+      page: { id: 'page', data: { type: 'Main', flow: 'list', label: '복합 조립 갤러리' } },
 
       hdr: { id: 'hdr', data: { type: 'Header', flow: 'cluster' } },
       hdrTitle: { id: 'hdrTitle', data: { type: 'Text', variant: 'h1', content: '복합 조립 갤러리' } },
@@ -295,16 +500,26 @@ function buildPage(): NormalizedData {
       sec5: { id: 'sec5', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '5. Pattern-level states (Carbon 시그니처)' } } },
       sec5Note: { id: 'sec5Note', data: { type: 'Text', variant: 'small', content: 'collection 패턴은 default 만으로 부족 — empty/loading/error/partial/done ladder 가 1급 시민.' } },
       sec5Body: { id: 'sec5Body', data: { type: 'Ui', component: 'Block', content: stateVariants } },
+
+      sec6: { id: 'sec6', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '6. 인증 폼 (4 patterns)' } } },
+      sec6Note: { id: 'sec6Note', data: { type: 'Text', variant: 'small', content: '로그인 / 가입 / 재설정 / 2FA — 같은 카드 surface + heading + 필드 stack + primary CTA + 보조 링크 골격.' } },
+      sec6Body: { id: 'sec6Body', data: { type: 'Ui', component: 'Block', content: authVariants } },
+
+      sec7: { id: 'sec7', data: { type: 'Section', flow: 'form', emphasis: 'raised', heading: { variant: 'h2', content: '7. 보편 콘텐츠 카드 (8 patterns)' } } },
+      sec7Note: { id: 'sec7Note', data: { type: 'Text', variant: 'small', content: 'Article preview / Profile / Pricing 3종 / Settings panel / Confirm dialog 2종.' } },
+      sec7Body: { id: 'sec7Body', data: { type: 'Ui', component: 'Block', content: contentCardVariants } },
     },
     relationships: {
       [ROOT]: ['page'],
-      page: ['hdr', 'sec1', 'sec2', 'sec3', 'sec4', 'sec5'],
+      page: ['hdr', 'sec1', 'sec2', 'sec3', 'sec4', 'sec5', 'sec6', 'sec7'],
       hdr: ['hdrTitle', 'hdrSub'],
       sec1: ['sec1Note', 'sec1Body'],
       sec2: ['sec2Note', 'sec2Body'],
       sec3: ['sec3Note', 'sec3Body'],
       sec4: ['sec4Note', 'sec4Body'],
       sec5: ['sec5Note', 'sec5Body'],
+      sec6: ['sec6Note', 'sec6Body'],
+      sec7: ['sec7Note', 'sec7Body'],
     },
   }
 }
