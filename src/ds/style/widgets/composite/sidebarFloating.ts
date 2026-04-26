@@ -139,5 +139,19 @@ export const sidebarFloatingCss = () => css`
       box-shadow: none;
     }
     hr { background: transparent; }
+
+    /* 경계는 border 대신 soft shadow — Apple HIG / Material 3 elevation 패턴.
+       "raised" emphasis 가진 카드성 surface만 1px ring + 가벼운 drop으로 떠 보이게.
+       hairline ring(4% alpha)이 sub-pixel 흐림 없이 "옆 표면과 분리"를 표현. */
+    [data-emphasis="raised"],
+    article[data-flow="prose"],
+    [popover][role="dialog"][aria-roledescription="popover"],
+    dialog:not([data-ds-sheet]) {
+      box-shadow:
+        0 0 0 1px ${tint('CanvasText', 5)},
+        0 1px 2px ${tint('CanvasText', 6)},
+        0 4px 12px ${tint('CanvasText', 4)};
+      border-radius: ${radius('lg')};
+    }
   }
 `
