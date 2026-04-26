@@ -26,9 +26,10 @@
       "@p/ds": ["packages/ds/src/index.ts"],
       "@p/ds/*": ["packages/ds/src/*"],
       "@p/app": ["packages/app/src/main.tsx"],
-      "@p/app/*": ["packages/app/src/*"]
+      "@p/app/*": ["packages/app/src/*"],
+      "@apps/*": ["apps/*/src"]
     }
   },
-  "include": ["packages/app/src", "packages/ds/src"],
+  "include": ["packages/app/src", "packages/ds/src", "apps/*/src"],
   "exclude": ["packages/ds/src/build.ts"]
 }

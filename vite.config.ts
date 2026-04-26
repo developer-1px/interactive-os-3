@@ -30,6 +30,8 @@ export default defineConfig({
       { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
       { find: /^@p\/app$/, replacement: resolve(__dirname, 'packages/app/src/main.tsx') },
       { find: /^@p\/app\//, replacement: resolve(__dirname, 'packages/app/src/') + '/' },
+      { find: /^@apps\/([^/]+)$/, replacement: resolve(__dirname, 'apps') + '/$1/src/index.ts' },
+      { find: /^@apps\/([^/]+)\//, replacement: resolve(__dirname, 'apps') + '/$1/src/' },
     ],
   },
   plugins: [

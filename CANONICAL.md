@@ -66,7 +66,7 @@
 - **cmd+k 등록**: staticData.palette · 임시: 없음 · 유산: 별도 등록 코드
 
 ### 패키지·플러그인
-- **패키지 구조**: pnpm workspace 모노레포. 단위는 `@p/ds`(디자인 시스템 · `packages/ds/`) · `@p/app`(셸 — main·router·routes·devtools·assets · `packages/app/`) · `@p/domain-<area>`(도메인 — schema·feature·resource·data·widgets·routes 묶음 · 도입 예정) · `@p/capability-<name>`(편집·조작 capability — clipboard·history·focus·cursor·rename·crud · 도입 예정) · 임시: 도메인·capability는 아직 `packages/app/src/routes/<area>` 안에 평탄 분포 (만료 조건: Phase B에서 domain-finder 시드 분리) · 유산: 라우트가 다른 라우트의 내부 모듈에 직접 import
+- **패키지 구조**: pnpm workspace 모노레포. 단위는 `@p/ds`(디자인 시스템 · `packages/ds/`) · `@p/app`(셸 — main·router·devtools·assets · `packages/app/`) · `@apps/<area>`(앱 — schema·feature·resource·data·widgets·routes 묶음 · `apps/<area>/` · 예: `apps/finder`, `apps/markdown`) · `@p/capability-<name>`(편집·조작 capability — clipboard·history·focus·cursor·rename·crud · 도입 예정) · 임시: 앱·capability는 아직 `packages/app/src/routes/<area>` 안에 평탄 분포 (만료 조건: Phase B에서 apps/finder 시드 분리) · 유산: 라우트가 다른 라우트의 내부 모듈에 직접 import
 - **Plugin manifest**: 패키지마다 `definePlugin({ name, routes?, widgets?, middlewares?, capabilities? })`를 default export. schemas·resources·features는 패키지 내부 detail이라 manifest 등록 대상 아님 · 임시: 없음 · 유산: 라우트가 다른 라우트의 내부에 직접 import (markdown→finder/data 등)
 - **Plugin 합산 시점**: 빌드 타임 정적 — `app/plugins.ts`가 정적 import 배열로 모든 manifest를 모음. `composeRegistry(plugins)`가 ds.uiRegistry merge·middleware chain 정렬·capability map 생성을 import 시점 부작용으로 수행 · 임시: 없음 · 유산: 런타임 register() 호출
 - **Middleware**: 파이프라인 훅은 `defineMiddleware({ name, phase, fn })` 정본. phase는 `pre-dispatch`(기존 gestures와 등가) · `post-dispatch` · `pre-resource-read` · `post-resource-write` · 임시: 기존 `defineFlow.gestures`는 pre-dispatch 특수 케이스로 흡수됨 — 시그니처 호환 유지 · 유산: 컴포넌트 안의 dispatch 가로채기
