@@ -175,15 +175,48 @@ const stateRow = (state: 'empty' | 'loading' | 'error' | 'partial' | 'done'): Re
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// VariantRow + Family — definePage 친화 ReactNode 헬퍼
+// Stage + VariantRow — 변형을 *실제로 사는 환경의 폭/규격* 으로 제약.
+// (Refactoring UI · TailwindUI 수렴: floating-in-void 금지, working chrome 안에)
 // ──────────────────────────────────────────────────────────────────────
 
-const VariantRow = ({ label, children }: { label: string; children: ReactNode }) => (
-  <section aria-label={label} data-part="variant-row">
-    <small>{label}</small>
-    <div>{children}</div>
+/** 각 family 가 production 에서 실제로 점유하는 폭. */
+const STAGE_WIDTH = {
+  chat:    '360px',  // 모바일 메신저 폭
+  feed:    '600px',  // X/Threads 메인 컬럼 폭
+  list:    '720px',  // Inbox row 가독 폭
+  form:    '420px',  // 폼 필드 폭
+  grid:    '240px',  // 카드 그리드 셀 폭
+  card:    '320px',  // 큰 단일 카드
+  reading: '680px',  // 본문 읽기 폭 (Medium·Notion 수렴)
+  panel:   '480px',  // 사이드 패널 폭
+} as const
+type StageKey = keyof typeof STAGE_WIDTH
+
+/* eslint-disable no-restricted-syntax -- showcase: stage 폭 제약은 inline style 가 가장 간단 */
+const Stage = ({ kind, children }: { kind: StageKey; children: ReactNode }) => (
+  <div data-stage={kind} style={{ inlineSize: STAGE_WIDTH[kind], maxInlineSize: '100%' }}>
+    {children}
+  </div>
+)
+
+const VariantRow = ({ label, kind, children }: { label: string; kind: StageKey; children: ReactNode }) => (
+  <section
+    aria-label={label}
+    data-part="variant-row"
+    style={{
+      display: 'grid',
+      gridTemplateColumns: '180px 1fr',
+      alignItems: 'start',
+      gap: 'var(--ds-space)',
+      paddingBlock: 'calc(var(--ds-space) * 1.5)',
+      borderBlockEnd: 'var(--ds-hairline) solid var(--ds-border)',
+    }}
+  >
+    <small style={{ color: 'var(--ds-muted)', fontVariantNumeric: 'tabular-nums' }}>{label}</small>
+    <Stage kind={kind}>{children}</Stage>
   </section>
 )
+/* eslint-enable no-restricted-syntax */
 
 // ──────────────────────────────────────────────────────────────────────
 // Page builder
