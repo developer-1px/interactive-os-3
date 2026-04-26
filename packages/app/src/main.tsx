@@ -56,7 +56,7 @@ onShortcut('mod+shift+p', () => {
 ;(window as unknown as { ds: unknown }).ds = { applyPreset, presets }
 
 if (import.meta.hot) {
-  import.meta.hot.accept('./ds', (mod) => {
+  import.meta.hot.accept('@p/ds', (mod) => {
     if (mod) styleEl.textContent = (mod as { dsCss: string }).dsCss + appsCss
   })
 }
