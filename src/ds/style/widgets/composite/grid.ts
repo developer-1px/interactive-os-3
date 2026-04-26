@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dim, dur, ease, emphasize, neutral, font, indicator, microLabel, mute, pad, radius, tint, tone } from '../../../foundations'
+import { accent, bg, border, control, css, dim, dur, ease, emphasize, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone } from '../../../foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -30,11 +30,11 @@ export const grid = () => [
     [role="grid"] [role="rowheader"],
     [role="treegrid"] [role="gridcell"],
     [role="treegrid"] [role="rowheader"] {
-      border-block-end: 1px solid ${neutral(2)};
+      border-block-end: ${hairlineWidth()} solid ${border()};
     }
     [role="grid"] [role="columnheader"],
     [role="treegrid"] [role="columnheader"] {
-      border-block-end: 1px solid ${control('border')};
+      border-block-end: ${hairlineWidth()} solid ${control('border')};
     }
     /* 테이블 끝 행의 bottom hairline 제거 — 닫히는 느낌 대신 열린 느낌 */
     [role="grid"] [role="rowgroup"]:last-child [role="row"]:last-child > :is([role="gridcell"], [role="rowheader"]),

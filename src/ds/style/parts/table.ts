@@ -1,4 +1,4 @@
-import { css, dim, font, pad, radius } from '../../foundations'
+import { border, css, dim, font, hairlineWidth, pad, radius } from '../../foundations'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.
@@ -28,10 +28,10 @@ export const table = () => css`
     font-weight: 500;
     font-size: ${font('xs')};
     background: ${dim(2)};
-    border-block-end: 1px solid ${dim(8)};
+    border-block-end: ${hairlineWidth()} solid ${border()};
   }
   table[data-part="table"] tbody tr {
-    border-block-end: 1px solid ${dim(4)};
+    border-block-end: ${hairlineWidth()} solid ${border()};
   }
   table[data-part="table"] tbody tr:last-child { border-block-end: 0; }
   table[data-part="table"] tbody td {
@@ -48,7 +48,7 @@ export const table = () => css`
     font-size: ${font('xs')};
   }
   table[data-part="table"] {
-    border: 1px solid ${dim(8)};
+    border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('md')};
     overflow: hidden;
   }

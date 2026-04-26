@@ -77,7 +77,6 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-danger-on:  ${p.color.dangerOn  ? tokenRefToCss(p.color.dangerOn)  : 'var(--ds-accent-on)'};
 
     ${(['1','2','3','4','5','6','7','8','9'] as const).map((n) => {
-      const g = p.color.neutral?.[n]
       // 모든 neutral는 var(--ds-tone)을 베이스로 — 정직한 회색이 아니라 미세 warm cast.
       // preset neutral override 시에도 토큰을 무조건 var(--ds-tone) 기반으로 강제한다 (drift 방지).
       const pct = [1, 2, 3.5, 6, 10, 18, 32, 52, 78][Number(n)-1]

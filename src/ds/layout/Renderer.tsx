@@ -43,13 +43,13 @@ function useDebugTree(page: NormalizedData) {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
     if (params.get('debug') !== 'tree') return
-    // eslint-disable-next-line no-console
+     
     console.groupCollapsed('%c[FlatLayout] hierarchy', 'color:#888')
-    // eslint-disable-next-line no-console
+     
     console.log(printTree(page))
-    // eslint-disable-next-line no-console
+     
     console.log('\n=== HEADING OUTLINE ===\n' + printHeadingOutline(page))
-    // eslint-disable-next-line no-console
+     
     console.groupEnd()
   }, [page])
 }
@@ -263,7 +263,7 @@ function UiLeaf({ page, id, d }: { page: NormalizedData; id: string; d: UiNode }
   const Cmp = resolveUi(d.component)
   if (!Cmp) {
     if (typeof window !== 'undefined') {
-      // eslint-disable-next-line no-console
+       
       console.warn('[FlatLayout] unknown ui component', d.component)
     }
     return null

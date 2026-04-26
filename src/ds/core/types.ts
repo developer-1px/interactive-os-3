@@ -59,7 +59,7 @@ export interface ControlProps {
  * 예) export function Menu(props: CollectionProps) { ... }
  *     export function Listbox(props: CollectionProps<{ 'aria-label'?: string }>) { ... }
  */
-export type CollectionProps<Extra = {}> = ControlProps & Extra
+export type CollectionProps<Extra = unknown> = ControlProps & Extra
 
 export const getChildren = (d: NormalizedData, id: string): string[] =>
   d.relationships[id] ?? []

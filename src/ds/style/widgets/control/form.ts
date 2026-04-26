@@ -1,4 +1,4 @@
-import { accent, control, css, dim, dur, ease, neutral, font, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
+import { accent, border, control, css, dim, dur, ease, font, hairlineWidth, neutral, onAccent, pad, radius, status, tint, tracking } from '../../../foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -99,7 +99,7 @@ export const formCss = css`
     font-weight: 700;
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
-    border-bottom: 1px solid ${control('border')};
+    border-bottom: ${hairlineWidth()} solid ${control('border')};
     letter-spacing: ${tracking()};
   }
   [data-ds="Row"][data-flow="form"] section > h3:first-child,
@@ -148,7 +148,7 @@ export const formCss = css`
   section[data-emphasis="raised"] > :where(h2, h3):first-child {
     margin: 0 0 ${pad(2)};
     padding-bottom: ${pad(2)};
-    border-bottom: 1px solid ${dim(8)};
+    border-bottom: ${hairlineWidth()} solid ${border()};
     font-size: ${font('md')};
     font-weight: 600;
   }

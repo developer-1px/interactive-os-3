@@ -1,7 +1,7 @@
-import { border, css, font, icon, pad, radius } from '../../../foundations'
+import { border, css, font, hairlineWidth, icon, pad, radius } from '../../../foundations'
 export const detailsCss = css`
   :where(details) {
-    border: 1px solid ${border()};
+    border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('sm')};
     overflow: hidden;
   }
@@ -31,7 +31,7 @@ export const detailsCss = css`
     flex: none;
   }
   :where(details[open]) > :where(summary)::before { transform: rotate(90deg); }
-  :where(details[open]) > :where(summary) { border-bottom: 1px solid ${border()}; }
+  :where(details[open]) > :where(summary) { border-bottom: ${hairlineWidth()} solid ${border()}; }
   :where(details) > :not(summary) { padding: ${pad(2)}; }
 
   /* summary 내부 rhythm — strong(이름) · span(설명) · small(메타) 3단 위계.

@@ -104,7 +104,7 @@ export function depthOf(sel: string): number {
       else if (c === ' ') {
         if (!prevWS) {
           const next = flat[i + 1], prev = flat[i - 1]
-          if (next && prev && /[\w*\[\]:.#-]/.test(prev) && /[\w*\[\]:.#-]/.test(next)) depth++
+          if (next && prev && /[\w*[\]:.#-]/.test(prev) && /[\w*[\]:.#-]/.test(next)) depth++
         }
         prevWS = true
       } else prevWS = false

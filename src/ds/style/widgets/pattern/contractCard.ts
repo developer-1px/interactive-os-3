@@ -1,4 +1,4 @@
-import { css, dim, font, pad, radius, status, tint } from '../../../foundations'
+import { css, dim, font, pad, radius, status } from '../../../foundations'
 
 /**
  * ContractCard slot inner styling — Card primitive 슬롯 안의 컨트랙트 특화 시각만.

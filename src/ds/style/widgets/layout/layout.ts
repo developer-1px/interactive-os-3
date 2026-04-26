@@ -1,4 +1,4 @@
-import { accent, control, css, dim, neutral, font, mix, pad, radius, square, status, tint, grouping } from '../../../foundations'
+import { accent, control, css, dim, font, grouping, hairlineWidth, mix, neutral, pad, radius, square, status, tint } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -75,7 +75,7 @@ export const layout = () => css`
     padding: ${pad(3)};
   }
   [data-emphasis="callout"] {
-    border: 1px solid ${accent()};
+    border: ${hairlineWidth()} solid ${accent()};
     border-radius: ${radius('sm')};
     padding: ${pad(3)};
   }
@@ -104,7 +104,7 @@ export const layout = () => css`
   aside:not([aria-roledescription]) {
     flex: none;
     background: ${neutral(1)};
-    border: 1px solid ${control('border')};
+    border: ${hairlineWidth()} solid ${control('border')};
     border-inline-start: 3px solid ${tint(accent(), 45)};
     border-radius: ${radius('lg')};
     padding: ${pad(4)};
@@ -136,7 +136,7 @@ export const layout = () => css`
   aside:not([aria-roledescription]) > section { gap: ${pad(2)}; }
   aside:not([aria-roledescription]) > section + section {
     padding-top: ${pad(3)};
-    border-top: 1px solid ${control('border')};
+    border-top: ${hairlineWidth()} solid ${control('border')};
   }
   aside:not([aria-roledescription]) > section[aria-roledescription="danger"] > h3:first-child {
     color: ${status('danger')};

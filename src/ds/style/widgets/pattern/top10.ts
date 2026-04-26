@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad } from '../../../foundations'
+import { accent, border, css, dim, font, hairlineWidth, pad } from '../../../foundations'
 export const top10 = () => css`
   .top-10 {
     counter-reset: rank;
@@ -12,7 +12,7 @@ export const top10 = () => css`
     align-items: center;
     column-gap: ${pad(2)};
     padding: ${pad(1)} 0;
-    border-bottom: 1px solid ${dim(8)};
+    border-bottom: ${hairlineWidth()} solid ${border()};
   }
   .top-10 > li:last-child { border-bottom: 0; }
   .top-10 > li::before {

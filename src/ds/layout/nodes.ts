@@ -219,7 +219,7 @@ export function validateFragment(frag: NormalizedData, kind?: FragmentKind): voi
   }
   for (const id of Object.keys(entities)) walk(id)
   if (issues.length) {
-    // eslint-disable-next-line no-console
+     
     console.warn('[FlatLayout fragment]', issues)
   }
 }
@@ -257,7 +257,7 @@ export function validatePage(page: NormalizedData): void {
   for (const id of Object.keys(entities)) walk(id)
 
   if (issues.length) {
-    // eslint-disable-next-line no-console
+     
     console.warn('[FlatLayout] validation', issues)
   }
 }

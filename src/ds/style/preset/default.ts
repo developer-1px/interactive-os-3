@@ -44,7 +44,7 @@ export const defaultPreset: DsPreset = {
   leading: { normal: 1.4, tight: 1.25, tracking: '-0.014em' },
   /* 현재 ds 재현: elev-2 = 기존 --ds-shadow (선형 depth 스케일),
      elev-1 = none (border-only), elev-0 = none, elev-3 = 기존 shadow × 1.5 */
-  /* d=1의 ring은 기존 `border: 1px solid var(--ds-border)`와 1:1 동치 (hairline, alpha 12%).
+  /* d=1의 ring은 기존 `border: ${hairlineWidth()} solid ${border()}`와 1:1 동치 (hairline, alpha 12%).
      d=2는 기존 --ds-shadow + ring 포함해 dialog·tooltip 시각 유지. */
   /* Layered elevation — Vercel/Linear/Arc 수렴 패턴.
      각 단계는 hairline ring + tight contact + ambient diffusion 다층.

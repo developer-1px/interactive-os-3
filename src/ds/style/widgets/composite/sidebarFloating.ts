@@ -1,5 +1,4 @@
-import { css } from '../../../foundations/primitives/css'
-import { neutral, pad, radius, hierarchy, tint } from '../../../foundations'
+import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**
@@ -25,7 +24,7 @@ export const sidebarFloatingCss = () => css`
     inline-size: ${pad(14)};
     block-size: ${pad(14)};
     border-radius: ${radius('full')};
-    border: 1px solid ${neutral(3)};
+    border: ${hairlineWidth()} solid ${border()};
     background: ${neutral(0)};
     box-shadow: var(--ds-elev-2);
     display: inline-flex;
@@ -77,7 +76,7 @@ export const sidebarFloatingCss = () => css`
     inline-size: min(85vw, 320px);
     margin: 0;
     border: 0;
-    border-inline-end: 1px solid ${neutral(3)};
+    border-inline-end: ${hairlineWidth()} solid ${border()};
     box-shadow: var(--ds-elev-3);
     --ds-sidebar-w: min(85vw, 320px);
     padding: ${hierarchy.surface};

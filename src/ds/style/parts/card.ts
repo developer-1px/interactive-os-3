@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, grouping } from '../../foundations'
+import { border, css, dim, grouping, hairlineWidth, pad, radius } from '../../foundations'
 
 /**
  * Card — surface primitive. 슬롯은 vertical flex stack.
@@ -15,7 +15,7 @@ export const card = () => css`
     display: flex;
     flex-direction: column;
     gap: ${pad(1.5)};
-    border: 1px solid ${dim(8)};
+    border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('md')};
     padding: ${pad(2.5)};
     min-inline-size: 0;
@@ -45,7 +45,7 @@ export const card = () => css`
     min-block-size: 220px;
     padding: ${pad(3)};
     background: ${dim(3)};
-    border: 1px solid ${dim(6)};
+    border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('md')};
     display: grid; place-items: center;
     overflow: hidden;

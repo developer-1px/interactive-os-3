@@ -1,4 +1,4 @@
-import { bg, border, control, css, radius, shadow } from '../../../foundations'
+import { bg, border, control, css, hairlineWidth, radius, shadow } from '../../../foundations'
 // input[type="range"] — native role=slider. DS 토큰 기반 풀 커스텀 (native와 섞지 않음).
 //   track:  4px channel — control-channel(neutral-4) 위에 thumb까지 accent fill로 진행도 표시
 //   thumb:  control('h') 정사각 원, bg + control-border + elev-1
@@ -39,7 +39,7 @@ export const sliderCss = css`
   }
   :where(input[type="color"]) {
     width: ${control('h')}; height: ${control('h')};
-    padding: 2px; border: 1px solid ${border()};
+    padding: 2px; border: ${hairlineWidth()} solid ${border()};
     border-radius: var(--ds-radius); background: ${bg()};
   }
   :where(input[type="color"])::-webkit-color-swatch-wrapper { padding: 0; }
