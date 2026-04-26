@@ -36,15 +36,13 @@ export function SidebarAdminFloating({
     <>
       <button
         type="button"
-        // @ts-expect-error — popovertarget is HTML, not yet in React types
-        popovertarget={popId}
+        popoverTarget={popId}
         aria-label={label}
         data-icon="list"
         data-ds-floating-nav-trigger
       />
       <nav
         id={popId}
-        // @ts-expect-error — popover is HTML, not yet in React types
         popover="auto"
         aria-label={label}
         aria-roledescription="sidebar"
