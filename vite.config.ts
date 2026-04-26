@@ -25,10 +25,12 @@ const spaFallback = () => ({
 export default defineConfig({
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
   resolve: {
-    alias: {
-      '@p/ds': resolve(__dirname, 'packages/ds/src/index.ts'),
-      '@p/app': resolve(__dirname, 'src/main.tsx'),
-    },
+    alias: [
+      { find: /^@p\/ds$/, replacement: resolve(__dirname, 'packages/ds/src/index.ts') },
+      { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
+      { find: /^@p\/app$/, replacement: resolve(__dirname, 'src/main.tsx') },
+      { find: /^@p\/app\//, replacement: resolve(__dirname, 'src/') + '/' },
+    ],
   },
   plugins: [
     tanstackRouter({
