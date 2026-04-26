@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- showcase 라우트 갤러리: 컴포넌트 + 헬퍼 함수 한 파일 */
 /**
  * /compositions — 복합 부품의 조립 변형 갤러리.
  *
@@ -97,6 +98,7 @@ const field = (
   variant: 'basic' | 'required' | 'help' | 'error' | 'success' | 'disabled',
   label: string, placeholder: string, helpText?: string,
 ): ReactNode => (
+  // eslint-disable-next-line no-restricted-syntax -- field group 의미 (showcase)
   <div role="group" data-part="field"
     {...(variant === 'required' && { 'aria-required': 'true' })}
     {...(variant === 'error' && { 'aria-invalid': 'true' })}>
@@ -164,6 +166,7 @@ const sidebarSurface = css\`
 const stateRow = (state: 'empty' | 'loading' | 'error' | 'partial' | 'done'): ReactNode => {
   switch (state) {
     case 'empty':   return <EmptyState title="받은 편지함이 비었습니다" description="새 메일이 도착하면 여기에 표시됩니다." />
+    // eslint-disable-next-line no-restricted-syntax -- loading status (showcase)
     case 'loading': return (<div role="status" aria-label="로딩 중"><Skeleton width="100%" height={48} /><Skeleton width="100%" height={48} /><Skeleton width="100%" height={48} /></div>)
     case 'error':   return <Callout tone="danger">서버 응답 없음. 잠시 후 다시 시도하세요.</Callout>
     case 'partial': return (<div>{inboxRow('unread', '김지민', '회의 자료', 'PR 검토 부탁드립니다', '14:32')}{inboxRow('read', '박서연', '점심', '점심 같이 드실래요?', '12:18')}<Skeleton width="100%" height={48} /></div>)
