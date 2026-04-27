@@ -1,4 +1,5 @@
-import { css, currentTint, font, radius, status, text } from '../tokens/foundations'
+import { css, currentTint, radius, status, text } from '../tokens/foundations'
+import { font } from '../tokens/palette'
 import { dim, pad } from '../tokens/palette'
 
 /**

@@ -1,4 +1,5 @@
-import { accent, accentTint, bg, border, control, css, currentTint, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, radius, text, tone, weight } from '../../tokens/foundations'
+import { accent, accentTint, bg, border, control, css, currentTint, dur, ease, emphasize, focusRingWidth, hairlineWidth, indicator, microLabel, mute, radius, text, tone } from '../../tokens/foundations'
+import { font, weight } from '../../tokens/palette'
 import { dim, neutral, pad, tint } from '../../tokens/palette'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.

@@ -1,4 +1,5 @@
-import { css, hierarchy, radius, surface, text, typography, weight } from '../../../tokens/foundations'
+import { css, hierarchy, radius, surface, text, typography } from '../../../tokens/foundations'
+import { weight } from '../../../tokens/palette'
 import { pad } from '../../../tokens/palette'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.

@@ -7,10 +7,8 @@
  *
  * 모든 객체 토큰은 React `style` prop 에 그대로 spread 가능한 CSS key 를 사용.
  */
-import {
-  pad, font, weight, radius, hairlineWidth,
-  accent, onAccent, bg, border,
-} from '@p/ds/tokens/foundations'
+import { radius, hairlineWidth, accent, onAccent, bg, border } from '@p/ds/tokens/foundations'
+import { pad, weight } from '@p/ds/tokens/palette'
 
 // ── 공통 divider — row↔row 사이 hairline ─────────────────────────────────
 export const divider = `${hairlineWidth()} solid ${border()}`

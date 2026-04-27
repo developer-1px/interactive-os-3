@@ -1,4 +1,4 @@
-import { SHELL_MOBILE_MAX, css, radius, typography, weight } from '@p/ds/tokens/foundations'
+import { SHELL_MOBILE_MAX, css, radius, typography } from '@p/ds/tokens/foundations'
 import { pad } from '@p/ds/tokens/palette'
 
 // edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content).

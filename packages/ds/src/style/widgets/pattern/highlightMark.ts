@@ -1,4 +1,5 @@
-import { css, font, radius, slot, surface, text, toneTint, typography, weight } from '../../../tokens/foundations'
+import { css, radius, slot, surface, text, toneTint, typography } from '../../../tokens/foundations'
+import { font, weight } from '../../../tokens/palette'
 
 /**
  * highlightMark — HTML <mark> 텍스트 하이라이트 스타일.

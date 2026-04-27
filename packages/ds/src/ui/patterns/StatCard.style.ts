@@ -1,4 +1,5 @@
-import { css, font, hairlineWidth, icon, status, statusTint, text, typography, weight } from '../../tokens/foundations'
+import { css, hairlineWidth, icon, status, statusTint, text, typography } from '../../tokens/foundations'
+import { font, weight } from '../../tokens/palette'
 import { dim, mix, pad, tint } from '../../tokens/palette'
 
 /**

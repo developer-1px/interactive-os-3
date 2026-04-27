@@ -1,4 +1,5 @@
-import { border, css, hairlineWidth, radius, surface, text, weight } from '../../../tokens/foundations'
+import { border, css, hairlineWidth, radius, surface, text } from '../../../tokens/foundations'
+import { weight } from '../../../tokens/palette'
 import { pad } from '../../../tokens/palette'
 
 /**

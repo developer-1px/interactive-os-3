@@ -1,4 +1,5 @@
-import { SHELL_MOBILE_MAX, css, grouping, microLabel, radius, status, surface, text, typography, weight } from '@p/ds/tokens/foundations'
+import { SHELL_MOBILE_MAX, css, grouping, microLabel, radius, status, surface, text, typography } from '@p/ds/tokens/foundations'
+import { weight } from '@p/ds/tokens/palette'
 import { dim, neutral, pad } from '@p/ds/tokens/palette'
 
 // Catalog — ds ui zone-first 감사 대시보드.

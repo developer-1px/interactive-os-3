@@ -22,6 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@p/ds": ["packages/ds/src/index.ts"],
       "@p/ds/*": ["packages/ds/src/*"],

@@ -1,4 +1,5 @@
-import { css, radius, surfaceTint, text, typography, weight } from '../tokens/foundations'
+import { css, radius, surfaceTint, text, typography } from '../tokens/foundations'
+import { weight } from '../tokens/palette'
 import { dim, pad, tint } from '../tokens/palette'
 
 /**

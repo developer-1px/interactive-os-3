@@ -1,4 +1,5 @@
-import { accent, accentTint, control, css, dur, ease, hairlineWidth, onAccent, radius, square, status, statusTint, surface, surfaceTint, weight } from '../../tokens/foundations'
+import { accent, accentTint, control, css, dur, ease, hairlineWidth, onAccent, radius, square, status, statusTint, surface, surfaceTint } from '../../tokens/foundations'
+import { weight } from '../../tokens/palette'
 import { neutral, pad, tint } from '../../tokens/palette'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음

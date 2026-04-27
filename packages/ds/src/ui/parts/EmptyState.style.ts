@@ -1,4 +1,5 @@
-import { css, font, mute, typography, weight } from '../../tokens/foundations'
+import { css, mute, typography } from '../../tokens/foundations'
+import { font, weight } from '../../tokens/palette'
 import { pad } from '../../tokens/palette'
 
 /**

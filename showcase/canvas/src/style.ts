@@ -1,4 +1,5 @@
-import { css, radius, weight, microLabel, pair, bg, text, surface, border, mute } from '@p/ds/tokens/foundations'
+import { css, radius, microLabel, pair, bg, text, surface, border, mute } from '@p/ds/tokens/foundations'
+import { weight } from '@p/ds/tokens/palette'
 import { neutral, pad } from '@p/ds/tokens/palette'
 import { TONE } from './canvas-tones'
 

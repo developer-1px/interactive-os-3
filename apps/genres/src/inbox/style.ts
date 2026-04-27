@@ -1,5 +1,4 @@
-import { css } from '@p/ds/tokens/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, css } from '@p/ds/tokens/foundations'
 
 // inbox 모바일 — 메일 목록만 표시. 사이드 폴더는 좌하단 FAB로 접근, 상세는 숨김.
 export const inboxCss = css`

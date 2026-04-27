@@ -1,4 +1,5 @@
-import { accent, border, css, font, hairlineWidth, text, typography, weight } from '../../tokens/foundations'
+import { accent, border, css, hairlineWidth, text, typography } from '../../tokens/foundations'
+import { font, weight } from '../../tokens/palette'
 import { dim, pad } from '../../tokens/palette'
 export const cssTop10List = () => css`
   [data-part="top-10"] {

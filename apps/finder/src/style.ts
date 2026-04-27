@@ -1,4 +1,4 @@
-import { css, icon, typography, weight } from '@p/ds/tokens/foundations'
+import { css, icon, typography } from '@p/ds/tokens/foundations'
 import { pad } from '@p/ds/tokens/palette'
 
 // Finder desktop — sidebar / columns / list-view / preview.

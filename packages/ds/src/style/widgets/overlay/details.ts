@@ -1,4 +1,5 @@
-import { border, css, font, hairlineWidth, icon, radius, weight } from '../../../tokens/foundations'
+import { border, css, hairlineWidth, icon, radius } from '../../../tokens/foundations'
+import { font, weight } from '../../../tokens/palette'
 import { pad } from '../../../tokens/palette'
 export const cssDetails = () => css`
   :where(details) {

@@ -1,4 +1,5 @@
-import { accent, css, font, radius, status, text } from '../../tokens/foundations'
+import { accent, css, radius, status, text } from '../../tokens/foundations'
+import { font } from '../../tokens/palette'
 import { dim, pad } from '../../tokens/palette'
 export const cssLegendDot = () => css`
   [data-part="legend-dot"] {

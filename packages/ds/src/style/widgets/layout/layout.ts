@@ -1,4 +1,5 @@
-import { SHELL_MOBILE_MAX, accent, border, container, control, css, font, grouping, hairlineWidth, hierarchy, radius, square, status, surface, text, typography, weight } from '../../../tokens/foundations'
+import { SHELL_MOBILE_MAX, accent, border, container, control, css, grouping, hairlineWidth, hierarchy, radius, square, status, surface, text, typography } from '../../../tokens/foundations'
+import { font, weight } from '../../../tokens/palette'
 import { elev, pad } from '../../../tokens/palette'
 
 /**

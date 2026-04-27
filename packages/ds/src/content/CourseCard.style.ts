@@ -1,4 +1,5 @@
-import { accent, css, currentTint, font, gradientDeep, on, radius, status, text, typography, weight } from '../tokens/foundations'
+import { accent, css, currentTint, gradientDeep, on, radius, status, text, typography } from '../tokens/foundations'
+import { font, weight } from '../tokens/palette'
 import { dim, mix, pad } from '../tokens/palette'
 
 /**
