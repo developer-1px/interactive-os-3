@@ -14,4 +14,4 @@ export { masterDetail, type MasterDetailProps } from './masterDetail'
 export { pageHeader, type PageHeaderProps } from './pageHeader'
 export { centeredNarrow, type CenteredNarrowProps } from './centeredNarrow'
 export { heroSection, type HeroSectionProps } from './heroSection'
-export * from './sidebar'
+// sidebar variants moved to ds/surfaces/sidebar (Phase 3 — L5 single-instance shell)

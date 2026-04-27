@@ -6,8 +6,8 @@ export * from './headless/types'
 export * from './data'
 export { reduce } from './headless/state/reduce'
 export { fromTree, fromList, pathAncestors } from './headless/state/fromTree'
-export { useControlState } from './headless/hooks/useControlState'
-export { useEventBridge } from './headless/hooks/useEventBridge'
+export { useControlState } from './headless/state/useControlState'
+export { useEventBridge } from './headless/state/useEventBridge'
 export { defineFlow, useFlow, type FlowDef } from './headless/flow'
 export {
   defineFeature, useFeature,
@@ -15,8 +15,8 @@ export {
   type Effect, type QuerySpec, type QueryResult,
   invalidateQuery,
 } from './headless/feature'
-export { useRoving } from './headless/hooks/useRoving'
-export { useRovingDOM } from './headless/hooks/useRovingDOM'
+export { useRoving } from './headless/roving/useRoving'
+export { useRovingDOM } from './headless/roving/useRovingDOM'
 export { parentOf } from './headless/axes'
 export {
   navigateOnActivate,
@@ -120,8 +120,10 @@ export {
   uiRegistry, resolveUi,
   type UiComponentName, type UiEntry, type Zone,
 } from './registry'
-// layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
+// L4 templates — page-level 시각 골격 (defineLayout fragment)
 export * from './ui/templates'
+// L5 surfaces — single-instance shell (sidebar variants · command palette)
+export * from './surfaces/sidebar'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...).
 // CountBadge/ProgressBar 는 ui/1-status/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
 export * from './ui/parts/Avatar'
