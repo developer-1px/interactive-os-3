@@ -18,7 +18,7 @@ export const catalogCss = css`
     height: 100vh; display: flex; flex-direction: column; overflow: hidden;
     container-type: inline-size; container-name: shell;
   }
-  main[data-part="catalog-app"] > section[data-part="body"] {
+  main[data-part="catalog-app"] > section[data-slot="body"] {
     flex: 1; display: flex; min-height: 0;
   }
   dl[data-part="catalog-stats"] {
@@ -134,12 +134,12 @@ export const catalogCss = css`
   }
 
   /* Catalog preview — 카드 클릭 시 우측 aside에 큰 demo + 상세. */
-  main[data-part="catalog-app"] > section[data-part="body"]
+  main[data-part="catalog-app"] > section[data-slot="body"]
     > aside[data-part="preview"] {
     display: none;
   }
   main[data-part="catalog-app"][data-preview-open="true"]
-    > section[data-part="body"]
+    > section[data-slot="body"]
     > aside[data-part="preview"] {
     display: flex; flex-direction: column; gap: ${pad(3)};
     flex: 0 0 var(--ds-preview-w, 480px);
@@ -204,7 +204,7 @@ export const catalogCss = css`
   /* 모바일 — preview는 화면 전체를 덮는 오버레이로 */
   @container shell (max-width: ${SHELL_MOBILE_MAX}) {
     main[data-part="catalog-app"][data-preview-open="true"]
-      > section[data-part="body"]
+      > section[data-slot="body"]
       > aside[data-part="preview"] {
       position: fixed; inset: 0; z-index: 50;
       flex: none; inline-size: 100%;
@@ -223,7 +223,7 @@ export const catalogCss = css`
       border: var(--ds-hairline) solid var(--ds-border); border-radius: ${radius('md')};
       background: var(--ds-bg); cursor: pointer; flex: none;
     }
-    main[data-part="catalog-app"] > section[data-part="body"] > nav[data-part="sidebar"] {
+    main[data-part="catalog-app"] > section[data-slot="body"] > nav[data-part="sidebar"] {
       position: fixed;
       inset-block: 0; inset-inline-start: 0;
       inline-size: min(80vw, 18rem);
@@ -232,10 +232,10 @@ export const catalogCss = css`
       transition: transform var(--ds-dur-fast) var(--ds-ease-out);
       box-shadow: 0 0 24px color-mix(in oklch, CanvasText 12%, transparent);
     }
-    main[data-part="catalog-app"][data-nav-open="true"] > section[data-part="body"] > nav[data-part="sidebar"] {
+    main[data-part="catalog-app"][data-nav-open="true"] > section[data-slot="body"] > nav[data-part="sidebar"] {
       transform: translateX(0);
     }
-    main[data-part="catalog-app"] > section[data-part="body"] > button[data-part="scrim"] {
+    main[data-part="catalog-app"] > section[data-slot="body"] > button[data-part="scrim"] {
       position: fixed; inset: 0; z-index: 49;
       background: color-mix(in oklch, CanvasText 35%, transparent);
       border: 0;

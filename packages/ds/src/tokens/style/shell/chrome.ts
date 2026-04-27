@@ -22,7 +22,7 @@ export const chromeCss = css`
     font-weight: 600;
   }
   main:has(> header > [data-part="window-controls"])
-    > section[data-part="body"] {
+    > section[data-slot="body"] {
     flex: 1; display: flex; min-height: 0;
   }
   [data-part="window-controls"] { display: flex; gap: ${pad(2)}; align-items: center; }

@@ -40,7 +40,7 @@ function InspectorBody() {
         <h1>Inspector — {sel.name}</h1>
       </header>
 
-      <section data-part="body">
+      <section data-slot="body">
         <Canvas sel={sel} />
         <aside data-part="panel" aria-label="Properties">
           <AlignSection />

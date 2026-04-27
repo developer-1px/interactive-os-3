@@ -3,15 +3,15 @@ import { css, pad, microLabel, status, grouping } from '@p/ds/tokens/foundations
 // Inspector + DS Matrix — 검사 패널 셸 + 단일 셀 매트릭스 데모
 export const inspectorCss = css`
   /* Inspector: canvas가 남은 공간을, aside panel이 고정폭. */
-  section[data-part="canvas"] {
+  section[aria-label="Canvas"] {
     flex: 1; min-width: 0; overflow: auto; display: grid; place-items: center;
     background: color-mix(in oklch, Canvas 93%, CanvasText 7%);
   }
-  section[data-part="canvas"] > svg {
+  section[aria-label="Canvas"] > svg {
     width: 100%; height: 100%; max-width: 100%;
   }
   /* L1 — Inspector panel의 outer-layout(width)은 inspector-app shell이 소유. */
-  main[data-part="inspector-app"] > section[data-part="body"] > aside[data-part="panel"] {
+  main[data-part="inspector-app"] > section[data-slot="body"] > aside[data-part="panel"] {
     width: var(--ds-panel-w, 280px); flex: none; overflow-y: auto;
     border-inline-start: var(--ds-hairline) solid var(--ds-border);
   }

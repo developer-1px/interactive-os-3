@@ -40,7 +40,7 @@ export function FloatingNav() {
     <aside data-part="floating-nav">
       <button type="button" popoverTarget={popoverId} aria-label="Navigator">⊞</button>
       <Popover id={popoverId} label="Routes" scrim>
-        <menu data-part="route-grid">
+        <menu>
           {entries.map((e) => (
             <li key={e.id}>
               <Link

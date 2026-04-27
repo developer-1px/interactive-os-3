@@ -2,7 +2,7 @@ import type { Selection } from './types'
 
 export function Canvas({ sel }: { sel: Selection }) {
   return (
-    <section data-part="canvas" aria-label="Canvas">
+    <section aria-label="Canvas">
       <svg viewBox="0 0 800 600" aria-label="Preview">
         <rect
           x={sel.x}
