@@ -43,9 +43,17 @@ for (const target of SCAN) {
   }
 }
 
-for (const f of findings) {
+const errors = findings.filter((f) => f.level === 'error')
+const warnings = findings.filter((f) => f.level === 'warn')
+
+for (const f of errors) {
   const loc = `${relative(ROOT, f.file)}:${f.ln}`.padEnd(56)
-  console.log(`❌ ${f.kind.padEnd(14)}  ${loc}  ${f.hint}`)
+  console.log(`❌ ${f.kind.padEnd(20)}  ${loc}  ${f.hint}`)
+  console.log(`   ↳ ${f.snippet}`)
+}
+for (const f of warnings) {
+  const loc = `${relative(ROOT, f.file)}:${f.ln}`.padEnd(56)
+  console.log(`⚠️  ${f.kind.padEnd(20)}  ${loc}  ${f.hint}`)
   console.log(`   ↳ ${f.snippet}`)
 }
 
@@ -53,9 +61,12 @@ if (findings.length === 0) {
   console.log('✅ raw-value 위반 없음.')
 } else {
   console.log()
-  const byKind = findings.reduce((m, f) => ((m[f.kind] = (m[f.kind] ?? 0) + 1), m), {})
-  const parts = Object.entries(byKind).map(([k, n]) => `${k}:${n}`).join('  ')
-  console.log(`요약 — 총 ${findings.length}건  (${parts})`)
+  const summarize = (arr) => {
+    const m = arr.reduce((m, f) => ((m[f.kind] = (m[f.kind] ?? 0) + 1), m), {})
+    return Object.entries(m).map(([k, n]) => `${k}:${n}`).join('  ')
+  }
+  if (errors.length) console.log(`❌ errors ${errors.length}건  (${summarize(errors)})`)
+  if (warnings.length) console.log(`⚠️  warnings ${warnings.length}건  (${summarize(warnings)})`)
 }
 
-process.exit(findings.length > 0 ? 1 : 0)
+process.exit(errors.length > 0 ? 1 : 0)

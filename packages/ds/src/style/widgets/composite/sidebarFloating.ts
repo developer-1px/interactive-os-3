@@ -1,4 +1,4 @@
-import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../tokens/foundations'
+import { bg, border, css, hairlineWidth, hierarchy, pad, radius, tint } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -25,7 +25,7 @@ export const sidebarFloatingCss = () => css`
     block-size: ${pad(14)};
     border-radius: ${radius('full')};
     border: ${hairlineWidth()} solid ${border()};
-    background: ${neutral(0)};
+    background: ${bg()};
     box-shadow: var(--ds-elev-2);
     display: inline-flex;
     align-items: center;

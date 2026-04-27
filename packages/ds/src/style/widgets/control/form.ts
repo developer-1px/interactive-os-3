@@ -1,4 +1,4 @@
-import { accent, border, control, css, dim, dur, ease, focusRingWidth, font, hairlineWidth, neutral, onAccent, pad, radius, status, tint, tracking } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, status, surface, text, tint, tracking } from '../../../tokens/foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -32,7 +32,7 @@ export const formCss = css`
   [role="group"][data-part="field"] > label {
     font-size: ${font('sm')};
     font-weight: 600;
-    color: ${dim(85)};
+    color: ${text()};
     line-height: 1.3;
   }
   [role="group"][data-part="field"][aria-required="true"] > label::after {
@@ -42,7 +42,7 @@ export const formCss = css`
   }
   [role="group"][data-part="field"] > p {
     font-size: ${font('xs')};
-    color: ${dim(55)};
+    color: ${text('subtle')};
     margin: 0;
     line-height: 1.4;
   }
@@ -57,11 +57,11 @@ export const formCss = css`
   :where(input[type="file"]) {
     inline-size: 100%;
     padding: ${pad(3)};
-    background: ${neutral(1)};
-    border: ${hairlineWidth()} dashed ${neutral(4)};
+    background: ${surface('subtle')};
+    border: ${hairlineWidth()} dashed ${border()};
     border-radius: ${radius('md')};
     font-size: ${font('sm')};
-    color: ${dim(65)};
+    color: ${text('subtle')};
     cursor: pointer;
     transition: background-color ${dur('fast')} ${ease('out')},
                 border-color ${dur('fast')} ${ease('out')};
@@ -107,7 +107,7 @@ export const formCss = css`
     font-size: ${font('md')};
     font-weight: 600;
     margin: 0 0 ${pad(1.5)};
-    color: ${dim(85)};
+    color: ${text()};
   }
 
   /* ── fieldset (data-part="fieldset"로 감싼 Column) ──────────
@@ -120,14 +120,14 @@ export const formCss = css`
   [data-part="fieldset"] > :where(strong, p):first-child {
     font-size: ${font('md')};
     font-weight: 700;
-    color: ${dim(90)};
+    color: ${text()};
     margin: 0 0 ${pad(0.5)};
     letter-spacing: ${tracking()};
   }
   [data-part="fieldset"] > :where(strong, p):first-child > small {
     font-weight: 400;
     font-size: ${font('sm')};
-    color: ${dim(55)};
+    color: ${text('subtle')};
     margin-inline-start: ${pad(0.5)};
   }
 

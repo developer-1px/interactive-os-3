@@ -1,4 +1,4 @@
-import { accent, css, dim, hairlineWidth, hierarchy, neutral, pad, radius } from '../../../tokens/foundations'
+import { accent, border, css, hairlineWidth, hierarchy, pad, radius, surface, text } from '../../../tokens/foundations'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.
@@ -16,14 +16,14 @@ export const authCard = () => css`
   article[data-part="card"][data-card="auth"] {
     padding: ${pad(8)};                                /* 32px — 호흡 공간 */
     gap: ${pad(6)};                                    /* 24px — 슬롯 간 큰 호흡 */
-    border: ${hairlineWidth()} solid ${neutral(2)};
+    border: ${hairlineWidth()} solid ${surface('muted')};
     border-radius: ${radius('lg')};
     background: var(--ds-bg);
   }
   article[data-part="card"][data-card="auth"]:hover {
     /* hover 강조 안 함 — 폼은 정적 surface */
     box-shadow: none;
-    border-color: ${neutral(2)};
+    border-color: ${surface('muted')};
   }
 
   /* title 슬롯 — heading 위 + small 서브카피 */
@@ -38,7 +38,7 @@ export const authCard = () => css`
     letter-spacing: -0.01em;
   }
   article[data-part="card"][data-card="auth"] > [data-slot="title"] small {
-    color: ${dim(60)};
+    color: ${text('subtle')};
     font-size: var(--ds-text-sm);
   }
 
@@ -64,7 +64,7 @@ export const authCard = () => css`
     inline-size: 100%;
     padding-block: ${pad(2.5)};
     background: var(--ds-bg);
-    border: ${hairlineWidth()} solid ${neutral(3)};
+    border: ${hairlineWidth()} solid ${border('subtle')};
     border-radius: ${radius('md')};
     cursor: pointer;
     font: inherit;
@@ -73,8 +73,8 @@ export const authCard = () => css`
     gap: ${pad(1.5)};
   }
   article[data-part="card"][data-card="auth"] [data-part="oauth-row"] > button:hover {
-    background: ${neutral(1)};
-    border-color: ${neutral(4)};
+    background: ${surface('subtle')};
+    border-color: ${border()};
   }
 
   /* "또는 이메일로" divider */
@@ -82,13 +82,13 @@ export const authCard = () => css`
     display: grid; grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: ${pad(2)};
-    color: ${dim(50)};
+    color: ${text('mute')};
   }
   article[data-part="card"][data-card="auth"] [data-part="text-divider"]::before,
   article[data-part="card"][data-card="auth"] [data-part="text-divider"]::after {
     content: '';
     block-size: ${hairlineWidth()};
-    background: ${neutral(2)};
+    background: ${surface('muted')};
   }
   article[data-part="card"][data-card="auth"] [data-part="text-divider"] > small {
     font-size: var(--ds-text-xs);
@@ -125,9 +125,9 @@ export const authCard = () => css`
   /* footer — 작은 보조 링크 한 줄 */
   article[data-part="card"][data-card="auth"] > [data-slot="footer"] {
     text-align: center;
-    color: ${dim(60)};
+    color: ${text('subtle')};
     font-size: var(--ds-text-sm);
-    border-block-start: ${hairlineWidth()} solid ${neutral(2)};
+    border-block-start: ${hairlineWidth()} solid ${surface('muted')};
     padding-block-start: ${pad(4)};
     margin-block-start: calc(${hierarchy.shell} * -1 + ${pad(2)});  /* card gap 보정 */
   }
@@ -146,7 +146,7 @@ export const authCard = () => css`
     text-align: center;
     font-size: var(--ds-text-xl);
     font-weight: 600;
-    border: ${hairlineWidth()} solid ${neutral(3)};
+    border: ${hairlineWidth()} solid ${border('subtle')};
     border-radius: ${radius('md')};
     background: var(--ds-bg);
     padding: 0;

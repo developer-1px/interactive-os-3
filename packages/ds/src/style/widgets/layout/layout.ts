@@ -1,4 +1,4 @@
-import { accent, container, control, css, dim, font, grouping, hairlineWidth, hierarchy, mix, neutral, pad, radius, square, status, tint } from '../../../tokens/foundations'
+import { accent, border, container, control, css, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, tint } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -62,7 +62,7 @@ export const layout = () => css`
       background: color-mix(in oklch, Canvas 75%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
-      border: var(--ds-hairline) solid ${tint('CanvasText', 8)};
+      border: var(--ds-hairline) solid ${border()};
       box-shadow:
         inset 0 1px 0 ${tint('CanvasText', 5)},
         0 1px 2px ${tint('CanvasText', 6)},
@@ -70,7 +70,7 @@ export const layout = () => css`
     }
   }
   [data-emphasis="sunk"]    {
-    background: ${mix('Canvas', 96, 'CanvasText')};
+    background: ${surface('muted')};
     border-radius: ${radius('md')};
     padding: ${pad(3)};
   }
@@ -169,9 +169,9 @@ export const layout = () => css`
   }
   aside:not([data-part]) {
     flex: none;
-    background: ${neutral(1)};
+    background: ${surface('subtle')};
     border: ${hairlineWidth()} solid ${control('border')};
-    border-inline-start: 3px solid ${tint(accent(), 45)};
+    border-inline-start: 3px solid ${accent()};
     border-radius: ${radius('lg')};
     padding: ${pad(4)};
     gap: ${pad(3)};
@@ -196,7 +196,7 @@ export const layout = () => css`
     font-size: ${font('sm')};
   }
   aside:not([data-part]) :where(dl) :where(dd) {
-    color: ${dim(60)};
+    color: ${text('subtle')};
     font-variant-numeric: tabular-nums;
   }
   aside:not([data-part]) > section { gap: ${pad(2)}; }

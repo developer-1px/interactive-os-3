@@ -1,4 +1,4 @@
-import { css, dim, hairlineWidth, neutral, pad, radius } from '../../../tokens/foundations'
+import { border, css, hairlineWidth, pad, radius, surface, text } from '../../../tokens/foundations'
 
 /**
  * InboxRow slot inner styling — 메일 행. Card primitive 슬롯에 메일 어휘 매핑.
@@ -15,7 +15,7 @@ import { css, dim, hairlineWidth, neutral, pad, radius } from '../../../tokens/f
 export const inboxRow = () => css`
   article[data-part="card"][data-card="inbox-row"] {
     border: 0;
-    border-block-end: ${hairlineWidth()} solid ${neutral(2)};
+    border-block-end: ${hairlineWidth()} solid ${border()};
     border-radius: 0;
     padding: ${pad(2)} ${pad(2)};
     display: grid;
@@ -29,8 +29,8 @@ export const inboxRow = () => css`
     box-shadow: none;
   }
   article[data-part="card"][data-card="inbox-row"]:hover {
-    background: ${neutral(2)};
-    border-color: ${neutral(2)};
+    background: ${surface('muted')};
+    border-color: ${border()};
   }
 
   article[data-part="card"][data-card="inbox-row"] > [data-slot="preview"] {
@@ -57,16 +57,16 @@ export const inboxRow = () => css`
   article[data-part="card"][data-card="inbox-row"] > [data-slot="body"] > p {
     margin: 0;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    color: ${dim(60)};
+    color: ${text('subtle')};
     font-size: var(--ds-text-sm);
   }
   article[data-part="card"][data-card="inbox-row"] > [data-slot="body"] > p > strong {
-    color: ${dim(85)};
+    color: ${text()};
     margin-inline-end: ${pad(0.5)};
   }
   article[data-part="card"][data-card="inbox-row"] > [data-slot="footer"] {
     grid-area: footer;
-    color: ${dim(50)};
+    color: ${text('mute')};
     font-size: var(--ds-text-xs);
     font-variant-numeric: tabular-nums;
   }
@@ -85,7 +85,7 @@ export const inboxRow = () => css`
 
   /* system — 색조 다르게 */
   article[data-part="card"][data-card="inbox-row"][data-state="system"] > [data-slot="title"] > strong {
-    color: ${dim(50)};
+    color: ${text('mute')};
     font-style: italic;
   }
 
@@ -94,7 +94,7 @@ export const inboxRow = () => css`
     color: var(--ds-warning);
   }
   article[data-part="card"][data-card="inbox-row"] > [data-slot="title"] > [aria-label="첨부 있음"] {
-    color: ${dim(50)};
+    color: ${text('mute')};
   }
 
   /* radius for first/last in stack */

@@ -12,12 +12,20 @@ export const stripColorMixSpace = (line) =>
 
 export const rules = [
   {
+    kind: 'non-semantic-color',
+    level: 'warn',
+    hint: 'non-semantic 색 토큰 — text()/surface()/border()/accent()/status() 등 semantic 사용 (neutral/tint/mix/dim 은 preset·foundations 내부 전용)',
+    test: (line) => /(?<![\w-])(neutral|tint|mix|dim)\s*\(/.test(line) && !/^\s*(import|export)\b/.test(line),
+  },
+  {
     kind: 'hex',
+    level: 'error',
     hint: '#hex 리터럴 금지 — var(--ds-*) 또는 fn/palette 경유',
     test: (line) => /#[0-9a-fA-F]{3,8}\b/.test(line),
   },
   {
     kind: 'raw-color',
+    level: 'error',
     hint: 'raw 색 함수 금지 — fn/palette의 fg/accent/status/tint/mix/dim 사용',
     test: (line) => {
       const cleaned = stripColorMixSpace(line)
@@ -26,11 +34,13 @@ export const rules = [
   },
   {
     kind: 'raw-mask',
+    level: 'error',
     hint: 'raw mask/-webkit-mask 금지 — fn/icon의 icon(token, size) 또는 indicator(...) 사용 (icon square invariant)',
     test: (line) => /\b(-webkit-mask|mask)\s*:/.test(line) && !/mask-type|mask-mode|mask-repeat|mask-position|mask-size|mask-origin|mask-clip|mask-composite/.test(line),
   },
   {
     kind: 'radius-literal',
+    level: 'error',
     hint: 'border-radius 리터럴 금지 — radius("sm"|"md"|"lg"|"pill") 사용',
     test: (line) => {
       const m = line.match(/border-radius\s*:\s*([^;${]+)/)
@@ -61,7 +71,7 @@ export function scanText(text) {
     if (ALLOW_COMMENT(line)) continue
     for (const r of rules) {
       if (r.test(line)) {
-        findings.push({ kind: r.kind, ln: i + 1, hint: r.hint, snippet: line.trim().slice(0, 100) })
+        findings.push({ kind: r.kind, level: r.level ?? 'error', ln: i + 1, hint: r.hint, snippet: line.trim().slice(0, 100) })
       }
     }
   }

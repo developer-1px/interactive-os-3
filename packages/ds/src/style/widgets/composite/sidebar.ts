@@ -1,4 +1,4 @@
-import { css, dim, neutral, hierarchy, microLabel, pad, radius } from '../../../tokens/foundations'
+import { css, hierarchy, microLabel, pad, radius, surface, text } from '../../../tokens/foundations'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.
@@ -23,7 +23,7 @@ export const sidebarCss = () => css`
   nav[data-part="sidebar"] {
     width: var(--ds-sidebar-w); flex: none;
     overflow-y: auto; overflow-x: hidden;
-    background: ${neutral(1)};
+    background: ${surface('subtle')};
     display: flex; flex-direction: column;
     /* L4 surface — sidebar 자체 padding (Figure/Ground). */
     padding: ${hierarchy.surface};
@@ -42,7 +42,7 @@ export const sidebarCss = () => css`
   }
   nav[data-part="sidebar"] > header > small {
     font-size: var(--ds-text-xs);
-    color: ${dim(55)};
+    color: ${text('subtle')};
   }
   /* L3 section — h3↔listbox는 atom보다 한 단계 넓게(Continuity 유지하며 atom과 구분).
      section 자체는 L5 shell gap으로 분리된다. */
@@ -73,11 +73,11 @@ export const sidebarCss = () => css`
     gap: ${pad(2)};
     padding: ${pad(2)};
     border-radius: ${radius('md')};
-    background: ${neutral(2)};
+    background: ${surface('muted')};
     font-size: var(--ds-text-sm);
   }
   nav[data-part="sidebar"] > footer > small {
-    color: ${dim(55)};
+    color: ${text('subtle')};
     font-size: var(--ds-text-xs);
   }
 
@@ -97,7 +97,7 @@ export const sidebarCss = () => css`
      키보드 진입/선택은 axes 측에서 disabled로 차단. 시각만 microLabel. */
   nav[data-part="sidebar"] [role="tree"] li[role="none"][data-group-label] {
     ${microLabel()}
-    color: ${neutral(6)};
+    color: ${text('mute')};
     pointer-events: none;
     padding-block: ${pad(2)} ${pad(1)};
     padding-inline-start: ${pad(2)};
