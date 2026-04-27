@@ -7,9 +7,9 @@
  *
  * inbox·email·finder 류 패턴. 좌측 list 는 고정 폭, 우측 detail 은 grow.
  */
-import { ROOT } from '../../core/types'
+import { ROOT } from '../../headless/types'
 import { defineLayout } from '../defineLayout'
-import type { NormalizedData } from '../../core/types'
+import type { NormalizedData } from '../../headless/types'
 
 export interface MasterDetailProps {
   /** 좌측 list Section 의 id. 라우트가 children 을 merge 로 채운다. */

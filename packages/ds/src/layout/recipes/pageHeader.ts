@@ -11,7 +11,7 @@
  * 좌·우 row 는 'cluster' flow 로 자연 wrap + gap.
  */
 import { defineLayout } from '../defineLayout'
-import type { NormalizedData } from '../../core/types'
+import type { NormalizedData } from '../../headless/types'
 
 export interface PageHeaderProps {
   /** Header 의 root id. 라우트가 외부에서 참조한다. */

@@ -6,7 +6,7 @@
  * - widget은 라우트당 N개 인스턴스 가능. 합성은 `merge`로.
  * - validate: orphan/cycle/unknown — root 도달성은 검사하지 않는다.
  */
-import type { NormalizedData } from '../core/types'
+import type { NormalizedData } from '../headless/types'
 import { validateFragment } from './nodes'
 
 export type WidgetBuilder<P = void> = (props: P) => NormalizedData

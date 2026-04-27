@@ -3,7 +3,7 @@ import { Dialog } from '../Dialog'
 import { Combobox } from '../../3-input/Combobox'
 import { Listbox } from '../../4-selection/Listbox'
 import { Columns } from '../../4-selection/Columns'
-import { useShortcut } from '../../../core/hooks/useShortcut'
+import { useShortcut } from '../../../headless/hooks/useShortcut'
 import { usePaletteController } from './usePaletteController'
 
 export function CommandPalette() {

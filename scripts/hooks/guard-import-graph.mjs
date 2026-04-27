@@ -25,22 +25,19 @@ const DS_SRC = join(REPO_ROOT, 'packages/ds/src')
 // 빈 배열 = 외부 layer import 0건 허용 (외부 dep 만 OK).
 // "self" 는 자기 layer 내부.
 const RULES = {
-  // ─── 현재 (Phase 1) — 카테고리 분기 ─────────────────────────────────
-  palette:     { deps: [] },
-  foundations: { deps: ['palette'] },
-  core:        { deps: [] },
-  style:       { deps: ['foundations', 'palette', 'core'] },
-  parts:       { deps: ['foundations', 'palette', 'core', 'style'] },
-  ui:          { deps: ['foundations', 'palette', 'core', 'style', 'parts'] },
-  layout:      { deps: ['foundations', 'palette', 'core', 'style', 'parts', 'ui'] },
-  devices:     { deps: ['foundations', 'palette', 'core', 'style', 'ui'] },
-
-  // ─── 목표 (Phase 2 이후) — 레이어 분기 ──────────────────────────────
-  // 폴더 신설 시 자동 활성화
-  tokens:   { deps: [] },
-  headless: { deps: ['tokens'] },
-  // ui / content / devices 는 위에 이미 있으니 곱사리. Phase 2 에서 deps 갱신.
-  content:  { deps: ['tokens', 'headless', 'ui'] },
+  // ─── L1 ───────────────────────────────────────────────────────────────
+  tokens:      { deps: [] },
+  foundations: { deps: ['tokens'] },                      // 잔존 alias 호환
+  // ─── L2 ───────────────────────────────────────────────────────────────
+  headless:    { deps: ['tokens'] },
+  // ─── L1 잔여 (Phase 2 후속에서 tokens/widgets 또는 ui co-location 흡수) ──
+  style:       { deps: ['tokens', 'foundations', 'headless'] },
+  // ─── L3 ───────────────────────────────────────────────────────────────
+  parts:       { deps: ['tokens', 'foundations', 'headless', 'style'] },
+  ui:          { deps: ['tokens', 'foundations', 'headless', 'style', 'parts'] },
+  layout:      { deps: ['tokens', 'foundations', 'headless', 'style', 'parts', 'ui'] },
+  devices:     { deps: ['tokens', 'foundations', 'headless', 'style', 'ui'] },
+  content:     { deps: ['tokens', 'foundations', 'headless', 'style', 'ui'] },
 }
 
 // 알려진 예외 — 정당한 이유로 허용하는 cross-layer import.

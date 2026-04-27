@@ -75,22 +75,22 @@ export const dsCss = layerDecl + segments.map(([, css]) => css).join('\n')
 // 부팅 시 selector 중복 차단 — cascade race 는 영구 부채. 새 중복은 throw.
 assertUniqueSelectors(segments)
 
-export * from './core/types'
+export * from './headless/types'
 export * from './data'
-export { reduce } from './core/state/reduce'
-export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
-export { useControlState } from './core/hooks/useControlState'
-export { useEventBridge } from './core/hooks/useEventBridge'
-export { defineFlow, useFlow, type FlowDef } from './core/flow'
+export { reduce } from './headless/state/reduce'
+export { fromTree, fromList, pathAncestors } from './headless/state/fromTree'
+export { useControlState } from './headless/hooks/useControlState'
+export { useEventBridge } from './headless/hooks/useEventBridge'
+export { defineFlow, useFlow, type FlowDef } from './headless/flow'
 export {
   defineFeature, useFeature,
   type FeatureSpec, type CommandBase,
   type Effect, type QuerySpec, type QueryResult,
   invalidateQuery,
-} from './core/feature'
-export { useRoving } from './core/hooks/useRoving'
-export { useRovingDOM } from './core/hooks/useRovingDOM'
-export { parentOf } from './core/axes'
+} from './headless/feature'
+export { useRoving } from './headless/hooks/useRoving'
+export { useRovingDOM } from './headless/hooks/useRovingDOM'
+export { parentOf } from './headless/axes'
 export {
   navigateOnActivate,
   activateOnNavigate,
@@ -98,12 +98,12 @@ export {
   composeGestures,
   activateProps,
   type GestureHelper,
-} from './core/gesture'
+} from './headless/gesture'
 export {
   defineMiddleware,
   type Middleware, type Phase,
   type PreDispatchCtx, type PostDispatchCtx, type ResourceCtx,
-} from './core/middleware'
+} from './headless/middleware'
 export { definePlugin, type PluginManifest } from './plugin'
 // 1-status — 시각 토큰. 다른 컴포넌트의 슬롯으로 들어감.
 export * from './ui/1-status/Badge'

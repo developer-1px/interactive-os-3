@@ -18,7 +18,7 @@
  *   cols?:     1|2|3|4|6|12  (Grid only)
  */
 import type { CSSProperties, ReactNode } from 'react'
-import type { Entity, NormalizedData } from '../core/types'
+import type { Entity, NormalizedData } from '../headless/types'
 import type { UiComponentName } from './registry'
 
 export type Flow = 'list' | 'cluster' | 'form' | 'prose' | 'split'

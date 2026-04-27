@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { printTree, printHeadingOutline } from '../debug'
-import type { NormalizedData } from '../core/types'
+import type { NormalizedData } from '../headless/types'
 
 /**
  * URL 파라미터 ?debug=tree 일 때 Renderer가 렌더한 페이지 트리와 heading outline을 console에 출력.

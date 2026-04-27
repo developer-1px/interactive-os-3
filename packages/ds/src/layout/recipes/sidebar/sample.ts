@@ -3,7 +3,7 @@
  * NormalizedData(Tree용) 단일 형식. seed 고정으로 재현 가능.
  */
 import { faker } from '@faker-js/faker'
-import { ROOT, EXPANDED, FOCUS, type NormalizedData } from '../../../core/types'
+import { ROOT, EXPANDED, FOCUS, type NormalizedData } from '../../../headless/types'
 
 export interface SampleOptions {
   seed?: number

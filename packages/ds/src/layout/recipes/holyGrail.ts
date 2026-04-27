@@ -12,9 +12,9 @@
  * navSlot/asideSlot 은 외부 widget 의 root id, contentSlot 은 내부 Section 의
  * id 로 라우트가 그 children 을 merge 한다.
  */
-import { ROOT } from '../../core/types'
+import { ROOT } from '../../headless/types'
 import { defineLayout } from '../defineLayout'
-import type { NormalizedData } from '../../core/types'
+import type { NormalizedData } from '../../headless/types'
 
 export interface HolyGrailProps {
   /** Main landmark 의 aria-label. 보통 페이지 헤더 라벨. */

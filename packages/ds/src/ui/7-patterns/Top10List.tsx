@@ -3,7 +3,7 @@ import {
   ROOT,
   getChildren,
   type CollectionProps,
-} from '../../core/types'
+} from '../../headless/types'
 
 /**
  * Top10List — 순위 + 라벨 + 수치 ordered list. CollectionProps 기반.

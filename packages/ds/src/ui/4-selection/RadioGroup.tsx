@@ -3,9 +3,9 @@ import {
   ROOT,
   getChildren, getLabel, isDisabled,
   type CollectionProps,
-} from '../../core/types'
-import { activate, composeAxes, navigate } from '../../core/axes'
-import { useRoving } from '../../core/hooks/useRoving'
+} from '../../headless/types'
+import { activate, composeAxes, navigate } from '../../headless/axes'
+import { useRoving } from '../../headless/hooks/useRoving'
 import { Radio } from '../3-input/Radio'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {

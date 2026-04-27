@@ -17,6 +17,7 @@
     "./style/seed/*": "./src/tokens/style/seed/*",
     "./style/shell": "./src/tokens/style/shell/index.ts",
     "./style/states": "./src/tokens/style/states/index.ts",
+    "./core/*": "./src/headless/*",
     "./*": "./src/*"
   }
 }

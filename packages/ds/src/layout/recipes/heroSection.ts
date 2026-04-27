@@ -11,7 +11,7 @@
  * 라우트가 상하 순서만 책임진다.
  */
 import { defineLayout } from '../defineLayout'
-import type { NormalizedData } from '../../core/types'
+import type { NormalizedData } from '../../headless/types'
 
 export interface HeroSectionProps {
   /** Section 의 root id. */

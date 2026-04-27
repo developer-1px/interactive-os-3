@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { useRovingDOM } from '../../core/hooks/useRovingDOM'
+import { useRovingDOM } from '../../headless/hooks/useRovingDOM'
 
 /**
  * TreeGrid — APG treegrid (계층 가능). focus model = **row-focus**.

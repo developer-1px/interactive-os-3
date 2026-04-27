@@ -1,5 +1,5 @@
-import { fromTree, pathAncestors } from '../../../core/state/fromTree'
-import type { NormalizedData } from '../../../core/types'
+import { fromTree, pathAncestors } from '../../../headless/state/fromTree'
+import type { NormalizedData } from '../../../headless/types'
 import type { PaletteEntry } from './usePaletteEntries'
 
 type Node = {
