@@ -15,8 +15,8 @@ import { inboxCss, chatCss, feedCss } from '@apps/genres'
 const appsCss = wrapAppsLayer([
   inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, markdownCss, inboxCss, chatCss, feedCss,
 ])
-import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/style/preset'
-import { onShortcut } from '@p/ds/core/hooks/useShortcut'
+import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/tokens/style/preset'
+import { onShortcut } from '@p/ds/headless/hooks/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 import { ReproRecorderOverlay, SpacingOverlay } from '@p/devtools'

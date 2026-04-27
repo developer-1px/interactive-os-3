@@ -27,26 +27,6 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: /^@p\/ds$/, replacement: resolve(__dirname, 'packages/ds/src/index.ts') },
-      // 3-layer reorg (PRD: prd-immutable-anchor.md) — 이동된 경로 alias.
-      // 일반 wildcard 보다 먼저 매칭되어야 함 (vite 는 위에서부터 순차 매칭).
-      { find: /^@p\/ds\/foundations$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/foundations/index.ts') },
-      { find: /^@p\/ds\/foundations\//, replacement: resolve(__dirname, 'packages/ds/src/tokens/foundations/') + '/' },
-      { find: /^@p\/ds\/palette$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/palette/index.ts') },
-      { find: /^@p\/ds\/palette\//, replacement: resolve(__dirname, 'packages/ds/src/tokens/palette/') + '/' },
-      { find: /^@p\/ds\/style\/preset$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/preset/index.ts') },
-      { find: /^@p\/ds\/style\/preset\//, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/preset/') + '/' },
-      { find: /^@p\/ds\/style\/seed$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/seed/index.ts') },
-      { find: /^@p\/ds\/style\/seed\//, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/seed/') + '/' },
-      { find: /^@p\/ds\/style\/shell$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/shell/index.ts') },
-      { find: /^@p\/ds\/style\/states$/, replacement: resolve(__dirname, 'packages/ds/src/tokens/style/states/index.ts') },
-      { find: /^@p\/ds\/core\//, replacement: resolve(__dirname, 'packages/ds/src/headless/') + '/' },
-      { find: /^@p\/ds\/layout$/, replacement: resolve(__dirname, 'packages/ds/src/headless/layout/index.ts') },
-      { find: /^@p\/ds\/layout\/recipes$/, replacement: resolve(__dirname, 'packages/ds/src/ui/recipes/index.ts') },
-      { find: /^@p\/ds\/layout\/recipes\//, replacement: resolve(__dirname, 'packages/ds/src/ui/recipes/') + '/' },
-      { find: /^@p\/ds\/parts$/, replacement: resolve(__dirname, 'packages/ds/src/ui/parts/index.ts') },
-      { find: /^@p\/ds\/parts\//, replacement: resolve(__dirname, 'packages/ds/src/ui/parts/') + '/' },
-      { find: /^@p\/ds\/ui\/7-patterns\/(ContractCard|CourseCard|RoleCard|ProductCard|PostCard|FeedPost)$/, replacement: resolve(__dirname, 'packages/ds/src/content') + '/$1.tsx' },
-      { find: /^@p\/ds\/ui\/7-patterns\//, replacement: resolve(__dirname, 'packages/ds/src/ui/patterns/') + '/' },
       { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
       { find: /^@p\/fs$/, replacement: resolve(__dirname, 'packages/fs/src/index.ts') },
       { find: /^@p\/fs\//, replacement: resolve(__dirname, 'packages/fs/src/') + '/' },

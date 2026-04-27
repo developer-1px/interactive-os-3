@@ -1,5 +1,5 @@
-import { css, pad } from '@p/ds/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/style/preset/breakpoints'
+import { css, pad } from '@p/ds/tokens/foundations'
+import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
 
 // Markdown viewer — 데스크톱은 중앙 정렬 + 여백, 모바일은 폭 100% + safe-area.
 export const markdownCss = css`

@@ -1,5 +1,5 @@
-import { css, pad, radius } from '@p/ds/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/style/preset/breakpoints'
+import { css, pad, radius } from '@p/ds/tokens/foundations'
+import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
 
 // edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content).
 // 모바일에서 sidebar는 좌측 드로어로 변환.

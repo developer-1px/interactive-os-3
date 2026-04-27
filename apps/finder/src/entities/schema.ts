@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { IconToken } from '@p/ds/foundations/iconography/icon'
+import type { IconToken } from '@p/ds/tokens/foundations/iconography/icon'
 
 /** finder 도메인 UI 엔티티 zod 스키마.
  *  fs entity(FsNode)는 @p/fs/schema 가 owner — 여기서는 finder UI 메타만. */

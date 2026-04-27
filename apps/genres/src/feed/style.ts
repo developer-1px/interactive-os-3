@@ -1,5 +1,5 @@
-import { css, pad, radius, hairlineWidth, border, text, surface } from '@p/ds/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/style/preset/breakpoints'
+import { css, pad, radius, hairlineWidth, border, text, surface } from '@p/ds/tokens/foundations'
+import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
 
 /**
  * feed Gestalt 적용 —

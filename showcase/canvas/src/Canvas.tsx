@@ -12,7 +12,7 @@
 import { useMemo, useReducer, useState, type ComponentType, type ReactNode } from 'react'
 import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
 import { ROOT, reduce, type NormalizedData } from '@p/ds'
-import { Card, Heading, KeyValue, Code } from '@p/ds/parts'
+import { Card, Heading, KeyValue, Code } from '@p/ds/ui/parts'
 import { audit } from 'virtual:ds-audit'
 import { demos as catalogDemos } from '@showcase/catalog'
 import { ThemeCreatorBody } from '@showcase/theme'

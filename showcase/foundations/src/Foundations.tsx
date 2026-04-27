@@ -6,7 +6,7 @@ import {
   SidebarAdminFloating,
   type Event,
 } from '@p/ds'
-import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '@p/ds/style/preset'
+import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '@p/ds/tokens/style/preset'
 import { buildFoundationsPage, navBase, presetToolsBase } from './build'
 import { DemoStyles, renderDemoFromSpec } from './demoRenderers'
 

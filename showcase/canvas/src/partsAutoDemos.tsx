@@ -9,7 +9,7 @@ import {
   Avatar, Badge, Breadcrumb, Callout, Card, Code, Kbd, EmptyState,
   Heading, KeyValue, Link as PartsLink,
   Progress, Skeleton, Table, Tag, Thumbnail, Timestamp,
-} from '@p/ds/parts'
+} from '@p/ds/ui/parts'
 import { Phone, PhoneTopBar, PhoneTabBar, ROOT, reduce, type NormalizedData } from '@p/ds'
 import { Prose } from '@p/ds/ui/0-primitives/Prose'
 import { CodeBlock } from '@p/ds/ui/0-primitives/CodeBlock'
@@ -31,9 +31,9 @@ import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
 import { Dialog } from '@p/ds/ui/6-overlay/Dialog'
 import { MenuPopover } from '@p/ds/ui/6-overlay/MenuPopover'
 import { Sheet } from '@p/ds/ui/6-overlay/Sheet'
-import { ContractCard } from '@p/ds/ui/7-patterns/ContractCard'
-import { FeedPost } from '@p/ds/ui/7-patterns/FeedPost'
-import { FeedArticle } from '@p/ds/ui/7-patterns/FeedArticle'
+import { ContractCard } from '@p/ds/content/ContractCard'
+import { FeedPost } from '@p/ds/content/FeedPost'
+import { FeedArticle } from '@p/ds/ui/patterns/FeedArticle'
 import { DataGridRow } from '@p/ds/ui/5-display/DataGridRow'
 
 const overlayWrap = (label: string): ReactNode => (

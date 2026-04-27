@@ -14,7 +14,7 @@ import { finderFeature } from '../features/feature'
 import { runChecks } from './checks'
 import { describe, shapeOf, defaultValue, labelOf, type FieldKind } from './zodIntrospect'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { Card, KeyValue, Code, Tag, Callout, Heading } from '@p/ds/parts'
+import { Card, KeyValue, Code, Tag, Callout, Heading } from '@p/ds/ui/parts'
 
 const initial: FinderState = { url: '/', pinned: '/', mode: 'columns', query: '' }
 

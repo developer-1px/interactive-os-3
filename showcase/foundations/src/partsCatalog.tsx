@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import {
   Avatar, Badge, Tag, Thumbnail, Timestamp,
   Skeleton, EmptyState, Callout, KeyValue,
-} from '@p/ds/parts'
+} from '@p/ds/ui/parts'
 
 export interface PartEntry {
   name: string

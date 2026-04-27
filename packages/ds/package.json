@@ -7,22 +7,6 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./foundations": "./src/tokens/foundations/index.ts",
-    "./foundations/*": "./src/tokens/foundations/*",
-    "./palette": "./src/tokens/palette/index.ts",
-    "./palette/*": "./src/tokens/palette/*",
-    "./style/preset": "./src/tokens/style/preset/index.ts",
-    "./style/preset/*": "./src/tokens/style/preset/*",
-    "./style/seed": "./src/tokens/style/seed/index.ts",
-    "./style/seed/*": "./src/tokens/style/seed/*",
-    "./style/shell": "./src/tokens/style/shell/index.ts",
-    "./style/states": "./src/tokens/style/states/index.ts",
-    "./core/*": "./src/headless/*",
-    "./layout": "./src/headless/layout/index.ts",
-    "./layout/recipes": "./src/ui/recipes/index.ts",
-    "./layout/recipes/*": "./src/ui/recipes/*",
-    "./parts": "./src/ui/parts/index.ts",
-    "./parts/*": "./src/ui/parts/*",
     "./*": "./src/*"
   }
 }

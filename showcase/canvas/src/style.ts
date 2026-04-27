@@ -1,4 +1,4 @@
-import { css, neutral, pad, radius, microLabel } from '@p/ds/foundations'
+import { css, neutral, pad, radius, microLabel } from '@p/ds/tokens/foundations'
 
 /**
  * Canvas — 자산 SSOT viewer. data-part 네임스페이스로 셀렉터 캡슐화.
