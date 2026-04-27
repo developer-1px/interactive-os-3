@@ -172,7 +172,7 @@ const oauthRow = (): ReactNode => (
 )
 
 const divider = (label: string): ReactNode => (
-  <div role="separator" data-part="text-divider" aria-label={label}><small>{label}</small></div>
+  <div role="separator" aria-label={label}><small>{label}</small></div>
 )
 
 const loginCard = (): ReactNode => (

@@ -78,19 +78,19 @@ export const authCard = () => css`
   }
 
   /* "또는 이메일로" divider */
-  article[data-part="card"][data-card="auth"] [data-part="text-divider"] {
+  article[data-part="card"][data-card="auth"] [role="separator"] {
     display: grid; grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: ${pad(2)};
     color: ${text('mute')};
   }
-  article[data-part="card"][data-card="auth"] [data-part="text-divider"]::before,
-  article[data-part="card"][data-card="auth"] [data-part="text-divider"]::after {
+  article[data-part="card"][data-card="auth"] [role="separator"]::before,
+  article[data-part="card"][data-card="auth"] [role="separator"]::after {
     content: '';
     block-size: ${hairlineWidth()};
     background: ${surface('muted')};
   }
-  article[data-part="card"][data-card="auth"] [data-part="text-divider"] > small {
+  article[data-part="card"][data-card="auth"] [role="separator"] > small {
     font-size: var(--ds-text-xs);
   }
 

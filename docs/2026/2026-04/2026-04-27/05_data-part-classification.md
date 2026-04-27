@@ -123,6 +123,32 @@ baseline 135 signatures = 70 distinct names. invariant 기준으로 분류한다
 
 ---
 
+## 재정밀화 (2026-04-27 1차 환원 후)
+
+ATOM 후보 11건 정밀 검토 결과 — 단순 1:1 native 환원 외에는 PART 또는 차원 불일치(L)로 재분류.
+
+| 원분류 | 이름 | 재분류 | 근거 |
+|--------|------|--------|------|
+| ATOM | `actions` | **PART (slot pattern)** | "그룹 첫 자식 button = primary CTA" 의미 캡슐화 |
+| ATOM | `danger` | **L (tone misuse)** | `data-tone="danger"` 가 정본. 차원 자체 오류 |
+| ATOM | `legend-dot` | **PART** | 색 dot + 4-tone 합성 widget, ARIA 등가 없음 |
+| ATOM | `thumbnail` | **PART** | 합성 micro-widget |
+| ATOM | `avatar` | **PART** | 합성 micro-widget (badge 합성 가능) |
+| ATOM | `badge` | **PART** | count badge widget, output role 약함 |
+| ATOM | `tag` | **PART** | chip widget, ARIA 등가 없음 |
+| ATOM | `frame` / `frames` / `frame-label` | **S (showcase scope)** | 라우트 자산 |
+| ATOM | `text-divider` | **ATOM ✅** | `<div role="separator">` 이미 사용 중 → `[role="separator"]` |
+
+→ 진짜 ATOM 은 줄어들고 PART 가 늘어남. 다음 환원은 의미 차원 검토 필수.
+
+## 환원 진행 (2026-04-27)
+
+| 배치 | 환원 | 잔여 baseline |
+|------|------|--------------|
+| 시작 | — | 135 |
+| 1차: code, kbd, link, progress, table, key-value, fieldset | -14 | 121 |
+| 2차: text-divider | -1 | 120 |
+
 ## 요약 (분포)
 
 | 카테고리 | 개수 | 비율 |
