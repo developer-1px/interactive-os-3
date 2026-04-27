@@ -11,6 +11,12 @@
     "./foundations/*": "./src/tokens/foundations/*",
     "./palette": "./src/tokens/palette/index.ts",
     "./palette/*": "./src/tokens/palette/*",
+    "./style/preset": "./src/tokens/style/preset/index.ts",
+    "./style/preset/*": "./src/tokens/style/preset/*",
+    "./style/seed": "./src/tokens/style/seed/index.ts",
+    "./style/seed/*": "./src/tokens/style/seed/*",
+    "./style/shell": "./src/tokens/style/shell/index.ts",
+    "./style/states": "./src/tokens/style/states/index.ts",
     "./*": "./src/*"
   }
 }

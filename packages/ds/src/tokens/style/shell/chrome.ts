@@ -1,4 +1,4 @@
-import { border, css, hairlineWidth, pad, grouping } from '../../tokens/foundations'
+import { border, css, hairlineWidth, pad, grouping } from '../../foundations'
 import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.

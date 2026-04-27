@@ -1,4 +1,4 @@
-import { css } from '../../tokens/foundations'
+import { css } from '../../foundations'
 import { avatarSize, containerPad, levelShift, rowGap, slotGap } from './keyline'
 import { defaultPreset } from '../preset/default'
 import { toCss } from '../preset/apply'
