@@ -9,26 +9,38 @@ import { scanText } from './lib/ds-value-rules.mjs'
 
 const ROOT = new URL('..', import.meta.url).pathname
 
-// 위계: 모든 widget 코드(*.style.ts) + tokens/style/shell·states 가 scope.
-// foundations·palette·preset·fn 은 정의 layer 라 raw 허용 (scope 제외).
-const SCAN = [
-  'packages/ds/src/style/widgets',
-  'packages/ds/src/tokens/style/shell',
-  'packages/ds/src/tokens/style/states.ts',
-  'packages/ds/src/ui',
-  'packages/ds/src/content',
-  'packages/ds/src/devices',
-]
+// Convention discovery — 새 패키지·앱·showcase 추가 시 SCAN 배열 수정 없이 자동
+// 포함된다 (OCP). 포함 규칙:
+//   1. SOURCE_ROOTS 아래를 모두 walk
+//   2. SCOPE 필터 통과 (.style.ts / /style/ 경로 / states.ts) — widget 시각 코드만
+//   3. SKIP_PATHS 에 걸리면 제외 (정의 layer · 물리 chrome · _demos)
+//
+// 즉 widget 시각 코드는 *어디 있든* lint 대상. raw 색을 칠하면 잡힌다.
+const SOURCE_ROOTS = ['packages', 'showcase', 'apps']
 
 const SKIP_PATHS = [
+  'node_modules',
+  'dist',
+  // 정의 layer — raw neutral/hex 가 SSOT 라 정당
   'packages/ds/src/fn',
   'packages/ds/src/tokens/style/preset',
   'packages/ds/src/tokens/foundations',
+  // demo는 1회용 시연 — raw 허용
   '/_demos/',
+  // devices/ 는 physical chrome (bezel·notch 같은 물리 수치) — semantic role 부적합
+  '/devices/',
 ]
 
-// scope 제한: .style.ts / .styles.ts 또는 /style/ 경로만 — *.tsx component 는 제외
-const SCOPE = (p) => /\.(style|styles)\.ts$/.test(p) || p.includes('/style/') || p.endsWith('/states.ts')
+// scope: 시각 코드만 — *.tsx component 는 제외.
+//   - <Name>.style.ts / <Name>.styles.ts (sibling pattern)
+//   - /style/<foo>.ts  (style 폴더 내부)
+//   - style.ts / styles.ts (단일 시각 모듈)
+//   - states.ts (canvas 등에서 시각 상태 토큰 호출하는 곳)
+const SCOPE = (p) =>
+  /\.(style|styles)\.ts$/.test(p) ||
+  p.includes('/style/') ||
+  /\/(style|styles)\.ts$/.test(p) ||
+  p.endsWith('/states.ts')
 
 function* walk(p) {
   const st = statSync(p)
@@ -44,8 +56,8 @@ function* walk(p) {
 }
 
 const findings = []
-for (const target of SCAN) {
-  const full = join(ROOT, target)
+for (const root of SOURCE_ROOTS) {
+  const full = join(ROOT, root)
   try { statSync(full) } catch { continue }
   for (const file of walk(full)) {
     const text = readFileSync(file, 'utf8')
