@@ -331,6 +331,15 @@ export const canvasCss = css`
     text-align: center;
   }
 
+  [data-part="canvas-stage-empty"] {
+    font: 400 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #b8b8b8;
+    padding: ${pad(4)};
+    border: 1px dashed #dcdcdc;
+    border-radius: 4px;
+    min-width: 320px;
+  }
+
   /* detail panel — viewport 우하단 floating wrapper만. 내부는 ds parts/Card. */
   [data-part="canvas-detail"] {
     position: fixed;

@@ -101,6 +101,48 @@ export function ThemeCreatorBody() {
           </ul>
         </section>
 
+        <section aria-labelledby="ctl-type">
+          <h2 id="ctl-type">Type palette</h2>
+          <ul aria-label="type scale">
+            {(['xs','sm','md','lg','xl','2xl'] as const).map((s) => (
+              <li key={s} data-step={s}>
+                <span data-specimen>Aa</span>
+                <code>--ds-text-{s}</code>
+              </li>
+            ))}
+          </ul>
+          <ul aria-label="type weights">
+            {(['regular','medium','semibold','bold','extrabold'] as const).map((w) => (
+              <li key={w} data-weight={w}>
+                <span data-specimen>Aa</span>
+                <code>--ds-weight-{w}</code>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="ctl-spacing">
+          <h2 id="ctl-spacing">Spacing palette</h2>
+          <ul aria-label="spacing hierarchy">
+            <li data-step="atom"><i aria-hidden /><code>atom</code><small>L0 row 안 atom 간격</small></li>
+            <li data-step="section"><i aria-hidden /><code>section</code><small>L3 section↔section</small></li>
+            <li data-step="surface"><i aria-hidden /><code>surface</code><small>L4 panel inner</small></li>
+            <li data-step="shell"><i aria-hidden /><code>shell</code><small>L5 app shell</small></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="ctl-state">
+          <h2 id="ctl-state">State palette</h2>
+          <ul aria-label="state samples">
+            <li data-state="rest"><span data-tile>Rest</span><code>default</code></li>
+            <li data-state="hover"><span data-tile>Hover</span><code>:hover</code></li>
+            <li data-state="active"><span data-tile>Active</span><code>:active</code></li>
+            <li data-state="focus"><span data-tile>Focus</span><code>:focus-visible</code></li>
+            <li data-state="selected"><span data-tile>Selected</span><code>aria-selected</code></li>
+            <li data-state="disabled"><span data-tile>Disabled</span><code>aria-disabled</code></li>
+          </ul>
+        </section>
+
         <section aria-labelledby="ctl-preview">
           <h2 id="ctl-preview">Preview</h2>
           <article aria-label="Sample card">
