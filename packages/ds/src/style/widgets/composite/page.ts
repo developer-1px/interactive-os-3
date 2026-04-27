@@ -1,6 +1,5 @@
 import { css, hierarchy, radius, surface, text, typography } from '../../../tokens/foundations'
-import { weight } from '../../../tokens/palette'
-import { pad } from '../../../tokens/palette'
+import { weight, pad } from '../../../tokens/palette'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)

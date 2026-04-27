@@ -1,6 +1,5 @@
 import { css, mute } from '../../tokens/foundations'
-import { font } from '../../tokens/palette'
-import { pad } from '../../tokens/palette'
+import { font, pad } from '../../tokens/palette'
 
 export const cssKeyValue = () => css`
   :where(dl) {

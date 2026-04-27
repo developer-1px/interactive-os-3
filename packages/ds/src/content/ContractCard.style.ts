@@ -1,6 +1,5 @@
 import { css, currentTint, radius, status, text } from '../tokens/foundations'
-import { font } from '../tokens/palette'
-import { dim, pad } from '../tokens/palette'
+import { font, pad } from '../tokens/palette'
 
 /**
  * ContractCard slot inner styling — Card primitive 슬롯 안의 컨트랙트 특화 시각만.

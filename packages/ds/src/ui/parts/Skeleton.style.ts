@@ -1,5 +1,4 @@
 import { css, currentTint, radius } from '../../tokens/foundations'
-import { dim } from '../../tokens/palette'
 
 /**
  * Skeleton — 로딩 placeholder. 단색 box. shimmer 없음 (motion 부담 없음).

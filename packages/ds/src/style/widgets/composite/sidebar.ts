@@ -1,5 +1,4 @@
 import { css, hierarchy, microLabel, radius, slot, surface, text, typography } from '../../../tokens/foundations'
-import { weight } from '../../../tokens/palette'
 import { pad } from '../../../tokens/palette'
 
 /**

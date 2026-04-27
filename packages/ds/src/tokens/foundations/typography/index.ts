@@ -1,12 +1,13 @@
 /**
- * typography/ — font scalar tokens. mixin 없음.
- *   scale.ts      → token: font('sm'), leading(...), weight(...) — 기본 var.
+ * typography/ — semantic role tokens.
+ *   role.ts       → type[role] · typography(role) — widget 이 쓸 어휘.
  *   heading.ts    → headingSize / headingFluid / trackingScale / underlineOffset.
  *   rhythm.ts     → emRatio() / progressInline() — em 기반 size ratio.
+ *   microLabel.ts → micro caption mixin.
  *
- * Note: proximity/inset 은 spacing/ 도메인으로 이전됐다.
+ * 구조 분리 — scale.ts (font/weight/tracking/leading) 는 palette/font.ts 가 SSoT.
+ * widget 이 raw scale 이 필요하면 `from '@p/ds/tokens/palette'` 명시 import.
  */
-export * from './scale'
 export * from './heading'
 export * from './rhythm'
 export * from './role'

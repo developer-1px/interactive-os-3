@@ -1,6 +1,5 @@
 import { border, css, currentTint, hairlineWidth, radius, text, typography } from '../../tokens/foundations'
-import { font, weight } from '../../tokens/palette'
-import { dim, pad } from '../../tokens/palette'
+import { font, pad } from '../../tokens/palette'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.

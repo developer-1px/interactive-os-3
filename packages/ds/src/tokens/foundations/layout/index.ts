@@ -9,3 +9,4 @@
 export * from './square'
 export * from './listReset'
 export * from './container'
+export * from './breakpoints'

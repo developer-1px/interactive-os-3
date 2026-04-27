@@ -1,5 +1,6 @@
 import { css } from '../../foundations'
-import { avatarSize, containerPad, levelShift, rowGap, slotGap } from './keyline'
+import { keyline } from '../../foundations'
+const { avatarSize, containerPad, levelShift, rowGap, slotGap } = keyline
 import { defaultPreset } from '../preset/default'
 import { toCss } from '../preset/apply'
 

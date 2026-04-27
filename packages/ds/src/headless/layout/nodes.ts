@@ -19,7 +19,7 @@
  */
 import type { CSSProperties, ReactNode } from 'react'
 import type { Entity, NormalizedData } from '../types'
-import type { UiComponentName } from './registry'
+import type { UiComponentName } from '../../registry'
 
 export type Flow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
 export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'

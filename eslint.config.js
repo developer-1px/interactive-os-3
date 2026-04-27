@@ -11,39 +11,55 @@ const MAX_LINES = 75
 const MAX_FILES_PER_DIR = 7
 
 // 인라인 플러그인 — SRP/모듈 크기 하네스
-// max-lines-no-imports: import 제외 줄 수 초과 → 파일 분리 신호
-// max-files-per-dir   : 같은 폴더 파일 수 초과 → 하위 폴더 분리 신호
 const dirFileCountCache = new Map()
 
-// ui/ zone 위계 — 작은 인덱스가 토대, 큰 인덱스가 합성.
-// 같은/낮은 zone 만 import 허용. entity ↔ overlay 는 같은 층(서로 import 금지).
-const ZONE_ORDER = { layout: 1, control: 2, entity: 3, overlay: 3, collection: 4, composite: 5 }
+// ─── ds 위계 (de facto: M3·Polaris·Atlassian 수렴) ───────────────────────
+//   L0  palette       tokens/palette/*           (raw scale)
+//   L1  foundations   tokens/foundations/*       (semantic)
+//   L1.5 component-tokens  intentionally empty
+//   L2  primitives    ui/{0-primitives,1-status,2-action,3-input}/*, ui/parts/*
+//   L3  patterns      ui/{4-selection,5-display,6-overlay,patterns}/*, content/*
+//   L4  templates     ui/{8-layout,recipes}/*
+//   L5  devices       devices/*
+//
+// + headless/ — L2 와 평행 (ARIA/keyboard 엔진), foundations 까지만 의존.
+// + style/widgets/ — orphan CSS (1:1 component 없는 shared CSS), foundations 까지만 의존.
+//
+// 위계 invariant: L<n> 의 파일은 L<m≤n> 만 import 가능. 같은 L<n> 안에서는 자유.
+// L0/L1 은 토큰이라 절대 widget 코드 (위쪽) 를 import 할 수 없음.
+
+const UI_ZONE_RANK = {
+  '0-primitives': 2, '1-status': 2, '2-action': 2, '3-input': 2, 'parts': 2,
+  '4-selection': 3, '5-display': 3, '6-overlay': 3, 'patterns': 3,
+  '8-layout': 4, 'recipes': 4,
+}
 
 const dsLimits = {
   rules: {
-    // 폴더 기반 layer boundary — palette < foundations < widget.
-    // widget(소비자) tier 는 palette/preset/seed 어떤 절대·상대경로로도 import 금지.
-    // import path 를 importing file 위치와 함께 해석해 cross-layer 를 잡는다.
+    // ─── layer-boundary ────────────────────────────────────────────────
+    // widget(L2~L5 + style/widgets) 는 token 정의층(preset/seed/shell) 직접 import ❌.
+    // foundations(L1) 은 palette(L0) 까지만, preset/seed/shell ❌.
     'layer-boundary': {
       meta: { type: 'problem', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
         if (!file) return {}
-        // widget tier — ui/ · content/ · devices/ · style/widgets/ · showcase/ · apps/
-        const isWidget =
-          /\/(?:packages\/ds\/src\/(?:ui|content|devices)|packages\/ds\/src\/style\/widgets|packages\/ds\/src\/tokens\/style\/widgets|showcase|apps)\//.test(file)
-        // foundations tier — palette 까지만 내려가도 됨 (semantic 정의 layer)
+        // showcase 카탈로그 — token tier 자체를 노출이 목적, raw 허용.
+        const isCatalogShowcase = /\/showcase\/(canvas|foundations|theme|catalog|inspector)\//.test(file)
+        if (isCatalogShowcase) return {}
+        // widget tier
+        const isWidget = /\/(?:packages\/ds\/src\/(?:ui|content|devices|headless)|packages\/ds\/src\/style\/widgets|showcase|apps)\//.test(file)
         const isFoundations = /\/packages\/ds\/src\/tokens\/foundations\//.test(file)
         if (!isWidget && !isFoundations) return {}
 
+        // widget 금지: preset · seed · shell (token 정의층)
         const FORBIDDEN_FOR_WIDGET = [
-          { name: 'palette',     re: /(?:^|\/)tokens\/palette(?:$|\/)/ },
-          { name: 'preset',      re: /(?:^|\/)tokens\/style\/preset(?:$|\/)/ },
-          { name: 'seed',        re: /(?:^|\/)tokens\/style\/seed(?:$|\/)/ },
-          // 상대경로 변형: '../palette/...' / '../../palette/color' 등
-          { name: 'palette',     re: /(?:^|\/)\.\.\/(?:\.\.\/)*palette(?:$|\/)/ },
-          { name: 'preset',      re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/preset(?:$|\/)/ },
-          { name: 'seed',        re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/seed(?:$|\/)/ },
+          { name: 'preset', re: /(?:^|\/)tokens\/style\/preset(?:$|\/|['"])/ },
+          { name: 'preset', re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/preset(?:$|\/|['"])/ },
+          { name: 'seed',   re: /(?:^|\/)tokens\/style\/seed(?:$|\/|['"])/ },
+          { name: 'seed',   re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/seed(?:$|\/|['"])/ },
+          { name: 'shell',  re: /(?:^|\/)tokens\/style\/shell(?:$|\/|['"])/ },
+          { name: 'shell',  re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/shell(?:$|\/|['"])/ },
         ]
         return {
           ImportDeclaration(node) {
@@ -55,22 +71,21 @@ const dsLimits = {
                   context.report({
                     node,
                     message:
-                      `layer 경계 위반: widget tier 는 ${r.name} layer 직접 import 금지 — ` +
-                      `tokens/foundations 의 semantic role 토큰 (text/surface/accent/accentTint/slot/size/…) 만 소비.`,
+                      `layer 위반: widget tier 는 ${r.name} 직접 import 금지 — ` +
+                      `tokens/foundations 의 semantic role + tokens/palette 의 raw scale 만 소비.`,
                   })
                   return
                 }
               }
             }
-            // foundations 는 palette 허용, preset/seed 는 금지 (정의 layer 아님)
+            // foundations 는 palette 만 허용 (preset/seed/shell ❌)
             if (isFoundations) {
-              if (/(?:^|\/)tokens\/style\/(preset|seed)(?:$|\/)/.test(src) ||
-                  /(?:^|\/)\.\.\/(?:\.\.\/)*style\/(preset|seed)(?:$|\/)/.test(src)) {
+              if (/(?:^|\/)tokens\/style\/(preset|seed|shell)(?:$|\/|['"])/.test(src) ||
+                  /(?:^|\/)\.\.\/(?:\.\.\/)*style\/(preset|seed|shell)(?:$|\/|['"])/.test(src)) {
                 context.report({
                   node,
                   message:
-                    `layer 경계 위반: foundations tier 는 preset/seed 직접 import 금지 — ` +
-                    `palette layer 까지만 의존.`,
+                    `layer 위반: foundations(L1) 은 token 정의층(preset/seed/shell) import 금지 — palette(L0) 까지만.`,
                 })
               }
             }
@@ -78,69 +93,78 @@ const dsLimits = {
         }
       },
     },
+
+    // ─── zone-boundary ────────────────────────────────────────────────
+    // ui/<zone> 내부 위계: L2 primitives → L3 patterns → L4 templates.
+    // 같은 L 끼리는 자유, 낮은 L 에서 높은 L 으로 import 금지 (예: L2 → L3 ❌).
     'zone-boundary': {
       meta: { type: 'problem', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
-        const m = file && file.match(/\/src\/ds\/ui\/([^/]+)\//)
+        const m = file && file.match(/\/packages\/ds\/src\/ui\/([^/]+)\//)
         if (!m) return {}
         const fromZone = m[1]
-        const fromRank = ZONE_ORDER[fromZone]
+        const fromRank = UI_ZONE_RANK[fromZone]
         if (fromRank == null) return {}
         return {
           ImportDeclaration(node) {
             const src = node.source.value
-            // ui/ 내부 cross-zone import 는 '../<zone>/...' 패턴.
-            // 절대경로(.../ui/<zone>/...) 도 함께 캐치.
+            if (typeof src !== 'string') return
+            // ui/<zone>/... 절대경로 또는 상대경로 둘 다 캐치
             const rel = src.match(/(?:^|\/)ui\/([^/]+)\//) || src.match(/^\.\.\/([^/]+)\//)
             if (!rel) return
             const toZone = rel[1]
-            const toRank = ZONE_ORDER[toZone]
+            const toRank = UI_ZONE_RANK[toZone]
             if (toRank == null) return
             if (toZone === fromZone) return
-            if (toRank >= fromRank) {
+            if (toRank > fromRank) {
               context.report({
                 node,
-                message: `zone 경계 위반: ${fromZone}(L${fromRank}) → ${toZone}(L${toRank}). 위계상 아래 zone 만 import 가능.`,
+                message:
+                  `zone 위반: ${fromZone}(L${fromRank}) → ${toZone}(L${toRank}). ` +
+                  `위계상 같은 L 또는 낮은 L 만 import 가능 (primitives → patterns → templates).`,
               })
             }
           },
         }
       },
     },
-    // L1a(raw palette) 직접 소비 금지. 소비자(L4 routes, L3 widgets)는 semantic 토큰만.
-    // 시연/카탈로그 라우트는 raw scale 노출이 의도이므로 allowlist.
-    'no-raw-palette-in-consumer': {
+
+    // ─── headless 경계 ─────────────────────────────────────────────────
+    // headless 는 tokens 까지만, ui/content/devices import ❌.
+    'headless-boundary': {
       meta: { type: 'problem', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
         if (!file) return {}
-        const isRoute  = /\/src\/routes\//.test(file)
-        const isWidget = /\/src\/ds\/style\/widgets\//.test(file)
-        if (!isRoute && !isWidget) return {}
-        // showcase / token-explorer 라우트는 예외 (memory: 시연 라우트 raw 예외)
-        const SHOWCASE = /\/src\/routes\/(theme|content|foundations|inspector)\b/
-        if (SHOWCASE.test(file)) return {}
-        const PALETTE = /var\(--ds-(?:neutral-[1-9]|tone(?:-hue|-chroma|-tint)?|step-scale|hue|density|depth)\b/
-        const check = (node, raw) => {
-          if (PALETTE.test(raw)) {
-            context.report({
-              node,
-              message:
-                `raw palette 소비: var(--ds-neutral-N) 등은 L1a(raw) 토큰입니다. ` +
-                `소비자(L4 routes / L3 widgets)는 semantic 토큰(--ds-fg/muted/border, mute()/dim()/pair())만 사용하세요.`,
-            })
-          }
-        }
+        if (!/\/packages\/ds\/src\/headless\//.test(file)) return {}
         return {
-          Literal(node) { if (typeof node.value === 'string') check(node, node.value) },
-          TemplateElement(node) { check(node, node.value.raw) },
+          ImportDeclaration(node) {
+            const src = node.source.value
+            if (typeof src !== 'string') return
+            // headless 가 ui/content/devices 를 import 하면 위반
+            if (/(?:^|\/)(?:ui|content|devices)(?:$|\/|['"])/.test(src) &&
+                !/^@tanstack|^react/.test(src)) {
+              // packages/ds/src/ui 등 ds 내부 경로만 검사
+              if (/@p\/ds\/(ui|content|devices)/.test(src) ||
+                  /\.\.\/(?:\.\.\/)*(ui|content|devices)\//.test(src)) {
+                context.report({
+                  node,
+                  message:
+                    `headless 위반: headless 는 ui/content/devices 를 import 할 수 없음 — tokens 까지만 의존.`,
+                })
+              }
+            }
+          },
         }
       },
     },
 
-    // aria-roledescription 을 namespace selector/JSX 키로 쓰지 마. data-part 사용.
-    // (memory: "No aria-roledescription namespace")
+    // ─── content/devices 경계 ──────────────────────────────────────────
+    // content (L3) · devices (L5) 는 ui (L2/L3/L4) + headless + tokens 까지.
+    // 같은 layer 끼리는 자유.
+
+    // ─── aria-roledescription 금지 ─────────────────────────────────────
     'no-aria-roledescription-namespace': {
       meta: { type: 'problem', schema: [] },
       create(context) {
@@ -150,7 +174,7 @@ const dsLimits = {
             context.report({
               node,
               message:
-                `aria-roledescription 을 selector namespace 로 쓰지 마세요 — 보조기기에 라벨로 노출되어 ARIA 의미를 왜곡합니다. data-part="<name>" 를 사용하세요.`,
+                `aria-roledescription 을 selector namespace 로 쓰지 마세요 — ARIA 의미 왜곡. data-part="<name>" 사용.`,
             })
           }
         }
@@ -161,8 +185,7 @@ const dsLimits = {
             if (node.name?.name === 'aria-roledescription') {
               context.report({
                 node,
-                message:
-                  `aria-roledescription JSX prop 금지 — namespace 용도면 data-part 사용. (true ARIA 의미가 필요하면 ds/parts 컴포넌트 정의부에서만)`,
+                message: `aria-roledescription JSX prop 금지 — namespace 용도면 data-part 사용.`,
               })
             }
           },
@@ -170,19 +193,18 @@ const dsLimits = {
       },
     },
 
-    // L0(preset/) 만 --ds-* 토큰을 새로 발행한다. L2/L3 에서 발행 = SSOT 분기.
+    // ─── token 정의 권한 ───────────────────────────────────────────────
+    // --ds-* 토큰 발행은 preset/seed/shell 에서만. foundations·widget 에서 ❌.
     'no-token-define-outside-preset': {
       meta: { type: 'problem', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
         if (!file) return {}
-        // 발행 권한이 있는 곳: preset/, seed/
-        if (/\/src\/ds\/style\/(preset|seed)\//.test(file)) return {}
-        // 토큰 발행은 foundations 와 widgets 에서만 검사 (test/스크립트 등 무시)
-        if (!/\/src\/ds\/(foundations|style\/widgets)\//.test(file)) return {}
-        // preset 에서 이미 발행된 토큰은 variant scope 에서 override 가 sanctioned.
-        // (예: rail/floating sidebar 가 --ds-sidebar-w 재정의, mobile media 가 --ds-hairline 0)
-        // 이 목록은 DsPreset 스키마에 정의된 모든 발행 토큰의 prefix 화이트리스트.
+        // 발행 권한: preset/, seed/, shell/, palette/ (raw 정의)
+        if (/\/packages\/ds\/src\/tokens\/(palette|style\/(preset|seed|shell))\//.test(file)) return {}
+        // 검사 대상: foundations 와 widget (ui/content/devices/style/widgets)
+        if (!/\/packages\/ds\/src\/(tokens\/foundations|ui|content|devices|style\/widgets)\//.test(file)) return {}
+        // preset 에서 이미 발행된 토큰의 variant override 는 sanctioned
         const PRESET_OVERRIDABLE = /^--ds-(sidebar-w|column-w|preview-w|chrome-h|hairline|elev-[0-3]|shadow|shell-mobile-max|traffic-(close|min|max))$/
         const DEFINE = /(?:^|[\s;{])(--ds-[a-z0-9-]+)\s*:/gi
         const check = (node, raw) => {
@@ -194,8 +216,8 @@ const dsLimits = {
             context.report({
               node,
               message:
-                `--ds-* 토큰 발행 (${tok}) 은 L0(src/ds/style/preset/)에서만 허용됩니다. ` +
-                `위계(L2 foundations / L3 widgets)에서 발행하면 SSOT 가 분기됩니다 — preset 스키마(DsPreset)에 추가하거나, 컴포넌트-내부 변수면 --ds- prefix 를 떼세요.`,
+                `--ds-* 토큰 발행 (${tok}) 은 tokens/(palette|style/(preset|seed|shell))/ 에서만 허용. ` +
+                `widget 에서 발행하면 SSOT 분기 — preset 스키마(DsPreset)에 추가하거나, internal var 면 --ds- prefix 제거.`,
             })
           }
         }
@@ -206,15 +228,13 @@ const dsLimits = {
       },
     },
 
-    // hairline 두께 하드코딩 금지 — hairlineWidth() / --ds-hairline 사용.
-    // (직전 commit "1px solid → hairlineWidth() 일괄 수렴" 후속)
+    // ─── hairline 하드코딩 금지 ────────────────────────────────────────
     'no-raw-hairline': {
       meta: { type: 'suggestion', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
         if (!file) return {}
-        if (!/\/src\/ds\/(foundations|style\/widgets)\//.test(file)) return {}
-        // hairline 자체 정의 파일은 예외
+        if (!/\/packages\/ds\/src\/(tokens\/foundations|style\/widgets|ui|content|devices)\//.test(file)) return {}
         if (/\/foundations\/shape\/hairline\.ts$/.test(file)) return {}
         const RAW = /\b[12]px\s+(solid|dashed|dotted)\b/
         const check = (node, raw) => {
@@ -222,7 +242,7 @@ const dsLimits = {
             context.report({
               node,
               message:
-                `'1px/2px solid' 하드코딩 — hairlineWidth() 토큰 또는 var(--ds-hairline) 을 사용하세요 (focus ring 이면 --ds-focus-ring-w 를 ladder 로 추가).`,
+                `'1px/2px solid' 하드코딩 — hairlineWidth() 또는 var(--ds-hairline) 사용.`,
             })
           }
         }
@@ -233,6 +253,7 @@ const dsLimits = {
       },
     },
 
+    // ─── 모듈 크기 ──────────────────────────────────────────────────────
     'max-lines-no-imports': {
       meta: { type: 'suggestion', schema: [{ type: 'number' }] },
       create(context) {
@@ -251,7 +272,7 @@ const dsLimits = {
             if (effective > limit) {
               context.report({
                 node,
-                message: `파일이 import 제외 ${effective}줄 — ${limit}줄 초과. SRP 위반 신호, 책임 분리 필요.`,
+                message: `파일이 import 제외 ${effective}줄 — ${limit}줄 초과. SRP 분리.`,
               })
             }
           },
@@ -281,7 +302,7 @@ const dsLimits = {
             if (count > limit) {
               context.report({
                 node,
-                message: `폴더 '${path.basename(dir)}' 에 소스 파일 ${count}개 — ${limit}개 초과. 하위 폴더로 분리하세요.`,
+                message: `폴더 '${path.basename(dir)}' 에 소스 ${count}개 — ${limit}개 초과. 하위 분리.`,
               })
             }
           },
@@ -291,21 +312,18 @@ const dsLimits = {
   },
 }
 
-// ds 원칙: style·className·role 금지. 모든 스타일/레이아웃은 ds CSS 가 태그+ARIA
-// 셀렉터로 관장한다.
-// - ds/ui 내부만 예외: role 리터럴 허용 (컴포넌트 정의부) + 동적 style 허용
-//   (anchor-name/CSS custom property 같이 정적 CSS로 표현 불가한 값).
+// ds 원칙: style·className·role 금지. 모든 스타일/레이아웃은 ds CSS 가 태그+ARIA 셀렉터로.
 const className = {
   selector: 'JSXAttribute[name.name="className"]',
   message: 'className 금지 — ds 는 classless. 스타일은 태그+role+aria 셀렉터로만.',
 }
 const style = {
   selector: 'JSXAttribute[name.name="style"]',
-  message: 'style prop 금지 — 레이아웃·간격·색상 전부 ds 토큰으로. src/ds/css 에 규칙을 추가.',
+  message: 'style prop 금지 — 레이아웃·간격·색상 전부 ds 토큰으로.',
 }
 const role = {
   selector: 'JSXAttribute[name.name="role"]',
-  message: 'role prop 금지 — ds controls 컴포넌트를 사용하세요 (No escape hatches).',
+  message: 'role prop 금지 — ds controls 컴포넌트를 사용 (No escape hatches).',
 }
 
 export default defineConfig([
@@ -325,16 +343,25 @@ export default defineConfig([
       'ds/max-files-per-dir': ['warn', MAX_FILES_PER_DIR],
       'ds/zone-boundary': 'error',
       'ds/layer-boundary': 'error',
-      'ds/no-raw-palette-in-consumer': 'error',
+      'ds/headless-boundary': 'error',
       'ds/no-aria-roledescription-namespace': 'error',
       'ds/no-token-define-outside-preset': 'error',
       'ds/no-raw-hairline': 'warn',
     },
   },
-  { files: ['src/**/*.{ts,tsx}'],              rules: { 'no-restricted-syntax': ['error', role, className, style] } },
-  { files: ['src/ds/ui/**/*.{ts,tsx}'],        rules: { 'no-restricted-syntax': ['error', className] } },
-  { files: ['src/ds/layout/**/*.{ts,tsx}'],    rules: { 'no-restricted-syntax': ['error', className] } },
-  // zone 폴더(src/ds/ui/*)는 의도적으로 동일 zone 컴포넌트를 모두 수집한다.
-  // 7개 제한은 arbitrary 도메인 폴더 대상이지 zone 폴더에는 적용하지 않는다.
-  { files: ['src/ds/ui/{collection,composite,control,overlay,entity,layout}/*.{ts,tsx}'], rules: { 'ds/max-files-per-dir': 'off' } },
+  // role/className/style escape hatch 금지 — ds 본체 외 전 영역
+  { files: ['packages/**/*.{ts,tsx}', 'apps/**/*.{ts,tsx}', 'showcase/**/*.{ts,tsx}'],
+    rules: { 'no-restricted-syntax': ['error', role, className, style] } },
+  // ds/ui 정의부 — role 리터럴 + 동적 style 허용 (anchor-name 등 정적 CSS 표현 불가 영역)
+  { files: ['packages/ds/src/ui/**/*.{ts,tsx}'],
+    rules: { 'no-restricted-syntax': ['error', className] } },
+  // ds/headless layout — role 정의부
+  { files: ['packages/ds/src/headless/layout/**/*.{ts,tsx}'],
+    rules: { 'no-restricted-syntax': ['error', className] } },
+  // ui zone 폴더 — 의도적으로 동일 zone 컴포넌트 다수 수집. 7개 제한 면제.
+  { files: ['packages/ds/src/ui/{0-primitives,1-status,2-action,3-input,4-selection,5-display,6-overlay,8-layout,parts,patterns,recipes}/*.{ts,tsx}'],
+    rules: { 'ds/max-files-per-dir': 'off' } },
+  // content/devices 폴더 — 비즈니스 부품/mock 다수 수집
+  { files: ['packages/ds/src/{content,devices}/*.{ts,tsx}'],
+    rules: { 'ds/max-files-per-dir': 'off' } },
 ])

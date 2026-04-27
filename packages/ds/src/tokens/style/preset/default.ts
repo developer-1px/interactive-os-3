@@ -1,5 +1,5 @@
 import type { DsPreset } from './types'
-import { SHELL_MOBILE_MAX } from './breakpoints'
+import { SHELL_MOBILE_MAX } from '../../foundations/layout/breakpoints'
 
 export const defaultPreset: DsPreset = {
   id: 'default',

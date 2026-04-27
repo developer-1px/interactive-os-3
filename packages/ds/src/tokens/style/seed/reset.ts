@@ -1,4 +1,4 @@
-import { css, weight } from '../../foundations'
+import { css, typography, weight } from '../../foundations'
 
 // Modern hard reset (Josh Comeau + Andy Bell 참고, 최소판)
 export const reset = css`
@@ -25,7 +25,7 @@ export const reset = css`
   :where(h1) { font-size: var(--ds-text-2xl); line-height: var(--ds-leading-tight); font-weight: ${weight('semibold')}; }
   :where(h2) { font-size: var(--ds-text-xl);  line-height: var(--ds-leading-tight); font-weight: ${weight('semibold')}; }
   :where(h3) { font-size: var(--ds-text-lg);  line-height: var(--ds-leading-tight); font-weight: ${weight('semibold')}; }
-  :where(h4, h5, h6) { font-size: var(--ds-text-md); font-weight: ${weight('semibold')}; }
+  :where(h4, h5, h6) { ${typography('bodyStrong')}; }
   :where(small) { font-size: var(--ds-text-sm); color: var(--ds-muted); }
   :where(img, picture, video, canvas, svg) { display: block; max-width: 100%; }
   :where(input, button, textarea, select) { font: inherit; color: inherit; }

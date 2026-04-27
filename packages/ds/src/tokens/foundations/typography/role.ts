@@ -31,4 +31,40 @@ export const type = {
   mono:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm') },
   /** 1줄 ellipsis truncate — list row text. */
   truncate:  { overflow: 'hidden' as const, textOverflow: 'ellipsis' as const, whiteSpace: 'nowrap' as const },
+
+  // ── 일반 본문 / 라벨 / meta role — widget 에서 가장 자주 호출되는 묶음 ──────
+  /** body 본문 (md regular) — 일반 단락. */
+  body:           { fontSize: font('md'), fontWeight: weight('regular') },
+  /** body 강조 (md semibold) — 본문 안 강조 텍스트. */
+  bodyStrong:     { fontSize: font('md'), fontWeight: weight('semibold') },
+  /** caption / 보조 (sm regular) — 행 본문보다 한 단 작게. */
+  caption:        { fontSize: font('sm'), fontWeight: weight('regular') },
+  /** caption 강조 (sm semibold) — chip · key label · 강한 caption. */
+  captionStrong:  { fontSize: font('sm'), fontWeight: weight('semibold') },
+  /** label (sm medium) — form label · key column · table header. */
+  label:          { fontSize: font('sm'), fontWeight: weight('medium') },
+  /** micro / meta (xs regular) — timestamp · meta · footnote. */
+  micro:          { fontSize: font('xs'), fontWeight: weight('regular') },
+  /** micro 강조 (xs semibold) — badge label · count · eyebrow. */
+  microStrong:    { fontSize: font('xs'), fontWeight: weight('semibold') },
+  /** heading h3 (lg semibold) — 섹션 제목. */
+  heading:        { fontSize: font('lg'), fontWeight: weight('semibold') },
+  /** heading h2 (xl bold) — 강한 섹션 제목. */
+  headingStrong:  { fontSize: font('xl'), fontWeight: weight('bold') },
 } as const
+
+/**
+ * typography(role) — type[role] 을 CSS 템플릿으로 emit. widget css`` 안에서 한 줄 호출.
+ *
+ *   `${typography('caption')}` → `font-size: var(--ds-text-sm); font-weight: var(--ds-weight-regular);`
+ *
+ * 단일 axis 만 필요하면 `${type.body.fontSize}` 같은 분해 접근 사용.
+ * 새 role 이 필요하면 위 type 객체에 등재 — widget 에서 raw scale (`font('xl')`) 직호출 ❌.
+ */
+export const typography = (role: keyof typeof type) => {
+  const t = type[role] as { fontSize?: string; fontWeight?: string }
+  const lines: string[] = []
+  if (t.fontSize)   lines.push(`font-size: ${t.fontSize};`)
+  if (t.fontWeight) lines.push(`font-weight: ${t.fontWeight};`)
+  return lines.join(' ')
+}

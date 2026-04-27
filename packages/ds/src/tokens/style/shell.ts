@@ -1,9 +1,10 @@
-import { border, css, grouping, hairlineWidth, pad, radius, weight } from '../../foundations'
-import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
+import { SHELL_MOBILE_MAX, border, css, grouping, hairlineWidth, pad, radius, weight } from '../foundations'
 
-// 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.
+// shell — OS 셸 크롬 (window-controls, traffic lights, body flex 컨테이너).
+// 특정 앱 이름이 아니라 "window-controls를 가진 main" 을 구조로 매칭.
 // 모든 앱(finder / inspector / …)이 동일 규칙을 상속한다. classless + structural.
-export const chromeCss = css`
+// 앱별 body 배치는 style/apps/* owner.
+const chromeCss = css`
   main:has(> header > [data-part="window-controls"]) {
     position: fixed;
     inset: var(--ds-shell-inset);
@@ -48,3 +49,5 @@ export const chromeCss = css`
     [data-part="window-controls"] { display: none; }
   }
 `
+
+export const shell = () => chromeCss

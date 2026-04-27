@@ -1,6 +1,5 @@
 import { border, css, hairlineWidth, icon, radius } from '../../../tokens/foundations'
-import { font, weight } from '../../../tokens/palette'
-import { pad } from '../../../tokens/palette'
+import { font, weight, pad } from '../../../tokens/palette'
 export const cssDetails = () => css`
   :where(details) {
     border: ${hairlineWidth()} solid ${border()};

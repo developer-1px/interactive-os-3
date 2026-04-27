@@ -1,6 +1,5 @@
 import { border, css, hairlineWidth, radius, surface, text } from '../../../tokens/foundations'
-import { weight } from '../../../tokens/palette'
-import { pad } from '../../../tokens/palette'
+import { weight, pad } from '../../../tokens/palette'
 
 /**
  * InboxRow slot inner styling — 메일 행. Card primitive 슬롯에 메일 어휘 매핑.

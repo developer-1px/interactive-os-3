@@ -1,6 +1,5 @@
 import { css, text, typography } from '../tokens/foundations'
-import { font, weight } from '../tokens/palette'
-import { dim, pad } from '../tokens/palette'
+import { font, pad } from '../tokens/palette'
 
 /**
  * RoleCard slot inner styling — drag handle + icon + 본문/액션.

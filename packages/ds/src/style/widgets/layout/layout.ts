@@ -1,6 +1,5 @@
 import { SHELL_MOBILE_MAX, accent, border, container, control, css, grouping, hairlineWidth, hierarchy, radius, square, status, surface, text, typography } from '../../../tokens/foundations'
-import { font, weight } from '../../../tokens/palette'
-import { elev, pad } from '../../../tokens/palette'
+import { font, elev, pad } from '../../../tokens/palette'
 
 /**
  * Layout primitives (Row / Column / Grid).

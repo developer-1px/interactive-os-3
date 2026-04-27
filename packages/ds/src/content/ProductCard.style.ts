@@ -1,6 +1,5 @@
 import { css, radius, status, text, typography } from '../tokens/foundations'
-import { weight } from '../tokens/palette'
-import { dim, pad } from '../tokens/palette'
+import { pad } from '../tokens/palette'
 
 /**
  * ProductCard slot inner styling — 커머스 상품 카드.

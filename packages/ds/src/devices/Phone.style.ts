@@ -1,6 +1,5 @@
 import { css, hairlineWidth, radius, text, typography } from '../tokens/foundations'
-import { weight } from '../tokens/palette'
-import { neutral, pad } from '../tokens/palette'
+import { weight, neutral, pad } from '../tokens/palette'
 
 /**
  * Phone — iPhone device chrome CSS. 실물 크기 (393×852pt = iPhone 14 Pro 논리 폭).
