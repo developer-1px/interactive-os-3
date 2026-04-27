@@ -54,7 +54,6 @@ export function CommandPalette() {
               ctrl.close()
               router.navigate({ to: e.to, params: e.params })
             },
-            'aria-label': '라우트',
           },
         },
       },

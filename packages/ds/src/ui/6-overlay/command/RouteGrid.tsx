@@ -5,11 +5,6 @@ import { Card } from '../../parts/Card'
 import { Heading } from '../../parts/Heading'
 import { Listbox } from '../../4-selection/Listbox'
 
-/**
- * RouteGrid — entries 를 첫 path 세그먼트로 그룹핑한 masonry 카드.
- * query 가 있으면 label 매칭으로 필터, 매칭 없는 그룹은 숨김.
- * 각 Card body 는 Listbox — vertical roving · activate emit.
- */
 type Group = { key: string; label: string; entries: PaletteEntry[] }
 
 function groupEntries(entries: PaletteEntry[]): Group[] {
@@ -34,21 +29,16 @@ export interface RouteGridProps {
   entries: PaletteEntry[]
   query?: string
   onSelect?: (entry: PaletteEntry) => void
-  'aria-label'?: string
 }
 
-export function RouteGrid({ entries, query = '', onSelect, ...rest }: RouteGridProps) {
+export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
     const filtered = q ? entries.filter((e) => e.label.toLowerCase().includes(q)) : entries
     return groupEntries(filtered)
   }, [entries, query])
 
-  const byId = useMemo(() => {
-    const m = new Map<string, PaletteEntry>()
-    for (const e of entries) m.set(e.id, e)
-    return m
-  }, [entries])
+  const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries])
 
   const onListEvent = (ev: Event) => {
     if (ev.type !== 'activate' || !ev.id) return
@@ -57,13 +47,13 @@ export function RouteGrid({ entries, query = '', onSelect, ...rest }: RouteGridP
   }
 
   return (
-    <div data-part="route-grid" {...rest}>
+    <div data-part="route-grid">
       {visible.map((g) => (
         <Card
           key={g.key}
           slots={{
             title: <Heading level="h3">{g.label}</Heading>,
-            body: <Listbox data={toData(g.entries)} onEvent={onListEvent} aria-label={g.label} />,
+            body: <Listbox data={toData(g.entries)} onEvent={onListEvent} />,
           }}
         />
       ))}
