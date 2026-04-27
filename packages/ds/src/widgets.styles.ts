@@ -19,6 +19,7 @@ import { tree } from './ui/4-selection/Tree.style'
 import { grid } from './ui/8-layout/Grid.style'
 import { toolbar } from './ui/4-selection/Toolbar.style'
 import { splitCss } from './ui/8-layout/Split.style'
+import { routeGrid } from './ui/6-overlay/command/RouteGrid.style'
 
 // ─── 잔존 (orphan / shared, 미공유 CSS) ───────────────────────────────────
 import { formCss } from './style/widgets/control/form'
@@ -50,4 +51,6 @@ export const widgets = () =>
     grid(), toolbar(), sidebarCss(), sidebarFloatingCss(), pageCss,
     // layout
     layout(), splitCss(),
+    // command palette
+    routeGrid(),
   ].join('\n')

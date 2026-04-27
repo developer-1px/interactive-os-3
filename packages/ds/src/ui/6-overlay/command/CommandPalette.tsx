@@ -1,17 +1,19 @@
 import { useId } from 'react'
+import { useRouter } from '@tanstack/react-router'
 import { Dialog } from '../Dialog'
 import { Combobox } from '../../3-input/Combobox'
 import { Listbox } from '../../4-selection/Listbox'
-import { Columns } from '../../4-selection/Columns'
+import { RouteGrid } from './RouteGrid'
 import { useShortcut } from '../../../headless/hooks/useShortcut'
 import { usePaletteController } from './usePaletteController'
 
 export function CommandPalette() {
   const {
-    inputRef, columnsHostRef,
-    query, filtered, mode, activeId, listData, columnsData, dialogData,
-    setQuery, toggle, onKeyDown, onListEvent, onColumnsEvent, onDialogEvent,
+    inputRef,
+    query, filtered, mode, activeId, listData, dialogData, entries,
+    setQuery, toggle, onKeyDown, onListEvent, onDialogEvent, dispatchClose,
   } = usePaletteController()
+  const router = useRouter()
   const listId = useId()
   useShortcut('mod+k', toggle)
 
@@ -19,7 +21,7 @@ export function CommandPalette() {
     <Dialog data={dialogData} onEvent={onDialogEvent}>
       <Combobox
         ref={inputRef}
-        expanded={mode === 'columns' || filtered.length > 0}
+        expanded={mode === 'browse' || filtered.length > 0}
         controls={listId}
         activedescendant={mode === 'query' ? activeId : undefined}
         value={query}
@@ -33,9 +35,14 @@ export function CommandPalette() {
           <Listbox id={listId} data={listData} onEvent={onListEvent} />
         )
       ) : (
-        <div ref={columnsHostRef}>
-          <Columns id={listId} data={columnsData} onEvent={onColumnsEvent} aria-label="라우트" />
-        </div>
+        <RouteGrid
+          entries={entries}
+          onSelect={(e) => {
+            dispatchClose()
+            router.navigate({ to: e.to, params: e.params })
+          }}
+          aria-label="라우트"
+        />
       )}
     </Dialog>
   )
