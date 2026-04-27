@@ -3,7 +3,7 @@
  *
  * 책임:
  *   - ui/devices glob 모듈 로드
- *   - demo resolver (colocated _demos · catalog · partAutoDemo 우선순위)
+ *   - demo resolver (colocated _demos · catalog · partAutoDemo · uiAutoDemo 우선순위)
  *   - lane 별 CompNode 묶기 (allLanes)
  *   - atom/composed 분리 (atomLanes · composedLanes)
  *   - 컴포넌트 이름 → import path 인덱스 (compIndex)
@@ -12,7 +12,6 @@
  */
 import type { ComponentType, ReactNode } from 'react'
 import { demos as catalogDemos } from '@showcase/catalog'
-import { partAutoDemo } from './partsAutoDemos'
 import { laneRank, isAtom } from './lanes'
 
 const uiModules = import.meta.glob<Record<string, unknown>>('@p/ds/ui/*/*.tsx', { eager: true })
@@ -24,18 +23,12 @@ export type DemoFn = () => ReactNode
 export type CompNode = { name: string; demo: DemoFn | null }
 export type CompLane = { lane: string; nodes: CompNode[] }
 
-function resolveDemo(name: string, colocated: ComponentType | undefined, allowAuto: boolean): DemoFn | null {
+function resolveDemo(name: string, colocated: ComponentType | undefined): DemoFn | null {
   if (colocated) {
     const C = colocated
     return () => <C />
   }
-  const fromCatalog = catalogDemos[name]
-  if (fromCatalog) return fromCatalog
-  if (allowAuto) {
-    const auto = partAutoDemo(name)
-    if (auto) return auto
-  }
-  return null
+  return catalogDemos[name] ?? null
 }
 
 function buildCompLanes(
@@ -59,7 +52,7 @@ function buildCompLanes(
     if (name.startsWith('_')) continue
     const group = groupOf(m)
     if (!lanes.has(group)) lanes.set(group, [])
-    lanes.get(group)!.push({ name, demo: resolveDemo(name, demoIndex.get(name), true) })
+    lanes.get(group)!.push({ name, demo: resolveDemo(name, demoIndex.get(name)) })
   }
   return [...lanes.keys()].map((lane) => ({
     lane,

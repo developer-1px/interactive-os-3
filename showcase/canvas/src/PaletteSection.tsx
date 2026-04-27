@@ -24,13 +24,23 @@ function callFn(fn: string, args: DemoSpec['args']): string {
   try { return f(...args) } catch { return '' }
 }
 
+import type { CategoryMeta } from '@p/ds/tokens/category-meta'
+
 type PaletteGroup = { category: string; exports: FoundationExport[] }
 
-const CATEGORY_LABEL: Record<string, { label: string; standard: string }> = {
-  color: { label: 'Color',     standard: 'M3 ref · Carbon palette · Radix scales' },
-  space: { label: 'Spacing',   standard: 'M3 ref · Atlassian space · Polaris space' },
-  elev:  { label: 'Elevation', standard: 'M3 ref · Atlassian elevation' },
-}
+// palette/<cat>.category.ts 자동 수집 — canvas 측 하드코딩 ❌
+const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
+  '@p/ds/tokens/palette/*.category.ts',
+  { eager: true },
+)
+const CATEGORY_LABEL: Record<string, CategoryMeta> = (() => {
+  const out: Record<string, CategoryMeta> = {}
+  for (const [path, mod] of Object.entries(categoryMetaModules)) {
+    const m = path.match(/\/palette\/([^/]+)\.category\.ts$/)
+    if (m) out[m[1]] = mod.default
+  }
+  return out
+})()
 
 export const paletteGroups: PaletteGroup[] = (() => {
   const map = new Map<string, FoundationExport[]>()
@@ -60,20 +70,9 @@ function renderScaleCard(e: FoundationExport, scaleArg: string | number): ReactN
   const args = [scaleArg, ...spec.args.slice(1)]
   const value = callFn(spec.fn, args)
   const label = `${e.name}(${scaleArg})`
-  if (spec.type === 'color') {
-    return (
-      <figure key={`${e.name}-${scaleArg}`} data-part="canvas-token-card" data-token-type="color">
-        <div data-swatch style={{ backgroundColor: value }} />
-        <span data-name>{label}</span>
-        <span data-call>{value}</span>
-      </figure>
-    )
-  }
-  // value type — preview by fn
+  // value type — preview by fn (color scales handled by renderColorRamp)
   let sample: ReactNode = <code style={{ fontSize: 12 }}>{value || '—'}</code>
-  if (spec.fn === 'pad') {
-    sample = <div style={{ width: value, height: 12, background: '#999' }} />
-  } else if (spec.fn === 'elev') {
+  if (spec.fn === 'elev') {
     sample = <div style={{ width: 64, height: 64, background: '#fff', boxShadow: value, borderRadius: 6 }} />
   } else if (spec.fn === 'emStep' || spec.fn === 'insetStep') {
     sample = (
@@ -88,6 +87,92 @@ function renderScaleCard(e: FoundationExport, scaleArg: string | number): ReactN
       <span data-name>{label}</span>
       <span data-call title={value}>{value || '—'}</span>
     </figure>
+  )
+}
+
+/**
+ * Color ramp — Radix Colors · Tailwind · IBM Carbon 수렴 디팩토.
+ * 9개 카드 분리 ❌ → 한 줄 flush strip + 스케일 라벨 인레이.
+ * 스케일 ≥5 면 흰 텍스트, 미만이면 검정 (자동 대비).
+ */
+function renderColorRamp(e: FoundationExport): ReactNode {
+  const spec = e.demo!
+  const scale = spec.scale!
+  return (
+    <div data-part="canvas-color-ramp">
+      <div data-tiles role="group" aria-label={`${e.name} scale`}>
+        {scale.map((s) => {
+          const args = [s, ...spec.args.slice(1)]
+          const value = callFn(spec.fn, args)
+          const isDark = typeof s === 'number' && s >= 5
+          return (
+            <div
+              key={String(s)}
+              data-tile
+              data-dark={isDark || undefined}
+              style={{ background: value }}
+              title={`${e.name}(${s}) = ${value}`}
+            >
+              <span data-step>{s}</span>
+              <span data-hex>{value}</span>
+            </div>
+          )
+        })}
+      </div>
+      <div data-meta>
+        <code data-name>{e.name}({String(scale[0])}…{String(scale[scale.length - 1])})</code>
+        <span data-range>{scale.length} steps</span>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Spacing bar stack — Material 3 spacing reference · Polaris space scale 수렴.
+ * 카드 그리드 ❌ → 가로 행 스택. 각 행: 라벨 · 막대(길이=value) · 수치.
+ */
+function renderSpaceStack(e: FoundationExport): ReactNode {
+  const spec = e.demo!
+  const scale = spec.scale!
+  return (
+    <div data-part="canvas-space-stack">
+      {scale.map((s) => {
+        const args = [s, ...spec.args.slice(1)]
+        const value = callFn(spec.fn, args)
+        return (
+          <div key={String(s)} data-row>
+            <code data-label>{e.name}({s})</code>
+            <div data-bar style={{ inlineSize: value || 0 }} />
+            <span data-value>{value || '0'}</span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/**
+ * Elevation tower — Material 3 surface tonal elevation 수렴.
+ * 4 surface 가 같은 높이로 늘어서 그림자 강도 비교.
+ */
+function renderElevTower(e: FoundationExport): ReactNode {
+  const spec = e.demo!
+  const scale = spec.scale!
+  return (
+    <div data-part="canvas-elev-tower">
+      {scale.map((s) => {
+        const args = [s, ...spec.args.slice(1)]
+        const value = callFn(spec.fn, args)
+        return (
+          <figure key={String(s)} data-tile>
+            <div data-surface style={{ boxShadow: value }} />
+            <figcaption>
+              <code>{e.name}({s})</code>
+            </figcaption>
+          </figure>
+        )
+      })}
+    </div>
   )
 }
 
@@ -116,6 +201,9 @@ function renderSingleCard(e: FoundationExport): ReactNode {
 function renderExport(e: FoundationExport): ReactNode {
   const spec = e.demo!
   if (spec.scale && spec.scale.length > 0) {
+    if (spec.type === 'color') return renderColorRamp(e)
+    if (spec.fn === 'pad') return renderSpaceStack(e)
+    if (spec.fn === 'elev') return renderElevTower(e)
     return spec.scale.map((s) => renderScaleCard(e, s))
   }
   return renderSingleCard(e)
@@ -150,12 +238,17 @@ export function PaletteSection(): ReactNode {
             >
               {g.exports.map((e) => {
                 const cards = renderExport(e)
-                const isScale = !!e.demo?.scale && e.demo.scale.length > 0
+                const spec = e.demo!
+                const isScale = !!spec.scale && spec.scale.length > 0
+                // 특화 렌더러는 자체 layout 보유 → grid 래퍼 우회
+                const specialized = isScale && (spec.type === 'color' || spec.fn === 'pad' || spec.fn === 'elev')
                 return (
                   <SubGroup key={e.name} title={e.name}>
-                    <div data-part={gridPart} style={isScale ? ({ ['--cols' as string]: e.demo!.scale!.length } as CSSProperties) : undefined}>
-                      {cards}
-                    </div>
+                    {specialized ? cards : (
+                      <div data-part={gridPart} style={isScale ? ({ ['--cols' as string]: spec.scale!.length } as CSSProperties) : undefined}>
+                        {cards}
+                      </div>
+                    )}
                   </SubGroup>
                 )
               })}

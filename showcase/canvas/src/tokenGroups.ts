@@ -2,33 +2,45 @@
  * tokenGroups — foundations 토큰 카테고리 그룹화 SSOT.
  *
  * 책임:
- *   - virtual:ds-audit @demo exports 를 카테고리(color/typography/...)별로 묶음
+ *   - virtual:ds-audit exports 를 카테고리(color/typography/...)별로 묶음
+ *   - @demo 가 있는 함수 토큰 + 객체 export(role bundle: slot/size/type) 둘 다 surface
  *   - 카테고리별 라벨·표준 매핑 제공
+ *
+ * 업계 de facto: token 은 정적 데이터, shape 가 곧 type. annotation·registry ❌
+ * (W3C DTCG · Open Props · Radix · Mantine · Spectrum 수렴).
  *
  * SemanticSection 이 소비.
  */
 import { audit } from 'virtual:ds-audit'
+import * as foundations from '@p/ds/tokens/foundations'
+import type { CategoryMeta } from '@p/ds/tokens/category-meta'
 
 export type TokenGroup = { category: string; exports: typeof audit.exports }
 
-export const CATEGORY_LABEL: Record<string, { label: string; standard?: string }> = {
-  color:       { label: 'Color',       standard: 'M3 · HIG · Polaris · Atlassian · Spectrum · Fluent' },
-  typography:  { label: 'Typography',  standard: 'M3 · HIG · Polaris · Atlassian · Spectrum · Fluent' },
-  shape:       { label: 'Shape',       standard: 'Material 3 Shape' },
-  state:       { label: 'State',       standard: '≈ Material Interaction · Atlassian States' },
-  motion:      { label: 'Motion',      standard: 'M3 · HIG · Atlassian · Spectrum · Fluent' },
-  layout:      { label: 'Layout',      standard: 'M3 · HIG · Polaris · Atlassian · Spectrum' },
-  iconography: { label: 'Iconography', standard: 'M3 · HIG · Polaris · Spectrum · Fluent' },
-  recipes:     { label: 'Recipes',     standard: '≈ Atlassian Tokens / composite' },
-  primitives:  { label: 'Primitives',  standard: '≈ Atlassian Primitives · Radix' },
-  control:     { label: 'Control',     standard: '≈ Material Interaction sizing' },
-  elevation:   { label: 'Elevation',   standard: 'M3 · Fluent' },
+// foundations/<cat>/_category.ts 자동 수집 — canvas 측 하드코딩 ❌
+const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
+  '@p/ds/tokens/foundations/*/_category.ts',
+  { eager: true },
+)
+export const CATEGORY_LABEL: Record<string, CategoryMeta> = (() => {
+  const out: Record<string, CategoryMeta> = {}
+  for (const [path, mod] of Object.entries(categoryMetaModules)) {
+    const m = path.match(/\/foundations\/([^/]+)\/_category\.ts$/)
+    if (m) out[m[1]] = mod.default
+  }
+  return out
+})()
+
+/** export 가 plain object(role bundle)인지 — @demo 없이 surface 기준. */
+const isRoleBundle = (name: string): boolean => {
+  const v = (foundations as Record<string, unknown>)[name]
+  return v !== null && typeof v === 'object' && !Array.isArray(v)
 }
 
 export const tokenGroups: TokenGroup[] = (() => {
   const map = new Map<string, typeof audit.exports>()
   for (const e of audit.exports) {
-    if (!e.demo) continue
+    if (!e.demo && !isRoleBundle(e.name)) continue
     const m = e.file.match(/\/foundations\/([^/]+)\//)
     if (!m) continue
     const cat = m[1]
