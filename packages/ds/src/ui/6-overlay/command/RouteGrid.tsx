@@ -47,7 +47,7 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   }
 
   return (
-    <div data-part="route-grid">
+    <nav>
       {visible.map((g) => (
         <Card
           key={g.key}
@@ -57,6 +57,6 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
           }}
         />
       ))}
-    </div>
+    </nav>
   )
 }
