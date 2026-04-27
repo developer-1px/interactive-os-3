@@ -1,4 +1,5 @@
-import { css, pad } from '@p/ds/tokens/foundations'
+import { css, radius } from '@p/ds/tokens/foundations'
+import { pad } from '@p/ds/tokens/palette'
 
 /** Minimal PPT 시각 어포던스
  *  - 슬라이드 1장 = 16:9 흰 카드(그림자) — "지금 한 장을 보고 있다"
@@ -26,8 +27,8 @@ export const slidesCss = css`
     max-block-size: calc(100% - ${pad(2)});
     background: var(--ds-surface-1);
     border: 1px solid var(--ds-border-level-1);
-    border-radius: 4px;
-    box-shadow: 0 8px 32px rgb(0 0 0 / .12);
+    border-radius: ${radius('sm')};
+    box-shadow: 0 8px 32px color-mix(in oklab, CanvasText 12%, transparent);
     padding: ${pad(6)};
     overflow: auto;
   }

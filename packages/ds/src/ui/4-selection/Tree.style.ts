@@ -1,4 +1,5 @@
-import { css, indicator, keyline, microLabel, pad, rowPadding } from '../../tokens/foundations'
+import { css, indicator, keyline, microLabel } from '../../tokens/foundations'
+import { pad, rowPadding } from '../../tokens/palette'
 
 export const cssTree = () => [
   indicator('[role="treeitem"]', 'chevronRight', {

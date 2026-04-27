@@ -1,13 +1,14 @@
-import { css, neutral, pad, radius, weight, microLabel, pair, bg, text, surface, border } from '@p/ds/tokens/foundations'
+import { css, radius, weight, microLabel, pair, bg, text, surface, border, mute } from '@p/ds/tokens/foundations'
+import { neutral, pad } from '@p/ds/tokens/palette'
 import { TONE } from './canvas-tones'
 
 /**
  * Canvas — 자산 SSOT viewer. data-part 네임스페이스로 셀렉터 캡슐화.
  *
  *   canvas-app          크림 배경, fixed inset 0 (zoom-pan viewport)
- *   canvas-page         포스터 본문 (board 폭 결정)
+ *   canvas-board        포스터 본문 (board 폭 결정)
  *   canvas-header       타이틀 + 메타
- *   canvas-{palette,semantic,components}-page  L0/L1/L2 시퀀스 페이지
+ *   canvas-{palette,semantic,atoms,composed}-column  L0/L1/L2/L3 시퀀스 컬럼
  *   canvas-section      흰 frame + soft shadow + 좌상단 검은 태그
  *   canvas-section-tag  검은 floating 태그 라벨 (Figma section 톤)
  *   canvas-subgroup     섹션 내부 file별 sub-그룹
@@ -25,7 +26,7 @@ export const canvasCss = css`
     font: 400 14px system-ui, sans-serif;
   }
 
-  [data-part="canvas-page"] {
+  [data-part="canvas-board"] {
     width: max-content;
     min-width: 100vw;
     padding: 64px 80px 96px;
@@ -38,7 +39,7 @@ export const canvasCss = css`
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: ${text('mute')};
+    ${mute(2)}
     margin-bottom: ${pad(2)};
   }
   [data-part="canvas-header"] > h1 {
@@ -49,7 +50,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-header"] > [data-stats] {
     font: 400 14px system-ui;
-    color: ${text('subtle')};
+    ${mute(1)}
   }
   [data-part="canvas-header"] code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -65,38 +66,36 @@ export const canvasCss = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: ${pad(12)};
+    gap: ${pad(16)};
   }
-  [data-part="canvas-palette-page"],
-  [data-part="canvas-semantic-page"],
-  [data-part="canvas-atoms-page"],
-  [data-part="canvas-composed-page"] {
+  /* 컬럼 = 한 tier 의 모든 섹션. 컬럼 사이 디바이더는 *그려진 룰이 아니라*
+     1-2% column-tinted 배경 (Figma audit board) + 큰 whitespace.
+     density gradient: L0 dense → L5 spacious (gap 자체가 컬럼 신호). */
+  [data-part$="-column"][data-part^="canvas-"] {
     --tone: ${TONE.neutral};
     display: flex;
     flex-direction: column;
-    gap: ${pad(20)};
     flex: 0 0 auto;
-    padding-right: ${pad(10)};
-    border-right: 1px dashed ${border('subtle')};
+    padding: ${pad(8)};
+    background: color-mix(in oklab, var(--tone) 1.5%, transparent);
   }
-  [data-part="canvas-palette-page"][data-tone="neutral"]    { --tone: ${TONE.neutral}; }
-  [data-part="canvas-semantic-page"][data-tone="blue"]      { --tone: ${TONE.blue}; }
-  [data-part="canvas-atoms-page"][data-tone="green"]        { --tone: ${TONE.green}; }
-  [data-part="canvas-composed-page"][data-tone="amber"]     { --tone: ${TONE.amber}; }
-  /* 각 레이어 폭 = 그 레이어의 가장 넓은 SectionFrame max-content + padding 여유. */
-  [data-part="canvas-palette-page"]   { width: 2200px; }
-  [data-part="canvas-semantic-page"]  { width: 1300px; }
-  [data-part="canvas-atoms-page"]     { width: 1400px; }
-  [data-part="canvas-composed-page"] {
-    width: 2400px;
-    border-right: none;
-    padding-right: 0;
-  }
+  [data-part$="-column"][data-tone="blue"]    { --tone: ${TONE.blue}; }
+  [data-part$="-column"][data-tone="green"]   { --tone: ${TONE.green}; }
+  [data-part$="-column"][data-tone="amber"]   { --tone: ${TONE.amber}; }
+
+  /* tier 별 폭 + density gradient (L0 dense → L5 spacious) */
+  [data-part="canvas-palette-column"]      { width: 2200px; gap: ${pad(14)}; }
+  [data-part="canvas-semantic-column"]     { width: 1300px; gap: ${pad(14)}; }
+  [data-part="canvas-empty-column"]        { width: 720px;  gap: ${pad(16)}; }
+  [data-part="canvas-bucket-l2-column"]    { width: 1400px; gap: ${pad(18)}; }
+  [data-part="canvas-bucket-l3-column"]    { width: 1600px; gap: ${pad(20)}; }
+  [data-part="canvas-bucket-l4-column"]    { width: 1200px; gap: ${pad(22)}; }
+  [data-part="canvas-bucket-l5-column"]    { width: 1100px; gap: ${pad(24)}; }
   /* Section 이 layer 폭 안에 머물도록 제한. */
-  [data-part="canvas-palette-page"] [data-part="canvas-section"],
-  [data-part="canvas-semantic-page"] [data-part="canvas-section"],
-  [data-part="canvas-atoms-page"] [data-part="canvas-section"],
-  [data-part="canvas-composed-page"] [data-part="canvas-section"] {
+  [data-part="canvas-palette-column"] [data-part="canvas-section"],
+  [data-part="canvas-semantic-column"] [data-part="canvas-section"],
+  [data-part="canvas-atoms-column"] [data-part="canvas-section"],
+  [data-part="canvas-composed-column"] [data-part="canvas-section"] {
     max-width: 100%;
     box-sizing: border-box;
   }
@@ -109,81 +108,53 @@ export const canvasCss = css`
     flex-direction: column;
     gap: ${pad(8)};
   }
-  /* ── PageDivider — L0/L1/L2/L3 column 헤더. lane(◆) 보다 강한 분리. ──
-     수렴 어휘: Brad Frost tone, Vercel mono eyebrow, Atlassian display title,
-     Material 3 stripe, Untitled UI hint. */
-  [data-part="canvas-page-divider"] {
+  /* ── ColumnBanner — L0/L1/L2/L3 컬럼 헤더 (de facto: M3·Carbon·Polaris).
+     typography-only: tier 배지 + 강한 명사 + tinted underline. 거대 숫자 ❌. */
+  [data-part="canvas-column-banner"] {
     --tone: ${TONE.neutral};
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: ${pad(3)};
-    margin-bottom: ${pad(8)};
-    padding-top: ${pad(4)};
-  }
-  [data-part="canvas-page-divider"][data-tone="blue"]   { --tone: ${TONE.blue}; }
-  [data-part="canvas-page-divider"][data-tone="green"]  { --tone: ${TONE.green}; }
-  [data-part="canvas-page-divider"][data-tone="amber"]  { --tone: ${TONE.amber}; }
-
-  [data-part="canvas-page-divider-stripe"] {
-    height: 8px;
-    width: 100%;
-    background: var(--tone);
-    border-radius: 1px;
-  }
-  [data-part="canvas-page-divider-eyebrow"] {
-    display: inline-flex;
-    gap: 10px;
-    align-items: baseline;
-    font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--tone);
-  }
-  [data-part="canvas-page-divider-eyebrow"] > span:nth-child(2) {
-    color: ${text('mute')};
-  }
-  [data-part="canvas-page-divider-eyebrow"] > span:nth-child(3) {
-    color: ${text('mute')};
-    letter-spacing: 0.14em;
-  }
-
-  [data-part="canvas-page-divider-head"] {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: ${pad(5)};
+    flex-direction: column;
+    gap: ${pad(2)};
+    padding-bottom: ${pad(4)};
+    margin-bottom: ${pad(6)};
   }
-  [data-part="canvas-page-divider-numeral"] {
-    font: 200 96px system-ui;
-    line-height: 0.85;
-    letter-spacing: -0.06em;
-    color: var(--tone);
-    flex: none;
-    user-select: none;
-    /* 시각 닻 — title 보다 거대하지만 weight 200 으로 약해서 위계 안 흔든다 */
-    opacity: 0.92;
+  [data-part="canvas-column-banner"][data-tone="blue"]   { --tone: ${TONE.blue}; }
+  [data-part="canvas-column-banner"][data-tone="green"]  { --tone: ${TONE.green}; }
+  [data-part="canvas-column-banner"][data-tone="amber"]  { --tone: ${TONE.amber}; }
+
+  [data-part="canvas-column-banner-eyebrow"] {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(2)};
   }
-  [data-part="canvas-page-divider-title"] {
-    font: 800 56px system-ui;
-    letter-spacing: -0.03em;
-    line-height: 1.0;
-    color: ${text('strong')};
+  /* tier 배지 = surface owner. 자체 pair (bg=tone, fg=항상 light) — 다크/라이트 무관 */
+  [data-part="canvas-column-banner-tier"] {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 28px;
+    padding: 3px ${pad(1.5)};
+    ${pair({ bg: 'var(--tone)', fg: 'white' })}
+    font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.06em;
+    border-radius: ${radius('sm')};
+  }
+  [data-part="canvas-column-banner-title"] {
+    font: 800 40px system-ui;
+    letter-spacing: -0.02em;
+    line-height: 1;
     margin: 0;
   }
-  [data-part="canvas-page-divider-subtitle"] {
-    font: 500 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
-    letter-spacing: 0.02em;
-    margin-top: ${pad(2)};
-  }
-  [data-part="canvas-page-divider-hint"] {
+  [data-part="canvas-column-banner-hint"] {
     font: 400 13px system-ui;
-    color: ${text('subtle')};
+    ${mute(1)}
     line-height: 1.55;
     margin: 0;
     max-width: 56ch;
-    padding-bottom: ${pad(4)};
-    border-bottom: 1px solid ${border('subtle')};
+  }
+  [data-part="canvas-column-banner-rule"] {
+    height: 2px;
+    background: var(--tone);
+    border-radius: 1px;
+    margin-top: ${pad(2)};
   }
   [data-part="canvas-palette-groups"] {
     display: flex;
@@ -196,88 +167,82 @@ export const canvasCss = css`
   /* canvas 안 ThemeCreator 의 preview 패널은 Palette 섹션 카드와 중복이므로 숨김.
      ThemeCreator 가 자체 inline <style> 로 unlayered 룰을 박아놔서 @layer apps 보다 우선.
      specificity + !important 로 덮어씀 — canvas 안에서만 적용 (다른 라우트는 그대로). */
-  [data-part="canvas-palette-page"] [data-part="theme-creator"] [aria-label="Theme preview"] {
+  [data-part="canvas-palette-column"] [data-part="theme-creator"] [aria-label="Theme preview"] {
     display: none !important;
   }
-  [data-part="canvas-palette-page"] [data-part="theme-creator"] header > h1 {
+  [data-part="canvas-palette-column"] [data-part="theme-creator"] header > h1 {
     font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace !important;
-    color: ${text('mute')} !important;
+    opacity: 0.65 !important;
     margin: 0 !important;
   }
 
-  /* ── Section (lane) — page 안 단위. tone 은 부모 page 에서 CSS 상속. ── */
+  /* ── Section (ledger row) — Spectrum·Primer 패턴.
+     L gutter (~240px) 에 헤더 sticky · R area 에 그리드. 단일 hairline + 큰 공백.
+     tone 은 부모 column 에서 CSS 상속. */
   [data-part="canvas-section"] {
-    position: relative;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    column-gap: ${pad(8)};
     width: max-content;
     box-sizing: border-box;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: ${pad(6)} 0 0;
-    flex: none;
+    padding-top: ${pad(6)};
+    border-top: 1px solid ${border('subtle')};
   }
-  /* 섹션 시작 marker — tone 색 2px 실선 (alpha 강화). 첫 섹션도 표시 (page divider 다음 시각 anchor). */
-  [data-part="canvas-section"]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 32px;
-    height: 2px;
-    background: var(--tone, ${TONE.neutral});
-    border-radius: 1px;
-  }
+  [data-part="canvas-section"]:first-child { border-top: none; padding-top: 0; }
 
-  /* header 묶기 — title/subtitle/count/standard 가 한 시각 블록으로 읽힘 */
+  /* L gutter — 섹션 헤더 sticky (긴 그리드 스크롤 시 라벨 유지) */
   [data-part="canvas-section-header"] {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    margin-bottom: ${pad(5)};
-    padding-bottom: ${pad(3)};
-    border-bottom: 1px solid ${border('subtle')};
+    position: sticky;
+    top: ${pad(4)};
+    align-self: start;
   }
 
+  /* section tag — column-tinted accent bar(4px) 옆 제목. fg 는 column 에서 inherit. */
   [data-part="canvas-section-tag"] {
-    position: static;
-    color: ${text('strong')};
-    font: 600 18px Inter, system-ui;
-    letter-spacing: -0.01em;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    font: 700 22px Inter, system-ui;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+    display: grid;
+    grid-template-columns: 3px auto;
+    column-gap: ${pad(2.5)};
+    align-items: baseline;
     background: transparent;
     padding: 0;
     margin: 0;
     text-transform: none;
   }
   [data-part="canvas-section-tag"] > [data-marker] {
-    width: 10px; height: 10px;
+    grid-row: 1 / -1;
+    align-self: stretch;
+    width: 3px;
     background: var(--tone, ${TONE.neutral});
-    transform: rotate(45deg);
-    border-radius: 1px;
-    flex: none;
+    border-radius: 2px;
+    transform: none;
   }
   [data-part="canvas-section-tag"] > [data-title] {
     font-weight: ${weight('bold')};
-    color: ${text('strong')};
   }
   [data-part="canvas-section-tag"] > small {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
-    margin-left: auto;
-    padding-left: ${pad(3)};
+    opacity: 0.65;
+    grid-column: 2;
+    margin-top: 2px;
   }
   [data-part="canvas-section-tag"] > [data-subtitle] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     text-transform: none;
+    grid-column: 2;
   }
   [data-part="canvas-section-standard"] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     letter-spacing: 0.02em;
-    color: ${text('mute')};
-    padding-left: 20px; /* marker(10px) + gap(10px) 정렬 */
+    opacity: 0.65;
+    padding-left: calc(3px + ${pad(2.5)}); /* accent bar 정렬 */
+    line-height: 1.5;
   }
 
   [data-part="canvas-shape-group"] {
@@ -289,18 +254,22 @@ export const canvasCss = css`
   [data-part="canvas-shape-group"]:last-child { margin-bottom: 0; }
   [data-part="canvas-shape-label"] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     letter-spacing: 0;
   }
 
-  [data-part="canvas-subgroup"] { margin-bottom: ${pad(5)}; }
+  [data-part="canvas-subgroup"] { margin-bottom: ${pad(6)}; }
   [data-part="canvas-subgroup"]:last-child { margin-bottom: 0; }
-  [data-part="canvas-subgroup"] > h3 {
-    ${microLabel()}
-    color: ${text('subtle')};
+  /* subgroup eyebrow — 섹션 디바이더와 경쟁 ❌. dashed 라인 폐기, micro mono 라벨만 */
+  [data-part="canvas-subgroup"] > h3,
+  [data-part="canvas-subgroup"] > h4 {
+    font: 600 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.65;
     margin: 0 0 ${pad(3)};
-    padding-bottom: ${pad(1.5)};
-    border-bottom: 1px dashed ${border('subtle')};
+    padding: 0;
+    border: 0;
   }
 
   /* cols = ceil(√N) (인라인 --cols로 주입) → 각 grid가 정사각 비율.
@@ -321,7 +290,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-grid-comp"] {
     display: grid;
-    grid-template-columns: repeat(var(--cols, 3), minmax(200px, max-content));
+    grid-template-columns: repeat(var(--cols, 3), minmax(280px, max-content));
     grid-auto-rows: auto;
     column-gap: ${pad(4)};
     row-gap: ${pad(4)};
@@ -354,16 +323,15 @@ export const canvasCss = css`
     width: 100%;
     min-height: 80px;
     aspect-ratio: 1 / 1;
-    border: 1px solid ${border()};
-    border-radius: ${radius('sm')};
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('md')};
+    box-shadow: 0 1px 2px color-mix(in oklab, CanvasText 4%, transparent);
   }
-  /* 흰색·투명 식별을 위한 체커보드 hint — Photoshop·Figma 디팩토.
-     2×2 정사각 체커: 같은 45° gradient 2장을 half-cell offset 으로 겹쳐서
-     사각형 패턴 (삼각형 ❌) 형성. 8px cell × 2 = 16px tile. */
+  /* 흰색·투명 식별을 위한 체커보드 — alpha 절반 줄여 노이즈 감소 */
   [data-part="canvas-token-card"][data-token-type="color"] > [data-swatch] {
     background-image:
-      linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.08) 75%),
-      linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.08) 75%);
+      linear-gradient(45deg, color-mix(in oklab, CanvasText 4%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in oklab, CanvasText 4%, transparent) 75%),
+      linear-gradient(45deg, color-mix(in oklab, CanvasText 4%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in oklab, CanvasText 4%, transparent) 75%);
     background-size: 16px 16px;
     background-position: 0 0, 8px 8px;
   }
@@ -374,31 +342,33 @@ export const canvasCss = css`
     padding: ${pad(2)};
     box-sizing: border-box;
     border: 1px solid ${border('subtle')};
-    border-radius: ${radius('sm')};
+    border-radius: ${radius('md')};
+    box-shadow: 0 1px 2px color-mix(in oklab, CanvasText 4%, transparent);
   }
   [data-part="canvas-token-card"] > [data-frame] {
     min-height: 80px;
     width: 100%;
     padding: ${pad(3)};
     display: grid; place-items: center;
-    /* surface owner — bg() 위 text() 페어. 안에서 그려지는 demo 가 정확한 대비
-       위에서 측정되도록. neutral(N) 직접 사용 금지(palette tier 로 호출은 정본
-       위배). pair() recipe 가 SSOT. */
     ${pair({ bg: bg(), fg: text('strong') })}
     border: 1px solid ${border('subtle')};
-    border-radius: ${radius('sm')};
+    border-radius: ${radius('md')};
     box-sizing: border-box;
+    box-shadow: 0 1px 2px color-mix(in oklab, CanvasText 4%, transparent);
   }
   [data-part="canvas-token-card"] > [data-name] {
-    font: 500 12px system-ui;
-    color: ${text('strong')};
+    font: 600 12px system-ui;
+    letter-spacing: -0.01em;
     align-self: end;
+    line-height: 1.3;
   }
   [data-part="canvas-token-card"] > [data-call] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    font: 500 10.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+    opacity: 0.65;
     align-self: start;
     word-break: break-all;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
   }
 
   /* ── Color ramp — Radix · Tailwind · Carbon 수렴 디팩토. ──
@@ -427,16 +397,17 @@ export const canvasCss = css`
     justify-content: space-between;
     padding: ${pad(2)};
     box-sizing: border-box;
-    color: ${text('strong')};
     transition: transform 160ms ease, z-index 0s 160ms;
     cursor: default;
   }
-  [data-part="canvas-color-ramp"] [data-tile][data-dark] { color: ${TONE.fgOnDark}; }
+  /* tile 은 자기 bg 위에 자기 fg — 검정 위 흰 텍스트, 흰 위 검정 텍스트 */
+  [data-part="canvas-color-ramp"] [data-tile]            { color: black; }
+  [data-part="canvas-color-ramp"] [data-tile][data-dark] { color: white; }
   [data-part="canvas-color-ramp"] [data-tile]:hover {
     transform: translateY(-2px);
     z-index: 1;
     transition: transform 160ms ease, z-index 0s 0s;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+    box-shadow: 0 6px 16px color-mix(in oklab, CanvasText 18%, transparent);
   }
   [data-part="canvas-color-ramp"] [data-tile] > [data-step] {
     font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -460,11 +431,10 @@ export const canvasCss = css`
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-name] {
     font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text()};
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-range] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     letter-spacing: 0.04em;
   }
 
@@ -486,7 +456,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-space-stack"] [data-label] {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('subtle')};
+    opacity: 0.80;
     letter-spacing: 0.02em;
   }
   [data-part="canvas-space-stack"] [data-bar] {
@@ -498,7 +468,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-space-stack"] [data-value] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     text-align: end;
   }
 
@@ -529,7 +499,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-elev-tower"] figcaption {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
   }
 
   [data-part="canvas-type-row"] {
@@ -542,11 +512,10 @@ export const canvasCss = css`
   [data-part="canvas-type-row"] > [data-specimen] {
     line-height: 1.1;
     font-weight: ${weight('semibold')};
-    color: ${text('strong')};
   }
   [data-part="canvas-type-row"] > [data-meta] {
     font: 400 11px system-ui;
-    color: ${text('mute')};
+    opacity: 0.65;
   }
 
   /* comp-card = frame 없는 stage + 아래 캡션 (Figma instance 스타일).
@@ -571,10 +540,9 @@ export const canvasCss = css`
     outline-color: ${border('subtle')};
   }
   [data-part="canvas-comp-card"][data-selected] {
-    outline-color: ${text('strong')};
+    outline-color: currentColor;
   }
   [data-part="canvas-comp-card"][data-selected] > figcaption {
-    color: ${text('strong')};
     font-weight: ${weight('semibold')};
   }
   [data-part="canvas-comp-card"] > [data-stage] {
@@ -590,7 +558,7 @@ export const canvasCss = css`
     overflow: visible;
   }
   [data-part="canvas-comp-card"] > [data-stage][data-empty] {
-    color: ${text('mute')};
+    opacity: 0.65;
     font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace;
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
@@ -598,7 +566,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-comp-card"] > figcaption {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     padding: ${pad(2)} 0 0;
     border-top: none;
     text-align: center;
@@ -606,7 +574,7 @@ export const canvasCss = css`
 
   [data-part="canvas-stage-empty"] {
     font: 400 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${text('mute')};
+    opacity: 0.65;
     padding: ${pad(4)};
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
@@ -637,7 +605,7 @@ export const canvasCss = css`
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: ${text('mute')};
+    opacity: 0.65;
     border-bottom: 1px solid ${border('subtle')};
     padding: ${pad(1)} 0;
   }

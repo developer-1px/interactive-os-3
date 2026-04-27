@@ -1,4 +1,5 @@
-import { accent, css, dim, font, pad, radius, status, text } from '../../tokens/foundations'
+import { accent, css, font, radius, status, text } from '../../tokens/foundations'
+import { dim, pad } from '../../tokens/palette'
 export const cssLegendDot = () => css`
   [data-part="legend-dot"] {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};

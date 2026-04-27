@@ -1,4 +1,5 @@
-import { css, font, mute, pad, typography, weight } from '../../tokens/foundations'
+import { css, font, mute, typography, weight } from '../../tokens/foundations'
+import { pad } from '../../tokens/palette'
 
 /**
  * Heading — 시맨틱 tag(h1~h3, p, small) + data-level로 시각 size.

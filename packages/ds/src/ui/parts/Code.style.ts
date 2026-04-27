@@ -1,4 +1,5 @@
-import { border, css, currentTint, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
+import { border, css, currentTint, font, hairlineWidth, radius } from '../../tokens/foundations'
+import { dim, pad } from '../../tokens/palette'
 
 export const cssCode = () => css`
   :where(code) {

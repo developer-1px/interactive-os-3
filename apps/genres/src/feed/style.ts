@@ -1,5 +1,5 @@
-import { css, pad, radius, hairlineWidth, border, text, surface } from '@p/ds/tokens/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, border, css, hairlineWidth, radius, surface, text, weight } from '@p/ds/tokens/foundations'
+import { pad } from '@p/ds/tokens/palette'
 
 /**
  * feed Gestalt 적용 —
@@ -50,7 +50,7 @@ export const feedCss = css`
     color: ${surface('subtle')};
     border-radius: ${radius('pill')};
     border: none;
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     font-size: 0.9375rem;
     justify-content: center;
   }
@@ -108,7 +108,7 @@ export const feedCss = css`
   }
   main[aria-label='피드'] [data-ds='Row'] > strong small {
     display: block;
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     color: ${text('subtle')};
     margin-block-start: ${pad(0.25)};
   }
@@ -173,7 +173,7 @@ export const feedCss = css`
   main[aria-label='피드'] [data-attachments] a[data-attach='link'] strong {
     grid-area: title;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
   main[aria-label='피드'] [data-attachments] a[data-attach='link'] small {
     grid-area: host;
@@ -202,7 +202,7 @@ export const feedCss = css`
   }
   main[aria-label='피드'] [data-attachments] [data-attach='file'] strong {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: ${weight('medium')};
   }
   main[aria-label='피드'] [data-attachments] [data-attach='file'] small {
     color: ${text('subtle')};
@@ -245,7 +245,7 @@ export const feedCss = css`
   }
   main[aria-label='피드'] [data-attachments] [data-attach='commit'] strong {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: ${weight('medium')};
     flex: 1;
     min-inline-size: 0;
     overflow: hidden;
@@ -319,12 +319,12 @@ export const feedCss = css`
   }
   aside[data-part='feed-side'] small {
     color: ${text('subtle')};
-    font-weight: 400;
+    font-weight: ${weight('regular')};
   }
   aside[data-part='feed-side'] h3 {
     margin: 0;
     font-size: 1.0625rem;
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: -0.005em;
   }
   aside[data-part='feed-side'] small[data-variant='muted'] {
@@ -336,7 +336,7 @@ export const feedCss = css`
     padding-inline: ${pad(2)};
     padding-block: ${pad(0.5)};
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
 
   /* ─── feed header tabs ───────────────────────────────────────── */
@@ -345,7 +345,7 @@ export const feedCss = css`
   }
   header [aria-label='피드 탭'] [aria-pressed='true'] {
     color: ${text('strong')};
-    font-weight: 700;
+    font-weight: ${weight('bold')};
   }
 
   /* ─── 모바일 ────────────────────────────────────────────────── */

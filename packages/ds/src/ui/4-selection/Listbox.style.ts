@@ -1,4 +1,5 @@
-import { css, font, mute, pad } from '../../tokens/foundations'
+import { css, font, mute } from '../../tokens/foundations'
+import { pad } from '../../tokens/palette'
 /**
  * Listbox — [icon][label ···][trailing] 보편 리스트 행.
  *

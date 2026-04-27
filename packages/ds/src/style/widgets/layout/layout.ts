@@ -1,4 +1,5 @@
-import { SHELL_MOBILE_MAX, accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, weight } from '../../../tokens/foundations'
+import { SHELL_MOBILE_MAX, accent, border, container, control, css, font, grouping, hairlineWidth, hierarchy, radius, square, status, surface, text, typography, weight } from '../../../tokens/foundations'
+import { elev, pad } from '../../../tokens/palette'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -115,8 +116,7 @@ export const cssLayout = () => css`
     gap: ${hierarchy.surface};                      /* L4 h2 ↔ frames */
   }
   [data-part="canvas-family"] > h2 {
-    font-size: var(--ds-text-lg);
-    font-weight: ${weight('semibold')};
+    ${typography('heading')};
     margin: 0;
     color: var(--ds-fg);
     letter-spacing: -0.01em;

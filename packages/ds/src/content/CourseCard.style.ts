@@ -1,4 +1,5 @@
-import { accent, css, currentTint, dim, font, gradientDeep, mix, on, pad, radius, status, text, typography, weight } from '../tokens/foundations'
+import { accent, css, currentTint, font, gradientDeep, on, radius, status, text, typography, weight } from '../tokens/foundations'
+import { dim, mix, pad } from '../tokens/palette'
 
 /**
  * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.

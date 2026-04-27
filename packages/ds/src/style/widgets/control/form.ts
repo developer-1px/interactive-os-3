@@ -1,4 +1,5 @@
-import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, slot, status, surface, text, toneAlpha, tracking, typography, weight } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, radius, slot, status, surface, text, toneAlpha, tracking, typography, weight } from '../../../tokens/foundations'
+import { pad } from '../../../tokens/palette'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *

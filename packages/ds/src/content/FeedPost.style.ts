@@ -1,4 +1,5 @@
-import { css, dim, pad, radius, text, weight } from '../tokens/foundations'
+import { css, radius, text, weight } from '../tokens/foundations'
+import { dim, pad } from '../tokens/palette'
 
 /**
  * FeedPost slot inner styling — SNS 피드 포스트 카드.

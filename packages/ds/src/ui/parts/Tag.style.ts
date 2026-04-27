@@ -1,4 +1,5 @@
-import { accent, accentTint, css, currentTint, dim, dur, ease, font, icon, pad, radius, tint } from '../../tokens/foundations'
+import { accent, accentTint, css, currentTint, dur, ease, font, icon, radius } from '../../tokens/foundations'
+import { dim, pad, tint } from '../../tokens/palette'
 
 /**
  * Tag — removable label. Chip(entity)과 다른 부품 layer 시맨틱.

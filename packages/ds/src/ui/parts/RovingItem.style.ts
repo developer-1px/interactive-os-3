@@ -1,4 +1,5 @@
-import { css, pad } from '../../tokens/foundations'
+import { css } from '../../tokens/foundations'
+import { pad } from '../../tokens/palette'
 
 /**
  * RovingItem — row 시각 셸. icon · content · tail 3-track flex.

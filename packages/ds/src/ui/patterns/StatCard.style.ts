@@ -1,4 +1,5 @@
-import { css, dim, font, hairlineWidth, icon, mix, pad, status, statusTint, text, tint, typography, weight } from '../../tokens/foundations'
+import { css, font, hairlineWidth, icon, status, statusTint, text, typography, weight } from '../../tokens/foundations'
+import { dim, mix, pad, tint } from '../../tokens/palette'
 
 /**
  * StatCard slot inner styling — Card primitive 슬롯 안의 KPI 특화 시각만.

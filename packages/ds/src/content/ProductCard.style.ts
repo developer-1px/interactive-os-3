@@ -1,4 +1,5 @@
-import { css, dim, pad, radius, status, text, weight } from '../tokens/foundations'
+import { css, radius, status, text, typography, weight } from '../tokens/foundations'
+import { dim, pad } from '../tokens/palette'
 
 /**
  * ProductCard slot inner styling — 커머스 상품 카드.
@@ -27,7 +28,7 @@ export const cssProductCard = () => css`
 
   /* title 슬롯 — 상품명 (2줄 clamp) */
   article[data-part="card"][data-card="product"] > [data-slot="title"] > strong {
-    font-size: var(--ds-text-md); font-weight: ${weight('semibold')};
+    ${typography('bodyStrong')};
     overflow: hidden; text-overflow: ellipsis;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
@@ -37,7 +38,7 @@ export const cssProductCard = () => css`
     margin: 0; display: flex; align-items: baseline; gap: ${pad(1.5)};
   }
   article[data-part="card"][data-card="product"] > [data-slot="body"] > p > strong {
-    font-size: var(--ds-text-lg); font-weight: ${weight('bold')};
+    ${typography('heading')};
   }
   article[data-part="card"][data-card="product"] > [data-slot="body"] > p > small > s { color: ${text('mute')}; }
   article[data-part="card"][data-card="product"] > [data-slot="body"] > p > mark {
@@ -45,7 +46,7 @@ export const cssProductCard = () => css`
     color: ${status('danger')};
     padding: ${pad(0.25)} ${pad(1)};
     border-radius: ${radius('pill')};
-    font-size: var(--ds-text-xs); font-weight: ${weight('semibold')};
+    ${typography('microStrong')};
   }
 
   /* meta 슬롯 — brand · rating · reviews */

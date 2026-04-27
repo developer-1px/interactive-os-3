@@ -1,5 +1,5 @@
-import { css, pad, radius } from '@p/ds/tokens/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, css, radius, typography, weight } from '@p/ds/tokens/foundations'
+import { pad } from '@p/ds/tokens/palette'
 
 // edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content).
 // 모바일에서 sidebar는 좌측 드로어로 변환.
@@ -22,7 +22,7 @@ export const eduPortalAdminCss = css`
     gap: ${pad(3)};
   }
   header[data-part="topbar"] > hgroup h1 {
-    font-size: var(--ds-text-xl); font-weight: 600; margin: 0;
+    ${typography('headingStrong')}; margin: 0;
   }
   header[data-part="topbar"] > hgroup p {
     opacity: .6; margin: ${pad(0.5)} 0 0;

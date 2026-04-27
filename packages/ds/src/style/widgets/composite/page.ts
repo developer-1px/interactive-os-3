@@ -1,4 +1,5 @@
-import { css, hierarchy, pad, radius, surface, text, weight } from '../../../tokens/foundations'
+import { css, hierarchy, radius, surface, text, typography, weight } from '../../../tokens/foundations'
+import { pad } from '../../../tokens/palette'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
@@ -15,7 +16,7 @@ export const cssPage = () => css`
     gap: ${pad(2)};
   }
   [data-part="board-page"] [data-part="board-nav"] > h3 {
-    font-size: var(--ds-text-md); font-weight: ${weight('bold')}; margin: 0;
+    ${typography('bodyStrong')}; margin: 0;
   }
   [data-part="board-page"] [data-part="board-nav"] > small {
     color: ${text('subtle')}; font-size: var(--ds-text-xs);

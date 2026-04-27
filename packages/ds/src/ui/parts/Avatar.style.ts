@@ -1,4 +1,5 @@
-import { css, currentTint, dim, font, radius, typography, weight } from '../../tokens/foundations'
+import { css, currentTint, font, radius, typography, weight } from '../../tokens/foundations'
+import { dim } from '../../tokens/palette'
 import { square } from '../../tokens/foundations/layout/square'
 
 /**

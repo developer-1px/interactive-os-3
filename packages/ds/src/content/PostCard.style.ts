@@ -1,4 +1,5 @@
-import { css, dim, pad, radius, surfaceTint, text, tint, weight } from '../tokens/foundations'
+import { css, radius, surfaceTint, text, typography, weight } from '../tokens/foundations'
+import { dim, pad, tint } from '../tokens/palette'
 
 /**
  * PostCard slot inner styling — Slack/Discord 식 채널 게시판 한 줄.
@@ -74,8 +75,7 @@ export const cssPostCard = () => css`
   article[data-part="card"][data-card="post"] > [data-slot="title"] > strong > small {
     margin-inline-start: ${pad(1)};
     color: ${text('mute')};
-    font-weight: ${weight('regular')};
-    font-size: var(--ds-text-xs);
+    ${typography('micro')};
   }
   article[data-part="card"][data-card="post"][data-cont] > [data-slot="title"] {
     display: none;

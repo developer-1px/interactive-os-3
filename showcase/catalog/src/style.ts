@@ -1,5 +1,5 @@
-import { css, pad, dim, microLabel, status, neutral, radius, grouping } from '@p/ds/tokens/foundations'
-import { SHELL_MOBILE_MAX } from '@p/ds/tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, css, grouping, microLabel, radius, status, surface, text, typography, weight } from '@p/ds/tokens/foundations'
+import { dim, neutral, pad } from '@p/ds/tokens/palette'
 
 // Catalog — ds ui zone-first 감사 대시보드.
 // edu-portal-admin 과 동일한 셸 구조, content 영역은 zone(h2) → component card(h3) 위계.
@@ -30,7 +30,7 @@ export const catalogCss = css`
     margin: 0;
   }
   dl[data-part="catalog-stats"] dd {
-    margin: 0; font-size: var(--ds-text-lg); font-weight: 700;
+    margin: 0; ${typography('heading')};
     font-variant-numeric: tabular-nums;
   }
   dl[data-part="catalog-stats"] [data-tone="good"] { color: ${status('success')}; }
@@ -45,15 +45,15 @@ export const catalogCss = css`
     display: flex; align-items: baseline; gap: ${pad(2)};
   }
   section[data-part="catalog-zone"] > header > h2 {
-    margin: 0; font-size: var(--ds-text-xl); font-weight: 700;
+    margin: 0; ${typography('headingStrong')};
     letter-spacing: var(--ds-tracking);
   }
   section[data-part="catalog-zone"] > header > small {
-    color: ${dim(55)}; font-size: var(--ds-text-sm);
+    color: ${text('mute')}; font-size: var(--ds-text-sm);
     font-variant-numeric: tabular-nums;
   }
   section[data-part="catalog-zone"] > p {
-    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-sm); max-width: 60ch;
+    margin: 0; color: ${text('mute')}; font-size: var(--ds-text-sm); max-width: 60ch;
   }
 
   ul[data-part="catalog-grid"] {
@@ -76,11 +76,11 @@ export const catalogCss = css`
     display: flex; align-items: baseline; gap: ${pad(1.5)}; flex-wrap: wrap;
   }
   article[data-part="catalog-card"] > header > h3 {
-    margin: 0; font-size: var(--ds-text-md); font-weight: 600;
+    margin: 0; ${typography('bodyStrong')};
   }
   article[data-part="catalog-card"] > header > [data-badge] {
     padding: ${pad(0.25)} ${pad(1)}; border-radius: ${radius('pill')};
-    font-size: var(--ds-text-xs); font-weight: 600;
+    ${typography('microStrong')};
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
   }
   article[data-part="catalog-card"] > header > [data-badge][data-tone="good"] {
@@ -96,17 +96,17 @@ export const catalogCss = css`
     color: ${status('danger')};
   }
   article[data-part="catalog-card"] > header > code {
-    font-size: var(--ds-text-xs); color: ${dim(55)};
+    font-size: var(--ds-text-xs); color: ${text('mute')};
     font-family: ui-monospace, monospace;
   }
   article[data-part="catalog-card"] > header > small {
     margin-inline-start: auto;
-    color: ${dim(55)}; font-size: var(--ds-text-xs);
+    color: ${text('mute')}; font-size: var(--ds-text-xs);
     font-variant-numeric: tabular-nums;
   }
   article[data-part="catalog-card"] > [data-part="card-path"] {
     font-family: ui-monospace, monospace;
-    font-size: var(--ds-text-xs); color: ${dim(55)};
+    font-size: var(--ds-text-xs); color: ${text('mute')};
   }
   article[data-part="catalog-card"] > pre {
     margin: 0; padding: ${pad(2)};
@@ -129,7 +129,7 @@ export const catalogCss = css`
   article[data-part="catalog-card"] [data-pass="true"]  { color: ${status('success')}; }
   article[data-part="catalog-card"] [data-pass="false"] { color: ${status('danger')}; }
   article[data-part="catalog-card"] > footer {
-    margin: 0; color: ${dim(55)}; font-size: var(--ds-text-xs);
+    margin: 0; color: ${text('mute')}; font-size: var(--ds-text-xs);
     border-top: var(--ds-hairline) solid var(--ds-border); padding-top: ${pad(1.5)};
   }
 
@@ -144,7 +144,7 @@ export const catalogCss = css`
     display: flex; flex-direction: column; gap: ${pad(3)};
     flex: 0 0 var(--ds-preview-w, 480px);
     border-inline-start: var(--ds-hairline) solid var(--ds-border);
-    background: ${neutral(1)};
+    background: ${surface('subtle')};
     padding: ${pad(4)};
     overflow-y: auto;
   }
@@ -153,12 +153,12 @@ export const catalogCss = css`
   }
   aside[data-part="preview"] > header > hgroup { flex: 1; min-width: 0; }
   aside[data-part="preview"] > header > hgroup > h2 {
-    margin: 0; font-size: var(--ds-text-xl); font-weight: 700;
+    margin: 0; ${typography('headingStrong')};
   }
   aside[data-part="preview"] > header > hgroup > p {
     margin: ${pad(0.5)} 0 0;
     display: flex; gap: ${pad(1.5)}; align-items: baseline; flex-wrap: wrap;
-    color: ${dim(55)}; font-size: var(--ds-text-sm);
+    color: ${text('mute')}; font-size: var(--ds-text-sm);
   }
   aside[data-part="preview"] > header > hgroup > p > code {
     font-family: ui-monospace, monospace; font-size: var(--ds-text-xs);
@@ -269,7 +269,7 @@ export const catalogCss = css`
       flex-wrap: nowrap;
     }
     article[data-part="catalog-card"] > header > h3 {
-      font-size: var(--ds-text-sm); font-weight: 600;
+      ${typography('captionStrong')};
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       min-inline-size: 0;
     }

@@ -1,4 +1,5 @@
-import { accent, border, css, hairlineWidth, hierarchy, pad, radius, slot, surface, text, weight } from '../../../tokens/foundations'
+import { accent, border, css, hairlineWidth, hierarchy, radius, slot, surface, text, typography, weight } from '../../../tokens/foundations'
+import { pad } from '../../../tokens/palette'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.
@@ -33,8 +34,7 @@ export const cssAuthCard = () => css`
   }
   article[data-part="card"][data-card="auth"] > [data-slot="title"] h2 {
     margin: 0;
-    font-size: var(--ds-text-2xl);
-    font-weight: ${weight('bold')};
+    ${typography('display')};
     letter-spacing: -0.01em;
   }
   article[data-part="card"][data-card="auth"] > [data-slot="title"] small {
@@ -144,8 +144,7 @@ export const cssAuthCard = () => css`
   article[data-part="card"][data-card="auth"] [data-part="otp-row"] > input {
     aspect-ratio: 1;
     text-align: center;
-    font-size: var(--ds-text-xl);
-    font-weight: ${weight('semibold')};
+    ${typography('headingStrong')};
     border: ${hairlineWidth()} solid ${border('subtle')};
     border-radius: ${radius('md')};
     background: var(--ds-bg);

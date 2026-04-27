@@ -1,4 +1,5 @@
-import { accent, border, css, elev, grouping, hairlineWidth, radius } from '../../../tokens/foundations'
+import { accent, border, css, grouping, hairlineWidth, radius } from '../../../tokens/foundations'
+import { elev } from '../../../tokens/palette'
 // 모바일 글래스 — iOS 26 Liquid Glass / Material 3 Expressive 트렌드 수렴.
 // hover:none + pointer:coarse 환경에서만 발동하여 데스크톱 외형 유지.
 //

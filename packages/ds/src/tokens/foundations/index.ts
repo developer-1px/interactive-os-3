@@ -1,26 +1,13 @@
 /**
  * foundations/ — sys tokens (semantic role).
  *
- * de facto 2층 (Material 3 / Carbon): ref tokens(raw scale) vs sys tokens(semantic).
- *   - ref(raw, 인자=숫자 scale): `ds/palette` (color/space/elev)
- *   - sys(semantic, 인자=named slot/role): 이 폴더
+ * de facto 2층 (Material 3 / Carbon):
+ *   - ref(raw, 인자=숫자 scale): `tokens/palette/` — pad, neutral, elev, tint, mix, dim
+ *   - sys(semantic, 인자=named slot/role): 이 폴더 — text, surface, border, accent, font, weight, radius, ...
  *
- * 외부 호환을 위해 palette을 여기서 re-export 한다 (점진 마이그레이션).
- * **신규 코드는 raw token이 필요하면 `from 'ds/tokens/palette'`를 직접 import 권장.**
+ * **레이어 완전 분리** — palette re-export ❌. raw 가 필요하면 `from '@p/ds/tokens/palette'` 직접.
+ * widget 은 가능하면 semantic 만 쓰고, raw 는 명시적 import 로 의도 표시.
  */
-/**
- * palette re-export — 점진 마이그레이션. emStep / insetStep 같이 가장 raw 한 토큰만
- * 의도적으로 제외 (widget 은 proximity/inset semantic 으로 접근).
- *
- * 신규 코드 권장:
- *   - 색은 text() / surface() / border() / accent() / status() 등 semantic 만
- *   - neutral(N) 은 preset 내부·foundations 내부에서만 직접 호출
- *   - dim() 은 box-shadow / border 등 currentColor 알파 다운에만
- */
-export { pad, rowPadding, level } from '../palette/space'
-export { neutral, tint, mix, dim, type Neutral } from '../palette/color'
-export { elev } from '../palette/elev'
-
 export * from './css'
 export * from './typography'
 export * from './spacing'

@@ -1,4 +1,5 @@
-import { css, pad, icon } from '@p/ds/tokens/foundations'
+import { css, icon, typography, weight } from '@p/ds/tokens/foundations'
+import { pad } from '@p/ds/tokens/palette'
 
 // Finder desktop — sidebar / columns / list-view / preview.
 // (sidebar surface 자체는 widgets/composite/sidebar.ts owner.)
@@ -205,7 +206,7 @@ export const finderCss = css`
     max-width: 100%; height: auto;
   }
   aside[data-part="preview"] > header h2 {
-    font-size: var(--ds-text-lg); font-weight: 600; word-break: break-all; margin: 0;
+    ${typography('heading')}; word-break: break-all; margin: 0;
   }
   aside[data-part="preview"] dl {
     display: grid; grid-template-columns: auto 1fr;

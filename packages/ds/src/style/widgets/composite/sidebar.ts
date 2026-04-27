@@ -1,4 +1,5 @@
-import { css, hierarchy, microLabel, pad, radius, slot, surface, text, weight } from '../../../tokens/foundations'
+import { css, hierarchy, microLabel, radius, slot, surface, text, typography, weight } from '../../../tokens/foundations'
+import { pad } from '../../../tokens/palette'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.
@@ -36,8 +37,7 @@ export const cssSidebar = () => css`
     display: grid; gap: ${pad(0.25)};
   }
   nav[data-part="sidebar"] > header > strong {
-    font-size: var(--ds-text-md);
-    font-weight: ${weight('bold')};
+    ${typography('bodyStrong')};
     letter-spacing: var(--ds-tracking);
   }
   nav[data-part="sidebar"] > header > small {

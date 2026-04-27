@@ -1,4 +1,5 @@
-import { css, pad, neutral, radius, microLabel, dim, grouping, tint } from '@p/ds/tokens/foundations'
+import { css, grouping, microLabel, radius, surface, surfaceTint, text, typography, weight } from '@p/ds/tokens/foundations'
+import { dim, neutral, pad, tint } from '@p/ds/tokens/palette'
 
 // Finder 모바일 — iOS Files 식 drill-down + TikTok 세로 스냅 스와이퍼 + FloatingNav FAB.
 // 라우트 컴포넌트가 isMobile 분기로 FinderMobile을 렌더하므로 CSS는 자기 root만 잡는다.
@@ -17,7 +18,7 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     padding: ${pad(2)} ${pad(3)};
     border-block-end: var(--ds-hairline) solid var(--ds-border);
-    background: ${neutral(1)};
+    background: ${surface('subtle')};
   }
   main[data-part="finder-mobile"] > header > button {
     inline-size: 2rem; block-size: 2rem;
@@ -31,7 +32,7 @@ export const finderMobileCss = css`
   }
   main[data-part="finder-mobile"] > header > h1 {
     margin: 0;
-    font-size: var(--ds-text-lg); font-weight: 600;
+    ${typography('heading')};
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   main[data-part="finder-mobile"] > header > h1:only-child {
@@ -101,8 +102,8 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     background: linear-gradient(
       to bottom,
-      color-mix(in oklch, ${neutral(1)} 96%, transparent) 30%,
-      color-mix(in oklch, ${neutral(1)} 70%, transparent) 70%,
+      color-mix(in oklch, ${surface('subtle')} 96%, transparent) 30%,
+      color-mix(in oklch, ${surface('subtle')} 70%, transparent) 70%,
       transparent
     );
   }
@@ -118,8 +119,8 @@ export const finderMobileCss = css`
     gap: ${pad(2)};
     background: linear-gradient(
       to top,
-      color-mix(in oklch, ${neutral(1)} 96%, transparent) 30%,
-      color-mix(in oklch, ${neutral(1)} 70%, transparent) 70%,
+      color-mix(in oklch, ${surface('subtle')} 96%, transparent) 30%,
+      color-mix(in oklch, ${surface('subtle')} 70%, transparent) 70%,
       transparent
     );
   }
@@ -139,16 +140,16 @@ export const finderMobileCss = css`
   }
   aside[data-part="floating-nav"] > button {
     width: 3.5rem; height: 3.5rem;
-    border-radius: 50%;
+    border-radius: ${radius('pill')};
     border: var(--ds-hairline) solid var(--ds-border);
     ${grouping(3)}
     color: inherit;
     font-size: 1.5rem; line-height: 1;
     cursor: pointer;
     box-shadow:
-      0 0 0 1px ${tint('CanvasText', 6)},
-      0 1px 2px ${tint('CanvasText', 10)},
-      0 4px 10px ${tint('CanvasText', 8)};
+      0 0 0 1px ${surfaceTint('overlay')},
+      0 1px 2px ${surfaceTint('overlay')},
+      0 4px 10px ${surfaceTint('overlay')};
     transition: transform var(--ds-dur-fast) var(--ds-ease-out);
   }
   aside[data-part="floating-nav"] > button:hover { transform: scale(1.05); }
@@ -159,12 +160,12 @@ export const finderMobileCss = css`
       background: color-mix(in oklch, Canvas 60%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
-      border: var(--ds-hairline) solid ${tint('CanvasText', 10)};
+      border: var(--ds-hairline) solid ${surfaceTint('overlay')};
       box-shadow:
-        inset 0 1px 0 ${tint('CanvasText', 8)},
-        0 0 0 1px ${tint('CanvasText', 4)},
-        0 2px 4px ${tint('CanvasText', 10)},
-        0 8px 16px ${tint('CanvasText', 8)};
+        inset 0 1px 0 ${surfaceTint('overlay')},
+        0 0 0 1px ${surfaceTint('glass')},
+        0 2px 4px ${surfaceTint('overlay')},
+        0 8px 16px ${surfaceTint('overlay')};
     }
   }
   aside[data-part="floating-nav"] [popover][data-part="popover"] {
@@ -199,12 +200,12 @@ export const finderMobileCss = css`
     border-radius: ${radius('md')};
     border: var(--ds-hairline) solid var(--ds-border);
     background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
-    font-size: 1.25rem; font-weight: 700;
+    font-size: 1.25rem; font-weight: ${weight('bold')};
     font-family: ui-rounded, ui-sans-serif, sans-serif;
-    color: ${dim(55)};
+    color: ${text('mute')};
   }
   menu[data-part="route-grid"] > li > a > strong {
-    font-size: var(--ds-text-xs); font-weight: 500; text-align: center;
+    ${typography('micro')}; text-align: center;
     word-break: keep-all; line-height: 1.3;
   }
 `

@@ -1,4 +1,5 @@
-import { accent, bg, control, css, dur, ease, indicator, onAccent, pad, radius, status } from '../../../tokens/foundations'
+import { accent, bg, control, css, dur, ease, indicator, onAccent, radius, status } from '../../../tokens/foundations'
+import { pad } from '../../../tokens/palette'
 export const cssToggle = () => [
   css`
     [role="checkbox"],
