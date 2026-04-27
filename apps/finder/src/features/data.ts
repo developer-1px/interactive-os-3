@@ -82,10 +82,10 @@ export function tagItems(tag: string): FsNode[] {
 void extToIcon
 
 export const sidebar: SidebarItem[] = [
-  { id: 'root',     label: tree.name, path: '/',            icon: 'home' },
-  { id: 'src',      label: 'src',     path: '/src',         icon: 'dir' },
-  { id: 'controls', label: 'controls', path: '/src/controls', icon: 'sliders' },
-  { id: 'ds',       label: 'ds',      path: '/src/ds',      icon: 'palette' },
-  { id: 'finder',   label: 'finder',  path: '/src/finder',  icon: 'dirOpen' },
-  { id: 'public',   label: 'public',  path: '/public',      icon: 'dir' },
+  { id: 'root',        label: tree.name,    path: '/',                  icon: 'home' },
+  { id: 'src',         label: 'src',        path: '/src',               icon: 'dir' },
+  { id: 'packages',    label: 'packages',   path: '/packages',          icon: 'dir' },
+  { id: 'ds',          label: 'ds',         path: '/packages/ds/src',   icon: 'palette' },
+  { id: 'finder',      label: 'finder',     path: '/src/finder',        icon: 'dirOpen' },
+  { id: 'screenshots', label: 'screenshots', path: '/docs/screenshots', icon: 'image' },
 ]

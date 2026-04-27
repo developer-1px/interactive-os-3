@@ -20,7 +20,7 @@
 | `scripts/role-css-audit.ts` | 셀렉터 — role 누락된 CSS 셀렉터 색출 |
 | `scripts/aria-xray.mjs` · `aria-tree.ts` | ARIA 트리 — role·aria-* 의 구조 검증 (raw role 0개 · 시연 라우트 예외) |
 | `scripts/verify-css-guard.mjs` | 색 weight·opacity — surface 소유자만 색 보유, item은 mute/emphasize |
-| `scripts/snap-evolution.mjs` | 변화 추적 — UI 진화 스냅샷 (정본 갱신 절차의 4단계 "감사 재실행" 보조) |
+| `scripts/snap-screenshots.mjs` | 변화 추적 — UI 진화 스냅샷 (정본 갱신 절차의 4단계 "감사 재실행" 보조) |
 | `scripts/hooks/pre-commit` | 강제 시점 — 커밋 시 위 lint 일괄 실행 |
 | `vite-plugin-ds-audit.ts` | 강제 시점 — dev/build 타임 정본 감사 (`scan` + `types` 분리) |
 

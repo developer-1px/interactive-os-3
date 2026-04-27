@@ -20,6 +20,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-git-tree.mjs",
+            "timeout": 3
+          }
+        ]
       }
     ],
     "Stop": [
@@ -27,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/snap-evolution.mjs",
+            "command": "node scripts/snap-screenshots.mjs",
             "async": true,
             "timeout": 60
           }

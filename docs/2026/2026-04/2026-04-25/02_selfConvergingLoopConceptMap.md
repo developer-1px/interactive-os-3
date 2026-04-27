@@ -122,7 +122,7 @@ P6(메타) ──┘                                                            
 
 ## 다음 행동
 
-- [ ] 차원 인벤토리를 `docs/evolution/channels.jsonl` 같은 머신리더블 형식으로 고정 (P3 시작)
+- [ ] 차원 인벤토리를 `docs/screenshots/channels.jsonl` 같은 머신리더블 형식으로 고정 (P3 시작)
 - [ ] kbd 차원: `useRoving` API를 ui root에 자동 attach해 마찰 역전 시도 (P1)
 - [ ] data 차원: ControlProps 팩토리가 children보다 짧아지는 타입/헬퍼 설계 (P1)
 - [ ] focus 차원: 통로 후보(`useFocusOwner` 등) 존재 여부부터 결정 (P3 이전 단계)

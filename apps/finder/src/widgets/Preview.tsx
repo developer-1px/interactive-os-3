@@ -12,14 +12,12 @@ import type { PreviewVM } from '../features/feature'
 /** PreviewPane — feature.view.preview 의 VM 을 받아 aside 마크업 + Meta 렌더.
  *  파일 본문은 PreviewBody 가 자기 fetch 로 처리. */
 export function PreviewPane({ vm }: { vm: PreviewVM }) {
-  const show = vm.kind !== 'empty'
+  const show = vm.kind !== 'empty' && vm.kind !== 'dir'
   return (
     <aside data-part="preview" aria-label="미리보기" aria-hidden={!show}>
       {show && 'node' in vm && (
         <>
-          {vm.kind === 'dir'
-            ? <Header node={vm.node} note={`${vm.node.children?.length ?? 0}개 항목`} />
-            : <PreviewBody node={vm.node} />}
+          <PreviewBody node={vm.node} />
           <Meta node={vm.node} />
         </>
       )}

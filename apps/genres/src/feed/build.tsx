@@ -104,7 +104,7 @@ export function buildFeedPage(s: FeedState): NormalizedData {
         [`tr${i}`, { id: `tr${i}`, data: { type: 'Row', flow: 'cluster' } }],
         [`trIcon${i}`, { id: `trIcon${i}`, data: { type: 'Text', variant: 'body', content: <span data-icon="hash" aria-hidden /> } }],
         [`trTag${i}`, { id: `trTag${i}`, data: { type: 'Text', variant: 'strong', content: t.tag, grow: true } }],
-        [`trCount${i}`, { id: `trCount${i}`, data: { type: 'Text', variant: 'caption', content: `${t.count} posts` } }],
+        [`trCount${i}`, { id: `trCount${i}`, data: { type: 'Text', variant: 'muted', content: `${t.count} posts` } }],
       ])),
       sugSec: { id: 'sugSec', data: { type: 'Section', emphasis: 'raised', flow: 'form' } },
       sugHdr: { id: 'sugHdr', data: { type: 'Text', variant: 'h3', content: '추천 팔로우' } },

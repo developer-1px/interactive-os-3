@@ -113,7 +113,7 @@ ds (packages/ds/src)
    │  ├─ aria-xray · aria-tree    ─ ARIA 트리 검증
    │  ├─ role-css-audit
    │  ├─ verify-css-guard
-   │  └─ snap-evolution           ─ UI 진화 스냅샷
+   │  └─ snap-screenshots         ─ UI 진화 스냅샷
    │
    ├─ scripts/hooks/    [git pre-commit hook]
    │  └─ install-git-hook.sh · pre-commit · compare/

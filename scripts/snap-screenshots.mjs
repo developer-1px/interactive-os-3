@@ -12,7 +12,7 @@ import puppeteer from 'puppeteer-core'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
-const outDir = resolve(root, 'docs/evolution')
+const outDir = resolve(root, 'docs/screenshots')
 const timelinePath = resolve(outDir, 'timeline.jsonl')
 const DEV_URL = process.env.SNAP_URL || 'http://localhost:5173'
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
@@ -35,7 +35,7 @@ const ROUTES = [
   { slug: 'genres-inbox', url: '/genres/inbox' },
 ]
 
-function log(...a) { process.stderr.write('[snap-evolution] ' + a.join(' ') + '\n') }
+function log(...a) { process.stderr.write('[snap-screenshots] ' + a.join(' ') + '\n') }
 
 async function devReachable() {
   try {
@@ -52,7 +52,7 @@ function changedFiles() {
     const out = execSync('git diff --name-only HEAD; git diff --name-only; git ls-files --others --exclude-standard',
       { cwd: root, encoding: 'utf8' })
     return [...new Set(out.split('\n').map(s => s.trim()).filter(Boolean))]
-      .filter(f => !f.startsWith('docs/evolution/'))
+      .filter(f => !f.startsWith('docs/screenshots/'))
   } catch { return [] }
 }
 

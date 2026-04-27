@@ -36,9 +36,9 @@ const rules = [
     test: (line) => {
       const m = line.match(/data-ds\s*=\s*["']([^"']+)["']/)
       if (!m) return false
-      return !['Row', 'Column', 'Grid'].includes(m[1])
+      return !['Row', 'Column', 'Grid', 'Split'].includes(m[1])
     },
-    hint: 'data-ds 화이트리스트 외 값 (Row|Column|Grid 만 허용)' },
+    hint: 'data-ds 화이트리스트 외 값 (Row|Column|Grid|Split 만 허용)' },
   { level: '🟡', kind: 'Inline',
     test: (line) => /\bstyle\s*=\s*\{\s*\{/.test(line),
     hint: 'inline style (토큰/ds.css로 이동 후보)' },

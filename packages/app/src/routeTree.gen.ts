@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WireframesRouteImport } from './routes/wireframes'
 import { Route as TokensRouteImport } from './routes/tokens'
-import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as SoundSettingsRouteImport } from './routes/sound-settings'
 import { Route as SidebarGalleryRouteImport } from './routes/sidebar-gallery'
 import { Route as KeyboardRouteImport } from './routes/keyboard'
@@ -54,11 +53,6 @@ const WireframesRoute = WireframesRouteImport.update({
 const TokensRoute = TokensRouteImport.update({
   id: '/tokens',
   path: '/tokens',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ThemeRoute = ThemeRouteImport.update({
-  id: '/theme',
-  path: '/theme',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SoundSettingsRoute = SoundSettingsRouteImport.update({
@@ -243,7 +237,6 @@ export interface FileRoutesByFullPath {
   '/keyboard': typeof KeyboardRoute
   '/sidebar-gallery': typeof SidebarGalleryRoute
   '/sound-settings': typeof SoundSettingsRoute
-  '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
   '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
@@ -279,7 +272,6 @@ export interface FileRoutesByTo {
   '/keyboard': typeof KeyboardRoute
   '/sidebar-gallery': typeof SidebarGalleryRoute
   '/sound-settings': typeof SoundSettingsRoute
-  '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
   '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
@@ -317,7 +309,6 @@ export interface FileRoutesById {
   '/keyboard': typeof KeyboardRoute
   '/sidebar-gallery': typeof SidebarGalleryRoute
   '/sound-settings': typeof SoundSettingsRoute
-  '/theme': typeof ThemeRoute
   '/tokens': typeof TokensRoute
   '/wireframes': typeof WireframesRoute
   '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
@@ -357,7 +348,6 @@ export interface FileRouteTypes {
     | '/keyboard'
     | '/sidebar-gallery'
     | '/sound-settings'
-    | '/theme'
     | '/tokens'
     | '/wireframes'
     | '/devtools/finder-spec'
@@ -393,7 +383,6 @@ export interface FileRouteTypes {
     | '/keyboard'
     | '/sidebar-gallery'
     | '/sound-settings'
-    | '/theme'
     | '/tokens'
     | '/wireframes'
     | '/devtools/finder-spec'
@@ -430,7 +419,6 @@ export interface FileRouteTypes {
     | '/keyboard'
     | '/sidebar-gallery'
     | '/sound-settings'
-    | '/theme'
     | '/tokens'
     | '/wireframes'
     | '/devtools/finder-spec'
@@ -469,7 +457,6 @@ export interface RootRouteChildren {
   KeyboardRoute: typeof KeyboardRoute
   SidebarGalleryRoute: typeof SidebarGalleryRoute
   SoundSettingsRoute: typeof SoundSettingsRoute
-  ThemeRoute: typeof ThemeRoute
   TokensRoute: typeof TokensRoute
   WireframesRoute: typeof WireframesRoute
   DevtoolsFinderSpecRoute: typeof DevtoolsFinderSpecRoute
@@ -492,13 +479,6 @@ declare module '@tanstack/react-router' {
       path: '/tokens'
       fullPath: '/tokens'
       preLoaderRoute: typeof TokensRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/theme': {
-      id: '/theme'
-      path: '/theme'
-      fullPath: '/theme'
-      preLoaderRoute: typeof ThemeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sound-settings': {
@@ -812,7 +792,6 @@ const rootRouteChildren: RootRouteChildren = {
   KeyboardRoute: KeyboardRoute,
   SidebarGalleryRoute: SidebarGalleryRoute,
   SoundSettingsRoute: SoundSettingsRoute,
-  ThemeRoute: ThemeRoute,
   TokensRoute: TokensRoute,
   WireframesRoute: WireframesRoute,
   DevtoolsFinderSpecRoute: DevtoolsFinderSpecRoute,

@@ -327,7 +327,7 @@ export const feedCss = css`
     font-weight: 700;
     letter-spacing: -0.005em;
   }
-  aside[data-part='feed-side'] [data-ds='Text'][variant='caption'] {
+  aside[data-part='feed-side'] small[data-variant='muted'] {
     color: ${text('subtle')};
     font-size: 0.8125rem;
   }

@@ -7,14 +7,15 @@
  *   - ds/ui 컴포넌트        glob '@p/ds/ui/<tier>/*.tsx' + _demos/*.demo.tsx
  *
  * 새 자산을 추가하면 (export + @demo 태그 또는 _demos/<Name>.demo.tsx) 이 페이지에
- * 즉시 등장한다 — 등록부 0개. 흡수 통합: /catalog · /foundations 라우트 대체.
+ * 즉시 등장한다 — 등록부 0개. 흡수 통합: /catalog · /foundations · /theme 라우트 대체.
  */
-import { useMemo, useState, type ComponentType, type ReactNode } from 'react'
+import { useMemo, useReducer, useState, type ComponentType, type ReactNode } from 'react'
 import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
-import { ROOT, useControlState, type NormalizedData } from '@p/ds'
+import { ROOT, reduce, type NormalizedData } from '@p/ds'
 import { Card, Heading, KeyValue, Code } from '@p/ds/parts'
 import { audit } from 'virtual:ds-audit'
 import { demos as catalogDemos } from '@showcase/catalog'
+import { ThemeCreatorBody } from '@showcase/theme'
 import { TokenCard, TypeSpecimen } from './TokenCard'
 import { SectionFrame, SubGroup } from './SectionFrame'
 import { partAutoDemo } from './partsAutoDemos'
@@ -198,9 +199,16 @@ export function Canvas() {
   const selectedMeta = selected ? compIndex.get(selected) : null
   const selectedLaneLabel = selectedMeta ? LANE_LABEL[selectedMeta.lane] : null
 
+  // Canvas view state(x, y, s)는 entity.data로 직렬화 — URL share-link/undo/persistence의 토대.
+  const initial = useMemo<NormalizedData>(() => ({
+    entities: { [ROOT]: { id: ROOT, data: { x: 0, y: 0, s: 0.4, bounds: { minS: 0.1, maxS: 4 } } } },
+    relationships: { [ROOT]: [] },
+  }), [])
+  const [viewData, viewDispatch] = useReducer(reduce, initial)
+
   return (
     <div data-part="canvas-app">
-      <ZoomPanCanvas initialScale={0.4}>
+      <ZoomPanCanvas id={ROOT} data={viewData} onEvent={viewDispatch}>
         <div data-part="canvas-page">
           <header data-part="canvas-header">
             <div data-meta>Design System · Library</div>
@@ -212,6 +220,19 @@ export function Canvas() {
           </header>
 
           <div data-part="canvas-board">
+            {/* ── ZONE 0 — SEED (Theme creator, /theme 라우트 흡수) ──────── */}
+            <section data-part="canvas-zone">
+              <header data-part="canvas-zone-label">
+                Seed
+                <small>theme tuning</small>
+              </header>
+              <div data-part="canvas-zone-row">
+                <SectionFrame title="Theme creator" subtitle="theme" standard="token overrides → :root vars">
+                  <ThemeCreatorBody />
+                </SectionFrame>
+              </div>
+            </section>
+
             {/* ── ZONE 1 — FOUNDATIONS ─────────────────────────────────── */}
             <section data-part="canvas-zone">
               <header data-part="canvas-zone-label">

@@ -55,12 +55,13 @@ export const canvasCss = css`
     font-size: 12px;
   }
 
-  /* 보드: 2개 zone(Foundations · Components)이 vertical stack.
-     알터네이팅 axis BP — 외곽=세로, zone 안 sections=가로(row), section 안=세로 stack, cards=row-major. */
+  /* 보드: zone(Theme · Foundations · Components · Devices)을 가로 lane으로 배치.
+     알터네이팅 axis BP — 외곽=가로(zone 컬럼), zone 안 sections=세로 stack, section 안=세로, cards=row-major. */
   [data-part="canvas-board"] {
     display: flex;
-    flex-direction: column;
-    gap: ${pad(12)};
+    flex-direction: row;
+    align-items: flex-start;
+    gap: ${pad(16)};
     padding-top: ${pad(4)};
   }
 
@@ -70,6 +71,8 @@ export const canvasCss = css`
     flex-direction: column;
     gap: ${pad(7)};
     padding: 0;
+    flex: none;
+    width: max-content;
   }
   [data-part="canvas-zone-label"] {
     font: 700 28px system-ui;
@@ -84,12 +87,12 @@ export const canvasCss = css`
     letter-spacing: 0;
     color: #999;
   }
-  /* zone 안 섹션 row — flex-wrap 가로 흐름 */
+  /* zone 안 섹션 — 외곽이 row로 바뀌었으므로 zone 내부는 세로 stack */
   [data-part="canvas-zone-row"] {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: flex-start;
-    gap: ${pad(10)} ${pad(12)};
+    gap: ${pad(10)};
     padding-top: ${pad(2)};
   }
 
@@ -97,12 +100,12 @@ export const canvasCss = css`
   [data-part="canvas-section"] {
     position: relative;
     width: max-content;
-    max-width: 100%;
     box-sizing: border-box;
     background: transparent;
     border: none;
     border-radius: 0;
     padding: 0;
+    flex: none;
   }
 
   [data-part="canvas-section-tag"] {
@@ -204,6 +207,10 @@ export const canvasCss = css`
     grid-template-rows: subgrid;
     row-gap: ${pad(2)};
     min-width: 0;
+    /* 성능: 뷰포트 밖 layout/paint 스킵 */
+    content-visibility: auto;
+    contain-intrinsic-size: 160px 220px;
+    contain: layout paint style;
   }
   [data-part="canvas-token-card"] > [data-swatch],
   [data-part="canvas-token-card"] > [data-sample],
@@ -286,6 +293,11 @@ export const canvasCss = css`
     border-radius: 6px;
     transition: outline-color 120ms ease;
     outline: 2px solid transparent;
+    /* 성능: 뷰포트 밖이면 layout/paint 스킵 (Chrome/Edge/Safari 17+).
+       contain-intrinsic-size로 placeholder 사이즈 제공 → 스크롤 점프·레이아웃 흔들림 방지 */
+    content-visibility: auto;
+    contain-intrinsic-size: 240px 320px;
+    contain: layout paint style;
     outline-offset: 2px;
   }
   [data-part="canvas-comp-card"]:hover {

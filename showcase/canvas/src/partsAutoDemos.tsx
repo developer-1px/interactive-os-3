@@ -4,13 +4,13 @@
  * `_demos/<Name>.demo.tsx` · catalog demo registry에 없는 부품에 대해
  * sensible default props로 렌더한다. 새 부품 추가 시에도 즉시 캔버스에 노출.
  */
-import type { ReactNode } from 'react'
+import { useReducer, useMemo, type ReactNode } from 'react'
 import {
   Avatar, Badge, Breadcrumb, Callout, Card, Code, Kbd, EmptyState,
   Heading, KeyValue, Link as PartsLink,
   Progress, Skeleton, Table, Tag, Thumbnail, Timestamp,
 } from '@p/ds/parts'
-import { Phone, PhoneTopBar, PhoneTabBar } from '@p/ds'
+import { Phone, PhoneTopBar, PhoneTabBar, ROOT, reduce, type NormalizedData } from '@p/ds'
 import { Prose } from '@p/ds/ui/0-primitives/Prose'
 import { CodeBlock } from '@p/ds/ui/0-primitives/CodeBlock'
 import { ListboxGroup } from '@p/ds/ui/4-selection/ListboxGroup'
@@ -218,13 +218,7 @@ const REGISTRY: Record<string, () => ReactNode> = {
       <div style={{ padding: 16 }}>Mobile content</div>
     </MobileFrame>
   ),
-  ZoomPanCanvas: () => (
-    <div style={{ width: 200, height: 120, border: '1px dashed #999' }}>
-      <ZoomPanCanvas>
-        <div style={{ padding: 16, font: '500 12px system-ui' }}>zoom · pan · scroll</div>
-      </ZoomPanCanvas>
-    </div>
-  ),
+  ZoomPanCanvas: () => <ZoomPanCanvasDemo />,
   DataGridRow: () => (
     <table role="grid">
       <tbody>
@@ -286,6 +280,21 @@ const REGISTRY: Record<string, () => ReactNode> = {
       shared={1}
     />
   ),
+}
+
+function ZoomPanCanvasDemo() {
+  const initial = useMemo<NormalizedData>(() => ({
+    entities: { [ROOT]: { id: ROOT, data: { x: 0, y: 0, s: 1, bounds: { minS: 0.25, maxS: 4 } } } },
+    relationships: { [ROOT]: [] },
+  }), [])
+  const [data, dispatch] = useReducer(reduce, initial)
+  return (
+    <div style={{ width: 200, height: 120, border: '1px dashed #999' }}>
+      <ZoomPanCanvas id={ROOT} data={data} onEvent={dispatch}>
+        <div style={{ padding: 16, font: '500 12px system-ui' }}>zoom · pan · scroll</div>
+      </ZoomPanCanvas>
+    </div>
+  )
 }
 
 export function partAutoDemo(name: string): (() => ReactNode) | null {

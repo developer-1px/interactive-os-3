@@ -1,117 +1,42 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
+import type { ControlProps } from '../../core/types'
+import { useZoomPanGesture } from '../../core/hooks/useZoomPanGesture'
 
-type Props = {
+/**
+ * ZoomPanCanvas — 선언적·직렬화 가능한 zoom/pan 뷰포트.
+ *
+ * 상태(x, y, s)는 entity.data 안에 산다 — useState/useRef 내부 상태 없음.
+ * 상위 useControlState reducer가 pan/zoom Event를 받아 entity.data를 갱신,
+ * 이 컴포넌트는 그걸 읽어 transform만 적용한다.
+ *
+ * 그래서:
+ *   · URL share-link: ?view={x,y,s} 으로 deep link 가능
+ *   · undo/redo: pan/zoom Event 스택을 미들웨어로 시간여행
+ *   · persistence: localStorage / 서버 세션 — 새로고침해도 위치 복원
+ *
+ * entity.data 스키마:
+ *   { x: number; y: number; s: number; bounds?: { minS, maxS } }
+ *
+ * 입력 → Event 번역은 core/hooks/useZoomPanGesture가 담당 (gesture/intent 분리).
+ *
+ * children은 본 캔버스가 wrapping role이라 예외적으로 ReactNode 허용 (memory: showcase·layout 정당화).
+ */
+export type ZoomPanCanvasProps = ControlProps & {
+  /** entity id — pan/zoom Event의 target. data가 NormalizedData면 ROOT, 아니면 명시. */
+  id: string
   children: ReactNode
-  initialScale?: number
-  minScale?: number
-  maxScale?: number
 }
 
-export function ZoomPanCanvas({
-  children,
-  initialScale = 1,
-  minScale = 0.1,
-  maxScale = 4,
-}: Props) {
+export function ZoomPanCanvas({ data, onEvent, id, children }: ZoomPanCanvasProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
-  const state = useRef({ x: 0, y: 0, s: initialScale })
-  const dragging = useRef<{ startX: number; startY: number; ox: number; oy: number } | null>(null)
 
-  useEffect(() => {
-    const vp = viewportRef.current
-    const stage = stageRef.current
-    if (!vp || !stage) return
+  useZoomPanGesture(viewportRef, id, onEvent ?? (() => {}), { stageRef })
 
-    const apply = () => {
-      const { x, y, s } = state.current
-      stage.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${s})`
-    }
-    apply()
-
-    let spaceDown = false
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      // ctrl/meta(트랙패드 핀치는 ctrlKey=true 로 들어옴) → zoom, 그 외 → pan
-      if (e.ctrlKey || e.metaKey) {
-        const rect = vp.getBoundingClientRect()
-        const cx = e.clientX - rect.left
-        const cy = e.clientY - rect.top
-        const factor = Math.pow(1.0035, -e.deltaY)
-        const next = Math.max(minScale, Math.min(maxScale, state.current.s * factor))
-        const k = next / state.current.s
-        state.current.x = cx - (cx - state.current.x) * k
-        state.current.y = cy - (cy - state.current.y) * k
-        state.current.s = next
-      } else {
-        state.current.x -= e.deltaX
-        state.current.y -= e.deltaY
-      }
-      apply()
-    }
-
-    const onPointerDown = (e: PointerEvent) => {
-      const isMiddle = e.button === 1
-      const isBackground = e.target === vp
-      if (!spaceDown && !isMiddle && !isBackground) return
-      e.preventDefault()
-      vp.setPointerCapture(e.pointerId)
-      dragging.current = {
-        startX: e.clientX,
-        startY: e.clientY,
-        ox: state.current.x,
-        oy: state.current.y,
-      }
-      vp.style.cursor = 'grabbing'
-    }
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && !spaceDown) {
-        spaceDown = true
-        vp.style.cursor = 'grab'
-        e.preventDefault()
-      }
-    }
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        spaceDown = false
-        if (!dragging.current) vp.style.cursor = ''
-      }
-    }
-
-    const onPointerMove = (e: PointerEvent) => {
-      const d = dragging.current
-      if (!d) return
-      state.current.x = d.ox + (e.clientX - d.startX)
-      state.current.y = d.oy + (e.clientY - d.startY)
-      apply()
-    }
-
-    const onPointerUp = (e: PointerEvent) => {
-      if (!dragging.current) return
-      dragging.current = null
-      if (vp.hasPointerCapture(e.pointerId)) vp.releasePointerCapture(e.pointerId)
-      vp.style.cursor = spaceDown ? 'grab' : ''
-    }
-
-    vp.addEventListener('wheel', onWheel, { passive: false })
-    vp.addEventListener('pointerdown', onPointerDown)
-    vp.addEventListener('pointermove', onPointerMove)
-    vp.addEventListener('pointerup', onPointerUp)
-    vp.addEventListener('pointercancel', onPointerUp)
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
-    return () => {
-      vp.removeEventListener('wheel', onWheel)
-      vp.removeEventListener('pointerdown', onPointerDown)
-      vp.removeEventListener('pointermove', onPointerMove)
-      vp.removeEventListener('pointerup', onPointerUp)
-      vp.removeEventListener('pointercancel', onPointerUp)
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
-    }
-  }, [minScale, maxScale])
+  const cur = data.entities[id]?.data ?? {}
+  const x = (cur.x as number) ?? 0
+  const y = (cur.y as number) ?? 0
+  const s = (cur.s as number) ?? 1
 
   return (
     <div
@@ -119,10 +44,13 @@ export function ZoomPanCanvas({
       data-ds="ZoomPanCanvas"
       style={{
         position: 'relative',
-        overflow: 'hidden',
+        // overflow:clip — hidden과 달리 스크롤 컨테이너를 만들지 않음(paint·layout 절약)
+        overflow: 'clip',
         width: '100%',
         height: '100%',
         touchAction: 'none',
+        // Safari edge-swipe(뒤로/앞으로) + 트랙패드 가로 bounce 차단
+        overscrollBehavior: 'none',
       }}
       tabIndex={0}
     >
@@ -132,6 +60,7 @@ export function ZoomPanCanvas({
           position: 'absolute',
           top: 0,
           left: 0,
+          transform: `translate3d(${x}px, ${y}px, 0) scale(${s})`,
           transformOrigin: '0 0',
           willChange: 'transform',
         }}

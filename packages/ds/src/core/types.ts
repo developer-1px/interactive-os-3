@@ -16,6 +16,10 @@ export type Event =
   | { type: 'value'; id: string; value: unknown }
   | { type: 'open'; id: string; open: boolean }
   | { type: 'typeahead'; buf: string; deadline: number }
+  /** pan: target entity의 (x, y)를 (dx, dy)만큼 이동 — gesture 어댑터가 wheel/pointer를 번역 */
+  | { type: 'pan'; id: string; dx: number; dy: number }
+  /** zoom: cursor (cx, cy)를 고정점으로 scale을 k 배 — Figma/Miro 식 cursor-anchored zoom */
+  | { type: 'zoom'; id: string; cx: number; cy: number; k: number }
 
 const metaId = (name: string) => `__${name}__`
 export const isMetaId = (id: string) => id.startsWith('__') && id.endsWith('__')
