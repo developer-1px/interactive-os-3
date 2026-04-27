@@ -1,4 +1,4 @@
-import { PhoneTabBar } from '../PhoneTabBar'
+import { PhoneTabBar } from '../Phone'
 export default () => (
   <PhoneTabBar
     active="home"

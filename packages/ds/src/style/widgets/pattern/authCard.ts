@@ -1,4 +1,4 @@
-import { accent, border, css, hairlineWidth, hierarchy, pad, radius, slot, surface, text } from '../../../tokens/foundations'
+import { accent, border, css, hairlineWidth, hierarchy, pad, radius, slot, surface, text, weight } from '../../../tokens/foundations'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.
@@ -34,7 +34,7 @@ export const authCard = () => css`
   article[data-part="card"][data-card="auth"] > [data-slot="title"] h2 {
     margin: 0;
     font-size: var(--ds-text-2xl);
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: -0.01em;
   }
   article[data-part="card"][data-card="auth"] > [data-slot="title"] small {
@@ -114,7 +114,7 @@ export const authCard = () => css`
     border: 0;
     border-radius: ${radius('md')};
     font: inherit;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     cursor: pointer;
     transition: background 120ms ease;
   }
@@ -133,7 +133,7 @@ export const authCard = () => css`
   }
   article[data-part="card"][data-card="auth"] > [data-slot="footer"] a {
     color: ${accent()};
-    font-weight: 500;
+    font-weight: ${weight('medium')};
   }
 
   /* OTP 6자리 — 큰 정사각 input row */
@@ -145,7 +145,7 @@ export const authCard = () => css`
     aspect-ratio: 1;
     text-align: center;
     font-size: var(--ds-text-xl);
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     border: ${hairlineWidth()} solid ${border('subtle')};
     border-radius: ${radius('md')};
     background: var(--ds-bg);

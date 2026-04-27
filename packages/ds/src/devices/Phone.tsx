@@ -73,7 +73,15 @@ const PhoneShell = ({ topBar, bottomBar, children }: { topBar?: ReactNode; botto
     background: 'var(--ds-bg)', color: 'var(--ds-fg)',
   }}>
     {topBar}
-    <div data-part="phone-body" style={{ overflow: 'auto', padding: 'calc(var(--ds-space) * 4)', display: 'flex', flexDirection: 'column', gap: 'calc(var(--ds-space) * 3)' }}>
+    <div data-part="phone-body" style={{
+      overflow: 'auto',
+      // padding/gap 은 ancestor 가 --phone-body-pad / --phone-body-gap 로 override 가능.
+      // wireframe guide-driven layout 이 이 hook 으로 layout 을 갈아끼운다 (기본값은 동일).
+      padding: 'var(--phone-body-pad, calc(var(--ds-space) * 4))',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 'var(--phone-body-gap, calc(var(--ds-space) * 3))',
+    }}>
       {children}
     </div>
     {bottomBar}
@@ -144,7 +152,7 @@ type PhoneTopBarProps = {
 export function PhoneTopBar({ back, title, action }: PhoneTopBarProps) {
   return (
     <header data-part="phone-topbar">
-      <span data-part="phone-topbar-lead">{back && <span aria-hidden>‹</span>}</span>
+      <span data-part="phone-topbar-lead">{back && <span data-icon="chevron-left" aria-label="back" />}</span>
       {title && <strong data-part="phone-topbar-title">{title}</strong>}
       <span data-part="phone-topbar-trail">{action}</span>
     </header>

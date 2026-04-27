@@ -81,18 +81,18 @@ export const phone = () => css`
   [data-part="phone-notch"] {
     justify-self: center;
     background: ${neutral(9)};
-    border-radius: 999px;
+    border-radius: ${radius('pill')};
   }
   [data-part="phone-notch"][data-shape="island"]  { inline-size: 124px; block-size: 37px; }
   [data-part="phone-notch"][data-shape="classic"] { inline-size: 154px; block-size: 30px; border-radius: 0 0 18px 18px; }
 
-  /* Screen body — 스크롤 영역. 외부 부품 스타일 그대로. */
+  /* Screen viewport — chrome 경계만. 컨텐츠 padding 은 PhoneShell 의
+     phone-body 가 단독 소유 (chrome ↔ content 책임 분리). 여기에 padding 을
+     추가하면 iframe 모드에서 이중 패딩으로 여백 발생. */
   [data-part="phone-screen"] {
-    overflow: auto;
-    padding: ${pad(4)};
-    display: flex; flex-direction: column;
-    gap: ${pad(3)};
+    overflow: hidden;
     min-block-size: 0;
+    display: block;
   }
 
   /* Home indicator — 5pt high pill */
@@ -100,7 +100,7 @@ export const phone = () => css`
     margin-inline: auto;
     inline-size: 134px; block-size: 5px;
     background: var(--ds-fg);
-    border-radius: 999px;
+    border-radius: ${radius('pill')};
     align-self: center;
     margin-block-start: ${pad(1)};
   }

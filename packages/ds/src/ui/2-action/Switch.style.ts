@@ -23,7 +23,7 @@ export const switchCss = css`
     content: '';
     width: var(--switch-thumb);
     height: var(--switch-thumb);
-    border-radius: 50%;
+    border-radius: ${radius('pill')};
     background: ${bg()};
     box-shadow: ${shadow()};
     transition: transform ${dur('base')} ${ease('spring')};

@@ -1,4 +1,4 @@
-import { css, dim, font, radius } from '../../tokens/foundations'
+import { css, dim, font, radius, weight } from '../../tokens/foundations'
 import { square } from '../../tokens/foundations/layout/square'
 
 /**
@@ -14,7 +14,7 @@ export const avatar = () => css`
     background: ${dim(8)};
     color: inherit;
     font-size: ${font('sm')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     object-fit: cover;
     user-select: none;
     flex: none;

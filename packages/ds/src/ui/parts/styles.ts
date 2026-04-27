@@ -16,6 +16,7 @@ import { link } from './Link.style'
 import { code } from './Code.style'
 import { progress } from './Progress.style'
 import { breadcrumb } from './Breadcrumb.style'
+import { rovingItem } from './RovingItem.style'
 
 export const partsStyles = () =>
   [
@@ -35,4 +36,5 @@ export const partsStyles = () =>
     code(),
     progress(),
     breadcrumb(),
+    rovingItem(),
   ].join('\n')

@@ -19,6 +19,8 @@
     "lint:ds:all": "pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts && pnpm lint:ds:keyboard && pnpm lint:ds:shell && pnpm lint:ds:flat-layout && pnpm lint:ds:slots && pnpm lint:ds:data-part",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "audit:ds-css": "tsx scripts/audit-ds-css.ts",
+    "audit:css-decls": "tsx scripts/audit-css-decls.ts",
+    "converge:css": "tsx scripts/converge-css.ts",
     "audit:hmi": "node scripts/audit-hmi.mjs",
     "aria:xray": "node scripts/aria-xray.mjs",
     "aria:tree": "TSX_TSCONFIG_PATH=tsconfig.app.json node --import tsx --loader ./scripts/aria-tree-loader.mjs scripts/aria-tree.ts",

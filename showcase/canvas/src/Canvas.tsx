@@ -20,6 +20,8 @@ import { PaletteSection, paletteTotal } from './PaletteSection'
 import { PageDivider } from './PageDivider'
 import { laneMetaMap } from './lanes'
 import { tokenGroups, CATEGORY_LABEL, type TokenGroup } from './tokenGroups'
+import { StateShowcase } from './StateShowcase'
+import { StateContextMatrix } from './StateContextMatrix'
 import { atomLanes, composedLanes, compIndex, totalCompCount, type CompLane } from './collect'
 
 // ── 렌더 헬퍼 ──────────────────────────────────────────────────────────
@@ -45,17 +47,37 @@ function renderTokenGroup(g: TokenGroup): ReactNode {
       count={g.exports.length}
     >
       {g.category === 'typography' ? (
-        <div data-part="canvas-type-stack">
-          {g.exports.map((e) => (
-            <TypeSpecimen key={e.name + e.file} e={e} />
-          ))}
-        </div>
+        <>
+          <div data-part="canvas-type-stack">
+            {g.exports.filter((e) => e.demo).map((e) => (
+              <TypeSpecimen key={e.name + e.file} e={e} />
+            ))}
+          </div>
+          {g.exports.some((e) => !e.demo) && (
+            <SubGroup title="role bundles (semantic)">
+              <div data-part="canvas-grid-value">
+                {g.exports.filter((e) => !e.demo).map((e) => (
+                  <TokenCard key={e.name + e.file} e={e} category={g.category} />
+                ))}
+              </div>
+            </SubGroup>
+          )}
+        </>
+      ) : g.category === 'state' ? (
+        <>
+          <SubGroup title="base 어휘 (foundations/state)">
+            <StateShowcase exports={g.exports} />
+          </SubGroup>
+          <SubGroup title="role / context — 전수 (selectors.ts SSoT)">
+            <StateContextMatrix />
+          </SubGroup>
+        </>
       ) : subs.length > 1 ? (
         subs.map((sub) => (
           <SubGroup key={sub} title={sub}>
             <div data-part={gridPart}>
               {byFile.get(sub)!.map((e) => (
-                <TokenCard key={e.name + e.file} e={e} />
+                <TokenCard key={e.name + e.file} e={e} category={g.category} />
               ))}
             </div>
           </SubGroup>
@@ -63,7 +85,7 @@ function renderTokenGroup(g: TokenGroup): ReactNode {
       ) : (
         <div data-part={gridPart}>
           {g.exports.map((e) => (
-            <TokenCard key={e.name + e.file} e={e} />
+            <TokenCard key={e.name + e.file} e={e} category={g.category} />
           ))}
         </div>
       )}

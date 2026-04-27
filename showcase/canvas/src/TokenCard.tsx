@@ -20,8 +20,13 @@ const callOf = (spec: DemoSpec) =>
     ? `${spec.fn}()`
     : `${spec.fn}(${spec.args.map((a) => JSON.stringify(a)).join(', ')})`
 
-export function TokenCard({ e }: { e: FoundationExport }): ReactNode {
-  if (!e.demo) return null
+export function TokenCard({ e, category }: { e: FoundationExport; category?: string }): ReactNode {
+  // role bundle (slot/size/type 등 plain object export) — @demo 없이 shape 로 surface.
+  if (!e.demo) {
+    const bundle = (FN as Record<string, unknown>)[e.name]
+    if (!bundle || typeof bundle !== 'object') return null
+    return <RoleBundleCards name={e.name} bundle={bundle as Record<string, unknown>} category={category ?? ''} />
+  }
   const spec = e.demo
   const value = callFn(spec.fn, spec.args)
 
@@ -94,6 +99,56 @@ export function TypeSpecimen({ e }: { e: FoundationExport }): ReactNode {
     </div>
   )
 }
+
+// ── role bundle (slot/size/type) ───────────────────────────────────────
+// 업계 de facto (Radix/Open Props/Spectrum): shape = type. category 별 sample
+// 만 분기 — 1 카테고리 = 1 sample renderer. annotation·registry ❌.
+
+function RoleBundleCards({ name, bundle, category }: { name: string; bundle: Record<string, unknown>; category: string }): ReactNode {
+  return (
+    <>
+      {Object.entries(bundle).map(([role, value]) => (
+        <figure key={role} data-part="canvas-token-card" data-token-type="role">
+          <div data-sample>{renderRoleSample(category, value)}</div>
+          <span data-name>{name}.{role}</span>
+          <span data-call title={summarizeRole(value)}>{summarizeRole(value)}</span>
+        </figure>
+      ))}
+    </>
+  )
+}
+
+function renderRoleSample(category: string, value: unknown): ReactNode {
+  if (category === 'typography' && isPlainObject(value)) {
+    return <span style={value as CSSProperties}>Aa Bg</span>
+  }
+  if (category === 'spacing' && isPlainObject(value)) {
+    const v = value as Record<string, string>
+    return (
+      <div style={{ padding: v.pad ?? v.inset, gap: v.gap, display: 'grid', placeItems: 'center', outline: '1px dashed #999', background: '#eee', minBlockSize: 48 }}>
+        <div style={{ inlineSize: 24, blockSize: 24, background: '#fff' }} />
+      </div>
+    )
+  }
+  if (category === 'spacing' && typeof value === 'string') {
+    // size 처럼 단일 string 치수
+    return <div style={{ inlineSize: value, blockSize: 24, background: '#888' }} />
+  }
+  return <code style={{ fontSize: 12 }}>{summarizeRole(value)}</code>
+}
+
+function summarizeRole(value: unknown): string {
+  if (typeof value === 'string') return value
+  if (isPlainObject(value)) {
+    return Object.entries(value as Record<string, unknown>)
+      .map(([k, v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`)
+      .join(' · ')
+  }
+  return String(value)
+}
+
+const isPlainObject = (v: unknown): v is Record<string, unknown> =>
+  v !== null && typeof v === 'object' && !Array.isArray(v)
 
 // ── helpers ────────────────────────────────────────────────────────────
 

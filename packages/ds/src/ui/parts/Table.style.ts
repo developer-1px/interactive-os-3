@@ -1,4 +1,4 @@
-import { border, css, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
+import { border, css, dim, font, hairlineWidth, pad, radius, weight } from '../../tokens/foundations'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.
@@ -25,7 +25,7 @@ export const table = () => css`
     text-align: start;
     padding: ${pad(0.75)} ${pad(2)};
     color: ${dim(55)};
-    font-weight: 500;
+    font-weight: ${weight('medium')};
     font-size: ${font('xs')};
     background: ${dim(2)};
     border-block-end: ${hairlineWidth()} solid ${border()};

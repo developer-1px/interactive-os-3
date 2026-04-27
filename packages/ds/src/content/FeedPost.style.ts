@@ -1,4 +1,4 @@
-import { css, dim, pad, radius } from '../tokens/foundations'
+import { css, dim, pad, radius, weight } from '../tokens/foundations'
 
 /**
  * FeedPost slot inner styling — SNS 피드 포스트 카드.
@@ -15,7 +15,7 @@ export const feedPost = () => css`
   }
   article[data-part="card"][data-card="feed-post"] > [data-slot="title"] > header > strong[data-ds-aspect="square"] {
     inline-size: 40px;
-    border-radius: 50%;
+    border-radius: ${radius('pill')};
     overflow: hidden;
     flex: none;
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
@@ -28,7 +28,7 @@ export const feedPost = () => css`
   }
   article[data-part="card"][data-card="feed-post"] > [data-slot="title"] > header > strong:nth-of-type(2) > small {
     display: block;
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     color: ${dim(55)};
     font-size: var(--ds-text-xs);
     margin-block-start: ${pad(0.25)};

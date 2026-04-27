@@ -1,4 +1,4 @@
-import { border, css, font, hairlineWidth, icon, pad, radius } from '../../../tokens/foundations'
+import { border, css, font, hairlineWidth, icon, pad, radius, weight } from '../../../tokens/foundations'
 export const detailsCss = css`
   :where(details) {
     border: ${hairlineWidth()} solid ${border()};
@@ -36,7 +36,7 @@ export const detailsCss = css`
 
   /* summary 내부 rhythm — strong(이름) · span(설명) · small(메타) 3단 위계.
      small은 자동으로 오른쪽 정렬되어 메타(개수 등) 역할을 고정한다. */
-  :where(details) > :where(summary) > :where(strong) { font-weight: 600; }
+  :where(details) > :where(summary) > :where(strong) { font-weight: ${weight('semibold')}; }
   :where(details) > :where(summary) > :where(span)   { opacity: .7; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   :where(details) > :where(summary) > :where(small)  {
     margin-inline-start: auto;

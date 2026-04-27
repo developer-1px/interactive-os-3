@@ -1,4 +1,4 @@
-import { accent, css, font, mute, pad, text } from '../../tokens/foundations'
+import { accent, css, font, mute, pad, text, weight } from '../../tokens/foundations'
 
 /**
  * Breadcrumb — <nav aria-label="Breadcrumb"><ol><li>...</li></ol></nav>.
@@ -45,6 +45,6 @@ export const breadcrumb = () => css`
   }
   nav[aria-label="Breadcrumb"] > ol > li > span[aria-current="page"] {
     color: ${text('strong')};
-    font-weight: 500;
+    font-weight: ${weight('medium')};
   }
 `

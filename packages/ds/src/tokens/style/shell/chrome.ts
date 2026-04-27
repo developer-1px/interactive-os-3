@@ -1,4 +1,4 @@
-import { border, css, hairlineWidth, pad, grouping } from '../../foundations'
+import { border, css, grouping, hairlineWidth, pad, radius, weight } from '../../foundations'
 import { SHELL_MOBILE_MAX } from '../preset/breakpoints'
 
 // 앱 셸 크롬 — 특정 앱 이름이 아니라 "window-controls를 가진 main"을 구조로 매칭.
@@ -19,7 +19,7 @@ export const chromeCss = css`
     padding-inline: ${pad(3)};
     border-bottom: ${hairlineWidth()} solid ${border()};
     background: color-mix(in oklch, Canvas 95%, CanvasText 5%);
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
   main:has(> header > [data-part="window-controls"])
     > section[data-slot="body"] {
@@ -28,7 +28,7 @@ export const chromeCss = css`
   [data-part="window-controls"] { display: flex; gap: ${pad(2)}; align-items: center; }
   [data-part="window-controls"] > span {
     width: var(--ds-traffic-size); height: var(--ds-traffic-size);
-    border-radius: 50%; border: ${hairlineWidth()} solid ${border()};
+    border-radius: ${radius('pill')}; border: ${hairlineWidth()} solid ${border()};
   }
   [data-part="window-controls"] > span:nth-child(1) { background: var(--ds-traffic-close); }
   [data-part="window-controls"] > span:nth-child(2) { background: var(--ds-traffic-min); }

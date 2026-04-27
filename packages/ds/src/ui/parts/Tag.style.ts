@@ -23,7 +23,7 @@ export const tag = () => css`
     all: unset;
     inline-size: 1.25em;
     block-size: 1.25em;
-    border-radius: 50%;
+    border-radius: ${radius('pill')};
     display: inline-grid;
     place-items: center;
     cursor: pointer;

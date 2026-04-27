@@ -1,4 +1,4 @@
-import { accent, css, dim, font, mix, on, pad, radius, status } from '../tokens/foundations'
+import { accent, css, dim, font, mix, on, pad, radius, status, weight } from '../tokens/foundations'
 
 /**
  * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.
@@ -20,7 +20,7 @@ export const courseCard = () => css`
     border-radius: ${radius('md')};
     display: grid; place-items: center;
     font-size: ${font('sm')};
-    font-weight: 800;
+    font-weight: ${weight('extrabold')};
     letter-spacing: -0.02em;
     color: ${on('accent')};
     background: linear-gradient(135deg, ${accent()}, ${mix('${accent()}', 70, 'CanvasText')});
@@ -49,7 +49,7 @@ export const courseCard = () => css`
   article[data-part="card"][data-card="course"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
     margin: 0;
     font-size: ${font('md')};
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: -0.01em;
   }
 

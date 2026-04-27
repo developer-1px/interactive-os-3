@@ -1,4 +1,4 @@
-import { accent, border, css, dim, font, hairlineWidth, pad } from '../../tokens/foundations'
+import { accent, border, css, dim, font, hairlineWidth, pad, weight } from '../../tokens/foundations'
 export const top10 = () => css`
   [data-part="top-10"] {
     counter-reset: rank;
@@ -18,7 +18,7 @@ export const top10 = () => css`
   [data-part="top-10"] > li::before {
     content: counter(rank);
     font-variant-numeric: tabular-nums;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     font-size: ${font('sm')};
     text-align: center;
     color: ${dim(55)};

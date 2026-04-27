@@ -1,4 +1,4 @@
-import { border, css, hairlineWidth, pad, radius, surface, text } from '../../../tokens/foundations'
+import { border, css, hairlineWidth, pad, radius, surface, text, weight } from '../../../tokens/foundations'
 
 /**
  * InboxRow slot inner styling — 메일 행. Card primitive 슬롯에 메일 어휘 매핑.
@@ -73,12 +73,12 @@ export const inboxRow = () => css`
 
   /* unread — 작성자/제목 강조 + accent dot */
   article[data-part="card"][data-card="inbox-row"][data-state="unread"] > [data-slot="title"] > strong > b {
-    font-weight: 700;
+    font-weight: ${weight('bold')};
   }
   article[data-part="card"][data-card="inbox-row"][data-state="unread"] > [data-slot="preview"]::after {
     content: '';
     position: absolute;
-    inline-size: 8px; block-size: 8px; border-radius: 50%;
+    inline-size: 8px; block-size: 8px; border-radius: ${radius('pill')};
     background: var(--ds-accent);
     transform: translate(28px, -16px);
   }

@@ -1,4 +1,4 @@
-import { accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text } from '../../../tokens/foundations'
+import { accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, weight } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -117,7 +117,7 @@ export const layout = () => css`
   }
   [data-part="canvas-family"] > h2 {
     font-size: var(--ds-text-lg);
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     margin: 0;
     color: var(--ds-fg);
     letter-spacing: -0.01em;

@@ -9,3 +9,4 @@
 export * from './scale'
 export * from './heading'
 export * from './rhythm'
+export * from './role'

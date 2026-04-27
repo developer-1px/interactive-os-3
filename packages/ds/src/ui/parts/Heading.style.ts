@@ -1,4 +1,4 @@
-import { css, font, mute, pad } from '../../tokens/foundations'
+import { css, font, mute, pad, weight } from '../../tokens/foundations'
 
 /**
  * Heading — 시맨틱 tag(h1~h3, p, small) + data-level로 시각 size.
@@ -8,11 +8,11 @@ export const heading = () => css`
   :where([data-part="heading"]) {
     margin: 0;
     line-height: 1.25;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
   :where([data-part="heading"][data-level="display"]) {
     font-size: ${font('2xl')};
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: -0.01em;
   }
   :where([data-part="heading"][data-level="h1"]) {
@@ -26,13 +26,13 @@ export const heading = () => css`
   }
   :where([data-part="heading"][data-level="body"]) {
     font-size: ${font('md')};
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     line-height: 1.5;
   }
   :where([data-part="heading"][data-level="caption"]) {
     ${mute(2)}
     font-size: ${font('xs')};
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     line-height: 1.4;
   }
   :where([data-part="heading"][data-level="body"]) + :where([data-part="heading"][data-level="body"]) {

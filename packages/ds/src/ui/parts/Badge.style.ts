@@ -1,4 +1,4 @@
-import { css, dim, font, pad, radius, status, toneTint } from '../../tokens/foundations'
+import { css, dim, font, pad, radius, status, toneTint, weight } from '../../tokens/foundations'
 
 /**
  * Badge (parts) — counter / status dot.
@@ -15,7 +15,7 @@ export const badge = () => css`
     padding: 0 ${pad(0.5)};
     border-radius: ${radius('pill')};
     font-size: ${font('xs')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     line-height: 1;
     background: ${dim(10)};
     color: inherit;

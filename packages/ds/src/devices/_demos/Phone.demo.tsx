@@ -1,5 +1,4 @@
-import { Phone } from '../Phone'
-import { PhoneTopBar } from '../PhoneTopBar'
+import { Phone, PhoneTopBar } from '../Phone'
 export default () => (
   <Phone>
     <PhoneTopBar title="Phone" />

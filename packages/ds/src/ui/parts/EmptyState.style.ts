@@ -1,4 +1,4 @@
-import { css, font, mute, pad } from '../../tokens/foundations'
+import { css, font, mute, pad, weight } from '../../tokens/foundations'
 
 /**
  * EmptyState — icon + heading + description + optional CTA.
@@ -17,7 +17,7 @@ export const emptyState = () => css`
   div[data-part="empty-state"] > h3 {
     margin: 0;
     font-size: ${font('lg')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
   div[data-part="empty-state"] > p {
     margin: 0;

@@ -24,13 +24,13 @@ export const sliderCss = css`
   }
   :where(input[type="range"])::-webkit-slider-thumb {
     appearance: none; -webkit-appearance: none;
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 16px; height: 16px; border-radius: ${radius('pill')};
     background: ${bg()}; border: ${focusRingWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
     margin-top: -6px;
   }
   :where(input[type="range"])::-moz-range-thumb {
     appearance: none;
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 16px; height: 16px; border-radius: ${radius('pill')};
     background: ${bg()}; border: ${focusRingWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
   }
   :where(input[type="range"]):hover::-webkit-slider-thumb,

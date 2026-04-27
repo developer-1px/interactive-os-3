@@ -1,4 +1,5 @@
 import { pad } from '../../palette/space'
+import { hierarchy } from './hierarchy'
 
 /**
  * slot — 컴포넌트 슬롯별 spacing. **role-scoped semantic**.
@@ -48,4 +49,26 @@ export const slot = {
   fab:     { inset: pad(4) },
   /** app shell chrome (titlebar). */
   chrome:  { pad: pad(2), gap: pad(2) },
+
+  // ── Mobile layout guide slots — 화면이 따르는 디자인 가이드별 spacing recipe.
+  //    각 guide 가 자기 padding/gap/sectionGap 을 자기 어휘로 선언한다.
+  //    수치는 모두 hierarchy.* 컴포지션 (scale → role 단방향 의존). raw pad() ❌.
+  //
+  //    8 guide → 4 grid overlay 로 수렴 (list·thread → list, feed → feed,
+  //    grid → 4col, article·hero·state → content). LayoutGuide 타입(showcase)이 entry key.
+
+  /** list — iOS Settings · Material List. row 동질 반복, similarity 분리. */
+  list:    { pad: hierarchy.shell, gap: hierarchy.group, sectionGap: hierarchy.shell },
+  /** thread — iMessage · WhatsApp. 메시지 bubble 흐름. */
+  thread:  { pad: hierarchy.shell, gap: hierarchy.section },
+  /** feed — Instagram · Twitter · Reddit. full-bleed timeline. */
+  feed:    { pad: hierarchy.group, gap: hierarchy.shell },
+  /** grid — Pinterest · Dashboard · Calendar. 균일 타일/카드. */
+  grid:    { pad: hierarchy.shell, gap: hierarchy.surface },
+  /** article — Medium · NYTimes. 장문 prose 본문. */
+  article: { pad: hierarchy.shell, gap: hierarchy.shell, sectionGap: hierarchy.shell },
+  /** hero — App Store · Profile · Pricing. banner edge-to-edge + section. */
+  hero:    { pad: hierarchy.group, gap: hierarchy.shell },
+  /** state — empty · error · loading. 중앙 정렬 fallback. */
+  state:   { pad: pad(8), gap: hierarchy.surface },
 } as const

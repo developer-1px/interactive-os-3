@@ -20,7 +20,7 @@ export const toggle = () => [
         box-shadow ${dur('base')} ${ease('out')};
     }
     [role="checkbox"] { border-radius: ${radius('sm')}; }
-    [role="radio"]    { border-radius: 50%; }
+    [role="radio"]    { border-radius: ${radius('pill')}; }
 
     [role="checkbox"][aria-checked="false"]:hover:not([aria-disabled="true"]),
     [role="radio"][aria-checked="false"]:hover:not([aria-disabled="true"]) {

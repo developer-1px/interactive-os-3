@@ -1,4 +1,4 @@
-import { css, hierarchy, pad, radius, surface, text } from '../../../tokens/foundations'
+import { css, hierarchy, pad, radius, surface, text, weight } from '../../../tokens/foundations'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
@@ -15,7 +15,7 @@ export const pageCss = css`
     gap: ${pad(2)};
   }
   [data-part="board-page"] [data-part="board-nav"] > h3 {
-    font-size: var(--ds-text-md); font-weight: 700; margin: 0;
+    font-size: var(--ds-text-md); font-weight: ${weight('bold')}; margin: 0;
   }
   [data-part="board-page"] [data-part="board-nav"] > small {
     color: ${text('subtle')}; font-size: var(--ds-text-xs);
@@ -23,7 +23,7 @@ export const pageCss = css`
   [data-part="board-page"] button[data-board-ch] {
     justify-content: flex-start;
     background: transparent; border: 0; padding: ${pad(1)} ${pad(2)};
-    color: inherit; font-weight: 400;
+    color: inherit; font-weight: ${weight('regular')};
     border-radius: ${radius('md')};
   }
   [data-part="board-page"] button[data-board-ch][aria-pressed="true"] {
@@ -99,7 +99,7 @@ export const pageCss = css`
     border-radius: ${radius('lg')};
   }
   [data-part$="-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] {
-    border-radius: 50%;
+    border-radius: ${radius('pill')};
     overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center;
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
@@ -110,7 +110,7 @@ export const pageCss = css`
   }
   [data-part$="-page"] [data-flow="cluster"] > strong[data-ds-grow] > small {
     display: block;
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     color: ${text('subtle')};
     font-size: var(--ds-text-xs);
     margin-top: ${pad(0.25)};

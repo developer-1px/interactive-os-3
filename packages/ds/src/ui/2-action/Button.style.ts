@@ -1,4 +1,4 @@
-import { accent, control, css, dur, ease, hairlineWidth, neutral, onAccent, pad, radius, square, status, tint } from '../../tokens/foundations'
+import { accent, control, css, dur, ease, hairlineWidth, neutral, onAccent, pad, radius, square, status, tint, weight } from '../../tokens/foundations'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
 //  - Button: 체크기(29.5px control-h), radius md, neutral-2 서피스, 1px hairline 경계, cursor pointer
@@ -52,7 +52,7 @@ export const buttonCss = css`
     border: ${hairlineWidth()} solid ${accent()};
     border-radius: ${radius('md')};
     padding: 0 ${pad(4)};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     transition: background-color ${dur('fast')} ${ease('out')},
                 transform ${dur('fast')} ${ease('out')};
   }

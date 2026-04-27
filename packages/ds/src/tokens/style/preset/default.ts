@@ -26,7 +26,7 @@ export const defaultPreset: DsPreset = {
     sm: '6px',
     md: '10px',
     lg: '14px',
-    pill: '999px',
+    pill: '9999px',
   },
   text: {
     xs: '11px',

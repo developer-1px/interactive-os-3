@@ -1,4 +1,4 @@
-import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, slot, status, surface, text, toneAlpha, tracking } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, slot, status, surface, text, toneAlpha, tracking, weight } from '../../../tokens/foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -31,14 +31,14 @@ export const formCss = css`
   }
   [role="group"][data-part="field"] > label {
     font-size: ${font('sm')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     color: ${text()};
     line-height: 1.3;
   }
   [role="group"][data-part="field"][aria-required="true"] > label::after {
     content: ' *';
     color: ${status('danger')};
-    font-weight: 400;
+    font-weight: ${weight('regular')};
   }
   [role="group"][data-part="field"] > p {
     font-size: ${font('xs')};
@@ -84,7 +84,7 @@ export const formCss = css`
     border: 0;
     border-radius: ${radius('sm')};
     font: inherit;
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     cursor: pointer;
     transition: background-color ${dur('fast')} ${ease('out')};
   }
@@ -96,7 +96,7 @@ export const formCss = css`
   [data-ds="Row"][data-flow="form"] section > h2:first-child,
   [data-ds="Column"][data-flow="form"] section > h2:first-child {
     font-size: ${font('lg')};
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     margin: 0 0 ${slot.form.headingMargin};
     padding-bottom: ${pad(2)};
     border-bottom: ${hairlineWidth()} solid ${control('border')};
@@ -105,7 +105,7 @@ export const formCss = css`
   [data-ds="Row"][data-flow="form"] section > h3:first-child,
   [data-ds="Column"][data-flow="form"] section > h3:first-child {
     font-size: ${font('md')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     margin: 0 0 ${pad(1.5)};
     color: ${text()};
   }
@@ -117,13 +117,13 @@ export const formCss = css`
   /* legend = "이 밑은 한 묶음" — Field label 보다 한 단계 강하게 (md + 700). */
   fieldset > :where(strong, p):first-child {
     font-size: ${font('md')};
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     color: ${text()};
     margin: 0 0 ${pad(0.5)};
     letter-spacing: ${tracking()};
   }
   fieldset > :where(strong, p):first-child > small {
-    font-weight: 400;
+    font-weight: ${weight('regular')};
     font-size: ${font('sm')};
     color: ${text('subtle')};
     margin-inline-start: ${pad(0.5)};
@@ -148,6 +148,6 @@ export const formCss = css`
     padding-bottom: ${pad(2)};
     border-bottom: ${hairlineWidth()} solid ${border()};
     font-size: ${font('md')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
   }
 `

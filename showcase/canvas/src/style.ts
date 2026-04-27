@@ -1,4 +1,4 @@
-import { css, neutral, pad, radius, microLabel } from '@p/ds/tokens/foundations'
+import { css, neutral, pad, radius, microLabel, pair, bg, text, surface } from '@p/ds/tokens/foundations'
 
 /**
  * Canvas — 자산 SSOT viewer. data-part 네임스페이스로 셀렉터 캡슐화.
@@ -19,8 +19,8 @@ import { css, neutral, pad, radius, microLabel } from '@p/ds/tokens/foundations'
 export const canvasCss = css`
   [data-part="canvas-app"] {
     position: fixed; inset: 0;
-    background: #f5f5f5;
-    color: ${neutral(9)};
+    /* surface owner — bg/fg 페어로 선언. 자식은 inherit, 자체 pair 필요 시 재선언. */
+    ${pair({ bg: surface('subtle'), fg: text('strong') })}
     font: 400 14px system-ui, sans-serif;
   }
 
@@ -357,13 +357,15 @@ export const canvasCss = css`
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
     border-radius: 2px;
   }
-  /* 흰색·투명 식별을 위한 체커보드 hint */
+  /* 흰색·투명 식별을 위한 체커보드 hint — Photoshop·Figma 디팩토.
+     2×2 정사각 체커: 같은 45° gradient 2장을 half-cell offset 으로 겹쳐서
+     사각형 패턴 (삼각형 ❌) 형성. 8px cell × 2 = 16px tile. */
   [data-part="canvas-token-card"][data-token-type="color"] > [data-swatch] {
     background-image:
-      linear-gradient(45deg, rgba(0,0,0,0.04) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(0,0,0,0.04) 25%, transparent 25%);
-    background-size: 8px 8px;
-    background-position: 0 0, 4px 4px;
+      linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.08) 75%),
+      linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.08) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
   }
   [data-part="canvas-token-card"] > [data-sample] {
     min-height: 80px;
@@ -377,7 +379,10 @@ export const canvasCss = css`
     width: 100%;
     padding: ${pad(3)};
     display: grid; place-items: center;
-    background: #fff;
+    /* surface owner — bg() 위 text() 페어. 안에서 그려지는 demo 가 정확한 대비
+       위에서 측정되도록. neutral(N) 직접 사용 금지(palette tier 로 호출은 정본
+       위배). pair() recipe 가 SSOT. */
+    ${pair({ bg: bg(), fg: text('strong') })}
     border: 1px solid rgba(0,0,0,0.06);
     box-sizing: border-box;
   }
@@ -391,6 +396,139 @@ export const canvasCss = css`
     color: ${neutral(6)};
     align-self: start;
     word-break: break-all;
+  }
+
+  /* ── Color ramp — Radix · Tailwind · Carbon 수렴 디팩토. ──
+     9개 카드 ❌ → flush strip + step 라벨 + hover hex.
+     자동 대비: data-dark(scale ≥5) → 흰 텍스트, 미만 → 검정. */
+  [data-part="canvas-color-ramp"] {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(2)};
+    width: max-content;
+  }
+  [data-part="canvas-color-ramp"] > [data-tiles] {
+    display: flex;
+    flex-direction: row;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.08),
+      0 1px 2px rgba(0,0,0,0.04);
+    isolation: isolate;
+  }
+  [data-part="canvas-color-ramp"] [data-tile] {
+    position: relative;
+    inline-size: 88px;
+    block-size: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: ${pad(2)};
+    box-sizing: border-box;
+    color: #1e1e1e;
+    transition: transform 160ms ease, z-index 0s 160ms;
+    cursor: default;
+  }
+  [data-part="canvas-color-ramp"] [data-tile][data-dark] { color: #fff; }
+  [data-part="canvas-color-ramp"] [data-tile]:hover {
+    transform: translateY(-2px);
+    z-index: 1;
+    transition: transform 160ms ease, z-index 0s 0s;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  }
+  [data-part="canvas-color-ramp"] [data-tile] > [data-step] {
+    font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.04em;
+    align-self: flex-start;
+  }
+  [data-part="canvas-color-ramp"] [data-tile] > [data-hex] {
+    font: 500 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    text-transform: lowercase;
+  }
+  [data-part="canvas-color-ramp"] [data-tile]:hover > [data-hex] { opacity: 0.9; }
+  [data-part="canvas-color-ramp"] > [data-meta] {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: ${pad(3)};
+    padding: 0 2px;
+  }
+  [data-part="canvas-color-ramp"] > [data-meta] > [data-name] {
+    font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(8)};
+  }
+  [data-part="canvas-color-ramp"] > [data-meta] > [data-range] {
+    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(5)};
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Spacing bar stack — Material 3 spacing reference · Polaris space 수렴. ──
+     [라벨 · 막대 · 값] 가로 행. 막대 길이 = 실제 pad value.
+     monospace 라벨/값으로 baseline 정렬, 막대는 tone 색의 8% alpha tinted. */
+  [data-part="canvas-space-stack"] {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    column-gap: ${pad(4)};
+    row-gap: ${pad(1)};
+    align-items: center;
+    width: max-content;
+    min-width: 360px;
+    padding: ${pad(2)} 0;
+  }
+  [data-part="canvas-space-stack"] > [data-row] {
+    display: contents;
+  }
+  [data-part="canvas-space-stack"] [data-label] {
+    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(7)};
+    letter-spacing: 0.02em;
+  }
+  [data-part="canvas-space-stack"] [data-bar] {
+    block-size: 14px;
+    background: var(--tone, ${neutral(8)});
+    opacity: 0.85;
+    border-radius: 2px;
+    min-inline-size: 1px;
+  }
+  [data-part="canvas-space-stack"] [data-value] {
+    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(5)};
+    text-align: end;
+  }
+
+  /* ── Elevation tower — Material 3 surface tonal elevation 수렴. ──
+     같은 stage 위 4 surface 가 그림자 강도만 다르게. soft 회색 stage 위에서
+     그림자가 정확하게 보임 (white-on-white 회피). */
+  [data-part="canvas-elev-tower"] {
+    display: flex;
+    flex-direction: row;
+    gap: ${pad(5)};
+    padding: ${pad(5)} ${pad(4)};
+    background: ${neutral(2)};
+    border-radius: 8px;
+    width: max-content;
+  }
+  [data-part="canvas-elev-tower"] > [data-tile] {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: ${pad(2)};
+  }
+  [data-part="canvas-elev-tower"] [data-surface] {
+    inline-size: 80px;
+    block-size: 80px;
+    background: #fff;
+    border-radius: 6px;
+  }
+  [data-part="canvas-elev-tower"] figcaption {
+    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(6)};
   }
 
   [data-part="canvas-type-row"] {
@@ -472,6 +610,44 @@ export const canvasCss = css`
     border: 1px dashed #dcdcdc;
     border-radius: 4px;
     min-width: 320px;
+  }
+
+  /* State base — Card grid (parts/Card 가 시각 담당). */
+  [data-part="canvas-state-grid"] {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: ${pad(3)};
+    width: 100%;
+  }
+
+  /* State matrix — 행=role/context, 열=variant. variant 가 세로 정렬돼 비교 용이. */
+  [data-part="canvas-state-matrix"] {
+    display: grid;
+    grid-template-columns: minmax(200px, max-content) repeat(3, minmax(200px, 1fr));
+    column-gap: ${pad(3)};
+    row-gap: ${pad(2)};
+    align-items: center;
+    width: 100%;
+  }
+  [data-part="canvas-state-matrix"] > [data-row] {
+    display: contents;
+  }
+  [data-part="canvas-state-matrix"] > [data-row] > [role="columnheader"] {
+    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: ${neutral(6)};
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: ${pad(1)} 0;
+  }
+  [data-part="canvas-state-matrix"] > [data-row] > [data-cell="role"] {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(0.5)};
+    align-items: flex-start;
+  }
+  [data-part="canvas-state-matrix"] > [data-row] > [data-cell] {
+    min-inline-size: 0;
   }
 
   /* detail panel — viewport 우하단 floating wrapper만. 내부는 ds parts/Card. */

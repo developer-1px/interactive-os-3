@@ -1,4 +1,4 @@
-import { css, font, radius, slot, surface, text, toneTint } from '../../../tokens/foundations'
+import { css, font, radius, slot, surface, text, toneTint, weight } from '../../../tokens/foundations'
 
 /**
  * highlightMark — HTML <mark> 텍스트 하이라이트 스타일.
@@ -10,7 +10,7 @@ export const highlightMark = () => css`
     padding: 1px ${slot.mark.padX};
     border-radius: ${radius('pill')};
     font-size: ${font('xs')};
-    font-weight: 600;
+    font-weight: ${weight('semibold')};
     line-height: 1.4;
     white-space: nowrap;
     background: ${surface('muted')};

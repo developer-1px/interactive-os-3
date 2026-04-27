@@ -9,21 +9,31 @@ import { scanText } from './lib/ds-value-rules.mjs'
 
 const ROOT = new URL('..', import.meta.url).pathname
 
+// 위계: 모든 widget 코드(*.style.ts) + tokens/style/shell·states 가 scope.
+// foundations·palette·preset·fn 은 정의 layer 라 raw 허용 (scope 제외).
 const SCAN = [
   'packages/ds/src/style/widgets',
   'packages/ds/src/tokens/style/shell',
   'packages/ds/src/tokens/style/states.ts',
+  'packages/ds/src/ui',
+  'packages/ds/src/content',
+  'packages/ds/src/devices',
 ]
 
 const SKIP_PATHS = [
   'packages/ds/src/fn',
   'packages/ds/src/tokens/style/preset',
+  'packages/ds/src/tokens/foundations',
+  '/_demos/',
 ]
+
+// scope 제한: .style.ts / .styles.ts 또는 /style/ 경로만 — *.tsx component 는 제외
+const SCOPE = (p) => /\.(style|styles)\.ts$/.test(p) || p.includes('/style/') || p.endsWith('/states.ts')
 
 function* walk(p) {
   const st = statSync(p)
   if (st.isFile()) {
-    if (/\.(ts|tsx)$/.test(p)) yield p
+    if (/\.(ts|tsx)$/.test(p) && SCOPE(p)) yield p
     return
   }
   for (const name of readdirSync(p)) {

@@ -1,4 +1,4 @@
-import { accent, bg, border, control, css, dim, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone } from '../../tokens/foundations'
+import { accent, bg, border, control, css, dim, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone, weight } from '../../tokens/foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -199,7 +199,7 @@ export const grid = () => [
 
     /* rowheader — 행의 첫 셀, 라벨 역할 */
     [role="rowheader"] {
-      font-weight: 600;
+      font-weight: ${weight('semibold')};
       color: ${dim(90)};
     }
 
@@ -265,7 +265,7 @@ export const grid = () => [
     }
     [role="grid"][data-density="mail"] [role="gridcell"][data-col="from"]    { grid-area: from; ${emphasize(1)} }
     [role="grid"][data-density="mail"] [role="gridcell"][data-col="time"]    { grid-area: time; justify-self: end; font-size: ${font('sm')}; ${mute(2)} }
-    [role="grid"][data-density="mail"] [role="gridcell"][data-col="subject"] { grid-area: subject; font-weight: 500; }
+    [role="grid"][data-density="mail"] [role="gridcell"][data-col="subject"] { grid-area: subject; font-weight: ${weight('medium')}; }
     [role="grid"][data-density="mail"] [role="gridcell"][data-col="preview"] { grid-area: preview; font-size: ${font('sm')}; ${mute(2)} }
     /* unread 강조 — 색 ❌, weight ✅ (mute/emphasize는 surface 무관) */
     [role="grid"][data-density="mail"] [role="row"][data-unread="true"] [role="gridcell"][data-col="from"],

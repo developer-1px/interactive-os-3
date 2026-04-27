@@ -13,8 +13,8 @@ export const stripColorMixSpace = (line) =>
 export const rules = [
   {
     kind: 'non-semantic-color',
-    level: 'error',
-    hint: 'non-semantic 색 토큰 — text()/surface()/border()/accent()/status() 등 semantic 사용 (neutral/tint/mix/dim 은 preset·foundations 내부 전용)',
+    level: 'warn',
+    hint: 'non-semantic 색 토큰 — role 기반 semantic 사용 (text/surface/border/accent/status…). 같은 수치라도 의미 다르면 별 role 로 등재. neutral/tint/mix/dim 은 preset·foundations 내부 전용',
     test: (line) => /(?<![\w-])(neutral|tint|mix|dim)\s*\(/.test(line) && !/^\s*(import|export)\b/.test(line),
   },
   {
@@ -34,23 +34,36 @@ export const rules = [
   },
   {
     kind: 'raw-mask',
-    level: 'error',
-    hint: 'raw mask/-webkit-mask 금지 — fn/icon의 icon(token, size) 또는 indicator(...) 사용 (icon square invariant)',
+    level: 'warn',
+    hint: 'raw mask/-webkit-mask — fn/icon의 icon(token, size) 또는 indicator(...) 사용 (icon square invariant)',
     test: (line) => /\b(-webkit-mask|mask)\s*:/.test(line) && !/mask-type|mask-mode|mask-repeat|mask-position|mask-size|mask-origin|mask-clip|mask-composite/.test(line),
   },
   {
     kind: 'radius-literal',
-    level: 'error',
-    hint: 'border-radius 리터럴 금지 — radius("sm"|"md"|"lg"|"pill") 사용',
+    level: 'warn',
+    hint: 'border-radius 리터럴 — radius("sm"|"md"|"lg"|"pill") 사용. 같은 수치라도 의미 다르면 별 role 토큰으로 등재 (50%·999px·9999px 모두 pill 로 통일)',
     test: (line) => {
       const m = line.match(/border-radius\s*:\s*([^;${]+)/)
       if (!m) return false
       const val = m[1].trim()
       if (val === '0' || val === '0px') return false
-      if (/^\d+%/.test(val)) return false
       if (/\$\{/.test(val)) return false
       if (/var\(/.test(val)) return false
       if (/^[123]px$/.test(val)) return false
+      return /\d/.test(val)
+    },
+  },
+  {
+    kind: 'font-weight-literal',
+    level: 'warn',
+    hint: 'font-weight 숫자 리터럴 — weight("regular"|"medium"|"semibold"|"bold"|"extrabold") 사용. 같은 수치라도 의미 다르면 별 role 토큰으로 등재',
+    test: (line) => {
+      const m = line.match(/font-weight\s*:\s*([^;${]+)/)
+      if (!m) return false
+      const val = m[1].trim()
+      if (/\$\{/.test(val)) return false
+      if (/var\(/.test(val)) return false
+      if (/^(inherit|normal|bold|lighter|bolder)$/.test(val)) return false
       return /\d/.test(val)
     },
   },

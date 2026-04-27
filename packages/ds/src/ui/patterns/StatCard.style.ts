@@ -1,4 +1,4 @@
-import { css, dim, font, hairlineWidth, icon, mix, pad, status, tint } from '../../tokens/foundations'
+import { css, dim, font, hairlineWidth, icon, mix, pad, status, tint, weight } from '../../tokens/foundations'
 
 /**
  * StatCard slot inner styling — Card primitive 슬롯 안의 KPI 특화 시각만.
@@ -23,7 +23,7 @@ export const statCard = () => css`
     display: inline-flex; align-items: center; gap: ${pad(1)};
     font-size: ${font('sm')};
     color: ${dim(60)};
-    font-weight: 500;
+    font-weight: ${weight('medium')};
   }
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > span[aria-hidden="true"] {
     font-size: ${font('lg')};
@@ -34,7 +34,7 @@ export const statCard = () => css`
   article[data-part="card"][data-card="stat"] > [data-slot="body"] > [data-part="heading"][data-level="display"] {
     margin: 0;
     font-size: calc(${font('xl')} * 1.4);
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
@@ -50,7 +50,7 @@ export const statCard = () => css`
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir] {
     display: inline-flex; align-items: center; gap: ${pad(0.5)};
     font-size: ${font('xs')};
-    font-weight: 500;
+    font-weight: ${weight('medium')};
   }
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir="up"]   { color: ${status('success')}; }
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir="down"] { color: ${status('danger')}; }

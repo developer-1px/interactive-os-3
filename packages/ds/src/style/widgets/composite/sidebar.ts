@@ -1,4 +1,4 @@
-import { css, hierarchy, microLabel, pad, radius, slot, surface, text } from '../../../tokens/foundations'
+import { css, hierarchy, microLabel, pad, radius, slot, surface, text, weight } from '../../../tokens/foundations'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.
@@ -37,7 +37,7 @@ export const sidebarCss = () => css`
   }
   nav[data-part="sidebar"] > header > strong {
     font-size: var(--ds-text-md);
-    font-weight: 700;
+    font-weight: ${weight('bold')};
     letter-spacing: var(--ds-tracking);
   }
   nav[data-part="sidebar"] > header > small {

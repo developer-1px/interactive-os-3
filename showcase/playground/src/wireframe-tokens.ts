@@ -26,27 +26,6 @@ export const meta = {
   medium: { opacity: 0.7 },
 }
 
-// ── type — 글자 role 시멘틱 (size + weight + family 묶음) ──────────────
-// font() / weight() 단독 호출 ❌. 모든 글자 변주는 의미 라벨로.
-export const type = {
-  /** pricing card 큰 가격 — h1 급 강조. */
-  display:   { fontSize: font('2xl'), fontWeight: weight('semibold') },
-  /** cart total · 강조 amount inline — semibold xl. */
-  amount:    { fontSize: font('xl'),  fontWeight: weight('semibold') },
-  /** pricing period suffix (/월) — regular weight 회복. */
-  period:    { fontSize: font('sm'),  fontWeight: weight('regular') },
-  /** OTP digit input — center align xl. */
-  digit:     { fontSize: font('xl'),  textAlign: 'center' as const, inlineSize: 44 },
-  /** calendar weekday header — sm center. */
-  weekday:   { fontSize: font('sm'),  textAlign: 'center' as const },
-  /** calendar today pill text — semibold. */
-  todayBold: { fontWeight: weight('semibold') },
-  /** HmiBar / 코드 inline — monospace sm. */
-  mono:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm') },
-  /** 1줄 ellipsis truncate — list row text. */
-  truncate:  { overflow: 'hidden' as const, textOverflow: 'ellipsis' as const, whiteSpace: 'nowrap' as const },
-}
-
 // ── list row — Chat conv · Notif inbox · Comments · Cart line · Curriculum
 export const listRow = {
   paddingBlock: pad(2),
@@ -153,19 +132,6 @@ export const tagInput = {
 
 // ── chevron / faint icon (curriculum row, voting down) ────────────────
 export const chevron = { opacity: 0.5 }
-
-// ── HMI audit toolbar (chrome bar) ────────────────────────────────────
-export const hmiBar = {
-  pad: pad(3),
-  gap: pad(3),
-  reportGap: pad(4),
-  bg: bg(),
-  border: divider,
-  shape: radius('md'),
-  font: font('sm'),
-  top: 0,
-  zIndex: 10,
-}
 
 // ── primary button full-width 슬롯 ────────────────────────────────────
 export const fullW = { inlineSize: '100%' as const }
