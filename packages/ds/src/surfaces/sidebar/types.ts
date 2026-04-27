@@ -4,7 +4,7 @@
  *
  * widget이 자체 nav landmark 소유. 외곽 wrapper 0.
  */
-import type { NormalizedData, Event as DsEvent } from '../../../headless/types'
+import type { NormalizedData, Event as DsEvent } from '../../headless/types'
 
 export interface SidebarProps {
   /** widget 인스턴스 id. entity prefix로 쓰인다. 페이지 내 충돌 방지용. */

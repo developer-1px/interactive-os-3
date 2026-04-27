@@ -13,7 +13,7 @@ import {
   type Event, type NormalizedData,
 } from '@p/ds'
 import { holyGrail } from '@p/ds/ui/templates'
-import { sidebarAdmin } from '@p/ds/ui/templates/sidebar'
+import { sidebarAdmin } from '@p/ds/surfaces/sidebar'
 import type { Contract } from 'virtual:ds-contracts'
 import { tierLabel, tierBlurb, type Tier } from './tiers'
 

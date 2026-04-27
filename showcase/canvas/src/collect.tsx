@@ -77,7 +77,7 @@ const uiLanesDepth2 = buildCompLanes(
   (m) => m[2],
 )
 
-// depth-3 (e.g. ui/6-overlay/command/CommandPalette, ui/recipes/sidebar/adminFloating)
+// depth-3 (e.g. surfaces/command/CommandPalette, surfaces/sidebar/adminFloating)
 // → 부모 lane 으로 병합하되 중간 폴더명을 subgroup 으로 보존 (fs 계층 1:1).
 const uiLanesDepth3 = buildCompLanes(
   uiSubModules,
