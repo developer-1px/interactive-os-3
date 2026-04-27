@@ -1,4 +1,5 @@
-import { css, neutral, pad, radius, microLabel, pair, bg, text, surface, border } from '@p/ds/tokens/foundations'
+import { css, neutral, pad, radius, weight, microLabel, pair, bg, text, surface, border } from '@p/ds/tokens/foundations'
+import { TONE } from './canvas-tones'
 
 /**
  * Canvas — 자산 SSOT viewer. data-part 네임스페이스로 셀렉터 캡슐화.
@@ -37,7 +38,7 @@ export const canvasCss = css`
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     margin-bottom: ${pad(2)};
   }
   [data-part="canvas-header"] > h1 {
@@ -48,7 +49,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-header"] > [data-stats] {
     font: 400 14px system-ui;
-    color: ${neutral(7)};
+    color: ${text('subtle')};
   }
   [data-part="canvas-header"] code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -70,7 +71,7 @@ export const canvasCss = css`
   [data-part="canvas-semantic-page"],
   [data-part="canvas-atoms-page"],
   [data-part="canvas-composed-page"] {
-    --tone: #1e1e1e;
+    --tone: ${TONE.neutral};
     display: flex;
     flex-direction: column;
     gap: ${pad(20)};
@@ -78,10 +79,10 @@ export const canvasCss = css`
     padding-right: ${pad(10)};
     border-right: 1px dashed ${border('subtle')};
   }
-  [data-part="canvas-palette-page"][data-tone="neutral"]    { --tone: #1e1e1e; }
-  [data-part="canvas-semantic-page"][data-tone="blue"]      { --tone: #2563eb; }
-  [data-part="canvas-atoms-page"][data-tone="green"]        { --tone: #16a34a; }
-  [data-part="canvas-composed-page"][data-tone="amber"]     { --tone: #d97706; }
+  [data-part="canvas-palette-page"][data-tone="neutral"]    { --tone: ${TONE.neutral}; }
+  [data-part="canvas-semantic-page"][data-tone="blue"]      { --tone: ${TONE.blue}; }
+  [data-part="canvas-atoms-page"][data-tone="green"]        { --tone: ${TONE.green}; }
+  [data-part="canvas-composed-page"][data-tone="amber"]     { --tone: ${TONE.amber}; }
   /* 각 레이어 폭 = 그 레이어의 가장 넓은 SectionFrame max-content + padding 여유. */
   [data-part="canvas-palette-page"]   { width: 2200px; }
   [data-part="canvas-semantic-page"]  { width: 1300px; }
@@ -112,16 +113,16 @@ export const canvasCss = css`
      수렴 어휘: Brad Frost tone, Vercel mono eyebrow, Atlassian display title,
      Material 3 stripe, Untitled UI hint. */
   [data-part="canvas-page-divider"] {
-    --tone: #1e1e1e;
+    --tone: ${TONE.neutral};
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: ${pad(3)};
     margin-bottom: ${pad(8)};
     padding-top: ${pad(4)};
   }
-  [data-part="canvas-page-divider"][data-tone="blue"]   { --tone: #2563eb; }
-  [data-part="canvas-page-divider"][data-tone="green"]  { --tone: #16a34a; }
-  [data-part="canvas-page-divider"][data-tone="amber"]  { --tone: #d97706; }
+  [data-part="canvas-page-divider"][data-tone="blue"]   { --tone: ${TONE.blue}; }
+  [data-part="canvas-page-divider"][data-tone="green"]  { --tone: ${TONE.green}; }
+  [data-part="canvas-page-divider"][data-tone="amber"]  { --tone: ${TONE.amber}; }
 
   [data-part="canvas-page-divider-stripe"] {
     height: 8px;
@@ -139,10 +140,10 @@ export const canvasCss = css`
     color: var(--tone);
   }
   [data-part="canvas-page-divider-eyebrow"] > span:nth-child(2) {
-    color: ${neutral(4)};
+    color: ${text('mute')};
   }
   [data-part="canvas-page-divider-eyebrow"] > span:nth-child(3) {
-    color: ${neutral(6)};
+    color: ${text('mute')};
     letter-spacing: 0.14em;
   }
 
@@ -166,18 +167,18 @@ export const canvasCss = css`
     font: 800 56px system-ui;
     letter-spacing: -0.03em;
     line-height: 1.0;
-    color: #1e1e1e;
+    color: ${text('strong')};
     margin: 0;
   }
   [data-part="canvas-page-divider-subtitle"] {
     font: 500 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     letter-spacing: 0.02em;
     margin-top: ${pad(2)};
   }
   [data-part="canvas-page-divider-hint"] {
     font: 400 13px system-ui;
-    color: ${neutral(7)};
+    color: ${text('subtle')};
     line-height: 1.55;
     margin: 0;
     max-width: 56ch;
@@ -200,7 +201,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-palette-page"] [data-part="theme-creator"] header > h1 {
     font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace !important;
-    color: ${neutral(6)} !important;
+    color: ${text('mute')} !important;
     margin: 0 !important;
   }
 
@@ -223,7 +224,7 @@ export const canvasCss = css`
     left: 0;
     width: 32px;
     height: 2px;
-    background: var(--tone, #1e1e1e);
+    background: var(--tone, ${TONE.neutral});
     border-radius: 1px;
   }
 
@@ -239,7 +240,7 @@ export const canvasCss = css`
 
   [data-part="canvas-section-tag"] {
     position: static;
-    color: #1e1e1e;
+    color: ${text('strong')};
     font: 600 18px Inter, system-ui;
     letter-spacing: -0.01em;
     display: inline-flex;
@@ -252,30 +253,30 @@ export const canvasCss = css`
   }
   [data-part="canvas-section-tag"] > [data-marker] {
     width: 10px; height: 10px;
-    background: var(--tone, #1e1e1e);
+    background: var(--tone, ${TONE.neutral});
     transform: rotate(45deg);
     border-radius: 1px;
     flex: none;
   }
   [data-part="canvas-section-tag"] > [data-title] {
-    font-weight: 700;
-    color: #1e1e1e;
+    font-weight: ${weight('bold')};
+    color: ${text('strong')};
   }
   [data-part="canvas-section-tag"] > small {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(5)};
+    color: ${text('mute')};
     margin-left: auto;
     padding-left: ${pad(3)};
   }
   [data-part="canvas-section-tag"] > [data-subtitle] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     text-transform: none;
   }
   [data-part="canvas-section-standard"] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     letter-spacing: 0.02em;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     padding-left: 20px; /* marker(10px) + gap(10px) 정렬 */
   }
 
@@ -288,7 +289,7 @@ export const canvasCss = css`
   [data-part="canvas-shape-group"]:last-child { margin-bottom: 0; }
   [data-part="canvas-shape-label"] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #b0b0b0;
+    color: ${text('mute')};
     letter-spacing: 0;
   }
 
@@ -296,7 +297,7 @@ export const canvasCss = css`
   [data-part="canvas-subgroup"]:last-child { margin-bottom: 0; }
   [data-part="canvas-subgroup"] > h3 {
     ${microLabel()}
-    color: ${neutral(7)};
+    color: ${text('subtle')};
     margin: 0 0 ${pad(3)};
     padding-bottom: ${pad(1.5)};
     border-bottom: 1px dashed ${border('subtle')};
@@ -390,12 +391,12 @@ export const canvasCss = css`
   }
   [data-part="canvas-token-card"] > [data-name] {
     font: 500 12px system-ui;
-    color: ${neutral(9)};
+    color: ${text('strong')};
     align-self: end;
   }
   [data-part="canvas-token-card"] > [data-call] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     align-self: start;
     word-break: break-all;
   }
@@ -426,11 +427,11 @@ export const canvasCss = css`
     justify-content: space-between;
     padding: ${pad(2)};
     box-sizing: border-box;
-    color: #1e1e1e;
+    color: ${text('strong')};
     transition: transform 160ms ease, z-index 0s 160ms;
     cursor: default;
   }
-  [data-part="canvas-color-ramp"] [data-tile][data-dark] { color: #fff; }
+  [data-part="canvas-color-ramp"] [data-tile][data-dark] { color: ${TONE.fgOnDark}; }
   [data-part="canvas-color-ramp"] [data-tile]:hover {
     transform: translateY(-2px);
     z-index: 1;
@@ -459,11 +460,11 @@ export const canvasCss = css`
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-name] {
     font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(8)};
+    color: ${text()};
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-range] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(5)};
+    color: ${text('mute')};
     letter-spacing: 0.04em;
   }
 
@@ -485,19 +486,19 @@ export const canvasCss = css`
   }
   [data-part="canvas-space-stack"] [data-label] {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(7)};
+    color: ${text('subtle')};
     letter-spacing: 0.02em;
   }
   [data-part="canvas-space-stack"] [data-bar] {
     block-size: 14px;
-    background: var(--tone, ${neutral(8)});
+    background: var(--tone, ${text()});
     opacity: 0.85;
     border-radius: ${radius('sm')};
     min-inline-size: 1px;
   }
   [data-part="canvas-space-stack"] [data-value] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(5)};
+    color: ${text('mute')};
     text-align: end;
   }
 
@@ -528,7 +529,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-elev-tower"] figcaption {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(6)};
+    color: ${text('mute')};
   }
 
   [data-part="canvas-type-row"] {
@@ -540,12 +541,12 @@ export const canvasCss = css`
   [data-part="canvas-type-row"]:last-child { border-bottom: 0; }
   [data-part="canvas-type-row"] > [data-specimen] {
     line-height: 1.1;
-    font-weight: 600;
-    color: ${neutral(9)};
+    font-weight: ${weight('semibold')};
+    color: ${text('strong')};
   }
   [data-part="canvas-type-row"] > [data-meta] {
     font: 400 11px system-ui;
-    color: ${neutral(6)};
+    color: ${text('mute')};
   }
 
   /* comp-card = frame 없는 stage + 아래 캡션 (Figma instance 스타일).
@@ -570,11 +571,11 @@ export const canvasCss = css`
     outline-color: ${border('subtle')};
   }
   [data-part="canvas-comp-card"][data-selected] {
-    outline-color: #1e1e1e;
+    outline-color: ${text('strong')};
   }
   [data-part="canvas-comp-card"][data-selected] > figcaption {
-    color: #1e1e1e;
-    font-weight: 600;
+    color: ${text('strong')};
+    font-weight: ${weight('semibold')};
   }
   [data-part="canvas-comp-card"] > [data-stage] {
     min-height: 64px;
@@ -589,7 +590,7 @@ export const canvasCss = css`
     overflow: visible;
   }
   [data-part="canvas-comp-card"] > [data-stage][data-empty] {
-    color: ${neutral(5)};
+    color: ${text('mute')};
     font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace;
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
@@ -597,7 +598,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-comp-card"] > figcaption {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     padding: ${pad(2)} 0 0;
     border-top: none;
     text-align: center;
@@ -605,7 +606,7 @@ export const canvasCss = css`
 
   [data-part="canvas-stage-empty"] {
     font: 400 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${neutral(5)};
+    color: ${text('mute')};
     padding: ${pad(4)};
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
@@ -636,7 +637,7 @@ export const canvasCss = css`
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     border-bottom: 1px solid ${border('subtle')};
     padding: ${pad(1)} 0;
   }
