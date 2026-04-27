@@ -23,11 +23,11 @@ export function SectionFrame({ title, children, count, subtitle, standard, cols 
       data-part="canvas-section"
       style={c !== undefined ? ({ ['--cols' as string]: c } as CSSProperties) : undefined}
     >
-      <header data-part="canvas-section-tag">
+      <h3 data-part="canvas-section-tag">
         {title}
         {subtitle && <span data-subtitle>{subtitle}</span>}
         {count !== undefined && <small>{count}</small>}
-      </header>
+      </h3>
       {standard && <div data-part="canvas-section-standard">≈ {standard}</div>}
       {children}
     </section>
@@ -37,7 +37,7 @@ export function SectionFrame({ title, children, count, subtitle, standard, cols 
 export function SubGroup({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div data-part="canvas-subgroup">
-      <h3>{title}</h3>
+      <h4>{title}</h4>
       {children}
     </div>
   )

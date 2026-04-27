@@ -9,6 +9,8 @@ export type DemoSpec = {
   args: (string | number | boolean | null)[]
   /** raw expression for label/comment */
   raw: string
+  /** optional scale — 각 값으로 fn 을 한 번씩 호출하여 카드 시리즈 생성 (palette 전용) */
+  scale?: (string | number)[]
 }
 
 export type FoundationExport = {

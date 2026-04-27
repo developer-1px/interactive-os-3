@@ -1,21 +1,18 @@
 /**
  * Canvas — DS 자산 SSOT viewer.
  *
+ * 시퀀스 3 페이지 (위→아래):
+ *   L0  Palette        raw scale (수치)            ← PaletteSection.tsx
+ *   L1  Semantic       token names (foundations)
+ *   L2  Components     ui/parts · ui/<tier> · devices
+ *
  * 자동 수집:
  *   - foundations 토큰      virtual:ds-audit ( @demo JSDoc 태그 )
- *   - ds/parts 부품         glob '@p/ds/parts/*.tsx' + _demos/*.demo.tsx
- *   - ds/ui 컴포넌트        glob '@p/ds/ui/<tier>/*.tsx' + _demos/*.demo.tsx
+ *   - palette 토큰          virtual:ds-audit ( @demo + scale=[...] )
+ *   - ui 컴포넌트            glob '@p/ds/ui/*&#47;*.tsx' + _demos/*.demo.tsx
+ *   - devices               glob '@p/ds/devices/*.tsx' + _demos/*.demo.tsx
  *
- * 구성: 발전 단계(Stage 0 → ∞) 순으로 자산을 배치한다.
- *   Stage 0  Minimum Affordances     theme creator + foundations basics + atoms (parts·primitives·status·action)
- *   Stage 1  Form & Collection       ui/3-input · 4-selection · 5-display
- *   Stage 2  Overlay & Navigation    ui/6-overlay
- *   Stage 3  Motion & Async          motion foundations
- *   Stage 4  Responsive shells       Devices (mobile/desktop frames)
- *   Stage 5  Self-verification       primitives · control · recipes
- *   Stage ∞  Declarative · Generative ui/7-patterns · 8-layout
- *
- * 새 자산 추가 시 (export + @demo 태그 또는 _demos/<Name>.demo.tsx) 매핑된 stage에 즉시 등장한다.
+ * 새 자산 추가 시 즉시 등장 — `LANE_LABEL` 의 lane 순서만 SSOT.
  */
 import { useMemo, useReducer, useState, type ComponentType, type ReactNode } from 'react'
 import { ZoomPanCanvas } from '@p/ds/ui/8-layout/ZoomPanCanvas'
@@ -23,15 +20,13 @@ import { ROOT, reduce, type NormalizedData } from '@p/ds'
 import { Card, Heading, KeyValue, Code } from '@p/ds/ui/parts'
 import { audit } from 'virtual:ds-audit'
 import { demos as catalogDemos } from '@showcase/catalog'
-import { ThemeCreatorBody } from '@showcase/theme'
 import { TokenCard, TypeSpecimen } from './TokenCard'
 import { SectionFrame, SubGroup } from './SectionFrame'
 import { partAutoDemo } from './partsAutoDemos'
+import { PaletteSection, paletteTotal } from './PaletteSection'
 
 const uiModules = import.meta.glob<Record<string, unknown>>('@p/ds/ui/*/*.tsx', { eager: true })
 const uiDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/ui/*/_demos/*.demo.tsx', { eager: true })
-const partsModules = import.meta.glob<Record<string, unknown>>('@p/ds/parts/*.tsx', { eager: true })
-const partsDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/parts/_demos/*.demo.tsx', { eager: true })
 const deviceModules = import.meta.glob<Record<string, unknown>>('@p/ds/devices/*.tsx', { eager: true })
 const deviceDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/devices/_demos/*.demo.tsx', { eager: true })
 
@@ -50,9 +45,9 @@ const CATEGORY_LABEL: Record<string, { label: string; standard?: string }> = {
   elevation:   { label: 'Elevation',   standard: 'M3 · Fluent' },
 }
 
-// ── ui/<tier> → 업계 표준 어휘 매핑 ─────────────────────────────────────
+// ── ui/<tier> → 업계 표준 어휘 매핑. 이 순서가 곧 화면 순서. ─────────────
 const LANE_LABEL: Record<string, { label: string; standard: string }> = {
-  parts:             { label: 'Content',    standard: 'Atomic atoms · Polaris/Atlassian Display' },
+  'ui/parts':        { label: 'Content',    standard: 'Atomic atoms · Polaris/Atlassian Display' },
   'ui/0-primitives': { label: 'Primitives', standard: 'Atlassian Primitives · Radix Primitives' },
   'ui/1-status':     { label: 'Status',     standard: 'Atlassian Status indicators · Polaris Feedback' },
   'ui/2-action':     { label: 'Action',     standard: 'Ant General · Material Actions' },
@@ -60,52 +55,10 @@ const LANE_LABEL: Record<string, { label: string; standard: string }> = {
   'ui/4-selection':  { label: 'Selection',  standard: 'Ant Data Entry · Material Selection' },
   'ui/5-display':    { label: 'Display',    standard: 'Ant Data Display · Atlassian Text & data display' },
   'ui/6-overlay':    { label: 'Overlay',    standard: 'Polaris Overlays · Atlassian Overlays & layering' },
-  'ui/7-patterns':   { label: 'Patterns',   standard: 'Polaris/Atlassian/GOV.UK Patterns' },
+  'ui/patterns':     { label: 'Patterns',   standard: 'Polaris/Atlassian/GOV.UK Patterns' },
   'ui/8-layout':     { label: 'Layout',     standard: 'Ant Layout · Polaris Layout & structure' },
+  devices:           { label: 'Devices',    standard: 'Mock frame · responsive shell separation' },
 }
-
-// ── 발전 단계 (Stage 0 → ∞) ─────────────────────────────────────────────
-type StageId = 's0' | 's1' | 's2' | 's3' | 's4' | 's5' | 'sInf'
-const STAGE_ORDER: StageId[] = ['s0', 's1', 's2', 's3', 's4', 's5', 'sInf']
-const STAGE_META: Record<StageId, { num: string; label: string; intent: string }> = {
-  s0:   { num: 'Stage 0', label: 'Minimum Affordances',     intent: 'theme · 색 · 타이포 · 위계 · 상태 · 모양 · 아이콘' },
-  s1:   { num: 'Stage 1', label: 'Form & Collection',        intent: '입력 · 표 · 리스트 · 카드 그리드' },
-  s2:   { num: 'Stage 2', label: 'Overlay & Navigation',     intent: 'Dialog · Toast · Tabs · Sidebar · Cmd' },
-  s3:   { num: 'Stage 3', label: 'Motion & Async',           intent: 'duration · easing · transition · loading' },
-  s4:   { num: 'Stage 4', label: 'Responsive shells',         intent: 'mobile · desktop frame separation' },
-  s5:   { num: 'Stage 5', label: 'Self-verification',        intent: 'invariant · lint · primitives 어휘 폐쇄' },
-  sInf: { num: 'Stage ∞', label: 'Declarative · Generative', intent: 'page-as-data · flow · LLM 어휘 닫힘' },
-}
-
-// foundation category → stage
-const FOUNDATION_STAGE: Record<string, StageId> = {
-  color:       's0',
-  typography:  's0',
-  layout:      's0',
-  shape:       's0',
-  state:       's0',
-  iconography: 's0',
-  elevation:   's0',
-  motion:      's3',
-  primitives:  's5',
-  control:     's5',
-  recipes:     's5',
-}
-
-// lane (parts / ui/<tier>) → stage
-const LANE_STAGE: Record<string, StageId> = {
-  parts:             's0',
-  'ui/0-primitives': 's0',
-  'ui/1-status':     's0',
-  'ui/2-action':     's0',
-  'ui/3-input':      's1',
-  'ui/4-selection':  's1',
-  'ui/5-display':    's1',
-  'ui/6-overlay':    's2',
-  'ui/7-patterns':   'sInf',
-  'ui/8-layout':     'sInf',
-}
-
 const LANE_ORDER = Object.keys(LANE_LABEL)
 const laneRank = (lane: string) => {
   const i = LANE_ORDER.indexOf(lane)
@@ -156,7 +109,6 @@ function buildCompLanes(
   pathRe: RegExp,
   groupOf: (m: RegExpMatchArray) => string,
   nameOf: (m: RegExpMatchArray) => string,
-  allowAuto: boolean,
 ): CompLane[] {
   const demoIndex = new Map<string, ComponentType>()
   for (const [path, mod] of Object.entries(demos)) {
@@ -172,9 +124,9 @@ function buildCompLanes(
     if (name.startsWith('_')) continue
     const group = groupOf(m)
     if (!lanes.has(group)) lanes.set(group, [])
-    lanes.get(group)!.push({ name, demo: resolveDemo(name, demoIndex.get(name), allowAuto) })
+    lanes.get(group)!.push({ name, demo: resolveDemo(name, demoIndex.get(name), true) })
   }
-  return [...lanes.keys()].sort().map((lane) => ({
+  return [...lanes.keys()].map((lane) => ({
     lane,
     nodes: lanes.get(lane)!.sort((a, b) => a.name.localeCompare(b.name)),
   }))
@@ -186,16 +138,6 @@ const uiLanes = buildCompLanes(
   /\/ui\/([^/]+)\/([^/]+)\.tsx$/,
   (m) => `ui/${m[1]}`,
   (m) => m[2],
-  true,
-)
-
-const partsLanes = buildCompLanes(
-  partsModules,
-  partsDemoModules,
-  /\/parts\/([^/]+)\.tsx$/,
-  () => 'parts',
-  (m) => m[1],
-  true,
 )
 
 const deviceLanes = buildCompLanes(
@@ -204,18 +146,47 @@ const deviceLanes = buildCompLanes(
   /\/devices\/([^/]+)\.tsx$/,
   () => 'devices',
   (m) => m[1],
-  true,
 )
 
-// ── stage 별로 자산 분배 ────────────────────────────────────────────────
-const allLanes = [...partsLanes, ...uiLanes].sort((a, b) => laneRank(a.lane) - laneRank(b.lane))
+const allLanes = [...uiLanes, ...deviceLanes].sort((a, b) => laneRank(a.lane) - laneRank(b.lane))
 
-function tokenGroupsForStage(stage: StageId): TokenGroup[] {
-  return tokenGroups.filter((g) => FOUNDATION_STAGE[g.category] === stage)
+// ── Atom 분류 (소스 ARIA role + roving 검증 기반) ─────────────────────
+// ATOM = 1 role = 1 component · roving 0 · leaf role (button·switch·checkbox·radio·separator) 또는 role 없음.
+// NOT ATOM = roving 1, 또는 composition role (listbox·menu·tablist·tree·grid·dialog·group·alert·status·feed·combobox·rowgroup 등),
+//            또는 slot 합성 / 다중 자식 구조 (<dl>·<nav>·<table>).
+const ATOM_LANES = new Set<string>([
+  'ui/0-primitives', // CodeBlock·Link·Prose·Separator
+  'ui/1-status',     // Badge·LegendDot·Progress
+  'ui/2-action',     // Button·Switch·ToolbarButton
+])
+// 혼합 lane 의 atom 들 — 명시 화이트리스트
+const ATOM_NAMES = new Set<string>([
+  // ui/3-input 단순 (leaf role 또는 passive)
+  'Input', 'Checkbox', 'Radio', 'Textarea',
+  // ui/8-layout 의 layout primitive (composition role 없음)
+  'Row', 'Column', 'Grid', 'Split',
+  // ui/parts 의 content atoms (role 없음, 단일 시각 단위)
+  'Heading', 'Tag', 'Code', 'Link', 'Avatar', 'Thumbnail',
+  'Skeleton', 'Timestamp', 'Badge', 'Progress',
+])
+function isAtom(name: string, lane: string): boolean {
+  if (ATOM_LANES.has(lane)) return true
+  return ATOM_NAMES.has(name)
 }
-function lanesForStage(stage: StageId): CompLane[] {
-  return allLanes.filter((l) => LANE_STAGE[l.lane] === stage)
+function splitLaneByAtom(l: CompLane): { atoms: CompLane; composed: CompLane } {
+  const atoms: CompNode[] = []
+  const composed: CompNode[] = []
+  for (const n of l.nodes) {
+    if (isAtom(n.name, l.lane)) atoms.push(n)
+    else composed.push(n)
+  }
+  return {
+    atoms: { lane: l.lane, nodes: atoms },
+    composed: { lane: l.lane, nodes: composed },
+  }
 }
+const atomLanes = allLanes.map(splitLaneByAtom).map((s) => s.atoms).filter((l) => l.nodes.length > 0)
+const composedLanes = allLanes.map(splitLaneByAtom).map((s) => s.composed).filter((l) => l.nodes.length > 0)
 
 // ── 컴포넌트 이름 → import path 인덱스 ──────────────────────────────────
 type CompMeta = { name: string; importPath: string; lane: string }
@@ -237,7 +208,6 @@ function addCompIndex(modules: Record<string, unknown>, pathRe: RegExp, laneOf: 
   }
 }
 addCompIndex(uiModules,    /\/ui\/([^/]+)\/([^/]+)\.tsx$/, (m) => `ui/${m[1]}`)
-addCompIndex(partsModules, /\/parts\/([^/]+)\.tsx$/,        () => 'parts')
 addCompIndex(deviceModules,/\/devices\/([^/]+)\.tsx$/,      () => 'devices')
 
 // ── 렌더 헬퍼 ──────────────────────────────────────────────────────────
@@ -258,7 +228,7 @@ function renderTokenGroup(g: TokenGroup): ReactNode {
     <SectionFrame
       key={g.category}
       title={CATEGORY_LABEL[g.category]?.label ?? g.category}
-      subtitle={g.category}
+      subtitle={`foundations/${g.category}`}
       standard={CATEGORY_LABEL[g.category]?.standard}
       count={g.exports.length}
     >
@@ -295,45 +265,77 @@ function renderLane(
   setSelected: (s: string | null) => void,
 ): ReactNode {
   const { lane, nodes } = laneObj
-  const shapeKey = (n: string) => {
-    const m = n.match(/[A-Z][a-z]+(?=$|[A-Z])/g)
-    return m ? m[m.length - 1] : n
-  }
-  const shapeGroups = new Map<string, typeof nodes>()
-  for (const node of nodes) {
-    const k = shapeKey(node.name)
-    if (!shapeGroups.has(k)) shapeGroups.set(k, [])
-    shapeGroups.get(k)!.push(node)
-  }
-  const useGrouping = [...shapeGroups.values()].some((g) => g.length > 1)
-  const groupEntries = useGrouping
-    ? [...shapeGroups.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
-    : [['', nodes] as const]
   const meta = LANE_LABEL[lane]
   const title = meta?.label ?? lane.replace(/^ui\//, '')
   return (
     <SectionFrame key={lane} title={title} subtitle={lane} standard={meta?.standard} count={nodes.length}>
-      {groupEntries.map(([gkey, groupNodes]) => (
-        <div key={gkey || '__flat__'} data-part="canvas-shape-group">
-          {gkey && <div data-part="canvas-shape-label">{gkey}</div>}
-          <div data-part="canvas-grid-comp">
-            {groupNodes.map((node) => (
-              <figure
-                key={node.name}
-                data-part="canvas-comp-card"
-                data-selected={selected === node.name || undefined}
-                onClick={() => setSelected(selected === node.name ? null : node.name)}
-              >
-                <div data-stage {...(node.demo ? {} : { 'data-empty': true })}>
-                  {node.demo ? node.demo() : 'no demo'}
-                </div>
-                <figcaption>{node.name}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      ))}
+      <div data-part="canvas-grid-comp">
+        {nodes.map((node) => (
+          <figure
+            key={node.name}
+            data-part="canvas-comp-card"
+            data-selected={selected === node.name || undefined}
+            onClick={() => setSelected(selected === node.name ? null : node.name)}
+          >
+            <div data-stage {...(node.demo ? {} : { 'data-empty': true })}>
+              {node.demo ? node.demo() : 'no demo'}
+            </div>
+            <figcaption>{node.name}</figcaption>
+          </figure>
+        ))}
+      </div>
     </SectionFrame>
+  )
+}
+
+// ── 페이지 섹션 ─────────────────────────────────────────────────────────
+
+function SemanticSection() {
+  return (
+    <section data-part="canvas-semantic-page">
+      <h2 data-part="canvas-page-label">
+        <strong>L1 · Semantic</strong>
+        <span>Foundations · token names</span>
+        <small>palette 위 의미 레이어. text·surface·border·accent·state 등 role 별 토큰. widget 은 여기까지만 import.</small>
+      </h2>
+      {tokenGroups.map(renderTokenGroup)}
+    </section>
+  )
+}
+
+function AtomsSection({
+  selected, setSelected,
+}: {
+  selected: string | null
+  setSelected: (s: string | null) => void
+}) {
+  return (
+    <section data-part="canvas-atoms-page">
+      <h2 data-part="canvas-page-label">
+        <strong>L2 · Atoms</strong>
+        <span>UI · 1 role = 1 component</span>
+        <small>단일 인터랙션 · 합성·roving·focus 없음. primitives · status · action · 단순 input · 단순 layout.</small>
+      </h2>
+      {atomLanes.map((lane) => renderLane(lane, selected, setSelected))}
+    </section>
+  )
+}
+
+function ComposedSection({
+  selected, setSelected,
+}: {
+  selected: string | null
+  setSelected: (s: string | null) => void
+}) {
+  return (
+    <section data-part="canvas-composed-page">
+      <h2 data-part="canvas-page-label">
+        <strong>L3 · Composed</strong>
+        <span>UI · parts · molecules · organisms · patterns · devices</span>
+        <small>atoms + tokens 합성. roving·focus·gesture 가 핵심. content parts · selection · display · overlay · patterns · 합성 layout · devices.</small>
+      </h2>
+      {composedLanes.map((lane) => renderLane(lane, selected, setSelected))}
+    </section>
   )
 }
 
@@ -341,7 +343,7 @@ function renderLane(
 
 export function Canvas() {
   const totalTokens = tokenGroups.reduce((n, g) => n + g.exports.length, 0)
-  const totalComps = uiLanes.reduce((n, l) => n + l.nodes.length, 0) + partsLanes.reduce((n, l) => n + l.nodes.length, 0)
+  const totalComps = uiLanes.reduce((n, l) => n + l.nodes.length, 0) + deviceLanes.reduce((n, l) => n + l.nodes.length, 0)
   const [selected, setSelected] = useState<string | null>(null)
   const selectedMeta = selected ? compIndex.get(selected) : null
   const selectedLaneLabel = selectedMeta ? LANE_LABEL[selectedMeta.lane] : null
@@ -360,87 +362,15 @@ export function Canvas() {
             <div data-meta>Design System · Library</div>
             <h1>Product UI Styleguide</h1>
             <div data-stats>
-              {totalTokens} tokens · {totalComps} components · arranged by maturity stage
+              {paletteTotal} palette · {totalTokens} semantic · {totalComps} components
             </div>
           </header>
 
-          <div data-part="canvas-board">
-            {STAGE_ORDER.map((stageId) => {
-              const meta = STAGE_META[stageId]
-              const tokens = tokenGroupsForStage(stageId)
-              const lanes = lanesForStage(stageId)
-              const isThemeStage = stageId === 's0'
-              const isDevicesStage = stageId === 's4'
-              const hasDevices = isDevicesStage && deviceLanes.length > 0
-              const stageTokenCount = tokens.reduce((n, g) => n + g.exports.length, 0)
-              const stageCompCount = lanes.reduce((n, l) => n + l.nodes.length, 0)
-              const stageDeviceCount = hasDevices ? deviceLanes.reduce((n, l) => n + l.nodes.length, 0) : 0
-              const summaryParts: string[] = []
-              if (stageTokenCount) summaryParts.push(`${stageTokenCount} tokens`)
-              if (stageCompCount) summaryParts.push(`${stageCompCount} components`)
-              if (stageDeviceCount) summaryParts.push(`${stageDeviceCount} mocks`)
-              if (isThemeStage) summaryParts.push('theme creator')
-
-              const isEmpty =
-                tokens.length === 0 &&
-                lanes.length === 0 &&
-                !hasDevices &&
-                !isThemeStage
-
-              return (
-                <section key={stageId} data-part="canvas-zone">
-                  <header data-part="canvas-zone-label">
-                    {meta.num} · {meta.label}
-                    <small>{summaryParts.join(' · ') || meta.intent}</small>
-                  </header>
-                  <div data-part="canvas-zone-row">
-                    {/* Stage 4 — Theme creator */}
-                    {isThemeStage && (
-                      <SectionFrame title="Theme creator" subtitle="theme" standard="token overrides → :root vars">
-                        <ThemeCreatorBody />
-                      </SectionFrame>
-                    )}
-
-                    {/* Foundations 토큰 */}
-                    {tokens.map(renderTokenGroup)}
-
-                    {/* 컴포넌트 레인 */}
-                    {lanes.map((lane) => renderLane(lane, selected, setSelected))}
-
-                    {/* Stage 4 — Devices (responsive shell separation) */}
-                    {hasDevices && deviceLanes.map(({ lane, nodes }) => (
-                      <SectionFrame
-                        key={lane}
-                        title="Mock frames"
-                        subtitle="devices"
-                        standard="responsive shell separation"
-                        count={nodes.length}
-                      >
-                        <div data-part="canvas-grid-comp">
-                          {nodes.map((node) => (
-                            <figure key={node.name} data-part="canvas-comp-card">
-                              <div data-stage {...(node.demo ? {} : { 'data-empty': true })}>
-                                {node.demo ? node.demo() : 'no demo'}
-                              </div>
-                              <figcaption>{node.name}</figcaption>
-                            </figure>
-                          ))}
-                        </div>
-                      </SectionFrame>
-                    ))}
-
-                    {/* 빈 stage — placeholder로 의도 표시 */}
-                    {isEmpty && (
-                      <SectionFrame title={meta.label} subtitle={stageId} standard={meta.intent}>
-                        <div data-part="canvas-stage-empty">
-                          이 단계의 자산은 아직 비어있다 — {meta.intent}
-                        </div>
-                      </SectionFrame>
-                    )}
-                  </div>
-                </section>
-              )
-            })}
+          <div data-part="canvas-layers">
+            <PaletteSection />
+            <SemanticSection />
+            <AtomsSection selected={selected} setSelected={setSelected} />
+            <ComposedSection selected={selected} setSelected={setSelected} />
           </div>
         </div>
       </ZoomPanCanvas>

@@ -19,13 +19,21 @@ const EXPORT_RE = /^export\s+(?:const|function)\s+([a-zA-Z_$][\w$]*)/
  * args is parsed as JSON array. Missing args = [].
  */
 const parseDemoTag = (raw: string): DemoSpec | undefined => {
-  const m = raw.match(/type=(\S+)\s+fn=(\S+)(?:\s+args=(\[.*\]))?/)
+  const m = raw.match(/type=(\S+)\s+fn=(\S+)/)
   if (!m) return undefined
+  const argsM = raw.match(/\bargs=(\[[^\]]*\])/)
+  const scaleM = raw.match(/\bscale=(\[[^\]]*\])/)
   let args: DemoSpec['args'] = []
-  if (m[3]) {
-    try { args = JSON.parse(m[3]) } catch { args = [] }
+  if (argsM) {
+    try { args = JSON.parse(argsM[1]) } catch { args = [] }
   }
-  return { type: m[1], fn: m[2], args, raw: raw.trim() }
+  let scale: DemoSpec['scale']
+  if (scaleM) {
+    try { scale = JSON.parse(scaleM[1]) } catch { /* ignore */ }
+  }
+  const spec: DemoSpec = { type: m[1], fn: m[2], args, raw: raw.trim() }
+  if (scale) spec.scale = scale
+  return spec
 }
 
 export const parseExports = (root: string): FoundationExport[] => {

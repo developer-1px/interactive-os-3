@@ -36,7 +36,7 @@ export default function dsAudit(): Plugin {
       return `export const audit = ${JSON.stringify(data)}\n`
     },
     handleHotUpdate({ file, server }) {
-      if (/src\/ds\/(fn|foundations|palette|style|ui)\//.test(file)) {
+      if (/packages\/ds\/src\/(tokens|ui|style|headless)\//.test(file)) {
         const mod = server.moduleGraph.getModuleById(RESOLVED)
         if (mod) server.moduleGraph.invalidateModule(mod)
       }

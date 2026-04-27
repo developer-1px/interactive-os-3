@@ -6,7 +6,7 @@ import { css, neutral, pad, radius, microLabel } from '@p/ds/tokens/foundations'
  *   canvas-app          크림 배경, fixed inset 0 (zoom-pan viewport)
  *   canvas-page         포스터 본문 (board 폭 결정)
  *   canvas-header       타이틀 + 메타
- *   canvas-board        2D wrap 보드 (섹션 타일링)
+ *   canvas-{palette,semantic,components}-page  L0/L1/L2 시퀀스 페이지
  *   canvas-section      흰 frame + soft shadow + 좌상단 검은 태그
  *   canvas-section-tag  검은 floating 태그 라벨 (Figma section 톤)
  *   canvas-subgroup     섹션 내부 file별 sub-그룹
@@ -55,48 +55,95 @@ export const canvasCss = css`
     font-size: 12px;
   }
 
-  /* 보드: zone(Theme · Foundations · Components · Devices)을 가로 lane으로 배치.
-     알터네이팅 axis BP — 외곽=가로(zone 컬럼), zone 안 sections=세로 stack, section 안=세로, cards=row-major. */
-  [data-part="canvas-board"] {
+  /* 3 레이어 가로 배치 — L0 Palette · L1 Semantic · L2 Components.
+     CSS Grid + max-content 트랙 — flex 의 손자→손주 max-content 전파 collapse 회피 (W3C css-grid-1 §6.6).
+     레이어 사이만 가로, 레이어 안 컨텐츠는 세로 stack. */
+  /* ZoomPanCanvas 의 absolute stage 안에서는 max-content/fit-content/intrinsic sizing 이
+     중첩 flex/grid 통해 collapse 되는 spec 모호 영역. → explicit width 로 자유도 차단. */
+  [data-part="canvas-layers"] {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: ${pad(16)};
-    padding-top: ${pad(4)};
+    gap: ${pad(12)};
   }
-
-  /* zone = whitespace 구분만. fill·border 없음. 큰 sans-serif 라벨로 단계 표현 */
-  [data-part="canvas-zone"] {
+  [data-part="canvas-palette-page"],
+  [data-part="canvas-semantic-page"],
+  [data-part="canvas-atoms-page"],
+  [data-part="canvas-composed-page"] {
     display: flex;
     flex-direction: column;
-    gap: ${pad(7)};
-    padding: 0;
-    flex: none;
-    width: max-content;
+    gap: ${pad(14)};
+    flex: 0 0 auto;
+    padding-right: ${pad(10)};
+    border-right: 1px dashed rgba(0,0,0,0.08);
   }
-  [data-part="canvas-zone-label"] {
-    font: 700 28px system-ui;
+  /* 각 레이어 폭 = 그 레이어의 가장 넓은 SectionFrame max-content + padding 여유. */
+  [data-part="canvas-palette-page"]   { width: 2200px; }
+  [data-part="canvas-semantic-page"]  { width: 1300px; }
+  [data-part="canvas-atoms-page"]     { width: 1400px; }
+  [data-part="canvas-composed-page"] {
+    width: 2400px;
+    border-right: none;
+    padding-right: 0;
+  }
+  /* Section 이 layer 폭 안에 머물도록 제한. */
+  [data-part="canvas-palette-page"] [data-part="canvas-section"],
+  [data-part="canvas-semantic-page"] [data-part="canvas-section"],
+  [data-part="canvas-atoms-page"] [data-part="canvas-section"],
+  [data-part="canvas-composed-page"] [data-part="canvas-section"] {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  [data-part="canvas-components-page"] {
+    border-right: none;
+    padding-right: 0;
+  }
+  [data-part="canvas-palette-groups"] {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(8)};
+  }
+  [data-part="canvas-page-label"] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: ${pad(2)};
+  }
+  [data-part="canvas-page-label"] > strong {
+    font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.08em;
+    color: ${neutral(6)};
+  }
+  [data-part="canvas-page-label"] > span {
+    font: 700 32px system-ui;
     letter-spacing: -0.02em;
     color: #1e1e1e;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 12px;
   }
-  [data-part="canvas-zone-label"] > small {
-    font: 500 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: 0;
-    color: #999;
+  [data-part="canvas-page-label"] > small {
+    font: 400 12px system-ui;
+    color: #888;
   }
-  /* zone 안 섹션 — 외곽이 row로 바뀌었으므로 zone 내부는 세로 stack */
-  [data-part="canvas-zone-row"] {
+  [data-part="canvas-palette-groups"] {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: ${pad(8)};
     align-items: flex-start;
-    gap: ${pad(10)};
-    padding-top: ${pad(2)};
   }
 
-  /* lane = frame 없음. 작은 ◇ + 회색 라벨 + 아이템들이 캔버스에 직접 떠 있음 */
+  /* canvas 안 ThemeCreator 의 preview 패널은 Palette 섹션 카드와 중복이므로 숨김.
+     ThemeCreator 가 자체 inline <style> 로 unlayered 룰을 박아놔서 @layer apps 보다 우선.
+     specificity + !important 로 덮어씀 — canvas 안에서만 적용 (다른 라우트는 그대로). */
+  [data-part="canvas-palette-page"] [data-part="theme-creator"] [aria-label="Theme preview"] {
+    display: none !important;
+  }
+  [data-part="canvas-palette-page"] [data-part="theme-creator"] header > h1 {
+    font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace !important;
+    color: ${neutral(6)} !important;
+    margin: 0 !important;
+  }
+
+  /* lane = frame 없음 (Figma section 톤). 섹션 위쪽에 가벼운 rail + 강화된 tag 로 구분. */
   [data-part="canvas-section"] {
     position: relative;
     width: max-content;
@@ -104,18 +151,28 @@ export const canvasCss = css`
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 0;
+    padding: ${pad(4)} 0 0;
     flex: none;
+  }
+  /* 섹션 위 dashed rail — 그 layer 의 섹션 사이 시각적 구분. 첫 섹션은 안 그림. */
+  [data-part="canvas-section"]:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top: 1px dashed rgba(0, 0, 0, 0.10);
   }
 
   [data-part="canvas-section-tag"] {
     position: static;
-    color: #999;
-    font: 500 13px Inter, system-ui;
-    letter-spacing: 0;
+    color: #1e1e1e;
+    font: 600 16px Inter, system-ui;
+    letter-spacing: -0.01em;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: transparent;
     padding: 0;
     margin-bottom: ${pad(4)};
@@ -123,8 +180,8 @@ export const canvasCss = css`
   }
   [data-part="canvas-section-tag"]::before {
     content: '';
-    width: 10px; height: 10px;
-    background: #b8b8b8;
+    width: 12px; height: 12px;
+    background: #1e1e1e;
     transform: rotate(45deg);
     border-radius: 1px;
     flex: none;
@@ -135,7 +192,7 @@ export const canvasCss = css`
   }
   [data-part="canvas-section-tag"] > [data-subtitle] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #c0c0c0;
+    color: #999;
     text-transform: none;
   }
   [data-part="canvas-section-standard"] {
@@ -278,14 +335,14 @@ export const canvasCss = css`
     color: ${neutral(6)};
   }
 
-  /* comp-card도 2행 subgrid (stage · caption) — 캡션이 카드들 사이에서 정렬 */
-  /* comp-card = frame 없는 stage + 아래 캡션 (Figma instance 스타일) */
+  /* comp-card = frame 없는 stage + 아래 캡션 (Figma instance 스타일).
+     이전: subgrid 로 캡션 정렬했으나 부모 행 높이가 min(stage 들) 로 고정돼 큰 demo 잘림.
+     변경: flex column → stage 가 자기 컨텐츠 만큼 자라고 컨텐츠 절대 잘리지 않음. 캡션 정렬은 포기. */
   [data-part="canvas-comp-card"] {
     margin: 0;
     min-width: 0;
-    display: grid;
-    grid-row: span 2;
-    grid-template-rows: subgrid;
+    display: flex;
+    flex-direction: column;
     border: none;
     background: transparent;
     overflow: visible;
@@ -293,11 +350,7 @@ export const canvasCss = css`
     border-radius: 6px;
     transition: outline-color 120ms ease;
     outline: 2px solid transparent;
-    /* 성능: 뷰포트 밖이면 layout/paint 스킵 (Chrome/Edge/Safari 17+).
-       contain-intrinsic-size로 placeholder 사이즈 제공 → 스크롤 점프·레이아웃 흔들림 방지 */
-    content-visibility: auto;
-    contain-intrinsic-size: 240px 320px;
-    contain: layout paint style;
+    contain: layout style;
     outline-offset: 2px;
   }
   [data-part="canvas-comp-card"]:hover {
@@ -315,6 +368,12 @@ export const canvasCss = css`
     display: grid; place-items: center;
     padding: ${pad(2)};
     background: transparent;
+    /* demo 안 position:fixed → 카드 기준 scope (viewport 비참조).
+       transform: translateZ(0) 로 containing block 생성. overflow:visible 로 내용 안 잘림. */
+    transform: translateZ(0);
+    isolation: isolate;
+    position: relative;
+    overflow: visible;
   }
   [data-part="canvas-comp-card"] > [data-stage][data-empty] {
     color: #c8c8c8;
