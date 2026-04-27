@@ -1,4 +1,4 @@
-import { css, neutral, pad, radius, microLabel, pair, bg, text, surface } from '@p/ds/tokens/foundations'
+import { css, neutral, pad, radius, microLabel, pair, bg, text, surface, border } from '@p/ds/tokens/foundations'
 
 /**
  * Canvas — 자산 SSOT viewer. data-part 네임스페이스로 셀렉터 캡슐화.
@@ -76,7 +76,7 @@ export const canvasCss = css`
     gap: ${pad(20)};
     flex: 0 0 auto;
     padding-right: ${pad(10)};
-    border-right: 1px dashed rgba(0,0,0,0.08);
+    border-right: 1px dashed ${border('subtle')};
   }
   [data-part="canvas-palette-page"][data-tone="neutral"]    { --tone: #1e1e1e; }
   [data-part="canvas-semantic-page"][data-tone="blue"]      { --tone: #2563eb; }
@@ -182,7 +182,7 @@ export const canvasCss = css`
     margin: 0;
     max-width: 56ch;
     padding-bottom: ${pad(4)};
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid ${border('subtle')};
   }
   [data-part="canvas-palette-groups"] {
     display: flex;
@@ -234,7 +234,7 @@ export const canvasCss = css`
     gap: 6px;
     margin-bottom: ${pad(5)};
     padding-bottom: ${pad(3)};
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid ${border('subtle')};
   }
 
   [data-part="canvas-section-tag"] {
@@ -299,7 +299,7 @@ export const canvasCss = css`
     color: ${neutral(7)};
     margin: 0 0 ${pad(3)};
     padding-bottom: ${pad(1.5)};
-    border-bottom: 1px dashed rgba(0,0,0,0.12);
+    border-bottom: 1px dashed ${border('subtle')};
   }
 
   /* cols = ceil(√N) (인라인 --cols로 주입) → 각 grid가 정사각 비율.
@@ -353,9 +353,8 @@ export const canvasCss = css`
     width: 100%;
     min-height: 80px;
     aspect-ratio: 1 / 1;
-    border: 1px solid rgba(0,0,0,0.16);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-    border-radius: 2px;
+    border: 1px solid ${border()};
+    border-radius: ${radius('sm')};
   }
   /* 흰색·투명 식별을 위한 체커보드 hint — Photoshop·Figma 디팩토.
      2×2 정사각 체커: 같은 45° gradient 2장을 half-cell offset 으로 겹쳐서
@@ -373,6 +372,8 @@ export const canvasCss = css`
     display: grid; place-items: center;
     padding: ${pad(2)};
     box-sizing: border-box;
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('sm')};
   }
   [data-part="canvas-token-card"] > [data-frame] {
     min-height: 80px;
@@ -383,7 +384,8 @@ export const canvasCss = css`
        위에서 측정되도록. neutral(N) 직접 사용 금지(palette tier 로 호출은 정본
        위배). pair() recipe 가 SSOT. */
     ${pair({ bg: bg(), fg: text('strong') })}
-    border: 1px solid rgba(0,0,0,0.06);
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('sm')};
     box-sizing: border-box;
   }
   [data-part="canvas-token-card"] > [data-name] {
@@ -410,11 +412,9 @@ export const canvasCss = css`
   [data-part="canvas-color-ramp"] > [data-tiles] {
     display: flex;
     flex-direction: row;
-    border-radius: 4px;
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('sm')};
     overflow: hidden;
-    box-shadow:
-      0 0 0 1px rgba(0,0,0,0.08),
-      0 1px 2px rgba(0,0,0,0.04);
     isolation: isolate;
   }
   [data-part="canvas-color-ramp"] [data-tile] {
@@ -492,7 +492,7 @@ export const canvasCss = css`
     block-size: 14px;
     background: var(--tone, ${neutral(8)});
     opacity: 0.85;
-    border-radius: 2px;
+    border-radius: ${radius('sm')};
     min-inline-size: 1px;
   }
   [data-part="canvas-space-stack"] [data-value] {
@@ -509,8 +509,8 @@ export const canvasCss = css`
     flex-direction: row;
     gap: ${pad(5)};
     padding: ${pad(5)} ${pad(4)};
-    background: ${neutral(2)};
-    border-radius: 8px;
+    background: ${surface('muted')};
+    border-radius: ${radius('md')};
     width: max-content;
   }
   [data-part="canvas-elev-tower"] > [data-tile] {
@@ -523,8 +523,8 @@ export const canvasCss = css`
   [data-part="canvas-elev-tower"] [data-surface] {
     inline-size: 80px;
     block-size: 80px;
-    background: #fff;
-    border-radius: 6px;
+    background: ${bg()};
+    border-radius: ${radius('sm')};
   }
   [data-part="canvas-elev-tower"] figcaption {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -535,7 +535,7 @@ export const canvasCss = css`
     display: flex; flex-direction: column;
     gap: 4px;
     padding: ${pad(2)} 0;
-    border-bottom: 1px dashed rgba(0,0,0,0.08);
+    border-bottom: 1px dashed ${border('subtle')};
   }
   [data-part="canvas-type-row"]:last-child { border-bottom: 0; }
   [data-part="canvas-type-row"] > [data-specimen] {
@@ -560,14 +560,14 @@ export const canvasCss = css`
     background: transparent;
     overflow: visible;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: ${radius('sm')};
     transition: outline-color 120ms ease;
     outline: 2px solid transparent;
     contain: layout style;
     outline-offset: 2px;
   }
   [data-part="canvas-comp-card"]:hover {
-    outline-color: rgba(0,0,0,0.08);
+    outline-color: ${border('subtle')};
   }
   [data-part="canvas-comp-card"][data-selected] {
     outline-color: #1e1e1e;
@@ -589,15 +589,15 @@ export const canvasCss = css`
     overflow: visible;
   }
   [data-part="canvas-comp-card"] > [data-stage][data-empty] {
-    color: #c8c8c8;
+    color: ${neutral(5)};
     font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace;
-    border: 1px dashed #dcdcdc;
-    border-radius: 4px;
+    border: 1px dashed ${border('subtle')};
+    border-radius: ${radius('sm')};
     min-height: 56px;
   }
   [data-part="canvas-comp-card"] > figcaption {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #999;
+    color: ${neutral(6)};
     padding: ${pad(2)} 0 0;
     border-top: none;
     text-align: center;
@@ -605,10 +605,10 @@ export const canvasCss = css`
 
   [data-part="canvas-stage-empty"] {
     font: 400 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #b8b8b8;
+    color: ${neutral(5)};
     padding: ${pad(4)};
-    border: 1px dashed #dcdcdc;
-    border-radius: 4px;
+    border: 1px dashed ${border('subtle')};
+    border-radius: ${radius('sm')};
     min-width: 320px;
   }
 
@@ -637,7 +637,7 @@ export const canvasCss = css`
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: ${neutral(6)};
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid ${border('subtle')};
     padding: ${pad(1)} 0;
   }
   [data-part="canvas-state-matrix"] > [data-row] > [data-cell="role"] {
