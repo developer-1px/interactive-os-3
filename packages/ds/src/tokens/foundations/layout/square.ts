@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 
 // 29.5px 높이 계약 + 콘텐츠 중앙 정렬 축.
 // clickable·control·사용자 정의 컨트롤 모두 이 한 함수로 정렬된다.

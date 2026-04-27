@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { dim } from '../../palette/color'
 
 /**

@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 
 /**
  * grouping(d) — 시각 그룹의 중첩 깊이. d=0 투명·d=1 hairline·d=2 ring+sharp+soft·d=3 깊음.

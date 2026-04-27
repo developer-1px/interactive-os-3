@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { accent, onAccent } from '../color/semantic'
 import { tint } from '../../palette/color'
 

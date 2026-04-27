@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { accent, bg } from '../color/semantic'
 import { dim, tint } from '../../palette/color'
 

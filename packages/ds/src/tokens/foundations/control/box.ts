@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { rowPadding } from '../../palette/space'
 import { radius } from '../shape/radius'
 import { hairlineWidth } from '../shape/hairline'

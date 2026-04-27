@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 
 /** @demo type=structural fn=listReset args=["ul"] */
 export const listReset = (sel: string) => css`

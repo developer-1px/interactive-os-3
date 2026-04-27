@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 
 /**
  * Tone pair — bg/fg를 쌍으로 묶어 contrast를 preset 정의 시점에 결정한다.

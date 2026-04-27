@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 
 /**
  * hairline thickness scalar — hairline(sel) mixin과 별개로 두께 값만 필요할 때.

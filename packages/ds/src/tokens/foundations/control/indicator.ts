@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { icon, type IconToken } from '../iconography/icon'
 
 type IndicatorOpts = {

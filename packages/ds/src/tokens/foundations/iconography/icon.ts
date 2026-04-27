@@ -1,4 +1,4 @@
-import { css } from '../primitives/css'
+import { css } from '../css'
 import { hairlineWidth } from '../shape/hairline'
 
 // lucide-static v1.9.0 — 사용 토큰에 매핑되는 파일만 명시 import 한다.
