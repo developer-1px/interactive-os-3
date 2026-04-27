@@ -1,4 +1,4 @@
-import { ProductCard } from '../ProductCard'
+import { ProductCard } from '../../../content/ProductCard'
 
 export default function ProductCardDemo() {
   return (

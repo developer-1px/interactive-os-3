@@ -45,6 +45,8 @@ export default defineConfig({
       { find: /^@p\/ds\/layout\/recipes\//, replacement: resolve(__dirname, 'packages/ds/src/ui/recipes/') + '/' },
       { find: /^@p\/ds\/parts$/, replacement: resolve(__dirname, 'packages/ds/src/ui/parts/index.ts') },
       { find: /^@p\/ds\/parts\//, replacement: resolve(__dirname, 'packages/ds/src/ui/parts/') + '/' },
+      { find: /^@p\/ds\/ui\/7-patterns\/(ContractCard|CourseCard|RoleCard|ProductCard|PostCard|FeedPost)$/, replacement: resolve(__dirname, 'packages/ds/src/content') + '/$1.tsx' },
+      { find: /^@p\/ds\/ui\/7-patterns\//, replacement: resolve(__dirname, 'packages/ds/src/ui/patterns/') + '/' },
       { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
       { find: /^@p\/fs$/, replacement: resolve(__dirname, 'packages/fs/src/index.ts') },
       { find: /^@p\/fs\//, replacement: resolve(__dirname, 'packages/fs/src/') + '/' },

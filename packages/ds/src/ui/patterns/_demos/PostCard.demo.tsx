@@ -1,4 +1,4 @@
-import { PostCard } from '../PostCard'
+import { PostCard } from '../../../content/PostCard'
 
 export default function PostCardDemo() {
   return (

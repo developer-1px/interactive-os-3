@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card } from '../parts/Card'
-import { Heading } from '../parts/Heading'
+import { Card } from '../ui/parts/Card'
+import { Heading } from '../ui/parts/Heading'
 
 /**
  * RoleCard — sortable resource list의 한 row. Card 슬롯에 어휘 바인딩.

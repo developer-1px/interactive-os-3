@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card } from '../parts/Card'
+import { Card } from '../ui/parts/Card'
 
 /**
  * ProductCard — 커머스 상품 카드. Card 슬롯에 어휘 바인딩.

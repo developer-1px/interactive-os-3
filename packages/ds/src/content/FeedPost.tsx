@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import { Card } from '../parts/Card'
+import { Card } from '../ui/parts/Card'
 
 /**
  * FeedPost — SNS/소셜 피드 포스트 카드. Card 슬롯에 어휘 바인딩.

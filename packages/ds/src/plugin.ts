@@ -1,4 +1,4 @@
-import type { UiEntry } from './ui/registry'
+import type { UiEntry } from './registry'
 import type { Middleware } from './core/middleware'
 import type { AnyRoute } from '@tanstack/react-router'
 

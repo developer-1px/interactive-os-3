@@ -18,7 +18,7 @@ import {
   type GridNode, type HeaderNode, type MainNode, type NavNode,
   type RowNode, type SectionNode, type SplitNode, type TextNode, type UiNode,
 } from '../headless/layout/nodes'
-import { resolveUi } from './registry'
+import { resolveUi } from '../registry'
 import { Split } from './8-layout/Split'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

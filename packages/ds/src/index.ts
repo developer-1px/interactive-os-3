@@ -159,19 +159,20 @@ export * from './ui/6-overlay/FloatingNav'
 export * from './ui/6-overlay/Disclosure'
 export * from './ui/6-overlay/Tooltip'
 export * from './ui/6-overlay/MenuPopover'
-// 7-patterns — 도메인 콘텐츠 / 데이터 시각화
-export * from './ui/7-patterns/StatCard'
-export * from './ui/7-patterns/CourseCard'
-export * from './ui/7-patterns/RoleCard'
-export * from './ui/7-patterns/Feed'
-export * from './ui/7-patterns/FeedArticle'
-export * from './ui/7-patterns/MessageBubble'
-export * from './ui/7-patterns/PostCard'
-export * from './ui/7-patterns/FeedPost'
-export * from './ui/7-patterns/ProductCard'
-export * from './ui/7-patterns/ContractCard'
-export * from './ui/7-patterns/BarChart'
-export * from './ui/7-patterns/Top10List'
+// patterns — 도메인 중립 (BarChart·Feed·MessageBubble·StatCard 등)
+export * from './ui/patterns/StatCard'
+export * from './ui/patterns/Feed'
+export * from './ui/patterns/FeedArticle'
+export * from './ui/patterns/MessageBubble'
+export * from './ui/patterns/BarChart'
+export * from './ui/patterns/Top10List'
+// content — 비즈니스 콘텐츠 (도메인 객체 props)
+export * from './content/CourseCard'
+export * from './content/RoleCard'
+export * from './content/PostCard'
+export * from './content/FeedPost'
+export * from './content/ProductCard'
+export * from './content/ContractCard'
 // 8-layout — 시각 골격
 export * from './ui/8-layout/Row'
 export * from './ui/8-layout/Column'
@@ -191,7 +192,7 @@ export {
 export {
   uiRegistry, resolveUi,
   type UiComponentName, type UiEntry, type Zone,
-} from './ui/registry'
+} from './registry'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
 export * from './ui/recipes'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-status/Badge와 이름 충돌하므로 alias.
