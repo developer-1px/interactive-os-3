@@ -1,4 +1,4 @@
-import { accent, css, font, mute, pad, text } from '../../foundations'
+import { accent, css, font, mute, pad, text } from '../../tokens/foundations'
 
 /**
  * Breadcrumb — <nav aria-label="Breadcrumb"><ol><li>...</li></ol></nav>.

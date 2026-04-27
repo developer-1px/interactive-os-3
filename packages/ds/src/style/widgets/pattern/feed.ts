@@ -1,4 +1,4 @@
-import { accent, css, focusRingWidth, pad, radius } from '../../../foundations'
+import { accent, css, focusRingWidth, pad, radius } from '../../../tokens/foundations'
 import { slotGap } from '../../seed/keyline'
 
 export const feedCss = css`

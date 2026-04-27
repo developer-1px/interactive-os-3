@@ -1,4 +1,4 @@
-import { css, dim, hairlineWidth, neutral, pad, radius } from '../../../foundations'
+import { css, dim, hairlineWidth, neutral, pad, radius } from '../../../tokens/foundations'
 
 /**
  * InboxRow slot inner styling — 메일 행. Card primitive 슬롯에 메일 어휘 매핑.

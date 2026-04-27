@@ -1,4 +1,4 @@
-import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../foundations'
+import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**

@@ -1,4 +1,4 @@
-import { css } from '../../foundations'
+import { css } from '../../tokens/foundations'
 
 // Modern hard reset (Josh Comeau + Andy Bell 참고, 최소판)
 export const reset = css`

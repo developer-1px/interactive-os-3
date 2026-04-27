@@ -1,4 +1,4 @@
-import { accent, container, control, css, dim, font, grouping, hairlineWidth, hierarchy, mix, neutral, pad, radius, square, status, tint } from '../../../foundations'
+import { accent, container, control, css, dim, font, grouping, hairlineWidth, hierarchy, mix, neutral, pad, radius, square, status, tint } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
 
 /**

@@ -1,4 +1,4 @@
-import { css, radius, grouping } from '../../../foundations'
+import { css, radius, grouping } from '../../../tokens/foundations'
 import { containerPad, slotGap } from '../../seed/keyline'
 
 export const tabPanelCss = css`

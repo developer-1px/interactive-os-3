@@ -7,6 +7,10 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./foundations": "./src/tokens/foundations/index.ts",
+    "./foundations/*": "./src/tokens/foundations/*",
+    "./palette": "./src/tokens/palette/index.ts",
+    "./palette/*": "./src/tokens/palette/*",
     "./*": "./src/*"
   }
 }

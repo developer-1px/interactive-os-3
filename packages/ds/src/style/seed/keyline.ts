@@ -1,4 +1,4 @@
-import { pad } from '../../foundations'
+import { pad } from '../../tokens/foundations'
 
 // 모든 수직 리스트 컨테이너가 공유하는 subgrid 축.
 // [lead]  = 체브론·아이콘·아바타 등 선두 슬롯 (auto)

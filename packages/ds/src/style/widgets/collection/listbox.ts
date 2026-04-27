@@ -1,4 +1,4 @@
-import { css, font, mute, pad } from '../../../foundations'
+import { css, font, mute, pad } from '../../../tokens/foundations'
 /**
  * Listbox — [icon][label ···][trailing] 보편 리스트 행.
  *

@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, status } from '../../../foundations'
+import { css, dim, pad, radius, status } from '../../../tokens/foundations'
 
 /**
  * ProductCard slot inner styling — 커머스 상품 카드.

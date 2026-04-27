@@ -1,4 +1,4 @@
-import { accent, css, dur, ease, pad } from '../../foundations'
+import { accent, css, dur, ease, pad } from '../../tokens/foundations'
 
 /**
  * Link — <a data-part="link"> + 외부 링크 표식 (data-external).

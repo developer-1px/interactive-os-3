@@ -1,4 +1,4 @@
-import { accent, css, dim, font, mix, on, pad, radius, status } from '../../../foundations'
+import { accent, css, dim, font, mix, on, pad, radius, status } from '../../../tokens/foundations'
 
 /**
  * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.

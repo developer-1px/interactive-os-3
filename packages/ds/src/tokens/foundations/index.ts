@@ -6,7 +6,7 @@
  *   - sys(semantic, 인자=named slot/role): 이 폴더
  *
  * 외부 호환을 위해 palette을 여기서 re-export 한다 (점진 마이그레이션).
- * **신규 코드는 raw token이 필요하면 `from 'ds/palette'`를 직접 import 권장.**
+ * **신규 코드는 raw token이 필요하면 `from 'ds/tokens/palette'`를 직접 import 권장.**
  */
 /**
  * palette re-export — 점진 마이그레이션. emStep / insetStep 같이 가장 raw 한 토큰만

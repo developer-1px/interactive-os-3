@@ -1,4 +1,4 @@
-import { css, dim, font, pad } from '../../../foundations'
+import { css, dim, font, pad } from '../../../tokens/foundations'
 
 /**
  * RoleCard slot inner styling — drag handle + icon + 본문/액션.

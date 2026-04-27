@@ -1,4 +1,4 @@
-import { css } from '../../foundations/primitives/css'
+import { css } from '../../tokens/foundations/primitives/css'
 import type {
   DsPreset,
   Layer,

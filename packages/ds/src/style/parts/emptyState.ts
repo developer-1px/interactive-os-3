@@ -1,4 +1,4 @@
-import { css, font, mute, pad } from '../../foundations'
+import { css, font, mute, pad } from '../../tokens/foundations'
 
 /**
  * EmptyState — icon + heading + description + optional CTA.

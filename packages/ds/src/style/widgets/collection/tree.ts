@@ -1,4 +1,4 @@
-import { css, indicator, microLabel, pad, rowPadding } from '../../../foundations'
+import { css, indicator, microLabel, pad, rowPadding } from '../../../tokens/foundations'
 import { levelShift } from '../../seed/keyline'
 
 export const tree = () => [

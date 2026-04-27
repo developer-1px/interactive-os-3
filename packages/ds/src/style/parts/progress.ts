@@ -1,4 +1,4 @@
-import { accent, css, dim, radius } from '../../foundations'
+import { accent, css, dim, radius } from '../../tokens/foundations'
 
 /**
  * Progress — linear, determinate. <progress data-part="progress">.

@@ -1,4 +1,4 @@
-import { border, css, dim, font, hairlineWidth, pad, radius } from '../../foundations'
+import { border, css, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
 
 /**
  * Code / Kbd — 인라인 시맨틱.

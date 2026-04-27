@@ -1,4 +1,4 @@
-import { css, font, mute, pad } from '../../foundations'
+import { css, font, mute, pad } from '../../tokens/foundations'
 
 /**
  * KeyValue — <dl><dt><dd> 라벨-값 쌍 리스트.

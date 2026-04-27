@@ -1,4 +1,4 @@
-import { css, mute } from '../../foundations'
+import { css, mute } from '../../tokens/foundations'
 
 /**
  * Timestamp — <time datetime>. mute로 약화. 색은 currentColor 기반 → surface flip 안전.

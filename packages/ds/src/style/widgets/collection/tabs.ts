@@ -1,4 +1,4 @@
-import { accent, border, css, dim, dur, ease, focusRingWidth, hairlineWidth, pad, radius, tint } from '../../../foundations'
+import { accent, border, css, dim, dur, ease, focusRingWidth, hairlineWidth, pad, radius, tint } from '../../../tokens/foundations'
 /**
  * Tabs — 보편적 탭 어포던스.
  *

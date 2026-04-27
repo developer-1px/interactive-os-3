@@ -1,4 +1,4 @@
-import { control, css, dim, neutral, font, pad, radius } from '../../../foundations'
+import { control, css, dim, neutral, font, pad, radius } from '../../../tokens/foundations'
 /**
  * Toolbar — 필터·액션을 담는 수평 컨테이너.
  *

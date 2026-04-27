@@ -1,4 +1,4 @@
-import { css, font, pad, radius, toneTint } from '../../foundations'
+import { css, font, pad, radius, toneTint } from '../../tokens/foundations'
 
 /**
  * Callout — info/success/warning/danger 메시지 박스.

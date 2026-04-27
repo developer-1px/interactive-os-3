@@ -1,4 +1,4 @@
-import { border, css, dim, font, hairlineWidth, pad, radius } from '../../foundations'
+import { border, css, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.

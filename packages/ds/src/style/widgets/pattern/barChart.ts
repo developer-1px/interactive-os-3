@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad, radius, status } from '../../../foundations'
+import { accent, css, dim, font, pad, radius, status } from '../../../tokens/foundations'
 export const barChart = () => css`
   [data-part="bar-chart"] {
     margin: 0;

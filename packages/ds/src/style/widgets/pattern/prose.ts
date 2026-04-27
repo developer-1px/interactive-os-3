@@ -2,7 +2,7 @@ import {
   accent, border, codeSurface, css, neutral, hairlineWidth, hierarchy,
   leading, pad, proximity, radius,
   text, toneTint, trackingScale, underlineOffset, weight,
-} from '../../../foundations'
+} from '../../../tokens/foundations'
 
 /**
  * Prose typography — article[data-flow="prose"] 안 시맨틱 태그.

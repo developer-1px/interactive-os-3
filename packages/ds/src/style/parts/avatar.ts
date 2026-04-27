@@ -1,5 +1,5 @@
-import { css, dim, font, radius } from '../../foundations'
-import { square } from '../../foundations/layout/square'
+import { css, dim, font, radius } from '../../tokens/foundations'
+import { square } from '../../tokens/foundations/layout/square'
 
 /**
  * Avatar — 사람·엔티티 식별 부품. <img> 또는 fallback initial <span>.

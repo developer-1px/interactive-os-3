@@ -1,4 +1,4 @@
-import { css, dim, radius } from '../../foundations'
+import { css, dim, radius } from '../../tokens/foundations'
 
 /**
  * Thumbnail — aspect-ratio 보존 미리보기 미디어.
