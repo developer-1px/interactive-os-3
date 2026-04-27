@@ -11,13 +11,13 @@ const ROOT = new URL('..', import.meta.url).pathname
 
 const SCAN = [
   'packages/ds/src/style/widgets',
-  'packages/ds/src/style/shell',
-  'packages/ds/src/style/states.ts',
+  'packages/ds/src/tokens/style/shell',
+  'packages/ds/src/tokens/style/states.ts',
 ]
 
 const SKIP_PATHS = [
   'packages/ds/src/fn',
-  'packages/ds/src/style/preset',
+  'packages/ds/src/tokens/style/preset',
 ]
 
 function* walk(p) {
