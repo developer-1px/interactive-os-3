@@ -132,13 +132,148 @@ export const feedCss = css`
     object-fit: cover;
   }
 
-  /* reaction toolbar — body keyline 좌측 정렬 + 클러스터 (Proximity).
-     풀폭 분포(space-between)는 시선 분산되어 금지. */
+  /* attachments — 본문 아래 다채로운 첨부 (image·link·file·code·commit) */
+  main[aria-label='피드'] [data-attachments] {
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(2)};
+    margin-block-start: ${pad(2)};
+  }
+  /* image attachment */
+  main[aria-label='피드'] [data-attachments] img[data-attach='image'] {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: ${radius('md')};
+    background: ${border('subtle')};
+  }
+  /* link attachment — 카드형 unfurl */
+  main[aria-label='피드'] [data-attachments] a[data-attach='link'] {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'icon title' 'icon host' 'icon desc';
+    column-gap: ${pad(2)};
+    row-gap: ${pad(0.5)};
+    padding: ${pad(2)} ${pad(3)};
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('md')};
+    text-decoration: none;
+    color: inherit;
+  }
+  main[aria-label='피드'] [data-attachments] a[data-attach='link']:hover {
+    background: ${surface('muted')};
+  }
+  main[aria-label='피드'] [data-attachments] a[data-attach='link'] [data-icon] {
+    grid-area: icon;
+    align-self: center;
+    color: ${text('subtle')};
+  }
+  main[aria-label='피드'] [data-attachments] a[data-attach='link'] strong {
+    grid-area: title;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  main[aria-label='피드'] [data-attachments] a[data-attach='link'] small {
+    grid-area: host;
+    color: ${text('subtle')};
+    font-size: 0.75rem;
+  }
+  main[aria-label='피드'] [data-attachments] a[data-attach='link'] p {
+    grid-area: desc;
+    margin: 0;
+    color: ${text('subtle')};
+    font-size: 0.8125rem;
+  }
+  /* file attachment — 작은 chip */
+  main[aria-label='피드'] [data-attachments] [data-attach='file'] {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(2)};
+    padding: ${pad(1.5)} ${pad(2.5)};
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('md')};
+    align-self: flex-start;
+    max-inline-size: 100%;
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='file'] [data-icon] {
+    color: ${text('subtle')};
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='file'] strong {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='file'] small {
+    color: ${text('subtle')};
+    font-size: 0.75rem;
+  }
+  /* code attachment — 인라인 snippet block */
+  main[aria-label='피드'] [data-attachments] pre[data-attach='code'] {
+    margin: 0;
+    padding: ${pad(2.5)} ${pad(3)};
+    background: ${surface('muted')};
+    border-radius: ${radius('md')};
+    overflow-x: auto;
+    font: 400 0.8125rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  main[aria-label='피드'] [data-attachments] pre[data-attach='code'] code {
+    background: transparent;
+    padding: 0;
+    color: ${text('default')};
+  }
+  /* commit attachment — git ref badge */
+  main[aria-label='피드'] [data-attachments] [data-attach='commit'] {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(2)};
+    padding: ${pad(1.5)} ${pad(2.5)};
+    border: 1px solid ${border('subtle')};
+    border-radius: ${radius('md')};
+    background: ${surface('muted')};
+    align-self: flex-start;
+    max-inline-size: 100%;
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='commit'] [data-icon] {
+    color: ${text('subtle')};
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='commit'] code {
+    font: 600 0.75rem ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: transparent;
+    padding: 0;
+    color: ${text('strong')};
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='commit'] strong {
+    font-size: 0.875rem;
+    font-weight: 500;
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  main[aria-label='피드'] [data-attachments] [data-attach='commit'] small {
+    color: ${text('subtle')};
+    font-size: 0.75rem;
+  }
+
+  /* reaction toolbar — 카드 본문 keyline 과 정확히 일치.
+     이전: padding-inline-start: calc(pad(5)+pad(1)) 로 body 보다 우측으로 밀려 있었음.
+     수정: 0 inset, 자연 정렬. button inline-size·padding 통일로 button 간 visual rhythm. */
   main[aria-label='피드'] [aria-label='반응'] {
-    padding-block-start: ${pad(1)};
-    padding-inline-start: calc(${pad(5)} + ${pad(1)});
-    gap: ${pad(3)};
+    padding: ${pad(1)} 0 0;
+    gap: ${pad(2)};
     justify-content: flex-start;
+    align-items: center;
+  }
+  main[aria-label='피드'] [aria-label='반응'] > button {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(1)};
+    padding: ${pad(1)} ${pad(2)};
+    min-inline-size: ${pad(11)};
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
   /* card 내부 control은 ghost — opacity 금지, 색만 약화 */
   main[aria-label='피드'] section button {

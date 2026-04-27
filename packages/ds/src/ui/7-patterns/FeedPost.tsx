@@ -6,9 +6,16 @@ import { Card } from '../../parts/Card'
  *
  * 슬롯 매핑:
  *   title   → header (avatar + name/handle/time + more 버튼)
- *   body    → 본문 텍스트 + 이미지(있을 때)
+ *   body    → 본문 텍스트 + 첨부(이미지·링크·파일·코드·커밋) 다채로운 컨텐츠
  *   footer  → reaction toolbar (좋아요/댓글/공유)
  */
+export type FeedAttachment =
+  | { kind: 'image'; src: string; alt?: string }
+  | { kind: 'link'; url: string; title: string; host: string; desc?: string }
+  | { kind: 'file'; name: string; size: string; ext: string }
+  | { kind: 'code'; lang: string; snippet: string }
+  | { kind: 'commit'; sha: string; subject: string; repo: string }
+
 type FeedPostProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   author: string
   handle: string
@@ -16,6 +23,7 @@ type FeedPostProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   body: string
   avatar: string
   image?: string
+  attachments?: readonly FeedAttachment[]
   likes: number
   comments: number
   shared: number
@@ -25,8 +33,47 @@ type FeedPostProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   onShare?: () => void
 }
 
+function Attachment({ a }: { a: FeedAttachment }) {
+  switch (a.kind) {
+    case 'image':
+      return <img src={a.src} alt={a.alt ?? ''} loading="lazy" data-attach="image" />
+    case 'link':
+      return (
+        <a href={a.url} target="_blank" rel="noreferrer" data-attach="link">
+          <span data-icon="link" aria-hidden="true" />
+          <strong>{a.title}</strong>
+          <small>{a.host}</small>
+          {a.desc && <p>{a.desc}</p>}
+        </a>
+      )
+    case 'file':
+      return (
+        <span data-attach="file">
+          <span data-icon="file" aria-hidden="true" />
+          <strong>{a.name}</strong>
+          <small>{a.size} · {a.ext.toUpperCase()}</small>
+        </span>
+      )
+    case 'code':
+      return (
+        <pre data-attach="code" data-lang={a.lang}>
+          <code>{a.snippet}</code>
+        </pre>
+      )
+    case 'commit':
+      return (
+        <span data-attach="commit">
+          <span data-icon="git-commit" aria-hidden="true" />
+          <code>{a.sha}</code>
+          <strong>{a.subject}</strong>
+          <small>{a.repo}</small>
+        </span>
+      )
+  }
+}
+
 export function FeedPost({
-  author, handle, time, body, avatar, image,
+  author, handle, time, body, avatar, image, attachments,
   likes, comments, shared, liked, onLike, onComment, onShare, ...rest
 }: FeedPostProps) {
   return (
@@ -47,7 +94,12 @@ export function FeedPost({
         body: (
           <>
             <p>{body}</p>
-            {image && <p><img src={image} alt="" loading="lazy" /></p>}
+            {image && <p><img src={image} alt="" loading="lazy" data-attach="image" /></p>}
+            {attachments && attachments.length > 0 && (
+              <div data-attachments>
+                {attachments.map((a, i) => <Attachment key={i} a={a} />)}
+              </div>
+            )}
           </>
         ),
         footer: (

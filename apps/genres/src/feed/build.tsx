@@ -1,5 +1,50 @@
 import { ROOT, type Event, type NormalizedData } from '@p/ds'
-import { NAV, POSTS, SUGGESTIONS, TRENDS } from './data'
+import { NAV, POSTS, SUGGESTIONS, TRENDS, type Attachment } from './data'
+
+function AttachmentItem({ a }: { a: Attachment }) {
+  switch (a.kind) {
+    case 'image':
+      return <img src={a.src} alt={a.alt ?? ''} loading="lazy" data-attach="image" />
+    case 'link':
+      return (
+        <a href={a.url} target="_blank" rel="noreferrer" data-attach="link">
+          <span data-icon="link" aria-hidden="true" />
+          <strong>{a.title}</strong>
+          <small>{a.host}</small>
+          {a.desc && <p>{a.desc}</p>}
+        </a>
+      )
+    case 'file':
+      return (
+        <span data-attach="file">
+          <span data-icon="file" aria-hidden="true" />
+          <strong>{a.name}</strong>
+          <small>{a.size} · {a.ext.toUpperCase()}</small>
+        </span>
+      )
+    case 'code':
+      return (
+        <pre data-attach="code" data-lang={a.lang}><code>{a.snippet}</code></pre>
+      )
+    case 'commit':
+      return (
+        <span data-attach="commit">
+          <span data-icon="git-commit" aria-hidden="true" />
+          <code>{a.sha}</code>
+          <strong>{a.subject}</strong>
+          <small>{a.repo}</small>
+        </span>
+      )
+  }
+}
+
+function Attachments({ list }: { list: readonly Attachment[] }) {
+  return (
+    <div data-attachments>
+      {list.map((a, i) => <AttachmentItem key={i} a={a} />)}
+    </div>
+  )
+}
 
 export interface FeedState {
   liked: Set<string>; toggle: (id: string) => void
@@ -16,7 +61,9 @@ export function buildFeedPage(s: FeedState): NormalizedData {
     [`who-${p.id}`,     { id: `who-${p.id}`,     data: { type: 'Text', variant: 'strong', content: <>{p.author} <small>{p.handle} · {p.time}</small></>, grow: true } }],
     [`more-${p.id}`,    { id: `more-${p.id}`,    data: { type: 'Ui', component: 'Button', props: { 'aria-label': '더보기', 'data-icon': 'more' }, content: '' } }],
     [`body-${p.id}`,    { id: `body-${p.id}`,    data: { type: 'Text', variant: 'body', content: p.body } }],
-    ...(p.image ? [[`img-${p.id}`, { id: `img-${p.id}`, data: { type: 'Text', variant: 'body', content: <img src={p.image} alt="" loading="lazy" /> } }] as const] : []),
+    ...(p.attachments && p.attachments.length > 0
+      ? [[`att-${p.id}`, { id: `att-${p.id}`, data: { type: 'Text', variant: 'body', content: <Attachments list={p.attachments} /> } }] as const]
+      : []),
     [`rxn-${p.id}`, { id: `rxn-${p.id}`, data: { type: 'Ui', component: 'Toolbar', props: { data: s.rxn[p.id]?.data, onEvent: s.rxn[p.id]?.onEvent, 'aria-label': '반응' } } }],
   ] as Array<readonly [string, unknown]>)
   return {
@@ -72,7 +119,12 @@ export function buildFeedPage(s: FeedState): NormalizedData {
       nav: ['navBrand', 'navList', 'composeBtn'],
       feed: ['feedHdr', ...POSTS.map((p) => `card-${p.id}`)],
       feedHdr: ['menuBtn', 'feedTitle', 'feedTabs'],
-      ...Object.fromEntries(POSTS.map((p) => [`card-${p.id}`, [`meta-${p.id}`, `body-${p.id}`, ...(p.image ? [`img-${p.id}`] : []), `rxn-${p.id}`]])),
+      ...Object.fromEntries(POSTS.map((p) => [`card-${p.id}`, [
+        `meta-${p.id}`,
+        `body-${p.id}`,
+        ...(p.attachments && p.attachments.length > 0 ? [`att-${p.id}`] : []),
+        `rxn-${p.id}`,
+      ]])),
       ...Object.fromEntries(POSTS.map((p) => [`meta-${p.id}`, [`avatar-${p.id}`, `who-${p.id}`, `more-${p.id}`]])),
       side: ['trendSec', 'sugSec'],
       trendSec: ['sHdr', ...TRENDS.map((_, i) => `tr${i}`)],
