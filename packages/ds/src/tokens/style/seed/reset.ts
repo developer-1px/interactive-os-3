@@ -1,4 +1,5 @@
-import { css, typography, weight } from '../../foundations'
+import { css, typography } from '../../foundations'
+import { weight } from '../../palette'
 
 // Modern hard reset (Josh Comeau + Andy Bell 참고, 최소판)
 export const reset = css`
