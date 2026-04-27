@@ -1,4 +1,4 @@
-import { accent, border, css, hairlineWidth, hierarchy, pad, radius, surface, text } from '../../../tokens/foundations'
+import { accent, border, css, hairlineWidth, hierarchy, pad, radius, slot, surface, text } from '../../../tokens/foundations'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.
@@ -14,8 +14,8 @@ import { accent, border, css, hairlineWidth, hierarchy, pad, radius, surface, te
  */
 export const authCard = () => css`
   article[data-part="card"][data-card="auth"] {
-    padding: ${pad(8)};                                /* 32px — 호흡 공간 */
-    gap: ${pad(6)};                                    /* 24px — 슬롯 간 큰 호흡 */
+    padding: ${slot.auth.pad};                                /* 32px — 호흡 공간 */
+    gap: ${slot.auth.slotGap};                                    /* 24px — 슬롯 간 큰 호흡 */
     border: ${hairlineWidth()} solid ${surface('muted')};
     border-radius: ${radius('lg')};
     background: var(--ds-bg);
@@ -48,7 +48,7 @@ export const authCard = () => css`
   }
   article[data-part="card"][data-card="auth"] > [data-slot="body"] > form {
     display: flex; flex-direction: column;
-    gap: ${pad(5)};                                    /* 20px — 폼 섹션 간 */
+    gap: ${slot.auth.formGap};                                    /* 20px — 폼 섹션 간 */
   }
   /* field 들끼리는 form gap(20px) 보다 살짝 좁게 묶음 */
   article[data-part="card"][data-card="auth"] > [data-slot="body"] > form > [role="group"][data-part="field"] + [role="group"][data-part="field"] {
@@ -62,7 +62,7 @@ export const authCard = () => css`
   }
   article[data-part="card"][data-card="auth"] [data-part="oauth-row"] > button {
     inline-size: 100%;
-    padding-block: ${pad(2.5)};
+    padding-block: ${slot.auth.buttonPadY};
     background: var(--ds-bg);
     border: ${hairlineWidth()} solid ${border('subtle')};
     border-radius: ${radius('md')};
@@ -108,7 +108,7 @@ export const authCard = () => css`
   /* submit 버튼 — full-width, 큰 hit area */
   article[data-part="card"][data-card="auth"] form > button[type="submit"] {
     inline-size: 100%;
-    padding-block: ${pad(2.5)};
+    padding-block: ${slot.auth.buttonPadY};
     background: ${accent()};
     color: var(--ds-accent-on);
     border: 0;
@@ -139,7 +139,7 @@ export const authCard = () => css`
   /* OTP 6자리 — 큰 정사각 input row */
   article[data-part="card"][data-card="auth"] [data-part="otp-row"] {
     display: grid; grid-template-columns: repeat(6, 1fr);
-    gap: ${pad(1.5)};
+    gap: ${slot.auth.otpGap};
   }
   article[data-part="card"][data-card="auth"] [data-part="otp-row"] > input {
     aspect-ratio: 1;

@@ -1,4 +1,4 @@
-import { css, hierarchy, microLabel, pad, radius, surface, text } from '../../../tokens/foundations'
+import { css, hierarchy, microLabel, pad, radius, slot, surface, text } from '../../../tokens/foundations'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.
@@ -32,7 +32,7 @@ export const sidebarCss = () => css`
     scrollbar-width: thin;
   }
   nav[data-part="sidebar"] > header {
-    padding: ${pad(1.5)} ${pad(2)};
+    padding: ${slot.sidebar.itemPadY} ${slot.sidebar.headerPad};
     display: grid; gap: ${pad(0.25)};
   }
   nav[data-part="sidebar"] > header > strong {
@@ -63,7 +63,7 @@ export const sidebarCss = () => css`
   }
   nav[data-part="sidebar"] [role="option"] {
     border-radius: ${radius('md')};
-    padding: ${pad(1.25)} ${pad(2)};
+    padding: ${slot.sidebar.itemPadY} ${slot.sidebar.itemPadX};
   }
   nav[data-part="sidebar"] > footer {
     margin-top: auto;
@@ -71,7 +71,7 @@ export const sidebarCss = () => css`
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: ${pad(2)};
-    padding: ${pad(2)};
+    padding: ${slot.sidebar.pad};
     border-radius: ${radius('md')};
     background: ${surface('muted')};
     font-size: var(--ds-text-sm);

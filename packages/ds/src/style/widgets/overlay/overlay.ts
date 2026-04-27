@@ -1,9 +1,9 @@
-import { bg, border, css, dur, ease, elev, font, grouping, hairlineWidth, pad, radius, rowPadding, scrim } from '../../../tokens/foundations'
+import { bg, border, css, dur, ease, elev, font, grouping, hairlineWidth, pad, radius, rowPadding, scrim, slot } from '../../../tokens/foundations'
 export const dialogCss = css`
   :where(dialog) {
     ${grouping(3)}
     color: inherit;
-    padding: ${pad(4)};
+    padding: ${slot.dialog.pad};
     border-radius: ${radius('lg')};
     max-width: min(90vw, 480px);
     min-width: 280px;
@@ -55,7 +55,7 @@ export const tooltipCss = css`
     background-color: ${bg()};
     color: inherit;
     margin: 0;
-    padding: ${pad(3)};
+    padding: ${slot.popover.pad};
     border-radius: ${radius('lg')};
     border: ${hairlineWidth()} solid ${border()};
     /* preset elev-3 — popover 분리감 (ring + 중간 드롭 + 큰 드롭) */
@@ -74,7 +74,7 @@ export const tooltipCss = css`
     margin: 0;
     max-width: none;
     border-radius: 0;
-    padding: ${pad(3)};
+    padding: ${slot.sheet.pad};
     transition: translate ${dur('base')} ${ease('out')};
   }
   :where(dialog[data-ds-sheet="end"]) {

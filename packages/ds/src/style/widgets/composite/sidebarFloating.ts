@@ -1,4 +1,4 @@
-import { bg, border, css, elev, hairlineWidth, hierarchy, pad, radius, scrim } from '../../../tokens/foundations'
+import { bg, border, css, elev, hairlineWidth, hierarchy, pad, radius, scrim, size, slot } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -18,11 +18,11 @@ import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 export const sidebarFloatingCss = () => css`
   [data-ds-floating-nav-trigger] {
     position: fixed;
-    inset-block-end: ${pad(4)};
-    inset-inline-start: ${pad(4)};
+    inset-block-end: ${slot.fab.inset};
+    inset-inline-start: ${slot.fab.inset};
     z-index: 40;
-    inline-size: ${pad(14)};
-    block-size: ${pad(14)};
+    inline-size: ${size.fab};
+    block-size: ${size.fab};
     border-radius: ${radius('full')};
     border: ${hairlineWidth()} solid ${border()};
     background: ${bg()};
@@ -42,8 +42,8 @@ export const sidebarFloatingCss = () => css`
   /* 뒤로 버튼 — popoverTargetAction="hide"로 popover 닫음. backdrop 탭이 모바일에서
      직관적이지 않으므로 명시적 affordance 제공. */
   [data-ds-floating-nav-back] {
-    inline-size: ${pad(8)};
-    block-size: ${pad(8)};
+    inline-size: ${size.avatar};
+    block-size: ${size.avatar};
     border: 0;
     background: transparent;
     border-radius: ${radius('md')};
@@ -112,7 +112,7 @@ export const sidebarFloatingCss = () => css`
     }
     /* FAB(좌하단 56px + pad(4) inset) 위로 본문이 가리지 않도록 main 끝에 여백 추가 */
     main:not([data-no-mobile-pad]) {
-      padding-block-end: calc(${pad(14)} + ${pad(4)} + ${hierarchy.surface});
+      padding-block-end: calc(${size.fab} + ${slot.fab.inset} + ${hierarchy.surface});
     }
     /* article[prose]는 이미 자체 padding-inline 가지고 있어 main의 inline padding과
        이중으로 겹치지 않게 article 안의 inline은 0으로 리셋 */
