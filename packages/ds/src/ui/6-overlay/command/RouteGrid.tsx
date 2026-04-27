@@ -1,18 +1,22 @@
 import { useMemo } from 'react'
 import type { PaletteEntry } from './usePaletteEntries'
+import { ROOT, type NormalizedData, type Event } from '../../../headless/types'
 import { Card } from '../../parts/Card'
 import { Heading } from '../../parts/Heading'
-import { Link } from '../../0-primitives/Link'
+import { Listbox } from '../../4-selection/Listbox'
 
 /**
  * RouteGrid — start.me 스타일 masonry 카드 그리드.
  *
  * 평탄 PaletteEntry[] 를 첫 path 세그먼트로 그룹핑하여 Card 묶음으로 렌더한다.
- * Miller column 의 계층 navigation 을 버리고 모든 라우트를 한 화면에 펼친다.
  *
- * - data-driven: entries · onSelect prop 만. children/JSX ❌
+ * 어휘: ds parts (Card·Heading) + ui/4-selection (Listbox). raw ul/li ❌.
+ * 각 Card body slot 에 그룹 NormalizedData 를 넣은 Listbox.
+ * activate 이벤트 → onSelect 호출.
+ *
+ * - data-driven: entries · onSelect prop. children/JSX ❌
  * - layout: CSS column-count masonry (RouteGrid.style.ts)
- * - 키보드: 자연 Tab/Shift+Tab 순회 + RouterLink 의 Enter
+ * - 키보드: Listbox 가 vertical roving + typeahead 자체 처리 (각 카드 단위)
  */
 type Group = { key: string; label: string; entries: PaletteEntry[] }
 
@@ -34,16 +38,33 @@ function groupEntries(entries: PaletteEntry[]): Group[] {
   return [...map.values()].sort((a, b) => a.label.localeCompare(b.label))
 }
 
+function toGroupData(entries: PaletteEntry[]): NormalizedData {
+  const ents: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
+  for (const e of entries) {
+    ents[e.id] = { id: e.id, data: { label: e.label } }
+  }
+  return { entities: ents, relationships: { [ROOT]: entries.map((e) => e.id) } }
+}
+
 export interface RouteGridProps {
   entries: PaletteEntry[]
-  /** 링크 클릭 시 호출. RouteGrid 가 RouterLink 로 navigate 한 뒤에 host(CommandPalette)
-   *  가 dialog close 등 후속 처리하기 위함. */
   onSelect?: (entry: PaletteEntry) => void
   'aria-label'?: string
 }
 
 export function RouteGrid({ entries, onSelect, ...rest }: RouteGridProps) {
   const groups = useMemo(() => groupEntries(entries), [entries])
+  const byId = useMemo(() => {
+    const m = new Map<string, PaletteEntry>()
+    for (const e of entries) m.set(e.id, e)
+    return m
+  }, [entries])
+
+  const onListEvent = (ev: Event) => {
+    if (ev.type !== 'activate' || !ev.id) return
+    const entry = byId.get(ev.id)
+    if (entry) onSelect?.(entry)
+  }
 
   return (
     <div data-part="route-grid" {...rest}>
@@ -53,15 +74,7 @@ export function RouteGrid({ entries, onSelect, ...rest }: RouteGridProps) {
           data-part="route-card"
           slots={{
             title: <Heading level="h3">{g.label}</Heading>,
-            body: (
-              <ul data-part="route-list">
-                {g.entries.map((e) => (
-                  <li key={e.id} onClick={() => onSelect?.(e)}>
-                    <Link to={e.to} params={e.params} label={e.label} />
-                  </li>
-                ))}
-              </ul>
-            ),
+            body: <Listbox data={toGroupData(g.entries)} onEvent={onListEvent} aria-label={g.label} />,
           }}
         />
       ))}
