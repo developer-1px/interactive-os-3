@@ -1,22 +1,23 @@
-import { reset } from './style/seed/reset'
-import { shell } from './style/shell'
-import { states } from './style/states'
-import { seeds } from './style/seed/tokens'
-import { breakpointsCss } from './style/seed/breakpoints'
-import { widgets } from './style/widgets'
-import { parts } from './style/parts'
-import { proseCss } from './style/widgets/pattern/prose'
-import { contractCard } from './style/widgets/pattern/contractCard'
-import { postCard } from './style/widgets/pattern/postCard'
-import { messageBubble } from './style/widgets/pattern/messageBubble'
-import { statCard } from './style/widgets/pattern/statCard'
-import { productCard } from './style/widgets/pattern/productCard'
-import { courseCard } from './style/widgets/pattern/courseCard'
-import { roleCard } from './style/widgets/pattern/roleCard'
-import { feedPost } from './style/widgets/pattern/feedPost'
+import { reset } from './tokens/style/seed/reset'
+import { shell } from './tokens/style/shell'
+import { states } from './tokens/style/states'
+import { seeds } from './tokens/style/seed/tokens'
+import { breakpointsCss } from './tokens/style/seed/breakpoints'
+import { widgets } from './widgets.styles'
+import { partsStyles } from './ui/parts/styles'
+import { phone } from './devices/Phone.style'
+import { proseCss } from './ui/0-primitives/Prose.style'
+import { contractCard } from './content/ContractCard.style'
+import { postCard } from './content/PostCard.style'
+import { messageBubble } from './ui/patterns/MessageBubble.style'
+import { statCard } from './ui/patterns/StatCard.style'
+import { productCard } from './content/ProductCard.style'
+import { courseCard } from './content/CourseCard.style'
+import { roleCard } from './content/RoleCard.style'
+import { feedPost } from './content/FeedPost.style'
 import { inboxRow } from './style/widgets/pattern/inboxRow'
 import { authCard } from './style/widgets/pattern/authCard'
-import { iconVars, iconIndicator } from './foundations/iconography/icon'
+import { iconVars, iconIndicator } from './tokens/foundations/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
 /**
@@ -49,7 +50,8 @@ const segments: ReadonlyArray<readonly [string, string]> = [
   ['states', wrap('states', states())],
   ['fn/iconIndicator', wrap('states', iconIndicator())],
   ['widgets', wrap('widgets', widgets())],
-  ['parts', wrap('parts', parts())],
+  ['parts', wrap('parts', partsStyles())],
+  ['parts/phone', wrap('parts', phone())],
   ['content/prose', wrap('content', proseCss())],
   /* Card 변형 slot CSS 는 parts/Card primitive 를 override 해야 하므로 content layer
      (parts 보다 후순위). 모든 data-card="*" 패턴이 여기. (이전엔 contractCard 만
@@ -75,22 +77,22 @@ export const dsCss = layerDecl + segments.map(([, css]) => css).join('\n')
 // 부팅 시 selector 중복 차단 — cascade race 는 영구 부채. 새 중복은 throw.
 assertUniqueSelectors(segments)
 
-export * from './core/types'
+export * from './headless/types'
 export * from './data'
-export { reduce } from './core/state/reduce'
-export { fromTree, fromList, pathAncestors } from './core/state/fromTree'
-export { useControlState } from './core/hooks/useControlState'
-export { useEventBridge } from './core/hooks/useEventBridge'
-export { defineFlow, useFlow, type FlowDef } from './core/flow'
+export { reduce } from './headless/state/reduce'
+export { fromTree, fromList, pathAncestors } from './headless/state/fromTree'
+export { useControlState } from './headless/hooks/useControlState'
+export { useEventBridge } from './headless/hooks/useEventBridge'
+export { defineFlow, useFlow, type FlowDef } from './headless/flow'
 export {
   defineFeature, useFeature,
   type FeatureSpec, type CommandBase,
   type Effect, type QuerySpec, type QueryResult,
   invalidateQuery,
-} from './core/feature'
-export { useRoving } from './core/hooks/useRoving'
-export { useRovingDOM } from './core/hooks/useRovingDOM'
-export { parentOf } from './core/axes'
+} from './headless/feature'
+export { useRoving } from './headless/hooks/useRoving'
+export { useRovingDOM } from './headless/hooks/useRovingDOM'
+export { parentOf } from './headless/axes'
 export {
   navigateOnActivate,
   activateOnNavigate,
@@ -98,12 +100,12 @@ export {
   composeGestures,
   activateProps,
   type GestureHelper,
-} from './core/gesture'
+} from './headless/gesture'
 export {
   defineMiddleware,
   type Middleware, type Phase,
   type PreDispatchCtx, type PostDispatchCtx, type ResourceCtx,
-} from './core/middleware'
+} from './headless/middleware'
 export { definePlugin, type PluginManifest } from './plugin'
 // 1-status — 시각 토큰. 다른 컴포넌트의 슬롯으로 들어감.
 export * from './ui/1-status/Badge'
@@ -159,52 +161,57 @@ export * from './ui/6-overlay/FloatingNav'
 export * from './ui/6-overlay/Disclosure'
 export * from './ui/6-overlay/Tooltip'
 export * from './ui/6-overlay/MenuPopover'
-// 7-patterns — 도메인 콘텐츠 / 데이터 시각화
-export * from './ui/7-patterns/StatCard'
-export * from './ui/7-patterns/CourseCard'
-export * from './ui/7-patterns/RoleCard'
-export * from './ui/7-patterns/Feed'
-export * from './ui/7-patterns/FeedArticle'
-export * from './ui/7-patterns/MessageBubble'
-export * from './ui/7-patterns/PostCard'
-export * from './ui/7-patterns/FeedPost'
-export * from './ui/7-patterns/ProductCard'
-export * from './ui/7-patterns/ContractCard'
-export * from './ui/7-patterns/BarChart'
-export * from './ui/7-patterns/Top10List'
+// patterns — 도메인 중립 (BarChart·Feed·MessageBubble·StatCard 등)
+export * from './ui/patterns/StatCard'
+export * from './ui/patterns/Feed'
+export * from './ui/patterns/FeedArticle'
+export * from './ui/patterns/MessageBubble'
+export * from './ui/patterns/BarChart'
+export * from './ui/patterns/Top10List'
+// content — 비즈니스 콘텐츠 (도메인 객체 props)
+export * from './content/CourseCard'
+export * from './content/RoleCard'
+export * from './content/PostCard'
+export * from './content/FeedPost'
+export * from './content/ProductCard'
+export * from './content/ContractCard'
 // 8-layout — 시각 골격
 export * from './ui/8-layout/Row'
 export * from './ui/8-layout/Column'
 export * from './ui/8-layout/Grid'
 export * from './ui/8-layout/Carousel'
+export { Renderer } from './ui/Renderer'
 export {
-  Renderer, definePage, defineWidget, defineLayout, merge,
-  uiRegistry, resolveUi, placementAttrs, validatePage, validateFragment, node,
-  type UiComponentName, type UiEntry, type Zone,
+  definePage, defineWidget, defineLayout, merge,
+  placementAttrs, validatePage, validateFragment, node,
   type AnyNode, type NodeType,
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,
   type GridNode as LayoutGridNode, type AsideNode, type SectionNode,
   type HeaderNode, type FooterNode, type UiNode, type TextNode,
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
-} from './layout'
+} from './headless/layout'
+export {
+  uiRegistry, resolveUi,
+  type UiComponentName, type UiEntry, type Zone,
+} from './registry'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
-export * from './layout/recipes'
+export * from './ui/recipes'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-status/Badge와 이름 충돌하므로 alias.
-export * from './parts/Avatar'
-export * from './parts/Tag'
-export * from './parts/Thumbnail'
-export * from './parts/Timestamp'
-export * from './parts/Skeleton'
-export * from './parts/EmptyState'
-export * from './parts/Callout'
-export * from './parts/KeyValue'
-export { Badge as CountBadge, type BadgeTone as CountBadgeTone } from './parts/Badge'
-export * from './parts/Heading'
-export * from './parts/Link'
-export * from './parts/Code'
-export { Progress as ProgressBar } from './parts/Progress'
-export * from './parts/Breadcrumb'
-export * from './parts/Card'
-export * from './parts/Table'
+export * from './ui/parts/Avatar'
+export * from './ui/parts/Tag'
+export * from './ui/parts/Thumbnail'
+export * from './ui/parts/Timestamp'
+export * from './ui/parts/Skeleton'
+export * from './ui/parts/EmptyState'
+export * from './ui/parts/Callout'
+export * from './ui/parts/KeyValue'
+export { Badge as CountBadge, type BadgeTone as CountBadgeTone } from './ui/parts/Badge'
+export * from './ui/parts/Heading'
+export * from './ui/parts/Link'
+export * from './ui/parts/Code'
+export { Progress as ProgressBar } from './ui/parts/Progress'
+export * from './ui/parts/Breadcrumb'
+export * from './ui/parts/Card'
+export * from './ui/parts/Table'
 export * from './devices/Phone'

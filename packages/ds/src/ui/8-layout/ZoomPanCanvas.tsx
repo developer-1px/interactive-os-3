@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from 'react'
-import type { ControlProps } from '../../core/types'
-import { useZoomPanGesture } from '../../core/hooks/useZoomPanGesture'
+import type { ControlProps } from '../../headless/types'
+import { useZoomPanGesture } from '../../headless/hooks/useZoomPanGesture'
 
 /**
  * ZoomPanCanvas — 선언적·직렬화 가능한 zoom/pan 뷰포트.

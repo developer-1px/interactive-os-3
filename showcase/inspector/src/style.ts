@@ -1,4 +1,4 @@
-import { css, pad, microLabel, status, grouping } from '@p/ds/foundations'
+import { css, pad, microLabel, status, grouping } from '@p/ds/tokens/foundations'
 
 // Inspector + DS Matrix — 검사 패널 셸 + 단일 셀 매트릭스 데모
 export const inspectorCss = css`

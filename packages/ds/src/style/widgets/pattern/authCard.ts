@@ -1,4 +1,4 @@
-import { accent, css, dim, hairlineWidth, hierarchy, neutral, pad, radius } from '../../../foundations'
+import { accent, css, dim, hairlineWidth, hierarchy, neutral, pad, radius } from '../../../tokens/foundations'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.

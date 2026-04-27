@@ -12,7 +12,7 @@ import type { Plugin } from 'vite'
  *       체크리스트로 점수화해 Catalog 페이지에 공급한다.
  */
 
-// Tier = 폴더 경로 (단일 진실 원천, packages/ds/src/core/INVARIANTS.md 참조).
+// Tier = 폴더 경로 (단일 진실 원천, packages/ds/src/headless/INVARIANTS.md 참조).
 // 폴더는 `N-<kind>` 포맷 (예: 1-indicator, 8-layout) — 숫자가 의존성 위계를 명시.
 // drift = ui/ 직속 또는 미분류 폴더 — lint 또는 tier 폴더로 이동 대상.
 export type Kind =

@@ -1,4 +1,4 @@
-import { css, pad, dim, radius, tint, hierarchy } from '../../../foundations'
+import { css, pad, dim, radius, tint, hierarchy } from '../../../tokens/foundations'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)

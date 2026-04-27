@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import type { Tone } from '../../core/types'
+import type { Tone } from '../../headless/types'
 
 export type BadgeTone = Tone
 

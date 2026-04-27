@@ -4,10 +4,10 @@ import {
   getChildren, getLabel, isDisabled,
   type CollectionProps,
   type Event,
-} from '../../core/types'
-import { activate, composeAxes, navigate } from '../../core/axes'
-import { activateOnNavigate } from '../../core/gesture'
-import { useRoving } from '../../core/hooks/useRoving'
+} from '../../headless/types'
+import { activate, composeAxes, navigate } from '../../headless/axes'
+import { activateOnNavigate } from '../../headless/gesture'
+import { useRoving } from '../../headless/hooks/useRoving'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'

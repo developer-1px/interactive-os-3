@@ -1,5 +1,5 @@
-import { css, radius, grouping } from '../../../foundations'
-import { containerPad, slotGap } from '../../seed/keyline'
+import { css, radius, grouping } from '../../../tokens/foundations'
+import { containerPad, slotGap } from '../../../tokens/style/seed/keyline'
 
 export const tabPanelCss = css`
   :where([role="tabpanel"]) { padding: ${containerPad}; }

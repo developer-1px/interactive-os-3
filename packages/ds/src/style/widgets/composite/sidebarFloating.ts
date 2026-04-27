@@ -1,5 +1,5 @@
-import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../foundations'
-import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
+import { border, css, hairlineWidth, neutral, pad, radius, hierarchy, tint } from '../../../tokens/foundations'
+import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
  * sidebarFloating — mobile surface of `sidebar/admin` intent.

@@ -1,4 +1,4 @@
-import { css, dim, neutral, hierarchy, microLabel, pad, radius } from '../../../foundations'
+import { css, dim, neutral, hierarchy, microLabel, pad, radius } from '../../../tokens/foundations'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.

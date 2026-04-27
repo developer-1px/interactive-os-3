@@ -3,9 +3,9 @@ import {
   ROOT,
   getChildren, getExpanded, getLabel, isDisabled,
   type CollectionProps, type Event,
-} from '../../core/types'
-import { activate, composeAxes, navigate } from '../../core/axes'
-import { useRoving } from '../../core/hooks/useRoving'
+} from '../../headless/types'
+import { activate, composeAxes, navigate } from '../../headless/axes'
+import { useRoving } from '../../headless/hooks/useRoving'
 import { Checkbox } from '../3-input/Checkbox'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {

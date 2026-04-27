@@ -30,7 +30,7 @@ const parseDemoTag = (raw: string): DemoSpec | undefined => {
 
 export const parseExports = (root: string): FoundationExport[] => {
   // ref(palette/) + sys(foundations/) 두 레이어 모두 카탈로그.
-  const dirs = ['packages/ds/src/palette', 'packages/ds/src/foundations'].map((d) => join(root, d))
+  const dirs = ['packages/ds/src/tokens/palette', 'packages/ds/src/tokens/foundations'].map((d) => join(root, d))
   const files = dirs
     .filter((d) => { try { return statSync(d).isDirectory() } catch { return false } })
     .flatMap((d) => walk(d))

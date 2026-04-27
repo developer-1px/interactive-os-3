@@ -1,7 +1,7 @@
 import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type ReactNode } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type NormalizedData } from '../../core/types'
-import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../core/axes'
-import { useRoving } from '../../core/hooks/useRoving'
+import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type NormalizedData } from '../../headless/types'
+import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '../../headless/axes'
+import { useRoving } from '../../headless/hooks/useRoving'
 
 type TreeProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>
 
