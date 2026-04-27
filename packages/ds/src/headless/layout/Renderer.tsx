@@ -10,7 +10,7 @@
  * `content`/`props.children`.
  */
 import { createContext, createElement, useContext, type ComponentType, type CSSProperties, type ReactNode } from 'react'
-import { ROOT, type NormalizedData } from '../headless/types'
+import { ROOT, type NormalizedData } from '../types'
 import { useDebugTree } from './useDebugTree'
 import {
   placementAttrs,

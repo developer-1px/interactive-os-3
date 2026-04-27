@@ -9,7 +9,7 @@
  * widget 영역, Ui leaf 는 component 영역. Main/Header/Footer 는 page-level
  * 구조 landmark 로 허용.
  */
-import type { NormalizedData } from '../headless/types'
+import type { NormalizedData } from '../types'
 import { validateFragment } from './nodes'
 
 export type LayoutBuilder<P = void> = (props: P) => NormalizedData

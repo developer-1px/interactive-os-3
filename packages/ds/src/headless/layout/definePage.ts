@@ -6,7 +6,7 @@
  * no new type. Re-using `NormalizedData` keeps the layout on the same rails
  * as ControlProps roles (`data` / `onEvent`).
  */
-import type { NormalizedData } from '../headless/types'
+import type { NormalizedData } from '../types'
 import { validatePage } from './nodes'
 
 export function definePage(page: NormalizedData): NormalizedData {

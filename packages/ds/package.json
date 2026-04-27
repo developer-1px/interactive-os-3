@@ -18,6 +18,9 @@
     "./style/shell": "./src/tokens/style/shell/index.ts",
     "./style/states": "./src/tokens/style/states/index.ts",
     "./core/*": "./src/headless/*",
+    "./layout": "./src/headless/layout/index.ts",
+    "./layout/recipes": "./src/ui/recipes/index.ts",
+    "./layout/recipes/*": "./src/ui/recipes/*",
     "./*": "./src/*"
   }
 }

@@ -3,7 +3,6 @@ export { definePage } from './definePage'
 export { defineWidget, type WidgetBuilder } from './defineWidget'
 export { defineLayout, type LayoutBuilder } from './defineLayout'
 export { merge } from './merge'
-export { uiRegistry, resolveUi, type UiComponentName, type UiEntry, type Zone } from './registry'
 export {
   placementAttrs, validatePage, validateFragment, node,
   type AnyNode, type NodeType,

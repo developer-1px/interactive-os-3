@@ -179,17 +179,20 @@ export * from './ui/8-layout/Grid'
 export * from './ui/8-layout/Carousel'
 export {
   Renderer, definePage, defineWidget, defineLayout, merge,
-  uiRegistry, resolveUi, placementAttrs, validatePage, validateFragment, node,
-  type UiComponentName, type UiEntry, type Zone,
+  placementAttrs, validatePage, validateFragment, node,
   type AnyNode, type NodeType,
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,
   type GridNode as LayoutGridNode, type AsideNode, type SectionNode,
   type HeaderNode, type FooterNode, type UiNode, type TextNode,
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
-} from './layout'
+} from './headless/layout'
+export {
+  uiRegistry, resolveUi,
+  type UiComponentName, type UiEntry, type Zone,
+} from './ui/registry'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
-export * from './layout/recipes'
+export * from './ui/recipes'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-status/Badge와 이름 충돌하므로 alias.
 export * from './parts/Avatar'
 export * from './parts/Tag'
