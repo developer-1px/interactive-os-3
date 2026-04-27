@@ -18,7 +18,7 @@ export type Neutral = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 /**
  * neutral scale — 1(가장 약함) ~ 9(가장 강함). raw scale, semantic.ts 내부에서만.
- * @demo type=color fn=neutral args=[5]
+ * @demo type=color fn=neutral args=[5] scale=[1,2,3,4,5,6,7,8,9]
  */
 export const neutral = (n: Neutral = 9) => `var(--ds-neutral-${n})`
 

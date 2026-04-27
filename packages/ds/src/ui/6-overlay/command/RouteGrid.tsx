@@ -8,10 +8,16 @@ import { Grid } from '../../8-layout/Grid'
 
 type Group = { key: string; label: string; entries: PaletteEntry[] }
 
+/** 카테고리 = entry.category (라우트 자체 선언) ?? 첫 path 세그먼트.
+ *  ds 는 카테고리 이름을 모른다 — 라우트가 staticData.palette.category 로 자기 분류 선언. */
+function categoryOf(entry: PaletteEntry): string {
+  return entry.category ?? entry.to.split('/').filter(Boolean)[0] ?? '_'
+}
+
 function groupEntries(entries: PaletteEntry[]): Group[] {
   const map = new Map<string, Group>()
   for (const e of entries) {
-    const key = e.to.split('/').filter(Boolean)[0] ?? '_'
+    const key = categoryOf(e)
     let g = map.get(key)
     if (!g) { g = { key, label: key === '_' ? 'Home' : key, entries: [] }; map.set(key, g) }
     g.entries.push(e)

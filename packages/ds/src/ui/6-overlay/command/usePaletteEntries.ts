@@ -6,12 +6,21 @@ export type PaletteEntry = {
   label: string
   to: string
   params?: Record<string, string>
+  /** cmd+k 카테고리. 미선언 시 RouteGrid 가 첫 path 세그먼트로 자동 분류. */
+  category?: string
+}
+
+type PaletteMeta = {
+  label: string
+  to: string
+  params?: Record<string, string>
+  category?: string
 }
 
 type RouterShape = {
   routesById: Record<string, {
     id: string
-    options?: { staticData?: { palette?: { label: string; to: string; params?: Record<string, string> } } }
+    options?: { staticData?: { palette?: PaletteMeta } }
   }>
 }
 
@@ -23,7 +32,7 @@ export function usePaletteEntries(): PaletteEntry[] {
     return Object.values(byId)
       .map((r) => {
         const p = r.options?.staticData?.palette
-        return p ? { id: r.id, label: p.label, to: p.to, params: p.params } : null
+        return p ? { id: r.id, label: p.label, to: p.to, params: p.params, category: p.category } : null
       })
       .filter((x): x is PaletteEntry => x !== null)
   }, [router])

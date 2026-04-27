@@ -3,5 +3,5 @@ import { Keyboard } from '@showcase/keyboard'
 
 export const Route = createFileRoute('/keyboard')({
   component: Keyboard,
-  staticData: { palette: { label: 'Keyboard Test', to: '/keyboard' } },
+  staticData: { palette: { label: 'Keyboard Test', to: '/keyboard', category: 'design-system' } },
 })

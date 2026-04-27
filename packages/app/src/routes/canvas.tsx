@@ -3,5 +3,5 @@ import { Canvas } from '@showcase/canvas'
 
 export const Route = createFileRoute('/canvas')({
   component: Canvas,
-  staticData: { palette: { label: 'Canvas', to: '/canvas' } },
+  staticData: { palette: { label: 'Canvas', to: '/canvas', category: 'design-system' } },
 })

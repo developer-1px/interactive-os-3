@@ -1,4 +1,4 @@
-/** @demo type=value fn=pad args=[2] */
+/** @demo type=value fn=pad args=[2] scale=[0,1,2,3,4,5,6,7,8,10,12,16] */
 export const pad = (t: number) => `calc(var(--ds-space) * ${t})`
 
 /**
@@ -26,7 +26,7 @@ export const level = () => `var(--ds-level, 0)`
  *   5 → 3em      (major)
  *   6 → 4em      (page)
  *
- * @demo type=value fn=emStep args=[3]
+ * @demo type=value fn=emStep args=[3] scale=[0,1,2,3,4,5,6]
  */
 export const emStep = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6) => {
   const scale = ['0.25em', '0.5em', '1em', '1.5em', '2em', '3em', '4em'] as const
@@ -41,7 +41,7 @@ export const emStep = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6) => {
  *   2 → 0.6em (md)
  *   3 → 1em   (lg)
  *
- * @demo type=value fn=insetStep args=[1]
+ * @demo type=value fn=insetStep args=[1] scale=[0,1,2,3]
  */
 export const insetStep = (n: 0 | 1 | 2 | 3) => {
   const scale = ['0.2em', '0.4em', '0.6em', '1em'] as const
