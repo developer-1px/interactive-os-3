@@ -7,7 +7,7 @@ type LinkProps = ComponentPropsWithoutRef<'a'> & {
 }
 
 /**
- * Link — <a data-part="link"> + 외부 링크 affordance.
+ * Link — <a> + 외부 링크 affordance.
  * external이면 target/rel 자동 + data-external로 시각 표식.
  */
 export function Link({ external, children, target, rel, ...rest }: LinkProps) {
@@ -15,7 +15,7 @@ export function Link({ external, children, target, rel, ...rest }: LinkProps) {
     ? { target: target ?? '_blank', rel: rel ?? 'noopener noreferrer', 'data-external': '' as const }
     : { target, rel }
   return (
-    <a data-part="link" {...extProps} {...rest}>
+    <a {...extProps} {...rest}>
       {children}
     </a>
   )

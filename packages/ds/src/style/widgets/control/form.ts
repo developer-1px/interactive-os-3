@@ -110,21 +110,18 @@ export const formCss = css`
     color: ${text()};
   }
 
-  /* ── fieldset (data-part="fieldset"로 감싼 Column) ──────────
-     legend는 Field label보다 강하게 (md + weight 700) — "이 밑의 것들은 한 묶음".
-     Field와 시각적으로 겹치지 않도록 legend 밑에 breathing + 다음 필드와의 간격 확보. */
-  [data-part="fieldset"] {
+  fieldset {
     gap: ${pad(1.5)};
     margin-block-end: ${slot.form.fieldsetMargin};
   }
-  [data-part="fieldset"] > :where(strong, p):first-child {
+  fieldset > :where(strong, p):first-child {
     font-size: ${font('md')};
     font-weight: 700;
     color: ${text()};
     margin: 0 0 ${pad(0.5)};
     letter-spacing: ${tracking()};
   }
-  [data-part="fieldset"] > :where(strong, p):first-child > small {
+  fieldset > :where(strong, p):first-child > small {
     font-weight: 400;
     font-size: ${font('sm')};
     color: ${text('subtle')};

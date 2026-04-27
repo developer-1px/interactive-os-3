@@ -4,7 +4,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
  * Table — 데이터 주도 표 부품.
  *
  * columns + rows 데이터로만 채운다. JSX children/서브파트 ❌.
- * 셀렉터 namespace: `table[data-part="table"]`.
+ * 셀렉터 namespace: `table[]`.
  *
  * - columns: { key, label } — header row 정의
  * - rows: Record<columnKey, ReactNode> — body row 데이터
@@ -24,7 +24,7 @@ export function Table({ columns, rows, caption, empty, ...rest }: TableProps) {
     return <>{empty}</>
   }
   return (
-    <table data-part="table" {...rest}>
+    <table {...rest}>
       {caption != null && <caption>{caption}</caption>}
       <thead>
         <tr>

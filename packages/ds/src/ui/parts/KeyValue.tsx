@@ -12,7 +12,7 @@ type KeyValueProps = Omit<ComponentPropsWithoutRef<'dl'>, 'children'> & {
  */
 export function KeyValue({ items, ...rest }: KeyValueProps) {
   return (
-    <dl data-part="key-value" {...rest}>
+    <dl {...rest}>
       {items.map((item, i) => (
         <Fragment key={i}>
           <dt>{item.key}</dt>

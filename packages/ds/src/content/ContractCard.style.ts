@@ -47,14 +47,14 @@ export const contractCard = () => css`
   article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-tone="bad"]::before  { background: ${status('danger')}; }
 
   /* role / caption (caption-level heading): 평소 숨김. */
-  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-part="code"],
+  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > code,
   article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-part="heading"][data-level="caption"] {
     grid-column: 1 / -1;
     display: none;
   }
-  article[data-part="card"][data-card="contract"]:hover > [data-slot="title"] > header > [data-part="code"],
-  article[data-part="card"][data-card="contract"]:focus-within > [data-slot="title"] > header > [data-part="code"],
-  article[data-part="card"][data-card="contract"][data-selected="true"] > [data-slot="title"] > header > [data-part="code"],
+  article[data-part="card"][data-card="contract"]:hover > [data-slot="title"] > header > code,
+  article[data-part="card"][data-card="contract"]:focus-within > [data-slot="title"] > header > code,
+  article[data-part="card"][data-card="contract"][data-selected="true"] > [data-slot="title"] > header > code,
   article[data-part="card"][data-card="contract"]:hover > [data-slot="title"] > header > [data-part="heading"][data-level="caption"],
   article[data-part="card"][data-card="contract"]:focus-within > [data-slot="title"] > header > [data-part="heading"][data-level="caption"],
   article[data-part="card"][data-card="contract"][data-selected="true"] > [data-slot="title"] > header > [data-part="heading"][data-level="caption"] {
@@ -72,7 +72,7 @@ export const contractCard = () => css`
   }
 
   /* 펼친 상태의 슬롯 시각 — 모두 mute, 본문 흐름 깨지 않게. */
-  article[data-part="card"][data-card="contract"] > [data-slot="meta"] > [data-part="code"] {
+  article[data-part="card"][data-card="contract"] > [data-slot="meta"] > code {
     background: transparent;
     padding: 0;
     font-size: ${font('xs')};
@@ -86,7 +86,7 @@ export const contractCard = () => css`
     overflow-x: auto;
     max-block-size: 8em;
   }
-  article[data-part="card"][data-card="contract"] > [data-slot="body"] > pre > [data-part="code"] {
+  article[data-part="card"][data-card="contract"] > [data-slot="body"] > pre > code {
     background: transparent;
     padding: 0;
     font-size: ${font('xs')};
