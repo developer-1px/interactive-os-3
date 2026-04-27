@@ -115,6 +115,25 @@ for (const [comp, fields] of Object.entries(S)) {
   }
 }
 
+// ── raw spacing audit (pad/gap/margin/inset 통합) ────────────────────────
+// slot 으로 일반화 가능한데도 raw pad(N) 으로 적힌 자리.
+// pad·gap·margin·inset 은 CSS property 가 달라도 같은 spacing family 로 본다.
+const SPACING_PROP = /(padding|gap|margin|inset|column-gap|row-gap)[a-z-]*\s*:\s*[^;]*pad\(/g
+let widgetRawCount = 0
+const widgetRawByProp = {}
+for (const d of SCAN_DIRS) {
+  const full = join(ROOT, d)
+  try { statSync(full) } catch { continue }
+  for (const f of walk(full)) {
+    const text = readFileSync(f, 'utf8')
+    for (const m of text.matchAll(SPACING_PROP)) {
+      const prop = m[1].split('-')[0]
+      widgetRawByProp[prop] = (widgetRawByProp[prop] ?? 0) + 1
+      widgetRawCount++
+    }
+  }
+}
+
 // ── report ───────────────────────────────────────────────────────────────
 const errors = findings.filter((f) => f.kind === 'invariant' || f.kind === 'missing')
 const warnings = findings.filter((f) => f.kind === 'dead')
@@ -125,7 +144,16 @@ if (errors.length === 0 && warnings.length === 0) {
   for (const f of errors)   console.log(`❌ ${f.msg}`)
   for (const f of warnings) console.log(`⚠️  ${f.msg}`)
   console.log()
-  console.log(`결과 — ✅ ${ok.length}건  ❌ ${errors.length}건  ⚠️ ${warnings.length}건`)
+  console.log(`invariant — ✅ ${ok.length}건  ❌ ${errors.length}건  ⚠️ dead ${warnings.length}건`)
 }
+
+// raw spacing 통합 dashboard — pad/gap/margin 같이 본다.
+console.log()
+const propsLine = Object.entries(widgetRawByProp)
+  .sort(([, a], [, b]) => b - a)
+  .map(([k, v]) => `${k}:${v}`)
+  .join('  ')
+console.log(`raw spacing in widgets — ${widgetRawCount}건  (${propsLine})`)
+console.log(`  ↳ slot.* 으로 일반화 가능한 자리 — 점진 마이그레이션 대상`)
 
 process.exit(errors.length > 0 ? 1 : 0)

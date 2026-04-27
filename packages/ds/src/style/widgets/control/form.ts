@@ -1,4 +1,4 @@
-import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, status, surface, text, toneAlpha, tracking } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, slot, status, surface, text, toneAlpha, tracking } from '../../../tokens/foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -97,7 +97,7 @@ export const formCss = css`
   [data-ds="Column"][data-flow="form"] section > h2:first-child {
     font-size: ${font('lg')};
     font-weight: 700;
-    margin: 0 0 ${pad(2)};
+    margin: 0 0 ${slot.form.headingMargin};
     padding-bottom: ${pad(2)};
     border-bottom: ${hairlineWidth()} solid ${control('border')};
     letter-spacing: ${tracking()};
@@ -115,7 +115,7 @@ export const formCss = css`
      Field와 시각적으로 겹치지 않도록 legend 밑에 breathing + 다음 필드와의 간격 확보. */
   [data-part="fieldset"] {
     gap: ${pad(1.5)};
-    margin-block-end: ${pad(2)};
+    margin-block-end: ${slot.form.fieldsetMargin};
   }
   [data-part="fieldset"] > :where(strong, p):first-child {
     font-size: ${font('md')};
@@ -146,7 +146,7 @@ export const formCss = css`
 
   /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */
   section[data-emphasis="raised"] > :where(h2, h3):first-child {
-    margin: 0 0 ${pad(2)};
+    margin: 0 0 ${slot.form.headingMargin};
     padding-bottom: ${pad(2)};
     border-bottom: ${hairlineWidth()} solid ${border()};
     font-size: ${font('md')};

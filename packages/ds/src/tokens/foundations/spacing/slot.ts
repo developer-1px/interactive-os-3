@@ -1,7 +1,11 @@
 import { pad } from '../../palette/space'
 
 /**
- * slot — 컴포넌트 슬롯별 padding/gap. **role-scoped semantic**.
+ * slot — 컴포넌트 슬롯별 spacing. **role-scoped semantic**.
+ *
+ * **CSS property 무관** — 같은 slot 토큰을 padding·gap·margin 어디든 쓴다.
+ * "card 의 안쪽 호흡" 이라는 *역할* 이 본질이지, padding 인지 gap 인지는 구현 선택.
+ * 한 곳에서 padding 으로, 다른 곳에서 gap 으로 같은 토큰을 써도 의미가 같음.
  *
  * Material 3 `comp.spacing.*` 패턴. spacing scale (pad(N)) 자체를 영어로
  * rename ("cluster"·"region") 하는 건 수치를 다시 쓴 것뿐 — 우리는 그 길을
@@ -33,8 +37,9 @@ export const slot = {
   sidebar: { pad: pad(2), gap: pad(4), headerPad: pad(2), itemPadY: pad(1.25), itemPadX: pad(2) },
   /** auth card — focused container, 일반 카드보다 큰 호흡. */
   auth:    { pad: pad(8), slotGap: pad(6), formGap: pad(5), buttonPadY: pad(2.5), otpGap: pad(1.5) },
-  /** form 슬롯 — field·fieldset·section 간격. */
-  form:    { gap: pad(3), fieldGap: pad(1), fieldDescGap: pad(0.5), fieldsetGap: pad(1.5) },
+  /** form 슬롯 — field·fieldset·section 간격. headingMargin 은 h2/h3 하단 (margin 자리). */
+  form:    { gap: pad(3), fieldGap: pad(1), fieldDescGap: pad(0.5), fieldsetGap: pad(1.5),
+             headingMargin: pad(2), fieldsetMargin: pad(2) },
   /** details/disclosure (summary + content). */
   details: { pad: pad(2), summaryPadY: pad(1.5), summaryPadX: pad(2) },
   /** highlightMark — HTML <mark>. */
