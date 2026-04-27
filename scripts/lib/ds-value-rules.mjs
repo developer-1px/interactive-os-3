@@ -13,7 +13,7 @@ export const stripColorMixSpace = (line) =>
 export const rules = [
   {
     kind: 'non-semantic-color',
-    level: 'warn',
+    level: 'error',
     hint: 'non-semantic 색 토큰 — text()/surface()/border()/accent()/status() 등 semantic 사용 (neutral/tint/mix/dim 은 preset·foundations 내부 전용)',
     test: (line) => /(?<![\w-])(neutral|tint|mix|dim)\s*\(/.test(line) && !/^\s*(import|export)\b/.test(line),
   },
