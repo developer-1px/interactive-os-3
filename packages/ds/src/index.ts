@@ -177,8 +177,9 @@ export * from './ui/8-layout/Row'
 export * from './ui/8-layout/Column'
 export * from './ui/8-layout/Grid'
 export * from './ui/8-layout/Carousel'
+export { Renderer } from './ui/Renderer'
 export {
-  Renderer, definePage, defineWidget, defineLayout, merge,
+  definePage, defineWidget, defineLayout, merge,
   placementAttrs, validatePage, validateFragment, node,
   type AnyNode, type NodeType,
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,

@@ -1,4 +1,3 @@
-export { Renderer } from './Renderer'
 export { definePage } from './definePage'
 export { defineWidget, type WidgetBuilder } from './defineWidget'
 export { defineLayout, type LayoutBuilder } from './defineLayout'

@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card } from '../../parts/Card'
+import { Card } from '../parts/Card'
 import { Badge, type BadgeTone } from '../1-status/Badge'
-import { Heading } from '../../parts/Heading'
+import { Heading } from '../parts/Heading'
 
 /**
  * StatCard — KPI 단일 카드. Card primitive 슬롯에 KPI 어휘 바인딩.

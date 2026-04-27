@@ -13,7 +13,7 @@
  * id 로 라우트가 그 children 을 merge 한다.
  */
 import { ROOT } from '../../headless/types'
-import { defineLayout } from '../defineLayout'
+import { defineLayout } from '../../headless/layout/defineLayout'
 import type { NormalizedData } from '../../headless/types'
 
 export interface HolyGrailProps {

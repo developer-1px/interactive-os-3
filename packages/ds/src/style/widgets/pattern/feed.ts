@@ -1,5 +1,5 @@
 import { accent, css, focusRingWidth, pad, radius } from '../../../tokens/foundations'
-import { slotGap } from '../../seed/keyline'
+import { slotGap } from '../../../tokens/style/seed/keyline'
 
 export const feedCss = css`
   /* Feed는 states.ts의 subgrid 체인이 grid·column·padding을 제공하고, 여기서

@@ -8,7 +8,7 @@
  * inbox·email·finder 류 패턴. 좌측 list 는 고정 폭, 우측 detail 은 grow.
  */
 import { ROOT } from '../../headless/types'
-import { defineLayout } from '../defineLayout'
+import { defineLayout } from '../../headless/layout/defineLayout'
 import type { NormalizedData } from '../../headless/types'
 
 export interface MasterDetailProps {

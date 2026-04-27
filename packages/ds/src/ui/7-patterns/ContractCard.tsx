@@ -1,9 +1,9 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card, type CardSlot } from '../../parts/Card'
-import { Heading } from '../../parts/Heading'
-import { Code } from '../../parts/Code'
-import { Callout } from '../../parts/Callout'
-import { KeyValue } from '../../parts/KeyValue'
+import { Card, type CardSlot } from '../parts/Card'
+import { Heading } from '../parts/Heading'
+import { Code } from '../parts/Code'
+import { Callout } from '../parts/Callout'
+import { KeyValue } from '../parts/KeyValue'
 
 /**
  * ContractCard — ds 컴포넌트 계약 감사 카드.

@@ -10,16 +10,16 @@
  * `content`/`props.children`.
  */
 import { createContext, createElement, useContext, type ComponentType, type CSSProperties, type ReactNode } from 'react'
-import { ROOT, type NormalizedData } from '../types'
-import { useDebugTree } from './useDebugTree'
+import { ROOT, type NormalizedData } from '../headless/types'
+import { useDebugTree } from '../headless/layout/useDebugTree'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
   type GridNode, type HeaderNode, type MainNode, type NavNode,
   type RowNode, type SectionNode, type SplitNode, type TextNode, type UiNode,
-} from './nodes'
+} from '../headless/layout/nodes'
 import { resolveUi } from './registry'
-import { Split } from '../ui/8-layout/Split'
+import { Split } from './8-layout/Split'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>

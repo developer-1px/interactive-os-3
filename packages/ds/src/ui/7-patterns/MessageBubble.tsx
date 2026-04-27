@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card } from '../../parts/Card'
+import { Card } from '../parts/Card'
 
 /**
  * MessageBubble — DM 1:1 채팅 한 메시지. Card 슬롯에 어휘 바인딩.

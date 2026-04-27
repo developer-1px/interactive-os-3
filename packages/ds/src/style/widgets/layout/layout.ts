@@ -1,5 +1,5 @@
 import { accent, container, control, css, dim, font, grouping, hairlineWidth, hierarchy, mix, neutral, pad, radius, square, status, tint } from '../../../tokens/foundations'
-import { SHELL_MOBILE_MAX } from '../../preset/breakpoints'
+import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
  * Layout primitives (Row / Column / Grid).

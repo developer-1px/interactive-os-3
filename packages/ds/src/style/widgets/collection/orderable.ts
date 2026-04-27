@@ -1,5 +1,5 @@
 import { accent, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../../tokens/foundations'
-import { containerPad, slotGap } from '../../seed/keyline'
+import { containerPad, slotGap } from '../../../tokens/style/seed/keyline'
 
 /**
  * OrderableList — drag-to-reorder list.

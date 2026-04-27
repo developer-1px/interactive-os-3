@@ -7,7 +7,7 @@
  * 덕분에 자연 스크롤 (layout.ts:158).
  */
 import { ROOT } from '../../headless/types'
-import { defineLayout } from '../defineLayout'
+import { defineLayout } from '../../headless/layout/defineLayout'
 import type { NormalizedData } from '../../headless/types'
 
 export interface CenteredNarrowProps {

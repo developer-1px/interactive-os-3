@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Card } from '../../parts/Card'
-import { Heading } from '../../parts/Heading'
+import { Card } from '../parts/Card'
+import { Heading } from '../parts/Heading'
 
 /**
  * CourseCard — 코스 카테고리 카드. Card 슬롯에 어휘 바인딩.
