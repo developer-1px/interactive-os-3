@@ -1,43 +1,75 @@
 import '@oddbird/popover-polyfill'
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { dsCss, wrapAppsLayer } from '@p/ds'
-import { catalogCss } from '@showcase/catalog'
-import { canvasCss } from '@showcase/canvas'
-import { finderCss } from '@apps/finder'
-import { finderMobileCss } from '@apps/finder'
-import { inspectorCss } from '@showcase/inspector'
-import { eduPortalAdminCss } from '@apps/edu-portal-admin'
-import { markdownCss } from '@apps/markdown'
-import { slidesCss } from '@apps/slides'
-import { inboxCss, chatCss, feedCss } from '@apps/genres'
-
-const appsCss = wrapAppsLayer([
-  inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, markdownCss, slidesCss, inboxCss, chatCss, feedCss,
-])
+import { dsCss, wrapAppsLayer } from '@p/ds/css'
 import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/tokens/style/preset'
 import { onShortcut } from '@p/ds/headless/hooks/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
-import { ReproRecorderOverlay, SpacingOverlay } from '@p/devtools'
-import { plugins } from './boot/plugins'
-import { composeRegistry } from './boot/registry'
-import { setFinderNav } from '@apps/finder'
 
-// plugin manifest 합산 — widgets/middlewares/capabilities 를 ds registry 에 주입.
-// 부작용은 즉시(import 시점) — Renderer 첫 렌더 전에 완료되어야 함.
-void composeRegistry(plugins)
+// devtools overlay 는 DEV 에서만 lazy 로드 (prod entry 에서 완전히 제거).
+const Devtools = import.meta.env.DEV
+  ? lazy(() => import('@p/devtools').then((m) => ({
+      default: () => (
+        <>
+          <m.ReproRecorderOverlay />
+          <m.SpacingOverlay />
+        </>
+      ),
+    })))
+  : null
 
-// finder 의 navigation 추상화에 셸 router 주입 (의존 inversion).
-setFinderNav((splat) => {
-  void router.navigate({ to: '/finder/$', params: { _splat: splat } })
-})
-
+// 앱·쇼케이스 CSS 와 plugin manifest 합산은 첫 페인트 후 lazy.
+// (entry 가 모든 app 모듈 트리를 끌어와 cold-start 가 망가지던 문제를 차단)
 const styleEl = document.createElement('style')
 styleEl.setAttribute('data-ds', '')
-styleEl.textContent = dsCss + appsCss
+styleEl.textContent = dsCss
 document.head.appendChild(styleEl)
+
+const appsStyleEl = document.createElement('style')
+appsStyleEl.setAttribute('data-ds-apps', '')
+document.head.appendChild(appsStyleEl)
+
+const loadAppsLayer = async () => {
+  const [
+    { catalogCss },
+    { canvasCss },
+    { finderCss, finderMobileCss, setFinderNav },
+    { inspectorCss },
+    { eduPortalAdminCss },
+    { markdownCss },
+    { slidesCss },
+    { inboxCss, chatCss, feedCss },
+    { plugins },
+    { composeRegistry },
+  ] = await Promise.all([
+    import('@showcase/catalog'),
+    import('@showcase/canvas'),
+    import('@apps/finder'),
+    import('@showcase/inspector'),
+    import('@apps/edu-portal-admin'),
+    import('@apps/markdown'),
+    import('@apps/slides'),
+    import('@apps/genres'),
+    import('./boot/plugins'),
+    import('./boot/registry'),
+  ])
+  void composeRegistry(plugins)
+  setFinderNav((splat) => {
+    void router.navigate({ to: '/finder/$', params: { _splat: splat } })
+  })
+  appsStyleEl.textContent = wrapAppsLayer([
+    inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, markdownCss, slidesCss, inboxCss, chatCss, feedCss,
+  ])
+}
+
+const idle = (cb: () => void) => {
+  const ric = (window as unknown as { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback
+  if (ric) ric(cb)
+  else setTimeout(cb, 0)
+}
+idle(() => { void loadAppsLayer() })
 
 // preset 런타임 핸들 — Cmd+Shift+P로 토글, DevTools에서 window.ds로 호출.
 const presets = { default: defaultPreset, hairline: hairlinePreset }
@@ -63,7 +95,7 @@ onShortcut('mod+shift+p', () => {
 
 if (import.meta.hot) {
   import.meta.hot.accept('@p/ds', (mod) => {
-    if (mod) styleEl.textContent = (mod as { dsCss: string }).dsCss + appsCss
+    if (mod) styleEl.textContent = (mod as { dsCss: string }).dsCss
   })
 }
 
@@ -74,7 +106,10 @@ if (import.meta.env.DEV) {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
-    <ReproRecorderOverlay />
-    <SpacingOverlay />
+    {Devtools && (
+      <Suspense fallback={null}>
+        <Devtools />
+      </Suspense>
+    )}
   </StrictMode>,
 )

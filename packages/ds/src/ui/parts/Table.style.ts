@@ -1,4 +1,4 @@
-import { border, css, dim, font, hairlineWidth, pad, radius, weight } from '../../tokens/foundations'
+import { border, css, currentTint, dim, font, hairlineWidth, pad, radius, text, weight } from '../../tokens/foundations'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.
@@ -10,12 +10,12 @@ export const table = () => css`
     inline-size: 100%;
     border-collapse: collapse;
     font-size: ${font('sm')};
-    color: ${dim(75)};
+    color: ${text('subtle')};
   }
   :where(table) > caption {
     text-align: start;
     font-size: ${font('xs')};
-    color: ${dim(55)};
+    color: ${text('mute')};
     padding: ${pad(1)} 0;
     caption-side: top;
   }
@@ -24,10 +24,10 @@ export const table = () => css`
     inset-block-start: 0;
     text-align: start;
     padding: ${pad(0.75)} ${pad(2)};
-    color: ${dim(55)};
+    color: ${text('mute')};
     font-weight: ${weight('medium')};
     font-size: ${font('xs')};
-    background: ${dim(2)};
+    background: ${currentTint('subtle')};
     border-block-end: ${hairlineWidth()} solid ${border()};
   }
   :where(table) tbody tr {

@@ -1,4 +1,4 @@
-import { css, dim, radius } from '../../tokens/foundations'
+import { css, currentTint, dim, radius } from '../../tokens/foundations'
 
 /**
  * Thumbnail — aspect-ratio 보존 미리보기 미디어.
@@ -10,7 +10,7 @@ export const thumbnail = () => css`
     inline-size: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    background: ${dim(6)};
+    background: ${currentTint('soft')};
     border-radius: ${radius('sm')};
   }
   img[data-part="thumbnail"][data-ratio="16/9"] { aspect-ratio: 16 / 9; }

@@ -1,10 +1,10 @@
-import { border, css, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
+import { border, css, currentTint, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
 
 export const code = () => css`
   :where(code) {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.9em;
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
     padding: 0.1em ${pad(0.5)};
     border-radius: ${radius('sm')};
   }

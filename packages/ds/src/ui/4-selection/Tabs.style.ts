@@ -1,4 +1,4 @@
-import { accent, border, css, dim, dur, ease, focusRingWidth, hairlineWidth, pad, radius, tint } from '../../tokens/foundations'
+import { accent, accentTint, border, css, dim, dur, ease, focusRingWidth, hairlineWidth, pad, radius, text, tint } from '../../tokens/foundations'
 /**
  * Tabs — 보편적 탭 어포던스.
  *
@@ -23,7 +23,7 @@ export const tabs = () => css`
     padding: ${pad(1.5)} ${pad(3)};
     border-bottom: ${focusRingWidth()} solid transparent;
     margin-bottom: -1px;
-    color: ${dim(65)};
+    color: ${text('subtle')};
     background: transparent;
     border-radius: ${radius('sm')} ${radius('sm')} 0 0;
     user-select: none;
@@ -33,7 +33,7 @@ export const tabs = () => css`
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-bottom-color: ${tint(accent(), 40)};
+    border-bottom-color: ${accentTint('border')};
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"][aria-selected="true"] {
     color: ${accent()};
@@ -51,7 +51,7 @@ export const tabs = () => css`
     padding: ${pad(1.5)} ${pad(3)};
     border-inline-end: ${focusRingWidth()} solid transparent;
     margin-inline-end: -1px;
-    color: ${dim(65)};
+    color: ${text('subtle')};
     background: transparent;
     border-radius: ${radius('sm')} 0 0 ${radius('sm')};
     text-align: start;
@@ -59,7 +59,7 @@ export const tabs = () => css`
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-inline-end-color: ${tint(accent(), 40)};
+    border-inline-end-color: ${accentTint('border')};
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"][aria-selected="true"] {
     color: ${accent()};

@@ -32,7 +32,7 @@ export const proseCss = () => css`
     font-size: 16px;
     /* 한국어 본문은 1.65 — 영문 1.75보다 살짝 조밀해야 단락이 한 묶음으로 읽힌다. */
     line-height: 1.65;
-    color: ${neutral()};
+    color: ${text('strong')};
     word-break: keep-all;
     overflow-wrap: anywhere;
     text-wrap: pretty;

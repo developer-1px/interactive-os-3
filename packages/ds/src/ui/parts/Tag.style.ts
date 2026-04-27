@@ -1,4 +1,4 @@
-import { accent, css, dim, dur, ease, font, icon, pad, radius, tint } from '../../tokens/foundations'
+import { accent, accentTint, css, currentTint, dim, dur, ease, font, icon, pad, radius, tint } from '../../tokens/foundations'
 
 /**
  * Tag — removable label. Chip(entity)과 다른 부품 layer 시맨틱.
@@ -10,7 +10,7 @@ export const tag = () => css`
     align-items: center;
     gap: ${pad(0.5)};
     padding: ${pad(0.25)} ${pad(1.25)};
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
     border-radius: ${radius('pill')};
     font-size: ${font('sm')};
     line-height: 1.4;
@@ -39,7 +39,7 @@ export const tag = () => css`
   }
   span[data-part="tag"] > button:hover {
     opacity: 1;
-    background: ${tint(accent(), 20)};
+    background: ${accentTint('medium')};
     color: ${accent()};
   }
   span[data-part="tag"] > button:focus-visible {

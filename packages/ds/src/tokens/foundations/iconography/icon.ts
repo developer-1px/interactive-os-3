@@ -1,17 +1,147 @@
 import { css } from '../primitives/css'
 import { hairlineWidth } from '../shape/hairline'
 
-// lucide-static v1.9.0 — 각 SVG 는 별도 asset 파일로 emit (Vite `?url`).
-// JS 번들엔 URL 문자열만, SVG 본문은 브라우저가 mask-image 페인트 시점에 lazy fetch.
-const lucideUrls = import.meta.glob('/node_modules/lucide-static/icons/*.svg', {
-  query: '?url',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+// lucide-static v1.9.0 — 사용 토큰에 매핑되는 파일만 명시 import 한다.
+// (eager glob 은 1944 개 SVG 모두 entry 로 끌어와 dev cold-start 를 망가뜨림)
+import urlChevronRight from 'lucide-static/icons/chevron-right.svg?url'
+import urlChevronDown from 'lucide-static/icons/chevron-down.svg?url'
+import urlChevronLeft from 'lucide-static/icons/chevron-left.svg?url'
+import urlCheck from 'lucide-static/icons/check.svg?url'
+import urlFolder from 'lucide-static/icons/folder.svg?url'
+import urlFolderOpen from 'lucide-static/icons/folder-open.svg?url'
+import urlFile from 'lucide-static/icons/file.svg?url'
+import urlFileCode from 'lucide-static/icons/file-code.svg?url'
+import urlFileCog from 'lucide-static/icons/file-cog.svg?url'
+import urlFileImage from 'lucide-static/icons/file-image.svg?url'
+import urlFileText from 'lucide-static/icons/file-text.svg?url'
+import urlHome from 'lucide-static/icons/home.svg?url'
+import urlSliders from 'lucide-static/icons/sliders.svg?url'
+import urlPalette from 'lucide-static/icons/palette.svg?url'
+import urlAlignLeft from 'lucide-static/icons/align-left.svg?url'
+import urlAlignCenterHorizontal from 'lucide-static/icons/align-center-horizontal.svg?url'
+import urlAlignRight from 'lucide-static/icons/align-right.svg?url'
+import urlAlignCenterVertical from 'lucide-static/icons/align-center-vertical.svg?url'
+import urlArrowRight from 'lucide-static/icons/arrow-right.svg?url'
+import urlArrowDown from 'lucide-static/icons/arrow-down.svg?url'
+import urlArrowUp from 'lucide-static/icons/arrow-up.svg?url'
+import urlArrowLeft from 'lucide-static/icons/arrow-left.svg?url'
+import urlPlus from 'lucide-static/icons/plus.svg?url'
+import urlSettings from 'lucide-static/icons/settings.svg?url'
+import urlX from 'lucide-static/icons/x.svg?url'
+import urlStar from 'lucide-static/icons/star.svg?url'
+import urlStarOff from 'lucide-static/icons/star-off.svg?url'
+import urlTrendingUp from 'lucide-static/icons/trending-up.svg?url'
+import urlTrendingDown from 'lucide-static/icons/trending-down.svg?url'
+import urlVideo from 'lucide-static/icons/video.svg?url'
+import urlUsers from 'lucide-static/icons/users.svg?url'
+import urlBadgeCheck from 'lucide-static/icons/badge-check.svg?url'
+import urlDoorOpen from 'lucide-static/icons/door-open.svg?url'
+import urlInbox from 'lucide-static/icons/inbox.svg?url'
+import urlSend from 'lucide-static/icons/send.svg?url'
+import urlBan from 'lucide-static/icons/ban.svg?url'
+import urlTrash from 'lucide-static/icons/trash.svg?url'
+import urlReply from 'lucide-static/icons/reply.svg?url'
+import urlForward from 'lucide-static/icons/forward.svg?url'
+import urlArchive from 'lucide-static/icons/archive.svg?url'
+import urlHash from 'lucide-static/icons/hash.svg?url'
+import urlLock from 'lucide-static/icons/lock.svg?url'
+import urlUser from 'lucide-static/icons/user.svg?url'
+import urlPin from 'lucide-static/icons/pin.svg?url'
+import urlSearch from 'lucide-static/icons/search.svg?url'
+import urlInfo from 'lucide-static/icons/info.svg?url'
+import urlFilter from 'lucide-static/icons/filter.svg?url'
+import urlEdit from 'lucide-static/icons/edit.svg?url'
+import urlLayoutGrid from 'lucide-static/icons/layout-grid.svg?url'
+import urlList from 'lucide-static/icons/list.svg?url'
+import urlColumns3 from 'lucide-static/icons/columns-3.svg?url'
+import urlGalleryVertical from 'lucide-static/icons/gallery-vertical.svg?url'
+import urlHeart from 'lucide-static/icons/heart.svg?url'
+import urlMessageCircle from 'lucide-static/icons/message-circle.svg?url'
+import urlShare2 from 'lucide-static/icons/share-2.svg?url'
+import urlMoreHorizontal from 'lucide-static/icons/more-horizontal.svg?url'
+import urlCalendar from 'lucide-static/icons/calendar.svg?url'
+import urlCalendarDays from 'lucide-static/icons/calendar-days.svg?url'
+import urlCalendarRange from 'lucide-static/icons/calendar-range.svg?url'
+import urlGripVertical from 'lucide-static/icons/grip-vertical.svg?url'
+import urlCode from 'lucide-static/icons/code.svg?url'
+import urlWrench from 'lucide-static/icons/wrench.svg?url'
+import urlShield from 'lucide-static/icons/shield.svg?url'
+import urlBot from 'lucide-static/icons/bot.svg?url'
+import urlLink from 'lucide-static/icons/link.svg?url'
+import urlExternalLink from 'lucide-static/icons/external-link.svg?url'
+import urlPaperclip from 'lucide-static/icons/paperclip.svg?url'
+import urlGitCommit from 'lucide-static/icons/git-commit.svg?url'
 
-const urlByBasename = Object.fromEntries(
-  Object.entries(lucideUrls).map(([p, url]) => [p.match(/([^/]+)\.svg$/)![1], url]),
-) as Record<string, string>
+const urlByBasename: Record<string, string> = {
+  'chevron-right': urlChevronRight,
+  'chevron-down': urlChevronDown,
+  'chevron-left': urlChevronLeft,
+  check: urlCheck,
+  folder: urlFolder,
+  'folder-open': urlFolderOpen,
+  file: urlFile,
+  'file-code': urlFileCode,
+  'file-cog': urlFileCog,
+  'file-image': urlFileImage,
+  'file-text': urlFileText,
+  home: urlHome,
+  sliders: urlSliders,
+  palette: urlPalette,
+  'align-left': urlAlignLeft,
+  'align-center-horizontal': urlAlignCenterHorizontal,
+  'align-right': urlAlignRight,
+  'align-center-vertical': urlAlignCenterVertical,
+  'arrow-right': urlArrowRight,
+  'arrow-down': urlArrowDown,
+  'arrow-up': urlArrowUp,
+  'arrow-left': urlArrowLeft,
+  plus: urlPlus,
+  settings: urlSettings,
+  x: urlX,
+  star: urlStar,
+  'star-off': urlStarOff,
+  'trending-up': urlTrendingUp,
+  'trending-down': urlTrendingDown,
+  video: urlVideo,
+  users: urlUsers,
+  'badge-check': urlBadgeCheck,
+  'door-open': urlDoorOpen,
+  inbox: urlInbox,
+  send: urlSend,
+  ban: urlBan,
+  trash: urlTrash,
+  reply: urlReply,
+  forward: urlForward,
+  archive: urlArchive,
+  hash: urlHash,
+  lock: urlLock,
+  user: urlUser,
+  pin: urlPin,
+  search: urlSearch,
+  info: urlInfo,
+  filter: urlFilter,
+  edit: urlEdit,
+  'layout-grid': urlLayoutGrid,
+  list: urlList,
+  'columns-3': urlColumns3,
+  'gallery-vertical': urlGalleryVertical,
+  heart: urlHeart,
+  'message-circle': urlMessageCircle,
+  'share-2': urlShare2,
+  'more-horizontal': urlMoreHorizontal,
+  calendar: urlCalendar,
+  'calendar-days': urlCalendarDays,
+  'calendar-range': urlCalendarRange,
+  'grip-vertical': urlGripVertical,
+  code: urlCode,
+  wrench: urlWrench,
+  shield: urlShield,
+  bot: urlBot,
+  link: urlLink,
+  'external-link': urlExternalLink,
+  paperclip: urlPaperclip,
+  'git-commit': urlGitCommit,
+}
 
 // 토큰 이름이 lucide 파일명과 다를 때만 오버라이드 (대부분 camelCase → kebab 자동 변환).
 const alias: Record<string, string> = {

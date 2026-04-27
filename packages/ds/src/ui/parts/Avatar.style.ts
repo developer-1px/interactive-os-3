@@ -1,4 +1,4 @@
-import { css, dim, font, radius, weight } from '../../tokens/foundations'
+import { css, currentTint, dim, font, radius, weight } from '../../tokens/foundations'
 import { square } from '../../tokens/foundations/layout/square'
 
 /**
@@ -11,7 +11,7 @@ export const avatar = () => css`
     inline-size: 2em;
     border-radius: ${radius('pill')};
     overflow: hidden;
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
     color: inherit;
     font-size: ${font('sm')};
     font-weight: ${weight('semibold')};

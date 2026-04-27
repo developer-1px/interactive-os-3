@@ -1,4 +1,4 @@
-import { accent, css, dim, font, pad, radius, status } from '../../tokens/foundations'
+import { accent, css, currentTint, dim, font, pad, radius, status, text } from '../../tokens/foundations'
 export const barChart = () => css`
   [data-part="bar-chart"] {
     margin: 0;
@@ -14,7 +14,7 @@ export const barChart = () => css`
   [data-part="bar-chart"] > dl > div { display: contents; }
   [data-part="bar-chart"] dt {
     font-size: ${font('sm')};
-    color: ${dim(70)};
+    color: ${text('subtle')};
   }
   [data-part="bar-chart"] dd {
     margin: 0;
@@ -26,13 +26,13 @@ export const barChart = () => css`
     inline-size: 100%;
     block-size: 8px;
     align-self: center;
-    background: ${dim(6)};
+    background: ${currentTint('soft')};
     border: 0;
     border-radius: ${radius('pill')};
     overflow: hidden;
   }
   [data-part="bar-chart"] meter::-webkit-meter-bar {
-    background: ${dim(6)};
+    background: ${currentTint('soft')};
     border: 0;
     border-radius: ${radius('pill')};
   }
@@ -47,7 +47,7 @@ export const barChart = () => css`
   [data-part="bar-chart"] dd > span {
     font-size: ${font('xs')};
     font-variant-numeric: tabular-nums;
-    color: ${dim(60)};
+    color: ${text('mute')};
     min-inline-size: 3ch; text-align: end;
   }
   [data-part="bar-chart"] > dl > div[data-tone="info"]    { color: ${accent()}; }
@@ -56,7 +56,7 @@ export const barChart = () => css`
   [data-part="bar-chart"] > dl > div[data-tone="danger"]  { color: ${status('danger')}; }
   [data-part="bar-chart"] > figcaption {
     font-size: ${font('xs')};
-    color: ${dim(50)};
+    color: ${text('mute')};
     text-align: end;
   }
 `

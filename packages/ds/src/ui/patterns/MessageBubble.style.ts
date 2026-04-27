@@ -1,4 +1,4 @@
-import { css, hairlineWidth, neutral, pad, radius } from '../../tokens/foundations'
+import { css, hairlineWidth, neutral, pad, radius, surface } from '../../tokens/foundations'
 
 /**
  * MessageBubble slot inner styling — DM 1:1 채팅 버블.
@@ -13,7 +13,7 @@ export const messageBubble = () => css`
   }
   article[data-part="card"][data-card="message"][data-side="other"] {
     align-self: flex-start;
-    background: ${neutral(2)};
+    background: ${surface('muted')};
     border-end-start-radius: ${radius('sm')};
   }
   article[data-part="card"][data-card="message"][data-side="me"] {

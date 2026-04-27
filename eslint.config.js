@@ -21,32 +21,58 @@ const ZONE_ORDER = { layout: 1, control: 2, entity: 3, overlay: 3, collection: 4
 
 const dsLimits = {
   rules: {
-    'token-tier': {
+    // 폴더 기반 layer boundary — palette < foundations < widget.
+    // widget(소비자) tier 는 palette/preset/seed 어떤 절대·상대경로로도 import 금지.
+    // import path 를 importing file 위치와 함께 해석해 cross-layer 를 잡는다.
+    'layer-boundary': {
       meta: { type: 'problem', schema: [] },
       create(context) {
         const file = context.filename ?? context.getFilename?.()
         if (!file) return {}
-        // 소비자(widget·ui·layout)는 Tier1(palette/seed) 직접 import 금지.
-        // semantic은 CSS var 문자열로 소비, Tier3은 src/ds/fn/* 로 소비.
-        const isConsumer =
-          /\/src\/ds\/ui\//.test(file) ||
-          /\/src\/ds\/layout\//.test(file) ||
-          /\/src\/ds\/style\/widgets\//.test(file)
-        if (!isConsumer) return {}
+        // widget tier — ui/ · content/ · devices/ · style/widgets/ · showcase/ · apps/
+        const isWidget =
+          /\/(?:packages\/ds\/src\/(?:ui|content|devices)|packages\/ds\/src\/style\/widgets|packages\/ds\/src\/tokens\/style\/widgets|showcase|apps)\//.test(file)
+        // foundations tier — palette 까지만 내려가도 됨 (semantic 정의 layer)
+        const isFoundations = /\/packages\/ds\/src\/tokens\/foundations\//.test(file)
+        if (!isWidget && !isFoundations) return {}
+
+        const FORBIDDEN_FOR_WIDGET = [
+          { name: 'palette',     re: /(?:^|\/)tokens\/palette(?:$|\/)/ },
+          { name: 'preset',      re: /(?:^|\/)tokens\/style\/preset(?:$|\/)/ },
+          { name: 'seed',        re: /(?:^|\/)tokens\/style\/seed(?:$|\/)/ },
+          // 상대경로 변형: '../palette/...' / '../../palette/color' 등
+          { name: 'palette',     re: /(?:^|\/)\.\.\/(?:\.\.\/)*palette(?:$|\/)/ },
+          { name: 'preset',      re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/preset(?:$|\/)/ },
+          { name: 'seed',        re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/seed(?:$|\/)/ },
+        ]
         return {
           ImportDeclaration(node) {
             const src = node.source.value
             if (typeof src !== 'string') return
-            const t1 = /(?:^|\/)ds\/style\/preset(?:$|\/)/.test(src) ||
-                       /(?:^|\/)ds\/style\/seed(?:$|\/)/.test(src) ||
-                       /^\.\.?\/.*style\/(preset|seed)(?:$|\/)/.test(src)
-            if (t1) {
-              context.report({
-                node,
-                message:
-                  `토큰 티어 위반: 소비자(ui/layout/widgets)는 Tier1(preset/seed) 직접 import 금지 — ` +
-                  `색은 var(--ds-*) 또는 src/ds/fn 의 tone()/pair()/mute()/emphasize() 로만 소비.`,
-              })
+            if (isWidget) {
+              for (const r of FORBIDDEN_FOR_WIDGET) {
+                if (r.re.test(src)) {
+                  context.report({
+                    node,
+                    message:
+                      `layer 경계 위반: widget tier 는 ${r.name} layer 직접 import 금지 — ` +
+                      `tokens/foundations 의 semantic role 토큰 (text/surface/accent/accentTint/slot/size/…) 만 소비.`,
+                  })
+                  return
+                }
+              }
+            }
+            // foundations 는 palette 허용, preset/seed 는 금지 (정의 layer 아님)
+            if (isFoundations) {
+              if (/(?:^|\/)tokens\/style\/(preset|seed)(?:$|\/)/.test(src) ||
+                  /(?:^|\/)\.\.\/(?:\.\.\/)*style\/(preset|seed)(?:$|\/)/.test(src)) {
+                context.report({
+                  node,
+                  message:
+                    `layer 경계 위반: foundations tier 는 preset/seed 직접 import 금지 — ` +
+                    `palette layer 까지만 의존.`,
+                })
+              }
             }
           },
         }
@@ -298,7 +324,7 @@ export default defineConfig([
       'ds/max-lines-no-imports': ['warn', MAX_LINES],
       'ds/max-files-per-dir': ['warn', MAX_FILES_PER_DIR],
       'ds/zone-boundary': 'error',
-      'ds/token-tier': 'error',
+      'ds/layer-boundary': 'error',
       'ds/no-raw-palette-in-consumer': 'error',
       'ds/no-aria-roledescription-namespace': 'error',
       'ds/no-token-define-outside-preset': 'error',

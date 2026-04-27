@@ -1,4 +1,4 @@
-import { css, dim, font, pad, radius, status } from '../tokens/foundations'
+import { css, currentTint, dim, font, pad, radius, status, text } from '../tokens/foundations'
 
 /**
  * ContractCard slot inner styling — Card primitive 슬롯 안의 컨트랙트 특화 시각만.
@@ -34,7 +34,7 @@ export const contractCard = () => css`
     align-items: center;
     flex: none;
     font-size: ${font('xs')};
-    color: ${dim(60)};
+    color: ${text('mute')};
   }
   /* badge 자체는 텍스트 안 보이고 dot 만. text 는 SR 전용으로. */
   article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge]::before {
@@ -76,11 +76,11 @@ export const contractCard = () => css`
     background: transparent;
     padding: 0;
     font-size: ${font('xs')};
-    color: ${dim(45)};
+    color: ${text('mute')};
   }
   article[data-part="card"][data-card="contract"] > [data-slot="body"] > pre {
     margin: 0;
-    background: ${dim(4)};
+    background: ${currentTint('soft')};
     padding: ${pad(1)};
     border-radius: ${radius('sm')};
     overflow-x: auto;
@@ -90,7 +90,7 @@ export const contractCard = () => css`
     background: transparent;
     padding: 0;
     font-size: ${font('xs')};
-    color: ${dim(50)};
+    color: ${text('mute')};
     white-space: pre;
   }
   article[data-part="card"][data-card="contract"] > [data-slot="checks"] [data-pass="true"]  { color: ${status('success')}; }
@@ -102,7 +102,7 @@ export const contractCard = () => css`
   article[data-part="card"][data-card="contract"]:hover,
   article[data-part="card"][data-card="contract"]:focus-within,
   article[data-part="card"][data-card="contract"][data-selected="true"] {
-    box-shadow: 0 2px 8px ${dim(8)};
+    box-shadow: 0 2px 8px ${currentTint('soft')};
     transition: box-shadow 160ms ease;
   }
 `

@@ -1,4 +1,4 @@
-import { css, dim, font, pad, weight } from '../tokens/foundations'
+import { css, dim, font, pad, text, weight } from '../tokens/foundations'
 
 /**
  * RoleCard slot inner styling — drag handle + icon + 본문/액션.
@@ -20,12 +20,12 @@ export const roleCard = () => css`
   article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"] {
     padding: ${pad(0.5)};
     background: transparent; border: 0;
-    color: ${dim(45)};
+    color: ${text('mute')};
     font-size: ${font('lg')};
     line-height: 1;
     cursor: grab;
   }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:hover { color: ${dim(75)}; }
+  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:hover { color: ${text('subtle')}; }
   article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:active { cursor: grabbing; }
   article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > span {
     font-size: ${font('xl')};
@@ -52,7 +52,7 @@ export const roleCard = () => css`
   article[data-part="card"][data-card="role"] > [data-slot="body"] > p {
     margin: 0;
     font-size: ${font('sm')};
-    color: ${dim(60)};
+    color: ${text('mute')};
     line-height: 1.5;
   }
 `

@@ -1,4 +1,4 @@
-import { accent, bg, border, control, css, dim, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, tint, tone, weight } from '../../tokens/foundations'
+import { accent, accentTint, bg, border, control, css, currentTint, dim, dur, ease, emphasize, focusRingWidth, font, hairlineWidth, indicator, microLabel, mute, neutral, pad, radius, text, tint, tone, weight } from '../../tokens/foundations'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
  *
@@ -12,7 +12,7 @@ export const grid = () => [
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      color: ${neutral()};
+      color: ${text('strong')};
       font: inherit;
     }
 
@@ -102,12 +102,12 @@ export const grid = () => [
     [role="treegrid"][data-density="compact"] [role="rowheader"],
     [role="grid"][data-density="compact"] [role="gridcell"],
     [role="grid"][data-density="compact"] [role="rowheader"] {
-      border-block-end-color: ${neutral(1)};
+      border-block-end-color: ${text('mute')};
     }
     /* selected 행 — edge-to-edge accent fill, lead bar 제거(Finder는 풀폭) */
     [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"],
     [role="grid"][data-density="compact"] [role="row"][aria-selected="true"] {
-      background: ${tint(accent(), 18)};
+      background: ${accentTint('medium')};
       box-shadow: none;
     }
     [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"] [role="gridcell"],
@@ -200,24 +200,24 @@ export const grid = () => [
     /* rowheader — 행의 첫 셀, 라벨 역할 */
     [role="rowheader"] {
       font-weight: ${weight('semibold')};
-      color: ${dim(90)};
+      color: ${text('default')};
     }
 
     /* row hover — subtle tint */
     [role="grid"] [role="row"]:hover:not([aria-disabled="true"]),
     [role="treegrid"] [role="row"]:hover:not([aria-disabled="true"]) {
-      background: ${dim(3)};
+      background: ${currentTint('subtle')};
     }
 
     /* row selected — tint + 좌측 accent lead bar (2026 표준 패턴) */
     [role="row"][aria-selected="true"] {
-      background: ${tint(accent(), 12)};
+      background: ${accentTint('soft')};
       box-shadow: inset 3px 0 0 0 ${accent()};
     }
 
     /* gridcell selected (셀 단위 선택 지원) */
     [role="gridcell"][aria-selected="true"] {
-      background: ${tint(accent(), 16)};
+      background: ${accentTint('medium')};
       box-shadow: inset 0 0 0 2px ${accent()};
       border-radius: ${pad(0.75)};
     }

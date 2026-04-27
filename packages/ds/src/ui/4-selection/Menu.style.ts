@@ -1,4 +1,4 @@
-import { accent, css, dur, ease, neutral, indicator, listReset, onAccent, pad, radius, rowPadding, selectedStrong, grouping } from '../../tokens/foundations'
+import { accent, css, dur, ease, grouping, indicator, listReset, neutral, onAccent, pad, radius, rowPadding, selectedStrong, text } from '../../tokens/foundations'
 export const menu = () => [
   css`
     button[popovertarget] {
@@ -26,7 +26,7 @@ export const menu = () => [
       padding: ${pad(1)};
       min-width: 180px; width: max-content;
       border-radius: ${radius('md')};
-      display: flex; flex-direction: column; color: ${neutral()};
+      display: flex; flex-direction: column; color: ${text('strong')};
     }
 
     /* inline-flex + align-items:center + justify-content:center + gap은 controlBox 축에서 상속.

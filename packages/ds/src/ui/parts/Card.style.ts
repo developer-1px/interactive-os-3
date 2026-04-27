@@ -1,4 +1,4 @@
-import { border, css, dim, grouping, hairlineWidth, pad, radius } from '../../tokens/foundations'
+import { border, css, currentTint, dim, grouping, hairlineWidth, pad, radius, text } from '../../tokens/foundations'
 
 /**
  * Card — surface primitive. 슬롯은 vertical flex stack.
@@ -22,12 +22,12 @@ export const card = () => css`
     transition: border-color .15s ease, box-shadow .15s ease;
   }
   article[data-part="card"]:hover {
-    border-color: ${dim(15)};
-    box-shadow: 0 1px 3px ${dim(6)};
+    border-color: ${text('mute')};
+    box-shadow: 0 1px 3px ${currentTint('soft')};
   }
   article[data-part="card"][aria-current="true"] {
     border-color: var(--ds-accent);
-    box-shadow: 0 0 0 1px var(--ds-accent), 0 1px 3px ${dim(6)};
+    box-shadow: 0 0 0 1px var(--ds-accent), 0 1px 3px ${currentTint('soft')};
   }
   article[data-part="card"]:focus-visible {
     outline: 2px solid var(--ds-accent);
@@ -44,7 +44,7 @@ export const card = () => css`
   article[data-part="card"] > [data-slot="preview"] {
     min-block-size: 220px;
     padding: ${pad(3)};
-    background: ${dim(3)};
+    background: ${currentTint('subtle')};
     border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('md')};
     display: grid; place-items: center;

@@ -1,4 +1,4 @@
-import { control, css, dim, neutral, font, pad, radius } from '../../tokens/foundations'
+import { control, css, dim, font, neutral, pad, radius, surface, text } from '../../tokens/foundations'
 /**
  * Toolbar — 필터·액션을 담는 수평 컨테이너.
  *
@@ -12,7 +12,7 @@ import { control, css, dim, neutral, font, pad, radius } from '../../tokens/foun
 export const toolbar = () => css`
   [role="toolbar"] {
     padding: ${pad(1.5)} ${pad(2)};
-    background: ${neutral(1)};
+    background: ${surface('subtle')};
     border-radius: ${radius('md')};
     row-gap: ${pad(1.5)};
   }
@@ -28,7 +28,7 @@ export const toolbar = () => css`
      조작 컨트롤 사이에 섞이지 않게 시각적으로 떨어뜨린다. */
   [role="toolbar"] > [data-variant] {
     margin-inline-start: auto;
-    color: ${dim(60)};
+    color: ${text('mute')};
     font-size: ${font('sm')};
     white-space: nowrap;
   }
@@ -37,7 +37,7 @@ export const toolbar = () => css`
   [role="toolbar"] > [role="separator"][aria-orientation="vertical"] {
     inline-size: 1px;
     block-size: calc(${control('h')} * 0.6);
-    background: ${neutral(3)};
+    background: ${surface('raised')};
     align-self: center;
   }
 
@@ -49,7 +49,7 @@ export const toolbar = () => css`
     align-items: center;
     gap: ${pad(0.25)};
     padding: ${pad(0.5)};
-    background: ${neutral(2)};
+    background: ${surface('muted')};
     border-radius: ${radius('pill')};
   }
   [role="toolbar"] > [role="group"] > button {
@@ -58,6 +58,6 @@ export const toolbar = () => css`
     border-radius: ${radius('pill')};
   }
   [role="toolbar"] > [role="group"] > button:hover:not(:disabled) {
-    background: ${neutral(3)};
+    background: ${surface('raised')};
   }
 `

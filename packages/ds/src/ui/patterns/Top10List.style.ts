@@ -1,4 +1,4 @@
-import { accent, border, css, dim, font, hairlineWidth, pad, weight } from '../../tokens/foundations'
+import { accent, border, css, dim, font, hairlineWidth, pad, text, weight } from '../../tokens/foundations'
 export const top10 = () => css`
   [data-part="top-10"] {
     counter-reset: rank;
@@ -21,7 +21,7 @@ export const top10 = () => css`
     font-weight: ${weight('semibold')};
     font-size: ${font('sm')};
     text-align: center;
-    color: ${dim(55)};
+    color: ${text('mute')};
   }
   [data-part="top-10"] > li:nth-child(-n+3)::before { color: ${accent()}; }
   [data-part="top-10"] > li > span {
@@ -30,6 +30,6 @@ export const top10 = () => css`
   }
   [data-part="top-10"] > li > small {
     font-variant-numeric: tabular-nums;
-    color: ${dim(55)};
+    color: ${text('mute')};
   }
 `

@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, status, weight } from '../tokens/foundations'
+import { css, dim, pad, radius, status, text, weight } from '../tokens/foundations'
 
 /**
  * ProductCard slot inner styling — 커머스 상품 카드.
@@ -39,7 +39,7 @@ export const productCard = () => css`
   article[data-part="card"][data-card="product"] > [data-slot="body"] > p > strong {
     font-size: var(--ds-text-lg); font-weight: ${weight('bold')};
   }
-  article[data-part="card"][data-card="product"] > [data-slot="body"] > p > small > s { color: ${dim(55)}; }
+  article[data-part="card"][data-card="product"] > [data-slot="body"] > p > small > s { color: ${text('mute')}; }
   article[data-part="card"][data-card="product"] > [data-slot="body"] > p > mark {
     background: color-mix(in oklch, ${status('danger')} 14%, transparent);
     color: ${status('danger')};
@@ -50,7 +50,7 @@ export const productCard = () => css`
 
   /* meta 슬롯 — brand · rating · reviews */
   article[data-part="card"][data-card="product"] > [data-slot="meta"] > small {
-    color: ${dim(55)}; font-size: var(--ds-text-xs);
+    color: ${text('mute')}; font-size: var(--ds-text-xs);
   }
 
   /* checks 슬롯 (tags 재사용) */

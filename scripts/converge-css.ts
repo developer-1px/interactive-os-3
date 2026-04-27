@@ -23,7 +23,7 @@ import { execSync } from 'node:child_process'
 const ROOT = new URL('..', import.meta.url).pathname
 const APPLY = process.argv.includes('--apply')
 
-type Rule = { match: RegExp; replace: string; importName: string }
+type Rule = { match: RegExp; replace: string | ((...args: string[]) => string); importName: string }
 
 const weightMap: Record<string, string> = {
   '400': 'regular', '500': 'medium', '600': 'semibold', '700': 'bold', '800': 'extrabold',
@@ -39,6 +39,122 @@ const RULES: Rule[] = [
     match: /border-radius:\s*(?:50%|9999px|999px)\s*;/g,
     replace: `border-radius: \${radius('pill')};`,
     importName: 'radius',
+  },
+  // text color 의 dim(N) → role-based text(role)
+  // N 값에 따른 매핑은 의미를 보고 결정 — 같은 수치라도 의미 다르면 별 role 로 분기 가능
+  {
+    match: /color:\s*\$\{dim\((\d+)\)\}\s*;/g,
+    replace: (m: string, n: string) => {
+      const v = Number(n)
+      const role = v <= 60 ? 'mute' : v <= 75 ? 'subtle' : 'default'
+      return `color: \${text('${role}')};`
+    },
+    importName: 'text',
+  },
+  {
+    match: /border-color:\s*\$\{dim\(\d+\)\}\s*;/g,
+    replace: `border-color: \${border('subtle')};`,
+    importName: 'border',
+  },
+  // neutral(N) 직접 매핑 — palette index → semantic role
+  {
+    match: /color:\s*\$\{neutral\((\d)\)\}\s*;/g,
+    replace: (_m: string, n: string) => {
+      const role = n === '9' ? 'strong' : n === '8' ? 'default' : n === '7' ? 'subtle' : 'mute'
+      return `color: \${text('${role}')};`
+    },
+    importName: 'text',
+  },
+  {
+    match: /background(?:-color)?:\s*\$\{neutral\(([123])\)\}\s*;/g,
+    replace: (_m: string, n: string) => {
+      const role = n === '1' ? 'subtle' : n === '2' ? 'muted' : 'raised'
+      return `background: \${surface('${role}')};`
+    },
+    importName: 'surface',
+  },
+  // tint(accent(), N) → accentTint(role) — N 값에 따른 의미 매핑
+  {
+    match: /\$\{tint\(accent\(\),\s*(\d+)\)\}/g,
+    replace: (_m: string, n: string) => {
+      const v = Number(n)
+      const role = v <= 8 ? 'softest' : v <= 14 ? 'soft' : v <= 25 ? 'medium' : v <= 50 ? 'border' : v <= 70 ? 'glow' : 'strong'
+      return `\${accentTint('${role}')}`
+    },
+    importName: 'accentTint',
+  },
+  // tint('CanvasText'|'Canvas', N) → surfaceTint(role)
+  {
+    match: /\$\{tint\(['"]CanvasText['"],\s*(\d+)\)\}/g,
+    replace: (_m: string, n: string) => {
+      const role = Number(n) <= 5 ? 'glass' : 'overlay'
+      return `\${surfaceTint('${role}')}`
+    },
+    importName: 'surfaceTint',
+  },
+  {
+    match: /\$\{tint\(['"]Canvas['"],\s*\d+\)\}/g,
+    replace: `\${surfaceTint('highlight')}`,
+    importName: 'surfaceTint',
+  },
+  // tint(status('tone'), N) and `tint(`${status('tone')}`, N) → statusTint(tone, role)
+  {
+    match: /\$\{tint\(status\(['"](success|warning|danger)['"]\),\s*(\d+)\)\}/g,
+    replace: (_m: string, tone: string, n: string) => {
+      const v = Number(n)
+      const role = v <= 20 ? 'soft' : v <= 50 ? 'border' : 'medium'
+      return `\${statusTint('${tone}', '${role}')}`
+    },
+    importName: 'statusTint',
+  },
+  // 백틱 nested 형: `tint(`${status('danger')}`, N)`
+  {
+    match: /\$\{tint\(`\$\{status\(['"](success|warning|danger)['"]\)\}`,\s*(\d+)\)\}/g,
+    replace: (_m: string, tone: string, n: string) => {
+      const v = Number(n)
+      const role = v <= 20 ? 'soft' : v <= 50 ? 'border' : 'medium'
+      return `\${statusTint('${tone}', '${role}')}`
+    },
+    importName: 'statusTint',
+  },
+  // dim(N) — color 매핑 끝, 나머지는 currentTint role (background/shadow/gradient stop)
+  {
+    match: /\$\{dim\((\d+)\)\}/g,
+    replace: (_m: string, n: string) => {
+      const v = Number(n)
+      const role = v <= 3 ? 'subtle' : v <= 8 ? 'soft' : v <= 15 ? 'medium' : v <= 60 ? 'strong' : 'deep'
+      return `\${currentTint('${role}')}`
+    },
+    importName: 'currentTint',
+  },
+  // bare neutral() = neutral(9) = text('strong')
+  {
+    match: /color:\s*\$\{neutral\(\)\}\s*;/g,
+    replace: `color: \${text('strong')};`,
+    importName: 'text',
+  },
+  // mix(color, 70, 'CanvasText') — 그라데이션 딥 스탑 → gradientDeep(color)
+  // accent / status('tone') 두 형태 모두 처리. 백틱 nested 형도.
+  {
+    match: /\$\{mix\(accent\(\),\s*70,\s*['"]CanvasText['"]\)\}/g,
+    replace: `\${gradientDeep(accent())}`,
+    importName: 'gradientDeep',
+  },
+  {
+    match: /\$\{mix\(`\$\{accent\(\)\}`,\s*70,\s*['"]CanvasText['"]\)\}/g,
+    replace: `\${gradientDeep(accent())}`,
+    importName: 'gradientDeep',
+  },
+  {
+    match: /\$\{mix\(status\(['"](success|warning|danger)['"]\),\s*70,\s*['"]CanvasText['"]\)\}/g,
+    replace: (_m: string, tone: string) => `\${gradientDeep(status('${tone}'))}`,
+    importName: 'gradientDeep',
+  },
+  // mix(status('tone'), 4) — Canvas 와 4% 블렌드 = soft status surface
+  {
+    match: /\$\{mix\(status\(['"](success|warning|danger)['"]\),\s*\d+\)\}/g,
+    replace: (_m: string, tone: string) => `\${statusTint('${tone}', 'soft')}`,
+    importName: 'statusTint',
   },
 ]
 
@@ -77,7 +193,10 @@ for (const file of files) {
   const needs = new Set<string>()
   for (const r of RULES) {
     const before = src
-    src = src.replace(r.match, () => { n++; return r.replace })
+    src = src.replace(r.match, (...args: string[]) => {
+      n++
+      return typeof r.replace === 'function' ? r.replace(...args) : r.replace
+    })
     if (src !== before) needs.add(r.importName)
   }
   if (n === 0) continue

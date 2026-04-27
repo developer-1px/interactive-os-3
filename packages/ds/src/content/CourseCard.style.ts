@@ -1,4 +1,4 @@
-import { accent, css, dim, font, mix, on, pad, radius, status, weight } from '../tokens/foundations'
+import { accent, css, currentTint, dim, font, gradientDeep, mix, on, pad, radius, status, text, weight } from '../tokens/foundations'
 
 /**
  * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.
@@ -23,22 +23,22 @@ export const courseCard = () => css`
     font-weight: ${weight('extrabold')};
     letter-spacing: -0.02em;
     color: ${on('accent')};
-    background: linear-gradient(135deg, ${accent()}, ${mix('${accent()}', 70, 'CanvasText')});
+    background: linear-gradient(135deg, ${accent()}, ${gradientDeep(accent())});
   }
   article[data-part="card"][data-card="course"][data-tone="success"] > [data-slot="preview"] > figure {
     color: ${on('success')};
-    background: linear-gradient(135deg, ${status('success')}, ${mix(status('success'), 70, 'CanvasText')});
+    background: linear-gradient(135deg, ${status('success')}, ${gradientDeep(status('success'))});
   }
   article[data-part="card"][data-card="course"][data-tone="warning"] > [data-slot="preview"] > figure {
     color: ${on('warning')};
-    background: linear-gradient(135deg, ${status('warning')}, ${mix(status('warning'), 70, 'CanvasText')});
+    background: linear-gradient(135deg, ${status('warning')}, ${gradientDeep(status('warning'))});
   }
   article[data-part="card"][data-card="course"][data-tone="danger"] > [data-slot="preview"] > figure {
     color: ${on('danger')};
-    background: linear-gradient(135deg, ${status('danger')}, ${mix(status('danger'), 70, 'CanvasText')});
+    background: linear-gradient(135deg, ${status('danger')}, ${gradientDeep(status('danger'))});
   }
   article[data-part="card"][data-card="course"][data-tone="neutral"] > [data-slot="preview"] > figure {
-    background: linear-gradient(135deg, ${dim(55)}, ${dim(80)});
+    background: linear-gradient(135deg, ${currentTint('strong')}, ${currentTint('deep')});
   }
 
   /* title 슬롯 — h3 + meta 가로 묶음 */
@@ -57,7 +57,7 @@ export const courseCard = () => css`
   article[data-part="card"][data-card="course"] > [data-slot="body"] > p {
     margin: 0;
     font-size: ${font('sm')};
-    color: ${dim(60)};
+    color: ${text('mute')};
     line-height: 1.5;
   }
 
@@ -68,6 +68,6 @@ export const courseCard = () => css`
   }
   article[data-part="card"][data-card="course"] > [data-slot="footer"] > footer > small {
     font-size: ${font('xs')};
-    color: ${dim(55)};
+    color: ${text('mute')};
   }
 `

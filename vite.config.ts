@@ -45,7 +45,7 @@ export default defineConfig({
       target: 'react',
       routesDirectory: 'packages/app/src/routes',
       generatedRouteTree: 'packages/app/src/routeTree.gen.ts',
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
       // 컴포넌트 파일(PascalCase)은 라우트로 해석하지 않는다.
       // 라우트 파일은 모두 lowercase / dot-segment 규약(예: finder.$.tsx)을 따른다.
       routeFileIgnorePattern: '(^|/)[A-Z][^/]*\\.(tsx?|jsx?)$',

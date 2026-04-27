@@ -1,4 +1,4 @@
-import { css, dim, font, hairlineWidth, icon, mix, pad, status, tint, weight } from '../../tokens/foundations'
+import { css, dim, font, hairlineWidth, icon, mix, pad, status, statusTint, text, tint, weight } from '../../tokens/foundations'
 
 /**
  * StatCard slot inner styling — Card primitive 슬롯 안의 KPI 특화 시각만.
@@ -9,8 +9,8 @@ import { css, dim, font, hairlineWidth, icon, mix, pad, status, tint, weight } f
 export const statCard = () => css`
   /* alert tone — 카드 root 강조 */
   article[data-part="card"][data-card="stat"][data-tone="alert"] {
-    border: ${hairlineWidth()} solid ${tint(status('danger'), 40)};
-    background: ${mix(status('danger'), 4)};
+    border: ${hairlineWidth()} solid ${statusTint('danger', 'border')};
+    background: ${statusTint('danger', 'soft')};
   }
 
   /* title 슬롯 — label dl + 우측 icon */
@@ -22,7 +22,7 @@ export const statCard = () => css`
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > dl > dt {
     display: inline-flex; align-items: center; gap: ${pad(1)};
     font-size: ${font('sm')};
-    color: ${dim(60)};
+    color: ${text('mute')};
     font-weight: ${weight('medium')};
   }
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > span[aria-hidden="true"] {
@@ -42,7 +42,7 @@ export const statCard = () => css`
 
   /* meta 슬롯 — sub 텍스트 */
   article[data-part="card"][data-card="stat"] > [data-slot="meta"] > small {
-    color: ${dim(55)};
+    color: ${text('mute')};
     font-size: ${font('xs')};
   }
 

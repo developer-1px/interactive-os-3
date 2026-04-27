@@ -1,4 +1,4 @@
-import { css, dim, font, pad, radius, status, toneTint, weight } from '../../tokens/foundations'
+import { css, currentTint, dim, font, pad, radius, status, toneTint, weight } from '../../tokens/foundations'
 
 /**
  * Badge (parts) — counter / status dot.
@@ -17,7 +17,7 @@ export const badge = () => css`
     font-size: ${font('xs')};
     font-weight: ${weight('semibold')};
     line-height: 1;
-    background: ${dim(10)};
+    background: ${currentTint('medium')};
     color: inherit;
     vertical-align: middle;
     user-select: none;

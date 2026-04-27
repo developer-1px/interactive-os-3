@@ -1,4 +1,4 @@
-import { accent, css, dim, radius } from '../../tokens/foundations'
+import { accent, css, currentTint, dim, radius } from '../../tokens/foundations'
 
 export const progress = () => css`
   :where(progress) {
@@ -8,10 +8,10 @@ export const progress = () => css`
     border: 0;
     border-radius: ${radius('pill')};
     overflow: hidden;
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
   }
   progress::-webkit-progress-bar {
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
     border-radius: ${radius('pill')};
   }
   progress::-webkit-progress-value {

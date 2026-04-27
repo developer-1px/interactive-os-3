@@ -1,4 +1,4 @@
-import { accent, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../tokens/foundations'
+import { accent, accentTint, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../tokens/foundations'
 import { containerPad, slotGap } from '../../tokens/style/seed/keyline'
 
 /**
@@ -29,7 +29,7 @@ export const orderableCss = () => css`
   }
   ${hairline(`ol[data-part="orderable"] > li`)}
   ol[data-part="orderable"] > li:hover {
-    background: ${tint(accent(), 6)};
+    background: ${accentTint('softest')};
   }
 
   /* primary label — flex:1 + truncate */

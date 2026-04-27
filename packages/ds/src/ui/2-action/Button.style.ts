@@ -1,4 +1,4 @@
-import { accent, control, css, dur, ease, hairlineWidth, neutral, onAccent, pad, radius, square, status, tint, weight } from '../../tokens/foundations'
+import { accent, accentTint, control, css, dur, ease, hairlineWidth, neutral, onAccent, pad, radius, square, status, statusTint, surface, surfaceTint, tint, weight } from '../../tokens/foundations'
 // Badge vs Button 시각 계약 단서:
 //  - Badge: 작음(xs, height auto), pill, 얕은 tint, cursor default, 경계 없음
 //  - Button: 체크기(29.5px control-h), radius md, neutral-2 서피스, 1px hairline 경계, cursor pointer
@@ -22,7 +22,7 @@ export const buttonCss = css`
   /* ── 기본 (= secondary/default) ───────────────────────────────
      base.ts의 controlBox 위에 얕은 서피스와 경계 없는 hover 신호만 얹는다. */
   :where(button:not([data-part="actions"] > button)) {
-    background: ${neutral(2)};
+    background: ${surface('muted')};
     color: inherit;
     border: ${hairlineWidth()} solid ${control('border')};
     border-radius: ${radius('md')};
@@ -38,9 +38,9 @@ export const buttonCss = css`
     margin-inline-end: 0;
   }
   :where(button:not([data-part="actions"] > button)):hover:not([aria-disabled="true"]) {
-    background: ${tint(accent(), 12)};
+    background: ${accentTint('soft')};
     color: ${accent()};
-    border-color: ${tint(accent(), 40)};
+    border-color: ${accentTint('border')};
   }
 
   /* ── Primary (actions 영역의 "주" 버튼 하나) ─────────────────────
@@ -57,7 +57,7 @@ export const buttonCss = css`
                 transform ${dur('fast')} ${ease('out')};
   }
   [data-part="actions"] > button:first-of-type:hover:not([aria-disabled="true"]) {
-    background: ${tint(accent(), 85)};
+    background: ${accentTint('strong')};
   }
   [data-part="actions"] > button:first-of-type:active:not([aria-disabled="true"]) {
     transform: translateY(1px);
@@ -67,7 +67,7 @@ export const buttonCss = css`
     [data-part="actions"] > button:first-of-type {
       border-radius: ${radius('pill')};
       box-shadow:
-        inset 0 1px 0 ${tint('Canvas', 30)},
+        inset 0 1px 0 ${surfaceTint('highlight')},
         0 1px 2px color-mix(in oklch, ${accent()} 20%, transparent),
         0 6px 14px color-mix(in oklch, ${accent()} 22%, transparent);
     }
@@ -76,9 +76,9 @@ export const buttonCss = css`
   /* ── Danger (위험 영역) ────────────────────────────────────────
      [data-part="danger"] 섹션 안의 button은 경고 색. 삭제/해지 등. */
   [data-part="danger"] button {
-    background: ${tint(`${status('danger')}`, 8)};
+    background: ${statusTint('danger', 'soft')};
     color: ${status('danger')};
-    border-color: ${tint(`${status('danger')}`, 30)};
+    border-color: ${statusTint('danger', 'border')};
   }
   [data-part="danger"] button:hover:not([aria-disabled="true"]) {
     background: ${status('danger')};

@@ -1,4 +1,4 @@
-import { css, dim, radius } from '../../tokens/foundations'
+import { css, currentTint, dim, radius } from '../../tokens/foundations'
 
 /**
  * Skeleton — 로딩 placeholder. 단색 box. shimmer 없음 (motion 부담 없음).
@@ -9,7 +9,7 @@ export const skeleton = () => css`
     display: inline-block;
     inline-size: 4em;
     block-size: 1em;
-    background: ${dim(8)};
+    background: ${currentTint('soft')};
     border-radius: ${radius('sm')};
     vertical-align: middle;
   }

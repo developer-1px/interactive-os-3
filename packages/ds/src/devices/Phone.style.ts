@@ -1,4 +1,4 @@
-import { css, hairlineWidth, neutral, pad, radius, weight } from '../tokens/foundations'
+import { css, hairlineWidth, neutral, pad, radius, text, weight } from '../tokens/foundations'
 
 /**
  * Phone — iPhone device chrome CSS. 실물 크기 (393×852pt = iPhone 14 Pro 논리 폭).
@@ -136,7 +136,7 @@ export const phone = () => css`
   }
   [data-part="phone-tab"] {
     display: flex; align-items: center; justify-content: center;
-    color: ${neutral(6)};
+    color: ${text('mute')};
     font-size: var(--ds-text-lg);
   }
   [data-part="phone-tab"][aria-current="true"] { color: var(--ds-accent); }

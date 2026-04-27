@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, weight } from '../tokens/foundations'
+import { css, dim, pad, radius, text, weight } from '../tokens/foundations'
 
 /**
  * FeedPost slot inner styling — SNS 피드 포스트 카드.
@@ -29,7 +29,7 @@ export const feedPost = () => css`
   article[data-part="card"][data-card="feed-post"] > [data-slot="title"] > header > strong:nth-of-type(2) > small {
     display: block;
     font-weight: ${weight('regular')};
-    color: ${dim(55)};
+    color: ${text('mute')};
     font-size: var(--ds-text-xs);
     margin-block-start: ${pad(0.25)};
   }

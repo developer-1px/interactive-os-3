@@ -67,6 +67,66 @@ export const border = (role?: 'subtle' | 'default' | 'strong' | 'emphatic') => {
 // ── 기존 semantic 토큰 (palette.ts에서 이전) ────────────────────────────
 /** @demo type=color fn=accent */
 export const accent    = () => `var(--ds-accent)`
+
+/**
+ * accentTint(role) — accent surface/border 변형. 같은 accent 색의 강도 role.
+ *   'softest' = 6%   — hover/selected 행 배경 (가장 약한 accent surface)
+ *   'soft'    = 12%  — 활성 상태 surface
+ *   'medium'  = 18%  — 강한 활성 surface
+ *   'border'  = 40%  — accent 톤 경계선
+ *   'glow'    = 60%  — focus ring 외곽
+ *   'strong'  = 85%  — accent surface 강조 (text inverse 배경)
+ * @demo type=color fn=accentTint args=["soft"]
+ */
+export const accentTint = (role: 'softest' | 'soft' | 'medium' | 'border' | 'glow' | 'strong') => {
+  const map = { softest: 6, soft: 12, medium: 18, border: 40, glow: 60, strong: 85 } as const
+  return `color-mix(in oklab, var(--ds-accent) ${map[role]}%, transparent)`
+}
+
+/**
+ * statusTint(tone, role) — status 색의 강도 변형. accentTint 와 같은 role 어휘.
+ * @demo type=color fn=statusTint args=["danger","border"]
+ */
+export const statusTint = (tone: StatusTone, role: 'soft' | 'border' | 'medium') => {
+  const map = { soft: 12, border: 40, medium: 70 } as const
+  return `color-mix(in oklab, var(--ds-${tone}) ${map[role]}%, transparent)`
+}
+
+/**
+ * surfaceTint(role) — Canvas/CanvasText 기반 알파 surface. neutral palette flip 안전.
+ *   'glass'  = 4%   — 가장 약한 overlay (chip 배경)
+ *   'overlay' = 8%  — 약한 overlay (hover row)
+ *   'highlight' = 30% — 반사 하이라이트 (inset shadow)
+ * @demo type=color fn=surfaceTint args=["overlay"]
+ */
+export const surfaceTint = (role: 'glass' | 'overlay' | 'highlight') => {
+  const map = { glass: 4, overlay: 8, highlight: 30 } as const
+  const base = role === 'highlight' ? 'Canvas' : 'CanvasText'
+  return `color-mix(in oklab, ${base} ${map[role]}%, transparent)`
+}
+
+/**
+ * currentTint(role) — currentColor 기반 알파 surface/shadow. surface flip 안전.
+ * dim() 의 role-based 래퍼. 호버 배경·shadow alpha·gradient stop 용도.
+ *   'subtle' = 3%   — 가장 약한 hover bg
+ *   'soft'   = 6%   — shadow alpha · 표준 hover
+ *   'medium' = 10%  — active bg · 진한 shadow
+ *   'strong' = 55%  — gradient mid stop
+ *   'deep'   = 80%  — gradient end stop · 거의 full color
+ * @demo type=color fn=currentTint args=["soft"]
+ */
+export const currentTint = (role: 'subtle' | 'soft' | 'medium' | 'strong' | 'deep') => {
+  const map = { subtle: 3, soft: 6, medium: 10, strong: 55, deep: 80 } as const
+  return `color-mix(in oklab, currentColor ${map[role]}%, transparent)`
+}
+
+/**
+ * gradientDeep(color) — 그라데이션 딥 스탑. 주어진 색을 CanvasText 로 70% 섞어 어둡게.
+ * `linear-gradient(deg, color, gradientDeep(color))` 패턴 전용.
+ * @demo type=color fn=gradientDeep args=["var(--ds-accent)"]
+ */
+export const gradientDeep = (color: string) =>
+  `color-mix(in oklab, ${color} 70%, CanvasText)`
 /** @demo type=color fn=onAccent */
 export const onAccent  = () => `var(--ds-accent-on)`
 

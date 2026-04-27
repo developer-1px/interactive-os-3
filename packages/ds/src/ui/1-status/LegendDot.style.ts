@@ -1,9 +1,9 @@
-import { accent, css, dim, font, pad, radius, status } from '../../tokens/foundations'
+import { accent, css, dim, font, pad, radius, status, text } from '../../tokens/foundations'
 export const legendDot = () => css`
   [data-part="legend-dot"] {
     display: inline-flex; align-items: center; gap: ${pad(0.75)};
     font-size: ${font('xs')};
-    color: ${dim(70)};
+    color: ${text('subtle')};
   }
   [data-part="legend-dot"]::before {
     content: ''; display: inline-block;

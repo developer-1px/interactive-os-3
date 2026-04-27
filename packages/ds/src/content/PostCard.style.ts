@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, tint, weight } from '../tokens/foundations'
+import { css, dim, pad, radius, surfaceTint, text, tint, weight } from '../tokens/foundations'
 
 /**
  * PostCard slot inner styling — Slack/Discord 식 채널 게시판 한 줄.
@@ -33,7 +33,7 @@ export const postCard = () => css`
   }
   article[data-part="card"][data-card="post"]:not([data-cont]) { padding-top: ${pad(2)}; }
   article[data-part="card"][data-card="post"]:hover {
-    background: ${tint('CanvasText', 4)};
+    background: ${surfaceTint('glass')};
     box-shadow: none;
     border-color: transparent;
   }
@@ -51,7 +51,7 @@ export const postCard = () => css`
     inline-size: 100%;
     border-radius: ${radius('md')};
     overflow: hidden;
-    background: ${tint('CanvasText', 8)};
+    background: ${surfaceTint('overlay')};
     display: block;
   }
   article[data-part="card"][data-card="post"] > [data-slot="preview"] > strong[data-ds-aspect="square"] > img {
@@ -73,7 +73,7 @@ export const postCard = () => css`
   }
   article[data-part="card"][data-card="post"] > [data-slot="title"] > strong > small {
     margin-inline-start: ${pad(1)};
-    color: ${dim(55)};
+    color: ${text('mute')};
     font-weight: ${weight('regular')};
     font-size: var(--ds-text-xs);
   }
