@@ -9,7 +9,7 @@ import {
 } from '../../headless/types'
 import { activate, composeAxes, navigate, typeahead } from '../../headless/axes'
 import { activateOnNavigate } from '../../headless/gesture'
-import { useRoving } from '../../headless/hooks/useRoving'
+import { useRoving } from '../../headless/roving/useRoving'
 import { Option } from './Option'
 
 type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>

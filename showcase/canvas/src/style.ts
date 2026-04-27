@@ -1,6 +1,5 @@
-import { css, radius, microLabel, pair, bg, text, surface, border, mute } from '@p/ds/tokens/foundations'
-import { weight } from '@p/ds/tokens/palette'
-import { neutral, pad } from '@p/ds/tokens/palette'
+import { css, radius, pair, bg, text, surface, border, mute, typography, type as typeRole } from '@p/ds/tokens/foundations'
+import { weight, pad, font } from '@p/ds/tokens/palette'
 import { TONE } from './canvas-tones'
 
 /**
@@ -24,7 +23,8 @@ export const canvasCss = css`
     position: fixed; inset: 0;
     /* surface owner — bg/fg 페어로 선언. 자식은 inherit, 자체 pair 필요 시 재선언. */
     ${pair({ bg: surface('subtle'), fg: text('strong') })}
-    font: 400 14px system-ui, sans-serif;
+    ${typography('body')}
+    font-family: system-ui, sans-serif;
   }
 
   [data-part="canvas-board"] {
@@ -37,25 +37,25 @@ export const canvasCss = css`
     margin-bottom: ${pad(8)};
   }
   [data-part="canvas-header"] > [data-meta] {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
     letter-spacing: 0.18em;
     text-transform: uppercase;
     ${mute(2)}
     margin-bottom: ${pad(2)};
   }
   [data-part="canvas-header"] > h1 {
-    font: 800 64px system-ui;
+    ${typography('hero')}
+    font-size: calc(${font('3xl')} * 1.6);
     letter-spacing: -0.03em;
     line-height: 1;
     margin: 0 0 ${pad(2)};
   }
   [data-part="canvas-header"] > [data-stats] {
-    font: 400 14px system-ui;
+    ${typography('body')}
     ${mute(1)}
   }
   [data-part="canvas-header"] code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 12px;
+    ${typography('mono')}
   }
 
   /* 3 레이어 가로 배치 — L0 Palette · L1 Semantic · L2 Components.
@@ -134,18 +134,20 @@ export const canvasCss = css`
     min-width: 28px;
     padding: 3px ${pad(1.5)};
     ${pair({ bg: 'var(--tone)', fg: 'white' })}
-    font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
+    font-weight: ${weight('bold')};
     letter-spacing: 0.06em;
     border-radius: ${radius('sm')};
   }
   [data-part="canvas-column-banner-title"] {
-    font: 800 40px system-ui;
+    ${typography('hero')}
+    font-weight: ${weight('extrabold')};
     letter-spacing: -0.02em;
     line-height: 1;
     margin: 0;
   }
   [data-part="canvas-column-banner-hint"] {
-    font: 400 13px system-ui;
+    ${typography('body')}
     ${mute(1)}
     line-height: 1.55;
     margin: 0;
@@ -172,7 +174,9 @@ export const canvasCss = css`
     display: none !important;
   }
   [data-part="canvas-palette-column"] [data-part="theme-creator"] header > h1 {
-    font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace !important;
+    font-family: ${typeRole.mono.fontFamily} !important;
+    font-size: ${font('sm')} !important;
+    font-weight: ${weight('semibold')} !important;
     opacity: 0.65 !important;
     margin: 0 !important;
   }
@@ -203,7 +207,7 @@ export const canvasCss = css`
 
   /* section tag — column-tinted accent bar(4px) 옆 제목. fg 는 column 에서 inherit. */
   [data-part="canvas-section-tag"] {
-    font: 700 22px Inter, system-ui;
+    ${typography('display')}
     letter-spacing: -0.018em;
     line-height: 1.1;
     display: grid;
@@ -227,19 +231,24 @@ export const canvasCss = css`
     font-weight: ${weight('bold')};
   }
   [data-part="canvas-section-tag"] > small {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
+    font-weight: ${weight('medium')};
     opacity: 0.65;
     grid-column: 2;
     margin-top: 2px;
   }
   [data-part="canvas-section-tag"] > [data-subtitle] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     opacity: 0.65;
     text-transform: none;
     grid-column: 2;
   }
   [data-part="canvas-section-standard"] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     letter-spacing: 0.02em;
     opacity: 0.65;
     padding-left: calc(3px + ${pad(2.5)}); /* accent bar 정렬 */
@@ -254,7 +263,9 @@ export const canvasCss = css`
   }
   [data-part="canvas-shape-group"]:last-child { margin-bottom: 0; }
   [data-part="canvas-shape-label"] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     opacity: 0.65;
     letter-spacing: 0;
   }
@@ -264,7 +275,7 @@ export const canvasCss = css`
   /* subgroup eyebrow — 섹션 디바이더와 경쟁 ❌. dashed 라인 폐기, micro mono 라벨만 */
   [data-part="canvas-subgroup"] > h3,
   [data-part="canvas-subgroup"] > h4 {
-    font: 600 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
     letter-spacing: 0.14em;
     text-transform: uppercase;
     opacity: 0.65;
@@ -358,13 +369,15 @@ export const canvasCss = css`
     box-shadow: 0 1px 2px color-mix(in oklab, CanvasText 4%, transparent);
   }
   [data-part="canvas-token-card"] > [data-name] {
-    font: 600 12px system-ui;
+    ${typography('captionStrong')}
     letter-spacing: -0.01em;
     align-self: end;
     line-height: 1.3;
   }
   [data-part="canvas-token-card"] > [data-call] {
-    font: 500 10.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('medium')};
     opacity: 0.65;
     align-self: start;
     word-break: break-all;
@@ -411,12 +424,14 @@ export const canvasCss = css`
     box-shadow: 0 6px 16px color-mix(in oklab, CanvasText 18%, transparent);
   }
   [data-part="canvas-color-ramp"] [data-tile] > [data-step] {
-    font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoStrong')}
     letter-spacing: 0.04em;
     align-self: flex-start;
   }
   [data-part="canvas-color-ramp"] [data-tile] > [data-hex] {
-    font: 500 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('medium')};
     letter-spacing: 0.02em;
     opacity: 0;
     transition: opacity 120ms ease;
@@ -431,10 +446,12 @@ export const canvasCss = css`
     padding: 0 2px;
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-name] {
-    font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoLabel')}
   }
   [data-part="canvas-color-ramp"] > [data-meta] > [data-range] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     opacity: 0.65;
     letter-spacing: 0.04em;
   }
@@ -456,7 +473,8 @@ export const canvasCss = css`
     display: contents;
   }
   [data-part="canvas-space-stack"] [data-label] {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
+    font-weight: ${weight('medium')};
     opacity: 0.80;
     letter-spacing: 0.02em;
   }
@@ -468,7 +486,9 @@ export const canvasCss = css`
     min-inline-size: 1px;
   }
   [data-part="canvas-space-stack"] [data-value] {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     opacity: 0.65;
     text-align: end;
   }
@@ -499,7 +519,8 @@ export const canvasCss = css`
     border-radius: ${radius('sm')};
   }
   [data-part="canvas-elev-tower"] figcaption {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
+    font-weight: ${weight('medium')};
     opacity: 0.65;
   }
 
@@ -515,7 +536,7 @@ export const canvasCss = css`
     font-weight: ${weight('semibold')};
   }
   [data-part="canvas-type-row"] > [data-meta] {
-    font: 400 11px system-ui;
+    ${typography('micro')}
     opacity: 0.65;
   }
 
@@ -560,13 +581,17 @@ export const canvasCss = css`
   }
   [data-part="canvas-comp-card"] > [data-stage][data-empty] {
     opacity: 0.65;
-    font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
     min-height: 56px;
   }
   [data-part="canvas-comp-card"] > figcaption {
-    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: ${typeRole.mono.fontFamily};
+    font-size: ${font('xs')};
+    font-weight: ${weight('regular')};
     opacity: 0.65;
     padding: ${pad(2)} 0 0;
     border-top: none;
@@ -574,7 +599,7 @@ export const canvasCss = css`
   }
 
   [data-part="canvas-stage-empty"] {
-    font: 400 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('mono')}
     opacity: 0.65;
     padding: ${pad(4)};
     border: 1px dashed ${border('subtle')};
@@ -603,7 +628,8 @@ export const canvasCss = css`
     display: contents;
   }
   [data-part="canvas-state-matrix"] > [data-row] > [role="columnheader"] {
-    font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    ${typography('monoMicro')}
+    font-weight: ${weight('medium')};
     text-transform: uppercase;
     letter-spacing: 0.06em;
     opacity: 0.65;

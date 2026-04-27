@@ -8,7 +8,7 @@ import {
   type NormalizedData,
 } from '../../headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '../../headless/axes'
-import { useRoving } from '../../headless/hooks/useRoving'
+import { useRoving } from '../../headless/roving/useRoving'
 
 type ColumnsProps = CollectionProps<Omit<ComponentPropsWithoutRef<'section'>, 'role' | 'onKeyDown'>>
 

@@ -7,7 +7,7 @@ import {
 } from '../../headless/types'
 import { activate, composeAxes, navigate } from '../../headless/axes'
 import { activateOnNavigate } from '../../headless/gesture'
-import { useRoving } from '../../headless/hooks/useRoving'
+import { useRoving } from '../../headless/roving/useRoving'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'

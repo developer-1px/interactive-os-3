@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { useRovingDOM } from '../../headless/hooks/useRovingDOM'
+import { useRovingDOM } from '../../headless/roving/useRovingDOM'
 
 /**
  * DataGrid — APG grid (flat). focus model = **row-focus**.

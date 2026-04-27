@@ -5,7 +5,7 @@ import {
   type CollectionProps, type Event,
 } from '../../headless/types'
 import { activate, composeAxes, navigate } from '../../headless/axes'
-import { useRoving } from '../../headless/hooks/useRoving'
+import { useRoving } from '../../headless/roving/useRoving'
 import { Checkbox } from '../3-input/Checkbox'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {

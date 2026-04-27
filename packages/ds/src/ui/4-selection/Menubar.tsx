@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { useRovingDOM } from '../../headless/hooks/useRovingDOM'
+import { useRovingDOM } from '../../headless/roving/useRovingDOM'
 
 // @slot children — composable (wrapper/label/subpart)
 type MenubarProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> & {

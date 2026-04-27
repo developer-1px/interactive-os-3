@@ -5,7 +5,7 @@ import {
   type CollectionProps,
 } from '../../headless/types'
 import { composeAxes, navigate } from '../../headless/axes'
-import { useRoving } from '../../headless/hooks/useRoving'
+import { useRoving } from '../../headless/roving/useRoving'
 import { ToolbarButton } from '../2-action/ToolbarButton'
 import { Separator } from '../0-primitives/Separator'
 

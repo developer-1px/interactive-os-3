@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { useShortcut } from '@p/ds/headless/hooks/useShortcut'
+import { useShortcut } from '@p/ds/headless/key/useShortcut'
 import { loadText, renderMarkdown } from '@p/fs'
 import { splitMarkdown } from '../features/split'
 import { ThumbnailStrip } from './ThumbnailStrip'
