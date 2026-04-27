@@ -1,5 +1,4 @@
-import { accent, accentTint, css, dur, ease, hairline, listReset, mute, pad, tint } from '../../tokens/foundations'
-import { containerPad, slotGap } from '../../tokens/style/seed/keyline'
+import { accent, accentTint, css, dur, ease, hairline, keyline, listReset, mute, pad, tint } from '../../tokens/foundations'
 
 /**
  * OrderableList — drag-to-reorder list.
@@ -12,18 +11,18 @@ import { containerPad, slotGap } from '../../tokens/style/seed/keyline'
  *   - 행 사이 분리        = hairline()      (재사용 helper)
  * 핸들 button 의 hit target 은 --ds-control-h 로 보장한다.
  */
-export const orderableCss = () => css`
+export const cssOrderableList = () => css`
   ${listReset(`ol[data-part="orderable"]`)}
   ol[data-part="orderable"] {
     display: flex;
     flex-direction: column;
-    padding: ${containerPad};
+    padding: ${keyline.containerPad};
   }
 
   ol[data-part="orderable"] > li {
     display: flex;
     align-items: center;
-    gap: ${slotGap};
+    gap: ${keyline.slotGap};
     padding-block: ${pad(1)};
     transition: background ${dur('base')} ${ease('out')};
   }

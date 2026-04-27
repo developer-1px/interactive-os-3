@@ -1,5 +1,5 @@
 import { accent, bg, control, css, dur, ease, indicator, onAccent, pad, radius, status } from '../../../tokens/foundations'
-export const toggle = () => [
+export const cssToggle = () => [
   css`
     [role="checkbox"],
     [role="radio"] {
@@ -71,7 +71,7 @@ export const toggle = () => [
   `,
 ].join('\n')
 
-export const alert = () => css`
+export const cssAlert = () => css`
   [role="alert"] {
     color: ${status('danger')};
     font-size: 0.85em;

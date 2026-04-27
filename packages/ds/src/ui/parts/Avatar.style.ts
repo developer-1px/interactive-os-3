@@ -1,11 +1,11 @@
-import { css, currentTint, dim, font, radius, weight } from '../../tokens/foundations'
+import { css, currentTint, dim, font, radius, typography, weight } from '../../tokens/foundations'
 import { square } from '../../tokens/foundations/layout/square'
 
 /**
  * Avatar — 사람·엔티티 식별 부품. <img> 또는 fallback initial <span>.
  * 정사각 비율은 structural.square()로 강제. 크기는 호출부 inline-size로 결정 (variant 없음).
  */
-export const avatar = () => css`
+export const cssAvatar = () => css`
   ${square('img[data-part="avatar"], span[data-part="avatar"]')}
   :where(img[data-part="avatar"], span[data-part="avatar"]) {
     inline-size: 2em;
@@ -13,8 +13,7 @@ export const avatar = () => css`
     overflow: hidden;
     background: ${currentTint('soft')};
     color: inherit;
-    font-size: ${font('sm')};
-    font-weight: ${weight('semibold')};
+    ${typography('captionStrong')}
     object-fit: cover;
     user-select: none;
     flex: none;

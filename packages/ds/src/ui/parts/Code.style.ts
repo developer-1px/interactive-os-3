@@ -1,6 +1,6 @@
 import { border, css, currentTint, dim, font, hairlineWidth, pad, radius } from '../../tokens/foundations'
 
-export const code = () => css`
+export const cssCode = () => css`
   :where(code) {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.9em;

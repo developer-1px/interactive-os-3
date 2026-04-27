@@ -15,7 +15,7 @@ import { css, hierarchy, microLabel, pad, radius, slot, surface, text, weight } 
  *
  * 이모지 ❌. 아이콘은 lucide token 1종.
  */
-export const sidebarCss = () => css`
+export const cssSidebar = () => css`
   /* sidebar surface — width invariant, scroll-aware, container background.
      Outer-layout 정책: sidebar는 *invariant* widget(데스크톱에서 항상 같은 폭)이라
      widget-level에서 width 소유. 모바일 드로어 변형은 각 app이 부모 셸 셀렉터로

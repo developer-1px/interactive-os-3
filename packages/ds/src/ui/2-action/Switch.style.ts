@@ -1,5 +1,5 @@
 import { accent, bg, control, css, dur, ease, radius, shadow } from '../../tokens/foundations'
-export const switchCss = css`
+export const cssSwitch = () => css`
   :where([role="switch"]) {
     --switch-ratio:  1.75;
     --switch-pad:    3px;

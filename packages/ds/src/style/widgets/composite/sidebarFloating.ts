@@ -1,5 +1,4 @@
-import { bg, border, css, elev, hairlineWidth, hierarchy, pad, radius, scrim, size, slot } from '../../../tokens/foundations'
-import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, bg, border, css, elev, hairlineWidth, hierarchy, pad, radius, scrim, size, slot } from '../../../tokens/foundations'
 
 /**
  * sidebarFloating — mobile surface of `sidebar/admin` intent.
@@ -15,7 +14,7 @@ import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
  * 메인 sidebar.ts의 nav[data-part="sidebar"] 규칙은 [data-state="floating"]
  * 셀렉터로 폭/위치만 override (background/padding/gap/item style 모두 재사용).
  */
-export const sidebarFloatingCss = () => css`
+export const cssSidebarFloating = () => css`
   [data-ds-floating-nav-trigger] {
     position: fixed;
     inset-block-end: ${slot.fab.inset};

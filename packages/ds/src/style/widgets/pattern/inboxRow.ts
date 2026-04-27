@@ -12,7 +12,7 @@ import { border, css, hairlineWidth, pad, radius, surface, text, weight } from '
  *   read   → 기본
  *   starred / threaded / attachment / system → title 슬롯의 마커가 시각 차이
  */
-export const inboxRow = () => css`
+export const cssInboxRow = () => css`
   article[data-part="card"][data-card="inbox-row"] {
     border: 0;
     border-block-end: ${hairlineWidth()} solid ${border()};

@@ -3,7 +3,7 @@ import { bg, border, control, css, focusRingWidth, hairlineWidth, radius, shadow
 //   track:  4px channel — control-channel(neutral-4) 위에 thumb까지 accent fill로 진행도 표시
 //   thumb:  control('h') 정사각 원, bg + control-border + elev-1
 //   accent-color로 WebKit/Firefox 모두 native progress fill 색을 한 번에 잡음
-export const sliderCss = css`
+export const cssSlider = () => css`
   :where(input[type="range"]) {
     appearance: none; -webkit-appearance: none;
     width: 100%; height: ${control('h')};

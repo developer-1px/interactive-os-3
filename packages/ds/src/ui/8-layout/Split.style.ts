@@ -10,7 +10,7 @@ import { control, css, hairlineWidth } from '../../tokens/foundations'
  * - separator는 평소 invisible, hover/active 시 1px hairline. hit area는 separator 트랙(8px).
  * - Tab 흐름 미오염: separator는 tabIndex=-1 (Split.tsx에서 부여).
  */
-export const splitCss = () => css`
+export const cssSplit = () => css`
   [data-ds="Split"] {
     display: grid;
     min-block-size: 100%;

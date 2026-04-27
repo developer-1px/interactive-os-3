@@ -4,7 +4,7 @@ import { css, hairlineWidth, neutral, pad, radius, surface } from '../../tokens/
  * MessageBubble slot inner styling — DM 1:1 채팅 버블.
  * 카드 root layout(flex stack)은 parts/card.ts owner.
  */
-export const messageBubble = () => css`
+export const cssMessageBubble = () => css`
   article[data-part="card"][data-card="message"] {
     max-inline-size: min(75%, 36rem);
     padding: ${pad(2)} ${pad(2.5)};

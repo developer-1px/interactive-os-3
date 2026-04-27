@@ -14,7 +14,7 @@ import { css, currentTint, dim, font, pad, radius, status, text } from '../token
  *
  * 평소 노이즈 0 — preview 가 카드의 80%. 디테일은 사용자 의도(hover/focus) 시에만.
  */
-export const contractCard = () => css`
+export const cssContractCard = () => css`
   /* title 슬롯 header — h3 와 통과 indicator 한 row, bonded gap */
   article[data-part="card"][data-card="contract"] > [data-slot="title"] > header {
     display: grid;

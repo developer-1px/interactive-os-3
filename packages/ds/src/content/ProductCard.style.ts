@@ -4,7 +4,7 @@ import { css, dim, pad, radius, status, text, weight } from '../tokens/foundatio
  * ProductCard slot inner styling — 커머스 상품 카드.
  * 카드 root layout(flex stack/border)은 parts/card.ts owner.
  */
-export const productCard = () => css`
+export const cssProductCard = () => css`
   article[data-part="card"][data-card="product"] {
     border-radius: ${radius('lg')};
     gap: ${pad(1.5)};

@@ -1,5 +1,5 @@
 import { accent, css, currentTint, dim, font, pad, radius, status, text } from '../../tokens/foundations'
-export const barChart = () => css`
+export const cssBarChart = () => css`
   [data-part="bar-chart"] {
     margin: 0;
     display: flex; flex-direction: column; gap: ${pad(2)};

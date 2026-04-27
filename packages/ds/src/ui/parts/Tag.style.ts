@@ -4,7 +4,7 @@ import { accent, accentTint, css, currentTint, dim, dur, ease, font, icon, pad, 
  * Tag — removable label. Chip(entity)과 다른 부품 layer 시맨틱.
  * 셀렉터: span[data-part="tag"]. optional remove button (× icon).
  */
-export const tag = () => css`
+export const cssTag = () => css`
   :where(span[data-part="tag"]) {
     display: inline-flex;
     align-items: center;

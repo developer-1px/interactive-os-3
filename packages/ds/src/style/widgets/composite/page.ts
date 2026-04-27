@@ -2,7 +2,7 @@ import { css, hierarchy, pad, radius, surface, text, weight } from '../../../tok
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
-export const pageCss = css`
+export const cssPage = () => css`
   /* Chat 메시지 버블 — me/other 정렬은 messageBubble.ts owner. */
   [data-part="chat-page"] [data-emphasis="sunk"]:has([data-part^="message-"]) {
     gap: ${pad(1.5)};

@@ -1,10 +1,10 @@
-import { accent, css, currentTint, dim, font, gradientDeep, mix, on, pad, radius, status, text, weight } from '../tokens/foundations'
+import { accent, css, currentTint, dim, font, gradientDeep, mix, on, pad, radius, status, text, typography, weight } from '../tokens/foundations'
 
 /**
  * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.
  * 카드 root layout(flex stack/border)은 parts/card.ts owner.
  */
-export const courseCard = () => css`
+export const cssCourseCard = () => css`
   /* preview 슬롯 — abbr 그라데이션 배지 (작은 정사각). 일반 preview override. */
   article[data-part="card"][data-card="course"] > [data-slot="preview"] {
     min-block-size: 0;
@@ -48,8 +48,7 @@ export const courseCard = () => css`
   }
   article[data-part="card"][data-card="course"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
     margin: 0;
-    font-size: ${font('md')};
-    font-weight: ${weight('bold')};
+    ${typography('bodyStrong')}
     letter-spacing: -0.01em;
   }
 

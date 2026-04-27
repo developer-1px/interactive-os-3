@@ -12,7 +12,7 @@ import { accent, border, css, hairlineWidth, hierarchy, pad, radius, slot, surfa
  * 일반 카드 ([data-part="card"]) 가 정보 밀도 우선이라면 auth 카드는 *집중* 우선.
  * 한 번에 한 가지만 — fields 적게, 호흡 크게.
  */
-export const authCard = () => css`
+export const cssAuthCard = () => css`
   article[data-part="card"][data-card="auth"] {
     padding: ${slot.auth.pad};                                /* 32px — 호흡 공간 */
     gap: ${slot.auth.slotGap};                                    /* 24px — 슬롯 간 큰 호흡 */

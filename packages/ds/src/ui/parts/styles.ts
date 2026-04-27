@@ -1,40 +1,40 @@
-// Phase 2h: ui/parts co-location aggregator.
-// 각 part 의 CSS 는 <Name>.style.ts 형제로 동거 (sibling pattern, no barrel).
-import { avatar } from './Avatar.style'
-import { badge } from './CountBadge.style'
-import { tag } from './Tag.style'
-import { thumbnail } from './Thumbnail.style'
-import { timestamp } from './Timestamp.style'
-import { skeleton } from './Skeleton.style'
-import { emptyState } from './EmptyState.style'
-import { callout } from './Callout.style'
-import { keyValue } from './KeyValue.style'
-import { card } from './Card.style'
-import { table } from './Table.style'
-import { heading } from './Heading.style'
-import { link } from './Link.style'
-import { code } from './Code.style'
-import { progress } from './ProgressBar.style'
-import { breadcrumb } from './Breadcrumb.style'
-import { rovingItem } from './RovingItem.style'
+// ui/parts CSS aggregator — sibling co-location, no barrel.
+// 모든 export 는 css 로 시작 (naming-audit 합의).
+import { cssAvatar } from './Avatar.style'
+import { cssCountBadge } from './CountBadge.style'
+import { cssTag } from './Tag.style'
+import { cssThumbnail } from './Thumbnail.style'
+import { cssTimestamp } from './Timestamp.style'
+import { cssSkeleton } from './Skeleton.style'
+import { cssEmptyState } from './EmptyState.style'
+import { cssCallout } from './Callout.style'
+import { cssKeyValue } from './KeyValue.style'
+import { cssCard } from './Card.style'
+import { cssTable } from './Table.style'
+import { cssHeading } from './Heading.style'
+import { cssLink } from './Link.style'
+import { cssCode } from './Code.style'
+import { cssProgressBar } from './ProgressBar.style'
+import { cssBreadcrumb } from './Breadcrumb.style'
+import { cssRovingItem } from './RovingItem.style'
 
 export const partsStyles = () =>
   [
-    avatar(),
-    badge(),
-    tag(),
-    thumbnail(),
-    timestamp(),
-    skeleton(),
-    emptyState(),
-    callout(),
-    keyValue(),
-    card(),
-    table(),
-    heading(),
-    link(),
-    code(),
-    progress(),
-    breadcrumb(),
-    rovingItem(),
+    cssAvatar(),
+    cssCountBadge(),
+    cssTag(),
+    cssThumbnail(),
+    cssTimestamp(),
+    cssSkeleton(),
+    cssEmptyState(),
+    cssCallout(),
+    cssKeyValue(),
+    cssCard(),
+    cssTable(),
+    cssHeading(),
+    cssLink(),
+    cssCode(),
+    cssProgressBar(),
+    cssBreadcrumb(),
+    cssRovingItem(),
   ].join('\n')

@@ -8,7 +8,7 @@ import { css, hairlineWidth, neutral, pad, radius, text, weight } from '../token
  * Phone 자체는 *컨테이너* — 내부 콘텐츠는 ds 부품(Skeleton, Tag, Button, Card 등)이
  * 채운다. status bar / topbar / tabbar / home indicator 만 phone 전용 chrome.
  */
-export const phone = () => css`
+export const cssPhone = () => css`
   [data-part="phone"] {
     margin: 0;
     display: flex; flex-direction: column;

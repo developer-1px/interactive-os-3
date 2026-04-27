@@ -1,19 +1,18 @@
-import { css, radius, grouping } from '../../../tokens/foundations'
-import { containerPad, slotGap } from '../../../tokens/style/seed/keyline'
+import { css, grouping, keyline, radius } from '../../../tokens/foundations'
 
-export const tabPanelCss = css`
-  :where([role="tabpanel"]) { padding: ${containerPad}; }
+export const cssTabPanel = () => css`
+  :where([role="tabpanel"]) { padding: ${keyline.containerPad}; }
 `
 
-export const carouselCss = css`
+export const cssCarousel = () => css`
   :where(section[data-part="carousel"]) {
     display: flex;
-    gap: ${slotGap};
+    gap: ${keyline.slotGap};
     align-items: stretch;
   }
   :where([data-part="slide"]) {
     ${grouping(1)}
-    padding: ${containerPad};
+    padding: ${keyline.containerPad};
     border-radius: ${radius('sm')};
   }
 `

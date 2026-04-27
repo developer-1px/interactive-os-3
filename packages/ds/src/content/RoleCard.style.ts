@@ -1,10 +1,10 @@
-import { css, dim, font, pad, text, weight } from '../tokens/foundations'
+import { css, dim, font, pad, text, typography, weight } from '../tokens/foundations'
 
 /**
  * RoleCard slot inner styling — drag handle + icon + 본문/액션.
  * 카드 root layout(flex stack/border)은 parts/card.ts owner.
  */
-export const roleCard = () => css`
+export const cssRoleCard = () => css`
   /* preview 슬롯 — drag handle + icon 가로 묶음 (작은 줄). 일반 preview override. */
   article[data-part="card"][data-card="role"] > [data-slot="preview"] {
     min-block-size: 0;
@@ -41,8 +41,7 @@ export const roleCard = () => css`
   }
   article[data-part="card"][data-card="role"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
     margin: 0;
-    font-size: ${font('md')};
-    font-weight: ${weight('bold')};
+    ${typography('bodyStrong')}
   }
   article[data-part="card"][data-card="role"] > [data-slot="title"] > header > div {
     display: flex; align-items: center; gap: ${pad(1)};

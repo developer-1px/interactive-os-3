@@ -1,5 +1,5 @@
 import { accent, css, dur, ease, grouping, indicator, listReset, neutral, onAccent, pad, radius, rowPadding, selectedStrong, text } from '../../tokens/foundations'
-export const menu = () => [
+export const cssMenu = () => [
   css`
     button[popovertarget] {
       ${grouping(1)}

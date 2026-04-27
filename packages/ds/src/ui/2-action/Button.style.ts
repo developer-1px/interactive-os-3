@@ -18,7 +18,7 @@ import { accent, accentTint, control, css, dur, ease, hairlineWidth, neutral, on
  * 메모: Primary 분기를 data-tone이나 variant prop이 아닌 ARIA context로 결정 →
  * "페이지의 주 행동은 actions 영역에 둔다"는 IA 규약이 자연스레 강제된다.
  */
-export const buttonCss = css`
+export const cssButton = () => css`
   /* ── 기본 (= secondary/default) ───────────────────────────────
      base.ts의 controlBox 위에 얕은 서피스와 경계 없는 hover 신호만 얹는다. */
   :where(button:not([data-part="actions"] > button)) {

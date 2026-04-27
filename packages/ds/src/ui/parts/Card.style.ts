@@ -9,7 +9,7 @@ import { border, css, currentTint, dim, grouping, hairlineWidth, pad, radius, te
  * 슬롯 cross-card baseline 정렬(subgrid)은 후속 PR에서 — 현재는 단순 vertical stack.
  * 부모 Grid 가 `cardGrid` 일 때 추가 시각(예: row gap 동기화)만 옵션으로 얹는다.
  */
-export const card = () => css`
+export const cssCard = () => css`
   article[data-part="card"] {
     ${grouping(1)}
     display: flex;

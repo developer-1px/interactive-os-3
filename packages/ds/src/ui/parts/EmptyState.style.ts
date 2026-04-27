@@ -1,10 +1,10 @@
-import { css, font, mute, pad, weight } from '../../tokens/foundations'
+import { css, font, mute, pad, typography, weight } from '../../tokens/foundations'
 
 /**
  * EmptyState — icon + heading + description + optional CTA.
  * 시맨틱: <div role="status" data-part="empty-state">. 자식은 의미 tag(h3/p/...).
  */
-export const emptyState = () => css`
+export const cssEmptyState = () => css`
   :where(div[data-part="empty-state"]) {
     display: flex;
     flex-direction: column;
@@ -16,8 +16,7 @@ export const emptyState = () => css`
   }
   div[data-part="empty-state"] > h3 {
     margin: 0;
-    font-size: ${font('lg')};
-    font-weight: ${weight('semibold')};
+    ${typography('heading')}
   }
   div[data-part="empty-state"] > p {
     margin: 0;

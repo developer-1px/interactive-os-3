@@ -12,7 +12,7 @@ import { accent, accentTint, border, css, dim, dur, ease, focusRingWidth, hairli
  * - tabpanel 기본 padding + focus ring
  * - aria-orientation="vertical" 분기 (border가 하단 → 우측으로 이동)
  */
-export const tabs = () => css`
+export const cssTabs = () => css`
   /* --- horizontal (default) --- */
   [role="tablist"]:not([aria-orientation="vertical"]) {
     gap: 0;

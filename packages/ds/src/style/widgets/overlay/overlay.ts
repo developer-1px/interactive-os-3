@@ -1,5 +1,5 @@
 import { bg, border, css, dur, ease, elev, font, grouping, hairlineWidth, pad, radius, rowPadding, scrim, slot } from '../../../tokens/foundations'
-export const dialogCss = css`
+export const cssDialog = () => css`
   :where(dialog) {
     ${grouping(3)}
     color: inherit;
@@ -45,7 +45,7 @@ export const dialogCss = css`
   }
 `
 
-export const tooltipCss = css`
+export const cssTooltip = () => css`
   /* Popover — non-modal light-dismiss. native [popover] element. dialog와 외형 공유하되
      centered 강제 풀고, padding/border-radius만 기본값. 위치는 소비 측이 결정.
      [popover]는 modal <dialog>와 달리 ::backdrop을 만들지 않으므로 scrim 옵션 시

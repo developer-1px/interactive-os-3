@@ -5,7 +5,7 @@ import { accent, css, font, mute, pad, text, weight } from '../../tokens/foundat
  * 구분자는 ::after content. 마지막 li는 구분자 없음.
  * 현재 페이지(span[aria-current="page"])는 강조 텍스트 색.
  */
-export const breadcrumb = () => css`
+export const cssBreadcrumb = () => css`
   :where(nav[aria-label="Breadcrumb"]) {
     font-size: ${font('sm')};
     line-height: 1.4;

@@ -1,6 +1,6 @@
 import { accent, css, dur, ease, pad } from '../../tokens/foundations'
 
-export const link = () => css`
+export const cssLink = () => css`
   :where(a) {
     color: ${accent()};
     text-decoration: none;

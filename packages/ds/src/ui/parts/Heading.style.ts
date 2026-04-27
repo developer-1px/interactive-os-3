@@ -1,18 +1,17 @@
-import { css, font, mute, pad, weight } from '../../tokens/foundations'
+import { css, font, mute, pad, typography, weight } from '../../tokens/foundations'
 
 /**
  * Heading — 시맨틱 tag(h1~h3, p, small) + data-level로 시각 size.
  * variant 아니라 의미 토큰. display는 시각 최상위, h1~h3은 의미 동일+시각 step.
  */
-export const heading = () => css`
+export const cssHeading = () => css`
   :where([data-part="heading"]) {
     margin: 0;
     line-height: 1.25;
     font-weight: ${weight('semibold')};
   }
   :where([data-part="heading"][data-level="display"]) {
-    font-size: ${font('2xl')};
-    font-weight: ${weight('bold')};
+    ${typography('display')}
     letter-spacing: -0.01em;
   }
   :where([data-part="heading"][data-level="h1"]) {
@@ -25,14 +24,12 @@ export const heading = () => css`
     font-size: ${font('md')};
   }
   :where([data-part="heading"][data-level="body"]) {
-    font-size: ${font('md')};
-    font-weight: ${weight('regular')};
+    ${typography('body')}
     line-height: 1.5;
   }
   :where([data-part="heading"][data-level="caption"]) {
     ${mute(2)}
-    font-size: ${font('xs')};
-    font-weight: ${weight('regular')};
+    ${typography('micro')}
     line-height: 1.4;
   }
   :where([data-part="heading"][data-level="body"]) + :where([data-part="heading"][data-level="body"]) {

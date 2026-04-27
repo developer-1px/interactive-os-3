@@ -18,7 +18,7 @@ import {
  *
  * form 컨트롤(input/select/textarea/button)은 prose 가 다루지 않는다 — form layer 가 owner.
  */
-export const proseCss = () => css`
+export const cssProse = () => css`
   article[data-flow="prose"] {
     container-type: inline-size;
     container-name: prose;

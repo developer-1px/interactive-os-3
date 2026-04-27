@@ -8,7 +8,7 @@ import { css, pad } from '../../tokens/foundations'
  *
  * content 슬롯이 가변, icon/tail 은 자연 크기.
  */
-export const rovingItem = () => css`
+export const cssRovingItem = () => css`
   :where([data-part="roving-item"]) {
     display: flex;
     align-items: center;

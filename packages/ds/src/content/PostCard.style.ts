@@ -6,7 +6,7 @@ import { css, dim, pad, radius, surfaceTint, text, tint, weight } from '../token
  *
  * data-card="post" 마커 + data-cont (연속 메시지) 변형.
  */
-export const postCard = () => css`
+export const cssPostCard = () => css`
   /* root — 게시판 전용 시각 (flat 한 줄, 호버시 배경 강조).
      Slack 패턴: avatar | (title 위 + body 아래) — grid template areas 가 의도. */
   article[data-part="card"][data-card="post"] {

@@ -1,11 +1,11 @@
-import { border, css, currentTint, dim, font, hairlineWidth, pad, radius, text, weight } from '../../tokens/foundations'
+import { border, css, currentTint, dim, font, hairlineWidth, pad, radius, text, typography, weight } from '../../tokens/foundations'
 
 /**
  * Table — 데이터 주도 표 부품의 시각.
  * 셀렉터: :where(table). classless — tag + data-col + data-align만.
  * sticky header + 가독 행간. monospace는 호출처가 cell 내부에 <code>로 감쌀 것.
  */
-export const table = () => css`
+export const cssTable = () => css`
   :where(table) {
     inline-size: 100%;
     border-collapse: collapse;
@@ -25,8 +25,7 @@ export const table = () => css`
     text-align: start;
     padding: ${pad(0.75)} ${pad(2)};
     color: ${text('mute')};
-    font-weight: ${weight('medium')};
-    font-size: ${font('xs')};
+    ${typography('micro')};
     background: ${currentTint('subtle')};
     border-block-end: ${hairlineWidth()} solid ${border()};
   }

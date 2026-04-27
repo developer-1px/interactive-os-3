@@ -1,5 +1,5 @@
-import { accent, border, css, dim, font, hairlineWidth, pad, text, weight } from '../../tokens/foundations'
-export const top10 = () => css`
+import { accent, border, css, dim, font, hairlineWidth, pad, text, typography, weight } from '../../tokens/foundations'
+export const cssTop10List = () => css`
   [data-part="top-10"] {
     counter-reset: rank;
     list-style: none; padding: 0; margin: 0;
@@ -18,8 +18,7 @@ export const top10 = () => css`
   [data-part="top-10"] > li::before {
     content: counter(rank);
     font-variant-numeric: tabular-nums;
-    font-weight: ${weight('semibold')};
-    font-size: ${font('sm')};
+    ${typography('captionStrong')};
     text-align: center;
     color: ${text('mute')};
   }

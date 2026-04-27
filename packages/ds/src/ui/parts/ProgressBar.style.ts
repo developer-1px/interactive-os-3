@@ -1,6 +1,6 @@
 import { accent, css, currentTint, dim, radius } from '../../tokens/foundations'
 
-export const progress = () => css`
+export const cssProgressBar = () => css`
   :where(progress) {
     appearance: none;
     inline-size: 100%;

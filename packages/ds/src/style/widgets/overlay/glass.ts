@@ -8,7 +8,7 @@ import { accent, border, css, elev, grouping, hairlineWidth, radius } from '../.
 // - shadow: 안쪽 1px highlight + 바깥쪽 soft drop
 // - radius: 알약(button) / lg(input·card)
 // - 색은 그대로, 표면만 교체 (semantic 토큰 재사용)
-export const glassCss = css`
+export const cssGlass = () => css`
   @media (hover: none) and (pointer: coarse) {
     :where(button):not([data-part="actions"] > button) {
       background: color-mix(in oklch, Canvas 70%, transparent);

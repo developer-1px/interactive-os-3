@@ -5,7 +5,7 @@ import { accent, accentTint, bg, border, control, css, currentTint, dim, dur, ea
  * 표 계열은 리스트와 달리 "열 정렬 · 헤더 고정 · 행 선택 · 정렬 표시"가 필수 어포던스다.
  * classless/role-only 방침에 맞춰 table/thead/tbody/tr/th/td + ARIA로만 스타일한다.
  */
-export const grid = () => [
+export const cssGrid = () => [
   css`
     [role="grid"],
     [role="treegrid"] {

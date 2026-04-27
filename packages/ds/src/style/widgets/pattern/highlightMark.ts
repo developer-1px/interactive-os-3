@@ -1,16 +1,15 @@
-import { css, font, radius, slot, surface, text, toneTint, weight } from '../../../tokens/foundations'
+import { css, font, radius, slot, surface, text, toneTint, typography, weight } from '../../../tokens/foundations'
 
 /**
  * highlightMark — HTML <mark> 텍스트 하이라이트 스타일.
  * parts/Badge(count/status dot)와 의미가 다르다. 셀렉터: `mark`.
  */
-export const highlightMark = () => css`
+export const cssHighlightMark = () => css`
   mark {
     display: inline-flex; align-items: center; gap: ${slot.mark.gap};
     padding: 1px ${slot.mark.padX};
     border-radius: ${radius('pill')};
-    font-size: ${font('xs')};
-    font-weight: ${weight('semibold')};
+    ${typography('microStrong')}
     line-height: 1.4;
     white-space: nowrap;
     background: ${surface('muted')};

@@ -1,4 +1,4 @@
-import { css, dim, font, hairlineWidth, icon, mix, pad, status, statusTint, text, tint, weight } from '../../tokens/foundations'
+import { css, dim, font, hairlineWidth, icon, mix, pad, status, statusTint, text, tint, typography, weight } from '../../tokens/foundations'
 
 /**
  * StatCard slot inner styling — Card primitive 슬롯 안의 KPI 특화 시각만.
@@ -6,7 +6,7 @@ import { css, dim, font, hairlineWidth, icon, mix, pad, status, statusTint, text
  *
  * data-card="stat" 마커로 다른 카드 변형과 분리.
  */
-export const statCard = () => css`
+export const cssStatCard = () => css`
   /* alert tone — 카드 root 강조 */
   article[data-part="card"][data-card="stat"][data-tone="alert"] {
     border: ${hairlineWidth()} solid ${statusTint('danger', 'border')};
@@ -49,8 +49,7 @@ export const statCard = () => css`
   /* footer 슬롯 — change(상승/하락) */
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir] {
     display: inline-flex; align-items: center; gap: ${pad(0.5)};
-    font-size: ${font('xs')};
-    font-weight: ${weight('medium')};
+    ${typography('micro')}
   }
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir="up"]   { color: ${status('success')}; }
   article[data-part="card"][data-card="stat"] > [data-slot="footer"] > small[data-dir="down"] { color: ${status('danger')}; }

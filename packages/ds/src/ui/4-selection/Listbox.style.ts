@@ -7,7 +7,7 @@ import { css, font, mute, pad } from '../../tokens/foundations'
  *   - `data-badge` → ::after (우측 카운트/트레일링)
  * 두 슬롯을 data-attr로만 주입. 새로운 wrapper/슬롯 없이 classless 유지.
  */
-export const listboxCss = () => css`
+export const cssListbox = () => css`
   [role="option"][data-badge]::after {
     content: attr(data-badge);
     margin-inline-start: auto;

@@ -1,5 +1,4 @@
-import { accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, weight } from '../../../tokens/foundations'
-import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
+import { SHELL_MOBILE_MAX, accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, weight } from '../../../tokens/foundations'
 
 /**
  * Layout primitives (Row / Column / Grid).
@@ -16,7 +15,7 @@ import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
  * Shell's panes.ts is appended after this generator, so pane-specific rules
  * still win over generic layout defaults when both apply to the same node.
  */
-export const layout = () => css`
+export const cssLayout = () => css`
   /* ── roots ───────────────────────────────────────────── */
   [data-ds="Row"],
   [data-ds="Column"] { display: flex; min-inline-size: 0; }
@@ -102,7 +101,7 @@ export const layout = () => css`
        shell  16px  → frame ↔ frame, canvas inner padding (intra-row, surface)
        64px         → family ↔ family        (inter-family, canvas 전용 큰 호흡) */
   [data-part="canvas"] {
-    background: var(--ds-neutral-1);
+    background: ${surface('subtle')};
     background-image:
       radial-gradient(circle, color-mix(in oklch, var(--ds-fg) 12%, transparent) 1px, transparent 1px);
     background-size: 24px 24px;

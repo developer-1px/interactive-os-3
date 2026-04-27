@@ -9,7 +9,7 @@ import { control, css, dim, font, neutral, pad, radius, surface, text } from '..
  * - separator: 그룹 경계 신호
  * - 컨테이너 자체: neutral-1 서피스 + radius로 "이건 한 묶음"이라는 괄호 역할
  */
-export const toolbar = () => css`
+export const cssToolbar = () => css`
   [role="toolbar"] {
     padding: ${pad(1.5)} ${pad(2)};
     background: ${surface('subtle')};

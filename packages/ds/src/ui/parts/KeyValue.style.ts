@@ -1,6 +1,6 @@
 import { css, font, mute, pad } from '../../tokens/foundations'
 
-export const keyValue = () => css`
+export const cssKeyValue = () => css`
   :where(dl) {
     display: grid;
     grid-template-columns: max-content 1fr;

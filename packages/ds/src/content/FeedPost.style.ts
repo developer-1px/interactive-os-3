@@ -4,7 +4,7 @@ import { css, dim, pad, radius, text, weight } from '../tokens/foundations'
  * FeedPost slot inner styling — SNS 피드 포스트 카드.
  * 카드 root layout(flex stack/border)은 parts/card.ts owner.
  */
-export const feedPost = () => css`
+export const cssFeedPost = () => css`
   article[data-part="card"][data-card="feed-post"] {
     border-radius: ${radius('lg')};
   }

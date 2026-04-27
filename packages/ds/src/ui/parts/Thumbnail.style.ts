@@ -4,7 +4,7 @@ import { css, currentTint, dim, radius } from '../../tokens/foundations'
  * Thumbnail — aspect-ratio 보존 미리보기 미디어.
  * 호출부가 inline-size를 결정. ratio는 data-ratio attribute로 (variant 아님, 데이터).
  */
-export const thumbnail = () => css`
+export const cssThumbnail = () => css`
   :where(img[data-part="thumbnail"]) {
     display: block;
     inline-size: 100%;
