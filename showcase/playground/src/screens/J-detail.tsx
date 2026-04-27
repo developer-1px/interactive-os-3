@@ -3,7 +3,7 @@ import { Button } from '@p/ds/ui/2-action/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
 
-defineGroup('J-Detail',        { id: 'J', title: 'Detail',        lede: 'Breadcrumb · KeyValue · Code · Link · ProgressBar — 주문 상세 같은 정보 페이지.' })
+defineGroup('J-Detail',        { id: 'J', title: 'Detail',        lede: 'Breadcrumb · KeyValue · Code · Link · ProgressBar — 주문 상세 같은 정보 페이지.', defaultGuide: 'article' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (J) Detail — Breadcrumb · KeyValue · Code · Link · Progress

@@ -4,7 +4,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, StickyAction } from '../wireframe-shell'
 import { commentIndent, composer, listRow, meta } from '../wireframe-tokens'
 
-defineGroup('S-Comments',      { id: 'S', title: 'Comments',      lede: 'Reddit 식 nested thread — voting · reply · 들여쓰기 + sticky composer.' })
+defineGroup('S-Comments',      { id: 'S', title: 'Comments',      lede: 'Reddit 식 nested thread — voting · reply · 들여쓰기 + sticky composer.', defaultGuide: 'list' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (S) Comments — nested thread

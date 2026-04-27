@@ -7,7 +7,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
 import { meta } from '../wireframe-tokens'
 
-defineGroup('R-Stepper',       { id: 'R', title: 'Stepper',       lede: 'Checkout 진행 stepper (1·2·3) + 배송지 폼 + 다음 단계 CTA.' })
+defineGroup('R-Stepper',       { id: 'R', title: 'Stepper',       lede: 'Checkout 진행 stepper (1·2·3) + 배송지 폼 + 다음 단계 CTA.', defaultGuide: 'form' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (R) Stepper — Checkout

@@ -3,7 +3,7 @@ import { Disclosure } from '@p/ds/ui/6-overlay/Disclosure'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 
-defineGroup('K-Overlay',       { id: 'K', title: 'Overlay',       lede: 'Disclosure · Dialog · Sheet · Popover — 모달/접힘/플로팅 표면.' })
+defineGroup('K-Overlay',       { id: 'K', title: 'Overlay',       lede: 'Disclosure · Dialog · Sheet · Popover — 모달/접힘/플로팅 표면.', defaultGuide: 'grid' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (K) Overlay — Disclosure FAQ + Dialog/Sheet 닫힌 상태 (showcase)

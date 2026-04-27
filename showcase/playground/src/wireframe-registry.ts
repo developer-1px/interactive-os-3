@@ -6,9 +6,18 @@
  *
  * derived view: byApp · byFlow · byPattern · byPart (Mobbin 식 다축 역참조).
  */
-import type { ScreenDef } from './wireframe-screens'
+import type { ScreenDef, LayoutGuide } from './wireframe-screens'
 
-export type GroupMeta = { id: string; title: string; lede: string }
+export type GroupMeta = {
+  id: string
+  title: string
+  lede: string
+  /**
+   * 카테고리 default guide — 화면에서 `guide` 명시 안 했을 때 적용되는 fallback.
+   * 화면별로 다르면 `defineScreen({ guide: ... })` 로 override.
+   */
+  defaultGuide?: LayoutGuide
+}
 export type GroupDef = GroupMeta & { screens: ScreenDef[] }
 
 const SCREEN_REGISTRY: Record<string, ScreenDef> = {}
@@ -25,6 +34,9 @@ export function defineGroup(category: string, meta: GroupMeta) {
 }
 
 export const getScreens = () => SCREEN_REGISTRY
+
+export const getGroup = (category: string): GroupMeta | undefined =>
+  GROUP_REGISTRY[category]
 
 export const getGroups = (): GroupDef[] => {
   const byCat: Record<string, ScreenDef[]> = {}

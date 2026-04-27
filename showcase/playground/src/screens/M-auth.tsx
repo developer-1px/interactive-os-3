@@ -5,9 +5,10 @@ import { Field, FieldLabel } from '@p/ds/ui/3-input/Field'
 import { Input } from '@p/ds/ui/3-input/Input'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
-import { meta, type } from '../wireframe-tokens'
+import { type } from '@p/ds/tokens/foundations'
+import { meta } from '../wireframe-tokens'
 
-defineGroup('M-Auth',          { id: 'M', title: 'Auth',          lede: 'Login (이메일·SSO·로그인 유지) · OTP (6자리 코드·재전송 타이머).' })
+defineGroup('M-Auth',          { id: 'M', title: 'Auth',          lede: 'Login (이메일·SSO·로그인 유지) · OTP (6자리 코드·재전송 타이머).', defaultGuide: 'form' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (M) Auth — Login · OTP

@@ -3,7 +3,7 @@ import { Card } from '@p/ds/ui/parts/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 
-defineGroup('F-Contracts',     { id: 'F', title: 'Contracts',     lede: 'ContractCard · ds 컴포넌트 계약 감사 (검사 목록 · pass/fail · 호출 사이트).' })
+defineGroup('F-Contracts',     { id: 'F', title: 'Contracts',     lede: 'ContractCard · ds 컴포넌트 계약 감사 (검사 목록 · pass/fail · 호출 사이트).', defaultGuide: 'list' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (F) Contracts — ContractCard

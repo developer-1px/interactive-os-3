@@ -2,7 +2,7 @@ import { BarChart, Phone, PhoneTabBar, PhoneTopBar, Row, StatCard, TabList, Top1
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
 
-defineGroup('E-Dashboard',     { id: 'E', title: 'Dashboard',     lede: 'StatCard 2×2 KPI grid + BarChart 주간 트래픽 + Top10List 라우트별 인기.' })
+defineGroup('E-Dashboard',     { id: 'E', title: 'Dashboard',     lede: 'StatCard 2×2 KPI grid + BarChart 주간 트래픽 + Top10List 라우트별 인기.', defaultGuide: 'grid' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (E) Dashboard — StatCard · BarChart · Top10List

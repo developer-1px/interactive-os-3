@@ -2,7 +2,7 @@ import { FeedPost, Listbox, Phone, PhoneTabBar, PhoneTopBar } from '@p/ds'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
 
-defineGroup('D-Feed',          { id: 'D', title: 'Feed',          lede: 'FeedPost · timeline. 좋아요 · 댓글 · 공유 toolbar 자체 내장.' })
+defineGroup('D-Feed',          { id: 'D', title: 'Feed',          lede: 'FeedPost · timeline. 좋아요 · 댓글 · 공유 toolbar 자체 내장.', defaultGuide: 'feed' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (D) Feed — FeedPost

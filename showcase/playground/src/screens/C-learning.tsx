@@ -4,7 +4,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, tabIcons } from '../wireframe-shell'
 import { hero, listRow, meta } from '../wireframe-tokens'
 
-defineGroup('C-Learning',      { id: 'C', title: 'Learning',      lede: 'CourseCard · 레벨 picker (TabList) + 코스 catalog + 코스 상세 (커리큘럼)' })
+defineGroup('C-Learning',      { id: 'C', title: 'Learning',      lede: 'CourseCard · 레벨 picker (TabList) + 코스 catalog + 코스 상세 (커리큘럼)', defaultGuide: 'feed' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (C) Learning — CourseCard

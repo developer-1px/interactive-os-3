@@ -3,9 +3,10 @@ import { Button } from '@p/ds/ui/2-action/Button'
 import { NumberInput } from '@p/ds/ui/3-input/NumberInput'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, sampleImg } from '../wireframe-shell'
-import { listRow, meta, qtyStepper, type } from '../wireframe-tokens'
+import { type } from '@p/ds/tokens/foundations'
+import { listRow, meta, qtyStepper } from '../wireframe-tokens'
 
-defineGroup('T-Quantity',      { id: 'T', title: 'Quantity',      lede: 'Cart line + NumberInput stepper · subtotal · sticky 주문 CTA.' })
+defineGroup('T-Quantity',      { id: 'T', title: 'Quantity',      lede: 'Cart line + NumberInput stepper · subtotal · sticky 주문 CTA.', defaultGuide: 'list' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (T) Cart — Quantity stepper

@@ -3,7 +3,7 @@ import { Button } from '@p/ds/ui/2-action/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
 
-defineGroup('G-Roles',         { id: 'G', title: 'Roles',         lede: 'RoleCard · 정렬 가능한 권한 row.' })
+defineGroup('G-Roles',         { id: 'G', title: 'Roles',         lede: 'RoleCard · 정렬 가능한 권한 row.', defaultGuide: 'list' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (G) Roles — RoleCard

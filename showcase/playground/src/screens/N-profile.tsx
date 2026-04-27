@@ -4,7 +4,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 import { banner, meta } from '../wireframe-tokens'
 
-defineGroup('N-Profile',       { id: 'N', title: 'Profile',       lede: 'Banner + Avatar overlap + stat row + follow CTA + segmented Tabs.' })
+defineGroup('N-Profile',       { id: 'N', title: 'Profile',       lede: 'Banner + Avatar overlap + stat row + follow CTA + segmented Tabs.', defaultGuide: 'hero' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (N) Profile — Header + Tabs

@@ -1,9 +1,10 @@
 import { Avatar, Column, Phone, PhoneTabBar, PhoneTopBar, Row, TabList, fromList } from '@p/ds'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
-import { dot, listRow, meta, type } from '../wireframe-tokens'
+import { type } from '@p/ds/tokens/foundations'
+import { dot, listRow, meta } from '../wireframe-tokens'
 
-defineGroup('P-Notifications', { id: 'P', title: 'Notifications', lede: 'GitHub 식 알림함 — filter Tabs · unread dot · avatar row.' })
+defineGroup('P-Notifications', { id: 'P', title: 'Notifications', lede: 'GitHub 식 알림함 — filter Tabs · unread dot · avatar row.', defaultGuide: 'list' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (P) Notifications — Inbox

@@ -8,7 +8,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
 import { meta } from '../wireframe-tokens'
 
-defineGroup('I-Forms',         { id: 'I', title: 'Forms',         lede: 'Field · Input · Textarea · SearchBox · validation tone (danger / success).' })
+defineGroup('I-Forms',         { id: 'I', title: 'Forms',         lede: 'Field · Input · Textarea · SearchBox · validation tone (danger / success).', defaultGuide: 'form' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (I) Forms — Field · Input · Textarea · SearchBox · validation

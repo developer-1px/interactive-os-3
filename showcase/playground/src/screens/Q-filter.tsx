@@ -5,7 +5,7 @@ import { Slider } from '@p/ds/ui/3-input/Slider'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
 
-defineGroup('Q-Filter',        { id: 'Q', title: 'Filter',        lede: 'Airbnb 식 facet sheet — Slider · CheckboxGroup · RadioGroup + 결과 수 sticky CTA.' })
+defineGroup('Q-Filter',        { id: 'Q', title: 'Filter',        lede: 'Airbnb 식 facet sheet — Slider · CheckboxGroup · RadioGroup + 결과 수 sticky CTA.', defaultGuide: 'form' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (Q) Filter — facets sheet

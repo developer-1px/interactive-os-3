@@ -7,7 +7,7 @@ import { Slider } from '@p/ds/ui/3-input/Slider'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
 
-defineGroup('H-Settings',      { id: 'H', title: 'Settings',      lede: 'Switch · Slider · Select · RadioGroup · CheckboxGroup — 모바일 환경 설정.' })
+defineGroup('H-Settings',      { id: 'H', title: 'Settings',      lede: 'Switch · Slider · Select · RadioGroup · CheckboxGroup — 모바일 환경 설정.', defaultGuide: 'form' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (H) Settings — Switch · Slider · Select · RadioGroup · CheckboxGroup

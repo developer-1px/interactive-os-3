@@ -4,7 +4,7 @@ import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, tabIcons } from '../wireframe-shell'
 import { skeletonBox } from '../wireframe-tokens'
 
-defineGroup('L-States',        { id: 'L', title: 'States',        lede: 'EmptyState · Callout · Skeleton 로 빈 상태 / 에러 / 로딩 시연.' })
+defineGroup('L-States',        { id: 'L', title: 'States',        lede: 'EmptyState · Callout · Skeleton 로 빈 상태 / 에러 / 로딩 시연.', defaultGuide: 'state' })
 
 // ──────────────────────────────────────────────────────────────────────
 // (L) States — Empty / Error / Loading
