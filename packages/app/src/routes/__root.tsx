@@ -6,7 +6,7 @@ const MobileFrame = lazy(() =>
   import('@p/ds/devices/MobileFrame').then((m) => ({ default: m.MobileFrame })),
 )
 const CommandPalette = lazy(() =>
-  import('@p/ds/ui/6-overlay/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
+  import('@p/ds/surfaces/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
 )
 const FloatingNav = lazy(() =>
   import('@p/ds/ui/6-overlay/FloatingNav').then((m) => ({ default: m.FloatingNav })),
