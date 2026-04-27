@@ -122,7 +122,8 @@ export {
 } from './registry'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
 export * from './ui/recipes'
-// parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...). Badge/BadgeTone은 ui/1-status/Badge와 이름 충돌하므로 alias.
+// parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...).
+// CountBadge/ProgressBar 는 ui/1-status/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
 export * from './ui/parts/Avatar'
 export * from './ui/parts/Tag'
 export * from './ui/parts/Thumbnail'
@@ -131,11 +132,11 @@ export * from './ui/parts/Skeleton'
 export * from './ui/parts/EmptyState'
 export * from './ui/parts/Callout'
 export * from './ui/parts/KeyValue'
-export { Badge as CountBadge, type BadgeTone as CountBadgeTone } from './ui/parts/Badge'
+export * from './ui/parts/CountBadge'
 export * from './ui/parts/Heading'
 export * from './ui/parts/Link'
 export * from './ui/parts/Code'
-export { Progress as ProgressBar } from './ui/parts/Progress'
+export * from './ui/parts/ProgressBar'
 export * from './ui/parts/Breadcrumb'
 export * from './ui/parts/Card'
 export * from './ui/parts/Table'

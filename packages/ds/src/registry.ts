@@ -18,7 +18,7 @@ const Block = ({ children }: { children?: ReactNode }) =>
   createElement(Fragment, null, children)
 import { Prose } from './ui/0-primitives/Prose'
 import { CodeBlock } from './ui/0-primitives/CodeBlock'
-import { Link } from './ui/0-primitives/Link'
+import { Link } from './ui/0-primitives/RouterLink'
 import { Button } from './ui/2-action/Button'
 import { Switch } from './ui/2-action/Switch'
 import { Progress, Meter } from './ui/1-status/Progress'
