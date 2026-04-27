@@ -1,4 +1,4 @@
-import { css, dim, pad, radius, tint } from '../../../tokens/foundations'
+import { css, dim, pad, radius, tint } from '../tokens/foundations'
 
 /**
  * PostCard slot inner styling — Slack/Discord 식 채널 게시판 한 줄.

@@ -1,5 +1,5 @@
-import { css, indicator, microLabel, pad, rowPadding } from '../../../tokens/foundations'
-import { levelShift } from '../../../tokens/style/seed/keyline'
+import { css, indicator, microLabel, pad, rowPadding } from '../../tokens/foundations'
+import { levelShift } from '../../tokens/style/seed/keyline'
 
 export const tree = () => [
   indicator('[role="treeitem"]', 'chevronRight', {

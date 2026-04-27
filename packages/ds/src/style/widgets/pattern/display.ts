@@ -1,13 +1,6 @@
+// display() 는 이전에 highlightMark + legendDot + barChart + top10 묶음.
+// Phase 2h-2 co-location 이후 legendDot·barChart·top10 은 ui/ 로 이동했고
+// widgets.styles.ts 가 직접 등록한다. display() 는 highlightMark 만 남김.
 import { highlightMark } from './highlightMark'
-import { legendDot } from './legendDot'
-import { barChart } from './barChart'
-import { top10 } from './top10'
 
-// statCard / courseCard / roleCard 는 src/ds/index.ts 에서 content layer 로 등록.
-// 여기 두 번 등록하면 cascade race → assertUniqueSelectors throw.
-export const display = () => [
-  highlightMark(),
-  legendDot(),
-  barChart(),
-  top10(),
-].join('\n')
+export const display = () => highlightMark()

@@ -1,4 +1,4 @@
-import { control, css, hairlineWidth } from '../../../tokens/foundations'
+import { control, css, hairlineWidth } from '../../tokens/foundations'
 
 /**
  * Split — N-pane resize layout primitive.

@@ -1,4 +1,4 @@
-import { accent, border, css, dim, font, hairlineWidth, pad } from '../../../tokens/foundations'
+import { accent, border, css, dim, font, hairlineWidth, pad } from '../../tokens/foundations'
 export const top10 = () => css`
   [data-part="top-10"] {
     counter-reset: rank;

@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dur, ease, radius, shadow } from '../../../tokens/foundations'
+import { accent, bg, control, css, dur, ease, radius, shadow } from '../../tokens/foundations'
 export const switchCss = css`
   :where([role="switch"]) {
     --switch-ratio:  1.75;
