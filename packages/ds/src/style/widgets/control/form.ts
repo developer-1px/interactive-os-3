@@ -114,6 +114,7 @@ export const formCss = css`
     gap: ${pad(1.5)};
     margin-block-end: ${slot.form.fieldsetMargin};
   }
+  /* legend = "이 밑은 한 묶음" — Field label 보다 한 단계 강하게 (md + 700). */
   fieldset > :where(strong, p):first-child {
     font-size: ${font('md')};
     font-weight: 700;
