@@ -4,7 +4,8 @@ import { states } from './tokens/style/states'
 import { seeds } from './tokens/style/seed/tokens'
 import { breakpointsCss } from './tokens/style/seed/breakpoints'
 import { widgets } from './style/widgets'
-import { parts } from './style/parts'
+import { partsStyles } from './ui/parts/styles'
+import { phone } from './devices/Phone.style'
 import { proseCss } from './style/widgets/pattern/prose'
 import { contractCard } from './style/widgets/pattern/contractCard'
 import { postCard } from './style/widgets/pattern/postCard'
@@ -49,7 +50,8 @@ const segments: ReadonlyArray<readonly [string, string]> = [
   ['states', wrap('states', states())],
   ['fn/iconIndicator', wrap('states', iconIndicator())],
   ['widgets', wrap('widgets', widgets())],
-  ['parts', wrap('parts', parts())],
+  ['parts', wrap('parts', partsStyles())],
+  ['parts/phone', wrap('parts', phone())],
   ['content/prose', wrap('content', proseCss())],
   /* Card 변형 slot CSS 는 parts/Card primitive 를 override 해야 하므로 content layer
      (parts 보다 후순위). 모든 data-card="*" 패턴이 여기. (이전엔 contractCard 만
