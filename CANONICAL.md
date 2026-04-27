@@ -61,6 +61,9 @@
 - **컬렉션 표시**: Table(비교)·List(관리)·Card Grid(시각 브라우징) 3패턴 분류 자체가 정본 · 임시: 없음
 - **카드 변형**: ds/parts/Card 슬롯 + 부모 Grid subgrid · 임시: 없음 · 유산: 카드별 커스텀 layout
 
+### 슬라이드 (md PPT)
+- **마크다운→슬라이드 분할**: 줄 단독 `^---$` 1개 = 슬라이드 경계 (Marpit / Slidev / Deckset 수렴 표준). `splitMarkdown(path, text): Deck` 정본 함수는 `apps/slides/src/features/split.ts` · 임시: 없음 · 유산: 없음
+
 ### 라우팅
 - **라우트 정의**: TanStack file-based (src/routes/<path>.tsx) · 임시: 없음 · 유산: router.tsx 직접 수정
 - **cmd+k 등록**: staticData.palette · 임시: 없음 · 유산: 별도 등록 코드
@@ -82,9 +85,48 @@
 - **prop 이름**: ARIA 그대로. 인위적 통일 금지 · 임시: 없음
 - **escape hatch**: raw `role="..."` 0개 · 임시: 시연/카탈로그 라우트 본문 · 유산: `as` prop (최후 수단)
 
-### 토큰
-- **토큰 계층**: palette(raw scale) → foundations(semantic role/slot/mixin) 2층. widget은 semantic만 import · 임시: 없음
-- **위계**: foundations/layout/hierarchy.ts atom < section < surface < shell 5단 (Gestalt sys layer) · 임시: 없음
+### ds 패키지 레이어 (직교 2축 구조)
+
+`packages/ds/src/` 의 레이어는 단일 사다리가 아니라 **Visual 축(V) · Behavior 축(B) 직교**다. 두 축은 서로를 import 하지 않으며, `ui/` 에서 처음 합류한다. 실측 의존도(2026-04-27)로 검증됨.
+
+```
+  V축 (Visual — 값·CSS)              B축 (Behavior — DOM·키보드·상태)
+  ─────────────────────              ─────────────────────────────
+  V0  tokens/palette/                B0  headless/
+       └─► foundations/                  (axes·state·layout·
+            └─► style/                    hooks·feature)
+  V1  style/widgets/                     · 0 deps, 완전 pure ⭐
+  ─────────────────────              ─────────────────────────────
+                    \                /
+                     ▼              ▼
+              C0  ui/  (V + B 합류 — role 컴포넌트)
+                       0-primitives · 1-status · 2-action · 3-input ·
+                       4-selection · 5-display · 6-overlay · 8-layout ·
+                       parts · patterns · recipes
+                    │
+                    ▼
+              C1  content/  (도메인 widget — ui 위)
+                    │
+                    ▼
+              C2  devices/  (mock frame — V만 사용)
+                    │
+                    ▼
+              R   registry · index · data · plugin · widgets.styles
+                    (조립 — 전 레이어 import)
+```
+
+- **V·B 직교**: V → B 또는 B → V import 0건이 invariant. 위반 시 직교 깨짐.
+- **headless 0 deps**: tokens조차 import 하지 않는다. "엔진은 시각을 모른다"가 정본.
+- **합류는 ui/ 에서만**: V·B 둘을 동시에 보는 첫 지점. content/devices/registry 는 그 위.
+- **단조 흐름**: V축·B축 → ui → content → registry. 역방향(아래→위) 0건이 invariant.
+- **content > ui**: content/ 가 ui/ 위. ui/ 가 content/ 를 import 하면 위반.
+
+#### 토큰 (V축 세부)
+- **토큰 계층**: palette(raw scale) → foundations(semantic role/slot/mixin) → style(preset/seed/shell/states) 3층. widget은 semantic 이상만 import · 임시: 없음
+- **위계 토큰**: foundations/layout/hierarchy.ts atom < section < surface < shell 5단 (Gestalt sys layer) · 임시: 없음
+
+#### 알려진 일탈 (수렴 대상)
+- ui/ → content/ 역방향 import 2건 (실측 2026-04-27). 위치 특정 후 ui→content 승격 또는 content→ui 강등으로 해소 · 유산: ui 안의 도메인 wording
 
 ### 문서
 - **inbox 문서 폴더**: `docs/YYYY-MM-DD/` = 사건 발생 날짜 (작성일 X) · 임시: 없음
@@ -114,4 +156,6 @@
 - 2026-04-26 · 모노레포·plugin manifest 정본 채택 (Phase A.0): pnpm-workspace.yaml 신설, `@p/*` path alias, `definePlugin`·`defineMiddleware` contract 신설(src/ds/plugin.ts·core/middleware.ts), `app/plugins.ts`·`app/registry.ts` 신설, main.tsx에 `composeRegistry(plugins)` 부팅 합산 — 파일 이동(Phase A.1)은 후속
 - 2026-04-26 · Phase A.1 파일 이동 완료: src/ds → packages/ds/src, src/{main,router,routeTree.gen,index.css,app,routes,devtools,assets} → packages/app/src/. 80개 파일의 ../ds 류 상대 import을 @p/ds로 일괄 alias 전환. vite alias·tsconfig path·tanstackRouter routesDirectory·scripts/ 하드코드 모두 재타깃. src/ 폴더 제거. tsc 0에러 + vite build 통과
 - 2026-04-26 · 카테고리 분리: packages/{ds·app·fs·devtools} 4개, apps/{edu-portal-admin·finder·genres·markdown} 4개, showcase/{catalog·content·ds-matrix·foundations·inspector·keyboard·playground·theme} 8개. m.finder를 finder/mobile로 흡수. @p/fs로 fs source layer 격리(loadText·tagIndex·frontmatter·highlight·FsNode). finder의 router 의존을 setFinderNav inversion으로 해소
+- 2026-04-27 · ds 패키지 레이어 정본 채택 — 직교 2축(Visual·Behavior) 구조 선언. 실측 의존도로 검증: headless 0 deps(완전 pure), V·B 상호 import 0건, content > ui 단조. 기존 "토큰" 섹션을 "ds 패키지 레이어" 하위로 흡수. 알려진 일탈 1종 등록(ui→content 역방향 2건)
 - 2026-04-26 · FSD 정본 채택 — 큰 앱에 entities/features/widgets 레이어 적용. 시드: apps/finder (entities: schema·types · features: feature·resources·data·nav · widgets: 7 components + useSidebarNav + mobile/). apps/edu-portal-admin도 entities/widgets + pages 유지로 적용
+- 2026-04-27 · slides 정본 채택: apps/slides 신설 (FSD). 슬라이드 분할 정본 = 줄 단독 `^---$` 1개 (Marpit/Slidev/Deckset 3곳 수렴). `splitMarkdown`/`SlideSchema`/`DeckSchema` 시드. 라우트 /slides/$, finder Sidebar 재사용, Prose entity로 슬라이드 본문 격리, 키 ←→/PgUp PgDn/Space/Home/End 네비

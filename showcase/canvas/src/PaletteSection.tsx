@@ -14,6 +14,7 @@ import { audit } from 'virtual:ds-audit'
 import * as palette from '@p/ds/tokens/palette'
 import { ThemeCreatorBody } from '@showcase/theme'
 import { SectionFrame, SubGroup } from './SectionFrame'
+import { PageDivider } from './PageDivider'
 
 const FN = palette as unknown as Record<string, (...args: unknown[]) => string>
 
@@ -123,12 +124,14 @@ function renderExport(e: FoundationExport): ReactNode {
 export function PaletteSection(): ReactNode {
   if (paletteGroups.length === 0) return null
   return (
-    <section data-part="canvas-palette-page">
-      <h2 data-part="canvas-page-label">
-        <strong>L0 · Palette</strong>
-        <span>Design Tokens · raw scale</span>
-        <small>palette = 수치. semantic 보다 한 층 아래의 ref token. widget 직접 호출 ❌</small>
-      </h2>
+    <section data-part="canvas-palette-page" data-tone="neutral">
+      <PageDivider
+        level="L0"
+        tone="neutral"
+        title="Design Tokens"
+        subtitle="raw scale"
+        hint="palette = 수치. semantic 보다 한 층 아래의 ref token. widget 직접 호출 ❌"
+      />
       <SectionFrame title="Theme creator" subtitle="theme" standard="palette controls → :root vars">
         <ThemeCreatorBody />
       </SectionFrame>

@@ -70,13 +70,18 @@ export const canvasCss = css`
   [data-part="canvas-semantic-page"],
   [data-part="canvas-atoms-page"],
   [data-part="canvas-composed-page"] {
+    --tone: #1e1e1e;
     display: flex;
     flex-direction: column;
-    gap: ${pad(14)};
+    gap: ${pad(20)};
     flex: 0 0 auto;
     padding-right: ${pad(10)};
     border-right: 1px dashed rgba(0,0,0,0.08);
   }
+  [data-part="canvas-palette-page"][data-tone="neutral"]    { --tone: #1e1e1e; }
+  [data-part="canvas-semantic-page"][data-tone="blue"]      { --tone: #2563eb; }
+  [data-part="canvas-atoms-page"][data-tone="green"]        { --tone: #16a34a; }
+  [data-part="canvas-composed-page"][data-tone="amber"]     { --tone: #d97706; }
   /* 각 레이어 폭 = 그 레이어의 가장 넓은 SectionFrame max-content + padding 여유. */
   [data-part="canvas-palette-page"]   { width: 2200px; }
   [data-part="canvas-semantic-page"]  { width: 1300px; }
@@ -103,25 +108,81 @@ export const canvasCss = css`
     flex-direction: column;
     gap: ${pad(8)};
   }
-  [data-part="canvas-page-label"] {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: ${pad(2)};
+  /* ── PageDivider — L0/L1/L2/L3 column 헤더. lane(◆) 보다 강한 분리. ──
+     수렴 어휘: Brad Frost tone, Vercel mono eyebrow, Atlassian display title,
+     Material 3 stripe, Untitled UI hint. */
+  [data-part="canvas-page-divider"] {
+    --tone: #1e1e1e;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: ${pad(3)};
+    margin-bottom: ${pad(8)};
+    padding-top: ${pad(4)};
   }
-  [data-part="canvas-page-label"] > strong {
-    font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: 0.08em;
+  [data-part="canvas-page-divider"][data-tone="blue"]   { --tone: #2563eb; }
+  [data-part="canvas-page-divider"][data-tone="green"]  { --tone: #16a34a; }
+  [data-part="canvas-page-divider"][data-tone="amber"]  { --tone: #d97706; }
+
+  [data-part="canvas-page-divider-stripe"] {
+    height: 8px;
+    width: 100%;
+    background: var(--tone);
+    border-radius: 1px;
+  }
+  [data-part="canvas-page-divider-eyebrow"] {
+    display: inline-flex;
+    gap: 10px;
+    align-items: baseline;
+    font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tone);
+  }
+  [data-part="canvas-page-divider-eyebrow"] > span:nth-child(2) {
+    color: ${neutral(4)};
+  }
+  [data-part="canvas-page-divider-eyebrow"] > span:nth-child(3) {
     color: ${neutral(6)};
+    letter-spacing: 0.14em;
   }
-  [data-part="canvas-page-label"] > span {
-    font: 700 32px system-ui;
-    letter-spacing: -0.02em;
+
+  [data-part="canvas-page-divider-head"] {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: ${pad(5)};
+  }
+  [data-part="canvas-page-divider-numeral"] {
+    font: 200 96px system-ui;
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    color: var(--tone);
+    flex: none;
+    user-select: none;
+    /* 시각 닻 — title 보다 거대하지만 weight 200 으로 약해서 위계 안 흔든다 */
+    opacity: 0.92;
+  }
+  [data-part="canvas-page-divider-title"] {
+    font: 800 56px system-ui;
+    letter-spacing: -0.03em;
+    line-height: 1.0;
     color: #1e1e1e;
+    margin: 0;
   }
-  [data-part="canvas-page-label"] > small {
-    font: 400 12px system-ui;
-    color: #888;
+  [data-part="canvas-page-divider-subtitle"] {
+    font: 500 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: ${neutral(6)};
+    letter-spacing: 0.02em;
+    margin-top: ${pad(2)};
+  }
+  [data-part="canvas-page-divider-hint"] {
+    font: 400 13px system-ui;
+    color: ${neutral(7)};
+    line-height: 1.55;
+    margin: 0;
+    max-width: 56ch;
+    padding-bottom: ${pad(4)};
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
   [data-part="canvas-palette-groups"] {
     display: flex;
@@ -143,7 +204,7 @@ export const canvasCss = css`
     margin: 0 !important;
   }
 
-  /* lane = frame 없음 (Figma section 톤). 섹션 위쪽에 가벼운 rail + 강화된 tag 로 구분. */
+  /* ── Section (lane) — page 안 단위. tone 은 부모 page 에서 CSS 상속. ── */
   [data-part="canvas-section"] {
     position: relative;
     width: max-content;
@@ -151,57 +212,71 @@ export const canvasCss = css`
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: ${pad(4)} 0 0;
+    padding: ${pad(6)} 0 0;
     flex: none;
   }
-  /* 섹션 위 dashed rail — 그 layer 의 섹션 사이 시각적 구분. 첫 섹션은 안 그림. */
-  [data-part="canvas-section"]:not(:first-child)::before {
+  /* 섹션 시작 marker — tone 색 2px 실선 (alpha 강화). 첫 섹션도 표시 (page divider 다음 시각 anchor). */
+  [data-part="canvas-section"]::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 0;
-    border-top: 1px dashed rgba(0, 0, 0, 0.10);
+    width: 32px;
+    height: 2px;
+    background: var(--tone, #1e1e1e);
+    border-radius: 1px;
+  }
+
+  /* header 묶기 — title/subtitle/count/standard 가 한 시각 블록으로 읽힘 */
+  [data-part="canvas-section-header"] {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: ${pad(5)};
+    padding-bottom: ${pad(3)};
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   [data-part="canvas-section-tag"] {
     position: static;
     color: #1e1e1e;
-    font: 600 16px Inter, system-ui;
+    font: 600 18px Inter, system-ui;
     letter-spacing: -0.01em;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     background: transparent;
     padding: 0;
-    margin-bottom: ${pad(4)};
+    margin: 0;
     text-transform: none;
   }
-  [data-part="canvas-section-tag"]::before {
-    content: '';
-    width: 12px; height: 12px;
-    background: #1e1e1e;
+  [data-part="canvas-section-tag"] > [data-marker] {
+    width: 10px; height: 10px;
+    background: var(--tone, #1e1e1e);
     transform: rotate(45deg);
     border-radius: 1px;
     flex: none;
   }
+  [data-part="canvas-section-tag"] > [data-title] {
+    font-weight: 700;
+    color: #1e1e1e;
+  }
   [data-part="canvas-section-tag"] > small {
     font: 500 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #b0b0b0;
+    color: ${neutral(5)};
+    margin-left: auto;
+    padding-left: ${pad(3)};
   }
   [data-part="canvas-section-tag"] > [data-subtitle] {
     font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #999;
+    color: ${neutral(6)};
     text-transform: none;
   }
   [data-part="canvas-section-standard"] {
-    font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace;
     letter-spacing: 0.02em;
-    color: #999;
-    margin-bottom: ${pad(3)};
-    padding-bottom: ${pad(2)};
-    border-bottom: 1px dashed rgba(0,0,0,0.08);
+    color: ${neutral(6)};
+    padding-left: 20px; /* marker(10px) + gap(10px) 정렬 */
   }
 
   [data-part="canvas-shape-group"] {
