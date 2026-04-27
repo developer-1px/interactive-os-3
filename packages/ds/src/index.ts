@@ -121,7 +121,7 @@ export {
   type UiComponentName, type UiEntry, type Zone,
 } from './registry'
 // layout/recipes — APG 외 page-level 시각 골격 (defineLayout fragment) + sidebar variants
-export * from './ui/recipes'
+export * from './ui/templates'
 // parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...).
 // CountBadge/ProgressBar 는 ui/1-status/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
 export * from './ui/parts/Avatar'

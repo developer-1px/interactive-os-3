@@ -1,39 +1,59 @@
 /**
- * Lanes — lane 어휘 SSOT.
+ * Lanes — fs SSoT.
  *
- * 책임:
- *   - 각 ui/<n>-<name>/ 및 devices/ 의 `_lane.ts` co-located meta 자동 수집
- *   - lane order 기반 ranking
- *   - atom 분류 — lane.tier default + 컴포넌트 옆 `Foo.meta.ts` override
+ * lane 메타(label·order·tier·layer·bucket)는 폴더 위치/이름에서 자동 도출.
+ * `_lane.ts` 메타 파일 ❌ — 폴더 만들기만으로 canvas 등재.
  *
- * Canvas.tsx · 섹션 컴포넌트들이 이 어휘를 소비.
+ * 컴포넌트별 atom override 만 `Foo.meta.ts` 로 보존 (fs 도출 불가능한 합리적 override).
  */
-import type { LaneMeta } from '@p/ds/ui/lane'
 import type { ComponentMeta } from '@p/ds/ui/component-meta'
 
-const uiLaneMetaModules = import.meta.glob<{ default: LaneMeta }>('@p/ds/ui/*/_lane.ts', { eager: true })
-const deviceLaneMetaModules = import.meta.glob<{ default: LaneMeta }>('@p/ds/devices/_lane.ts', { eager: true })
-const componentMetaModules = import.meta.glob<{ default: ComponentMeta }>('@p/ds/ui/*/*.meta.ts', { eager: true })
+export type Bucket = 'L2' | 'L3' | 'L4' | 'L5'
 
-export const laneMetaMap = new Map<string, LaneMeta>()
-for (const [path, mod] of Object.entries(uiLaneMetaModules)) {
-  const m = path.match(/\/ui\/([^/]+)\/_lane\.ts$/)
-  if (!m) continue
-  laneMetaMap.set(`ui/${m[1]}`, mod.default)
+/** fs 위치 → bucket (L2 Primitives · L3 Patterns · L4 Templates · L5 Devices) */
+export function bucketOf(lanePath: string): Bucket {
+  if (lanePath === 'devices') return 'L5'
+  if (lanePath === 'content') return 'L3'
+  if (lanePath.startsWith('ui/')) {
+    const tail = lanePath.slice(3)
+    const n = parseInt(tail.match(/^(\d+)-/)?.[1] ?? '99')
+    if (n >= 0 && n <= 3) return 'L2'
+    if (n >= 4 && n <= 6) return 'L3'
+    if (n === 8)          return 'L4'
+    if (tail === 'parts')    return 'L2'
+    if (tail === 'patterns') return 'L3'
+    if (tail === 'templates')  return 'L4'
+  }
+  return 'L3'
 }
-for (const [path, mod] of Object.entries(deviceLaneMetaModules)) {
-  if (!path.match(/\/devices\/_lane\.ts$/)) continue
-  laneMetaMap.set('devices', mod.default)
+
+/** 폴더명 → 표시 라벨 (`0-primitives` → "Primitives"). */
+export function labelOf(lanePath: string): string {
+  const tail = lanePath.split('/').pop()!
+  const name = tail.replace(/^\d+-/, '')
+  return name[0].toUpperCase() + name.slice(1)
 }
 
-export const laneRank = (lane: string) => laneMetaMap.get(lane)?.order ?? 999
+/** lane 정렬 — bucket × prefix 숫자. */
+export function orderOf(lanePath: string): number {
+  const bucketRank = { L2: 100, L3: 200, L4: 300, L5: 400 }[bucketOf(lanePath)]
+  const n = parseInt(lanePath.match(/(\d+)-/)?.[1] ?? '50')
+  return bucketRank + n
+}
 
-// ── 컴포넌트 자기-선언 tier (SSOT, lane default override) ──────────────
-// `ui/<lane>/Foo.meta.ts` default export 가 컴포넌트의 atom/composed 정체성.
-// 없으면 lane.tier default 적용. _lane.ts 는 .meta.ts 가 아니므로 자연 제외.
+export const laneRank = orderOf
+
+// ── 컴포넌트별 atom override ─────────────────────────────────────────────
+// `ui/<lane>/Foo.meta.ts` default export 가 atom/composed 정체성을 자기 선언.
+// 없으면 bucket==='L2' 가 default atom.
+const componentMetaModules = import.meta.glob<{ default: ComponentMeta }>(
+  '@p/ds/ui/**/*.meta.ts',
+  { eager: true },
+)
+
 const componentTierMap = new Map<string, ComponentMeta['tier']>()
 for (const [path, mod] of Object.entries(componentMetaModules)) {
-  const m = path.match(/\/ui\/[^/]+\/([^/]+)\.meta\.ts$/)
+  const m = path.match(/\/([^/]+)\.meta\.ts$/)
   if (!m) continue
   componentTierMap.set(m[1], mod.default.tier)
 }
@@ -41,5 +61,5 @@ for (const [path, mod] of Object.entries(componentMetaModules)) {
 export function isAtom(name: string, lane: string): boolean {
   const own = componentTierMap.get(name)
   if (own) return own === 'atom'
-  return laneMetaMap.get(lane)?.tier === 'atom'
+  return bucketOf(lane) === 'L2'
 }
