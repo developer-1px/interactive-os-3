@@ -31,6 +31,8 @@ import { Select } from './ui/3-input/Select'
 import { Checkbox } from './ui/3-input/Checkbox'
 import { Field, FieldLabel, FieldDescription, FieldError } from './ui/3-input/Field'
 import { Listbox } from './ui/4-selection/Listbox'
+import { Combobox } from './ui/3-input/Combobox'
+import { RouteGrid } from './ui/6-overlay/command/RouteGrid'
 import { Tree } from './ui/4-selection/Tree'
 import { Toolbar } from './ui/4-selection/Toolbar'
 import { TabList, Tab, TabPanel } from './ui/4-selection/Tabs'
@@ -100,8 +102,11 @@ export const uiRegistry = {
   FieldLabel:       { component: FieldLabel,       zone: 'input' },
   FieldDescription: { component: FieldDescription, zone: 'input' },
   FieldError:       { component: FieldError,       zone: 'input' },
+  // input
+  Combobox: { component: Combobox, zone: 'input' },
   // collection
   Listbox: { component: Listbox, zone: 'collection' },
+  RouteGrid: { component: RouteGrid, zone: 'collection' },
   Tree:    { component: Tree,    zone: 'collection' },
   Toolbar: { component: Toolbar, zone: 'collection' },
   TabList: { component: TabList, zone: 'collection' },
