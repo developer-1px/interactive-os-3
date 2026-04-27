@@ -48,7 +48,7 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   }
 
   return (
-    <Grid cols={3} flow="form">
+    <Grid cols={3} flow="list" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
       {visible.map((g) => (
         <Card
           key={g.key}
