@@ -26,7 +26,6 @@ export function CommandPalette() {
   const page = definePage({
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Column', flow: 'prose' } },
       input: {
         id: 'input',
         data: {
@@ -58,7 +57,7 @@ export function CommandPalette() {
         },
       },
     },
-    relationships: { [ROOT]: ['page'], page: ['input', 'grid'] },
+    relationships: { [ROOT]: ['input', 'grid'] },
   })
 
   return (

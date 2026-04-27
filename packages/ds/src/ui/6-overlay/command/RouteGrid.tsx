@@ -48,7 +48,7 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   }
 
   return (
-    <Grid cols={3} flow="prose">
+    <Grid cols={3} flow="form">
       {visible.map((g) => (
         <Card
           key={g.key}

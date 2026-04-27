@@ -17,9 +17,9 @@ export const dialogCss = css`
 
   /* Command palette — 상단 정렬, 가로 확장, 입력/목록 스택 */
   :where(dialog[aria-label="Command palette"][open]) {
-    max-width: min(92vw, 640px);
+    max-width: min(92vw, 1024px);
     width: 100%;
-    margin-top: 12vh;
+    margin-top: 8vh;
     padding: ${pad(1)};
     display: grid;
     gap: ${pad(1)};
