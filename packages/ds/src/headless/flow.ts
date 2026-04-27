@@ -3,8 +3,8 @@ import type { Event, NormalizedData } from './types'
 import type { GestureHelper } from './gesture'
 import type { Resource } from '../data'
 import { useResource } from '../data'
-import { useControlState } from './hooks/useControlState'
-import { useEventBridge } from './hooks/useEventBridge'
+import { useControlState } from './state/useControlState'
+import { useEventBridge } from './state/useEventBridge'
 
 /**
  * Flow — ui/ ↔ resource 사이의 wiring을 1조각으로 묶은 선언형 정의.

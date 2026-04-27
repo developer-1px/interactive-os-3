@@ -1,4 +1,4 @@
-import { getChildren, getExpanded, type Event, type NormalizedData } from './types'
+import { getChildren, getExpanded, type Event, type NormalizedData } from '../types'
 
 // 제스처(activate) → 의도(expand/navigate) 변환 헬퍼.
 // ui/ role은 activate 단발만 emit. 소비자가 자기 reducer 직전에 골라 통과시킨다.
