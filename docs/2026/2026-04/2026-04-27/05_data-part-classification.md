@@ -149,6 +149,33 @@ ATOM 후보 11건 정밀 검토 결과 — 단순 1:1 native 환원 외에는 PA
 | 1차: code, kbd, link, progress, table, key-value, fieldset | -14 | 121 |
 | 2차: text-divider | -1 | 120 |
 | 3차: breadcrumb → `nav[aria-label="Breadcrumb"]` (APG) | -2 | 118 |
+| 4차: body → data-slot, route-grid 제거, inspector canvas | -2 | 116 |
+
+## 중대 재분류 (2026-04-27 4차 이후)
+
+S 카테고리(10건) 전체 재분류:
+- `apps/genres/*/build.tsx` 가 `roledescription: 'chat-page'` 를 definePage entity 로 주입 → Renderer 가 `data-part` 로 렌더
+- 이는 memory `Renderer.tsx` SKIP 과 동형의 **정당한 동적 주입 패턴**
+- → `chat-page`·`feed-page`·`shop-page`·`board-page`·`board-nav`·`board-posts`·`board-stream`·`post-cont`·`canvas-family`(playground) 전부 **PART (composite 페이지 widget)** 로 재분류
+- `page.ts` CSS 는 모두 token 사용 (raw px/hex 0건) — invariant 본질 통과
+
+L 카테고리(5건) 재분류:
+- `column`·`columns` (Columns.tsx) → **PART** (Finder miller column composite, ARIA 등가 없음)
+- `route-grid` ✅ 제거 (dead namespace)
+- `sidebar` → **PART** (shell composite, recipes/ 위치)
+- `row-split` → 유지 (data-tone 차원 misuse 가능, 별도 검토)
+
+## 최종 PART 인정 (~50건)
+
+원 30 → 50+ 로 증가. 대부분의 data-part 사용이 **합성 widget namespace** 이며, invariant 의 핵심("표현은 token/ARIA")은 이미 만족. 셀렉터 namespace 자체의 존재는 정당.
+
+## 진짜 ATOM (환원 완료) — 9건
+
+`code`·`kbd`·`link`·`progress`·`table`·`key-value`·`fieldset`·`text-divider`·`breadcrumb` → 모두 native HTML/ARIA 등가로 환원 완료.
+
+## 진짜 MISUSE (환원 완료/제거) — 2건
+
+`body` → data-slot 차원 이동, `route-grid` → dead namespace 제거.
 
 추가 재분류: `callout` → **PART** (role 이 status/alert/note 가변, 단일 ARIA 셀렉터 불가). `body`·`heading` 은 slot 차원 얽힘으로 별도 세션 필요.
 
