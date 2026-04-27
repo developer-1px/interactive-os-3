@@ -4,6 +4,7 @@ import { ROOT, type NormalizedData, type Event } from '../../../headless/types'
 import { Card } from '../../parts/Card'
 import { Heading } from '../../parts/Heading'
 import { Listbox } from '../../4-selection/Listbox'
+import { Grid } from '../../8-layout/Grid'
 
 type Group = { key: string; label: string; entries: PaletteEntry[] }
 
@@ -47,7 +48,7 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   }
 
   return (
-    <nav>
+    <Grid cols={3} flow="prose">
       {visible.map((g) => (
         <Card
           key={g.key}
@@ -57,6 +58,6 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
           }}
         />
       ))}
-    </nav>
+    </Grid>
   )
 }
