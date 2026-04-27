@@ -11,7 +11,7 @@ export type Layer = {
 }
 
 export type RadiusScale = 'sm' | 'md' | 'lg' | 'pill'
-export type TextScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type TextScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type ElevationLevel = 0 | 1 | 2 | 3
 
 export type DsPreset = {

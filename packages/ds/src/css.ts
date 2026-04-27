@@ -2,11 +2,11 @@
  * dsCss · wrapAppsLayer — entry 가 @p/ds 배럴 전체(UI·widget tree)를 끌어오지
  * 않도록 CSS 합성만 분리. main.tsx 는 `@p/ds/css` 로 import 한다.
  */
-import { reset } from './tokens/style/seed/reset'
-import { shell } from './tokens/style/shell'
-import { states } from './tokens/style/states'
-import { seeds } from './tokens/style/seed/tokens'
-import { cssContainerQueries } from './tokens/style/seed/containerQueries'
+import { reset } from './tokens/internal/seed/reset'
+import { shell } from './tokens/internal/shell'
+import { states } from './tokens/internal/states'
+import { seeds } from './tokens/internal/seed/tokens'
+import { cssContainerQueries } from './tokens/internal/seed/containerQueries'
 import { widgets } from './widgets.styles'
 import { partsStyles } from './ui/parts/styles'
 import { cssPhone } from './devices/Phone.style'

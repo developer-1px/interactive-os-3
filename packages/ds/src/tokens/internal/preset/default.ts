@@ -35,6 +35,7 @@ export const defaultPreset: DsPreset = {
     lg: '15px',
     xl: '18px',
     '2xl': '24px',
+    '3xl': '34px',
   },
   font: {
     sans: `ui-sans-serif, -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`,

@@ -51,6 +51,14 @@ export const type = {
   heading:        { fontSize: font('lg'), fontWeight: weight('semibold') },
   /** heading h2 (xl bold) — 강한 섹션 제목. */
   headingStrong:  { fontSize: font('xl'), fontWeight: weight('bold') },
+  /** hero (3xl bold) — page banner / column banner display. */
+  hero:           { fontSize: font('3xl'), fontWeight: weight('bold') },
+  /** monospace micro (xs mono semibold) — eyebrow · subgroup label · meta. uppercase는 호출처에서 적용. */
+  monoMicro:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('xs'), fontWeight: weight('semibold') },
+  /** monospace label (sm mono medium) — token call · code label. */
+  monoLabel:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm'), fontWeight: weight('medium') },
+  /** monospace strong (sm mono semibold) — code step · ramp index. */
+  monoStrong:     { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm'), fontWeight: weight('semibold') },
 } as const
 
 /**
@@ -62,9 +70,10 @@ export const type = {
  * 새 role 이 필요하면 위 type 객체에 등재 — widget 에서 raw scale (`font('xl')`) 직호출 ❌.
  */
 export const typography = (role: keyof typeof type) => {
-  const t = type[role] as { fontSize?: string; fontWeight?: string }
+  const t = type[role] as { fontSize?: string; fontWeight?: string; fontFamily?: string }
   const lines: string[] = []
   if (t.fontSize)   lines.push(`font-size: ${t.fontSize};`)
   if (t.fontWeight) lines.push(`font-weight: ${t.fontWeight};`)
+  if (t.fontFamily) lines.push(`font-family: ${t.fontFamily};`)
   return lines.join(' ')
 }

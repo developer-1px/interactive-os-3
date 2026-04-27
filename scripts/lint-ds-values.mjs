@@ -23,12 +23,14 @@ const SKIP_PATHS = [
   'dist',
   // 정의 layer — raw neutral/hex 가 SSOT 라 정당
   'packages/ds/src/fn',
-  'packages/ds/src/tokens/style/preset',
+  'packages/ds/src/tokens/internal/preset',
   'packages/ds/src/tokens/foundations',
   // demo는 1회용 시연 — raw 허용
   '/_demos/',
   // devices/ 는 physical chrome (bezel·notch 같은 물리 수치) — semantic role 부적합
   '/devices/',
+  // theme creator — palette 편집 도구라 raw scale 직접 read/write 정당 (다른 카탈로그 라우트와 동일 예외)
+  '/showcase/theme/',
 ]
 
 // scope: 시각 코드만 — *.tsx component 는 제외.

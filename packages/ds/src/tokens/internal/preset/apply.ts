@@ -102,6 +102,7 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-text-lg:  ${p.text.lg};
     --ds-text-xl:  ${p.text.xl};
     --ds-text-2xl: ${p.text['2xl']};
+    --ds-text-3xl: ${p.text['3xl']};
 
     --ds-leading:        ${p.leading.normal};
     --ds-leading-tight:  ${p.leading.tight};
@@ -200,6 +201,7 @@ export const toCss = (p: DsPreset): string => {
         --ds-text-lg:  20px;
         --ds-text-xl:  24px;
         --ds-text-2xl: 32px;
+        --ds-text-3xl: 40px;
         --ds-control-h: 44px;
         /* spacing 위계 비례 확장 — density 한 변수로 모든 pad()/hierarchy 토큰 1.5× 키움.
            atom 2→3, section 4→6, surface 8→12, shell 16→24 — Gestalt 위계 단조성 그대로 보존.

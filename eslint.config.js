@@ -23,7 +23,7 @@ const dirFileCountCache = new Map()
 //   L5  devices       devices/*
 //
 // + headless/ — L2 와 평행 (ARIA/keyboard 엔진), foundations 까지만 의존.
-// + style/widgets/ — orphan CSS (1:1 component 없는 shared CSS), foundations 까지만 의존.
+// + tokens/(palette|internal/widgets/ — orphan CSS (1:1 component 없는 shared CSS), foundations 까지만 의존.
 //
 // 위계 invariant: L<n> 의 파일은 L<m≤n> 만 import 가능. 같은 L<n> 안에서는 자유.
 // L0/L1 은 토큰이라 절대 widget 코드 (위쪽) 를 import 할 수 없음.
@@ -37,7 +37,7 @@ const UI_ZONE_RANK = {
 const dsLimits = {
   rules: {
     // ─── layer-boundary ────────────────────────────────────────────────
-    // widget(L2~L5 + style/widgets) 는 token 정의층(preset/seed/shell) 직접 import ❌.
+    // widget(L2~L5 + tokens/(palette|internal/widgets) 는 token 정의층(preset/seed/shell) 직접 import ❌.
     // foundations(L1) 은 palette(L0) 까지만, preset/seed/shell ❌.
     'layer-boundary': {
       meta: { type: 'problem', schema: [] },
@@ -54,11 +54,11 @@ const dsLimits = {
 
         // widget 금지: preset · seed · shell (token 정의층)
         const FORBIDDEN_FOR_WIDGET = [
-          { name: 'preset', re: /(?:^|\/)tokens\/style\/preset(?:$|\/|['"])/ },
+          { name: 'preset', re: /(?:^|\/)tokens\/internal\/preset(?:$|\/|['"])/ },
           { name: 'preset', re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/preset(?:$|\/|['"])/ },
-          { name: 'seed',   re: /(?:^|\/)tokens\/style\/seed(?:$|\/|['"])/ },
+          { name: 'seed',   re: /(?:^|\/)tokens\/internal\/seed(?:$|\/|['"])/ },
           { name: 'seed',   re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/seed(?:$|\/|['"])/ },
-          { name: 'shell',  re: /(?:^|\/)tokens\/style\/shell(?:$|\/|['"])/ },
+          { name: 'shell',  re: /(?:^|\/)tokens\/internal\/shell(?:$|\/|['"])/ },
           { name: 'shell',  re: /(?:^|\/)\.\.\/(?:\.\.\/)*style\/shell(?:$|\/|['"])/ },
         ]
         return {
@@ -80,7 +80,7 @@ const dsLimits = {
             }
             // foundations 는 palette 만 허용 (preset/seed/shell ❌)
             if (isFoundations) {
-              if (/(?:^|\/)tokens\/style\/(preset|seed|shell)(?:$|\/|['"])/.test(src) ||
+              if (/(?:^|\/)tokens\/internal\/(preset|seed|shell)(?:$|\/|['"])/.test(src) ||
                   /(?:^|\/)\.\.\/(?:\.\.\/)*style\/(preset|seed|shell)(?:$|\/|['"])/.test(src)) {
                 context.report({
                   node,
@@ -202,7 +202,7 @@ const dsLimits = {
         if (!file) return {}
         // 발행 권한: preset/, seed/, shell/, palette/ (raw 정의)
         if (/\/packages\/ds\/src\/tokens\/(palette|style\/(preset|seed|shell))\//.test(file)) return {}
-        // 검사 대상: foundations 와 widget (ui/content/devices/style/widgets)
+        // 검사 대상: foundations 와 widget (ui/content/devices/tokens/(palette|internal/widgets)
         if (!/\/packages\/ds\/src\/(tokens\/foundations|ui|content|devices|style\/widgets)\//.test(file)) return {}
         // preset 에서 이미 발행된 토큰의 variant override 는 sanctioned
         const PRESET_OVERRIDABLE = /^--ds-(sidebar-w|column-w|preview-w|chrome-h|hairline|elev-[0-3]|shadow|shell-mobile-max|traffic-(close|min|max))$/
@@ -216,7 +216,7 @@ const dsLimits = {
             context.report({
               node,
               message:
-                `--ds-* 토큰 발행 (${tok}) 은 tokens/(palette|style/(preset|seed|shell))/ 에서만 허용. ` +
+                `--ds-* 토큰 발행 (${tok}) 은 tokens/(palette|internal/|internal/(preset|seed|shell))/ 에서만 허용. ` +
                 `widget 에서 발행하면 SSOT 분기 — preset 스키마(DsPreset)에 추가하거나, internal var 면 --ds- prefix 제거.`,
             })
           }

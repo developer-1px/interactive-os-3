@@ -1,7 +1,7 @@
 /**
  * StateContextMatrix — state 가 적용되는 모든 role/context 를 가로 행으로 전수 나열.
  *
- * SSoT: packages/ds/src/tokens/style/states/selectors.ts
+ * SSoT: packages/ds/src/tokens/internal/states/selectors.ts
  *
  * 행: role/context · 열: variant(rest · selected/checked · disabled).
  * 같은 variant 가 세로로 정렬돼 맥락별 차이가 한눈에 비교된다.

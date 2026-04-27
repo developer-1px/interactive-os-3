@@ -156,6 +156,51 @@ const RULES: Rule[] = [
     replace: (_m: string, tone: string) => `\${statusTint('${tone}', 'soft')}`,
     importName: 'statusTint',
   },
+  // font+weight 페어 → typography(role) — 같은 줄 또는 인접 줄.
+  // (font('size'), weight('w')) 매핑 표 — 빈도 audit 기반 role 등재.
+  ...(() => {
+    const PAIRS: Array<[string, string, string]> = [
+      ['md', 'regular',    'body'],
+      ['md', 'semibold',   'bodyStrong'],
+      ['md', 'bold',       'bodyStrong'],
+      ['sm', 'regular',    'caption'],
+      ['sm', 'medium',     'label'],
+      ['sm', 'semibold',   'captionStrong'],
+      ['sm', 'bold',       'captionStrong'],
+      ['xs', 'regular',    'micro'],
+      ['xs', 'medium',     'micro'],
+      ['xs', 'semibold',   'microStrong'],
+      ['xs', 'bold',       'microStrong'],
+      ['lg', 'semibold',   'heading'],
+      ['lg', 'bold',       'heading'],
+      ['xl', 'semibold',   'headingStrong'],
+      ['xl', 'bold',       'headingStrong'],
+      ['2xl', 'semibold',  'display'],
+      ['2xl', 'bold',      'display'],
+    ]
+    return PAIRS.flatMap(([size, w, role]): Rule[] => {
+      // ${font('size')} 또는 var(--ds-text-size) 둘 다 매칭 — 같은 의미
+      const f = `(?:\\$\\{font\\(['"]${size}['"]\\)\\}|var\\(--ds-text-${size}\\))`
+      const wt = `\\$\\{weight\\(['"]${w}['"]\\)\\}`
+      return [
+        {
+          match: new RegExp(`font-size:\\s*${f};\\s*font-weight:\\s*${wt};`, 'g'),
+          replace: `\${typography('${role}')};`,
+          importName: 'typography',
+        },
+        {
+          match: new RegExp(`font-size:\\s*${f};\\s+font-weight:\\s*${wt};`, 'gs'),
+          replace: `\${typography('${role}')};`,
+          importName: 'typography',
+        },
+        {
+          match: new RegExp(`font-weight:\\s*${wt};\\s+font-size:\\s*${f};`, 'gs'),
+          replace: `\${typography('${role}')};`,
+          importName: 'typography',
+        },
+      ]
+    })
+  })(),
 ]
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -164,7 +209,7 @@ function walk(dir: string, out: string[] = []): string[] {
     const s = statSync(p)
     if (s.isDirectory()) walk(p, out)
     else if (/\.ts$/.test(name) && !/\.d\.ts$/.test(name) &&
-             (/\.(style|styles)\.ts$/.test(name) || p.includes('/style/'))) out.push(p)
+             (/\.(style|styles)\.ts$/.test(name) || /\/(style|styles)\.ts$/.test(p) || p.includes('/style/'))) out.push(p)
   }
   return out
 }
@@ -182,7 +227,12 @@ function ensureImport(src: string, name: string): string {
   return src.replace(re, `import { ${names.join(', ')} } from ${m[2]}`)
 }
 
-const files = walk(join(ROOT, 'packages/ds/src'))
+// scope: packages/ds + apps + showcase (단, theme creator 등 raw 정당 케이스는 ensureImport 가 자동 skip)
+const files = [
+  ...walk(join(ROOT, 'packages/ds/src')),
+  ...walk(join(ROOT, 'apps')),
+  ...walk(join(ROOT, 'showcase')),
+]
 let changed = 0
 let totalReplacements = 0
 const touched: { file: string; n: number }[] = []

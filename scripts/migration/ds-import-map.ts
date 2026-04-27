@@ -37,13 +37,13 @@ export const MIGRATION_RULES: MigrationRule[] = [
   },
   {
     from: '@p/ds/style/preset',
-    to: '@p/ds/tokens/style/preset',
+    to: '@p/ds/tokens/internal/preset',
     kind: 'rewrite',
-    reason: 'style/{seed,preset,shell,states} → tokens/style/*',
+    reason: 'style/{seed,preset,shell,states} → tokens/internal/*',
   },
   {
     from: '@p/ds/style/preset/breakpoints',
-    to: '@p/ds/tokens/style/preset/breakpoints',
+    to: '@p/ds/tokens/internal/preset/breakpoints',
     kind: 'rewrite',
     reason: 'style/preset 하위',
   },

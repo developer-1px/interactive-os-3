@@ -18,6 +18,13 @@ export const rules = [
     test: (line) => /(?<![\w-])(neutral|tint|mix|dim)\s*\(/.test(line) && !/^\s*(import|export)\b/.test(line),
   },
   {
+    kind: 'raw-palette-var',
+    level: 'error',
+    hint: 'raw palette CSS var 직접 참조 금지 — var(--ds-neutral-N · --ds-tone-* · --ds-step-scale 등) 은 L0 raw scale. semantic 토큰(text/surface/accent…) 또는 fn 사용',
+    test: (line) =>
+      /var\(\s*--ds-(neutral-[0-9]|tone(?:-hue|-chroma|-tint)?|step-scale|hue|density|depth)\b/.test(line),
+  },
+  {
     kind: 'hex',
     level: 'error',
     hint: '#hex 리터럴 금지 — var(--ds-*) 또는 fn/palette 경유',
@@ -65,6 +72,18 @@ export const rules = [
       if (/var\(/.test(val)) return false
       if (/^(inherit|normal|bold|lighter|bolder)$/.test(val)) return false
       return /\d/.test(val)
+    },
+  },
+  {
+    kind: 'typography-scale',
+    level: 'warn',
+    hint: 'font(scale)·weight(scale) 직접 호출 — t-shirt 스케일은 이름만 semantic. role 어휘 (type.label · type.amount · type.period 등) 사용. 새 role 필요하면 foundations/typography/role.ts 에 등재',
+    test: (line) => {
+      // import/export 라인은 이름만 등장하는 거라 무시
+      if (/^\s*(import|export)\b/.test(line)) return false
+      // ${font('xl')} or ${weight('semibold')} 형태 — 실제 호출만 잡고 type.* 정의 라인은 제외 (foundations 정의는 SKIP_PATHS 로 격리됨)
+      return /(?<![\w.])font\s*\(\s*['"](?:xs|sm|md|lg|xl|2xl)['"]\s*\)/.test(line) ||
+             /(?<![\w.])weight\s*\(\s*['"](?:regular|medium|semibold|bold|extrabold)['"]\s*\)/.test(line)
     },
   },
 ]

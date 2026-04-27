@@ -88,7 +88,7 @@ cmp('details.pad', '>=', 'details.summaryPadY', '[Details] body pad ≥ summaryP
 // ── dead slot 검출 ───────────────────────────────────────────────────────
 const SCAN_DIRS = [
   'packages/ds/src/style/widgets',
-  'packages/ds/src/tokens/style/shell',
+  'packages/ds/src/tokens/internal/shell',
 ]
 function* walk(p) {
   for (const name of readdirSync(p)) {

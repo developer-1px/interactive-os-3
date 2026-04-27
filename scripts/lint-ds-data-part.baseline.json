@@ -94,7 +94,7 @@
     "B|packages/ds/src/style/widgets/pattern/bar.ts|slide",
     "B|packages/ds/src/style/widgets/pattern/inboxRow.ts|card",
     "B|packages/ds/src/tokens/foundations/color/pair.ts|tag",
-    "B|packages/ds/src/tokens/style/shell/chrome.ts|window-controls",
+    "B|packages/ds/src/tokens/internal/shell/chrome.ts|window-controls",
     "B|packages/ds/src/ui/1-status/LegendDot.tsx|legend-dot",
     "B|packages/ds/src/ui/3-input/Field.tsx|field",
     "B|packages/ds/src/ui/4-selection/Columns.tsx|column",

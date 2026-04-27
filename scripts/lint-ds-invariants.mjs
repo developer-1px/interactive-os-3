@@ -38,7 +38,7 @@ const CONTAINER_ROLES = new Set([
 ])
 
 // ── ① state selector 커버리지 수집 ──────────────────────────────────────
-const SELECTORS_FILE = join(ROOT, 'packages/ds/src/tokens/style/states/selectors.ts')
+const SELECTORS_FILE = join(ROOT, 'packages/ds/src/tokens/internal/states/selectors.ts')
 const selectorsText = readFileSync(SELECTORS_FILE, 'utf8')
 const registeredRoles = new Set()
 // [role="X"] + optional [attr] 꼬리 (조건부 커버도 커버로 인정 — 예: columnheader[aria-sort])
