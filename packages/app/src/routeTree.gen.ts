@@ -23,6 +23,7 @@ import { Route as CanvasRouteImport } from './routes/canvas'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GenresIndexRouteImport } from './routes/genres.index'
 import { Route as EduPortalAdminIndexRouteImport } from './routes/edu-portal-admin.index'
+import { Route as SlidesSplatRouteImport } from './routes/slides.$'
 import { Route as MarkdownSplatRouteImport } from './routes/markdown.$'
 import { Route as GenresShopRouteImport } from './routes/genres.shop'
 import { Route as GenresSettingsRouteImport } from './routes/genres.settings'
@@ -114,6 +115,11 @@ const EduPortalAdminIndexRoute = EduPortalAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EduPortalAdminRoute,
+} as any)
+const SlidesSplatRoute = SlidesSplatRouteImport.update({
+  id: '/slides/$',
+  path: '/slides/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MarkdownSplatRoute = MarkdownSplatRouteImport.update({
   id: '/markdown/$',
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/genres/settings': typeof GenresSettingsRoute
   '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
+  '/slides/$': typeof SlidesSplatRoute
   '/edu-portal-admin/': typeof EduPortalAdminIndexRoute
   '/genres/': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/genres/settings': typeof GenresSettingsRoute
   '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
+  '/slides/$': typeof SlidesSplatRoute
   '/edu-portal-admin': typeof EduPortalAdminIndexRoute
   '/genres': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/genres/settings': typeof GenresSettingsRoute
   '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
+  '/slides/$': typeof SlidesSplatRoute
   '/edu-portal-admin/': typeof EduPortalAdminIndexRoute
   '/genres/': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/genres/settings'
     | '/genres/shop'
     | '/markdown/$'
+    | '/slides/$'
     | '/edu-portal-admin/'
     | '/genres/'
     | '/edu-portal-admin/videos/new'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/genres/settings'
     | '/genres/shop'
     | '/markdown/$'
+    | '/slides/$'
     | '/edu-portal-admin'
     | '/genres'
     | '/edu-portal-admin/videos/new'
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/genres/settings'
     | '/genres/shop'
     | '/markdown/$'
+    | '/slides/$'
     | '/edu-portal-admin/'
     | '/genres/'
     | '/edu-portal-admin/videos/new'
@@ -462,6 +474,7 @@ export interface RootRouteChildren {
   DevtoolsFinderSpecRoute: typeof DevtoolsFinderSpecRoute
   FinderSplatRoute: typeof FinderSplatRoute
   MarkdownSplatRoute: typeof MarkdownSplatRoute
+  SlidesSplatRoute: typeof SlidesSplatRoute
   MFinderSplatRoute: typeof MFinderSplatRoute
 }
 
@@ -564,6 +577,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/edu-portal-admin/'
       preLoaderRoute: typeof EduPortalAdminIndexRouteImport
       parentRoute: typeof EduPortalAdminRoute
+    }
+    '/slides/$': {
+      id: '/slides/$'
+      path: '/slides/$'
+      fullPath: '/slides/$'
+      preLoaderRoute: typeof SlidesSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/markdown/$': {
       id: '/markdown/$'
@@ -797,6 +817,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevtoolsFinderSpecRoute: DevtoolsFinderSpecRoute,
   FinderSplatRoute: FinderSplatRoute,
   MarkdownSplatRoute: MarkdownSplatRoute,
+  SlidesSplatRoute: SlidesSplatRoute,
   MFinderSplatRoute: MFinderSplatRoute,
 }
 export const routeTree = rootRouteImport

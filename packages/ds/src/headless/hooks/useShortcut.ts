@@ -16,19 +16,23 @@ const isMac = typeof navigator !== 'undefined' && /Mac|iP(hone|od|ad)/.test(navi
 type Parsed = { key: string; meta: boolean; ctrl: boolean; alt: boolean; shift: boolean }
 
 const parse = (spec: string): Parsed => {
-  const parts = spec.toLowerCase().split('+').map((s) => s.trim())
+  // 모디파이어는 트림(가독성), 마지막 segment(=key)는 preserve — KeyboardEvent.key
+  // 표준값(' ', 'Enter', 'ArrowRight', '+', 등)을 손실 없이 그대로 매칭하려면 트림 X.
+  const parts = spec.split('+')
   const flags = { meta: false, ctrl: false, alt: false, shift: false }
   let key = ''
-  for (const p of parts) {
-    if (p === 'mod') { if (isMac) flags.meta = true; else flags.ctrl = true }
-    else if (p in flags) flags[p as keyof typeof flags] = true
-    else key = p
-  }
+  parts.forEach((raw, i) => {
+    const isLast = i === parts.length - 1
+    const p = raw.trim().toLowerCase()
+    if (!isLast && p === 'mod') { if (isMac) flags.meta = true; else flags.ctrl = true }
+    else if (!isLast && p in flags) flags[p as keyof typeof flags] = true
+    else key = raw.toLowerCase()
+  })
   return { key, ...flags }
 }
 
 const match = (e: KeyboardEvent, s: Parsed): boolean =>
-  e.key.toLowerCase() === s.key &&
+  (e.key.toLowerCase() === s.key || e.code.toLowerCase() === s.key) &&
   e.metaKey === s.meta && e.ctrlKey === s.ctrl &&
   e.altKey === s.alt && e.shiftKey === s.shift
 

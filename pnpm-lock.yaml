@@ -93,6 +93,8 @@ importers:
 
   apps/markdown: {}
 
+  apps/slides: {}
+
   packages/app: {}
 
   packages/devtools: {}
@@ -101,11 +103,11 @@ importers:
 
   packages/fs: {}
 
+  showcase/canvas: {}
+
   showcase/catalog: {}
 
   showcase/content: {}
-
-  showcase/ds-matrix: {}
 
   showcase/foundations: {}
 
