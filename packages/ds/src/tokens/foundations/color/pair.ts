@@ -34,6 +34,22 @@ export const toneTint = (name: Tone, pct: number = 12) => css`
 `
 
 /**
+ * toneAlpha(name, role) — 단일 CSS 색값. background 또는 border-color 한쪽만 필요할 때.
+ * (`toneTint`은 bg+fg 쌍이라 부분 적용 불가 — hover bg, border hint, button hover bg 등.)
+ *
+ *   'subtle' = 4%  (hover 미세 bg)
+ *   'border' = 50% (border 힌트)
+ *   'strong' = 85% (강한 hover bg — button 류)
+ *
+ * 페어가 필요한 곳은 toneTint() 또는 pair({bg,fg}) 사용.
+ * @demo type=color fn=toneAlpha args=["accent","subtle"]
+ */
+export const toneAlpha = (name: Tone, role: 'subtle' | 'border' | 'strong' = 'subtle') => {
+  const pct = role === 'border' ? 50 : role === 'strong' ? 85 : 4
+  return `color-mix(in oklab, var(--ds-${name}) ${pct}%, transparent)`
+}
+
+/**
  * on-* 색 접근자 — Tone별 전경. 드물게 단독으로 필요할 때.
  * @demo type=color fn=on args=["accent"]
  */

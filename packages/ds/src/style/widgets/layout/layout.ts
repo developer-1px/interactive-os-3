@@ -1,4 +1,4 @@
-import { accent, border, container, control, css, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text, tint } from '../../../tokens/foundations'
+import { accent, border, container, control, css, elev, font, grouping, hairlineWidth, hierarchy, pad, radius, square, status, surface, text } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -63,10 +63,7 @@ export const layout = () => css`
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
       border: var(--ds-hairline) solid ${border()};
-      box-shadow:
-        inset 0 1px 0 ${tint('CanvasText', 5)},
-        0 1px 2px ${tint('CanvasText', 6)},
-        0 6px 14px ${tint('CanvasText', 5)};
+      box-shadow: ${elev(2)};
     }
   }
   [data-emphasis="sunk"]    {

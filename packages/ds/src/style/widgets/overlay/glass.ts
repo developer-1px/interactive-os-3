@@ -1,4 +1,4 @@
-import { accent, css, hairlineWidth, radius, grouping, tint } from '../../../tokens/foundations'
+import { accent, border, css, elev, grouping, hairlineWidth, radius } from '../../../tokens/foundations'
 // 모바일 글래스 — iOS 26 Liquid Glass / Material 3 Expressive 트렌드 수렴.
 // hover:none + pointer:coarse 환경에서만 발동하여 데스크톱 외형 유지.
 //
@@ -14,13 +14,10 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
-      border: ${hairlineWidth()} solid ${tint('CanvasText', 8)};
+      border: ${hairlineWidth()} solid ${border()};
       border-radius: ${radius('pill')};
-      /* hairline 1px ring(경계 또렷) + 짧은 드롭 — 큰 blur 흐림 제거 */
-      box-shadow:
-        inset 0 1px 0 ${tint('CanvasText', 6)},
-        0 1px 2px ${tint('CanvasText', 8)},
-        0 4px 10px ${tint('CanvasText', 6)};
+      /* preset elev-2 — hairline ring + 작은 드롭 + 중간 드롭 (frosted button 분리) */
+      box-shadow: ${elev(2)};
     }
 
     /* primary action 의 mobile pill+drop override 는 control/button.ts (owner) 가 보유 */
@@ -31,9 +28,9 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
-      border: ${hairlineWidth()} solid ${tint('CanvasText', 8)};
+      border: ${hairlineWidth()} solid ${border()};
       border-radius: ${radius('lg')};
-      box-shadow: inset 0 1px 0 ${tint('CanvasText', 5)};
+      box-shadow: ${elev(1)};
     }
 
     /* emphasis="raised" 의 mobile frosted override 는 layout/layout.ts (owner) 가 보유 */
@@ -44,7 +41,7 @@ export const glassCss = css`
       background: color-mix(in oklch, Canvas 72%, transparent);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
               backdrop-filter: blur(28px) saturate(180%);
-      border: ${hairlineWidth()} solid ${tint('CanvasText', 8)};
+      border: ${hairlineWidth()} solid ${border()};
     }
 
     /* FloatingNav FAB — frosted override 는 shell/panes.ts (FAB owner) 가 inline media query 로 직접 보유 */
@@ -58,7 +55,7 @@ export const glassCss = css`
     }
     :where([role="toolbar"]) > :where(button[aria-pressed="true"]) {
       background: color-mix(in oklch, ${accent()} 12%, transparent);
-      border-color: ${tint('CanvasText', 6)};
+      border-color: ${border()};
     }
   }
 

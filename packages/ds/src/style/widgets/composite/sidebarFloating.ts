@@ -1,4 +1,4 @@
-import { bg, border, css, hairlineWidth, hierarchy, pad, radius, tint } from '../../../tokens/foundations'
+import { bg, border, css, elev, hairlineWidth, hierarchy, pad, radius, scrim } from '../../../tokens/foundations'
 import { SHELL_MOBILE_MAX } from '../../../tokens/style/preset/breakpoints'
 
 /**
@@ -84,7 +84,7 @@ export const sidebarFloatingCss = () => css`
     z-index: 100;
   }
   nav[data-part="sidebar"][data-state="floating"]::backdrop {
-    background: ${tint('CanvasText', 10)};
+    background: ${scrim('subtle')};
     backdrop-filter: blur(8px);
   }
 
@@ -146,10 +146,7 @@ export const sidebarFloatingCss = () => css`
     article[data-flow="prose"],
     [popover][role="dialog"][data-part="popover"],
     dialog:not([data-ds-sheet]) {
-      box-shadow:
-        0 0 0 1px ${tint('CanvasText', 5)},
-        0 1px 2px ${tint('CanvasText', 6)},
-        0 4px 12px ${tint('CanvasText', 4)};
+      box-shadow: ${elev(2)};
       border-radius: ${radius('lg')};
     }
   }

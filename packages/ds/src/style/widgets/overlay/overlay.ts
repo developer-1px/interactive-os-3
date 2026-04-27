@@ -1,4 +1,4 @@
-import { bg, border, css, dur, ease, font, hairlineWidth, pad, radius, rowPadding, grouping, tint } from '../../../tokens/foundations'
+import { bg, border, css, dur, ease, elev, font, grouping, hairlineWidth, pad, radius, rowPadding, scrim } from '../../../tokens/foundations'
 export const dialogCss = css`
   :where(dialog) {
     ${grouping(3)}
@@ -11,7 +11,7 @@ export const dialogCss = css`
   }
   /* 2026 — 얇은 틴트 + backdrop-filter blur로 콘텐츠를 "위에 뜬" 듯 분리 */
   :where(dialog)::backdrop {
-    background: ${tint('CanvasText', 10)};
+    background: ${scrim('subtle')};
     backdrop-filter: blur(8px);
   }
 
@@ -58,16 +58,13 @@ export const tooltipCss = css`
     padding: ${pad(3)};
     border-radius: ${radius('lg')};
     border: ${hairlineWidth()} solid ${border()};
-    /* 선명도 우선 — 1 device-px ring(경계 또렷) + 짧은 드롭(공간감만). 큰 blur는 흐림 원인. */
-    box-shadow:
-      0 0 0 ${hairlineWidth()} ${tint('CanvasText', 6)},
-      0 2px 6px ${tint('CanvasText', 8)},
-      0 8px 16px ${tint('CanvasText', 10)};
+    /* preset elev-3 — popover 분리감 (ring + 중간 드롭 + 큰 드롭) */
+    box-shadow: ${elev(3)};
   }
   body:has([popover][data-ds-scrim]:popover-open)::before {
     content: '';
     position: fixed; inset: 0;
-    background: ${tint('CanvasText', 30)};
+    background: ${scrim('strong')};
     z-index: 99;
     pointer-events: none;
   }

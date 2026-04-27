@@ -1,4 +1,4 @@
-import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, status, surface, text, tint, tracking } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, focusRingWidth, font, hairlineWidth, onAccent, pad, radius, status, surface, text, toneAlpha, tracking } from '../../../tokens/foundations'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
  *
@@ -67,8 +67,8 @@ export const formCss = css`
                 border-color ${dur('fast')} ${ease('out')};
   }
   :where(input[type="file"]):hover {
-    background: ${tint(accent(), 4)};
-    border-color: ${tint(accent(), 50)};
+    background: ${toneAlpha('accent', 'subtle')};
+    border-color: ${toneAlpha('accent', 'border')};
   }
   :where(input[type="file"]):focus-visible {
     outline: ${focusRingWidth()} solid ${accent()};
@@ -89,7 +89,7 @@ export const formCss = css`
     transition: background-color ${dur('fast')} ${ease('out')};
   }
   :where(input[type="file"])::file-selector-button:hover {
-    background: ${tint(accent(), 85)};
+    background: ${toneAlpha('accent', 'strong')};
   }
 
   /* ── Section 헤딩 계층 — form 도메인 한정 (prose article 같은 다른 콘텐츠로 leak 금지) ── */
@@ -141,7 +141,7 @@ export const formCss = css`
   }
   [data-ds="Row"][data-flow="cluster"]:has(> [role="checkbox"], > [role="radio"], > [role="switch"]):hover > :where([role="checkbox"]:not([aria-checked="true"]), [role="radio"]:not([aria-checked="true"]), [role="switch"]:not([aria-checked="true"])) {
     /* 이미 checked인 박스는 accent fill 유지, unchecked인 경우만 hover 시 border 힌트 */
-    border-color: ${tint(accent(), 50)};
+    border-color: ${toneAlpha('accent', 'border')};
   }
 
   /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */

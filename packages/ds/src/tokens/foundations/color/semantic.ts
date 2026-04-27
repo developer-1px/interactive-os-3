@@ -78,3 +78,17 @@ export const status    = (t: StatusTone) => `var(--ds-${t})`
 export const muted     = () => `var(--ds-muted)`
 /** @demo type=color fn=bg */
 export const bg        = () => `var(--ds-bg)`
+
+// ── Scrim — modal/popover 뒤 dim layer ─────────────────────────────────
+/**
+ * scrim(role) — 오버레이 뒤 dim 배경. CanvasText 알파 tint.
+ *   'subtle' = 10% (backdrop-filter blur 와 짝)
+ *   'strong' = 30% (불투명한 scrim — popover 단독)
+ *
+ * 광원이 다른 surface 위에서도 일관되게 어두워진다 (currentColor 기반 X — Canvas 기반).
+ * @demo type=color fn=scrim args=["subtle"]
+ */
+export const scrim = (role: 'subtle' | 'strong' = 'subtle') =>
+  role === 'strong'
+    ? `color-mix(in oklab, CanvasText 30%, transparent)`
+    : `color-mix(in oklab, CanvasText 10%, transparent)`
