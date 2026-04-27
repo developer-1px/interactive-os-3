@@ -16,7 +16,7 @@ type BreadcrumbProps = Omit<ComponentPropsWithoutRef<'nav'>, 'children' | 'aria-
 export function Breadcrumb({ items, ...rest }: BreadcrumbProps) {
   const last = items.length - 1
   return (
-    <nav aria-label="Breadcrumb" data-part="breadcrumb" {...rest}>
+    <nav aria-label="Breadcrumb" {...rest}>
       <ol>
         {items.map((it, i) => {
           const isCurrent = i === last || !it.href

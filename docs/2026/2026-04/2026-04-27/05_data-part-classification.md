@@ -148,6 +148,9 @@ ATOM 후보 11건 정밀 검토 결과 — 단순 1:1 native 환원 외에는 PA
 | 시작 | — | 135 |
 | 1차: code, kbd, link, progress, table, key-value, fieldset | -14 | 121 |
 | 2차: text-divider | -1 | 120 |
+| 3차: breadcrumb → `nav[aria-label="Breadcrumb"]` (APG) | -2 | 118 |
+
+추가 재분류: `callout` → **PART** (role 이 status/alert/note 가변, 단일 ARIA 셀렉터 불가). `body`·`heading` 은 slot 차원 얽힘으로 별도 세션 필요.
 
 ## 요약 (분포)
 
