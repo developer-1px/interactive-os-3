@@ -33,4 +33,17 @@ export const cssItemRow = () => css`
   :where(${itemRoles}) > [data-slot="leading"]  { grid-column: lead; }
   :where(${itemRoles}) > [data-slot="meta"],
   :where(${itemRoles}) > [data-slot="trailing"] { grid-column: trail; }
+
+  /* slot span 자체가 inline 이라 ::before(icon) 가 baseline 정렬되어 vertical 어긋남.
+     슬롯을 inline-flex 로 만들어 ::before 를 자기 박스 중앙에 가둔다. */
+  :where(${itemRoles}) > [data-slot="leading"],
+  :where(${itemRoles}) > [data-slot="trailing"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* data-icon::before 의 inline 사이 margin 은 column-gap 이 owner 라 제거. */
+  :where(${itemRoles}) > [data-icon]::before {
+    margin-inline-end: 0;
+  }
 `
