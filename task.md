@@ -1,48 +1,145 @@
-# task — de facto vocab gap fill
+# ui/ ARIA 재구조화
 
-> 발견 경로: `/guess` 로 css 중복 인사이트 추적 → "함수로 묶을 다발"의 정체가 *어휘 누락*이라는 결론 → ds 어휘 인벤토리 vs Radix·Ariakit·RAC·Material·Polaris·MUI·Atlassian 교차 → ds 부재 + 3곳 이상 수렴 어휘 10개.
+기존 task.md 는 `task.archive.md` 로 보관 (필요시 수동 이동).
 
-## 원칙 (각 컴포넌트 공통 contract)
+## 목표 구조 (ARIA 1.2 spec 그대로)
 
-1. **Schema-first** — props 타입 명시. `(data, onEvent)` 단일 인터페이스 가능한 곳은 그쪽으로.
-2. **Vocabulary closed** — 이름·prop 은 ARIA / de facto 그대로 (Radix·Ariakit 우선). 새 단어 짓지 않음.
-3. **Classless** — class 금지. `data-part="<name>"` namespace + ARIA 속성 셀렉터.
-4. **Token only** — palette raw 는 명시 import, 의미는 foundations.
-5. **Sibling files** — `Foo.tsx + Foo.style.ts` 동거. 배럴 ❌.
-6. **No escape hatches** — raw `role="..."` 사용처 대신 컴포넌트로 흡수.
+```
+packages/ds/src/ui/
+├─ 1-command/        widget · 행동 트리거 (no value)
+├─ 2-input/          widget · 값 가지는 단일 컨트롤
+├─ 3-composite/      widget · 포커스 관리 컨테이너
+├─ 4-window/         widget · modal/floating
+├─ 5-live/           live region
+├─ 6-structure/      structure · section
+├─ 7-landmark/       structure · landmark
+├─ 8-field/          form composition (label+input)
+└─ 9-layout/         presentational primitives
+```
 
-## 진행 순서 (의존성 + 단순한 것부터)
+## 매핑표
 
-| # | 컴포넌트 | tier | de facto | 의존 |
-|---|---------|------|---------|------|
-| 1 | Spinner | 1-status | Material CircularProgress · Radix · RAC · Polaris | — |
-| 2 | ButtonGroup | 2-action | Material · Polaris · Bootstrap · Chakra | Button |
-| 3 | ToggleButton / ToggleGroup | 2-action | Radix Toggle · Ariakit · RAC ToggleButton | Button |
-| 4 | SegmentedControl | 4-selection | Material · Polaris · Apple HIG | roving |
-| 5 | AvatarGroup | parts | Material · Polaris · Atlassian · Chakra | Avatar |
-| 6 | MediaObject | parts | Bootstrap · Material List · Atlassian | Avatar / Thumbnail |
-| 7 | Pagination | 5-display | Material · Polaris · Ant · Atlassian | Button |
-| 8 | Stepper | 5-display | Material · Polaris · Ant · Atlassian | — |
-| 9 | Accordion | 6-overlay | Radix · Ariakit · RAC · Material | Disclosure |
-| 10 | Toast | 6-overlay | Radix · Sonner · RAC · Material · Polaris | Dialog 시스템 참고 |
+### 1-command ✅
+- [x] Button.tsx               ← 2-action
+- [x] ButtonGroup.tsx          ← 2-action
+- [x] ToolbarButton.tsx        ← 2-action
+- [x] MenuItems.tsx            ← 4-selection
+- [x] RouterLink.tsx           ← 0-primitives
 
-## 산출물 contract (각 컴포넌트)
+### 2-input
+- [ ] Checkbox.tsx             ← 3-input
+- [ ] Radio.tsx                ← 3-input
+- [ ] Switch.tsx               ← 2-action
+- [ ] ToggleButton.tsx         ← 2-action
+- [ ] Option.tsx               ← 4-selection
+- [ ] Input.tsx                ← 3-input
+- [ ] Textarea.tsx             ← 3-input
+- [ ] SearchBox.tsx            ← 3-input
+- [ ] NumberInput.tsx          ← 3-input
+- [ ] ColorInput.tsx           ← 3-input
+- [ ] Slider.tsx               ← 3-input
+- [ ] Combobox.tsx             ← 3-input
+- [ ] Select.tsx               ← 3-input
 
-- `packages/ds/src/ui/<tier>/<Name>.tsx`
-- `packages/ds/src/ui/<tier>/<Name>.style.ts` — `export const css<Name> = () => css\`...\``
-- `src/css.ts` 또는 `ui/parts/styles.ts` 의 segments 에 등록
-- `src/index.ts` 에 `export * from './ui/<tier>/<Name>'`
-- (Ui 노드로 쓸 거라면) `src/registry.ts` 에 매핑 추가
-- (캔버스 카탈로그 노출이 필요하면) 같은 폴더 `_demos/` 에 demo 파일
+### 3-composite
+- [ ] Listbox.tsx               ← 4-selection
+- [ ] ListboxGroup.tsx          ← 4-selection
+- [ ] RadioGroup.tsx            ← 4-selection
+- [ ] CheckboxGroup.tsx         ← 4-selection
+- [ ] ToggleGroup.tsx           ← 2-action
+- [ ] SegmentedControl.tsx      ← 4-selection
+- [ ] Menu.tsx                  ← 4-selection
+- [ ] MenuList.tsx              ← 4-selection
+- [ ] MenuGroup.tsx             ← 4-selection
+- [ ] Menubar.tsx               ← 4-selection
+- [ ] Tabs.tsx                  ← 4-selection
+- [ ] Tree.tsx                  ← 4-selection
+- [ ] TreeRow.tsx               ← 5-display
+- [ ] TreeGrid.tsx              ← 5-display
+- [ ] DataGrid.tsx              ← 5-display
+- [ ] DataGridRow.tsx           ← 5-display
+- [ ] GridCell.tsx              ← 5-display
+- [ ] ColumnHeader.tsx          ← 5-display
+- [ ] RowHeader.tsx             ← 5-display
+- [ ] RowGroup.tsx              ← 5-display
+- [ ] Toolbar.tsx               ← 4-selection
+- [ ] OrderableList.tsx         ← 5-display
+- [ ] Columns.tsx               ← 4-selection
 
-## verify
+### 4-window
+- [ ] Dialog.tsx                ← 6-overlay
+- [ ] Sheet.tsx                 ← 6-overlay
+- [ ] Popover.tsx               ← 6-overlay
+- [ ] MenuPopover.tsx           ← 6-overlay
+- [ ] Tooltip.tsx               ← 6-overlay
+- [ ] FloatingNav.tsx           ← 6-overlay
 
-- `npx tsc -b --noEmit` 통과
-- `pnpm lint:ds:all` 통과 (data-part baseline 갱신 필요시 명시)
-- canvas 라우트에서 시각 확인
+### 5-live
+- [ ] Toast.tsx                 ← 6-overlay
+- [ ] Progress.tsx              ← 1-status
+- [ ] Spinner.tsx               ← 1-status
+- [ ] Badge.tsx                 ← 1-status
+- [ ] LegendDot.tsx             ← 1-status
+
+### 6-structure
+- [ ] Separator.tsx             ← 0-primitives
+- [ ] Heading.tsx               ← parts
+- [ ] Card.tsx                  ← parts
+- [ ] Callout.tsx               ← parts
+- [ ] EmptyState.tsx            ← parts
+- [ ] KeyValue.tsx              ← parts
+- [ ] MediaObject.tsx           ← parts
+- [ ] Table.tsx                 ← parts
+- [ ] Code.tsx                  ← parts
+- [ ] CodeBlock.tsx             ← 0-primitives
+- [ ] Prose.tsx                 ← 0-primitives
+- [ ] Skeleton.tsx              ← parts
+- [ ] Timestamp.tsx             ← parts
+- [ ] Avatar.tsx                ← parts
+- [ ] AvatarGroup.tsx           ← parts
+- [ ] Thumbnail.tsx             ← parts
+- [ ] Chip.tsx                  ← parts
+- [ ] CountBadge.tsx            ← parts
+- [ ] ProgressBar.tsx           ← parts
+- [ ] Link.tsx                  ← parts
+- [ ] Accordion.tsx             ← 6-overlay
+- [ ] Disclosure.tsx            ← 6-overlay
+- [ ] RovingItem.tsx            ← parts
+
+### 7-landmark
+- [ ] Breadcrumb.tsx            ← parts
+- [ ] Pagination.tsx            ← 5-display
+
+### 8-field
+- [ ] Field.tsx                 ← 3-input
+- [ ] Stepper.tsx               ← 5-display
+
+### 9-layout
+- [ ] Row.tsx                   ← 8-layout
+- [ ] Column.tsx                ← 8-layout
+- [ ] Grid.tsx                  ← 8-layout
+- [ ] Split.tsx                 ← 8-layout
+- [ ] Carousel.tsx              ← 8-layout
+- [ ] ZoomPanCanvas.tsx         ← 8-layout
+
+## 진행 순서 (작은 단위, 한 번에 하나)
+
+각 step = 폴더 1개 만들고 → 파일 옮기고 → import 갱신 → tsc 통과 → 커밋.
+
+1. [x] 1-command
+2. [ ] 2-input
+3. [ ] 3-composite
+4. [ ] 4-window
+5. [ ] 5-live
+6. [ ] 6-structure
+7. [ ] 7-landmark
+8. [ ] 8-field
+9. [ ] 9-layout
+10. [ ] 옛 폴더(0-primitives, 1-status, 2-action, 3-input, 4-selection, 5-display, 6-overlay, 8-layout, parts) 청소
+11. [ ] lint:ds 최종 통과
 
 ## 메모
-
-- "MediaObject" — content/PostCard·FeedPost 의 grid-template-areas 패턴 흡수가 후속 PR. 이번 PR 은 어휘만 신설.
-- "Toast" — provider + queue + portal 시스템 필요. 가장 무거움. 작은 surface API 부터.
-- "Accordion" — Disclosure 의 group container 어휘. Disclosure 자체는 그대로 유지.
+- `.style.ts` / `.meta.ts` 형제 파일도 함께 이동
+- `_demos/` 는 각 카테고리에 동행
+- import 경로는 barrel(`@p/ds`)과 직접 import 양쪽 갱신
+- parts barrel(`parts/index.ts`, `parts/styles.ts`)는 마지막

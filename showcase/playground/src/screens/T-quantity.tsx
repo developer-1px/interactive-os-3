@@ -1,5 +1,5 @@
 import { Column, Phone, PhoneTopBar, Row, Thumbnail } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { NumberInput } from '@p/ds/ui/3-input/NumberInput'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, sampleImg } from '../wireframe-shell'

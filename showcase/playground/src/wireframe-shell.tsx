@@ -12,7 +12,7 @@
  */
 import type { ReactNode } from 'react'
 import { Column } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { tabBar, composer, bodyFill, fullW } from './wireframe-tokens'
 
 const TAB_TOKENS = ['home', 'search', 'inbox', 'list', 'settings'] as const

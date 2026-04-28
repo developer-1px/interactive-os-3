@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Column, Heading, Phone, PhoneTopBar, Row, TabList, Chip, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { Card } from '@p/ds/ui/parts/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'

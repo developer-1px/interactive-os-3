@@ -1,5 +1,5 @@
 import { Column, CourseCard, Heading, Phone, PhoneTabBar, PhoneTopBar, Row, Skeleton, TabList, Chip, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, tabIcons } from '../wireframe-shell'
 import { hero, listRow, meta } from '../wireframe-tokens'

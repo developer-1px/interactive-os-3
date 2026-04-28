@@ -1,5 +1,5 @@
 import { Callout, Listbox, Phone, PhoneTabBar, PhoneTopBar, Row, Chip, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { Field, FieldDescription, FieldLabel } from '@p/ds/ui/3-input/Field'
 import { Input } from '@p/ds/ui/3-input/Input'
 import { SearchBox } from '@p/ds/ui/3-input/SearchBox'

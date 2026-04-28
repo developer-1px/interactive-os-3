@@ -1,5 +1,5 @@
 import { Avatar, Column, Heading, Phone, PhoneTopBar, Row, Skeleton, TabList, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 import { banner, meta } from '../wireframe-tokens'

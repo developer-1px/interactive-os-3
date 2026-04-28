@@ -1,5 +1,5 @@
 import { Heading, Link, Phone, PhoneTopBar, Row } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { Switch } from '@p/ds/ui/2-action/Switch'
 import { Field, FieldLabel } from '@p/ds/ui/3-input/Field'
 import { Input } from '@p/ds/ui/3-input/Input'

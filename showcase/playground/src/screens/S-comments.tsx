@@ -1,5 +1,5 @@
 import { Avatar, Column, Link, Listbox, Phone, PhoneTopBar, Row, Skeleton, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, StickyAction } from '../wireframe-shell'
 import { commentIndent, composer, listRow, meta } from '../wireframe-tokens'

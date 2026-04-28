@@ -6,7 +6,7 @@ import {
 } from '../../headless/types'
 import { composeAxes, navigate } from '../../headless/axes'
 import { useRoving } from '../../headless/roving/useRoving'
-import { ToolbarButton } from '../2-action/ToolbarButton'
+import { ToolbarButton } from '../1-command/ToolbarButton'
 import { Separator } from '../0-primitives/Separator'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {

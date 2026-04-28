@@ -104,8 +104,8 @@ export const MIGRATION_RULES: MigrationRule[] = [
     reason: 'co-location 보존',
   },
   {
-    from: '@p/ds/ui/2-action/Button',
-    to: '@p/ds/ui/2-action/Button',
+    from: '@p/ds/ui/1-command/Button',
+    to: '@p/ds/ui/1-command/Button',
     kind: 'preserved',
     reason: 'co-location 보존',
   },

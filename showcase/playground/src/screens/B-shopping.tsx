@@ -1,5 +1,5 @@
 import { Callout, EmptyState, Phone, PhoneTabBar, PhoneTopBar, ProductCard, Row, TabList, fromList } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, sampleImg, tabIcons } from '../wireframe-shell'
 import { type } from '@p/ds/tokens/foundations'

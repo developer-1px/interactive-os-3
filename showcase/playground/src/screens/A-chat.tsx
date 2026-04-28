@@ -1,5 +1,5 @@
 import { Avatar, Column, MessageBubble, Phone, PhoneTabBar, PhoneTopBar, Row, Skeleton } from '@p/ds'
-import { Button } from '@p/ds/ui/2-action/Button'
+import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, StickyAction, tabIcons } from '../wireframe-shell'
 import { type } from '@p/ds/tokens/foundations'
