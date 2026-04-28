@@ -19,7 +19,7 @@
 - [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
 - [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
 - [x] ToolbarButton      — ARIA 적합 (role=button native, pressed/disabled, forwardRef). style은 Toolbar parent owner 의도. Button에 forwardRef 추가 시 ToolbarButton 흡수 가능 — 후속
-- [x] MenuItem           — role=menuitem/menuitemcheckbox/menuitemradio. aria-disabled 일관화. demo 를 Option(role=option)에서 MenuItem 로 교정 (role=menu ⊂ role=option 였던 ARIA 위반)
+- [x] MenuItem           — role=menuitem/checkbox/radio. aria-disabled 일관화. **4-slot anatomy** (icon·label·shortcut·indicator) 도입 — Option·TreeItem 와 keyline 공유 (style/widgets/control/itemRow.ts SSoT)
 - [x] RouterLink         — role=link (TanstackLink→a), aria-current="page" 활성 (활성 nav 에 자동 표명). 6-structure/Link 통합은 후속
 - [x] TreeItem (← TreeRow) — role=treeitem 정정 (was Row 어휘)
 - [x] ProgressBar (6-structure) 폐기 — Progress(5-live)와 role=progressbar 중복

@@ -43,7 +43,6 @@ export function Tree({ data, onEvent, autoFocus, ...rest }: TreeProps) {
           <li
             role="treeitem"
             data-id={id}
-            data-icon={icon}
             ref={bindFocus(id)}
             aria-level={level}
             aria-posinset={i + 1}
@@ -54,10 +53,12 @@ export function Tree({ data, onEvent, autoFocus, ...rest }: TreeProps) {
             tabIndex={focused ? 0 : -1}
             style={{ '--ds-level': level - 1 } as CSSProperties}
           >
+            {icon && <span data-slot="leading" data-icon={icon} aria-hidden="true" />}
             <span>{getLabel(data, id)}</span>
             {badge !== undefined && badge !== null && badge !== false && (
-              <span aria-label={typeof badge === 'number' ? `${badge}건` : undefined}>{badge}</span>
+              <span data-slot="meta" aria-label={typeof badge === 'number' ? `${badge}건` : undefined}>{badge}</span>
             )}
+            {hasKids && <span data-slot="trailing" data-icon={isOpen ? 'chevronDown' : 'chevronRight'} aria-hidden="true" />}
           </li>
           {hasKids && isOpen && render(id, level + 1)}
         </Fragment>

@@ -282,10 +282,10 @@ function GridOverlayToggle() {
  * KeylineAudit — 모바일 visual keyline 자동 측정 패널.
  *
  * "Run keyline audit" 버튼을 누르면 카탈로그 안 모든 [data-screen][data-screen-grid] 의
- * phone-body 의 effective outer padding 을 측정하여 grid spec (mobileGrid SSoT) 과
+ * phone-body 의 effective outer padding 을 측정하여 grid spec (mobileGuide SSoT) 과
  * 비교한다. 위반은 wrapper 의 data-audit 속성과 sticky 패널에 표시된다.
  *
- * SSoT: ds/tokens/semantic/spacing/keyline.ts → mobileGrid (overlay CSS 와 동일).
+ * SSoT: ds/tokens/semantic/breakpoint/mobileGuide.ts → mobileGuide (overlay CSS 와 동일).
  * 측정 함수: ./keyline-audit.ts.
  *
  * 메모리 준수:

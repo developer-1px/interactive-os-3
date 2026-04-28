@@ -82,7 +82,7 @@ export * from './ui/3-composite/GridCell'
 export * from './ui/3-composite/ColumnHeader'
 export * from './ui/3-composite/RowHeader'
 export * from './ui/3-composite/TreeGrid'
-export * from './ui/3-composite/TreeItem'
+export * from './ui/3-composite/TreeRow'
 export * from './ui/7-landmark/Pagination'
 export * from './ui/8-field/Stepper'
 // 6-overlay — surface

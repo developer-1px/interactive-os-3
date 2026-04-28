@@ -28,6 +28,7 @@ import { cssSplit } from './ui/9-layout/Split.style'
 
 // ─── 잔존 (orphan / shared, 미공유 CSS) ───────────────────────────────────
 import { cssForm } from './style/widgets/control/form'
+import { cssItemRow } from './style/widgets/control/itemRow'
 import { cssToggle, cssAlert } from './style/widgets/control/toggle'
 import { cssDialog, cssTooltip } from './style/widgets/overlay/overlay'
 import { cssDetails } from './style/widgets/overlay/details'
@@ -45,7 +46,7 @@ import { cssLayout } from './style/widgets/layout/layout'
 export const widgets = () =>
   [
     // control
-    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssToggleButton(), cssForm(), cssToggle(), cssAlert(),
+    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssToggleButton(), cssForm(), cssItemRow(), cssToggle(), cssAlert(),
     // overlay
     cssDialog(), cssTooltip(), cssDetails(), cssAccordion(), cssToast(), cssGlass(),
     // pattern

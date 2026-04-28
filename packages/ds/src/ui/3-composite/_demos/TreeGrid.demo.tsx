@@ -1,5 +1,5 @@
 import { TreeGrid } from '../TreeGrid'
-import { TreeItem } from '../TreeItem'
+import { TreeRow } from '../TreeRow'
 import { ColumnHeader } from '../ColumnHeader'
 import { GridCell } from '../GridCell'
 export default () => (
@@ -8,8 +8,8 @@ export default () => (
       <tr><ColumnHeader>Name</ColumnHeader></tr>
     </thead>
     <tbody>
-      <TreeItem level={1}><GridCell>Root</GridCell></TreeItem>
-      <TreeItem level={2}><GridCell>Child</GridCell></TreeItem>
+      <TreeRow level={1}><GridCell>Root</GridCell></TreeRow>
+      <TreeRow level={2}><GridCell>Child</GridCell></TreeRow>
     </tbody>
   </TreeGrid>
 )

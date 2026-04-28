@@ -51,17 +51,17 @@ export const text = (role: TextRole = 'default') => TEXT_VAR[role]
 
 // ── Surface — bg ladder 의 role alias ───────────────────────────────────
 /**
- * surface(role) — Atlas 4단 bg ladder.
- *   'default' → bg          card/popover/input
- *   'subtle'  → bg-sunken   page ground · chip · banner
- *   'raised'  → bg-elev     popover (alias of bg)
+ * surface(role) — Atlas bg ladder.
+ *   'subtle'  → bg-sunken   page ground · chip · banner (default)
+ *   'raised'  → bg-elev     popover
  *   'inverse' → CanvasText
+ *
+ * "default" surface 는 `bg()` 단독 함수를 사용한다 (Tailwind 디팩토).
  * 페어가 필요한 곳은 fn/pair.ts 의 pair({ bg, fg }).
  * @demo type=color fn=surface args=["subtle"]
  */
-type SurfaceRole = 'default' | 'subtle' | 'raised' | 'inverse'
+type SurfaceRole = 'subtle' | 'raised' | 'inverse'
 const SURFACE_VAR: Record<SurfaceRole, string> = {
-  default: 'var(--ds-bg)',
   subtle:  'var(--ds-bg-sunken)',
   raised:  'var(--ds-bg-elev)',
   inverse: 'CanvasText',
@@ -156,8 +156,6 @@ export type StatusTone = 'success' | 'warning' | 'danger'
 /** @demo type=color fn=status args=["success"] */
 export const status    = (t: StatusTone) => `var(--ds-${t})`
 
-/** @demo type=color fn=muted */
-export const muted     = () => `var(--ds-muted)`
 /** @demo type=color fn=bg */
 export const bg        = () => `var(--ds-bg)`
 

@@ -8,7 +8,7 @@ import {
 } from 'react'
 
 // @slot children — composable (wrapper/label/subpart)
-type TreeItemProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
+type TreeRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
   level: number
   posinset?: number
   setsize?: number
@@ -18,7 +18,7 @@ type TreeItemProps = Omit<ComponentPropsWithoutRef<'tr'>, 'role'> & {
   children: ReactNode
 }
 
-export function TreeItem({
+export function TreeRow({
   level,
   posinset,
   setsize,
@@ -27,7 +27,7 @@ export function TreeItem({
   disabled,
   children,
   ...rest
-}: TreeItemProps) {
+}: TreeRowProps) {
   const cells = Children.toArray(children).filter(isValidElement) as ReactElement<{
     colindex?: number
   }>[]

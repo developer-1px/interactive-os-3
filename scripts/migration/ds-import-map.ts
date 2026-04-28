@@ -200,8 +200,8 @@ export const MIGRATION_RULES: MigrationRule[] = [
     reason: 'co-location 보존',
   },
   {
-    from: '@p/ds/ui/3-composite/TreeItem',
-    to: '@p/ds/ui/3-composite/TreeItem',
+    from: '@p/ds/ui/3-composite/TreeRow',
+    to: '@p/ds/ui/3-composite/TreeRow',
     kind: 'preserved',
     reason: 'co-location 보존',
   },

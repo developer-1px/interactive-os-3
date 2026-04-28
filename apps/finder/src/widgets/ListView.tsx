@@ -1,4 +1,4 @@
-import { TreeGrid, ColumnHeader, RowGroup, TreeItem, GridCell, activateProps } from '@p/ds'
+import { TreeGrid, ColumnHeader, RowGroup, TreeRow, GridCell, activateProps } from '@p/ds'
 import { formatDate, formatSize } from '../features/data'
 import { extToIcon, type FsNode } from '../entities/types'
 
@@ -36,7 +36,7 @@ export function ListView({
           const selected = n.path === currentPath
           const kind = n.type === 'dir' ? '폴더' : (n.ext ?? '파일').toUpperCase()
           return (
-            <TreeItem
+            <TreeRow
               key={n.path}
               level={1}
               posinset={i + 1}
@@ -50,7 +50,7 @@ export function ListView({
               <GridCell>{formatDate(n.mtime)}</GridCell>
               <GridCell>{n.type === 'dir' ? '—' : formatSize(n.size)}</GridCell>
               <GridCell>{kind}</GridCell>
-            </TreeItem>
+            </TreeRow>
           )
         })}
       </RowGroup>
