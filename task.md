@@ -48,13 +48,8 @@ packages/ds/src/ui/
 - [x] GridCell · ColumnHeader · RowHeader · RowGroup · Toolbar
 - [x] OrderableList · Columns
 
-### 4-window
-- [ ] Dialog.tsx                ← 6-overlay
-- [ ] Sheet.tsx                 ← 6-overlay
-- [ ] Popover.tsx               ← 6-overlay
-- [ ] MenuPopover.tsx           ← 6-overlay
-- [ ] Tooltip.tsx               ← 6-overlay
-- [ ] FloatingNav.tsx           ← 6-overlay
+### 4-window ✅
+- [x] Dialog · Sheet · Popover · MenuPopover · Tooltip · FloatingNav (← 6-overlay)
 
 ### 5-live
 - [ ] Toast.tsx                 ← 6-overlay
@@ -111,7 +106,7 @@ packages/ds/src/ui/
 1. [x] 1-command
 2. [x] 2-input
 3. [x] 3-composite
-4. [ ] 4-window
+4. [x] 4-window
 5. [ ] 5-live
 6. [ ] 6-structure
 7. [ ] 7-landmark

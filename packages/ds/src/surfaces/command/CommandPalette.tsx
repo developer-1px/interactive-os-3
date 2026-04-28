@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Dialog } from '../../ui/6-overlay/Dialog'
+import { Dialog } from '../../ui/4-window/Dialog'
 import { Renderer } from '../../ui/Renderer'
 import { definePage } from '../../headless/layout/definePage'
 import { ROOT } from '../../headless/types'

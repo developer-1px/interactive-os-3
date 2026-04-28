@@ -9,7 +9,7 @@ const CommandPalette = lazy(() =>
   import('@p/ds/surfaces/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
 )
 const FloatingNav = lazy(() =>
-  import('@p/ds/ui/6-overlay/FloatingNav').then((m) => ({ default: m.FloatingNav })),
+  import('@p/ds/ui/4-window/FloatingNav').then((m) => ({ default: m.FloatingNav })),
 )
 
 export const Route = createRootRoute({
