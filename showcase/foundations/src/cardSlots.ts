@@ -26,7 +26,7 @@ export function fnCardSlots(args: {
       'span',
       {
         'data-badge': true,
-        'data-tone': dead ? 'bad' : 'good',
+        'data-variant': dead ? 'bad' : 'good',
         'aria-label': `${count} call sites`,
         title: count
           ? sites!.slice(0, 10).map((s) => `${s.file}:${s.line}`).join('\n')

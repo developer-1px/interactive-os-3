@@ -26,8 +26,8 @@ export const MESSAGES: Message[] = [
   { id: 'm8', from: 'Sentry',    subject: '새 이슈 3건',          preview: 'TypeError…',                  time: '2주 전',     unread: false, starred: false, label: 'alert',   folder: 'inbox', body: '3 issues.' },
 ]
 
-export const labelTone: Record<LabelKey, 'info' | 'success' | 'warning' | 'danger' | 'neutral'> = {
-  work: 'info', news: 'neutral', billing: 'success', alert: 'danger',
+export const labelTone: Record<LabelKey, 'info' | 'success' | 'warning' | 'danger' | 'default'> = {
+  work: 'info', news: 'default', billing: 'success', alert: 'danger',
 }
 
 export const ACTS = [['actReply','답장','reply'],['actForward','전달','forward'],['actArchive','보관','archive'],['actDelete','삭제','trash']] as const

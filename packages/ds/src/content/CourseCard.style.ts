@@ -26,19 +26,19 @@ export const cssCourseCard = () => css`
     color: ${on('accent')};
     background: linear-gradient(135deg, ${accent()}, ${gradientDeep(accent())});
   }
-  article[data-part="card"][data-card="course"][data-tone="success"] > [data-slot="preview"] > figure {
+  article[data-part="card"][data-card="course"][data-variant="success"] > [data-slot="preview"] > figure {
     color: ${on('success')};
     background: linear-gradient(135deg, ${status('success')}, ${gradientDeep(status('success'))});
   }
-  article[data-part="card"][data-card="course"][data-tone="warning"] > [data-slot="preview"] > figure {
+  article[data-part="card"][data-card="course"][data-variant="warning"] > [data-slot="preview"] > figure {
     color: ${on('warning')};
     background: linear-gradient(135deg, ${status('warning')}, ${gradientDeep(status('warning'))});
   }
-  article[data-part="card"][data-card="course"][data-tone="danger"] > [data-slot="preview"] > figure {
+  article[data-part="card"][data-card="course"][data-variant="danger"] > [data-slot="preview"] > figure {
     color: ${on('danger')};
     background: linear-gradient(135deg, ${status('danger')}, ${gradientDeep(status('danger'))});
   }
-  article[data-part="card"][data-card="course"][data-tone="neutral"] > [data-slot="preview"] > figure {
+  article[data-part="card"][data-card="course"][data-variant="default"] > [data-slot="preview"] > figure {
     background: linear-gradient(135deg, ${currentTint('strong')}, ${currentTint('deep')});
   }
 

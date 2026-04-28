@@ -6,7 +6,7 @@ export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'
 
 export type RowProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
   children?: ReactNode
 }
 
@@ -20,7 +20,7 @@ export function Row({ flow, emphasis, children, ...rest }: RowProps) {
     <div
       data-ds="Row"
       data-flow={flow}
-      data-emphasis={emphasis}
+      data-variant={emphasis}
       {...rest}
     >
       {children}

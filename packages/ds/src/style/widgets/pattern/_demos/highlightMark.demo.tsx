@@ -1,13 +1,13 @@
 /**
- * highlightMark 데모 — `<mark>` 태그 + data-tone 변형.
+ * highlightMark 데모 — `<mark>` 태그 + data-variant 변형.
  * style/widgets/pattern/highlightMark.ts 의 raw markup 시연.
  */
 export default () => (
   <p style={{ lineHeight: 1.8 }}>
-    <mark data-tone="neutral">neutral</mark>{' '}
-    <mark data-tone="info">info</mark>{' '}
-    <mark data-tone="success">success</mark>{' '}
-    <mark data-tone="warning">warning</mark>{' '}
-    <mark data-tone="danger">danger</mark>
+    <mark data-variant="default">neutral</mark>{' '}
+    <mark data-variant="info">info</mark>{' '}
+    <mark data-variant="success">success</mark>{' '}
+    <mark data-variant="warning">warning</mark>{' '}
+    <mark data-variant="danger">danger</mark>
   </p>
 )

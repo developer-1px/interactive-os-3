@@ -4,9 +4,9 @@ import type { Tone } from '../../headless/types'
 export type BadgeTone = Tone
 
 type BadgeProps = ComponentPropsWithoutRef<'mark'> & {
-  tone?: Tone
+  variant?: Tone
 }
 
 export function Badge({ tone = 'neutral', ...rest }: BadgeProps) {
-  return <mark data-tone={tone} {...rest} />
+  return <mark data-variant={tone} {...rest} />
 }

@@ -12,14 +12,14 @@ export interface CrmState {
 const rowCells = (c: Contact, sel: Set<string>, toggle: (id: string) => void) => [
   [`c-${c.id}-0`, <input type="checkbox" checked={sel.has(c.id)} onChange={() => toggle(c.id)} onClick={(e) => e.stopPropagation()} aria-label={`${c.name} 선택`} />],
   [`c-${c.id}-1`, c.name], [`c-${c.id}-2`, c.company], [`c-${c.id}-3`, <small>{c.email}</small>],
-  [`c-${c.id}-4`, <Badge tone={stageTone(c.stage)}>{c.stage}</Badge>],
+  [`c-${c.id}-4`, <Badge variant={stageTone(c.stage)}>{c.stage}</Badge>],
   [`c-${c.id}-5`, c.value.toLocaleString()], [`c-${c.id}-6`, c.owner], [`c-${c.id}-7`, <small>{c.updatedAt}</small>],
 ] as const
 
 const renderContact = (c: Contact) => (
   <div data-ds="Column" data-flow="form"><h2>{c.name}</h2><dl data-ds-dl>
     <dt>회사</dt><dd>{c.company}</dd><dt>이메일</dt><dd>{c.email}</dd>
-    <dt>단계</dt><dd><Badge tone={stageTone(c.stage)}>{c.stage}</Badge></dd>
+    <dt>단계</dt><dd><Badge variant={stageTone(c.stage)}>{c.stage}</Badge></dd>
     <dt>가치</dt><dd>${c.value.toLocaleString()}</dd><dt>담당</dt><dd>{c.owner}</dd>
     <dt>업데이트</dt><dd>{c.updatedAt}</dd></dl></div>
 )

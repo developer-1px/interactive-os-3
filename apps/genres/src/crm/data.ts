@@ -15,7 +15,7 @@ export const CONTACTS: Contact[] = [
 ]
 
 export const stageTone = (s: Stage) =>
-  s === '성사' ? 'success' : s === '실패' ? 'danger' : s === '협상' ? 'warning' : s === '제안' ? 'info' : 'neutral'
+  s === '성사' ? 'success' : s === '실패' ? 'danger' : s === '협상' ? 'warning' : s === '제안' ? 'info' : 'default'
 
 export const HEADS = ['', '이름', '회사', '이메일', '단계', '가치($)', '담당', '업데이트']
 export const BULK_ACTS = [['bAssign','담당자 변경','user'],['bStage','단계 이동','move'],['bExport','내보내기','download'],['bDelete','삭제','trash']] as const

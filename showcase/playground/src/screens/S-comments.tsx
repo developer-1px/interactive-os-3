@@ -43,7 +43,7 @@ const Comments_Thread = defineScreen({
       <StickyAction>
         <Row flow="cluster" style={{ alignItems: 'center' }}>
           <Skeleton width="100%" height={composer.inputHeight} style={{ borderRadius: composer.inputRadius }} />
-          <Button data-emphasis="primary" aria-label="send"><span data-icon="arrow-up" /></Button>
+          <Button data-variant="primary" aria-label="send"><span data-icon="arrow-up" /></Button>
         </Row>
       </StickyAction>
     </Phone>

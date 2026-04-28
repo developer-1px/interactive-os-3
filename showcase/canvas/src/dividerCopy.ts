@@ -9,7 +9,7 @@ import type { Bucket } from './lanes'
 
 export type DividerCopy = {
   tier: string
-  tone: ColumnTone
+  variant: ColumnTone
   title: string
   hint: string
 }
@@ -17,43 +17,43 @@ export type DividerCopy = {
 export const DIVIDER: Record<'palette' | 'foundations' | 'componentTokens' | Bucket, DividerCopy> = {
   palette: {
     tier: 'L0',
-    tone: 'neutral',
+    variant: 'default',
     title: 'Palette',
     hint: 'raw scale (gray N · pad N · elev N). 수치만 — widget 직접 import ❌. foundations 의 alias 통해서만 소비.',
   },
   foundations: {
     tier: 'L1',
-    tone: 'blue',
+    variant: 'info',
     title: 'Foundations',
     hint: 'palette 위 의미 레이어. text · surface · border · accent · state 등 role 별 토큰. widget 은 여기까지만 import.',
   },
   componentTokens: {
     tier: 'L1.5',
-    tone: 'neutral',
+    variant: 'default',
     title: 'Component tokens',
     hint: 'intentionally empty — Radix Colors / Base UI 노선. semantic-only 로 어휘를 닫는다. 멀티브랜드·dynamic theming 도입 시 재고.',
   },
   L2: {
     tier: 'L2',
-    tone: 'green',
+    variant: 'success',
     title: 'Primitives',
     hint: '1 role = 1 component. 단일 인터랙션 · 합성·roving·focus 없음.',
   },
   L3: {
     tier: 'L3',
-    tone: 'amber',
+    variant: 'warning',
     title: 'Patterns',
     hint: 'atoms + tokens 합성. roving·focus·gesture 가 핵심. selection · display · overlay · patterns · content widgets.',
   },
   L4: {
     tier: 'L4',
-    tone: 'amber',
+    variant: 'warning',
     title: 'Templates',
     hint: 'layout 합성 — definePage 조합 스니펫. Row/Column/Grid 같은 layout primitive · sidebar · holyGrail 등 page recipe.',
   },
   L5: {
     tier: 'L5',
-    tone: 'amber',
+    variant: 'warning',
     title: 'Devices',
     hint: 'presentation surface — Phone · MobileFrame 등 mock frame. canvas 의 시각 무게 lane 분리 근거.',
   },

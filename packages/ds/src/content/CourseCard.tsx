@@ -15,19 +15,19 @@ type CourseCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   abbr: ReactNode
   name: ReactNode
   desc?: ReactNode
-  tone?: 'info' | 'success' | 'warning' | 'danger' | 'accent' | 'neutral'
+  variant?: 'info' | 'success' | 'warning' | 'danger' | 'accent' | 'default'
   actions?: ReactNode
   meta?: ReactNode
   footer?: ReactNode
 }
 
 export function CourseCard({
-  abbr, name, desc, tone = 'info', actions, meta, footer, ...rest
+  abbr, name, desc, variant = 'info', actions, meta, footer, ...rest
 }: CourseCardProps) {
   return (
     <Card
       data-card="course"
-      data-tone={tone}
+      data-variant={variant}
       slots={{
         preview: <figure aria-hidden="true">{abbr}</figure>,
         title: (

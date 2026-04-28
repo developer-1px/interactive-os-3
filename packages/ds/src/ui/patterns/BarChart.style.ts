@@ -51,10 +51,10 @@ export const cssBarChart = () => css`
     color: ${text('mute')};
     min-inline-size: 3ch; text-align: end;
   }
-  [data-part="bar-chart"] > dl > div[data-tone="info"]    { color: ${accent()}; }
-  [data-part="bar-chart"] > dl > div[data-tone="success"] { color: ${status('success')}; }
-  [data-part="bar-chart"] > dl > div[data-tone="warning"] { color: ${status('warning')}; }
-  [data-part="bar-chart"] > dl > div[data-tone="danger"]  { color: ${status('danger')}; }
+  [data-part="bar-chart"] > dl > div[data-variant="info"]    { color: ${accent()}; }
+  [data-part="bar-chart"] > dl > div[data-variant="success"] { color: ${status('success')}; }
+  [data-part="bar-chart"] > dl > div[data-variant="warning"] { color: ${status('warning')}; }
+  [data-part="bar-chart"] > dl > div[data-variant="danger"]  { color: ${status('danger')}; }
   [data-part="bar-chart"] > figcaption {
     font-size: ${font('xs')};
     color: ${text('mute')};

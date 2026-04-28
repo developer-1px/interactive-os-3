@@ -55,7 +55,7 @@ export function buildSettingsPage(s: SettingsState): NormalizedData {
       dExportBtn: { id: 'dExportBtn', data: { type: 'Ui', component: 'Button', props: { onClick: () => alert('내보내기') }, content: '내보내기' } },
       ...splitRow('dDel', '계정 삭제', '이 작업은 되돌릴 수 없습니다'),
       dDelBtn: { id: 'dDelBtn', data: { type: 'Ui', component: 'Button',
-        props: { onClick: () => window.confirm('정말 삭제?') && alert('삭제'), 'data-tone': 'danger' }, content: '계정 삭제' } },
+        props: { onClick: () => window.confirm('정말 삭제?') && alert('삭제'), 'data-variant': 'danger' }, content: '계정 삭제' } },
     },
     relationships: {
       [ROOT]: ['page'], page: ['nav', 'main'],

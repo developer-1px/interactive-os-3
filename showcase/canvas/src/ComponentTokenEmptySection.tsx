@@ -10,8 +10,8 @@ import { DIVIDER } from './dividerCopy'
 export function ComponentTokenEmptySection() {
   const c = DIVIDER.componentTokens
   return (
-    <section data-part="canvas-empty-column" data-tone={c.tone}>
-      <ColumnBanner tier={c.tier} tone={c.tone} title={c.title} hint={c.hint} />
+    <section data-part="canvas-empty-column" data-variant={c.tone}>
+      <ColumnBanner tier={c.tier} variant={c.tone} title={c.title} hint={c.hint} />
     </section>
   )
 }

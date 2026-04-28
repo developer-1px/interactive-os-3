@@ -44,8 +44,8 @@ const postCardVariant = (cont: boolean, who: string, time: string, body: string,
 
 // eslint-disable-next-line no-restricted-syntax -- showcase: stat value 큰 글자 강조 (display 변형 대체 토큰 부재)
 const statCardVariant = (label: string, value: string, delta: string, tone?: 'alert'): ReactNode => (
-  <article data-part="card" data-card="stat" {...(tone && { 'data-tone': tone })}>
-    <div data-slot="title"><header><strong>{label}</strong>{tone === 'alert' && <Badge tone="danger" label="alert" />}</header></div>
+  <article data-part="card" data-card="stat" {...(tone && { 'data-variant': tone })}>
+    <div data-slot="title"><header><strong>{label}</strong>{tone === 'alert' && <Badge variant="danger" label="alert" />}</header></div>
     <div data-slot="meta"><strong style={{ fontSize: '2em', fontVariantNumeric: 'tabular-nums' }}>{value}</strong></div>
     <div data-slot="footer"><small>{delta}</small></div>
   </article>
@@ -53,7 +53,7 @@ const statCardVariant = (label: string, value: string, delta: string, tone?: 'al
 
 const productCardVariant = (name: string, price: string, img: string, badge?: string): ReactNode => (
   <article data-part="card" data-card="product">
-    <div data-slot="preview"><img src={img} alt={name} loading="lazy" />{badge && <Badge tone="success" label={badge} />}</div>
+    <div data-slot="preview"><img src={img} alt={name} loading="lazy" />{badge && <Badge variant="success" label={badge} />}</div>
     <div data-slot="title"><strong>{name}</strong></div>
     <div data-slot="footer"><strong>{price}</strong></div>
   </article>
@@ -107,8 +107,8 @@ const field = (
       defaultValue={variant === 'success' ? 'jane.doe@example.com' : variant === 'error' ? 'invalid' : ''}
       disabled={variant === 'disabled'} />
     {helpText && <p>{helpText}</p>}
-    {variant === 'error' && <p data-tone="danger">올바른 이메일 형식이 아닙니다.</p>}
-    {variant === 'success' && <p data-tone="success">사용 가능한 이메일입니다.</p>}
+    {variant === 'error' && <p data-variant="danger">올바른 이메일 형식이 아닙니다.</p>}
+    {variant === 'success' && <p data-variant="success">사용 가능한 이메일입니다.</p>}
   </div>
 )
 
@@ -193,7 +193,7 @@ const loginCard = (): ReactNode => (
           <label><input type="checkbox" defaultChecked /> 로그인 유지</label>
           <a href="#">비밀번호 찾기</a>
         </div>
-        <button type="submit" data-emphasis="primary">로그인</button>
+        <button type="submit" data-variant="primary">로그인</button>
       </form>
     </div>
     <div data-slot="footer">
@@ -216,7 +216,7 @@ const signupCard = (): ReactNode => (
         {field('basic', '이메일', 'jane@example.com')}
         {field('help', '비밀번호', '8자 이상', '대소문자·숫자·특수문자 조합 권장')}
         <label><input type="checkbox" /> <small><a href="#">이용약관</a> 과 <a href="#">개인정보 처리방침</a> 에 동의합니다.</small></label>
-        <button type="submit" data-emphasis="primary">가입하기</button>
+        <button type="submit" data-variant="primary">가입하기</button>
       </form>
     </div>
     <div data-slot="footer">
@@ -236,7 +236,7 @@ const resetCard = (): ReactNode => (
     <div data-slot="body">
       <form>
         {field('required', '이메일', 'jane@example.com')}
-        <button type="submit" data-emphasis="primary">재설정 링크 받기</button>
+        <button type="submit" data-variant="primary">재설정 링크 받기</button>
       </form>
     </div>
     <div data-slot="footer"><small><a href="#">← 로그인으로 돌아가기</a></small></div>
@@ -258,7 +258,7 @@ const otpCard = (): ReactNode => (
             <input key={i} type="text" inputMode="numeric" maxLength={1} aria-label={`자리 ${i+1}`} />
           ))}
         </div>
-        <button type="submit" data-emphasis="primary">확인</button>
+        <button type="submit" data-variant="primary">확인</button>
         <small>코드를 못 받으셨나요? <a href="#">다시 보내기</a> (45초)</small>
       </form>
     </div>
@@ -298,7 +298,7 @@ const profileCard = (): ReactNode => (
       <Chip label="design-systems" /> <Chip label="a11y" /> <Chip label="frontend" />
     </div>
     <div data-slot="footer">
-      <button type="button" data-emphasis="primary">팔로우</button>
+      <button type="button" data-variant="primary">팔로우</button>
       <button type="button">메시지</button>
     </div>
   </article>
@@ -318,7 +318,7 @@ const pricingCard = (tier: 'free' | 'pro' | 'team', highlighted?: boolean): Reac
       <div data-slot="title">
         <header>
           <h3>{data.name}</h3>
-          {highlighted && <Badge tone="success" label="추천" />}
+          {highlighted && <Badge variant="success" label="추천" />}
         </header>
       </div>
       <div data-slot="meta">
@@ -328,7 +328,7 @@ const pricingCard = (tier: 'free' | 'pro' | 'team', highlighted?: boolean): Reac
         <ul>{data.features.map((f) => <li key={f}><span data-icon="check" aria-hidden />{f}</li>)}</ul>
       </div>
       <div data-slot="footer">
-        <button type="button" data-emphasis={highlighted ? 'primary' : undefined}>{data.cta}</button>
+        <button type="button" data-variant={highlighted ? 'primary' : undefined}>{data.cta}</button>
       </div>
     </article>
   )
@@ -359,18 +359,18 @@ const settingsPanel = (): ReactNode => (
     </div>
     <div data-slot="footer">
       <button type="button">취소</button>
-      <button type="button" data-emphasis="primary">저장</button>
+      <button type="button" data-variant="primary">저장</button>
     </div>
   </article>
 )
 
 const confirmDialog = (tone: 'default' | 'danger'): ReactNode => (
-  <article data-part="card" data-card="confirm" data-tone={tone === 'danger' ? 'alert' : undefined} role="alertdialog" aria-labelledby="confirm-h" aria-describedby="confirm-d">
+  <article data-part="card" data-card="confirm" data-variant={tone === 'danger' ? 'alert' : undefined} role="alertdialog" aria-labelledby="confirm-h" aria-describedby="confirm-d">
     <div data-slot="title"><h3 id="confirm-h">{tone === 'danger' ? '계정을 삭제하시겠어요?' : '저장하시겠어요?'}</h3></div>
     <div data-slot="body"><p id="confirm-d">{tone === 'danger' ? '이 작업은 되돌릴 수 없습니다. 모든 데이터가 즉시 삭제됩니다.' : '변경 사항을 저장합니다. 다른 사용자에게 즉시 반영됩니다.'}</p></div>
     <div data-slot="footer">
       <button type="button">취소</button>
-      <button type="button" data-emphasis="primary" data-tone={tone === 'danger' ? 'danger' : undefined}>{tone === 'danger' ? '영구 삭제' : '저장'}</button>
+      <button type="button" data-variant={tone === 'danger' ? 'danger' : 'primary'}>{tone === 'danger' ? '영구 삭제' : '저장'}</button>
     </div>
   </article>
 )
@@ -384,7 +384,7 @@ const stateRow = (state: 'empty' | 'loading' | 'error' | 'partial' | 'done'): Re
     case 'empty':   return <EmptyState title="받은 편지함이 비었습니다" description="새 메일이 도착하면 여기에 표시됩니다." />
     // eslint-disable-next-line no-restricted-syntax -- loading status (showcase)
     case 'loading': return (<div role="status" aria-label="로딩 중"><Skeleton width="100%" height={48} /><Skeleton width="100%" height={48} /><Skeleton width="100%" height={48} /></div>)
-    case 'error':   return <Callout tone="danger">서버 응답 없음. 잠시 후 다시 시도하세요.</Callout>
+    case 'error':   return <Callout variant="danger">서버 응답 없음. 잠시 후 다시 시도하세요.</Callout>
     case 'partial': return (<div>{inboxRow('unread', '김지민', '회의 자료', 'PR 검토 부탁드립니다', '14:32')}{inboxRow('read', '박서연', '점심', '점심 같이 드실래요?', '12:18')}<Skeleton width="100%" height={48} /></div>)
     case 'done':    return <KeyValue items={[{ key: '총', value: '128개' }, { key: '읽지 않음', value: '12개' }, { key: '별표', value: '4개' }]} />
   }

@@ -1,93 +1,128 @@
-# ui/ ARIA 재구조화
+# ui/ ARIA 스펙 적합성 감사
 
-기존 task.md 는 `task.archive.md` 로 보관 (필요시 수동 이동).
+각 컴포넌트가 **ARIA 1.2 스펙대로 role/속성/키보드 인터랙션/스타일 attribute selector**를 구현했는지 한 개씩 점검.
 
-## 목표 구조 (ARIA 1.2 spec 그대로)
+## 점검 항목 (per 컴포넌트)
 
-```
-packages/ds/src/ui/
-├─ 1-command/        widget · 행동 트리거 (no value)
-├─ 2-input/          widget · 값 가지는 단일 컨트롤
-├─ 3-composite/      widget · 포커스 관리 컨테이너
-├─ 4-window/         widget · modal/floating
-├─ 5-live/           live region
-├─ 6-structure/      structure · section
-├─ 7-landmark/       structure · landmark
-├─ 8-field/          form composition (label+input)
-└─ 9-layout/         presentational primitives
-```
+1. **role** — 명시 또는 native 태그로 묵시 (ARIA in HTML 권고)
+2. **aria-* 속성** — required / supported 속성 빠짐없이 (state·property)
+3. **키보드** — WAI-ARIA APG 키 매핑
+4. **focus** — tabindex / roving / focus visible
+5. **스타일 selector** — `[aria-*]`/`:focus-visible` 등 ARIA 셀렉터 (data-* 임의 namespace 금지)
+6. **labelling** — aria-label / aria-labelledby / aria-describedby 경로
+7. **스타일 최소** — 꼭 필요한 1-2 selector만. variant/size/intent 분기 금지
+8. **토큰 시맨틱 only** — palette raw 직접 사용 ❌. foundations 의 semantic role 토큰만
 
-## 매핑표
+## 진행 (작은 단위, 한 개씩)
 
-### 1-command ✅
-- [x] Button.tsx               ← 2-action
-- [x] ButtonGroup.tsx          ← 2-action
-- [x] ToolbarButton.tsx        ← 2-action
-- [x] MenuItems.tsx            ← 4-selection
-- [x] RouterLink.tsx           ← 0-primitives
+### 1-command
+- [ ] Button             — role=button, aria-pressed?, disabled
+- [ ] ButtonGroup        — role=group + aria-label
+- [ ] ToolbarButton      — toolbar 자식, focus roving
+- [ ] MenuItems          — role=menuitem, aria-haspopup, aria-expanded
+- [ ] RouterLink         — role=link (a) , aria-current
 
-### 2-input ✅
-- [x] Checkbox.tsx             ← 3-input
-- [x] Radio.tsx                ← 3-input
-- [x] Switch.tsx               ← 2-action
-- [x] ToggleButton.tsx         ← 2-action
-- [x] Option.tsx               ← 4-selection
-- [x] Input.tsx                ← 3-input
-- [x] Textarea.tsx             ← 3-input
-- [x] SearchBox.tsx            ← 3-input
-- [x] NumberInput.tsx          ← 3-input
-- [x] ColorInput.tsx           ← 3-input
-- [x] Slider.tsx               ← 3-input
-- [x] Combobox.tsx             ← 3-input
-- [x] Select.tsx               ← 3-input
+### 2-input
+- [ ] Checkbox           — role=checkbox, aria-checked(mixed)
+- [ ] Radio              — role=radio, aria-checked
+- [ ] Switch             — role=switch, aria-checked
+- [ ] ToggleButton       — button, aria-pressed
+- [ ] Option             — role=option, aria-selected
+- [ ] Input              — type=text, aria-invalid/required
+- [ ] Textarea           — multiline textbox
+- [ ] SearchBox          — role=searchbox
+- [ ] NumberInput        — role=spinbutton, aria-valuenow/min/max
+- [ ] ColorInput         — type=color
+- [ ] Slider             — role=slider, aria-valuenow/min/max/orientation
+- [ ] Combobox           — role=combobox, aria-expanded/controls/activedescendant
+- [ ] Select             — role=combobox / listbox 패턴
 
-### 3-composite ✅
-- [x] Listbox · ListboxGroup · RadioGroup · CheckboxGroup · ToggleGroup
-- [x] SegmentedControl · Menu · MenuList · MenuGroup · Menubar
-- [x] Tabs · Tree · TreeRow · TreeGrid · DataGrid · DataGridRow
-- [x] GridCell · ColumnHeader · RowHeader · RowGroup · Toolbar
-- [x] OrderableList · Columns
+### 3-composite
+- [ ] Listbox            — role=listbox, aria-multiselectable, aria-activedescendant
+- [ ] ListboxGroup       — role=group
+- [ ] RadioGroup         — role=radiogroup
+- [ ] CheckboxGroup      — role=group
+- [ ] ToggleGroup        — role=group / radiogroup
+- [ ] SegmentedControl   — role=radiogroup
+- [ ] Menu               — role=menu, aria-orientation
+- [ ] MenuList           — role=menu (listbox 변형 X)
+- [ ] MenuGroup          — role=group / aria-labelledby
+- [ ] Menubar            — role=menubar, orientation
+- [ ] Tabs               — role=tablist, tab[aria-selected/aria-controls]
+- [ ] Tree               — role=tree, aria-expanded/aria-level
+- [ ] TreeRow            — role=treeitem
+- [ ] TreeGrid           — role=treegrid, row/cell
+- [ ] DataGrid           — role=grid, aria-rowcount/colcount
+- [ ] DataGridRow        — role=row
+- [ ] GridCell           — role=gridcell
+- [ ] ColumnHeader       — role=columnheader, aria-sort
+- [ ] RowHeader          — role=rowheader
+- [ ] RowGroup           — role=rowgroup
+- [ ] Toolbar            — role=toolbar, aria-orientation
+- [ ] OrderableList      — listbox + reorder 셈antics
+- [ ] Columns            — multi-listbox composite
 
-### 4-window ✅
-- [x] Dialog · Sheet · Popover · MenuPopover · Tooltip · FloatingNav (← 6-overlay)
+### 4-window
+- [ ] Dialog             — role=dialog, aria-modal, aria-labelledby/describedby, focus trap
+- [ ] Sheet              — dialog 변형 (side)
+- [ ] Popover            — non-modal dialog
+- [ ] MenuPopover        — popover wrapping menu (no aria-modal)
+- [ ] Tooltip            — role=tooltip, aria-describedby 연결
+- [ ] FloatingNav        — non-modal dialog
 
-### 5-live ✅
-- [x] Toast (← 6-overlay), Progress · Spinner · Badge · LegendDot (← 1-status)
+### 5-live
+- [ ] Toast              — role=status / alert (live region)
+- [ ] Progress           — role=progressbar, aria-valuenow/min/max
+- [ ] Spinner            — role=progressbar (indeterminate, aria-valuetext)
+- [ ] Badge              — role=status (aria-label)
+- [ ] LegendDot          — decorative (aria-hidden) 인지
 
-### 6-structure ✅
-- [x] parts/* (Separator/CodeBlock/Prose 포함, Breadcrumb 제외)
-- [x] Accordion · Disclosure (← 6-overlay)
-- [x] parts/index.ts · styles.ts barrel 도 함께 이동
+### 6-structure
+- [ ] Accordion          — group of disclosures (button[aria-expanded] + region[aria-labelledby])
+- [ ] Disclosure         — button[aria-expanded] + region
+- [ ] Heading            — role=heading, aria-level
+- [ ] Card               — section / article / group
+- [ ] Callout            — role=note / status
+- [ ] Table              — role=table (presentation 금지)
+- [ ] Code / CodeBlock   — code semantic
+- [ ] Prose              — semantic HTML pass-through
+- [ ] Separator          — role=separator
+- [ ] Avatar / AvatarGroup — img + aria-label / aria-labelledby
+- [ ] Chip               — button / status / option (use case별)
+- [ ] CountBadge         — status + aria-label
+- [ ] EmptyState         — region / status
+- [ ] KeyValue           — dl semantic
+- [ ] Link               — a[href]
+- [ ] MediaObject        — figure / article
+- [ ] ProgressBar        — non-live progress (5-live와 분리 의도)
+- [ ] RovingItem         — base for roving widgets
+- [ ] Skeleton           — aria-busy / aria-hidden
+- [ ] Thumbnail          — img
+- [ ] Timestamp          — time element
 
-### 7-landmark ✅
-- [x] Breadcrumb (← parts)
-- [x] Pagination (← 5-display)
+### 7-landmark
+- [ ] Breadcrumb         — nav[aria-label=Breadcrumb] + ol
+- [ ] Pagination         — nav[aria-label=Pagination]
 
+### 8-field
+- [ ] Field              — label + input + describedby + errormessage
+- [ ] Stepper            — process semantic (ol + aria-current)
 
-### 8-field ✅
-- [x] Field (← 3-input), Stepper (← 5-display)
+### 9-layout
+- [ ] Row / Column / Grid — role=presentation / 무 role
+- [ ] Split              — role=presentation (separator는 별도)
+- [ ] Carousel           — role=region + aria-roledescription="carousel"
+- [ ] ZoomPanCanvas      — application 또는 presentation
 
-### 9-layout ✅
-- [x] Row · Column · Grid · Split · Carousel · ZoomPanCanvas (← 8-layout)
+## per-컴포넌트 작업 형식
 
-## 진행 순서 (작은 단위, 한 번에 하나)
-
-각 step = 폴더 1개 만들고 → 파일 옮기고 → import 갱신 → tsc 통과 → 커밋.
-
-1. [x] 1-command
-2. [x] 2-input
-3. [x] 3-composite
-4. [x] 4-window
-5. [x] 5-live
-6. [x] 6-structure
-7. [x] 7-landmark
-8. [x] 8-field
-9. [x] 9-layout
-10. [x] 옛 폴더(0-primitives, 1-status, 2-action, 3-input, 4-selection, 5-display, 6-overlay, 8-layout, parts) 청소
-11. [ ] lint:ds 최종 통과
+각 컴포넌트마다:
+1. 현재 코드 읽기
+2. ARIA APG / spec 조회 (확인 사항: role, required attrs, keyboard, focus)
+3. 갭 표 작성 (✅ 충족 / ⚠️ 부분 / ❌ 누락)
+4. 수정 — 코드 + style attribute selector
+5. 다음으로
 
 ## 메모
-- `.style.ts` / `.meta.ts` 형제 파일도 함께 이동
-- `_demos/` 는 각 카테고리에 동행
-- import 경로는 barrel(`@p/ds`)과 직접 import 양쪽 갱신
-- parts barrel(`parts/index.ts`, `parts/styles.ts`)는 마지막
+- 스타일은 `[aria-*]`/`:focus-visible`/`:disabled` 등 표준 셀렉터만 사용. data-* namespace 금지 (`data-part` 만 허용)
+- 이미 ds parts에 분리된 합성(Field/Combobox 등)은 "각 부품이 자기 ARIA를 옳게 표현하느냐"가 기준

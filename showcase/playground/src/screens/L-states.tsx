@@ -36,7 +36,7 @@ const State_Error = defineScreen({
   render: () => (
     <Phone label="error" topBar={<PhoneTopBar back title="Dashboard" />} bottomBar={<PhoneTabBar items={tabIcons(3)} active={3} />}>
       <Body>
-        <Callout tone="danger">서버 응답 없음. 잠시 후 다시 시도하세요.</Callout>
+        <Callout variant="danger">서버 응답 없음. 잠시 후 다시 시도하세요.</Callout>
         <Skeleton width="100%" height={skeletonBox.small.height} />
         <Skeleton width="100%" height={skeletonBox.small.height} />
         <Skeleton width="100%" height={skeletonBox.small.height} />

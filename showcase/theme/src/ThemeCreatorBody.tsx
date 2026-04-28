@@ -150,8 +150,8 @@ export function ThemeCreatorBody() {
             <p>이 카드는 <code>--ds-bg</code> 위, 페이지는 <code>--ds-base</code> 위. 두 surface의 미세 차이가 깊이를 만든다.</p>
             <p>본문은 <code>--ds-neutral-9</code> (oklch L≈0.30, hue {v.toneHue}°). 진한 검정의 차가운 인상이 사라지고 종이 위 잉크 같은 따뜻함.</p>
             <div data-part="actions" aria-label="Card actions">
-              <button type="button" data-emphasis="primary">Primary</button>
-              <button type="button" data-emphasis="secondary">Secondary</button>
+              <button type="button" data-variant="primary">Primary</button>
+              <button type="button" data-variant="secondary">Secondary</button>
             </div>
           </article>
         </section>

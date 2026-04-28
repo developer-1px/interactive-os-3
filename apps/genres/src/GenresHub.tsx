@@ -32,7 +32,7 @@ export function GenresHub() {
         { id: `card-${e.id}`, data: {
           type: 'Section',
           heading: { variant: 'h3' as const, content: e.title },
-          emphasis: 'raised' as const,
+          variant: 'raised' as const,
         } },
       ])),
       ...Object.fromEntries(entries.flatMap((e) => [

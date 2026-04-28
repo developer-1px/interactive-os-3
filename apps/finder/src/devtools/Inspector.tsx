@@ -92,7 +92,7 @@ export function FinderInspector() {
   const invRows = checks.map((c) => ({
     idx:    <Code>{String(c.index)}</Code>,
     spec:   c.spec,
-    pass:   <span data-icon={c.pass ? 'check' : 'x'} data-tone={c.pass ? 'success' : 'danger'} aria-label={c.pass ? 'pass' : 'fail'} />,
+    pass:   <span data-icon={c.pass ? 'check' : 'x'} data-variant={c.pass ? 'success' : 'danger'} aria-label={c.pass ? 'pass' : 'fail'} />,
     detail: <Code>{c.detail}</Code>,
   }))
 
@@ -148,7 +148,7 @@ export function FinderInspector() {
       intro:      { id: 'intro',      data: { type: 'Column', flow: 'list' } },
       introTitle: { id: 'introTitle', data: { type: 'Text', variant: 'h1', content: 'Finder · Spec Inspector' } },
       introBody:  { id: 'introBody',  data: { type: 'Ui', component: 'Block', content: (
-        <Callout tone="info">
+        <Callout variant="info">
           이 페이지는 <Code>apps/finder/src/entities/spec.ts</Code> (SSoT) 의 zod 객체를 런타임 introspect 해서
           State·Cmds·Invariants·View 4슬롯을 그립니다. spec 을 한 줄 바꾸면 이 inspector 가 그대로 따라옵니다.
           state 는 sample reducer 로 조작 — 실제 라우트와 무관.
@@ -163,7 +163,7 @@ export function FinderInspector() {
       cmdsSec:  { id: 'cmdsSec',  data: { type: 'Section', heading: { content: `Cmds · ${Object.keys(FinderCmdSpec).length} commands` }, flow: 'form' } },
       cmdsErr:  { id: 'cmdsErr',  data: {
         type: 'Ui', component: 'Block',
-        content: error ? <Callout tone="danger"><Code>{error.type}</Code> dispatch 실패: {error.message}</Callout> : null,
+        content: error ? <Callout variant="danger"><Code>{error.type}</Code> dispatch 실패: {error.message}</Callout> : null,
         hidden: !error,
       } },
       cmdsGrid: { id: 'cmdsGrid', data: { type: 'Grid', cols: 2, flow: 'cluster' } },
@@ -173,7 +173,7 @@ export function FinderInspector() {
       invSec:  { id: 'invSec',  data: { type: 'Section', heading: { content: `Invariants · ${passed} / ${checks.length} pass` }, flow: 'list' } },
       invTbl:  { id: 'invTbl',  data: { type: 'Ui', component: 'Table', props: { columns: INV_COLS, rows: invRows, 'aria-label': 'invariant checks' } } },
       invNote: { id: 'invNote', data: { type: 'Ui', component: 'Block', content: (
-        <Callout tone="info">
+        <Callout variant="info">
           invariants 의 자연어 행과 <Code>devtools/checks.ts</Code> predicate 배열은 인덱스 1:1.
           길이 mismatch 시 자동 경고.
         </Callout>
@@ -186,7 +186,7 @@ export function FinderInspector() {
       // Schema dump section
       schemaSec:  { id: 'schemaSec',  data: { type: 'Section', heading: { content: 'Schema dump' }, flow: 'list' } },
       schemaNote: { id: 'schemaNote', data: { type: 'Ui', component: 'Block', content: (
-        <Callout tone="info">
+        <Callout variant="info">
           FinderCmdSchema 는 <Code>type</Code> 으로 분기되는 discriminatedUnion. 멤버는 위 Cmds 와 1:1.
         </Callout>
       ) } },

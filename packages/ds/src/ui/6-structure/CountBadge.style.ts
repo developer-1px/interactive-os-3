@@ -29,10 +29,10 @@ export const cssCountBadge = () => css`
     padding: 0;
     background: currentColor;
   }
-  span[data-part="badge"][data-tone="success"] { ${toneTint('success', 12)} }
-  span[data-part="badge"][data-tone="warning"] { ${toneTint('warning', 12)} }
-  span[data-part="badge"][data-tone="danger"]  { ${toneTint('danger', 12)} }
-  span[data-part="badge"][data-dot="true"][data-tone="success"] { background: ${status('success')}; color: ${status('success')}; }
-  span[data-part="badge"][data-dot="true"][data-tone="warning"] { background: ${status('warning')}; color: ${status('warning')}; }
-  span[data-part="badge"][data-dot="true"][data-tone="danger"]  { background: ${status('danger')};  color: ${status('danger')}; }
+  span[data-part="badge"][data-variant="success"] { ${toneTint('success', 12)} }
+  span[data-part="badge"][data-variant="warning"] { ${toneTint('warning', 12)} }
+  span[data-part="badge"][data-variant="danger"]  { ${toneTint('danger', 12)} }
+  span[data-part="badge"][data-dot="true"][data-variant="success"] { background: ${status('success')}; color: ${status('success')}; }
+  span[data-part="badge"][data-dot="true"][data-variant="warning"] { background: ${status('warning')}; color: ${status('warning')}; }
+  span[data-part="badge"][data-dot="true"][data-variant="danger"]  { background: ${status('danger')};  color: ${status('danger')}; }
 `

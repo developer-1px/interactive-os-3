@@ -5,7 +5,7 @@ import { weight, pad } from '../../../tokens/palette'
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
 export const cssPage = () => css`
   /* Chat 메시지 버블 — me/other 정렬은 messageBubble.ts owner. */
-  [data-part="chat-page"] [data-emphasis="sunk"]:has([data-part^="message-"]) {
+  [data-part="chat-page"] [data-variant="sunk"]:has([data-part^="message-"]) {
     gap: ${pad(1.5)};
     align-items: stretch;
   }
@@ -96,7 +96,7 @@ export const cssPage = () => css`
 
   /* Feed 카드 — avatar 원형, body 줄높이, reaction toolbar 정렬 */
   [data-part="feed-page"] [role="article"],
-  [data-part="feed-page"] [data-emphasis="raised"] {
+  [data-part="feed-page"] [data-variant="raised"] {
     border-radius: ${radius('lg')};
   }
   [data-part$="-page"] [data-flow="cluster"] > strong[data-ds-aspect="square"] {
@@ -117,17 +117,17 @@ export const cssPage = () => css`
     margin-top: ${pad(0.25)};
   }
   /* 포스트/카드 본문 이미지 — 카드 폭 채우고 라운딩 + aspect 보존 */
-  [data-part$="-page"] [data-emphasis="raised"] > p > img {
+  [data-part$="-page"] [data-variant="raised"] > p > img {
     width: 100%; height: auto; display: block;
     border-radius: ${radius('md')};
     aspect-ratio: 16 / 9; object-fit: cover;
     background: color-mix(in oklch, var(--ds-fg) 4%, transparent);
   }
   /* Shop 카드의 첫 텍스트 슬롯이 이미지일 때 — 정사각형 비율, 카드 라운딩 동기화 */
-  [data-part="shop-page"] [data-emphasis="raised"] > p:first-child {
+  [data-part="shop-page"] [data-variant="raised"] > p:first-child {
     margin: 0; padding: 0;
   }
-  [data-part="shop-page"] [data-emphasis="raised"] > p:first-child > img {
+  [data-part="shop-page"] [data-variant="raised"] > p:first-child > img {
     width: 100%; height: auto; display: block;
     aspect-ratio: 1 / 1; object-fit: cover;
     border-radius: ${radius('md')};

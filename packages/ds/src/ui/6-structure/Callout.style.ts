@@ -17,8 +17,8 @@ export const cssCallout = () => css`
     line-height: 1.5;
     border: 1px solid transparent;
   }
-  aside[data-part="callout"][data-tone="info"]    { ${toneTint('accent', 8)} }
-  aside[data-part="callout"][data-tone="success"] { ${toneTint('success', 8)} }
-  aside[data-part="callout"][data-tone="warning"] { ${toneTint('warning', 10)} }
-  aside[data-part="callout"][data-tone="danger"]  { ${toneTint('danger', 10)} }
+  aside[data-part="callout"][data-variant="info"]    { ${toneTint('accent', 8)} }
+  aside[data-part="callout"][data-variant="success"] { ${toneTint('success', 8)} }
+  aside[data-part="callout"][data-variant="warning"] { ${toneTint('warning', 10)} }
+  aside[data-part="callout"][data-variant="danger"]  { ${toneTint('danger', 10)} }
 `

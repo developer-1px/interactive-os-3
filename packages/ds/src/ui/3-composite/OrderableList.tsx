@@ -8,7 +8,7 @@ import { ROOT, getChildren, type ControlProps } from '../../headless/types'
  * OrderableList 가 정해진 시각으로 행을 그린다:
  *   primary    필수 — 메인 라벨
  *   secondary  보조 — 시각·메타 단어 (small)
- *   meta       우측 — mark[data-tone] 등 caller 가 만들어 넘기는 ReactNode
+ *   meta       우측 — mark[data-variant] 등 caller 가 만들어 넘기는 ReactNode
  *   badge      좌측 강조 — NEW 등 caller 가 만들어 넘기는 ReactNode
  *
  * 키보드: 드래그 핸들 button focus 후 ArrowUp/ArrowDown 으로 인접 reorder 가 발생한다.

@@ -18,9 +18,9 @@ export const cssHighlightMark = () => css`
     user-select: none;
     vertical-align: middle;
   }
-  mark[data-tone="info"]    { ${toneTint('accent', 10)} }
-  mark[data-tone="success"] { ${toneTint('success', 10)} }
-  mark[data-tone="warning"] { ${toneTint('warning', 10)} }
-  mark[data-tone="danger"]  { ${toneTint('danger', 10)} }
-  mark[data-tone="neutral"] { color: ${text('subtle')}; background: ${surface('muted')}; }
+  mark[data-variant="info"]    { ${toneTint('accent', 10)} }
+  mark[data-variant="success"] { ${toneTint('success', 10)} }
+  mark[data-variant="warning"] { ${toneTint('warning', 10)} }
+  mark[data-variant="danger"]  { ${toneTint('danger', 10)} }
+  mark[data-variant="default"] { color: ${text('subtle')}; background: ${surface('muted')}; }
 `

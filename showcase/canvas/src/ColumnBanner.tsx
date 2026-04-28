@@ -9,7 +9,7 @@
  *   - typography-only — 카드 wrapper · 배경 fill · 아이콘 ❌
  *
  * 셀렉터:
- *   [data-part="canvas-column-banner"]          root (data-tone 으로 색)
+ *   [data-part="canvas-column-banner"]          root (data-variant 으로 색)
  *   [data-part="canvas-column-banner-eyebrow"]  "L0 — TIER" mono uppercase + tier 배지
  *   [data-part="canvas-column-banner-tier"]     tier 배지 (small pill, 색조)
  *   [data-part="canvas-column-banner-title"]    display title
@@ -28,12 +28,12 @@ type Props = {
   /** 보조 설명 단락 */
   hint?: ReactNode
   /** atomic-design 단계 색상. 기본 neutral. */
-  tone?: ColumnTone
+  variant?: ColumnTone
 }
 
 export function ColumnBanner({ tier, title, hint, tone = 'neutral' }: Props) {
   return (
-    <header data-part="canvas-column-banner" data-tone={tone}>
+    <header data-part="canvas-column-banner" data-variant={tone}>
       <div data-part="canvas-column-banner-eyebrow">
         <span data-part="canvas-column-banner-tier">{tier}</span>
       </div>

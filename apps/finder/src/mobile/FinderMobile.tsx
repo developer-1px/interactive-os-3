@@ -198,7 +198,7 @@ function FilesSwiper({
           </header>
 
           <aside data-part="finder-tiktok-bottom" aria-label={`${f.name} 정보`}>
-            <mark data-tone="info">{(f.ext ?? 'file').toUpperCase()}</mark>
+            <mark data-variant="info">{(f.ext ?? 'file').toUpperCase()}</mark>
             {f.size != null && <small>{formatSize(f.size)}</small>}
             {f.mtime && <small>{formatDate(f.mtime)}</small>}
             <small title={f.path}>{f.path}</small>

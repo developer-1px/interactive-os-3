@@ -56,15 +56,15 @@ export const cssLayout = () => css`
   [data-flow="wide"]    { gap: ${pad(4)}; align-items: stretch; }
 
   /* ── emphasis — surface + radius + padding bundle ────── */
-  [data-emphasis="flat"]    { padding: ${pad(2)}; }
-  [data-emphasis="raised"]  {
+  [data-variant="flat"]    { padding: ${pad(2)}; }
+  [data-variant="raised"]  {
     ${grouping(1)}
     border-radius: ${radius('md')};
     padding: ${pad(3)};
   }
   /* mobile glass override — frosted card. desktop 외형은 위 base 가 유지. */
   @media (hover: none) and (pointer: coarse) {
-    [data-emphasis="raised"] {
+    [data-variant="raised"] {
       background: color-mix(in oklch, Canvas 75%, transparent);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
               backdrop-filter: blur(24px) saturate(180%);
@@ -72,12 +72,12 @@ export const cssLayout = () => css`
       box-shadow: ${elev(2)};
     }
   }
-  [data-emphasis="sunk"]    {
+  [data-variant="sunk"]    {
     background: ${surface('muted')};
     border-radius: ${radius('md')};
     padding: ${pad(3)};
   }
-  [data-emphasis="callout"] {
+  [data-variant="callout"] {
     border: ${hairlineWidth()} solid ${accent()};
     border-radius: ${radius('sm')};
     padding: ${pad(3)};
@@ -87,9 +87,9 @@ export const cssLayout = () => css`
      Renderer가 ROOT의 직속 children에 data-page-root를 붙인다.
      기존 emphasis padding(2/3)과 같은 스케일로 모든 페이지가 화면 가장자리에 붙지 않게.
      모바일은 좁아 가독을 위해 한 단계 축소. */
-  [data-page-root]:not([data-emphasis]) { padding: ${pad(3)}; }
+  [data-page-root]:not([data-variant]) { padding: ${pad(3)}; }
   @media (max-width: ${SHELL_MOBILE_MAX}) {
-    [data-page-root]:not([data-emphasis]) { padding: ${pad(2)}; }
+    [data-page-root]:not([data-variant]) { padding: ${pad(2)}; }
   }
 
   /* ── Main content width policy — single-column page-root ────────

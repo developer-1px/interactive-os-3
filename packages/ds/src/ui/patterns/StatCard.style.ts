@@ -9,7 +9,7 @@ import { font, weight, pad } from '../../tokens/palette'
  */
 export const cssStatCard = () => css`
   /* alert tone — 카드 root 강조 */
-  article[data-part="card"][data-card="stat"][data-tone="alert"] {
+  article[data-part="card"][data-card="stat"][data-variant="danger"] {
     border: ${hairlineWidth()} solid ${statusTint('danger', 'border')};
     background: ${statusTint('danger', 'soft')};
   }

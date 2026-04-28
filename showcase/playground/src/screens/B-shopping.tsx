@@ -57,7 +57,7 @@ const Shop_Cart = defineScreen({
       <Body>
         <ProductCard image={sampleImg('kbd')} title="Mechanical Keyboard" brand="Acme" price={189000} rating={4.6} reviews={128} />
         <ProductCard image={sampleImg('mouse')} title="Wireless Mouse" brand="LogiTec" price={59000} rating={4.4} reviews={420} />
-        <Callout tone="success">5만원 이상 무료 배송 적용</Callout>
+        <Callout variant="success">5만원 이상 무료 배송 적용</Callout>
         <Row flow="split">
           <strong>합계</strong>
           <strong style={type.amount}>₩248,000</strong>
@@ -82,7 +82,7 @@ const Shop_Empty = defineScreen({
     >
       <Body>
         <EmptyState title="장바구니가 비었습니다" description="둘러보기에서 마음에 드는 상품을 담아보세요." />
-        <Button data-emphasis="primary" style={{ alignSelf: 'center' }}>둘러보기</Button>
+        <Button data-variant="primary" style={{ alignSelf: 'center' }}>둘러보기</Button>
       </Body>
     </Phone>
   ),

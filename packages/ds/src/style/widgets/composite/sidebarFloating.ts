@@ -142,7 +142,7 @@ export const cssSidebarFloating = () => css`
     /* 경계는 border 대신 soft shadow — Apple HIG / Material 3 elevation 패턴.
        "raised" emphasis 가진 카드성 surface만 1px ring + 가벼운 drop으로 떠 보이게.
        hairline ring(4% alpha)이 sub-pixel 흐림 없이 "옆 표면과 분리"를 표현. */
-    [data-emphasis="raised"],
+    [data-variant="raised"],
     article[data-flow="prose"],
     [popover][role="dialog"][data-part="popover"],
     dialog:not([data-ds-sheet]) {

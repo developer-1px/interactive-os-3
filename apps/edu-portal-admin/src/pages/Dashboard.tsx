@@ -82,7 +82,7 @@ export function Dashboard() {
       pclRange: { id: 'pclRange', data: { type: 'Text', variant: 'strong', content: PERIOD_RANGE[period] } },
       pclBadge: { id: 'pclBadge', data: {
         type: 'Ui', component: 'Badge',
-        props: { tone: 'info', children: PERIOD_CMP[period] },
+        props: { variant: 'info', children: PERIOD_CMP[period] },
       } },
 
       /* ── KPI (heading 없음 — 원본 충실) ───────────────────────── */
@@ -97,10 +97,10 @@ export function Dashboard() {
         props: {
           caption: '단위: 수강 신청 수 (명)',
           data: fromList([
-            { label: '개발자',   value: 312, pct: 100, tone: 'info' },
-            { label: '엔지니어', value: 228, pct:  73, tone: 'success' },
-            { label: '보안',     value: 138, pct:  44, tone: 'danger' },
-            { label: 'AI',       value: 126, pct:  40, tone: 'warning' },
+            { label: '개발자',   value: 312, pct: 100, variant: 'info' },
+            { label: '엔지니어', value: 228, pct:  73, variant: 'success' },
+            { label: '보안',     value: 138, pct:  44, variant: 'danger' },
+            { label: 'AI',       value: 126, pct:  40, variant: 'warning' },
           ]),
         },
       } },
@@ -119,9 +119,9 @@ export function Dashboard() {
       } },
       dropActions: { id: 'dropActions', data: { type: 'Row', flow: 'cluster' } },
       dropLegend: { id: 'dropLegend', data: { type: 'Row', flow: 'cluster' } },
-      dropLegDanger:  { id: 'dropLegDanger',  data: { type: 'Ui', component: 'LegendDot', props: { tone: 'danger',  children: '≥40% 위험' } } },
-      dropLegWarning: { id: 'dropLegWarning', data: { type: 'Ui', component: 'LegendDot', props: { tone: 'warning', children: '20–39% 주의' } } },
-      dropLegSuccess: { id: 'dropLegSuccess', data: { type: 'Ui', component: 'LegendDot', props: { tone: 'success', children: '<20% 양호' } } },
+      dropLegDanger:  { id: 'dropLegDanger',  data: { type: 'Ui', component: 'LegendDot', props: { variant: 'danger',  children: '≥40% 위험' } } },
+      dropLegWarning: { id: 'dropLegWarning', data: { type: 'Ui', component: 'LegendDot', props: { variant: 'warning', children: '20–39% 주의' } } },
+      dropLegSuccess: { id: 'dropLegSuccess', data: { type: 'Ui', component: 'LegendDot', props: { variant: 'success', children: '<20% 양호' } } },
       dropSort: { id: 'dropSort', data: {
         type: 'Ui', component: 'Select',
         props: { 'aria-label': '정렬', defaultValue: 'rate-desc' },
@@ -242,13 +242,13 @@ function kpiNodes() {
   // 이모지 아이콘 → lucide 토큰으로 치환. StatCard.icon은 ReactNode라 span[data-icon]으로 전달.
   const items: Array<{
     key: string; kpiKey: keyof typeof kpi; term: string; iconToken: string;
-    changeDir: 'up' | 'down'; tone?: 'alert'; topBadge?: string;
+    changeDir: 'up' | 'down'; variant?: 'danger'; topBadge?: string;
   }> = [
     { key: 'totalVideos', kpiKey: 'totalVideos', term: '전체 영상',  iconToken: 'video',       changeDir: 'up', topBadge: '누적' },
     { key: 'enrolled',    kpiKey: 'enrolled',    term: '수강 신청',  iconToken: 'users',       changeDir: 'up' },
     { key: 'completion',  kpiKey: 'completion',  term: '평균 완료율', iconToken: 'badge-check', changeDir: 'up' },
     { key: 'rating',      kpiKey: 'rating',      term: '평균 별점',   iconToken: 'star',        changeDir: 'down' },
-    { key: 'dropout',     kpiKey: 'dropout',     term: '평균 이탈율', iconToken: 'door-open',   changeDir: 'down', tone: 'alert' },
+    { key: 'dropout',     kpiKey: 'dropout',     term: '평균 이탈율', iconToken: 'door-open',   changeDir: 'down', variant: 'danger' },
   ]
   const out: Record<string, { id: string; data: Record<string, unknown> }> = {}
   for (const it of items) {
@@ -261,8 +261,8 @@ function kpiNodes() {
           label: it.term, value: v.value, sub: v.sub, change: v.change,
           changeDir: it.changeDir,
           icon: <span data-icon={it.iconToken} aria-hidden="true" />,
-          tone: it.tone ?? 'normal',
-          topBadge: it.topBadge ? { tone: 'info', content: it.topBadge } : undefined,
+          variant: it.variant ?? 'normal',
+          topBadge: it.topBadge ? { variant: 'info', content: it.topBadge } : undefined,
           'aria-label': it.term,
         },
       },
@@ -273,19 +273,19 @@ function kpiNodes() {
 
 function levelRowNodes() {
   type Tone = 'success' | 'warning' | 'danger'
-  const levels: Array<{ label: string; value: number; tone: Tone }> = [
-    { label: '초급', value: 81, tone: 'success' },
-    { label: '중급', value: 67, tone: 'warning' },
-    { label: '고급', value: 52, tone: 'danger' },
+  const levels: Array<{ label: string; value: number; variant: Tone }> = [
+    { label: '초급', value: 81, variant: 'success' },
+    { label: '중급', value: 67, variant: 'warning' },
+    { label: '고급', value: 52, variant: 'danger' },
   ]
   const out: Record<string, { id: string; data: Record<string, unknown> }> = {}
-  for (const { label, value, tone } of levels) {
+  for (const { label, value, variant } of levels) {
     out[`lr-${label}`] = { id: `lr-${label}`, data: { type: 'Row', flow: 'cluster' } }
     out[`ll-${label}`] = {
       id: `ll-${label}`,
       data: {
         type: 'Ui', component: 'Badge',
-        props: { tone, children: label },
+        props: { variant, children: label },
         width: 56,
       },
     }
@@ -322,7 +322,7 @@ function videoRowNodes(prefix: string) {
       data: { type: 'Ui', component: 'DataGridRow' },
     }
     const levelTone = v.level === '초급' ? 'success' : v.level === '중급' ? 'warning' : 'danger'
-    const statusTone = v.status === '게시 중' ? 'success' : v.status === '임시저장' ? 'neutral' : v.status === '예약' ? 'info' : 'neutral'
+    const statusTone = v.status === '게시 중' ? 'success' : v.status === '임시저장' ? 'default' : v.status === '예약' ? 'info' : 'default'
     const completionCell = v.completion == null
       ? '—'
       : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -330,17 +330,17 @@ function videoRowNodes(prefix: string) {
           <small>{v.completion}%</small>
         </span>
     const roleChips = <span style={{ display: 'inline-flex', gap: 4, flexWrap: 'wrap' }}>
-      {v.roles.map((r) => <Badge key={r} tone="neutral">{r}</Badge>)}
+      {v.roles.map((r) => <Badge key={r} variant="default">{r}</Badge>)}
     </span>
     const cells: Array<[string, unknown]> = [
       [`thumb`, <span aria-hidden="true" data-ds-thumb>🎬</span>],
       [`title`, <>{v.title}<br /><small>{v.duration} · {v.tags.join(', ')}</small></>],
-      [`level`, <Badge tone={levelTone}>{v.level}</Badge>],
+      [`level`, <Badge variant={levelTone}>{v.level}</Badge>],
       [`roles`, roleChips],
       [`enrolled`, v.enrolled],
       [`completion`, completionCell],
       [`rating`, v.rating == null ? '—' : <span data-icon="star" aria-label={`별점 ${v.rating}`}>{v.rating}</span>],
-      [`status`, <Badge tone={statusTone}>{v.status}</Badge>],
+      [`status`, <Badge variant={statusTone}>{v.status}</Badge>],
       [`createdAt`, v.createdAt],
     ]
     for (const [key, content] of cells) {
@@ -376,11 +376,11 @@ function dropoutRowNodes(goEdit: (id: string) => void) {
     </span>
     const cells: Array<[string, unknown]> = [
       [`title`, r.title],
-      [`level`, <Badge tone={levelTone}>{r.level}</Badge>],
+      [`level`, <Badge variant={levelTone}>{r.level}</Badge>],
       [`enrolled`, r.enrolled],
       [`dropouts`, r.dropouts],
       [`rate`, rateCell],
-      [`risk`, <Badge tone={r.risk}>{r.riskLabel}</Badge>],
+      [`risk`, <Badge variant={r.risk}>{r.riskLabel}</Badge>],
       [`action`, <button type="button" onClick={() => goEdit(r.id)}>수정</button>],
     ]
     for (const [key, content] of cells) {

@@ -33,7 +33,7 @@ export const StickyAction = ({ children }: { children: ReactNode }) => (
 )
 
 export const PrimaryButton = ({ children }: { children: ReactNode }) => (
-  <Button data-emphasis="primary" style={fullW}>{children}</Button>
+  <Button data-variant="primary" style={fullW}>{children}</Button>
 )
 
 export const sampleImg = (seed: string) => `https://picsum.photos/seed/${seed}/320/320`

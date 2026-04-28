@@ -100,7 +100,7 @@ function BarChartDemo() {
         { label: 'NCA', value: '48%', pct: 48, tone: 'success' },
         { label: 'NCP', value: '30%', pct: 30, tone: 'info' },
         { label: 'NCE', value: '15%', pct: 15, tone: 'warning' },
-        { label: 'ETC', value: '7%',  pct:  7, tone: 'neutral' },
+        { label: 'ETC', value: '7%',  pct:  7, tone: 'default' },
       ])}
     />
   )
@@ -128,8 +128,8 @@ function CourseCardDemo() {
       abbr="NCA"
       name="Naver Cloud Associate"
       desc="입문자를 위한 클라우드 기초"
-      tone="success"
-      meta={<Badge tone="info">입문 · 영상 24개</Badge>}
+      variant="success"
+      meta={<Badge variant="info">입문 · 영상 24개</Badge>}
       footer="최종 수정 2일 전"
     />
   )
@@ -141,7 +141,7 @@ function RoleCardDemo() {
       icon={<span data-icon="code" aria-hidden />}
       name="프론트엔드 엔지니어"
       desc="UI 구현 + 시스템 설계"
-      meta={<Badge tone="success">활성</Badge>}
+      meta={<Badge variant="success">활성</Badge>}
       draggable={false}
     />
   )
@@ -150,11 +150,11 @@ function RoleCardDemo() {
 function BadgeDemo() {
   return (
     <Row flow="cluster">
-      <Badge tone="info">info</Badge>
-      <Badge tone="success">success</Badge>
-      <Badge tone="warning">warning</Badge>
-      <Badge tone="danger">danger</Badge>
-      <Badge tone="neutral">neutral</Badge>
+      <Badge variant="info">info</Badge>
+      <Badge variant="success">success</Badge>
+      <Badge variant="warning">warning</Badge>
+      <Badge variant="danger">danger</Badge>
+      <Badge variant="neutral">neutral</Badge>
     </Row>
   )
 }
@@ -162,10 +162,10 @@ function BadgeDemo() {
 function LegendDotDemo() {
   return (
     <Row flow="cluster">
-      <LegendDot tone="info">조회</LegendDot>
-      <LegendDot tone="success">완료</LegendDot>
-      <LegendDot tone="warning">대기</LegendDot>
-      <LegendDot tone="danger">오류</LegendDot>
+      <LegendDot variant="info">조회</LegendDot>
+      <LegendDot variant="success">완료</LegendDot>
+      <LegendDot variant="warning">대기</LegendDot>
+      <LegendDot variant="danger">오류</LegendDot>
     </Row>
   )
 }

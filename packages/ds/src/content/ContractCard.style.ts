@@ -43,9 +43,9 @@ export const cssContractCard = () => css`
     display: inline-block;
     inline-size: 0.5em; block-size: 0.5em; border-radius: ${radius('pill')};
   }
-  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-tone="good"]::before { background: ${status('success')}; }
-  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-tone="warn"]::before { background: ${status('warning')}; }
-  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-tone="bad"]::before  { background: ${status('danger')}; }
+  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-variant="success"]::before { background: ${status('success')}; }
+  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-variant="warning"]::before { background: ${status('warning')}; }
+  article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > [data-badge][data-variant="danger"]::before  { background: ${status('danger')}; }
 
   /* role / caption (caption-level heading): 평소 숨김. */
   article[data-part="card"][data-card="contract"] > [data-slot="title"] > header > code,

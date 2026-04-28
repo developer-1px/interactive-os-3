@@ -204,10 +204,10 @@ export function PaletteSection(): ReactNode {
     href: `#${g.category}`,
   }))
   return (
-    <section data-part="canvas-palette-column" data-tone="neutral">
+    <section data-part="canvas-palette-column" data-variant="default">
       <ColumnBanner
         tier="L0"
-        tone="neutral"
+        variant="neutral"
         title="Tokens"
         hint="palette = raw scale. 인자 = 숫자/슬롯 인덱스. semantic role 토큰은 Foundations 으로."
       />

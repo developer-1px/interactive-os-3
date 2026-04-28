@@ -79,7 +79,7 @@ export function FeedPost({
   return (
     <Card
       data-card="feed-post"
-      data-emphasis="raised"
+      data-variant="raised"
       aria-label={author}
       slots={{
         title: (

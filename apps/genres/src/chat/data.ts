@@ -38,8 +38,8 @@ export const MEMBERS: Member[] = [
 export const statusLabel: Record<MemberStatus, string> = {
   online: '온라인', away: '자리비움', offline: '오프라인',
 }
-export const statusTone: Record<MemberStatus, 'success' | 'warning' | 'neutral'> = {
-  online: 'success', away: 'warning', offline: 'neutral',
+export const statusTone: Record<MemberStatus, 'success' | 'warning' | 'default'> = {
+  online: 'success', away: 'warning', offline: 'default',
 }
 
 export const ACTS = [['aPin','핀','pin'],['aSearch','검색','search'],['aInfo','정보','info']] as const

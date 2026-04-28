@@ -3,7 +3,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 export type CalloutTone = 'info' | 'success' | 'warning' | 'danger'
 
 type CalloutProps = ComponentPropsWithoutRef<'aside'> & {
-  tone?: CalloutTone
+  variant?: CalloutTone
   children: ReactNode
 }
 
@@ -18,7 +18,7 @@ export function Callout({ tone = 'info', children, ...rest }: CalloutProps) {
       // eslint-disable-next-line no-restricted-syntax
       role={role}
       data-part="callout"
-      data-tone={tone}
+      data-variant={tone}
       {...rest}
     >
       {children}

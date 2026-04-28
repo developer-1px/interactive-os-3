@@ -219,13 +219,13 @@ export const themeCreatorStyles = `
     display: flex;
     gap: calc(var(--ds-space) * 2);
   }
-  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="primary"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-variant="primary"] {
     background: var(--ds-accent);
     color: var(--ds-accent-on);
     padding: calc(var(--ds-space) * 2) calc(var(--ds-space) * 4);
     border-radius: var(--ds-radius-sm);
   }
-  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-emphasis="secondary"] {
+  [data-part="theme-creator"] article[aria-label="Sample card"] button[data-variant="secondary"] {
     background: var(--ds-bg);
     border: 1px solid var(--ds-border);
     padding: calc(var(--ds-space) * 2) calc(var(--ds-space) * 4);

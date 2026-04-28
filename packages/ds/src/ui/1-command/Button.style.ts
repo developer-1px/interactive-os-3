@@ -16,7 +16,7 @@ import { weight, pad } from '../../tokens/palette'
  * 3. Ghost — 이미 state.ts base가 주는 기본 (transparent bg + controlBox).
  *    variant로 옵트인 없음 — 모든 button은 2번에 기본 해당.
  *
- * 메모: Primary 분기를 data-tone이나 variant prop이 아닌 ARIA context로 결정 →
+ * 메모: Primary 분기를 data-variant이나 variant prop이 아닌 ARIA context로 결정 →
  * "페이지의 주 행동은 actions 영역에 둔다"는 IA 규약이 자연스레 강제된다.
  */
 export const cssButton = () => css`

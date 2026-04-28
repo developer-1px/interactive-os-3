@@ -12,8 +12,8 @@ export const cssLegendDot = () => css`
     border-radius: ${radius('pill')};
     background: currentColor;
   }
-  [data-part="legend-dot"][data-tone="info"]    { color: ${accent()}; }
-  [data-part="legend-dot"][data-tone="success"] { color: ${status('success')}; }
-  [data-part="legend-dot"][data-tone="warning"] { color: ${status('warning')}; }
-  [data-part="legend-dot"][data-tone="danger"]  { color: ${status('danger')}; }
+  [data-part="legend-dot"][data-variant="info"]    { color: ${accent()}; }
+  [data-part="legend-dot"][data-variant="success"] { color: ${status('success')}; }
+  [data-part="legend-dot"][data-variant="warning"] { color: ${status('warning')}; }
+  [data-part="legend-dot"][data-variant="danger"]  { color: ${status('danger')}; }
 `

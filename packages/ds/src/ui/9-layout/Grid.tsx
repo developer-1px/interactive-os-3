@@ -8,7 +8,7 @@ export type GridCols = 1 | 2 | 3 | 4 | 6 | 9 | 12
 export type GridProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   cols?: GridCols
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
   children?: ReactNode
 }
 
@@ -22,7 +22,7 @@ export function Grid({ cols, flow, emphasis, children, ...rest }: GridProps) {
       data-ds="Grid"
       data-cols={cols}
       data-flow={flow}
-      data-emphasis={emphasis}
+      data-variant={emphasis}
       {...rest}
     >
       {children}

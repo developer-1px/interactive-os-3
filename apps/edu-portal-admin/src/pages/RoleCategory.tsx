@@ -55,7 +55,7 @@ function roleCardNodes(list: RoleCategoryT[], toggle: (id: string) => void) {
           icon: c.icon,
           name: c.name,
           desc: c.desc,
-          meta: <mark data-tone="info">영상 {c.videoIds.length}개</mark>,
+          meta: <mark data-variant="info">영상 {c.videoIds.length}개</mark>,
           actions: (
             <>
               <Switch

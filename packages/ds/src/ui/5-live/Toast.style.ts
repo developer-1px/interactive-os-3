@@ -39,10 +39,10 @@ export const cssToast = () => css`
     padding: ${pad(0.5)};
     line-height: 1;
   }
-  [data-part="toast"][data-tone="info"]    { border-color: ${accent()}; }
-  [data-part="toast"][data-tone="success"] { border-color: ${status('success')}; }
-  [data-part="toast"][data-tone="warning"] { border-color: ${status('warning')}; }
-  [data-part="toast"][data-tone="danger"]  { border-color: ${status('danger')}; }
+  [data-part="toast"][data-variant="info"]    { border-color: ${accent()}; }
+  [data-part="toast"][data-variant="success"] { border-color: ${status('success')}; }
+  [data-part="toast"][data-variant="warning"] { border-color: ${status('warning')}; }
+  [data-part="toast"][data-variant="danger"]  { border-color: ${status('danger')}; }
   @keyframes ds-toast-in {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: none; }

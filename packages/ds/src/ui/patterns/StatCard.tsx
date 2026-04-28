@@ -15,27 +15,27 @@ type StatCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
   /** 변화 방향 — entity/statCard.ts 가 trending-up/down 아이콘을 mask로 주입 */
   changeDir?: 'up' | 'down'
   /** 누적/신규 같은 미니 배지 */
-  topBadge?: { tone?: BadgeTone; content: ReactNode }
+  topBadge?: { variant?: BadgeTone; content: ReactNode }
   /** 카드 전체 강조 (이탈율 같은 alert 카드) */
-  tone?: 'normal' | 'alert'
+  variant?: 'normal' | 'danger'
   /** lucide data-icon span 등 아이콘 노드 — 이모지 금지 */
   icon?: ReactNode
 }
 
 export function StatCard({
-  label, value, sub, change, changeDir, topBadge, tone = 'normal', icon, ...rest
+  label, value, sub, change, changeDir, topBadge, variant = 'normal', icon, ...rest
 }: StatCardProps) {
   return (
     <Card
       data-card="stat"
-      data-tone={tone}
+      data-variant={variant}
       slots={{
         title: (
           <header>
             <dl>
               <dt>
                 {label}
-                {topBadge && <Badge tone={topBadge.tone ?? 'neutral'}>{topBadge.content}</Badge>}
+                {topBadge && <Badge variant={topBadge.variant ?? 'default'}>{topBadge.content}</Badge>}
               </dt>
             </dl>
             {icon && <span aria-hidden="true">{icon}</span>}

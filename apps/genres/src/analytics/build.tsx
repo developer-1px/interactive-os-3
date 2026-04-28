@@ -20,7 +20,7 @@ export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {
         props: {
           label: k.label, value: k.value, change: k.change, changeDir: k.dir,
           icon: <span data-icon={k.icon} aria-hidden="true" />,
-          tone: k.tone ?? 'normal', 'aria-label': k.label,
+          variant: k.variant ?? 'normal', 'aria-label': k.label,
         },
       } }])),
       chartsGrid: { id: 'chartsGrid', data: { type: 'Grid', cols: 2, flow: 'form' } },

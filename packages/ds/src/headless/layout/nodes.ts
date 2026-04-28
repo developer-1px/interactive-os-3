@@ -61,18 +61,18 @@ export interface CommonNodeData extends ItemPlacement {
 export interface RowNode extends CommonNodeData {
   type: 'Row'
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 export interface ColumnNode extends CommonNodeData {
   type: 'Column'
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 export interface GridNode extends CommonNodeData {
   type: 'Grid'
   cols?: GridCols
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
   /** Card 슬롯 row track owner — 자식 article[data-part="card"]가 subgrid로 상속받는다. */
   cardGrid?: boolean
 }
@@ -92,25 +92,25 @@ export interface SplitNode extends CommonNodeData {
 export interface AsideNode extends CommonNodeData {
   type: 'Aside'
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 /** Page main landmark. Renders <main role=main>. 페이지당 1개. */
 export interface MainNode extends CommonNodeData {
   type: 'Main'
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 /** Navigation landmark. Renders <nav role=navigation>. */
 export interface NavNode extends CommonNodeData {
   type: 'Nav'
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 export interface SectionNode extends CommonNodeData {
   type: 'Section'
   heading?: { variant?: TextVariant; content: string }
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
 }
 export interface HeaderNode extends CommonNodeData {
   type: 'Header'

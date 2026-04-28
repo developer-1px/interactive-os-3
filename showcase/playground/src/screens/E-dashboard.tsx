@@ -31,7 +31,7 @@ const Dash_Overview = defineScreen({
         />
         <Row flow="cluster" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
           <StatCard label="MAU" value="12,438" change="+8.2%" changeDir="up" />
-          <StatCard label="Errors" value="3.4%" change="+2.1%" changeDir="up" tone="alert" />
+          <StatCard label="Errors" value="3.4%" change="+2.1%" changeDir="up" variant="alert" />
           <StatCard label="Revenue" value="₩48.2M" change="+12%" changeDir="up" />
           <StatCard label="Latency" value="120ms" change="-8ms" changeDir="down" />
         </Row>

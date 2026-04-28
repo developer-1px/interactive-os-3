@@ -218,8 +218,8 @@ export function SemanticSection() {
   ]
   const tailNumStart = headFrames.length + restGroups.length + 1
   return (
-    <section data-part="canvas-semantic-column" data-tone={c.tone}>
-      <ColumnBanner tier={c.tier} tone={c.tone} title={c.title} hint={c.hint} />
+    <section data-part="canvas-semantic-column" data-variant={c.tone}>
+      <ColumnBanner tier={c.tier} variant={c.tone} title={c.title} hint={c.hint} />
       <CanvasTokensToc items={tocItems} />
       <SectionFrame num="01" id="color" title="Color" subtitle="foundations/color">
         <CanvasTokensColor />
@@ -247,8 +247,8 @@ export const BucketSection = memo(function BucketSection({ bucket }: { bucket: B
   const c = DIVIDER[bucket]
   const lanes = lanesByBucket[bucket]
   return (
-    <section data-part={`canvas-bucket-${bucket.toLowerCase()}-column`} data-tone={c.tone}>
-      <ColumnBanner tier={c.tier} tone={c.tone} title={c.title} hint={c.hint} />
+    <section data-part={`canvas-bucket-${bucket.toLowerCase()}-column`} data-variant={c.tone}>
+      <ColumnBanner tier={c.tier} variant={c.tone} title={c.title} hint={c.hint} />
       {lanes.map((lane) => renderLane(lane))}
     </section>
   )

@@ -34,7 +34,7 @@ const Profile_Header = defineScreen({
           <Column style={{ alignItems: 'center', flex: 1 }}><strong>312</strong><small style={meta.weak}>following</small></Column>
         </Row>
         <Row flow="cluster">
-          <Button data-emphasis="primary" style={{ flex: 1 }}>팔로우</Button>
+          <Button data-variant="primary" style={{ flex: 1 }}>팔로우</Button>
           <Button style={{ flex: 1 }}>메시지</Button>
         </Row>
         <TabList aria-label="profile section" data={fromList([{ label: 'Posts', selected: true }, { label: 'Replies' }, { label: 'Likes' }])} onEvent={() => {}} />

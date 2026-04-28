@@ -183,7 +183,7 @@ export const cssForm = () => css`
   }
 
   /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */
-  section[data-emphasis="raised"] > :where(h2, h3):first-child {
+  section[data-variant="raised"] > :where(h2, h3):first-child {
     margin: 0 0 ${slot.form.headingMargin};
     padding-bottom: ${pad(2)};
     border-bottom: ${hairlineWidth()} solid ${border()};

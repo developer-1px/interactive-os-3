@@ -2,7 +2,7 @@
  * SectionFrame — page divider 안 lane(section) 단위.
  *
  * 위계 위치: PageDivider(L0/L1/L2/L3) > SectionFrame(◆ Color · Spacing) > Card.
- * 부모 page 의 data-tone(--tone) 을 CSS 상속으로 받아 ◆ 마커·accent rule 에 반영.
+ * 부모 page 의 data-variant(--tone) 을 CSS 상속으로 받아 ◆ 마커·accent rule 에 반영.
  *
  * 셀렉터:
  *   [data-part="canvas-section"]          root

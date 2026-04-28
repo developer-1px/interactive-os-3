@@ -13,6 +13,6 @@ export const card = (p: Product) => [
   [`pbrand-${p.id}`, { id: `pbrand-${p.id}`, data: { type: 'Text', variant: 'small', content: p.brand } }],
   [`prating-${p.id}`,{ id: `prating-${p.id}`,data: { type: 'Text', variant: 'small', content: `★ ${p.rating} · ${p.reviews.toLocaleString()}` } }],
   [`ptags-${p.id}`,  { id: `ptags-${p.id}`,  data: { type: 'Row', flow: 'cluster' } }],
-  ...p.tags.map((t, i) => [`ptag-${p.id}-${i}`, { id: `ptag-${p.id}-${i}`, data: { type: 'Ui', component: 'Badge', props: { tone: 'neutral', children: t } } }]),
+  ...p.tags.map((t, i) => [`ptag-${p.id}-${i}`, { id: `ptag-${p.id}-${i}`, data: { type: 'Ui', component: 'Badge', props: { tone: 'default', children: t } } }]),
   [`pcart-${p.id}`,  { id: `pcart-${p.id}`,  data: { type: 'Ui', component: 'Button', props: { onClick: () => alert(`add ${p.title}`), 'aria-label': `${p.title} 담기` }, content: '장바구니 담기' } }],
 ] as Array<readonly [string, unknown]>

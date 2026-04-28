@@ -5,7 +5,7 @@ import type { Emphasis, Flow } from './Row'
 
 export type ColumnProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   flow?: Flow
-  emphasis?: Emphasis
+  variant?: Emphasis
   children?: ReactNode
 }
 
@@ -18,7 +18,7 @@ export function Column({ flow, emphasis, children, ...rest }: ColumnProps) {
     <div
       data-ds="Column"
       data-flow={flow}
-      data-emphasis={emphasis}
+      data-variant={emphasis}
       {...rest}
     >
       {children}

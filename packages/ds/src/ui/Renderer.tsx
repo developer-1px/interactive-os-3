@@ -96,7 +96,7 @@ function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; 
     <div
       data-ds="Row"
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
@@ -117,7 +117,7 @@ function ColumnView({ page, id, d, pageRoot }: { page: NormalizedData; id: strin
     <div
       data-ds="Column"
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
@@ -139,7 +139,7 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       data-ds="Grid"
       data-cols={d.cols}
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       data-card-grid={d.cardGrid ? '' : undefined}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
@@ -183,7 +183,7 @@ function MainView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
   return (
     <main
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -201,7 +201,7 @@ function NavView({ page, id, d }: { page: NormalizedData; id: string; d: NavNode
   return (
     <nav
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
       data-part={d.roledescription}
@@ -218,7 +218,7 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
   return (
     <aside
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
       data-part={d.roledescription}
@@ -236,7 +236,7 @@ function SectionView({ page, id, d, pageRoot }: { page: NormalizedData; id: stri
   return (
     <section
       data-flow={d.flow}
-      data-emphasis={d.emphasis}
+      data-variant={d.emphasis}
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label && !headingId ? d.label : undefined}
       aria-labelledby={d.labelledBy ?? headingId}

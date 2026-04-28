@@ -22,11 +22,11 @@ export function BarChart({ data, caption, ...rest }: CollectionProps<Extra>) {
       <dl>
         {kids.map((id) => {
           const d = (data.entities[id]?.data ?? {}) as {
-            label?: ReactNode; value?: ReactNode; pct?: number; tone?: string
+            label?: ReactNode; value?: ReactNode; pct?: number; variant?: string
           }
           const pct = Math.max(0, Math.min(100, Number(d.pct) || 0))
           return (
-            <div key={id} data-tone={d.tone ?? 'info'}>
+            <div key={id} data-variant={d.variant ?? 'info'}>
               <dt>{d.label}</dt>
               <dd>
                 <meter value={pct} min={0} max={100} />

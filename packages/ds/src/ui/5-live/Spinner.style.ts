@@ -20,10 +20,10 @@ export const cssSpinner = () => css`
   }
   [data-part="spinner"][data-size="sm"] { inline-size: .875em; block-size: .875em; }
   [data-part="spinner"][data-size="lg"] { inline-size: 1.5em;  block-size: 1.5em; }
-  [data-part="spinner"][data-tone="info"]    { color: ${accent()}; }
-  [data-part="spinner"][data-tone="success"] { color: ${status('success')}; }
-  [data-part="spinner"][data-tone="warning"] { color: ${status('warning')}; }
-  [data-part="spinner"][data-tone="danger"]  { color: ${status('danger')}; }
+  [data-part="spinner"][data-variant="info"]    { color: ${accent()}; }
+  [data-part="spinner"][data-variant="success"] { color: ${status('success')}; }
+  [data-part="spinner"][data-variant="warning"] { color: ${status('warning')}; }
+  [data-part="spinner"][data-variant="danger"]  { color: ${status('danger')}; }
   @keyframes ds-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     [data-part="spinner"] { animation-duration: 2400ms; }

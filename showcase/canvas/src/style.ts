@@ -288,9 +288,9 @@ export const canvasCss = css`
     background: color-mix(in oklab, var(--tone) 5%, transparent);
     border-radius: ${radius('md')};
   }
-  [data-part$="-column"][data-tone="blue"]    { --tone: ${TONE.blue}; }
-  [data-part$="-column"][data-tone="green"]   { --tone: ${TONE.green}; }
-  [data-part$="-column"][data-tone="amber"]   { --tone: ${TONE.amber}; }
+  [data-part$="-column"][data-variant="info"]    { --tone: ${TONE.blue}; }
+  [data-part$="-column"][data-variant="success"]   { --tone: ${TONE.green}; }
+  [data-part$="-column"][data-variant="warning"]   { --tone: ${TONE.amber}; }
 
   /* tier 별 min 폭 + density gradient (L0 dense → L5 spacious).
      min-width 만 — 콘텐츠가 더 크면 컬럼이 따라 자란다 (max-content). 잘림·overflow ❌. */
@@ -327,9 +327,9 @@ export const canvasCss = css`
     padding-bottom: ${pad(4)};
     margin-bottom: ${pad(6)};
   }
-  [data-part="canvas-column-banner"][data-tone="blue"]   { --tone: ${TONE.blue}; }
-  [data-part="canvas-column-banner"][data-tone="green"]  { --tone: ${TONE.green}; }
-  [data-part="canvas-column-banner"][data-tone="amber"]  { --tone: ${TONE.amber}; }
+  [data-part="canvas-column-banner"][data-variant="info"]   { --tone: ${TONE.blue}; }
+  [data-part="canvas-column-banner"][data-variant="success"]  { --tone: ${TONE.green}; }
+  [data-part="canvas-column-banner"][data-variant="warning"]  { --tone: ${TONE.amber}; }
 
   [data-part="canvas-column-banner-eyebrow"] {
     display: inline-flex;

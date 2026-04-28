@@ -33,7 +33,7 @@ export function ProductCard({
   return (
     <Card
       data-card="product"
-      data-emphasis="raised"
+      data-variant="raised"
       slots={{
         preview: <img src={image} alt={typeof title === 'string' ? title : ''} loading="lazy" />,
         title: <strong>{title}</strong>,

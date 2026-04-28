@@ -8,7 +8,7 @@ export type Toast = {
   id: string
   title: ReactNode
   description?: ReactNode
-  tone?: Tone
+  variant?: Tone
   /** ms — 0 으로 두면 자동 닫힘 ❌ (사용자 dismiss 만). */
   duration?: number
   /** 'alert' = 즉각(accessibility-aware); 'status' = polite. default 는 tone 으로 결정. */
@@ -87,7 +87,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
   }, [duration, onDismiss])
 
   return (
-    <li data-part="toast" data-tone={tone} role={ariaRole} aria-live={ariaRole === 'alert' ? 'assertive' : 'polite'}>
+    <li data-part="toast" data-variant={tone} role={ariaRole} aria-live={ariaRole === 'alert' ? 'assertive' : 'polite'}>
       <div data-slot="title">{toast.title}</div>
       {toast.description && <div data-slot="description">{toast.description}</div>}
       <button type="button" data-part="toast-dismiss" aria-label="Dismiss" onClick={onDismiss}>✕</button>

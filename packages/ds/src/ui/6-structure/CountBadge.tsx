@@ -8,7 +8,7 @@ type CountBadgeProps = Omit<ComponentPropsWithoutRef<'span'>, 'children'> & {
   /** dot 형태 (status indicator). */
   dot?: boolean
   /** 의미 토큰. variant 아님. */
-  tone?: CountBadgeTone
+  variant?: CountBadgeTone
   /** 스크린리더용 라벨 — 'N unread' 같은 의미 텍스트. */
   label?: string
 }
@@ -23,7 +23,7 @@ export function CountBadge({ count, dot, tone = 'default', label, ...rest }: Cou
     <span
       data-part="badge"
       aria-label={ariaLabel}
-      data-tone={tone === 'default' ? undefined : tone}
+      data-variant={tone === 'default' ? undefined : tone}
       data-dot={dot ? 'true' : undefined}
       {...rest}
     >

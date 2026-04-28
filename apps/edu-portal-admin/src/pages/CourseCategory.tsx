@@ -80,8 +80,8 @@ function certCardNodes(list: CertCategory[], toggle: (id: string) => void) {
           abbr: c.name,
           name: c.desc.split(' — ')[0] ?? c.desc,
           desc: c.desc.split(' — ')[1] ?? '',
-          tone: toneByLevel[c.level],
-          meta: <mark data-tone="info">{levelLabel[c.level]} · 영상 {c.videoIds.length}개</mark>,
+          variant: toneByLevel[c.level],
+          meta: <mark data-variant="info">{levelLabel[c.level]} · 영상 {c.videoIds.length}개</mark>,
           actions: (
             <>
               <Switch
@@ -109,7 +109,7 @@ function CourseStats({ list }: { list: CertCategory[] }) {
     <dl>
       {list.map((c) => (
         <div key={c.id}>
-          <dt><mark data-tone={tones[c.level]}>{c.name}</mark></dt>
+          <dt><mark data-variant={tones[c.level]}>{c.name}</mark></dt>
           <dd>{c.visible ? `영상 ${c.videoIds.length}개` : '숨김'}</dd>
         </div>
       ))}

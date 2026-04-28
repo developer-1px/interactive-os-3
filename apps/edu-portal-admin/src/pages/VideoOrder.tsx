@@ -186,11 +186,11 @@ function buildListData(items: VideoRow[], now: number): NormalizedData {
         secondary: <>{v.duration} · {v.createdAt}</>,
         meta: (
           <>
-            {v.status !== '게시 중' && <mark data-tone={STATUS_TONE[v.status]}>{v.status}</mark>}
-            <mark data-tone={LEVEL_TONE[v.level]}>{v.level}</mark>
+            {v.status !== '게시 중' && <mark data-variant={STATUS_TONE[v.status]}>{v.status}</mark>}
+            <mark data-variant={LEVEL_TONE[v.level]}>{v.level}</mark>
           </>
         ),
-        badge: isNew(v, now) ? <mark data-tone="info">NEW</mark> : null,
+        badge: isNew(v, now) ? <mark data-variant="info">NEW</mark> : null,
       },
     }
   }

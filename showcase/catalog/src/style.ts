@@ -33,8 +33,8 @@ export const catalogCss = css`
     margin: 0; ${typography('heading')};
     font-variant-numeric: tabular-nums;
   }
-  dl[data-part="catalog-stats"] [data-tone="good"] { color: ${status('success')}; }
-  dl[data-part="catalog-stats"] [data-tone="warn"] { color: ${status('warning')}; }
+  dl[data-part="catalog-stats"] [data-variant="success"] { color: ${status('success')}; }
+  dl[data-part="catalog-stats"] [data-variant="warning"] { color: ${status('warning')}; }
 
   section[data-part="catalog-zone"] {
     display: flex; flex-direction: column; gap: ${pad(3)};
@@ -83,15 +83,15 @@ export const catalogCss = css`
     ${typography('microStrong')};
     background: color-mix(in oklch, var(--ds-fg) 8%, transparent);
   }
-  article[data-part="catalog-card"] > header > [data-badge][data-tone="good"] {
+  article[data-part="catalog-card"] > header > [data-badge][data-variant="success"] {
     background: color-mix(in oklch, ${status('success')} 14%, transparent);
     color: ${status('success')};
   }
-  article[data-part="catalog-card"] > header > [data-badge][data-tone="warn"] {
+  article[data-part="catalog-card"] > header > [data-badge][data-variant="warning"] {
     background: color-mix(in oklch, ${status('warning')} 14%, transparent);
     color: ${status('warning')};
   }
-  article[data-part="catalog-card"] > header > [data-badge][data-tone="bad"] {
+  article[data-part="catalog-card"] > header > [data-badge][data-variant="danger"] {
     background: color-mix(in oklch, ${status('danger')} 14%, transparent);
     color: ${status('danger')};
   }

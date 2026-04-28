@@ -65,12 +65,12 @@ const Form_Validation = defineScreen({
         <Field invalid>
           <FieldLabel>비밀번호</FieldLabel>
           <Input type="password" defaultValue="abc" />
-          <Callout tone="danger">최소 8자 + 숫자 1개 이상 필요</Callout>
+          <Callout variant="danger">최소 8자 + 숫자 1개 이상 필요</Callout>
         </Field>
         <Field required>
           <FieldLabel>닉네임</FieldLabel>
           <Input defaultValue="Yongtae" />
-          <Callout tone="success">사용 가능한 닉네임</Callout>
+          <Callout variant="success">사용 가능한 닉네임</Callout>
         </Field>
       </Body>
       <StickyAction><PrimaryButton>가입</PrimaryButton></StickyAction>

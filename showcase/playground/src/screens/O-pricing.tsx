@@ -41,7 +41,7 @@ const Pricing_Plans = defineScreen({
           title: <Row flow="split" style={{ alignItems: 'center' }}><Heading level="h3">Pro</Heading><Chip label="추천" /></Row>,
           meta: <Price amount="₩9,900" />,
           body: <Column flow="list"><Feat>무제한 프로젝트</Feat><Feat>50GB 저장</Feat><Feat>이메일 지원</Feat><Feat>우선 처리</Feat></Column>,
-          footer: <Button data-emphasis="primary" style={{ inlineSize: '100%' }}>업그레이드</Button>,
+          footer: <Button data-variant="primary" style={{ inlineSize: '100%' }}>업그레이드</Button>,
         }} />
         <Card slots={{
           title: <Heading level="h3">Team</Heading>,

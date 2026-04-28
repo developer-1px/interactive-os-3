@@ -49,7 +49,7 @@ export function ContractCard({
         title: (
           <header>
             <Heading level="h3">{name}</Heading>
-            <span data-badge data-tone={tone}>{badge}</span>
+            <span data-badge data-variant={tone}>{badge}</span>
             {role && <Code>role=&quot;{role}&quot;</Code>}
             <Heading level="caption">{callSites} 소비처</Heading>
           </header>
@@ -65,7 +65,7 @@ export function ContractCard({
           />
         ),
         footer: drift
-          ? <Callout tone="warning">tier 폴더 외부 — 1-status ~ 8-layout 중 하나로 이동</Callout>
+          ? <Callout variant="warning">tier 폴더 외부 — 1-status ~ 8-layout 중 하나로 이동</Callout>
           : null,
       }}
       slotOrder={slotOrder}
