@@ -41,7 +41,7 @@
 - [x] ColorInput         — `<input type="color">` (native picker), aria-disabled 미러, demo 추가. ARIA에 color 전용 role 없음 (de facto 그대로)
 - [x] Slider             — `<input type="range">` (native role=slider + 키보드), aria-disabled 미러, demo 추가
 - [x] Combobox           — role=combobox, aria-expanded/controls/activedescendant/autocomplete + aria-haspopup="listbox" 기본 + aria-disabled 미러
-- [ ] Select             — role=combobox / listbox 패턴
+- [x] Select             — native `<select>` (브라우저 role=combobox + listbox popup), aria-disabled 미러
 
 ### 3-composite
 - [ ] Listbox            — role=listbox, aria-multiselectable, aria-activedescendant
