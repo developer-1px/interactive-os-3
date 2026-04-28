@@ -19,6 +19,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         aria-describedby={describedBy}
         aria-invalid={props['aria-invalid'] ?? field?.invalid ?? undefined}
         aria-required={props['aria-required'] ?? field?.required ?? undefined}
+        aria-disabled={props.disabled || undefined}
+        aria-readonly={props.readOnly || undefined}
       />
     )
   },

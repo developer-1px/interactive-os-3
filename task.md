@@ -35,7 +35,7 @@
 - [x] ToggleButton       — `<button aria-pressed>` data-part="toggle" 제거 (memory hook 위반). 시각은 Button.style 의 `[aria-pressed="true"]` 통합 → ToggleButton.style.ts 폐기
 - [x] Option             — role=option, aria-selected/posinset/setsize, aria-disabled || undefined, 4-slot (icon·label·indicator), demo 보강
 - [x] Input              — type=text, aria-invalid/required (Field context), aria-disabled/readonly 자동 미러, demo 추가
-- [ ] Textarea           — multiline textbox
+- [x] Textarea           — multiline textbox, Field context, aria-disabled/readonly 미러, demo 추가
 - [ ] SearchBox          — role=searchbox
 - [ ] NumberInput        — role=spinbutton, aria-valuenow/min/max
 - [ ] ColorInput         — type=color

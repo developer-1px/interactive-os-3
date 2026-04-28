@@ -4,8 +4,8 @@
 
 ## 기본 자세
 
-- **분류·이름·위계의 정합 출처는 W3C ARIA 단 하나.** Material 3·Radix·FSD·Polaris·Panda 등 다른 de facto 차용 ❌. ARIA 추상 역할 taxonomy(`widget`/`structure`/`window`/`liveregion`) 안에서만 폴더·이름 결정. ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
-- **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** 단 *이름·구조* 가 아니라 *행동* 을 차용. 고민되면 Radix·Base·Ariakit·RAC 최소 2곳 수렴.
+- **분류·이름·위계의 정합 출처는 변하지 않는 W3C/WHATWG spec 만.** 우선순위: 1) **W3C WAI-ARIA + APG** (role taxonomy) → 2) **WHATWG HTML Living Standard** (semantic element 어휘) → 3) **W3C CSS · WCAG** (필요 시). Material 3·Radix·FSD·Polaris·Panda·shadcn 등 라이브러리·DS 차용 ❌ (5~10년 주기로 교체·fork). ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
+- **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** *이름·구조* 가 아니라 *행동* 을 차용 (Radix·Base·Ariakit·RAC 최소 2곳 수렴). 두 축 분리: 이름 = spec, 동작 = lib.
 - **하란 것 이상으로 하지 않는다.** 시키지 않은 리팩토링·추가 기능·예방적 추상화 금지.
 - **코드 양을 늘리려 하지 않는다.** 있는 것으로 해결 가능하면 있는 것으로. 새 파일·새 어휘·새 wrapper 는 마지막 수단.
 
