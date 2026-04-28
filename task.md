@@ -41,30 +41,12 @@ packages/ds/src/ui/
 - [x] Combobox.tsx             ← 3-input
 - [x] Select.tsx               ← 3-input
 
-### 3-composite
-- [ ] Listbox.tsx               ← 4-selection
-- [ ] ListboxGroup.tsx          ← 4-selection
-- [ ] RadioGroup.tsx            ← 4-selection
-- [ ] CheckboxGroup.tsx         ← 4-selection
-- [ ] ToggleGroup.tsx           ← 2-action
-- [ ] SegmentedControl.tsx      ← 4-selection
-- [ ] Menu.tsx                  ← 4-selection
-- [ ] MenuList.tsx              ← 4-selection
-- [ ] MenuGroup.tsx             ← 4-selection
-- [ ] Menubar.tsx               ← 4-selection
-- [ ] Tabs.tsx                  ← 4-selection
-- [ ] Tree.tsx                  ← 4-selection
-- [ ] TreeRow.tsx               ← 5-display
-- [ ] TreeGrid.tsx              ← 5-display
-- [ ] DataGrid.tsx              ← 5-display
-- [ ] DataGridRow.tsx           ← 5-display
-- [ ] GridCell.tsx              ← 5-display
-- [ ] ColumnHeader.tsx          ← 5-display
-- [ ] RowHeader.tsx             ← 5-display
-- [ ] RowGroup.tsx              ← 5-display
-- [ ] Toolbar.tsx               ← 4-selection
-- [ ] OrderableList.tsx         ← 5-display
-- [ ] Columns.tsx               ← 4-selection
+### 3-composite ✅
+- [x] Listbox · ListboxGroup · RadioGroup · CheckboxGroup · ToggleGroup
+- [x] SegmentedControl · Menu · MenuList · MenuGroup · Menubar
+- [x] Tabs · Tree · TreeRow · TreeGrid · DataGrid · DataGridRow
+- [x] GridCell · ColumnHeader · RowHeader · RowGroup · Toolbar
+- [x] OrderableList · Columns
 
 ### 4-window
 - [ ] Dialog.tsx                ← 6-overlay
@@ -128,7 +110,7 @@ packages/ds/src/ui/
 
 1. [x] 1-command
 2. [x] 2-input
-3. [ ] 3-composite
+3. [x] 3-composite
 4. [ ] 4-window
 5. [ ] 5-live
 6. [ ] 6-structure

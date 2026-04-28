@@ -17,8 +17,8 @@
  *
  * collection 종류는 prop으로 분기 (Tree | Listbox). default Tree.
  */
-import { Tree } from '../../ui/4-selection/Tree'
-import { Listbox } from '../../ui/4-selection/Listbox'
+import { Tree } from '../../ui/3-composite/Tree'
+import { Listbox } from '../../ui/3-composite/Listbox'
 import type { SidebarProps } from './types'
 
 export interface SidebarAdminFloatingProps extends SidebarProps {

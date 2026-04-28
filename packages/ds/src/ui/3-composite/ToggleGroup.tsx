@@ -6,7 +6,7 @@ import {
 } from '../../headless/types'
 import { activate, composeAxes, navigate } from '../../headless/axes'
 import { useRoving } from '../../headless/roving/useRoving'
-import { ToggleButton } from './ToggleButton'
+import { ToggleButton } from '../2-input/ToggleButton'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'

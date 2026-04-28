@@ -24,7 +24,7 @@ const Contract_Audit = defineScreen({
       <Body>
         <Row flow="cluster"><Chip label="passing 12" /><Chip label="failing 2" /><Chip label="warn 3" /></Row>
         <ContractCard
-          name="Listbox" file="ds/ui/4-selection/Listbox.tsx" role="listbox"
+          name="Listbox" file="ds/ui/3-composite/Listbox.tsx" role="listbox"
           propsSignature="(data, onEvent, autoFocus?)"
           callSites={14}
           badgeTone="good"
