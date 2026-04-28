@@ -19,8 +19,10 @@
 - [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
 - [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
 - [ ] ToolbarButton      — toolbar 자식, focus roving (demo 추가만; ARIA 점검 미완)
-- [ ] MenuItems          — role=menuitem, aria-haspopup, aria-expanded
-- [ ] RouterLink         — role=link (a), aria-current (demo 미추가 — router context 필요)
+- [x] MenuItem (← MenuItems) — role=menuitem 단수형 정정
+- [ ] RouterLink         — role=link, aria-current (이름 유지 — 6-structure/Link 와 동시 존재. 통합은 후속 task)
+- [x] TreeItem (← TreeRow) — role=treeitem 정정 (was Row 어휘)
+- [x] ProgressBar (6-structure) 폐기 — Progress(5-live)와 role=progressbar 중복
 
 ### 1-command demos
 - [x] Button.demo, ButtonGroup.demo, ToolbarButton.demo

@@ -4,7 +4,7 @@
  *   heading.ts    → headingSize / headingFluid / trackingScale / underlineOffset.
  *   microLabel.ts → micro caption mixin.
  *
- * 구조 분리 — scale.ts (font/weight/tracking/leading) 는 scalar/font.ts 가 SSoT.
+ * raw scale (font/weight/tracking/leading) 의 SSoT 는 scalar/font.ts.
  * widget 이 raw scale 이 필요하면 `from '@p/ds/tokens/scalar'` 명시 import.
  */
 export * from './heading'

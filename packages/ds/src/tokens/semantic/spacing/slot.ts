@@ -37,7 +37,7 @@ export const slot = {
   /** tooltip — small, 마우스 hover. */
   tooltip: { pad: pad(1) },
   /** sidebar nav surface. */
-  sidebar: { pad: pad(2), gap: pad(4), headerPad: pad(2), itemPadY: pad(1.25), itemPadX: pad(2) },
+  sidebar: { pad: pad(2), gap: pad(4), headerPad: pad(2), itemPadY: pad(1.25), itemPadX: pad(2), avatarSize: pad(8) },
   /** auth card — focused container, 일반 카드보다 큰 호흡. */
   auth:    { pad: pad(8), slotGap: pad(6), formGap: pad(5), buttonPadY: pad(2.5), otpGap: pad(1.5) },
   /**
@@ -54,8 +54,8 @@ export const slot = {
   details: { pad: pad(2), summaryPadY: pad(1.5), summaryPadX: pad(2) },
   /** highlightMark — HTML <mark>. */
   mark:    { padX: pad(1.25), gap: pad(0.5) },
-  /** floating action button (FAB). 위치 offset. */
-  fab:     { inset: pad(4) },
+  /** floating action button (FAB). 위치 offset + 박스 치수. */
+  fab:     { inset: pad(4), size: pad(14) },
   /** app shell chrome (titlebar). */
   chrome:  { pad: pad(2), gap: pad(2) },
 

@@ -1,4 +1,4 @@
-import { SHELL_MOBILE_MAX, bg, border, css, hairlineWidth, hierarchy, radius, scrim, size, slot } from '../../../tokens/semantic'
+import { SHELL_MOBILE_MAX, bg, border, css, hairlineWidth, hierarchy, radius, scrim, slot } from '../../../tokens/semantic'
 import { elev } from '../../../tokens/scalar'
 
 /**
@@ -21,8 +21,8 @@ export const cssSidebarFloating = () => css`
     inset-block-end: ${slot.fab.inset};
     inset-inline-start: ${slot.fab.inset};
     z-index: 40;
-    inline-size: ${size.fab};
-    block-size: ${size.fab};
+    inline-size: ${slot.fab.size};
+    block-size: ${slot.fab.size};
     border-radius: ${radius('full')};
     border: ${hairlineWidth()} solid ${border()};
     background: ${bg()};
@@ -42,8 +42,8 @@ export const cssSidebarFloating = () => css`
   /* 뒤로 버튼 — popoverTargetAction="hide"로 popover 닫음. backdrop 탭이 모바일에서
      직관적이지 않으므로 명시적 affordance 제공. */
   [data-ds-floating-nav-back] {
-    inline-size: ${size.avatar};
-    block-size: ${size.avatar};
+    inline-size: ${slot.sidebar.avatarSize};
+    block-size: ${slot.sidebar.avatarSize};
     border: 0;
     background: transparent;
     border-radius: ${radius('md')};
@@ -112,7 +112,7 @@ export const cssSidebarFloating = () => css`
     }
     /* FAB(좌하단 56px + pad(4) inset) 위로 본문이 가리지 않도록 main 끝에 여백 추가 */
     main:not([data-no-mobile-pad]) {
-      padding-block-end: calc(${size.fab} + ${slot.fab.inset} + ${hierarchy.surface});
+      padding-block-end: calc(${slot.fab.size} + ${slot.fab.inset} + ${hierarchy.surface});
     }
     /* article[prose]는 이미 자체 padding-inline 가지고 있어 main의 inline padding과
        이중으로 겹치지 않게 article 안의 inline은 0으로 리셋 */

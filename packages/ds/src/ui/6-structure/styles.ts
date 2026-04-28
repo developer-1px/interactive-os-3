@@ -16,7 +16,6 @@ import { cssTable } from './Table.style'
 import { cssHeading } from './Heading.style'
 import { cssLink } from './Link.style'
 import { cssCode } from './Code.style'
-import { cssProgressBar } from './ProgressBar.style'
 import { cssBreadcrumb } from '../7-landmark/Breadcrumb.style'
 import { cssRovingItem } from './RovingItem.style'
 
@@ -38,7 +37,6 @@ export const partsStyles = () =>
     cssHeading(),
     cssLink(),
     cssCode(),
-    cssProgressBar(),
     cssBreadcrumb(),
     cssRovingItem(),
   ].join('\n')

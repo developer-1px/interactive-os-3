@@ -18,7 +18,7 @@ const Block = ({ children }: { children?: ReactNode }) =>
   createElement(Fragment, null, children)
 import { Prose } from './ui/6-structure/Prose'
 import { CodeBlock } from './ui/6-structure/CodeBlock'
-import { Link } from './ui/1-command/RouterLink'
+import { RouterLink } from './ui/1-command/RouterLink'
 import { Button } from './ui/1-command/Button'
 import { Switch } from './ui/2-input/Switch'
 import { Progress, Meter } from './ui/5-live/Progress'
@@ -76,7 +76,7 @@ export const uiRegistry = {
   // primitive
   Prose:     { component: Prose,     zone: 'primitive' },
   CodeBlock: { component: CodeBlock, zone: 'primitive' },
-  Link:      { component: Link,      zone: 'primitive' },
+  Link:      { component: RouterLink,      zone: 'primitive' },
   // shell — TanStack passthrough
   Outlet: { component: Outlet, zone: 'shell' },
   Block:  { component: Block,  zone: 'primitive' },

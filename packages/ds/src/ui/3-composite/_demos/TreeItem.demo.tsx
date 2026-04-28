@@ -1,9 +1,9 @@
-import { TreeRow } from '../TreeRow'
+import { TreeItem } from '../TreeItem'
 import { GridCell } from '../GridCell'
 export default () => (
   <table role="treegrid">
     <tbody>
-      <TreeRow level={1}><GridCell>Tree row</GridCell></TreeRow>
+      <TreeItem level={1}><GridCell>Tree row</GridCell></TreeItem>
     </tbody>
   </table>
 )

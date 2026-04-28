@@ -1,4 +1,4 @@
-import { font, weight } from './scale'
+import { font, weight } from '../../scalar/font'
 
 /**
  * type — 글자 role 시멘틱. role-scoped semantic (slot/size 와 동형).

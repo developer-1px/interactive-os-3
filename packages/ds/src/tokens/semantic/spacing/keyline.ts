@@ -13,14 +13,12 @@ import { pad } from '../../scalar/space'
 /** @demo type=value fn=tracks */
 export const tracks = '[lead] auto [label] 1fr [trail] auto'
 
-/** @demo type=value fn=gap */
-export const gap = pad(2)
 /** @demo type=value fn=rowGap */
-export const rowGap = gap
+export const rowGap = pad(2)
 /** @demo type=value fn=slotGap */
 export const slotGap = pad(1.5)
 /** @demo type=value fn=containerPad */
-export const containerPad = gap
+export const containerPad = pad(2)
 
 /**
  * Tree level 하나당 수평 들여쓰기 폭.
