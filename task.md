@@ -51,12 +51,8 @@ packages/ds/src/ui/
 ### 4-window ✅
 - [x] Dialog · Sheet · Popover · MenuPopover · Tooltip · FloatingNav (← 6-overlay)
 
-### 5-live
-- [ ] Toast.tsx                 ← 6-overlay
-- [ ] Progress.tsx              ← 1-status
-- [ ] Spinner.tsx               ← 1-status
-- [ ] Badge.tsx                 ← 1-status
-- [ ] LegendDot.tsx             ← 1-status
+### 5-live ✅
+- [x] Toast (← 6-overlay), Progress · Spinner · Badge · LegendDot (← 1-status)
 
 ### 6-structure
 - [ ] Separator.tsx             ← 0-primitives
@@ -107,7 +103,7 @@ packages/ds/src/ui/
 2. [x] 2-input
 3. [x] 3-composite
 4. [x] 4-window
-5. [ ] 5-live
+5. [x] 5-live
 6. [ ] 6-structure
 7. [ ] 7-landmark
 8. [ ] 8-field

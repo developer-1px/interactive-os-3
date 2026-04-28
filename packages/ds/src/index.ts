@@ -33,11 +33,11 @@ export {
 } from './headless/middleware'
 export { definePlugin, type PluginManifest } from './plugin'
 // 1-status — 시각 토큰. 다른 컴포넌트의 슬롯으로 들어감.
-export * from './ui/1-status/Badge'
+export * from './ui/5-live/Badge'
 export * from './ui/0-primitives/Separator'
-export * from './ui/1-status/LegendDot'
-export * from './ui/1-status/Progress'
-export * from './ui/1-status/Spinner'
+export * from './ui/5-live/LegendDot'
+export * from './ui/5-live/Progress'
+export * from './ui/5-live/Spinner'
 // 2-action — 단일 탭 액션. 폼 값 ❌
 export * from './ui/1-command/Button'
 export * from './ui/1-command/ButtonGroup'
@@ -92,7 +92,7 @@ export * from './ui/4-window/Popover'
 export * from './ui/4-window/FloatingNav'
 export * from './ui/6-overlay/Disclosure'
 export * from './ui/6-overlay/Accordion'
-export * from './ui/6-overlay/Toast'
+export * from './ui/5-live/Toast'
 export * from './ui/4-window/Tooltip'
 export * from './ui/4-window/MenuPopover'
 // patterns — 도메인 중립 (BarChart·Feed·MessageBubble·StatCard 등)
@@ -134,7 +134,7 @@ export * from './ui/templates'
 // L5 surfaces — single-instance shell (sidebar variants · command palette)
 export * from './surfaces/sidebar'
 // parts — content 부품 어휘 (Avatar, Chip, Thumbnail, ...).
-// CountBadge/ProgressBar 는 ui/1-status/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
+// CountBadge/ProgressBar 는 ui/5-live/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
 export * from './ui/parts/Avatar'
 export * from './ui/parts/AvatarGroup'
 export * from './ui/parts/MediaObject'
