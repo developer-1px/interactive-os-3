@@ -32,8 +32,8 @@
 - [x] Checkbox           — role=checkbox (button-route, mixed 지원), aria-checked + disabled+aria-disabled 둘 다, demo 추가. style 토큰 semantic, ARIA selector only
 - [x] Radio              — `<button role="radio">` (div→button: 키보드 native + dual disabled). aria-checked, tabIndex roving (checked만 0)
 - [x] Switch             — `<button role="switch">` aria-checked, dual disabled, demo 추가
-- [ ] ToggleButton       — button, aria-pressed
-- [ ] Option             — role=option, aria-selected
+- [x] ToggleButton       — `<button aria-pressed>` data-part="toggle" 제거 (memory hook 위반). 시각은 Button.style 의 `[aria-pressed="true"]` 통합 → ToggleButton.style.ts 폐기
+- [x] Option             — role=option, aria-selected/posinset/setsize, aria-disabled || undefined, 4-slot (icon·label·indicator), demo 보강
 - [ ] Input              — type=text, aria-invalid/required
 - [ ] Textarea           — multiline textbox
 - [ ] SearchBox          — role=searchbox

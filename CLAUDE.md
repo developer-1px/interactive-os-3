@@ -4,7 +4,8 @@
 
 ## 기본 자세
 
-- **고민되면 de facto 를 따른다.** 직접 만들기 전 업계 수렴 패턴(Radix·Base·Ariakit·RAC 등 최소 2곳) 부터 본다.
+- **분류·이름·위계의 정합 출처는 W3C ARIA 단 하나.** Material 3·Radix·FSD·Polaris·Panda 등 다른 de facto 차용 ❌. ARIA 추상 역할 taxonomy(`widget`/`structure`/`window`/`liveregion`) 안에서만 폴더·이름 결정. ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
+- **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** 단 *이름·구조* 가 아니라 *행동* 을 차용. 고민되면 Radix·Base·Ariakit·RAC 최소 2곳 수렴.
 - **하란 것 이상으로 하지 않는다.** 시키지 않은 리팩토링·추가 기능·예방적 추상화 금지.
 - **코드 양을 늘리려 하지 않는다.** 있는 것으로 해결 가능하면 있는 것으로. 새 파일·새 어휘·새 wrapper 는 마지막 수단.
 

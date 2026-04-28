@@ -1,6 +1,6 @@
 import { css } from '../../semantic'
 import { keyline } from '../../semantic'
-const { avatarSize, containerPad, levelShift, rowGap, slotGap } = keyline
+const { containerPad, levelShift, rowGap, slotGap } = keyline
 import { defaultPreset } from '../preset/default'
 import { toCss } from '../preset/apply'
 
@@ -34,7 +34,6 @@ const staticSeeds = css`
     --ds-slot-gap:      ${slotGap};
     --ds-container-pad: ${containerPad};
     --ds-level-shift:   ${levelShift};
-    --ds-avatar-size:   ${avatarSize};
 
     /* 2026 motion — state transition 공용 토큰. widget이 transition-duration/easing을 여기 참조. */
     --ds-ease-out:    cubic-bezier(0.22, 1, 0.36, 1);

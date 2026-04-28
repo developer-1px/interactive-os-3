@@ -143,12 +143,6 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-z-toast:    ${p.zIndex?.toast    ?? 1400};
     --ds-z-tooltip:  ${p.zIndex?.tooltip  ?? 1500};
 
-    /* opacity layered alpha — modal scrim · pressed/hover state-layer 표준. */
-    --ds-opacity-scrim:   ${p.opacity?.scrim   ?? 0.32};
-    --ds-opacity-overlay: ${p.opacity?.overlay ?? 0.5};
-    --ds-opacity-press:   ${p.opacity?.press   ?? 0.12};
-    --ds-opacity-hover:   ${p.opacity?.hover   ?? 0.08};
-
     --ds-leading:        ${p.leading.normal};
     --ds-leading-tight:  ${p.leading.tight};
     --ds-leading-normal: ${p.leading.normal};

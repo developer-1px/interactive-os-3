@@ -96,16 +96,15 @@ export const border = (role: BorderRole = 'subtle') => BORDER_VAR[role]
  *   'soft'    → 12%  — 활성 상태 surface
  *   'medium'  → 18%  — 강한 활성 surface
  *   'border'  → 40%  — accent 톤 경계선
- *   'glow'    → 60%  — focus ring 외곽
  *   'strong'  → 85%  — accent surface 강조 (text inverse 배경)
  *
  * 무인자 호출 = 'default'. text·surface·border 와 같은 role-based 패턴.
  *
  * @demo type=color fn=accent args=["default"]
  */
-type AccentRole = 'default' | 'softest' | 'soft' | 'medium' | 'border' | 'glow' | 'strong'
+type AccentRole = 'default' | 'softest' | 'soft' | 'medium' | 'border' | 'strong'
 const ACCENT_PCT: Record<Exclude<AccentRole, 'default'>, number> = {
-  softest: 6, soft: 12, medium: 18, border: 40, glow: 60, strong: 85,
+  softest: 6, soft: 12, medium: 18, border: 40, strong: 85,
 }
 export const accent = (role: AccentRole = 'default') =>
   role === 'default'
@@ -116,22 +115,20 @@ export const accent = (role: AccentRole = 'default') =>
  * statusTint(tone, role) — status 색의 강도 변형. accent 와 같은 role 어휘.
  * @demo type=color fn=statusTint args=["danger","border"]
  */
-export const statusTint = (tone: StatusTone, role: 'soft' | 'border' | 'medium') => {
-  const map = { soft: 12, border: 40, medium: 70 } as const
+export const statusTint = (tone: StatusTone, role: 'soft' | 'border') => {
+  const map = { soft: 12, border: 40 } as const
   return `color-mix(in oklab, var(--ds-${tone}) ${map[role]}%, transparent)`
 }
 
 /**
- * surfaceTint(role) — Canvas/CanvasText 기반 알파 surface. neutral scalar flip 안전.
+ * surfaceTint(role) — CanvasText 기반 알파 surface. neutral scalar flip 안전.
  *   'glass'  = 4%   — 가장 약한 overlay (chip 배경)
  *   'overlay' = 8%  — 약한 overlay (hover row)
- *   'highlight' = 30% — 반사 하이라이트 (inset shadow)
  * @demo type=color fn=surfaceTint args=["overlay"]
  */
-export const surfaceTint = (role: 'glass' | 'overlay' | 'highlight') => {
-  const map = { glass: 4, overlay: 8, highlight: 30 } as const
-  const base = role === 'highlight' ? 'Canvas' : 'CanvasText'
-  return `color-mix(in oklab, ${base} ${map[role]}%, transparent)`
+export const surfaceTint = (role: 'glass' | 'overlay') => {
+  const map = { glass: 4, overlay: 8 } as const
+  return `color-mix(in oklab, CanvasText ${map[role]}%, transparent)`
 }
 
 /**

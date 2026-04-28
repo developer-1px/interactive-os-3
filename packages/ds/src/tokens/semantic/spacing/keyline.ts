@@ -22,8 +22,3 @@ export const containerPad = pad(2)
  */
 export const levelShift = pad(4)
 
-/**
- * Feed 아바타 폭·높이 (lead 슬롯이 auto이지만 실제 요소 크기는 여기서 통제).
- * @demo type=value fn=avatarSize
- */
-export const avatarSize = pad(9)
