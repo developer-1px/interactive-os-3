@@ -37,7 +37,7 @@
 - [x] Input              — type=text, aria-invalid/required (Field context), aria-disabled/readonly 자동 미러, demo 추가
 - [x] Textarea           — multiline textbox, Field context, aria-disabled/readonly 미러, demo 추가
 - [x] SearchBox          — role=searchbox + role=search wrapper, aria-disabled/readonly 미러, **subgridTracks 키라인 통일** (data-slot="leading" + grid-column lead/label) — MenuItem/Option/TreeItem과 같은 keyline
-- [ ] NumberInput        — role=spinbutton, aria-valuenow/min/max
+- [x] NumberInput        — role=spinbutton (native), Field 연결, aria-disabled/readonly 미러, demo 추가
 - [ ] ColorInput         — type=color
 - [ ] Slider             — role=slider, aria-valuenow/min/max/orientation
 - [ ] Combobox           — role=combobox, aria-expanded/controls/activedescendant
