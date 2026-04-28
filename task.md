@@ -54,34 +54,15 @@ packages/ds/src/ui/
 ### 5-live ✅
 - [x] Toast (← 6-overlay), Progress · Spinner · Badge · LegendDot (← 1-status)
 
-### 6-structure
-- [ ] Separator.tsx             ← 0-primitives
-- [ ] Heading.tsx               ← parts
-- [ ] Card.tsx                  ← parts
-- [ ] Callout.tsx               ← parts
-- [ ] EmptyState.tsx            ← parts
-- [ ] KeyValue.tsx              ← parts
-- [ ] MediaObject.tsx           ← parts
-- [ ] Table.tsx                 ← parts
-- [ ] Code.tsx                  ← parts
-- [ ] CodeBlock.tsx             ← 0-primitives
-- [ ] Prose.tsx                 ← 0-primitives
-- [ ] Skeleton.tsx              ← parts
-- [ ] Timestamp.tsx             ← parts
-- [ ] Avatar.tsx                ← parts
-- [ ] AvatarGroup.tsx           ← parts
-- [ ] Thumbnail.tsx             ← parts
-- [ ] Chip.tsx                  ← parts
-- [ ] CountBadge.tsx            ← parts
-- [ ] ProgressBar.tsx           ← parts
-- [ ] Link.tsx                  ← parts
-- [ ] Accordion.tsx             ← 6-overlay
-- [ ] Disclosure.tsx            ← 6-overlay
-- [ ] RovingItem.tsx            ← parts
+### 6-structure ✅
+- [x] parts/* (Separator/CodeBlock/Prose 포함, Breadcrumb 제외)
+- [x] Accordion · Disclosure (← 6-overlay)
+- [x] parts/index.ts · styles.ts barrel 도 함께 이동
 
-### 7-landmark
-- [ ] Breadcrumb.tsx            ← parts
-- [ ] Pagination.tsx            ← 5-display
+### 7-landmark ✅
+- [x] Breadcrumb (← parts)
+- [x] Pagination (← 5-display)
+
 
 ### 8-field
 - [ ] Field.tsx                 ← 3-input
@@ -104,8 +85,8 @@ packages/ds/src/ui/
 3. [x] 3-composite
 4. [x] 4-window
 5. [x] 5-live
-6. [ ] 6-structure
-7. [ ] 7-landmark
+6. [x] 6-structure
+7. [x] 7-landmark
 8. [ ] 8-field
 9. [ ] 9-layout
 10. [ ] 옛 폴더(0-primitives, 1-status, 2-action, 3-input, 4-selection, 5-display, 6-overlay, 8-layout, parts) 청소

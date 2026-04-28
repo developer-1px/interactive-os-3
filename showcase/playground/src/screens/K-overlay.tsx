@@ -1,5 +1,5 @@
 import { Heading, Listbox, Phone, PhoneTopBar, TabList, Toolbar, fromList } from '@p/ds'
-import { Disclosure } from '@p/ds/ui/6-overlay/Disclosure'
+import { Disclosure } from '@p/ds/ui/6-structure/Disclosure'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 

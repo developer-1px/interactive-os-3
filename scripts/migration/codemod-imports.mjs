@@ -26,9 +26,9 @@ const REWRITES = [
   ['@p/ds/layout/recipes/sidebar', '@p/ds/ui/recipes/sidebar'],
   ['@p/ds/layout/recipes', '@p/ds/ui/recipes'],
   // L3 parts (parts → ui/parts)
-  ['@p/ds/parts/Card', '@p/ds/ui/parts/Card'],
-  ['@p/ds/parts/Table', '@p/ds/ui/parts/Table'],
-  ['@p/ds/parts', '@p/ds/ui/parts'],
+  ['@p/ds/parts/Card', '@p/ds/ui/6-structure/Card'],
+  ['@p/ds/parts/Table', '@p/ds/ui/6-structure/Table'],
+  ['@p/ds/parts', '@p/ds/ui/6-structure'],
   // L3 7-patterns split → content/ + ui/patterns/
   ['@p/ds/ui/7-patterns/ContractCard', '@p/ds/content/ContractCard'],
   ['@p/ds/ui/7-patterns/CourseCard', '@p/ds/content/CourseCard'],

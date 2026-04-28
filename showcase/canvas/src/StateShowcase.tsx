@@ -9,7 +9,7 @@
 import type { ReactNode } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
 import * as foundations from '@p/ds/tokens/foundations'
-import { Card, Heading, Chip, Code, RovingItem } from '@p/ds/ui/parts'
+import { Card, Heading, Chip, Code, RovingItem } from '@p/ds/ui/6-structure'
 
 const FN = foundations as unknown as Record<string, (...args: unknown[]) => string>
 

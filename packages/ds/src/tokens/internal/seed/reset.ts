@@ -33,6 +33,6 @@ export const reset = css`
   :where(button) { background: none; border: 0; }
   :where(p, h1, h2, h3, h4, h5, h6) { overflow-wrap: break-word; }
   :where(ul, ol) { padding: 0; list-style: none; }
-  /* :where(a) 는 ui/parts/Link.style 이 owner — reset 에서 중복 선언 ❌ (cascade race). */
+  /* :where(a) 는 ui/6-structure/Link.style 이 owner — reset 에서 중복 선언 ❌ (cascade race). */
   :where(:focus-visible) { outline: none; }
 `

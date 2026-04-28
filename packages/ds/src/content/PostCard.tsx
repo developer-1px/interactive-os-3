@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import { Card } from '../ui/parts/Card'
+import { Card } from '../ui/6-structure/Card'
 
 /**
  * PostCard — Slack/Discord 식 채널 게시판 한 줄. Card 슬롯에 어휘 바인딩.

@@ -1,6 +1,6 @@
 import { useResource } from '@p/ds'
-import { CodeBlock } from '@p/ds/ui/0-primitives/CodeBlock'
-import { Prose } from '@p/ds/ui/0-primitives/Prose'
+import { CodeBlock } from '@p/ds/ui/6-structure/CodeBlock'
+import { Prose } from '@p/ds/ui/6-structure/Prose'
 import { formatDate, formatSize } from '../features/data'
 import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,

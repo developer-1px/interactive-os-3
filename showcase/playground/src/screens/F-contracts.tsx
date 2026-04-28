@@ -1,5 +1,5 @@
 import { ContractCard, Listbox, MessageBubble, Phone, PhoneTopBar, Row, Chip } from '@p/ds'
-import { Card } from '@p/ds/ui/parts/Card'
+import { Card } from '@p/ds/ui/6-structure/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
 

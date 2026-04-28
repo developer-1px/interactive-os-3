@@ -22,7 +22,7 @@ import {
   uiRegistry,
   type Event,
 } from '@p/ds'
-import { Table } from '@p/ds/ui/parts/Table'
+import { Table } from '@p/ds/ui/6-structure/Table'
 
 // ──────────────────────────────────────────────────────────────────────
 // 카테고리 — sidebar 항목

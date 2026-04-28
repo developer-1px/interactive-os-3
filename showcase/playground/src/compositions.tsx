@@ -11,7 +11,7 @@
  */
 import { useState, type ReactNode } from 'react'
 import { ROOT, Renderer, definePage, type NormalizedData } from '@p/ds'
-import { Avatar, Badge, Chip, Callout, EmptyState, Skeleton, KeyValue } from '@p/ds/ui/parts'
+import { Avatar, Badge, Chip, Callout, EmptyState, Skeleton, KeyValue } from '@p/ds/ui/6-structure'
 
 const todayAt = (hhmm: string): number => {
   const [h, m] = hhmm.split(':').map(Number)

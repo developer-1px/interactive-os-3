@@ -71,35 +71,35 @@ export const MIGRATION_RULES: MigrationRule[] = [
   // ─── L3 UI parts ────────────────────────────────────────────────────────
   {
     from: '@p/ds/parts',
-    to: '@p/ds/ui/parts',
+    to: '@p/ds/ui/6-structure',
     kind: 'rewrite',
-    reason: 'parts/ → ui/parts/ (data-part namespace 보존, ui/ 하위로 흡수)',
+    reason: 'parts/ → ui/6-structure/ (data-part namespace 보존, ui/ 하위로 흡수)',
   },
   {
     from: '@p/ds/parts/Table',
-    to: '@p/ds/ui/parts/Table',
+    to: '@p/ds/ui/6-structure/Table',
     kind: 'rewrite',
-    reason: 'parts/<Name> → ui/parts/<Name>/(index.tsx)',
+    reason: 'parts/<Name> → ui/6-structure/<Name>/(index.tsx)',
   },
   {
     from: '@p/ds/parts/Card',
-    to: '@p/ds/ui/parts/Card',
+    to: '@p/ds/ui/6-structure/Card',
     kind: 'rewrite',
-    reason: 'parts/<Name> → ui/parts/<Name>/(index.tsx)',
+    reason: 'parts/<Name> → ui/6-structure/<Name>/(index.tsx)',
   },
 
   // ─── L3 UI tier (co-location 흡수, 경로 보존) ─────────────────────────────
   // ui/<tier>/<Name>.tsx → ui/<tier>/<Name>/index.tsx + style.ts
   // 외부 import `@p/ds/ui/<tier>/<Name>`는 그대로 동작
   {
-    from: '@p/ds/ui/0-primitives/CodeBlock',
-    to: '@p/ds/ui/0-primitives/CodeBlock',
+    from: '@p/ds/ui/6-structure/CodeBlock',
+    to: '@p/ds/ui/6-structure/CodeBlock',
     kind: 'preserved',
     reason: 'co-location: 파일 → 폴더+index.tsx, import 경로 보존',
   },
   {
-    from: '@p/ds/ui/0-primitives/Prose',
-    to: '@p/ds/ui/0-primitives/Prose',
+    from: '@p/ds/ui/6-structure/Prose',
+    to: '@p/ds/ui/6-structure/Prose',
     kind: 'preserved',
     reason: 'co-location 보존',
   },
@@ -242,8 +242,8 @@ export const MIGRATION_RULES: MigrationRule[] = [
     reason: 'co-location 보존',
   },
   {
-    from: '@p/ds/ui/6-overlay/Disclosure',
-    to: '@p/ds/ui/6-overlay/Disclosure',
+    from: '@p/ds/ui/6-structure/Disclosure',
+    to: '@p/ds/ui/6-structure/Disclosure',
     kind: 'preserved',
     reason: 'co-location 보존',
   },

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import type { PaletteEntry } from './usePaletteEntries'
 import { ROOT, type NormalizedData, type Event } from '../../headless/types'
-import { Card } from '../../ui/parts/Card'
-import { Heading } from '../../ui/parts/Heading'
+import { Card } from '../../ui/6-structure/Card'
+import { Heading } from '../../ui/6-structure/Heading'
 import { Listbox } from '../../ui/3-composite/Listbox'
 import { Grid } from '../../ui/8-layout/Grid'
 

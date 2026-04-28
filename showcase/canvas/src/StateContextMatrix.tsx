@@ -9,7 +9,7 @@
  * 새 시각/CSS 없음. parts(Code·Chip) + 진짜 ARIA role 마크업 + 단일 grid wrapper.
  */
 import type { ReactNode } from 'react'
-import { Code, Chip } from '@p/ds/ui/parts'
+import { Code, Chip } from '@p/ds/ui/6-structure'
 import { Switch } from '@p/ds/ui/2-input/Switch'
 import { Checkbox } from '@p/ds/ui/2-input/Checkbox'
 
