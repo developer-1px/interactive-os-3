@@ -16,6 +16,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
         value={value}
         onChange={(e) => onChange(e.target.valueAsNumber)}
         {...rest}
+        aria-disabled={rest.disabled || undefined}
       />
     )
   },
