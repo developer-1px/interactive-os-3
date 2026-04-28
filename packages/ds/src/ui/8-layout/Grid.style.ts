@@ -1,4 +1,4 @@
-import { accent, accentTint, bg, border, control, css, currentTint, dur, ease, emphasize, focusRingWidth, hairlineWidth, indicator, microLabel, mute, radius, text, tone } from '../../tokens/foundations'
+import { accent, accentTint, bg, border, control, css, currentTint, dur, ease, emphasize, hairlineWidth, indicator, microLabel, mute, radius, ring, text, tone } from '../../tokens/foundations'
 import { font, weight, pad } from '../../tokens/palette'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
@@ -155,8 +155,7 @@ export const cssGrid = () => [
       color: ${accent()};
     }
     [role="columnheader"] > button:focus-visible {
-      outline: ${focusRingWidth()} solid ${accent()};
-      outline-offset: 2px;
+      ${ring()}
       border-radius: ${pad(0.5)};
     }
 
@@ -179,8 +178,7 @@ export const cssGrid = () => [
       text-decoration-thickness: 1.5px;
     }
     [role="gridcell"] a[href]:focus-visible {
-      outline: ${focusRingWidth()} solid ${accent()};
-      outline-offset: 2px;
+      ${ring()}
       border-radius: ${pad(0.5)};
     }
     /* media link — img를 감싼 <a>. 이미지 자체엔 변화 없이 ring만 감싸는 affordance. */
@@ -189,13 +187,11 @@ export const cssGrid = () => [
       border-radius: ${radius('md')};
     }
     [role="gridcell"] a[href]:has(> img):hover {
-      outline: ${focusRingWidth()} solid ${accent()};
-      outline-offset: 2px;
+      ${ring()}
       text-decoration: none;
     }
     [role="gridcell"] a[href]:has(> img):focus-visible {
-      outline: ${focusRingWidth()} solid ${accent()};
-      outline-offset: 2px;
+      ${ring()}
     }
 
     /* rowheader — 행의 첫 셀, 라벨 역할 */

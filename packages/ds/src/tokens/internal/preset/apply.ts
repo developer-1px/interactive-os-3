@@ -104,6 +104,29 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-text-2xl: ${p.text['2xl']};
     --ds-text-3xl: ${p.text['3xl']};
 
+    /* box size scale — icon/avatar/thumbnail/control 공통. */
+    --ds-size-xs:  ${p.size.xs};
+    --ds-size-sm:  ${p.size.sm};
+    --ds-size-md:  ${p.size.md};
+    --ds-size-lg:  ${p.size.lg};
+    --ds-size-xl:  ${p.size.xl};
+    --ds-size-2xl: ${p.size['2xl']};
+
+    /* z-index stack — overlay 표준 ladder. preset.zIndex 로 override 가능. */
+    --ds-z-base:     ${p.zIndex?.base     ?? 0};
+    --ds-z-dropdown: ${p.zIndex?.dropdown ?? 1000};
+    --ds-z-sticky:   ${p.zIndex?.sticky   ?? 1100};
+    --ds-z-overlay:  ${p.zIndex?.overlay  ?? 1200};
+    --ds-z-modal:    ${p.zIndex?.modal    ?? 1300};
+    --ds-z-toast:    ${p.zIndex?.toast    ?? 1400};
+    --ds-z-tooltip:  ${p.zIndex?.tooltip  ?? 1500};
+
+    /* opacity layered alpha — modal scrim · pressed/hover state-layer 표준. */
+    --ds-opacity-scrim:   ${p.opacity?.scrim   ?? 0.32};
+    --ds-opacity-overlay: ${p.opacity?.overlay ?? 0.5};
+    --ds-opacity-press:   ${p.opacity?.press   ?? 0.12};
+    --ds-opacity-hover:   ${p.opacity?.hover   ?? 0.08};
+
     --ds-leading:        ${p.leading.normal};
     --ds-leading-tight:  ${p.leading.tight};
     --ds-leading-normal: ${p.leading.normal};
@@ -140,7 +163,8 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
 
     /* focus-ring 두께 — outline / active indicator / thumb 강조선 공통.
        hairline(--ds-hairline)보다 한 단 두꺼운 강조 테두리. preset.focusRingWidth 가 owner. */
-    --ds-focus-ring-w: ${p.focusRingWidth ?? '2px'};
+    --ds-focus-ring-w:      ${p.focusRingWidth ?? '2px'};
+    --ds-focus-ring-offset: ${p.focusRingOffset ?? '2px'};
 
     --ds-radius-sm:   ${p.radius.sm};
     --ds-radius-md:   ${p.radius.md};
@@ -191,7 +215,7 @@ export const toCss = (p: DsPreset): string => {
          caption       12 → 13px (iOS Footnote)
          heading 1     28 → 32px (iOS Title 1 28pt × 1.15 — 모바일 hero 가독성)
          control-h     32 → 44px (iOS HIG 최소 터치 타깃)
-         tap target  → control-h 같이 키워 Button/Tag/Tab 모두 따라옴 */
+         tap target  → control-h 같이 키워 Button/Chip/Tab 모두 따라옴 */
     @media (max-width: ${p.shell.mobileMax}) {
       :root {
         /* iOS HIG · Material 3 표준 사이즈 */

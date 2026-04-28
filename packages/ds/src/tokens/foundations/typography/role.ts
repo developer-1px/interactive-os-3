@@ -28,7 +28,7 @@ export const type = {
   /** calendar today pill text — semibold. */
   todayBold: { fontWeight: weight('semibold') },
   /** 코드 inline / chrome bar — monospace sm. */
-  mono:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm') },
+  mono:      { fontFamily: 'var(--ds-font-mono)' as const, fontSize: font('sm') },
   /** 1줄 ellipsis truncate — list row text. */
   truncate:  { overflow: 'hidden' as const, textOverflow: 'ellipsis' as const, whiteSpace: 'nowrap' as const },
 
@@ -54,11 +54,11 @@ export const type = {
   /** hero (3xl bold) — page banner / column banner display. */
   hero:           { fontSize: font('3xl'), fontWeight: weight('bold') },
   /** monospace micro (xs mono semibold) — eyebrow · subgroup label · meta. uppercase는 호출처에서 적용. */
-  monoMicro:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('xs'), fontWeight: weight('semibold') },
+  monoMicro:      { fontFamily: 'var(--ds-font-mono)' as const, fontSize: font('xs'), fontWeight: weight('semibold') },
   /** monospace label (sm mono medium) — token call · code label. */
-  monoLabel:      { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm'), fontWeight: weight('medium') },
+  monoLabel:      { fontFamily: 'var(--ds-font-mono)' as const, fontSize: font('sm'), fontWeight: weight('medium') },
   /** monospace strong (sm mono semibold) — code step · ramp index. */
-  monoStrong:     { fontFamily: 'ui-monospace, monospace' as const, fontSize: font('sm'), fontWeight: weight('semibold') },
+  monoStrong:     { fontFamily: 'var(--ds-font-mono)' as const, fontSize: font('sm'), fontWeight: weight('semibold') },
 } as const
 
 /**

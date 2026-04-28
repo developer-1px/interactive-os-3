@@ -11,7 +11,7 @@
  */
 import { useState, type ReactNode } from 'react'
 import { ROOT, Renderer, definePage, type NormalizedData } from '@p/ds'
-import { Avatar, Badge, Tag, Callout, EmptyState, Skeleton, KeyValue } from '@p/ds/ui/parts'
+import { Avatar, Badge, Chip, Callout, EmptyState, Skeleton, KeyValue } from '@p/ds/ui/parts'
 
 const todayAt = (hhmm: string): number => {
   const [h, m] = hhmm.split(':').map(Number)
@@ -62,7 +62,7 @@ const productCardVariant = (name: string, price: string, img: string, badge?: st
 const courseCardVariant = (title: string, instructor: string, level: string, mins: number): ReactNode => (
   <article data-part="card" data-card="course">
     <div data-slot="title"><strong>{title}</strong></div>
-    <div data-slot="meta"><Tag label={level} /><small> · {instructor} · {mins}분</small></div>
+    <div data-slot="meta"><Chip label={level} /><small> · {instructor} · {mins}분</small></div>
   </article>
 )
 
@@ -274,7 +274,7 @@ const articleCard = (): ReactNode => (
     <div data-slot="preview">
       <img src="https://picsum.photos/seed/article/640/360" alt="" loading="lazy" />
     </div>
-    <div data-slot="meta"><Tag label="디자인" /><small> · 5분 읽기</small></div>
+    <div data-slot="meta"><Chip label="디자인" /><small> · 5분 읽기</small></div>
     <div data-slot="title"><h3>recursive Proximity — 위계가 곧 spacing 이다</h3></div>
     <div data-slot="body"><p>Gestalt 의 가장 단순한 표현. atom→cluster→section→surface→shell 5단이 어떻게 한 화면 안에서 작동하는지.</p></div>
     <div data-slot="footer">
@@ -295,7 +295,7 @@ const profileCard = (): ReactNode => (
     </div>
     <div data-slot="body"><p>디자인 시스템과 접근성을 다룹니다. 최근에는 OKLCH 색 공간과 recursive proximity 에 빠져 있습니다.</p></div>
     <div data-slot="meta">
-      <Tag label="design-systems" /> <Tag label="a11y" /> <Tag label="frontend" />
+      <Chip label="design-systems" /> <Chip label="a11y" /> <Chip label="frontend" />
     </div>
     <div data-slot="footer">
       <button type="button" data-emphasis="primary">팔로우</button>

@@ -14,7 +14,7 @@ import { finderFeature } from '../features/feature'
 import { runChecks } from './checks'
 import { describe, shapeOf, defaultValue, labelOf, type FieldKind } from './zodIntrospect'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { Card, KeyValue, Code, Tag, Callout, Heading } from '@p/ds/ui/parts'
+import { Card, KeyValue, Code, Chip, Callout, Heading } from '@p/ds/ui/parts'
 
 const initial: FinderState = { url: '/', pinned: '/', mode: 'columns', query: '' }
 
@@ -117,9 +117,9 @@ export function FinderInspector() {
         <KeyValue items={[
           { key: 'effect', value: <Code>{def.effect}</Code> },
           ...(fields.length === 0
-            ? [{ key: 'payload', value: <Tag label="no payload" /> }]
+            ? [{ key: 'payload', value: <Chip label="no payload" /> }]
             : fields.map(([k, fk]) => ({
-                key:   <span><Code>{k}</Code> <Tag label={labelOf(fk)} /></span>,
+                key:   <span><Code>{k}</Code> <Chip label={labelOf(fk)} /></span>,
                 value: <FieldInput field={fk} value={forms[type][k]} onChange={(v) => onField(type, k, v)} />,
               }))
           ),

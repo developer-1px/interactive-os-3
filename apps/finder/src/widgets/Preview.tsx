@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useResource } from '@p/ds'
 import { CodeBlock } from '@p/ds/ui/0-primitives/CodeBlock'
 import { Prose } from '@p/ds/ui/0-primitives/Prose'
@@ -92,12 +91,5 @@ function CodeView({ node }: { node: FsNode }) {
 function MarkdownView({ node }: { node: FsNode }) {
   const [html] = useResource(markdownHtmlResource, node.path)
   if (html == null) return <article aria-busy="true" />
-  return (
-    <>
-      <nav aria-label="마크다운 액션">
-        <Link to="/markdown/$" params={{ _splat: node.path.replace(/^\//, '') }}>전체 화면으로 열기 ↗</Link>
-      </nav>
-      <Prose html={html} />
-    </>
-  )
+  return <Prose html={html} />
 }

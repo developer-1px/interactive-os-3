@@ -54,11 +54,11 @@ export function checkboxRels<K extends string>(prefix: string, state: Record<K, 
 export function tagChipNodes(prefix: string, items: string[], onRemove: (t: string) => void): NodeMap {
   const out: NodeMap = {}
   for (const t of items) {
-    // parts/Tag — span[data-part="tag"] + optional × remove. label/onRemove 데이터 주도.
+    // parts/Chip — span[data-part="chip"] + optional × remove. label/onRemove 데이터 주도.
     out[`${prefix}-chip-${t}`] = {
       id: `${prefix}-chip-${t}`,
       data: {
-        type: 'Ui', component: 'Tag',
+        type: 'Ui', component: 'Chip',
         props: { label: t, onRemove: () => onRemove(t), removeLabel: `${t} 제거` },
       },
     }
@@ -67,7 +67,7 @@ export function tagChipNodes(prefix: string, items: string[], onRemove: (t: stri
 }
 
 export function tagChipRels(): RelMap {
-  // Tag는 leaf — relationships 없음.
+  // Chip 은 leaf — relationships 없음.
   return {}
 }
 

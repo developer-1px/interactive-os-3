@@ -37,8 +37,12 @@ export * from './ui/1-status/Badge'
 export * from './ui/0-primitives/Separator'
 export * from './ui/1-status/LegendDot'
 export * from './ui/1-status/Progress'
+export * from './ui/1-status/Spinner'
 // 2-action — 단일 탭 액션. 폼 값 ❌
 export * from './ui/2-action/Button'
+export * from './ui/2-action/ButtonGroup'
+export * from './ui/2-action/ToggleButton'
+export * from './ui/2-action/ToggleGroup'
 export * from './ui/2-action/ToolbarButton'
 export * from './ui/2-action/Switch'
 // 3-input — 폼 값을 갖는 단일 입력
@@ -66,6 +70,7 @@ export * from './ui/4-selection/RadioGroup'
 export * from './ui/4-selection/CheckboxGroup'
 export * from './ui/4-selection/Toolbar'
 export * from './ui/4-selection/Tabs'
+export * from './ui/4-selection/SegmentedControl'
 export * from './ui/4-selection/Menubar'
 export * from './ui/4-selection/MenuList'
 // 5-display — 격자·계층 합성 roving
@@ -78,12 +83,16 @@ export * from './ui/5-display/ColumnHeader'
 export * from './ui/5-display/RowHeader'
 export * from './ui/5-display/TreeGrid'
 export * from './ui/5-display/TreeRow'
+export * from './ui/5-display/Pagination'
+export * from './ui/5-display/Stepper'
 // 6-overlay — surface
 export * from './ui/6-overlay/Dialog'
 export * from './ui/6-overlay/Sheet'
 export * from './ui/6-overlay/Popover'
 export * from './ui/6-overlay/FloatingNav'
 export * from './ui/6-overlay/Disclosure'
+export * from './ui/6-overlay/Accordion'
+export * from './ui/6-overlay/Toast'
 export * from './ui/6-overlay/Tooltip'
 export * from './ui/6-overlay/MenuPopover'
 // patterns — 도메인 중립 (BarChart·Feed·MessageBubble·StatCard 등)
@@ -124,10 +133,12 @@ export {
 export * from './ui/templates'
 // L5 surfaces — single-instance shell (sidebar variants · command palette)
 export * from './surfaces/sidebar'
-// parts — content 부품 어휘 (Avatar, Tag, Thumbnail, ...).
+// parts — content 부품 어휘 (Avatar, Chip, Thumbnail, ...).
 // CountBadge/ProgressBar 는 ui/1-status/Badge·Progress 와 어휘 분리: 파일명·함수명 모두 별개.
 export * from './ui/parts/Avatar'
-export * from './ui/parts/Tag'
+export * from './ui/parts/AvatarGroup'
+export * from './ui/parts/MediaObject'
+export * from './ui/parts/Chip'
 export * from './ui/parts/Thumbnail'
 export * from './ui/parts/Timestamp'
 export * from './ui/parts/Skeleton'

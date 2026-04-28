@@ -50,7 +50,7 @@ import { Popover } from './ui/6-overlay/Popover'
 import { Badge } from './ui/1-status/Badge'
 import { LegendDot } from './ui/1-status/LegendDot'
 import { Separator } from './ui/0-primitives/Separator'
-import { Tag } from './ui/parts/Tag'
+import { Chip } from './ui/parts/Chip'
 import { StatCard } from './ui/patterns/StatCard'
 import { CourseCard } from './content/CourseCard'
 import { RoleCard } from './content/RoleCard'
@@ -84,7 +84,7 @@ export const uiRegistry = {
   Badge:     { component: Badge,     zone: 'indicator' },
   LegendDot: { component: LegendDot, zone: 'indicator' },
   Separator: { component: Separator, zone: 'indicator' },
-  Tag:       { component: Tag,       zone: 'indicator' },
+  Chip:      { component: Chip,      zone: 'indicator' },
   // action
   Button:        { component: Button,        zone: 'action' },
   Switch:        { component: Switch,        zone: 'action' },
@@ -160,5 +160,3 @@ export function resolveUi(name: string): AnyCmp | undefined {
   }
   return entry.component
 }
-
-export type UiLeafContent = ReactNode

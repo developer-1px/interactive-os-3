@@ -1,4 +1,4 @@
-import { accent, css, dur, ease } from '../../tokens/foundations'
+import { accent, css, dur, ease, ring } from '../../tokens/foundations'
 import { pad } from '../../tokens/palette'
 
 export const cssLink = () => css`
@@ -13,8 +13,7 @@ export const cssLink = () => css`
     text-underline-offset: 2px;
   }
   :where(a):focus-visible {
-    outline: ${pad(0.25)} solid ${accent()};
-    outline-offset: ${pad(0.25)};
+    ${ring()}
   }
   :where(a)[data-external]::after {
     content: "\\2197";

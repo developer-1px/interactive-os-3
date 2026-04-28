@@ -1,5 +1,5 @@
 /**
- * StateShowcase — foundations/state 토큰을 ds parts(Card·Heading·Tag·Code·RovingItem)
+ * StateShowcase — foundations/state 토큰을 ds parts(Card·Heading·Chip·Code·RovingItem)
  * 어휘로 조립.
  *
  * 새 시각/CSS 없음. RovingItem 이 row 시각 셸을 담당하고, state 토큰의 css 블록은
@@ -9,7 +9,7 @@
 import type { ReactNode } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
 import * as foundations from '@p/ds/tokens/foundations'
-import { Card, Heading, Tag, Code, RovingItem } from '@p/ds/ui/parts'
+import { Card, Heading, Chip, Code, RovingItem } from '@p/ds/ui/parts'
 
 const FN = foundations as unknown as Record<string, (...args: unknown[]) => string>
 
@@ -70,7 +70,7 @@ function StateCard({ e }: { e: FoundationExport }): ReactNode {
     <Card
       slots={{
         title: <Heading level={4}>{e.name}</Heading>,
-        meta: TRIGGER[e.name] ? <Tag label={TRIGGER[e.name]} /> : undefined,
+        meta: TRIGGER[e.name] ? <Chip label={TRIGGER[e.name]} /> : undefined,
         body: (
           <div id={id} data-demo="scoped">
             <style>{css.replace(/:where\(/g, `:where(#${id} `)}</style>

@@ -1,6 +1,6 @@
 export * from './Avatar'
 export * from './CountBadge'
-export * from './Tag'
+export * from './Chip'
 export * from './Thumbnail'
 export * from './Timestamp'
 export * from './Skeleton'

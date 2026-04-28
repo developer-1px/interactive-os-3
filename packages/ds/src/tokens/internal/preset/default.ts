@@ -37,6 +37,15 @@ export const defaultPreset: DsPreset = {
     '2xl': '24px',
     '3xl': '34px',
   },
+  // box size scale — Tailwind size-{4..12} 합집합. icon · avatar · thumbnail.
+  size: {
+    xs:    '16px',
+    sm:    '20px',
+    md:    '24px',
+    lg:    '32px',
+    xl:    '40px',
+    '2xl': '48px',
+  },
   font: {
     sans: `ui-sans-serif, -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`,
     mono: `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace`,

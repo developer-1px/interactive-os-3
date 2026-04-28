@@ -22,6 +22,23 @@
  */
 import { useEffect, useState, type ReactNode } from 'react'
 import { ROOT, Renderer, definePage, type NormalizedData } from '@p/ds'
+import type { CategoryMeta } from '@p/ds/tokens/category-meta'
+
+// foundations/<cat>/_category.ts 자동 수집 — 라벨·표준 SSOT (canvas/tokenGroups 패턴 평행이동)
+const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
+  '@p/ds/tokens/foundations/*/_category.ts',
+  { eager: true },
+)
+const CATEGORY_META: Record<string, CategoryMeta> = (() => {
+  const out: Record<string, CategoryMeta> = {}
+  for (const [path, mod] of Object.entries(categoryMetaModules)) {
+    const m = path.match(/\/foundations\/([^/]+)\/_category\.ts$/)
+    if (m) out[m[1]] = mod.default
+  }
+  return out
+})()
+const CATEGORY_LABEL_OF = (key: string): string =>
+  CATEGORY_META[key]?.label ?? (key === 'preset' ? 'Preset · seed' : key === 'etc' ? 'ETC · misc' : key)
 
 // ──────────────────────────────────────────────────────────────────────
 // Color — Tailwind / Radix grid: 큰 swatch
@@ -200,7 +217,80 @@ const ContainerStack: ReactNode = (
 )
 
 // ──────────────────────────────────────────────────────────────────────
+// Visual Registry — 속성 기반 dispatch (OCP).
+//   대표 카테고리는 시각 메타포 entry, 매칭 안 된 토큰은 하단 TokenTable(ETC) 로.
+//   신규 lane 추가 = (a) registry append 또는 (b) categorize prefix 추가하여 ETC 노출.
+//   메인 buildPage 는 닫혀 있음.
+// ──────────────────────────────────────────────────────────────────────
+
+type VisualEntry = {
+  /** matches categorize() 결과. ETC 에서 자동 제외하기 위해 필수. */
+  categoryKey: string
+  title: string
+  lede: string
+  frames: ReadonlyArray<{ label: string; span?: 1 | 2 | 3; body: ReactNode }>
+}
+
+const visualRegistry: ReadonlyArray<VisualEntry> = [
+  {
+    categoryKey: 'color',
+    title: '1. Color',
+    lede: '3-tier (palette → semantic → pair). neutral 1-9 raw scale 위에 의미 토큰(bg/fg/accent/border)을 얹고, 사용처에선 pair 만 import — preset 스왑 시 contrast 자동 보존.',
+    frames: [
+      { label: 'neutral 1 → 9', span: 2, body: ColorSwatchGrid },
+      { label: 'semantic pairs', body: SemanticPairs },
+    ],
+  },
+  {
+    categoryKey: 'typography',
+    title: '2. Typography',
+    lede: 'modular scale 6 단 (xs → 2xl). 토큰 이름은 use-case 가 아니라 *위치* — Display/Headline/Body 매핑은 컴포넌트가 결정. weight 5 단.',
+    frames: [
+      { label: 'size — use-case specimen', span: 2, body: TypeSpecimen },
+      { label: 'weight', body: WeightSpecimen },
+    ],
+  },
+  {
+    categoryKey: 'spacing',
+    title: '3. Spacing',
+    lede: 'raw pad(n) 위에 *재귀 Proximity* 5 단 hierarchy 의미를 얹는다. Gestalt: L0 atom < L3 section < L4 surface < L5 shell — 단조 증가 invariant.',
+    frames: [
+      { label: 'hierarchy ladder (recursive Proximity)', span: 2, body: SpacingLadder },
+      { label: 'raw pad scale', body: PadScale },
+    ],
+  },
+  {
+    categoryKey: 'shape',
+    title: '4. Shape — Radius',
+    lede: '4-step (sm / md / lg / pill). 같은 surface 에 적용해 *둥근 정도의 모핑* 으로 비교 — 절대 px 보다 *대비* 가 중요.',
+    frames: [{ label: 'radius scale', body: RadiusMorph }],
+  },
+  {
+    categoryKey: 'elevation',
+    title: '5. Elevation',
+    lede: 'surface 가 그라운드 위로 떠오르는 z-축 — depth 1/2/3. neutral-1 공통 그라운드 위에 놓여야 그림자 체감이 정확.',
+    frames: [{ label: 'shadow ladder', body: ElevationStack }],
+  },
+  {
+    categoryKey: 'motion',
+    title: '6. Motion',
+    lede: 'duration 2 단 × easing 2 종 = 4 조합. hover 로 trigger — *시간×곡선* 의 차이는 정지 그래프가 아니라 실제 움직임으로만 보인다.',
+    frames: [{ label: 'hover →', span: 3, body: MotionDemo }],
+  },
+  {
+    categoryKey: 'layout',
+    title: '7. Container — 환경 폭',
+    lede: '컴포넌트가 production 에서 점유하는 inline-size. *환경* 이름(chat / feed / reading) — t-shirt size 가 아님. 각 폭은 외부 벤더 수렴 (KakaoTalk · Twitter · Notion · Gmail).',
+    frames: [{ label: 'cell 240 → list 720', span: 3, body: ContainerStack }],
+  },
+]
+
+/** visualRegistry 가 다루는 categoryKey 의 prefix set — ETC 필터링용. */
+const VISUAL_KEYS = new Set(visualRegistry.map(e => e.categoryKey))
+
+// ──────────────────────────────────────────────────────────────────────
 // 하단 token table — :root 의 --ds-* 를 getComputedStyle 로 enumerate (코드 SSOT)
+//   visualRegistry 가 다루지 않은 카테고리만 = ETC.
 // ──────────────────────────────────────────────────────────────────────
 
 type TokenEntry = { name: string; value: string }
@@ -241,27 +331,88 @@ function readRootTokens(): TokenEntry[] {
   return out.sort((a, b) => a.name.localeCompare(b.name))
 }
 
-function categorize(name: string): string {
-  if (name.startsWith('--ds-neutral'))                 return 'color · neutral'
-  if (name.startsWith('--ds-icon-'))                   return 'iconography'
-  if (name.startsWith('--ds-bp-'))                     return 'breakpoint'
-  if (name.startsWith('--ds-font-'))                   return 'typography · family'
-  if (name.startsWith('--ds-text-'))                   return 'typography · size'
-  if (name.startsWith('--ds-weight-'))                 return 'typography · weight'
-  if (name.startsWith('--ds-leading'))                 return 'typography · leading'
-  if (name.startsWith('--ds-tracking'))                return 'typography · tracking'
-  if (/^--ds-h[1-6]-/.test(name))                      return 'typography · heading ladder'
-  if (name.startsWith('--ds-radius'))                  return 'shape · radius'
-  if (name.startsWith('--ds-hairline') || name.startsWith('--ds-focus')) return 'shape · stroke'
-  if (name.startsWith('--ds-elev') || name.startsWith('--ds-shadow'))    return 'elevation'
-  if (name.startsWith('--ds-dur'))                     return 'motion · duration'
-  if (name.startsWith('--ds-ease'))                    return 'motion · easing'
-  if (name.startsWith('--ds-space') || name.startsWith('--ds-hierarchy')) return 'spacing'
-  if (name.startsWith('--ds-control') || name.startsWith('--ds-chrome') || name.startsWith('--ds-avatar') || name.startsWith('--ds-column') || name.startsWith('--ds-container-pad')) return 'component · sizing'
-  if (name.startsWith('--ds-danger'))                  return 'color · status'
-  if (name.startsWith('--ds-bg') || name.startsWith('--ds-fg') || name.startsWith('--ds-on-') || name.startsWith('--ds-accent') || name.startsWith('--ds-border') || name.startsWith('--ds-tone')) return 'color · semantic'
-  if (name.startsWith('--ds-base') || name.startsWith('--ds-depth') || name.startsWith('--ds-density') || name.startsWith('--ds-hue') || name.startsWith('--ds-step')) return 'preset · seed'
-  return 'misc'
+/**
+ * varName → foundation `_category.ts` 키. SSOT 정렬 (longest-first 매칭).
+ *
+ * 16 lane (color · typography · spacing · shape · state · motion · elevation
+ * · control · layout · iconography · zIndex · opacity · focus · sizing
+ * · breakpoint) + preset(seed knobs) + etc(미분류).
+ *
+ * 신규 lane 추가 = `tokens/foundations/<cat>/_category.ts` + 여기에 prefix 한 줄.
+ */
+type CategoryKey =
+  | 'color' | 'typography' | 'spacing' | 'shape' | 'state'
+  | 'motion' | 'elevation' | 'control' | 'layout' | 'iconography'
+  | 'zIndex' | 'opacity' | 'focus' | 'sizing' | 'breakpoint'
+  | 'preset' | 'etc'
+
+const PREFIX_TABLE: ReadonlyArray<readonly [string, CategoryKey]> = [
+  // typography (longest first: --ds-text- 보다 --ds-tracking 이 먼저 잡혀야)
+  ['--ds-tracking',  'typography'],
+  ['--ds-leading',   'typography'],
+  ['--ds-weight-',   'typography'],
+  ['--ds-text-',     'typography'],
+  ['--ds-font-',     'typography'],
+  // shape
+  ['--ds-radius',    'shape'],
+  ['--ds-hairline',  'shape'],
+  // spacing
+  ['--ds-space',     'spacing'],
+  ['--ds-hierarchy', 'spacing'],
+  // motion
+  ['--ds-dur',       'motion'],
+  ['--ds-ease',      'motion'],
+  // elevation
+  ['--ds-elev',      'elevation'],
+  ['--ds-shadow',    'elevation'],
+  // 신규 6 lane
+  ['--ds-z',         'zIndex'],
+  ['--ds-opacity',   'opacity'],
+  ['--ds-alpha',     'opacity'],
+  ['--ds-focus',     'focus'],
+  ['--ds-size-',     'sizing'],
+  ['--ds-bp-',       'breakpoint'],
+  // iconography
+  ['--ds-icon-',     'iconography'],
+  // control
+  ['--ds-control',   'control'],
+  ['--ds-chrome',    'control'],
+  ['--ds-avatar',    'control'],
+  // layout
+  ['--ds-column',    'layout'],
+  ['--ds-shell',     'layout'],
+  ['--ds-sidebar',   'layout'],
+  ['--ds-preview',   'layout'],
+  ['--ds-container', 'layout'],
+  ['--ds-stage',     'layout'],
+  // color (광범위 prefix — 가장 마지막에 fallthrough)
+  ['--ds-neutral',   'color'],
+  ['--ds-accent',    'color'],
+  ['--ds-tone',      'color'],
+  ['--ds-success',   'color'],
+  ['--ds-warning',   'color'],
+  ['--ds-danger',    'color'],
+  ['--ds-traffic',   'color'],
+  ['--ds-border',    'color'],
+  ['--ds-muted',     'color'],
+  ['--ds-base',      'color'],
+  ['--ds-on-',       'color'],
+  ['--ds-bg',        'color'],
+  ['--ds-fg',        'color'],
+  // preset seed
+  ['--ds-hue',       'preset'],
+  ['--ds-density',   'preset'],
+  ['--ds-depth',     'preset'],
+  ['--ds-step',      'preset'],
+] as const
+
+const SORTED_PREFIX = [...PREFIX_TABLE].sort(([a], [b]) => b.length - a.length)
+
+function categorize(name: string): CategoryKey {
+  for (const [prefix, cat] of SORTED_PREFIX) if (name.startsWith(prefix)) return cat
+  // h1~h6 ladder
+  if (/^--ds-h[1-6]-/.test(name)) return 'typography'
+  return 'etc'
 }
 
 const isColorValue = (v: string) =>
@@ -271,23 +422,39 @@ export function TokenTable() {
   const [tokens, setTokens] = useState<TokenEntry[]>([])
   useEffect(() => { setTokens(readRootTokens()) }, [])
 
-  // group by category
+  // 모든 토큰을 foundation lane(_category.ts) 별로 그룹. visual 카테고리도 포함 — 사용자 의도: "모든 데이터를 볼 수 있게".
   const groups = tokens.reduce<Record<string, TokenEntry[]>>((acc, t) => {
     const c = categorize(t.name)
     ;(acc[c] ||= []).push(t)
     return acc
   }, {})
-  const ordered = Object.keys(groups).sort()
+
+  // 정렬: foundation lane 순서 → preset → etc
+  const FOUNDATION_ORDER: ReadonlyArray<CategoryKey> = [
+    'color', 'typography', 'spacing', 'shape', 'state', 'motion', 'elevation',
+    'control', 'layout', 'iconography', 'zIndex', 'opacity', 'focus', 'sizing', 'breakpoint',
+    'preset', 'etc',
+  ]
+  const ordered = FOUNDATION_ORDER.filter(k => groups[k]?.length)
+
+  const visualNote = (cat: string) =>
+    VISUAL_KEYS.has(cat) ? <small data-part="lane-mark">위에 시각 렌더러 ↑</small> : null
 
   return (
     <div data-part="token-table">
       <header>
-        <h2>실시간 token table</h2>
-        <p><code>:root</code> 의 모든 <code>--ds-*</code> custom property — <code>getComputedStyle</code> 로 enumerate (수동 매핑 ❌). 총 <strong>{tokens.length}</strong> 개.</p>
+        <h2>Token directory — foundation lane 전수</h2>
+        <p><code>:root</code> 의 모든 <code>--ds-*</code> 를 <code>getComputedStyle</code> 로 enumerate (수동 매핑 ❌). foundation <code>_category.ts</code> SSOT 기준 그룹. 전체 <strong>{tokens.length}</strong> 개, lane <strong>{ordered.length}</strong>.</p>
       </header>
       {ordered.map(cat => (
         <section key={cat} data-part="token-table-group">
-          <h3>{cat} <small>({groups[cat].length})</small></h3>
+          <h3>
+            {CATEGORY_LABEL_OF(cat)} <small>({groups[cat].length})</small>
+            {visualNote(cat)}
+            {CATEGORY_META[cat]?.standard && (
+              <small data-part="lane-standard"> · {CATEGORY_META[cat]!.standard}</small>
+            )}
+          </h3>
           <dl data-part="token-table-grid">
             {groups[cat].map(t => (
               <div key={t.name} data-part="token-table-row">
@@ -657,57 +824,13 @@ function buildPage(): NormalizedData {
     <div data-part="canvas">
       <style>{tokenPageCss}</style>
 
-      <Family
-        title="1. Color"
-        lede="3-tier (palette → semantic → pair). neutral 1-9 raw scale 위에 의미 토큰(bg/fg/accent/border)을 얹고, 사용처에선 pair 만 import — preset 스왑 시 contrast 자동 보존."
-      >
-        <Frame label="neutral 1 → 9" span={2}>{ColorSwatchGrid}</Frame>
-        <Frame label="semantic pairs">{SemanticPairs}</Frame>
-      </Family>
-
-      <Family
-        title="2. Typography"
-        lede="modular scale 6 단 (xs → 2xl). 토큰 이름은 use-case 가 아니라 *위치* — Display/Headline/Body 매핑은 컴포넌트가 결정. weight 5 단."
-      >
-        <Frame label="size — use-case specimen" span={2}>{TypeSpecimen}</Frame>
-        <Frame label="weight">{WeightSpecimen}</Frame>
-      </Family>
-
-      <Family
-        title="3. Spacing"
-        lede="raw pad(n) 위에 *재귀 Proximity* 5 단 hierarchy 의미를 얹는다. Gestalt: L0 atom < L3 section < L4 surface < L5 shell — 단조 증가 invariant."
-      >
-        <Frame label="hierarchy ladder (recursive Proximity)" span={2}>{SpacingLadder}</Frame>
-        <Frame label="raw pad scale">{PadScale}</Frame>
-      </Family>
-
-      <Family
-        title="4. Shape — Radius"
-        lede="4-step (sm / md / lg / pill). 같은 surface 에 적용해 *둥근 정도의 모핑* 으로 비교 — 절대 px 보다 *대비* 가 중요."
-      >
-        <Frame label="radius scale">{RadiusMorph}</Frame>
-      </Family>
-
-      <Family
-        title="5. Elevation"
-        lede="surface 가 그라운드 위로 떠오르는 z-축 — depth 1/2/3. neutral-1 공통 그라운드 위에 놓여야 그림자 체감이 정확."
-      >
-        <Frame label="shadow ladder">{ElevationStack}</Frame>
-      </Family>
-
-      <Family
-        title="6. Motion"
-        lede="duration 2 단 × easing 2 종 = 4 조합. hover 로 trigger — *시간×곡선* 의 차이는 정지 그래프가 아니라 실제 움직임으로만 보인다."
-      >
-        <Frame label="hover →" span={3}>{MotionDemo}</Frame>
-      </Family>
-
-      <Family
-        title="7. Container — 환경 폭"
-        lede="컴포넌트가 production 에서 점유하는 inline-size. *환경* 이름(chat / feed / reading) — t-shirt size 가 아님. 각 폭은 외부 벤더 수렴 (KakaoTalk · Twitter · Notion · Gmail)."
-      >
-        <Frame label="cell 240 → list 720" span={3}>{ContainerStack}</Frame>
-      </Family>
+      {visualRegistry.map(entry => (
+        <Family key={entry.categoryKey} title={entry.title} lede={entry.lede}>
+          {entry.frames.map(f => (
+            <Frame key={f.label} label={f.label} span={f.span}>{f.body}</Frame>
+          ))}
+        </Family>
+      ))}
 
       <TokenTable />
     </div>

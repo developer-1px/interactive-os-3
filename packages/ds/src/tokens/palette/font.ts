@@ -4,7 +4,7 @@
 
 /**
  * font-size scale — preset.text.
- * @demo type=value fn=font args=["lg"]
+ * @demo type=value fn=font scale=["xs","sm","md","lg","xl","2xl","3xl"] args=["lg"]
  */
 export const font = (s: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl') =>
   `var(--ds-text-${s})`

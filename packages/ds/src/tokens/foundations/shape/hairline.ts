@@ -6,12 +6,8 @@ import { css } from '../css'
  */
 export const hairlineWidth = () => `var(--ds-hairline)`
 
-/**
- * focus-ring thickness scalar — outline·active indicator·slider thumb 등 강조 테두리.
- * preset --ds-focus-ring-w (default 2px) 발행값 참조.
- * @demo type=value fn=focusRingWidth
- */
-export const focusRingWidth = () => `var(--ds-focus-ring-w, 2px)`
+/* focus-ring thickness scalar 는 focus/ring.ts 의 ringWidth() 로 이동 — domain hierarchy.
+   shape/hairline.ts 는 hairline 도메인 전용. */
 
 /**
  * Hairline divider — 리스트 행 사이 분리선.

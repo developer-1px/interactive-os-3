@@ -1,4 +1,4 @@
-import { accent, border, css, hairlineWidth, hierarchy, radius, slot, surface, text, typography } from '../../../tokens/foundations'
+import { accent, border, css, hairlineWidth, hierarchy, radius, ring, slot, surface, text, typography } from '../../../tokens/foundations'
 import { weight, pad } from '../../../tokens/palette'
 
 /**
@@ -152,8 +152,7 @@ export const cssAuthCard = () => css`
     inline-size: 100%;
   }
   article[data-part="card"][data-card="auth"] [data-part="otp-row"] > input:focus-visible {
-    outline: 2px solid ${accent()};
-    outline-offset: 2px;
+    ${ring()}
     border-color: ${accent()};
   }
 `

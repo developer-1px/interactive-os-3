@@ -15,6 +15,3 @@ export function Disclosure({ summary, children, ...rest }: DisclosureProps) {
   )
 }
 
-export function Accordion(props: ComponentPropsWithoutRef<'div'>) {
-  return <div role="group" {...props} />
-}

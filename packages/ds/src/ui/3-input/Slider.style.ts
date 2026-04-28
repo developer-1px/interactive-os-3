@@ -1,4 +1,4 @@
-import { bg, border, control, css, focusRingWidth, hairlineWidth, radius, shadow } from '../../tokens/foundations'
+import { bg, border, control, css, ringWidth, hairlineWidth, radius, shadow } from '../../tokens/foundations'
 // input[type="range"] — native role=slider. DS 토큰 기반 풀 커스텀 (native와 섞지 않음).
 //   track:  4px channel — control-channel(neutral-4) 위에 thumb까지 accent fill로 진행도 표시
 //   thumb:  control('h') 정사각 원, bg + control-border + elev-1
@@ -25,13 +25,13 @@ export const cssSlider = () => css`
   :where(input[type="range"])::-webkit-slider-thumb {
     appearance: none; -webkit-appearance: none;
     width: 16px; height: 16px; border-radius: ${radius('pill')};
-    background: ${bg()}; border: ${focusRingWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
+    background: ${bg()}; border: ${ringWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
     margin-top: -6px;
   }
   :where(input[type="range"])::-moz-range-thumb {
     appearance: none;
     width: 16px; height: 16px; border-radius: ${radius('pill')};
-    background: ${bg()}; border: ${focusRingWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
+    background: ${bg()}; border: ${ringWidth()} solid var(--ds-accent); box-shadow: ${shadow()};
   }
   :where(input[type="range"]):hover::-webkit-slider-thumb,
   :where(input[type="range"]):focus-visible::-webkit-slider-thumb {

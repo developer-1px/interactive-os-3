@@ -1,5 +1,5 @@
-import { css, icon, typography } from '@p/ds/tokens/foundations'
-import { pad } from '@p/ds/tokens/palette'
+import { css, icon, text, typography } from '@p/ds/tokens/foundations'
+import { font, pad } from '@p/ds/tokens/palette'
 
 // Finder desktop — sidebar / columns / list-view / preview.
 // (sidebar surface 자체는 widgets/composite/sidebar.ts owner.)
@@ -55,12 +55,26 @@ export const finderCss = css`
     line-height: 1;
     box-sizing: border-box;
   }
-  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] form[role="search"] {
-    margin-inline-start: auto;
-    display: flex; align-items: center; flex: 1;
+  /* preview pane toolbar — SearchBox(<search>)가 남는 공간을 흡수, 우측에 markdown 액션 링크 */
+  main[data-part="finder"] section[data-pane="preview"] > header[data-part="pane-toolbar"] {
+    gap: ${pad(2)};
   }
-  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] input[type="search"] {
-    inline-size: 100%;
+  main[data-part="finder"] section[data-part="pane"] > header[data-part="pane-toolbar"] > search {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    max-inline-size: 360px;
+  }
+  main[data-part="finder"] section[data-pane="preview"] > header[data-part="pane-toolbar"] > a {
+    margin-inline-start: auto;
+    display: inline-flex; align-items: center; gap: ${pad(0.5)};
+    color: ${text('subtle')};
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: ${font('sm')};
+  }
+  main[data-part="finder"] section[data-pane="preview"] > header[data-part="pane-toolbar"] > a:hover {
+    color: ${text()};
+    text-decoration: underline;
   }
   /* sidebar 접기 버튼 — control-h 정사각, ghost */
   main[data-part="finder"] section[data-pane="sidebar"] > header[data-part="pane-toolbar"] > button {

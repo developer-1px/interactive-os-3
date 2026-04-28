@@ -9,7 +9,6 @@
  */
 export * from './proximity'
 export * from './hierarchy'
-export * from './score'
 export * from './slot'
 export * from './size'
 // keyline 은 generic 이름(tracks/gap)을 가져 namespace 로만 노출

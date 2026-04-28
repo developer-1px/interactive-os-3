@@ -1,4 +1,4 @@
-import { Callout, Listbox, Phone, PhoneTabBar, PhoneTopBar, Row, Tag, fromList } from '@p/ds'
+import { Callout, Listbox, Phone, PhoneTabBar, PhoneTopBar, Row, Chip, fromList } from '@p/ds'
 import { Button } from '@p/ds/ui/2-action/Button'
 import { Field, FieldDescription, FieldLabel } from '@p/ds/ui/3-input/Field'
 import { Input } from '@p/ds/ui/3-input/Input'
@@ -20,7 +20,7 @@ const Form_Compose = defineScreen({
   flow: 'compose',
   category: 'I-Forms',
   patterns: ['title-body-form', 'tag-input', 'sticky-action-cta', 'top-bar-back-action'],
-  parts: ['Phone', 'PhoneTopBar', 'Field', 'FieldLabel', 'FieldDescription', 'Input', 'Textarea', 'Tag', 'Row', 'Button'],
+  parts: ['Phone', 'PhoneTopBar', 'Field', 'FieldLabel', 'FieldDescription', 'Input', 'Textarea', 'Chip', 'Row', 'Button'],
   render: () => (
     <Phone label="compose" topBar={<PhoneTopBar back title="새 글" action="발행" />}>
       <Body>
@@ -36,8 +36,8 @@ const Form_Compose = defineScreen({
         <Field>
           <FieldLabel>태그</FieldLabel>
           <Row flow="cluster">
-            <Tag label="design" onRemove={() => {}} />
-            <Tag label="ds" onRemove={() => {}} />
+            <Chip label="design" onRemove={() => {}} />
+            <Chip label="ds" onRemove={() => {}} />
             <Input placeholder="+ 추가" style={{ flex: 1, minInlineSize: 80 }} />
           </Row>
         </Field>
@@ -84,16 +84,16 @@ const Form_Search = defineScreen({
   flow: 'search',
   category: 'I-Forms',
   patterns: ['searchbox', 'recent-tags', 'suggestion-listbox', 'top-bar-back'],
-  parts: ['Phone', 'PhoneTopBar', 'SearchBox', 'Tag', 'Row', 'Listbox'],
+  parts: ['Phone', 'PhoneTopBar', 'SearchBox', 'Chip', 'Row', 'Listbox'],
   render: () => (
     <Phone label="search" topBar={<PhoneTopBar back title="검색" />}>
       <Body>
         <SearchBox placeholder="라우트 · 컴포넌트 · 토큰" />
         <small style={meta.weak}>최근 검색</small>
         <Row flow="cluster">
-          <Tag label="Phone" onRemove={() => {}} />
-          <Tag label="container" onRemove={() => {}} />
-          <Tag label="hierarchy" onRemove={() => {}} />
+          <Chip label="Phone" onRemove={() => {}} />
+          <Chip label="container" onRemove={() => {}} />
+          <Chip label="hierarchy" onRemove={() => {}} />
         </Row>
         <small style={meta.weak}>제안</small>
         <Listbox

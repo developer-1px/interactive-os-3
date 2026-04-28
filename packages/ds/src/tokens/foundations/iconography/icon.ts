@@ -170,7 +170,7 @@ const customUrls: Record<string, string> = {
 }
 
 // 토큰 목록 — 소비 지점에서 참조하는 이름 집합.
-const tokens = [
+export const ICON_TOKENS = [
   'chevronRight', 'chevronDown', 'check', 'dot',
   'dir', 'dirOpen',
   'file', 'fileCode', 'fileConfig', 'fileImage', 'fileText', 'fileGlobe', 'filePalette',
@@ -192,7 +192,7 @@ const tokens = [
   'link', 'external-link', 'paperclip', 'git-commit',
 ] as const
 
-export type IconToken = (typeof tokens)[number]
+export type IconToken = (typeof ICON_TOKENS)[number]
 
 const urlOf = (t: IconToken): string => {
   if (customUrls[t]) return customUrls[t]
@@ -207,7 +207,7 @@ const varName = (t: IconToken) => `--ds-icon-${t}`
 /** @demo type=recipe fn=iconVars */
 export const iconVars = () => css`
   :root {
-${tokens.map((t) => `    ${varName(t)}: ${urlOf(t)};`).join('\n')}
+${ICON_TOKENS.map((t) => `    ${varName(t)}: ${urlOf(t)};`).join('\n')}
   }
 `
 
@@ -231,7 +231,7 @@ export const icon = (token: IconToken, size: string = '1em') => css`
  * @demo type=recipe fn=iconIndicator
  */
 export const iconIndicator = () => css`
-  /* base — 미등록 토큰은 :not(:is(${tokens.map((t) => `[data-icon="${t}"]`).join(',')}))로 따로 빨간 빗금 표시. */
+  /* base — 미등록 토큰은 :not(:is(${ICON_TOKENS.map((t) => `[data-icon="${t}"]`).join(',')}))로 따로 빨간 빗금 표시. */
   [data-icon]::before {
     content: '';
     display: inline-block;
@@ -245,13 +245,13 @@ export const iconIndicator = () => css`
     opacity: .65;
   }
   /* dev affordance — 미등록 토큰 (mask 없음) 은 시끄럽게: 빨간 빗금. 검정 박스가 정상 같던 문제 차단. */
-  [data-icon]:not(${tokens.map((t) => `[data-icon="${t}"]`).join(', ')})::before {
+  [data-icon]:not(${ICON_TOKENS.map((t) => `[data-icon="${t}"]`).join(', ')})::before {
     background-color: transparent;
     background-image: repeating-linear-gradient(45deg, #e11 0 3px, transparent 3px 6px);
     outline: ${hairlineWidth()} dashed #e11;
     opacity: 1;
   }
-${tokens
+${ICON_TOKENS
   .map(
     (t) =>
       `  [data-icon="${t}"]::before { -webkit-mask-image: var(${varName(t)}); mask-image: var(${varName(t)}); }`,

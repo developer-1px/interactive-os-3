@@ -7,9 +7,10 @@ import {
   type Event,
 } from '@p/ds'
 import { Split } from '@p/ds/ui/8-layout/Split'
+import { Link } from '@tanstack/react-router'
 import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'
-import type { ViewMode } from '../entities/types'
+import { extToPreviewKind, type ViewMode } from '../entities/types'
 
 /**
  * Finder 본문 — sidebar(recent/fav Listbox) + Columns view + Preview pane.
@@ -75,6 +76,16 @@ export function FinderBody() {
                 value={view.titlebar.query}
                 onChange={(e) => dispatch({ type: 'setQuery', q: e.currentTarget.value })}
               />
+              {'node' in view.preview && extToPreviewKind(view.preview.node.ext) === 'markdown' && (
+                <Link
+                  to="/markdown/$"
+                  params={{ _splat: view.preview.node.path.replace(/^\//, '') }}
+                  aria-label="전체 화면으로 열기"
+                >
+                  전체 화면으로 열기
+                  <span data-icon="external-link" aria-hidden="true" />
+                </Link>
+              )}
             </header>
             <PreviewPane vm={view.preview} />
           </section>

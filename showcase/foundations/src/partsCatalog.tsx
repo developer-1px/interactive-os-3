@@ -1,7 +1,7 @@
 /** partsCatalog — ds/parts 표준 부품 9종 카탈로그(데이터 + 데모 inline). */
 import type { ReactNode } from 'react'
 import {
-  Avatar, Badge, Tag, Thumbnail, Timestamp,
+  Avatar, Badge, Chip, Thumbnail, Timestamp,
   Skeleton, EmptyState, Callout, KeyValue,
 } from '@p/ds/ui/parts'
 
@@ -15,7 +15,7 @@ export interface PartEntry {
 export const PARTS: PartEntry[] = [
   { name: 'Avatar',     doc: '사람·엔티티 식별. src 있으면 img, 없으면 fallback initial.', demo: <Avatar alt="Jane Doe" initial="J" /> },
   { name: 'Badge',      doc: 'counter(숫자) 또는 status dot. tone=success/warning/danger.', demo: <Badge count={3} tone="danger" label="3 unread" /> },
-  { name: 'Tag',        doc: '라벨 + optional remove(×). chip 아니라 Tag로 통일.',          demo: <Tag label="design-system" /> },
+  { name: 'Chip',        doc: '라벨 + optional remove(×). Material/Mantine 의 Input/Filter Chip 시맨틱.', demo: <Chip label="design-system" /> },
   { name: 'Thumbnail',  doc: 'aspect-ratio 보존 미리보기 미디어.',                          demo: <Thumbnail src="data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect width=%2280%22 height=%2280%22 fill=%22%23ddd%22/></svg>" alt="placeholder" ratio="1/1" /> },
   { name: 'Timestamp',  doc: '<time datetime> 시맨틱. absolute or relative.',               demo: <Timestamp value={Date.now() - 1000 * 60 * 7} display="relative" /> },
   { name: 'Skeleton',   doc: '로딩 placeholder. 단색 box. width/height 호출부 결정.',       demo: <Skeleton width={120} height={12} /> },

@@ -1,4 +1,4 @@
-import { accent, css, mute, text } from '../../tokens/foundations'
+import { accent, css, mute, ring, text } from '../../tokens/foundations'
 import { font, weight, pad } from '../../tokens/palette'
 
 /**
@@ -40,8 +40,7 @@ export const cssBreadcrumb = () => css`
     text-underline-offset: 2px;
   }
   nav[aria-label="Breadcrumb"] > ol > li > a:focus-visible {
-    outline: 2px solid ${accent()};
-    outline-offset: 2px;
+    ${ring()}
     border-radius: 2px;
   }
   nav[aria-label="Breadcrumb"] > ol > li > span[aria-current="page"] {

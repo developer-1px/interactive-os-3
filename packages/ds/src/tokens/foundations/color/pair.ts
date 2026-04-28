@@ -10,7 +10,7 @@ import { css } from '../css'
  *
  * 사용:
  *   css`
- *     [data-part="tag"] {
+ *     [data-part="chip"] {
  *       ${tone('accent')}  // background-color + color를 쌍으로 주입
  *     }
  *   `

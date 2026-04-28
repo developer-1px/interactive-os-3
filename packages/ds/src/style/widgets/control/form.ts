@@ -1,4 +1,4 @@
-import { accent, border, control, css, dur, ease, focusRingWidth, hairlineWidth, onAccent, radius, slot, status, surface, text, toneAlpha, typography } from '../../../tokens/foundations'
+import { accent, border, control, css, dur, ease, hairlineWidth, onAccent, radius, ring, slot, status, surface, text, toneAlpha, typography } from '../../../tokens/foundations'
 import { font, tracking, weight, pad } from '../../../tokens/palette'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
@@ -71,8 +71,7 @@ export const cssForm = () => css`
     border-color: ${toneAlpha('accent', 'border')};
   }
   :where(input[type="file"]):focus-visible {
-    outline: ${focusRingWidth()} solid ${accent()};
-    outline-offset: 2px;
+    ${ring()}
     border-color: ${accent()};
   }
   /* UA가 그리는 "Choose File" 버튼 — WebKit pseudo */
@@ -136,6 +135,51 @@ export const cssForm = () => css`
   [data-ds="Row"][data-flow="cluster"]:has(> [role="checkbox"], > [role="radio"], > [role="switch"]):hover > :where([role="checkbox"]:not([aria-checked="true"]), [role="radio"]:not([aria-checked="true"]), [role="switch"]:not([aria-checked="true"])) {
     /* 이미 checked인 박스는 accent fill 유지, unchecked인 경우만 hover 시 border 힌트 */
     border-color: ${toneAlpha('accent', 'border')};
+  }
+
+  /* ── SearchBox — search 랜드마크 wrapper + sibling icon + native input ──
+     search element 자체가 시각 컨테이너 (border·radius·padding 보유), 내부 input
+     은 chromeless 로 비워 둔다. focus 는 :focus-within 으로 wrapper 가 받는다. */
+  :where(search):has(> input[type="search"]) {
+    display: inline-flex;
+    align-items: center;
+    gap: ${pad(1)};
+    block-size: ${control('h')};
+    min-inline-size: 16ch;
+    padding-inline: ${pad(2)};
+    background: ${surface()};
+    border: ${hairlineWidth()} solid ${border()};
+    border-radius: ${radius('md')};
+    color: ${text()};
+    transition: border-color ${dur('fast')} ${ease('out')},
+                box-shadow ${dur('fast')} ${ease('out')};
+  }
+  /* composite focus ring 정책 — 가장 외부 컨테이너(search) 1곳에만 표시.
+     내부 input 의 native outline 은 아래 규칙에서 outline:none 으로 차단.
+     ring() mixin = ds 표준 focus 시각 (outline width·color·offset 일원화). */
+  :where(search):has(> input[type="search"]:focus-visible) {
+    border-color: ${accent()};
+    ${ring()}
+  }
+  :where(search) > :where([data-icon]) {
+    flex: none;
+    color: ${text('subtle')};
+  }
+  :where(search) > input[type="search"] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+  }
+  /* 내부 input 자체의 focus ring 은 외부 컨테이너로 위임 — 모든 focus 상태에서 차단 */
+  :where(search) > input[type="search"]:where(:focus, :focus-visible) {
+    outline: none;
+    box-shadow: none;
   }
 
   /* ── Panel as Section[emphasis=raised] — h2/h3 하단 구분선 ─── */

@@ -1,4 +1,4 @@
-import { border, css, currentTint, grouping, hairlineWidth, radius, text } from '../../tokens/foundations'
+import { border, css, currentTint, grouping, hairlineWidth, radius, ring, text } from '../../tokens/foundations'
 import { pad } from '../../tokens/palette'
 
 /**
@@ -31,8 +31,7 @@ export const cssCard = () => css`
     box-shadow: 0 0 0 1px var(--ds-accent), 0 1px 3px ${currentTint('soft')};
   }
   article[data-part="card"]:focus-visible {
-    outline: 2px solid var(--ds-accent);
-    outline-offset: 2px;
+    ${ring()}
   }
 
   /* slot blocks — 기본은 block. 슬롯 내부 시맨틱 태그(header/code/p/footer)는 호출처 책임. */

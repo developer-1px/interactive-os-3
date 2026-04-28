@@ -1,4 +1,4 @@
-import { Column, CourseCard, Heading, Phone, PhoneTabBar, PhoneTopBar, Row, Skeleton, TabList, Tag, fromList } from '@p/ds'
+import { Column, CourseCard, Heading, Phone, PhoneTabBar, PhoneTopBar, Row, Skeleton, TabList, Chip, fromList } from '@p/ds'
 import { Button } from '@p/ds/ui/2-action/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, tabIcons } from '../wireframe-shell'
@@ -48,7 +48,7 @@ const Learn_Detail = defineScreen({
   flow: 'learning',
   category: 'C-Learning',
   patterns: ['hero-image', 'tag-meta-row', 'curriculum-list', 'sticky-action-cta', 'top-bar-back-action'],
-  parts: ['Phone', 'PhoneTopBar', 'Skeleton', 'Heading', 'Tag', 'Row', 'Column', 'Button'],
+  parts: ['Phone', 'PhoneTopBar', 'Skeleton', 'Heading', 'Chip', 'Row', 'Column', 'Button'],
   render: () => (
     <Phone
       label="course detail"
@@ -58,7 +58,7 @@ const Learn_Detail = defineScreen({
         <Column>
           <Skeleton width="100%" height={hero.height} style={{ borderRadius: hero.radius }} />
           <Heading level="h2">TypeScript 심화 — 타입 추론과 generics</Heading>
-          <Row flow="cluster"><Tag label="중급" /><Tag label="240 분" /><Tag label="자막" /></Row>
+          <Row flow="cluster"><Chip label="중급" /><Chip label="240 분" /><Chip label="자막" /></Row>
           <p style={meta.medium}>강사 Sora Park · 12 챕터 · 8 실습</p>
         </Column>
         <Heading level="h3">커리큘럼</Heading>

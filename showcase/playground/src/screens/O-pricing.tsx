@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Column, Heading, Phone, PhoneTopBar, Row, TabList, Tag, fromList } from '@p/ds'
+import { Column, Heading, Phone, PhoneTopBar, Row, TabList, Chip, fromList } from '@p/ds'
 import { Button } from '@p/ds/ui/2-action/Button'
 import { Card } from '@p/ds/ui/parts/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
@@ -26,7 +26,7 @@ const Pricing_Plans = defineScreen({
   flow: 'pricing',
   category: 'O-Pricing',
   patterns: ['period-tabs', 'pricing-card', 'feature-list', 'recommended-tag'],
-  parts: ['Phone', 'PhoneTopBar', 'TabList', 'Card', 'Heading', 'Tag', 'Row', 'Column', 'Button'],
+  parts: ['Phone', 'PhoneTopBar', 'TabList', 'Card', 'Heading', 'Chip', 'Row', 'Column', 'Button'],
   render: () => (
     <Phone label="pricing" topBar={<PhoneTopBar back title="요금제" />}>
       <Body>
@@ -38,7 +38,7 @@ const Pricing_Plans = defineScreen({
           footer: <Button style={{ inlineSize: '100%' }}>현재 플랜</Button>,
         }} />
         <Card selected slots={{
-          title: <Row flow="split" style={{ alignItems: 'center' }}><Heading level="h3">Pro</Heading><Tag label="추천" /></Row>,
+          title: <Row flow="split" style={{ alignItems: 'center' }}><Heading level="h3">Pro</Heading><Chip label="추천" /></Row>,
           meta: <Price amount="₩9,900" />,
           body: <Column flow="list"><Feat>무제한 프로젝트</Feat><Feat>50GB 저장</Feat><Feat>이메일 지원</Feat><Feat>우선 처리</Feat></Column>,
           footer: <Button data-emphasis="primary" style={{ inlineSize: '100%' }}>업그레이드</Button>,

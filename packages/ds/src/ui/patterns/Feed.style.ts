@@ -1,4 +1,4 @@
-import { accent, css, focusRingWidth, keyline, radius } from '../../tokens/foundations'
+import { css, keyline, radius, ring } from '../../tokens/foundations'
 import { pad } from '../../tokens/palette'
 
 export const cssFeed = () => css`
@@ -10,8 +10,7 @@ export const cssFeed = () => css`
   :where([role="feed"]) article > div { display: grid; row-gap: ${pad(0.5)}; min-width: 0; }
   :where([role="feed"]) header { display: flex; gap: ${keyline.slotGap}; align-items: baseline; }
   :where([role="feed"]) article:focus-visible {
-    outline: ${focusRingWidth()} solid ${accent()};
-    outline-offset: 2px;
+    ${ring()}
     border-radius: ${radius('sm')};
   }
 `

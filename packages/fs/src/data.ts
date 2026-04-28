@@ -29,7 +29,7 @@ if (import.meta.hot) {
 
 /** 프로젝트 파일 raw 텍스트 lazy loader — path → () => Promise<string> */
 const textLoaders = {
-  ...import.meta.glob('/src/**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,mdx,txt,css,scss,sass,html,svg,yml,yaml,toml}', {
+  ...import.meta.glob('/{src,packages,apps,showcase}/**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,mdx,txt,css,scss,sass,html,svg,yml,yaml,toml}', {
     query: '?raw', import: 'default',
   }),
   ...import.meta.glob('/public/**/*.{json,md,mdx,txt,css,html,svg,yml,yaml}', {
@@ -45,7 +45,7 @@ const textLoaders = {
 
 /** 이미지 url — path → public url (eager) */
 const imageUrls = {
-  ...import.meta.glob('/src/**/*.{png,jpg,jpeg,gif,webp,avif,svg}', {
+  ...import.meta.glob('/{src,packages,apps,showcase}/**/*.{png,jpg,jpeg,gif,webp,avif,svg}', {
     query: '?url', import: 'default', eager: true,
   }),
   ...import.meta.glob('/public/**/*.{png,jpg,jpeg,gif,webp,avif,svg}', {

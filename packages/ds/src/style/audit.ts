@@ -56,63 +56,6 @@ export function parseSegments(segments: ReadonlyArray<readonly [string, string]>
 export const normSelector = (sel: string) =>
   sel.replace(/\s+/g, ' ').replace(/\s*,\s*/g, ',').replace(/\s*([>+~])\s*/g, '$1').trim()
 
-export function splitTopLevel(s: string, sep: string): string[] {
-  const out: string[] = []
-  let depth = 0, start = 0
-  for (let i = 0; i < s.length; i++) {
-    const c = s[i]
-    if (c === '(' || c === '[') depth++
-    else if (c === ')' || c === ']') depth--
-    else if (c === sep && depth === 0) {
-      out.push(s.slice(start, i))
-      start = i + 1
-    }
-  }
-  out.push(s.slice(start))
-  return out
-}
-
-export const splitSelectorList = (sel: string) =>
-  splitTopLevel(sel, ',').map((s) => s.trim()).filter(Boolean)
-
-export const normDecls = (body: string): string =>
-  body
-    .split(';')
-    .map((d) => d.trim())
-    .filter(Boolean)
-    .map((d) => d.replace(/\s+/g, ' '))
-    .sort()
-    .join(';')
-
-export function depthOf(sel: string): number {
-  let flat = sel
-  for (let k = 0; k < 5; k++) {
-    const next = flat.replace(/:where\(([^()]*)\)/g, '$1').replace(/:is\(([^()]*)\)/g, '$1')
-    if (next === flat) break
-    flat = next
-  }
-  let depth = 1
-  let parens = 0, brackets = 0, prevWS = false
-  for (let i = 0; i < flat.length; i++) {
-    const c = flat[i]
-    if (c === '(') parens++
-    else if (c === ')') parens--
-    else if (c === '[') brackets++
-    else if (c === ']') brackets--
-    else if (parens === 0 && brackets === 0) {
-      if (c === '>' || c === '+' || c === '~') { depth++; prevWS = false }
-      else if (c === ' ') {
-        if (!prevWS) {
-          const next = flat[i + 1], prev = flat[i - 1]
-          if (next && prev && /[\w*[\]:.#-]/.test(prev) && /[\w*[\]:.#-]/.test(next)) depth++
-        }
-        prevWS = true
-      } else prevWS = false
-    } else prevWS = false
-  }
-  return depth
-}
-
 // ── duplicate 분석 ─────────────────────────────────────────────────────
 export type Duplicate = { selector: string; sources: string[]; count: number }
 

@@ -21,17 +21,33 @@ const contentModules = import.meta.glob<Record<string, unknown>>('@p/ds/content/
 const contentDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/content/_demos/*.demo.tsx', { eager: true })
 const deviceModules = import.meta.glob<Record<string, unknown>>('@p/ds/devices/*.tsx', { eager: true })
 const deviceDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/devices/_demos/*.demo.tsx', { eager: true })
+const surfaceModules = import.meta.glob<Record<string, unknown>>('@p/ds/surfaces/*/*.tsx', { eager: true })
+const surfaceDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/surfaces/*/_demos/*.demo.tsx', { eager: true })
+// style/widgets/* — CSS-only stylesheet (.ts). demo 는 _demos/<name>.demo.tsx 로 raw markup 시연.
+const styleWidgetModules = import.meta.glob<Record<string, unknown>>('@p/ds/style/widgets/*/*.ts', { eager: true })
+const styleWidgetDemoModules = import.meta.glob<{ default: ComponentType }>('@p/ds/style/widgets/*/_demos/*.demo.tsx', { eager: true })
 
 export type DemoFn = () => ReactNode
 export type CompNode = { name: string; demo: DemoFn | null; subgroup?: string }
 export type CompLane = { lane: string; nodes: CompNode[]; bucket: Bucket }
 
-function resolveDemo(name: string, colocated: ComponentType | undefined): DemoFn | null {
+function resolveDemo(
+  name: string,
+  colocated: ComponentType | undefined,
+  ownModule: Record<string, unknown> | undefined,
+): DemoFn | null {
   if (colocated) {
     const C = colocated
     return () => <C />
   }
-  return catalogDemos[name] ?? null
+  if (catalogDemos[name]) return catalogDemos[name]
+  // fallback — 0-prop 자동 mount. ErrorBoundary 가 render-time 실패 흡수.
+  const exported = ownModule?.[name]
+  if (typeof exported === 'function' && /^[A-Z]/.test(name)) {
+    const C = exported as ComponentType
+    return () => <C />
+  }
+  return null
 }
 
 function buildCompLanes(
@@ -58,7 +74,7 @@ function buildCompLanes(
     if (!lanes.has(group)) lanes.set(group, [])
     lanes.get(group)!.push({
       name,
-      demo: resolveDemo(name, demoIndex.get(name)),
+      demo: resolveDemo(name, demoIndex.get(name), components[path] as Record<string, unknown> | undefined),
       subgroup: subgroupOf?.(m),
     })
   }
@@ -118,7 +134,23 @@ const deviceLanes = buildCompLanes(
   (m) => m[1],
 )
 
-export const allLanes = [...uiLanes, ...contentLanes, ...deviceLanes].sort((a, b) => laneRank(a.lane) - laneRank(b.lane))
+const surfaceLanes = buildCompLanes(
+  surfaceModules,
+  surfaceDemoModules,
+  /\/surfaces\/([^/]+)\/([^/]+)\.tsx$/,
+  (m) => `surfaces/${m[1]}`,
+  (m) => m[2],
+)
+
+const styleWidgetLanes = buildCompLanes(
+  styleWidgetModules,
+  styleWidgetDemoModules,
+  /\/style\/widgets\/([^/]+)\/([^/]+)\.ts$/,
+  (m) => `style/widgets/${m[1]}`,
+  (m) => m[2],
+)
+
+export const allLanes = [...uiLanes, ...contentLanes, ...surfaceLanes, ...styleWidgetLanes, ...deviceLanes].sort((a, b) => laneRank(a.lane) - laneRank(b.lane))
 
 // L2 lane 안에서 컴포넌트별 atom override (Foo.meta.ts) 가 composed 로 끌어내릴 수 있다.
 // L3+ lane 은 default composed — atom override 가 있으면 L2 로 끌어올린다.
@@ -146,6 +178,8 @@ export const lanesByBucket = rebucket(allLanes)
 export const totalCompCount =
   uiLanes.reduce((n, l) => n + l.nodes.length, 0) +
   contentLanes.reduce((n, l) => n + l.nodes.length, 0) +
+  surfaceLanes.reduce((n, l) => n + l.nodes.length, 0) +
+  styleWidgetLanes.reduce((n, l) => n + l.nodes.length, 0) +
   deviceLanes.reduce((n, l) => n + l.nodes.length, 0)
 
 // ── 컴포넌트 이름 → import path 인덱스 ──────────────────────────────────
@@ -172,3 +206,5 @@ addCompIndex(uiModules,     /\/ui\/([^/]+)\/([^/]+)\.tsx$/,         (m) => `ui/$
 addCompIndex(uiSubModules,  /\/ui\/([^/]+)\/([^/]+)\/([^/]+)\.tsx$/, (m) => `ui/${m[1]}`)
 addCompIndex(contentModules,/\/content\/([^/]+)\.tsx$/,             () => 'content')
 addCompIndex(deviceModules, /\/devices\/([^/]+)\.tsx$/,             () => 'devices')
+addCompIndex(surfaceModules,/\/surfaces\/([^/]+)\/([^/]+)\.tsx$/,    (m) => `surfaces/${m[1]}`)
+addCompIndex(styleWidgetModules, /\/style\/widgets\/([^/]+)\/([^/]+)\.ts$/, (m) => `style/widgets/${m[1]}`)

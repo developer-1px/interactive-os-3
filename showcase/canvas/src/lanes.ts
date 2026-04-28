@@ -14,6 +14,12 @@ export type Bucket = 'L2' | 'L3' | 'L4' | 'L5'
 export function bucketOf(lanePath: string): Bucket {
   if (lanePath === 'devices') return 'L5'
   if (lanePath === 'content') return 'L3'
+  if (lanePath.startsWith('surfaces/')) return 'L5'
+  if (lanePath.startsWith('style/widgets/')) {
+    const tail = lanePath.slice('style/widgets/'.length)
+    if (tail === 'composite') return 'L4'
+    return 'L3'
+  }
   if (lanePath.startsWith('ui/')) {
     const tail = lanePath.slice(3)
     const n = parseInt(tail.match(/^(\d+)-/)?.[1] ?? '99')

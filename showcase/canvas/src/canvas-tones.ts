@@ -1,16 +1,19 @@
 /**
  * Canvas tones — L0/L1/L2/L3 layer 색 신호 (page divider · section marker).
  *
- * Canvas 내부 art direction tone 으로, DS semantic surface 와 별개의 좌표.
- * widget 시각 코드에서 직접 import 금지 — canvas chrome 전용.
+ * ds semantic 토큰 직참 — preset 갈아끼우면(theme/dark mode) 자동 추적.
+ * 이전 hardcoded hex 는 dark mode 에서 깨졌고 brand swap 추종 불가.
  *
- * 이 파일은 lint-ds-values SCOPE 밖이라 hex 리터럴 허용.
+ *   neutral → --ds-neutral-9 (text/strong 등가)
+ *   blue    → --ds-accent     (preset accent)
+ *   green   → --ds-success    (semantic status)
+ *   amber   → --ds-warning    (semantic status)
+ *   fgOnDark → --ds-accent-on (preset 가 contrast 보장)
  */
 export const TONE = {
-  neutral: '#1e1e1e',
-  blue:    '#2563eb',
-  green:   '#16a34a',
-  amber:   '#d97706',
-  /** 동적 dark 배경(color-ramp dark tile)에서 forced-white 텍스트. */
-  fgOnDark: '#fff',
+  neutral:  'var(--ds-neutral-9)',
+  blue:     'var(--ds-accent)',
+  green:    'var(--ds-success)',
+  amber:    'var(--ds-warning)',
+  fgOnDark: 'var(--ds-accent-on)',
 } as const

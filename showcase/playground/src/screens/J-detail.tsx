@@ -1,4 +1,4 @@
-import { Breadcrumb, Code, CountBadge, Heading, KeyValue, Link, Phone, PhoneTopBar, ProgressBar, Row, Tag } from '@p/ds'
+import { Breadcrumb, Code, CountBadge, Heading, KeyValue, Link, Phone, PhoneTopBar, ProgressBar, Row, Chip } from '@p/ds'
 import { Button } from '@p/ds/ui/2-action/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
@@ -15,7 +15,7 @@ const Detail_Order = defineScreen({
   flow: 'order-detail',
   category: 'J-Detail',
   patterns: ['breadcrumb', 'progress-tracker', 'key-value-list', 'sticky-action-cta', 'top-bar-back-action'],
-  parts: ['Phone', 'PhoneTopBar', 'Breadcrumb', 'Heading', 'Tag', 'CountBadge', 'ProgressBar', 'KeyValue', 'Code', 'Link', 'Button', 'Row'],
+  parts: ['Phone', 'PhoneTopBar', 'Breadcrumb', 'Heading', 'Chip', 'CountBadge', 'ProgressBar', 'KeyValue', 'Code', 'Link', 'Button', 'Row'],
   render: () => (
     <Phone label="order detail" topBar={<PhoneTopBar back title="주문 #482" action={<span data-icon="more" aria-label="more" />} />}>
       <Body>
@@ -25,7 +25,7 @@ const Detail_Order = defineScreen({
           { label: '#482', current: true },
         ]} />
         <Heading level="h2">Mechanical Keyboard</Heading>
-        <Row flow="cluster"><Tag label="배송 중" /><CountBadge label="2/3" /></Row>
+        <Row flow="cluster"><Chip label="배송 중" /><CountBadge label="2/3" /></Row>
         <ProgressBar value={66} max={100} aria-label="delivery progress" />
         <Heading level="h3">상세</Heading>
         <KeyValue items={[

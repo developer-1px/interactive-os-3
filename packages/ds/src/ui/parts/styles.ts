@@ -1,8 +1,10 @@
 // ui/parts CSS aggregator — sibling co-location, no barrel.
 // 모든 export 는 css 로 시작 (naming-audit 합의).
 import { cssAvatar } from './Avatar.style'
+import { cssAvatarGroup } from './AvatarGroup.style'
+import { cssMedia } from './MediaObject.style'
 import { cssCountBadge } from './CountBadge.style'
-import { cssTag } from './Tag.style'
+import { cssChip } from './Chip.style'
 import { cssThumbnail } from './Thumbnail.style'
 import { cssTimestamp } from './Timestamp.style'
 import { cssSkeleton } from './Skeleton.style'
@@ -21,8 +23,10 @@ import { cssRovingItem } from './RovingItem.style'
 export const partsStyles = () =>
   [
     cssAvatar(),
+    cssAvatarGroup(),
+    cssMedia(),
     cssCountBadge(),
-    cssTag(),
+    cssChip(),
     cssThumbnail(),
     cssTimestamp(),
     cssSkeleton(),

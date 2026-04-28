@@ -6,10 +6,12 @@
  * 행: role/context · 열: variant(rest · selected/checked · disabled).
  * 같은 variant 가 세로로 정렬돼 맥락별 차이가 한눈에 비교된다.
  *
- * 새 시각/CSS 없음. parts(Code·Tag) + 진짜 ARIA role 마크업 + 단일 grid wrapper.
+ * 새 시각/CSS 없음. parts(Code·Chip) + 진짜 ARIA role 마크업 + 단일 grid wrapper.
  */
 import type { ReactNode } from 'react'
-import { Code, Tag } from '@p/ds/ui/parts'
+import { Code, Chip } from '@p/ds/ui/parts'
+import { Switch } from '@p/ds/ui/2-action/Switch'
+import { Checkbox } from '@p/ds/ui/3-input/Checkbox'
 
 type Layer = 'rovingItem.subgrid' | 'rovingItem.flex' | 'rovingItem.table' | 'rovingItem.form' | 'control' | 'widget'
 
@@ -164,16 +166,16 @@ const CONTEXTS: Spec[] = [
   {
     role: '[role="switch"]',
     layer: 'widget',
-    rest: <button role="switch" type="button" aria-checked="false">off</button>,
-    selected: <button role="switch" type="button" aria-checked="true">on</button>,
-    disabled: <button role="switch" type="button" aria-checked="false" disabled>off</button>,
+    rest: <Switch checked={false} />,
+    selected: <Switch checked={true} />,
+    disabled: <Switch checked={false} disabled />,
   },
   {
     role: '[role="checkbox"]',
     layer: 'widget',
-    rest: <button role="checkbox" type="button" aria-checked="false">off</button>,
-    selected: <button role="checkbox" type="button" aria-checked="true">on</button>,
-    disabled: <button role="checkbox" type="button" aria-checked="false" disabled>off</button>,
+    rest: <Checkbox checked={false} />,
+    selected: <Checkbox checked={true} />,
+    disabled: <Checkbox checked={false} disabled />,
   },
   {
     role: 'input[type="range"]',
@@ -197,7 +199,7 @@ export function StateContextMatrix(): ReactNode {
         <div data-row key={c.role} role="row">
           <div data-cell="role">
             <Code>{c.role}</Code>
-            <Tag label={c.layer} />
+            <Chip label={c.layer} />
           </div>
           <div data-cell>{c.rest}</div>
           <div data-cell>{c.selected}</div>

@@ -6,7 +6,7 @@ import { weight, neutral, pad } from '../tokens/palette'
  *
  * 외부 수렴: Apple HIG (status bar 47pt · home indicator 5pt · safe area).
  *
- * Phone 자체는 *컨테이너* — 내부 콘텐츠는 ds 부품(Skeleton, Tag, Button, Card 등)이
+ * Phone 자체는 *컨테이너* — 내부 콘텐츠는 ds 부품(Skeleton, Chip, Button, Card 등)이
  * 채운다. status bar / topbar / tabbar / home indicator 만 phone 전용 chrome.
  */
 export const cssPhone = () => css`

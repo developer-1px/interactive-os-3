@@ -1,4 +1,4 @@
-import { ContractCard, Listbox, MessageBubble, Phone, PhoneTopBar, Row, Tag } from '@p/ds'
+import { ContractCard, Listbox, MessageBubble, Phone, PhoneTopBar, Row, Chip } from '@p/ds'
 import { Card } from '@p/ds/ui/parts/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
@@ -15,14 +15,14 @@ const Contract_Audit = defineScreen({
   flow: 'audit',
   category: 'F-Contracts',
   patterns: ['status-summary-tags', 'contract-card-checklist', 'top-bar-back-search'],
-  parts: ['Phone', 'PhoneTopBar', 'Tag', 'Row', 'ContractCard'],
+  parts: ['Phone', 'PhoneTopBar', 'Chip', 'Row', 'ContractCard'],
   render: () => (
     <Phone
       label="contract audit"
       topBar={<PhoneTopBar back title="Contracts" action={<span data-icon="search" aria-label="search" />} />}
     >
       <Body>
-        <Row flow="cluster"><Tag label="passing 12" /><Tag label="failing 2" /><Tag label="warn 3" /></Row>
+        <Row flow="cluster"><Chip label="passing 12" /><Chip label="failing 2" /><Chip label="warn 3" /></Row>
         <ContractCard
           name="Listbox" file="ds/ui/4-selection/Listbox.tsx" role="listbox"
           propsSignature="(data, onEvent, autoFocus?)"

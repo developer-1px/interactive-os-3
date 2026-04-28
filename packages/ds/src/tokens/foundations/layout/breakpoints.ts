@@ -1,8 +1,5 @@
 /**
- * 명명된 viewport breakpoint — semantic 상수.
- * preset 의 default.shell.mobileMax 와 widget @media 리터럴이 모두 이 값을 본다.
- *
- * @media (max-width: var(--x)) 는 브라우저 지원이 불완전 (CSS Conditional 5).
- * css`` 템플릿에서 ${SHELL_MOBILE_MAX} 로 build-time interpolation 한다.
+ * @deprecated — breakpoint 은 별도 foundation lane (`foundations/breakpoint/`) 으로 격상됨.
+ * 이 shim 은 기존 import 호환용. 신규 코드는 `from '@p/ds/tokens/foundations'` (barrel) 사용.
  */
-export const SHELL_MOBILE_MAX = '600px'
+export { SHELL_MOBILE_MAX } from '../breakpoint'

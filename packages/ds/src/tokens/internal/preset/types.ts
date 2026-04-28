@@ -13,6 +13,9 @@ export type Layer = {
 export type RadiusScale = 'sm' | 'md' | 'lg' | 'pill'
 export type TextScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type ElevationLevel = 0 | 1 | 2 | 3
+export type ZSlot = 'base' | 'dropdown' | 'sticky' | 'overlay' | 'modal' | 'toast' | 'tooltip'
+export type AlphaSlot = 'scrim' | 'overlay' | 'press' | 'hover'
+export type SizeScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
 export type DsPreset = {
   id: string
@@ -58,7 +61,11 @@ export type DsPreset = {
   /** 강조 테두리 두께 — focus-ring · active indicator · slider thumb 공통.
    *  hairline(border 토큰)보다 한 단 두꺼운 ladder. 미정의 시 default '2px'. */
   focusRingWidth?: string
+  /** focus-ring outline-offset. 미정의 시 default '2px'. */
+  focusRingOffset?: string
   text: Record<TextScale, string>
+  /** box size scale — width/height for icon · avatar · thumbnail · control. */
+  size: Record<SizeScale, string>
   font: { sans: string; mono: string }
   leading: { normal: number; tight: number; tracking: string }
   /** Heading ladder — h1~h6 size·leading. preset 갈아끼우면 모든 prose/parts 헤딩 자동 따라옴.
@@ -78,6 +85,12 @@ export type DsPreset = {
     caps?: string
   }
   elevation: Record<ElevationLevel, Layer[]>
+  /** z-index stack ladder. base < dropdown < sticky < overlay < modal < toast < tooltip.
+   *  미정의 시 default (0/1000/1100/1200/1300/1400/1500). */
+  zIndex?: Partial<Record<ZSlot, number>>
+  /** opacity layered alpha. scrim · overlay · press · hover.
+   *  미정의 시 default (0.32 / 0.5 / 0.12 / 0.08). */
+  opacity?: Partial<Record<AlphaSlot, number>>
   shell: {
     inset: string
     radius: string

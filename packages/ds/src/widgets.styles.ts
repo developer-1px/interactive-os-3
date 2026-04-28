@@ -7,12 +7,18 @@ import { cssSwitch } from './ui/2-action/Switch.style'
 import { cssValue } from './ui/1-status/Progress.style'
 import { cssSlider } from './ui/3-input/Slider.style'
 import { cssButton } from './ui/2-action/Button.style'
+import { cssButtonGroup } from './ui/2-action/ButtonGroup.style'
+import { cssToggleButton } from './ui/2-action/ToggleButton.style'
 import { cssFeed } from './ui/patterns/Feed.style'
 import { cssBarChart } from './ui/patterns/BarChart.style'
 import { cssLegendDot } from './ui/1-status/LegendDot.style'
+import { cssSpinner } from './ui/1-status/Spinner.style'
 import { cssTop10List } from './ui/patterns/Top10List.style'
 import { cssListbox } from './ui/4-selection/Listbox.style'
+import { cssSegmented } from './ui/4-selection/SegmentedControl.style'
 import { cssOrderableList } from './ui/5-display/OrderableList.style'
+import { cssPagination } from './ui/5-display/Pagination.style'
+import { cssStepper } from './ui/5-display/Stepper.style'
 import { cssMenu } from './ui/4-selection/Menu.style'
 import { cssTabs } from './ui/4-selection/Tabs.style'
 import { cssTree } from './ui/4-selection/Tree.style'
@@ -25,6 +31,8 @@ import { cssForm } from './style/widgets/control/form'
 import { cssToggle, cssAlert } from './style/widgets/control/toggle'
 import { cssDialog, cssTooltip } from './style/widgets/overlay/overlay'
 import { cssDetails } from './style/widgets/overlay/details'
+import { cssAccordion } from './ui/6-overlay/Accordion.style'
+import { cssToast } from './ui/6-overlay/Toast.style'
 import { cssGlass } from './style/widgets/overlay/glass'
 import { cssTabPanel, cssCarousel } from './style/widgets/pattern/bar'
 import { cssHighlightMark } from './style/widgets/pattern/highlightMark'
@@ -37,16 +45,16 @@ import { cssLayout } from './style/widgets/layout/layout'
 export const widgets = () =>
   [
     // control
-    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssForm(), cssToggle(), cssAlert(),
+    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssToggleButton(), cssForm(), cssToggle(), cssAlert(),
     // overlay
-    cssDialog(), cssTooltip(), cssDetails(), cssGlass(),
+    cssDialog(), cssTooltip(), cssDetails(), cssAccordion(), cssToast(), cssGlass(),
     // pattern
     cssFeed(), cssTabPanel(), cssCarousel(),
     cssHighlightMark(), cssBarChart(),
-    cssLegendDot(), cssTop10List(),
+    cssLegendDot(), cssSpinner(), cssTop10List(),
     /* data-card="*" 패턴은 src/index.ts 가 content layer 로 별도 등록. */
     // collection
-    cssListbox(), cssOrderableList(), cssMenu(), cssTabs(), cssTree(),
+    cssListbox(), cssSegmented(), cssOrderableList(), cssPagination(), cssStepper(), cssMenu(), cssTabs(), cssTree(),
     // composite
     cssGrid(), cssToolbar(), cssSidebar(), cssSidebarFloating(), cssPage(),
     // layout

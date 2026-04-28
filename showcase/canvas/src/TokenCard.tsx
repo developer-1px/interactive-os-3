@@ -1,11 +1,15 @@
 /**
- * TokenCard — DS doc 토큰 카드. 셀렉터 [data-part="canvas-token-card"].
- * type 별 sample 영역만 분기 — 카드 frame은 CSS가 담당.
+ * TokenCard — DS doc 토큰 카드. cell 렌더링은 `<TokenPreview>` 정본 어휘로 위임.
+ *
+ * 본 파일에 남은 책임:
+ *   1) DemoSpec → TokenKind 변환 (kindOf)
+ *   2) role bundle (no @demo) 처리 → RoleBundleCards
+ *   3) TypeSpecimen / TokenRow — typography·table-mode 전용 layout
  */
 import type { ReactNode, CSSProperties } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
 import * as foundations from '@p/ds/tokens/foundations'
-import { renderDemoFromSpec } from '@showcase/foundations/demoRenderers'
+import { TokenPreview, inferKind, type TokenKind } from './preview'
 
 const FN = foundations as unknown as Record<string, (...args: unknown[]) => string>
 
@@ -20,6 +24,14 @@ const callOf = (spec: DemoSpec) =>
     ? `${spec.fn}()`
     : `${spec.fn}(${spec.args.map((a) => JSON.stringify(a)).join(', ')})`
 
+/** DemoSpec → TokenKind. type=color/pair/icon 직접 매핑, 나머지는 fn 추론. */
+function kindOf(spec: DemoSpec): TokenKind {
+  if (spec.type === 'color') return 'color'
+  if (spec.type === 'pair') return 'pair'
+  if (spec.type === 'icon') return 'icon'
+  return inferKind(spec.fn)
+}
+
 export function TokenCard({ e, category }: { e: FoundationExport; category?: string }): ReactNode {
   // role bundle (slot/size/type 등 plain object export) — @demo 없이 shape 로 surface.
   if (!e.demo) {
@@ -29,60 +41,31 @@ export function TokenCard({ e, category }: { e: FoundationExport; category?: str
   }
   const spec = e.demo
   const value = callFn(spec.fn, spec.args)
-
-  // 모든 variant: 3개의 직접 자식 (visual · name · call) — subgrid 행 정렬
-  if (spec.type === 'color') {
-    return (
-      <figure data-part="canvas-token-card" data-token-type="color">
-        <div data-swatch style={{ backgroundColor: value }} />
-        <span data-name>{e.name}</span>
-        <span data-call>{value}</span>
-      </figure>
-    )
-  }
-
-  if (spec.type === 'pair') {
-    return (
-      <figure data-part="canvas-token-card" data-token-type="pair">
-        <div data-swatch style={pairSwatch(value)}>Aa</div>
-        <span data-name>{e.name}</span>
-        <span data-call>{callOf(spec)}</span>
-      </figure>
-    )
-  }
-
-  if (spec.type === 'value') {
-    return (
-      <figure data-part="canvas-token-card" data-token-type="value">
-        <div data-sample>{renderValueSample(spec, value)}</div>
-        <span data-name>{e.name}</span>
-        <span data-call title={value}>{value || '—'}</span>
-      </figure>
-    )
-  }
-
-  if (spec.type === 'icon') {
-    return (
-      <figure data-part="canvas-token-card" data-token-type="icon">
-        <div data-swatch dangerouslySetInnerHTML={{ __html: extractSvg(value) }} />
-        <span data-name>{e.name}</span>
-        <span data-call />
-      </figure>
-    )
-  }
-
-  // recipe / selector / structural — 기존 renderer 위임
-  return (
-    <figure data-part="canvas-token-card" data-token-type={spec.type}>
-      <div data-frame>{renderDemoFromSpec(e)}</div>
-      <span data-name>{e.name}</span>
-      <span data-call>{callOf(spec)}</span>
-    </figure>
-  )
+  const kind = kindOf(spec)
+  // color 는 value 자체가 var(--ds-X) 라 그대로 caption 에. 그 외는 호출 표기.
+  const callText = kind === 'color' ? value : callOf(spec)
+  return <TokenPreview kind={kind} value={value} name={e.name} call={callText} />
 }
 
 export function TypeSpecimen({ e }: { e: FoundationExport }): ReactNode {
-  if (!e.demo) return null
+  // role bundle (no @demo) — typography object 를 inline style 로 적용한 specimen + 단축 meta
+  if (!e.demo) {
+    const bundle = (FN as Record<string, unknown>)[e.name]
+    if (!bundle || typeof bundle !== 'object') return null
+    return (
+      <>
+        {Object.entries(bundle as Record<string, unknown>).map(([role, value]) => (
+          <div key={role} data-part="canvas-type-row">
+            <span data-specimen style={value as CSSProperties}>Aa Bg</span>
+            <span data-meta title={summarizeRole(value)}>
+              <code data-name>{e.name}.{role}</code>
+              <span data-spec>{summarizeRoleShort(value)}</span>
+            </span>
+          </div>
+        ))}
+      </>
+    )
+  }
   const spec = e.demo
   const value = callFn(spec.fn, spec.args)
   const sample =
@@ -95,7 +78,44 @@ export function TypeSpecimen({ e }: { e: FoundationExport }): ReactNode {
   return (
     <div data-part="canvas-type-row">
       <span data-specimen style={specimenStyle(spec, value)}>{sample}</span>
-      <span data-meta>{e.name}({(spec.args ?? []).map((a) => JSON.stringify(a)).join(', ')}) · {value || '—'}</span>
+      <span data-meta>
+        <code data-name>{e.name}({(spec.args ?? []).map((a) => JSON.stringify(a)).join(', ')})</code>
+        <span data-spec>{value || '—'}</span>
+      </span>
+    </div>
+  )
+}
+
+/** value-primary 토큰 (border/breakpoint/shape/motion/control/elevation/focus/layout/opacity/sizing/zIndex)
+ *  를 row 형태로 그린다. 정사각 카드 그리드 폐기 — 정보가 visual 보다 value 인 카테고리는 table 이 적합.
+ *  디팩토: Tailwind values, Open Props all-tokens, Material 3 token docs. */
+export function TokenRow({ e }: { e: FoundationExport }): ReactNode {
+  // role bundle 도 처리 (e.demo ❌)
+  if (!e.demo) {
+    const bundle = (FN as Record<string, unknown>)[e.name]
+    if (!bundle || typeof bundle !== 'object') return null
+    return (
+      <>
+        {Object.entries(bundle as Record<string, unknown>).map(([role, value]) => (
+          <div key={role} data-part="canvas-token-row">
+            <span data-specimen>{summarizeRoleShort(value)}</span>
+            <span data-meta title={summarizeRole(value)}>
+              <code data-name>{e.name}.{role}</code>
+            </span>
+          </div>
+        ))}
+      </>
+    )
+  }
+  const spec = e.demo
+  const value = callFn(spec.fn, spec.args)
+  return (
+    <div data-part="canvas-token-row">
+      <span data-specimen>{renderValueSample(spec, value)}</span>
+      <span data-meta>
+        <code data-name>{e.name}({(spec.args ?? []).map((a) => JSON.stringify(a)).join(', ')})</code>
+        <span data-spec title={value}>{value || '—'}</span>
+      </span>
     </div>
   )
 }
@@ -111,7 +131,7 @@ function RoleBundleCards({ name, bundle, category }: { name: string; bundle: Rec
         <figure key={role} data-part="canvas-token-card" data-token-type="role">
           <div data-sample>{renderRoleSample(category, value)}</div>
           <span data-name>{name}.{role}</span>
-          <span data-call title={summarizeRole(value)}>{summarizeRole(value)}</span>
+          <span data-call title={summarizeRole(value)}>{summarizeRoleShort(value)}</span>
         </figure>
       ))}
     </>
@@ -147,38 +167,25 @@ function summarizeRole(value: unknown): string {
   return String(value)
 }
 
+/** caption 용 단축형 — `var(--ds-text-sm)` → `sm`, `var(--ds-weight-medium)` → `medium`.
+ *  raw var dump 가 카드 caption 을 지배하는 문제 해결. 자세한 형태는 `title` (hover) 에 보존. */
+function summarizeRoleShort(value: unknown): string {
+  if (typeof value === 'string') return stripVar(value)
+  if (isPlainObject(value)) {
+    return Object.values(value as Record<string, unknown>).map(stripVar).join(' · ')
+  }
+  return String(value)
+}
+function stripVar(s: unknown): string {
+  if (typeof s !== 'string') return String(s)
+  const m = s.match(/var\(--ds-[a-z]+-([^)]+)\)/)
+  return m ? m[1] : s
+}
+
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === 'object' && !Array.isArray(v)
 
 // ── helpers ────────────────────────────────────────────────────────────
-
-function pairSwatch(css: string): CSSProperties {
-  const out: Record<string, string> = {}
-  for (const decl of css.split(';')) {
-    const i = decl.indexOf(':')
-    if (i < 0) continue
-    const k = decl.slice(0, i).trim()
-    const v = decl.slice(i + 1).trim()
-    if (!k || !v) continue
-    out[toCamel(k)] = v
-  }
-  out.display = 'grid'
-  out.placeItems = 'center'
-  out.font = '600 28px system-ui'
-  return out as CSSProperties
-}
-const toCamel = (s: string) => s.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-
-function extractSvg(raw: string): string {
-  const m = raw.match(/url\(["']?(data:image\/svg\+xml[^"')]+)["']?\)/)
-  if (m) {
-    const url = m[1]
-    const comma = url.indexOf(',')
-    return decodeURIComponent(url.slice(comma + 1))
-  }
-  if (raw.startsWith('<svg')) return raw
-  return ''
-}
 
 function specimenStyle(spec: DemoSpec, value: string): CSSProperties {
   if (spec.fn === 'font' || spec.fn === 'headingSize') return { fontSize: value, lineHeight: 1.05 }
@@ -207,7 +214,7 @@ function renderValueSample(spec: DemoSpec, value: string): ReactNode {
         {value}
       </div>
     )
-  if (fn === 'focusRingWidth')
+  if (fn === 'ringWidth')
     return <div style={{ width: 64, height: 32, background: '#fff', outline: `${value} solid var(--ds-accent, #4a90e2)`, outlineOffset: 2 }} />
   return <code style={{ fontSize: 14 }}>{value || '—'}</code>
 }

@@ -9,4 +9,6 @@
 export * from './square'
 export * from './listReset'
 export * from './container'
+// breakpoints 는 별도 foundation lane(`foundations/breakpoint/`)으로 이동.
+// 기존 import 는 layout/breakpoints.ts shim 을 통해 호환.
 export * from './breakpoints'
