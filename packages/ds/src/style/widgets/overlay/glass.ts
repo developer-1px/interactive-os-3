@@ -11,7 +11,7 @@ import { elev } from '../../../tokens/palette'
 // - 색은 그대로, 표면만 교체 (semantic 토큰 재사용)
 export const cssGlass = () => css`
   @media (hover: none) and (pointer: coarse) {
-    :where(button):not([data-part="actions"] > button) {
+    :where(button):not([data-variant="primary"]) {
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);

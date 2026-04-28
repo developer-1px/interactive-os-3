@@ -16,7 +16,7 @@
 ## 진행 (작은 단위, 한 개씩)
 
 ### 1-command
-- [ ] Button             — role=button, aria-pressed?, disabled
+- [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
 - [ ] ButtonGroup        — role=group + aria-label
 - [ ] ToolbarButton      — toolbar 자식, focus roving
 - [ ] MenuItems          — role=menuitem, aria-haspopup, aria-expanded

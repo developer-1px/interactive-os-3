@@ -8,12 +8,6 @@ export const pad = (t: number) => `calc(var(--ds-space) * ${t})`
 export const rowPadding = (h: number) => `${pad(1)} ${pad(h)}`
 
 /**
- * Tree level depth — context 변수, calc 안에서만 사용.
- * @demo type=value fn=level
- */
-export const level = () => `var(--ds-level, 0)`
-
-/**
  * em-based vertical rhythm raw scale — body 폰트 크기 비례 (raw, no semantic).
  *
  * Gestalt proximity 7단계와 1:1 대응 인덱스. 의미 부여는 foundations/proximity()가 한다.
