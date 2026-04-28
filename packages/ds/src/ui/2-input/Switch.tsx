@@ -11,7 +11,8 @@ export function Switch({ checked, disabled, ...rest }: SwitchProps) {
       type="button"
       role="switch"
       aria-checked={checked}
-      aria-disabled={disabled}
+      aria-disabled={disabled || undefined}
+      disabled={disabled}
       {...rest}
     />
   )
