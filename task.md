@@ -29,7 +29,7 @@
 - [ ] RouterLink.demo (router context 필요해서 보류)
 
 ### 2-input
-- [ ] Checkbox           — role=checkbox, aria-checked(mixed)
+- [x] Checkbox           — role=checkbox (button-route, mixed 지원), aria-checked + disabled+aria-disabled 둘 다, demo 추가. style 토큰 semantic, ARIA selector only
 - [ ] Radio              — role=radio, aria-checked
 - [ ] Switch             — role=switch, aria-checked
 - [ ] ToggleButton       — button, aria-pressed

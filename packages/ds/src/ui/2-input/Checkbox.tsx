@@ -11,7 +11,8 @@ export function Checkbox({ checked, disabled, ...rest }: CheckboxProps) {
       type="button"
       role="checkbox"
       aria-checked={checked}
-      aria-disabled={disabled}
+      aria-disabled={disabled || undefined}
+      disabled={disabled}
       {...rest}
     />
   )
