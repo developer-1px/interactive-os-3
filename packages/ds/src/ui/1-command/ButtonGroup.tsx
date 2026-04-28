@@ -7,7 +7,7 @@ type ButtonGroupProps = ComponentPropsWithoutRef<'div'> & {
 
 export function ButtonGroup({ orientation = 'horizontal', children, ...rest }: ButtonGroupProps) {
   return (
-    <div data-part="button-group" data-orientation={orientation} {...rest}>
+    <div role="group" data-part="button-group" data-orientation={orientation} {...rest}>
       {children}
     </div>
   )

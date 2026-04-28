@@ -17,7 +17,7 @@
 
 ### 1-command
 - [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
-- [ ] ButtonGroup        — role=group + aria-label
+- [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
 - [ ] ToolbarButton      — toolbar 자식, focus roving
 - [ ] MenuItems          — role=menuitem, aria-haspopup, aria-expanded
 - [ ] RouterLink         — role=link (a) , aria-current
