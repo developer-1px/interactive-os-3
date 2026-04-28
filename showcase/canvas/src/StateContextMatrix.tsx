@@ -10,8 +10,8 @@
  */
 import type { ReactNode } from 'react'
 import { Code, Chip } from '@p/ds/ui/parts'
-import { Switch } from '@p/ds/ui/2-action/Switch'
-import { Checkbox } from '@p/ds/ui/3-input/Checkbox'
+import { Switch } from '@p/ds/ui/2-input/Switch'
+import { Checkbox } from '@p/ds/ui/2-input/Checkbox'
 
 type Layer = 'rovingItem.subgrid' | 'rovingItem.flex' | 'rovingItem.table' | 'rovingItem.form' | 'control' | 'widget'
 

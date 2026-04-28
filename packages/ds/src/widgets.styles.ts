@@ -3,12 +3,12 @@
 // 잔존 style/widgets/ 에서 가져옴. 모든 export 는 css 로 시작 — naming-audit 합의.
 
 // ─── 1:1 co-located (ui sibling) ────────────────────────────────────────
-import { cssSwitch } from './ui/2-action/Switch.style'
+import { cssSwitch } from './ui/2-input/Switch.style'
 import { cssValue } from './ui/1-status/Progress.style'
-import { cssSlider } from './ui/3-input/Slider.style'
+import { cssSlider } from './ui/2-input/Slider.style'
 import { cssButton } from './ui/1-command/Button.style'
 import { cssButtonGroup } from './ui/1-command/ButtonGroup.style'
-import { cssToggleButton } from './ui/2-action/ToggleButton.style'
+import { cssToggleButton } from './ui/2-input/ToggleButton.style'
 import { cssFeed } from './ui/patterns/Feed.style'
 import { cssBarChart } from './ui/patterns/BarChart.style'
 import { cssLegendDot } from './ui/1-status/LegendDot.style'

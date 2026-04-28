@@ -26,20 +26,20 @@ packages/ds/src/ui/
 - [x] MenuItems.tsx            ← 4-selection
 - [x] RouterLink.tsx           ← 0-primitives
 
-### 2-input
-- [ ] Checkbox.tsx             ← 3-input
-- [ ] Radio.tsx                ← 3-input
-- [ ] Switch.tsx               ← 2-action
-- [ ] ToggleButton.tsx         ← 2-action
-- [ ] Option.tsx               ← 4-selection
-- [ ] Input.tsx                ← 3-input
-- [ ] Textarea.tsx             ← 3-input
-- [ ] SearchBox.tsx            ← 3-input
-- [ ] NumberInput.tsx          ← 3-input
-- [ ] ColorInput.tsx           ← 3-input
-- [ ] Slider.tsx               ← 3-input
-- [ ] Combobox.tsx             ← 3-input
-- [ ] Select.tsx               ← 3-input
+### 2-input ✅
+- [x] Checkbox.tsx             ← 3-input
+- [x] Radio.tsx                ← 3-input
+- [x] Switch.tsx               ← 2-action
+- [x] ToggleButton.tsx         ← 2-action
+- [x] Option.tsx               ← 4-selection
+- [x] Input.tsx                ← 3-input
+- [x] Textarea.tsx             ← 3-input
+- [x] SearchBox.tsx            ← 3-input
+- [x] NumberInput.tsx          ← 3-input
+- [x] ColorInput.tsx           ← 3-input
+- [x] Slider.tsx               ← 3-input
+- [x] Combobox.tsx             ← 3-input
+- [x] Select.tsx               ← 3-input
 
 ### 3-composite
 - [ ] Listbox.tsx               ← 4-selection
@@ -127,7 +127,7 @@ packages/ds/src/ui/
 각 step = 폴더 1개 만들고 → 파일 옮기고 → import 갱신 → tsc 통과 → 커밋.
 
 1. [x] 1-command
-2. [ ] 2-input
+2. [x] 2-input
 3. [ ] 3-composite
 4. [ ] 4-window
 5. [ ] 5-live

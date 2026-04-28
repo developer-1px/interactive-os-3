@@ -1,9 +1,9 @@
 import { CheckboxGroup, Heading, Phone, PhoneTabBar, PhoneTopBar, RadioGroup, Row, fromList } from '@p/ds'
-import { Switch } from '@p/ds/ui/2-action/Switch'
+import { Switch } from '@p/ds/ui/2-input/Switch'
 import { Field, FieldDescription, FieldLabel } from '@p/ds/ui/3-input/Field'
-import { Input } from '@p/ds/ui/3-input/Input'
-import { Select } from '@p/ds/ui/3-input/Select'
-import { Slider } from '@p/ds/ui/3-input/Slider'
+import { Input } from '@p/ds/ui/2-input/Input'
+import { Select } from '@p/ds/ui/2-input/Select'
+import { Slider } from '@p/ds/ui/2-input/Slider'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
 

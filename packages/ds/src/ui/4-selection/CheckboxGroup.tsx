@@ -6,7 +6,7 @@ import {
 } from '../../headless/types'
 import { activate, composeAxes, navigate } from '../../headless/axes'
 import { useRoving } from '../../headless/roving/useRoving'
-import { Checkbox } from '../3-input/Checkbox'
+import { Checkbox } from '../2-input/Checkbox'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
