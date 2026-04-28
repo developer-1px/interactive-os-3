@@ -16,6 +16,7 @@ export const ColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
         value={value}
         onChange={(e) => onChange(e.target.value)}
         {...rest}
+        aria-disabled={rest.disabled || undefined}
       />
     )
   },
