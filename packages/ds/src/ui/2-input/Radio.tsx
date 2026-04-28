@@ -1,22 +1,20 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
-// @slot children — composable (wrapper/label/subpart)
-type RadioProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
-  checked: boolean
+type RadioProps = Omit<ComponentPropsWithoutRef<'button'>, 'role' | 'type'> & {
+  checked?: boolean
   disabled?: boolean
-  children: ReactNode
 }
 
-export function Radio({ checked, disabled, children, ...rest }: RadioProps) {
+export function Radio({ checked = false, disabled, ...rest }: RadioProps) {
   return (
-    <div
+    <button
+      type="button"
       role="radio"
       aria-checked={checked}
-      aria-disabled={disabled}
+      aria-disabled={disabled || undefined}
+      disabled={disabled}
       tabIndex={checked ? 0 : -1}
       {...rest}
-    >
-      {children}
-    </div>
+    />
   )
 }

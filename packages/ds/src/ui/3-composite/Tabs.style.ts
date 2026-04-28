@@ -1,4 +1,4 @@
-import { accent, accentTint, border, css, dur, ease, ringWidth, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
+import { accent, accentTint, border, css, dur, ease, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
 import { pad } from '../../tokens/scalar'
 /**
  * Tabs — 보편적 탭 어포던스.
@@ -22,7 +22,7 @@ export const cssTabs = () => css`
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"] {
     padding: ${pad(1.5)} ${pad(3)};
-    border-bottom: ${ringWidth()} solid transparent;
+    border-bottom: var(--ds-focus-ring-w) solid transparent;
     margin-bottom: -1px;
     color: ${text('subtle')};
     background: transparent;
@@ -50,7 +50,7 @@ export const cssTabs = () => css`
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"] {
     padding: ${pad(1.5)} ${pad(3)};
-    border-inline-end: ${ringWidth()} solid transparent;
+    border-inline-end: var(--ds-focus-ring-w) solid transparent;
     margin-inline-end: -1px;
     color: ${text('subtle')};
     background: transparent;

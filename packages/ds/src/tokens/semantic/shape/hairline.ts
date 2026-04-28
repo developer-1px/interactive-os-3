@@ -6,9 +6,6 @@ import { css } from '../css'
  */
 export const hairlineWidth = () => `var(--ds-hairline)`
 
-/* focus-ring thickness scalar 는 focus/ring.ts 의 ringWidth() 로 이동 — domain hierarchy.
-   shape/hairline.ts 는 hairline 도메인 전용. */
-
 /**
  * Hairline divider — 리스트 행 사이 분리선.
  *

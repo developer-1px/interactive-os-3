@@ -30,7 +30,7 @@
 
 ### 2-input
 - [x] Checkbox           — role=checkbox (button-route, mixed 지원), aria-checked + disabled+aria-disabled 둘 다, demo 추가. style 토큰 semantic, ARIA selector only
-- [ ] Radio              — role=radio, aria-checked
+- [x] Radio              — `<button role="radio">` (div→button: 키보드 native + dual disabled). aria-checked, tabIndex roving (checked만 0)
 - [ ] Switch             — role=switch, aria-checked
 - [ ] ToggleButton       — button, aria-pressed
 - [ ] Option             — role=option, aria-selected
