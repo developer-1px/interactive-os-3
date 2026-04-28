@@ -14,21 +14,27 @@ related:
 
 각 Stage = 1 턴 = 1 commit 단위. 의존 위상 정렬됨 (앞 Stage 만 의존). 검증 게이트 = `npx tsc -b --noEmit` + `pnpm lint:ds:all` 로 신규 에러 0 + dev `/tokens` 스샷 회귀 0.
 
-## 진행 표
+## 스코프 (재정의)
+
+> **방침**: SSOT 만 먼저. flat router OK. **/tokens = CSS 변수 collector** 컨셉.
+> 시각 메타포(visualRegistry showcase) 는 부차 — 분리·고도화 작업 모두 후순위로 미룸.
+
+## 진행 표 (SSOT path)
 
 | # | 단계 | 산출물 | 의존 | 상태 |
 |---|------|--------|------|------|
-| 0 | categorize SSoT 정렬 + ETC 전수 노출 | `tokens.tsx` in-place 패치 | — | ✅ done |
+| 0 | categorize SSoT 정렬 + ETC 전수 노출 | `tokens.tsx` in-place 패치 | — | ✅ done (commit `aefa4b9`) |
 | 1 | enumerate 추출 | `tokens/enumerate.ts` 신규, 본체 import | 0 | ⬜ |
-| 2 | categorize 추출 | `tokens/categorize.ts` 신규, 본체 import | 0 | ⬜ |
-| 3 | 시각 ReactNode → renderers/<cat>.tsx 분리 (color) | `tokens/renderers/color.tsx` 신규 | 2 | ⬜ |
-| 4 | typography renderer 분리 | `tokens/renderers/typography.tsx` | 2 | ⬜ |
-| 5 | spacing renderer 분리 | `tokens/renderers/spacing.tsx` | 2 | ⬜ |
-| 6 | shape · elevation · motion · layout renderer 분리 (4개 일괄, 단일 파일당 1책임) | `tokens/renderers/{shape,elevation,motion,layout}.tsx` | 2 | ⬜ |
-| 7 | rendererRegistry 도입 | `tokens/renderers/index.ts` 신규. visualRegistry → registry record 로 대체 | 3-6 | ⬜ |
-| 8 | EtcTable parts/Table 화 | `tokens/EtcTable.tsx` 신규. 현 `<dl>` 기반 token-table → `parts/Table` 으로 | 1,2 | ⬜ |
-| 9 | tokens.tsx 본체 슬림화 (~80줄) | enumerate + groupBy + dispatch 만 남김. CSS 는 tokens/page.css.ts 로 분리 | 1-8 | ⬜ |
-| 10 | dev 스샷 회귀 확인 + 신규 lane 자동 surface 검증 | `/tokens` 라이브 스샷 + 임시 `--ds-test-foo: 1` 추가 → ETC 자동 등장 확인 | 9 | ⬜ |
+| 2 | categorize 추출 | `tokens/categorize.ts` 신규, 본체 import. PREFIX_TABLE 단일 SSoT | 0 | ⬜ |
+| 8 | EtcTable parts/Table 화 | `tokens/EtcTable.tsx` 신규. 현 raw `<dl>` token-table → `parts/Table` 으로 | 1,2 | ⬜ |
+| 10 | 자동 surface 검증 | `--ds-test-foo: 1` 임시 주입 → ETC 자동 등장 확인. screenshot archive | 8 | ⬜ |
+
+## 후순위 (SSOT path 끝난 뒤 별도 라운드)
+
+| # | 단계 | 비고 |
+|---|------|------|
+| 3-7 | 시각 ReactNode → `renderers/<cat>.tsx` 분리 + rendererRegistry record | collector 본질과 무관. 풍부 시각화는 부차 |
+| 9 | tokens.tsx 본체 슬림화 (740 → ~80줄) | 위가 끝나야 의미. 지금은 본체에 inline JSX 잔존해도 SSOT 정합 ✓ |
 
 ## 게이트
 

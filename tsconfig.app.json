@@ -33,6 +33,14 @@
       "@p/app": ["packages/app/src/main.tsx"],
       "@p/app/*": ["packages/app/src/*"],
       "@apps/*": ["apps/*/src"],
+      "@showcase/playground": ["showcase/playground/src/index.ts"],
+      "@showcase/playground/*": ["showcase/playground/src/*"],
+      "@showcase/canvas": ["showcase/canvas/src/index.ts"],
+      "@showcase/canvas/*": ["showcase/canvas/src/*"],
+      "@showcase/catalog": ["showcase/catalog/src/index.ts"],
+      "@showcase/catalog/*": ["showcase/catalog/src/*"],
+      "@showcase/foundations": ["showcase/foundations/src/index.ts"],
+      "@showcase/foundations/*": ["showcase/foundations/src/*"],
       "@showcase/*": ["showcase/*/src"]
     }
   },

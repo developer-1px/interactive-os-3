@@ -1,4 +1,4 @@
-import { css, mute, typography } from '../../tokens/foundations'
+import { css, text, typography } from '../../tokens/foundations'
 import { font, weight, pad } from '../../tokens/palette'
 
 /**
@@ -29,7 +29,7 @@ export const cssHeading = () => css`
     line-height: 1.5;
   }
   :where([data-part="heading"][data-level="caption"]) {
-    ${mute(2)}
+    color: ${text('mute')};
     ${typography('micro')}
     line-height: 1.4;
   }

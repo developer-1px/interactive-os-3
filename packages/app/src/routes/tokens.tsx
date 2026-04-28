@@ -3,5 +3,5 @@ import { Tokens } from '@showcase/playground/tokens'
 
 export const Route = createFileRoute('/tokens')({
   component: Tokens,
-  staticData: { palette: { label: 'Design Token 카탈로그', to: '/tokens', category: 'design-system' } },
+  staticData: { palette: { label: 'Design Token 카탈로그', to: '/tokens' } },
 })
