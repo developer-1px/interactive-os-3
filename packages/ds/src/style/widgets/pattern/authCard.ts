@@ -1,5 +1,5 @@
-import { accent, border, css, hairlineWidth, hierarchy, radius, ring, slot, surface, text, typography } from '../../../tokens/foundations'
-import { weight, pad } from '../../../tokens/palette'
+import { accent, border, css, hairlineWidth, hierarchy, radius, ring, slot, surface, text, typography } from '../../../tokens/semantic'
+import { weight, pad } from '../../../tokens/scalar'
 
 /**
  * AuthCard slot inner styling — 로그인 / 가입 / 재설정 / OTP.

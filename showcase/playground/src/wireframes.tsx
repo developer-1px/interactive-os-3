@@ -21,7 +21,7 @@ import {
   type NormalizedData,
   Column,
 } from '@p/ds'
-import { slot } from '@p/ds/tokens/foundations'
+import { slot } from '@p/ds/tokens/semantic'
 import { getGroups, getGroup } from './wireframe-registry'
 import type { LayoutGuide, ScreenDef } from './wireframe-screens'
 import { Group, wireframesCss, wireframesMobileCss } from './wireframes.chrome'
@@ -285,7 +285,7 @@ function GridOverlayToggle() {
  * phone-body 의 effective outer padding 을 측정하여 grid spec (mobileGrid SSoT) 과
  * 비교한다. 위반은 wrapper 의 data-audit 속성과 sticky 패널에 표시된다.
  *
- * SSoT: ds/tokens/foundations/spacing/keyline.ts → mobileGrid (overlay CSS 와 동일).
+ * SSoT: ds/tokens/semantic/spacing/keyline.ts → mobileGrid (overlay CSS 와 동일).
  * 측정 함수: ./keyline-audit.ts.
  *
  * 메모리 준수:

@@ -24,7 +24,7 @@ const SKIP_PATHS = [
   // 정의 layer — raw neutral/hex 가 SSOT 라 정당
   'packages/ds/src/fn',
   'packages/ds/src/tokens/internal/preset',
-  'packages/ds/src/tokens/foundations',
+  'packages/ds/src/tokens/semantic',
   // demo는 1회용 시연 — raw 허용
   '/_demos/',
   // devices/ 는 physical chrome (bezel·notch 같은 물리 수치) — semantic role 부적합

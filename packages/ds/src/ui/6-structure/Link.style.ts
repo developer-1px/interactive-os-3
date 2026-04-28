@@ -1,5 +1,5 @@
-import { accent, css, dur, ease, ring } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { accent, css, dur, ease, ring } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 export const cssLink = () => css`
   :where(a) {

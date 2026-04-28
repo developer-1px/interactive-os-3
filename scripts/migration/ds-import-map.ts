@@ -25,13 +25,13 @@ export const MIGRATION_RULES: MigrationRule[] = [
   // ─── L1 Tokens ──────────────────────────────────────────────────────────
   {
     from: '@p/ds/foundations',
-    to: '@p/ds/tokens/foundations',
+    to: '@p/ds/tokens/semantic',
     kind: 'rewrite',
-    reason: 'foundations → tokens/foundations (L1)',
+    reason: 'foundations → tokens/semantic (L1)',
   },
   {
     from: '@p/ds/foundations/iconography/icon',
-    to: '@p/ds/tokens/foundations/iconography/icon',
+    to: '@p/ds/tokens/semantic/iconography/icon',
     kind: 'rewrite',
     reason: 'foundations 하위는 모두 tokens/ 아래로',
   },

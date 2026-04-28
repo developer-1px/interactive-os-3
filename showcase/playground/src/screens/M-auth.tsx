@@ -5,7 +5,7 @@ import { Field, FieldLabel } from '@p/ds/ui/8-field/Field'
 import { Input } from '@p/ds/ui/2-input/Input'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'
-import { type } from '@p/ds/tokens/foundations'
+import { type } from '@p/ds/tokens/semantic'
 import { meta } from '../wireframe-tokens'
 
 defineGroup('M-Auth',          { id: 'M', title: 'Auth',          lede: 'Login (이메일·SSO·로그인 유지) · OTP (6자리 코드·재전송 타이머).', defaultGuide: 'form' })

@@ -1,5 +1,5 @@
-import { accent, border, css, hairlineWidth, radius, status, surface, text } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { accent, border, css, hairlineWidth, radius, status, surface, text } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 export const cssToast = () => css`
   [data-part="toast-region"] {

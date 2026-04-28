@@ -12,14 +12,14 @@
  * SemanticSection 이 소비.
  */
 import { audit } from 'virtual:ds-audit'
-import * as foundations from '@p/ds/tokens/foundations'
+import * as foundations from '@p/ds/tokens/semantic'
 import type { CategoryMeta } from '@p/ds/tokens/category-meta'
 
 export type TokenGroup = { category: string; exports: typeof audit.exports }
 
 // foundations/<cat>/_category.ts 자동 수집 — canvas 측 하드코딩 ❌
 const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
-  '@p/ds/tokens/foundations/*/_category.ts',
+  '@p/ds/tokens/semantic/*/_category.ts',
   { eager: true },
 )
 export const CATEGORY_LABEL: Record<string, CategoryMeta> = (() => {

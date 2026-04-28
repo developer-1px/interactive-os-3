@@ -1,5 +1,5 @@
-import { accent, css, mute, ring, text } from '../../tokens/foundations'
-import { font, weight, pad } from '../../tokens/palette'
+import { accent, css, mute, ring, text } from '../../tokens/semantic'
+import { font, weight, pad } from '../../tokens/scalar'
 
 /**
  * Breadcrumb — <nav aria-label="Breadcrumb"><ol><li>...</li></ol></nav>.

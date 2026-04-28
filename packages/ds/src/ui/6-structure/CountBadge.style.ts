@@ -1,5 +1,5 @@
-import { css, currentTint, radius, status, toneTint, typography } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { css, currentTint, radius, status, toneTint, typography } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * Badge (parts) — counter / status dot.

@@ -1,5 +1,5 @@
-import { border, css, hairlineWidth, radius } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { border, css, hairlineWidth, radius } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 export const cssAccordion = () => css`
   [data-part="accordion"] {

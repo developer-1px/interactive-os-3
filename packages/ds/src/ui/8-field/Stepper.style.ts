@@ -1,5 +1,5 @@
-import { accent, accentTint, border, css, hairlineWidth, radius, surface, text } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { accent, accentTint, border, css, hairlineWidth, radius, surface, text } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 export const cssStepper = () => css`
   [data-part="stepper"] {

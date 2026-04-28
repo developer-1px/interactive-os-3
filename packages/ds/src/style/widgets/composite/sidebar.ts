@@ -1,5 +1,5 @@
-import { css, hierarchy, microLabel, radius, slot, surface, text, typography } from '../../../tokens/foundations'
-import { pad } from '../../../tokens/palette'
+import { css, hierarchy, microLabel, radius, slot, surface, text, typography } from '../../../tokens/semantic'
+import { pad } from '../../../tokens/scalar'
 
 /**
  * Sidebar — nav[data-part="sidebar"] surface only.

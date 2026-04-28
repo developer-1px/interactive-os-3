@@ -1,5 +1,5 @@
-import { border, css, hairlineWidth, surface, text } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { border, css, hairlineWidth, surface, text } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * AvatarGroup — overlap stack. 각 자식 avatar 뒤에 surface 색 ring 으로 분리.

@@ -1,5 +1,5 @@
-import { accent, accentTint, css, dur, ease, hairline, keyline, listReset, mute } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { accent, accentTint, css, dur, ease, hairline, keyline, listReset, mute } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * OrderableList — drag-to-reorder list.

@@ -1,5 +1,5 @@
-import { SHELL_MOBILE_MAX, bg, border, css, hairlineWidth, hierarchy, radius, scrim, size, slot } from '../../../tokens/foundations'
-import { elev } from '../../../tokens/palette'
+import { SHELL_MOBILE_MAX, bg, border, css, hairlineWidth, hierarchy, radius, scrim, size, slot } from '../../../tokens/semantic'
+import { elev } from '../../../tokens/scalar'
 
 /**
  * sidebarFloating — mobile surface of `sidebar/admin` intent.

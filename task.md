@@ -18,9 +18,13 @@
 ### 1-command
 - [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
 - [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
-- [ ] ToolbarButton      — toolbar 자식, focus roving
+- [ ] ToolbarButton      — toolbar 자식, focus roving (demo 추가만; ARIA 점검 미완)
 - [ ] MenuItems          — role=menuitem, aria-haspopup, aria-expanded
-- [ ] RouterLink         — role=link (a) , aria-current
+- [ ] RouterLink         — role=link (a), aria-current (demo 미추가 — router context 필요)
+
+### 1-command demos
+- [x] Button.demo, ButtonGroup.demo, ToolbarButton.demo
+- [ ] RouterLink.demo (router context 필요해서 보류)
 
 ### 2-input
 - [ ] Checkbox           — role=checkbox, aria-checked(mixed)

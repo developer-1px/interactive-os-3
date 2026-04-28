@@ -1,5 +1,5 @@
-import { css, mute, typography } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { css, mute, typography } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 /**
  * EmptyState — icon + heading + description + optional CTA.

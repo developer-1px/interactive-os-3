@@ -1,5 +1,5 @@
-import { css, grouping, microLabel, radius, surface, surfaceTint, text, typography } from '@p/ds/tokens/foundations'
-import { pad, weight } from '@p/ds/tokens/palette'
+import { css, grouping, microLabel, radius, surface, surfaceTint, text, typography } from '@p/ds/tokens/semantic'
+import { pad, weight } from '@p/ds/tokens/scalar'
 
 // Finder 모바일 — iOS Files 식 drill-down + TikTok 세로 스냅 스와이퍼 + FloatingNav FAB.
 // 라우트 컴포넌트가 isMobile 분기로 FinderMobile을 렌더하므로 CSS는 자기 root만 잡는다.

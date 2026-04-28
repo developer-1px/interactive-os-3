@@ -2,7 +2,7 @@
  * tokens.categorize — varName → foundation `_category.ts` 키. SSOT 정렬.
  *
  * **SSoT 단일화 (2025 정렬)**: prefix 매핑은 이 파일이 아니라 각 foundation
- *   `packages/ds/src/tokens/foundations/<cat>/_category.ts` 의 `prefixes` 가 SSOT.
+ *   `packages/ds/src/tokens/semantic/<cat>/_category.ts` 의 `prefixes` 가 SSOT.
  *   `import.meta.glob` 으로 자동 수집 → 신규 카테고리 추가 시 _category.ts 한 곳만.
  *
  * **Longest-first 매칭**: 짧은 prefix 가 긴 prefix 를 가로채지 않도록 길이 내림차순.
@@ -28,7 +28,7 @@ const PRESET_PREFIXES: ReadonlyArray<string> = ['--ds-hue', '--ds-density', '--d
 
 /* foundations/<cat>/_category.ts 자동 수집. CategoryKey 는 폴더명. */
 const modules = import.meta.glob<{ default: CategoryMeta }>(
-  '/packages/ds/src/tokens/foundations/*/_category.ts',
+  '/packages/ds/src/tokens/semantic/*/_category.ts',
   { eager: true },
 )
 

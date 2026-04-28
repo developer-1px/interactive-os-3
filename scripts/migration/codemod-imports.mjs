@@ -13,9 +13,9 @@ const REPO_ROOT = join(__dirname, '..', '..')
 // 경로 prefix 매핑 (구 → 신). 더 긴 prefix 가 먼저 매칭되어야 함.
 const REWRITES = [
   // L1
-  ['@p/ds/foundations/iconography/icon', '@p/ds/tokens/foundations/iconography/icon'],
-  ['@p/ds/foundations', '@p/ds/tokens/foundations'],
-  ['@p/ds/palette', '@p/ds/tokens/palette'],
+  ['@p/ds/foundations/iconography/icon', '@p/ds/tokens/semantic/iconography/icon'],
+  ['@p/ds/foundations', '@p/ds/tokens/semantic'],
+  ['@p/ds/palette', '@p/ds/tokens/scalar'],
   ['@p/ds/style/preset/breakpoints', '@p/ds/tokens/internal/preset/breakpoints'],
   ['@p/ds/style/preset', '@p/ds/tokens/internal/preset'],
   ['@p/ds/style/seed', '@p/ds/tokens/internal/seed'],

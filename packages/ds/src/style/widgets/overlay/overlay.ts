@@ -1,5 +1,5 @@
-import { bg, border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot } from '../../../tokens/foundations'
-import { font, elev, pad, rowPadding } from '../../../tokens/palette'
+import { bg, border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot } from '../../../tokens/semantic'
+import { font, elev, pad, rowPadding } from '../../../tokens/scalar'
 export const cssDialog = () => css`
   :where(dialog) {
     ${grouping(3)}

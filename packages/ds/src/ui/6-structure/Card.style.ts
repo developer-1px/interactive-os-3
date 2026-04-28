@@ -1,5 +1,5 @@
-import { border, css, currentTint, grouping, hairlineWidth, radius, ring, text } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { border, css, currentTint, grouping, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * Card — surface primitive. 슬롯은 vertical flex stack.

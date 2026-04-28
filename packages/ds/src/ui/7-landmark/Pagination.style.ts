@@ -1,5 +1,5 @@
-import { accent, accentTint, css, text } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { accent, accentTint, css, text } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 export const cssPagination = () => css`
   [data-part="pagination"] > ol {

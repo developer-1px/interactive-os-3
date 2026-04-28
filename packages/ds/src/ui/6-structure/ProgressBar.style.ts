@@ -1,4 +1,4 @@
-import { accent, css, currentTint, radius } from '../../tokens/foundations'
+import { accent, css, currentTint, radius } from '../../tokens/semantic'
 
 export const cssProgressBar = () => css`
   :where(progress) {

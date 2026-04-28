@@ -53,7 +53,7 @@ const SIDEBAR_LABELS: Record<SidebarId, string> = {
   'a11y-personal-voice': '응용 프로그램이 개인 음성을 사용하는 것을 허용',
 }
 
-// data-icon 토큰은 src/ds/foundations/icon.ts 에 등록된 lucide-static 이름만 사용 가능하다.
+// data-icon 토큰은 src/tokens/semantic/iconography/icon.ts 에 등록된 lucide-static 이름만 사용 가능하다.
 // volume-high / accessibility 는 등록돼있지 않아 settings / users 로 대체했다.
 const SIDEBAR_ICONS: Partial<Record<SidebarId, string>> = {
   'sound-root': 'settings',

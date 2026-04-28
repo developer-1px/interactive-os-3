@@ -1,5 +1,5 @@
-import { controlBox, css, hierarchy } from '../../foundations'
-import { pad } from '../../palette'
+import { controlBox, css, hierarchy } from '../../semantic'
+import { pad } from '../../scalar'
 
 const selectChevron = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6l5 5 5-5'/></svg>`
 import { clickable, control, flexItem } from './selectors'

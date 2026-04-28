@@ -1,5 +1,5 @@
-import { css, radius, surfaceTint, text, typography } from '../tokens/foundations'
-import { pad } from '../tokens/palette'
+import { css, radius, surfaceTint, text, typography } from '../tokens/semantic'
+import { pad } from '../tokens/scalar'
 
 /**
  * PostCard slot inner styling — Slack/Discord 식 채널 게시판 한 줄.

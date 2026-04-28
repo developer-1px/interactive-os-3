@@ -1,5 +1,5 @@
-import { SHELL_MOBILE_MAX, border, css, hairlineWidth, radius, surface, text } from '@p/ds/tokens/foundations'
-import { weight, pad } from '@p/ds/tokens/palette'
+import { SHELL_MOBILE_MAX, border, css, hairlineWidth, radius, surface, text } from '@p/ds/tokens/semantic'
+import { weight, pad } from '@p/ds/tokens/scalar'
 
 /**
  * feed Gestalt 적용 —

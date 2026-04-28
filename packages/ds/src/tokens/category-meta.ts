@@ -1,7 +1,7 @@
 /**
  * Category meta — co-located SSOT for foundations·palette 카테고리 분류.
  *
- * 각 `tokens/foundations/<cat>/_category.ts` · `tokens/palette/<cat>.category.ts`
+ * 각 `tokens/semantic/<cat>/_category.ts` · `tokens/scalar/<cat>.category.ts`
  * 가 default export 한다. canvas 의 tokenGroups · PaletteSection 은
  * `import.meta.glob` 으로 자동 수집 — 카테고리 추가/라벨 변경 시 canvas 코드
  * 수정 0곳.

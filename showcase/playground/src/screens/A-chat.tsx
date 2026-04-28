@@ -2,7 +2,7 @@ import { Avatar, Column, MessageBubble, Phone, PhoneTabBar, PhoneTopBar, Row, Sk
 import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, StickyAction, tabIcons } from '../wireframe-shell'
-import { type } from '@p/ds/tokens/foundations'
+import { type } from '@p/ds/tokens/semantic'
 import { composer, divider, listRow, meta } from '../wireframe-tokens'
 
 defineGroup('A-Chat',          { id: 'A', title: 'Chat',          lede: 'MessageBubble · 1:1 대화 thread + 대화 목록 (Avatar + last-message)', defaultGuide: 'list' })

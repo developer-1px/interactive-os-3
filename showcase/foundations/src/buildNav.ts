@@ -13,7 +13,7 @@ export const navBase = (
     { id: 'all', label: 'All', badge: totalExports },
     ...fileEntries.map(([file, list]) => ({
       id: file,
-      label: file.replace('/src/ds/foundations/', ''),
+      label: file.replace('/src/tokens/semantic/', ''),
       badge: list.length,
     })),
     { id: 'missing', label: 'Missing @demo', badge: missing },

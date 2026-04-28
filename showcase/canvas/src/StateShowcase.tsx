@@ -8,14 +8,14 @@
  */
 import type { ReactNode } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
-import * as foundations from '@p/ds/tokens/foundations'
+import * as foundations from '@p/ds/tokens/semantic'
 import { Card, Heading, Chip, Code, RovingItem } from '@p/ds/ui/6-structure'
 
 const FN = foundations as unknown as Record<string, (...args: unknown[]) => string>
 
 // foundations/state/<file>.triggers.ts 자동 수집 — canvas 측 하드코딩 ❌
 const triggerModules = import.meta.glob<{ default: Record<string, string> }>(
-  '@p/ds/tokens/foundations/state/*.triggers.ts',
+  '@p/ds/tokens/semantic/state/*.triggers.ts',
   { eager: true },
 )
 const TRIGGER: Record<string, string> = (() => {

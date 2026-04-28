@@ -148,7 +148,7 @@ const proseCallout = (): ReactNode => (
 const proseCode = (): ReactNode => (
   <article data-flow="prose">
     <h3>적용 예</h3>
-    <pre><code>{`import { hierarchy } from 'src/ds/foundations'
+    <pre><code>{`import { hierarchy } from '@p/ds/tokens/semantic'
 
 const sidebarSurface = css\`
   nav[data-part="sidebar"] {

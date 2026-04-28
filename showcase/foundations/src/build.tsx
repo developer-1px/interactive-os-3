@@ -36,7 +36,7 @@ export function buildFoundationsPage(s: FoundationsState): NormalizedData {
     : showLeaks ? 'Leak Report'
     : showParts ? 'Parts'
     : showMissing ? `Missing @demo (${s.missingDemos.length})`
-    : s.filter.replace('/src/ds/foundations/', '')
+    : s.filter.replace('/src/tokens/semantic/', '')
 
   const headerBlurb = showLeaks
     ? 'style/widgets/** 에서 foundations/ 을 거치지 않은 리터럴·직접 var 참조. 0에 가까울수록 메타-DS.'
@@ -84,9 +84,9 @@ export function buildFoundationsPage(s: FoundationsState): NormalizedData {
       const grid = `gr-${file}`
       const ttl = `gt-${file}`
       const cnt = `gc-${file}`
-      entities[gid] = { id: gid, data: { type: 'Section', flow: 'list', label: file.replace('/src/ds/foundations/', '') } }
+      entities[gid] = { id: gid, data: { type: 'Section', flow: 'list', label: file.replace('/src/tokens/semantic/', '') } }
       entities[hdr] = { id: hdr, data: { type: 'Header', flow: 'cluster' } }
-      entities[ttl] = { id: ttl, data: { type: 'Text', variant: 'h2', content: file.replace('/src/ds/foundations/', '') } }
+      entities[ttl] = { id: ttl, data: { type: 'Text', variant: 'h2', content: file.replace('/src/tokens/semantic/', '') } }
       entities[cnt] = { id: cnt, data: { type: 'Text', variant: 'small', content: String(list.length) } }
       entities[grid] = { id: grid, data: { type: 'Grid', cols: 3, cardGrid: true } }
       relationships[gid] = [hdr, grid]
@@ -154,7 +154,7 @@ export function buildFoundationsPage(s: FoundationsState): NormalizedData {
   if (showMissing && s.missingDemos.length > 0) {
     const rows = s.missingDemos.map((e) => ({
       name: createElement('code', null, e.name),
-      file: e.file.replace('/src/ds/foundations/', ''),
+      file: e.file.replace('/src/tokens/semantic/', ''),
       signature: createElement('code', null, e.signature),
     }))
     entities.missingSection = { id: 'missingSection', data: { type: 'Section', flow: 'list', label: 'Missing @demo' } }

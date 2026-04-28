@@ -4,7 +4,7 @@ import { Button } from '@p/ds/ui/1-command/Button'
 import { Card } from '@p/ds/ui/6-structure/Card'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body } from '../wireframe-shell'
-import { type } from '@p/ds/tokens/foundations'
+import { type } from '@p/ds/tokens/semantic'
 import { meta } from '../wireframe-tokens'
 
 defineGroup('O-Pricing',       { id: 'O', title: 'Pricing',       lede: '월/연 토글 + 3-tier Card (Free / Pro 추천 / Team) + feature checklist.', defaultGuide: 'hero' })

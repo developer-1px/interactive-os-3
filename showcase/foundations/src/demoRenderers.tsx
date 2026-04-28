@@ -2,7 +2,7 @@
 /** demoRenderers — @demo spec → ReactNode 디스패처 + atomic demo 컴포넌트 + 데모 전용 CSS. */
 import type { ReactNode } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
-import * as foundations from '@p/ds/tokens/foundations'
+import * as foundations from '@p/ds/tokens/semantic'
 
 const FOUNDATIONS = foundations as unknown as Record<string, (...args: unknown[]) => string>
 

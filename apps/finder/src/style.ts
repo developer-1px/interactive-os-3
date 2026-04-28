@@ -1,5 +1,5 @@
-import { css, icon, text, typography } from '@p/ds/tokens/foundations'
-import { font, pad } from '@p/ds/tokens/palette'
+import { css, icon, text, typography } from '@p/ds/tokens/semantic'
+import { font, pad } from '@p/ds/tokens/scalar'
 
 // Finder desktop — sidebar / columns / list-view / preview.
 // (sidebar surface 자체는 widgets/composite/sidebar.ts owner.)

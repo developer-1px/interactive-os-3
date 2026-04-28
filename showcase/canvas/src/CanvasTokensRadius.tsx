@@ -4,7 +4,7 @@
  * 출처: docs/inbox/screens-foundation.jsx RadiusScreen.
  * cell 렌더링은 <TokenPreview kind="radius"> — 정본 어휘 통과.
  */
-import { radius } from '@p/ds/tokens/foundations'
+import { radius } from '@p/ds/tokens/semantic'
 import { TokenPreview } from './preview'
 
 type R = { key: 'sm' | 'md' | 'lg' | 'pill'; call: string }

@@ -21,7 +21,7 @@ import { cssRoleCard } from './content/RoleCard.style'
 import { cssFeedPost } from './content/FeedPost.style'
 import { cssInboxRow } from './style/widgets/pattern/inboxRow'
 import { cssAuthCard } from './style/widgets/pattern/authCard'
-import { iconVars, iconIndicator } from './tokens/foundations/iconography/icon'
+import { iconVars, iconIndicator } from './tokens/semantic/iconography/icon'
 import { assertUniqueSelectors } from './style/assertUnique'
 
 export const APPS_LAYER_DECL = '@layer reset, states, widgets, parts, content, shell, apps;\n'

@@ -1,5 +1,5 @@
-import { css, keyline, radius, ring } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { css, keyline, radius, ring } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 export const cssFeed = () => css`
   /* Feed는 states.ts의 subgrid 체인이 grid·column·padding을 제공하고, 여기서

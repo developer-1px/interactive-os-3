@@ -2,7 +2,7 @@ import { Column, Phone, PhoneTabBar, PhoneTopBar, Row } from '@p/ds'
 import { Grid } from '@p/ds/ui/9-layout/Grid'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
-import { type } from '@p/ds/tokens/foundations'
+import { type } from '@p/ds/tokens/semantic'
 import { calendar, dot, meta, todayPill } from '../wireframe-tokens'
 
 defineGroup('U-Calendar',      { id: 'U', title: 'Calendar',      lede: 'Google Calendar 식 월간 grid — weekday header · today pill · event dot.', defaultGuide: 'grid' })

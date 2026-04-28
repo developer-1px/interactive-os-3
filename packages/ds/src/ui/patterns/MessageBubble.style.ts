@@ -1,5 +1,5 @@
-import { css, hairlineWidth, radius, surface } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { css, hairlineWidth, radius, surface } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * MessageBubble slot inner styling — DM 1:1 채팅 버블.

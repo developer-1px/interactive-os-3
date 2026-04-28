@@ -27,7 +27,7 @@ function bucketOf(name: string): string {
 
 // ── lane meta (label/standard) ──────────────────────────────────────────
 const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
-  '@p/ds/tokens/foundations/*/_category.ts',
+  '@p/ds/tokens/semantic/*/_category.ts',
   { eager: true },
 )
 const CATEGORY_META: Record<string, CategoryMeta> = (() => {

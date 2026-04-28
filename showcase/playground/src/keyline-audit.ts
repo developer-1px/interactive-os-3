@@ -6,7 +6,7 @@
  * 일관되게 지키는지 정적 grep 으론 잡을 수 없다 — 디자인 얹은 뒤 실제 픽셀 거리로
  * 검증해야 한다. 이 모듈이 그 측정 책임을 진다.
  *
- * SSoT: `mobileGrid` (packages/ds/src/tokens/foundations/spacing/keyline.ts) — overlay
+ * SSoT: `mobileGrid` (packages/ds/src/tokens/semantic/spacing/keyline.ts) — overlay
  * CSS 와 동일한 값을 읽으므로 "보이는 가이드" = "통과 기준". 별도 수치 선언 0.
  *
  * 측정 대상 (V1):
@@ -16,7 +16,7 @@
  *
  * 같은 document 와 iframe (desktop · same-origin) 모두 지원.
  */
-import { mobileGrid, type MobileGuideName } from '@p/ds/tokens/foundations/spacing/keyline'
+import { mobileGrid, type MobileGuideName } from '@p/ds/tokens/semantic/spacing/keyline'
 
 export type ViolationLevel = 'ok' | 'warn' | 'fail'
 export type ViolationAxis =

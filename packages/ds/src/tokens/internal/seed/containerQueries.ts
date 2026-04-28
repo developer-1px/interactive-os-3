@@ -1,4 +1,4 @@
-import { css } from '../../foundations'
+import { css } from '../../semantic'
 
 // 모바일 확장 — container query 전용 breakpoint 토큰.
 // 원칙: media query는 장치 특성(hover/pointer/prefers-*)에만, viewport 폭 분기는 container query.

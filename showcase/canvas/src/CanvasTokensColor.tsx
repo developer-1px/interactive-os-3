@@ -11,7 +11,7 @@
  * cell 렌더링은 <TokenPreview kind="color">. 그룹 라벨은 Atlas 정본 따라 hardcoded.
  * 값은 foundations/color SSOT 함수 호출.
  */
-import { accent, surface, text, border, status, bg } from '@p/ds/tokens/foundations'
+import { accent, surface, text, border, status, bg } from '@p/ds/tokens/semantic'
 import { SubGroup } from './SectionFrame'
 import { TokenPreview } from './preview'
 

@@ -1,5 +1,5 @@
-import { accent, accentTint, control, css, currentTint, dur, ease, radius, ring } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { accent, accentTint, control, css, currentTint, dur, ease, radius, ring } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 /**
  * Chip — removable label. Material/Mantine 의 Input/Filter Chip 시맨틱.

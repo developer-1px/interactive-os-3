@@ -6,7 +6,7 @@
  *   02 In context     — 같은 weight 으로 그린 카드들
  *   03 Horizontal rule — <hr>
  */
-import { border } from '@p/ds/tokens/foundations'
+import { border } from '@p/ds/tokens/semantic'
 import { SubGroup } from './SectionFrame'
 import { TokenPreview } from './preview'
 

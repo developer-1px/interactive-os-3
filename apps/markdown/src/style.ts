@@ -1,5 +1,5 @@
-import { SHELL_MOBILE_MAX, css } from '@p/ds/tokens/foundations'
-import { pad } from '@p/ds/tokens/palette/space'
+import { SHELL_MOBILE_MAX, css } from '@p/ds/tokens/semantic'
+import { pad } from '@p/ds/tokens/scalar/space'
 
 // Markdown viewer — 데스크톱은 중앙 정렬 + 여백, 모바일은 폭 100% + safe-area.
 export const markdownCss = css`

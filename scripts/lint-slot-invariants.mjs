@@ -9,13 +9,13 @@
  *   - 정의했는데 widget 어디서도 안 쓰는 dead slot 금지
  *   - 모든 값은 pad(N) scale 위에 있다 (raw px 금지)
  *
- * source-of-truth: packages/ds/src/tokens/foundations/spacing/slot.ts
+ * source-of-truth: packages/ds/src/tokens/semantic/spacing/slot.ts
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const ROOT = new URL('..', import.meta.url).pathname
-const SLOT_FILE = join(ROOT, 'packages/ds/src/tokens/foundations/spacing/slot.ts')
+const SLOT_FILE = join(ROOT, 'packages/ds/src/tokens/semantic/spacing/slot.ts')
 
 // ── parse ────────────────────────────────────────────────────────────────
 // slot 객체에서 { component: { key: pad(N) } } 형태로 추출.

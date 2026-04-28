@@ -1,4 +1,4 @@
-import { css, grouping, keyline, radius } from '../../../tokens/foundations'
+import { css, grouping, keyline, radius } from '../../../tokens/semantic'
 
 export const cssTabPanel = () => css`
   :where([role="tabpanel"]) { padding: ${keyline.containerPad}; }

@@ -3,7 +3,7 @@
  * /foundations — TS Foundation 카탈로그.
  *
  * /tokens 가 `:root --ds-*` CSS var (값) 의 SSOT viewer 라면,
- * /foundations 는 `@p/ds/tokens/foundations` 의 *함수형 export* (mixin·helper·scale) 의 SSOT viewer.
+ * /foundations 는 `@p/ds/tokens/semantic` 의 *함수형 export* (mixin·helper·scale) 의 SSOT viewer.
  *
  * 같은 dispatch 골격, 다른 SSOT 소스:
  *   import * as F → entries → categorize(typeof + arity + name) → kindRegistry[kind]
@@ -11,7 +11,7 @@
  * 신규 foundation 추가 = export 1줄. 페이지 본체 닫혀 있음 (OCP).
  */
 import { useMemo, type ReactNode } from 'react'
-import * as F from '@p/ds/tokens/foundations'
+import * as F from '@p/ds/tokens/semantic'
 import { ROOT, Renderer, definePage, Table, Heading, Code, type NormalizedData } from '@p/ds'
 
 // ──────────────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ function buildPage(): NormalizedData {
     page:      { id: 'page',  data: { type: 'Main',   flow: 'prose', label: 'Foundation 카탈로그' } },
     hdr:       { id: 'hdr',   data: { type: 'Header', flow: 'cluster' } },
     hdrTitle:  { id: 'hdrTitle', data: { type: 'Text', variant: 'h1',    content: 'Foundations' } },
-    hdrSub:    { id: 'hdrSub',   data: { type: 'Text', variant: 'small', content: '@p/ds/tokens/foundations 의 함수형 export — mixin · value · helper · scale · ETC. 자동 enumerate (수동 매핑 ❌).' } },
+    hdrSub:    { id: 'hdrSub',   data: { type: 'Text', variant: 'small', content: '@p/ds/tokens/semantic 의 함수형 export — mixin · value · helper · scale · ETC. 자동 enumerate (수동 매핑 ❌).' } },
   }
   const childrenOfPage: string[] = ['hdr']
 

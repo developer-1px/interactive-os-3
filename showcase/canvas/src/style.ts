@@ -1,5 +1,5 @@
-import { css, radius, pair, bg, text, surface, border, mute, typography, type as typeRole } from '@p/ds/tokens/foundations'
-import { weight, pad, font, elev } from '@p/ds/tokens/palette'
+import { css, radius, pair, bg, text, surface, border, mute, typography, type as typeRole } from '@p/ds/tokens/semantic'
+import { weight, pad, font, elev } from '@p/ds/tokens/scalar'
 import { TONE } from './canvas-tones'
 import { previewCss } from './preview/preview.style'
 

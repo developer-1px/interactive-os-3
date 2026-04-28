@@ -2,7 +2,7 @@ import { Callout, EmptyState, Phone, PhoneTabBar, PhoneTopBar, ProductCard, Row,
 import { Button } from '@p/ds/ui/1-command/Button'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction, sampleImg, tabIcons } from '../wireframe-shell'
-import { type } from '@p/ds/tokens/foundations'
+import { type } from '@p/ds/tokens/semantic'
 
 defineGroup('B-Shopping',      { id: 'B', title: 'Shopping',      lede: 'ProductCard · 카테고리 picker (TabList) + 상품 grid + 장바구니 + 빈 상태', defaultGuide: 'feed' })
 

@@ -1,5 +1,5 @@
-import { css, radius, toneTint } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { css, radius, toneTint } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 /**
  * Callout — info/success/warning/danger 메시지 박스.

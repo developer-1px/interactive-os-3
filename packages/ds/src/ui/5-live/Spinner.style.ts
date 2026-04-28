@@ -1,4 +1,4 @@
-import { accent, css, radius, status, text } from '../../tokens/foundations'
+import { accent, css, radius, status, text } from '../../tokens/semantic'
 
 /**
  * Spinner — inline loading indicator. CircularProgress 풍.

@@ -1,4 +1,4 @@
-import { css } from '../../foundations/css'
+import { css } from '../../semantic/css'
 import type {
   DsPreset,
   Layer,

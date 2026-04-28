@@ -1,4 +1,4 @@
-import { css, currentTint, radius } from '../../tokens/foundations'
+import { css, currentTint, radius } from '../../tokens/semantic'
 
 /**
  * Thumbnail — aspect-ratio 보존 미리보기 미디어.

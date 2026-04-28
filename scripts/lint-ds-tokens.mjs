@@ -13,7 +13,7 @@ import path from 'node:path'
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..')
 const APPLY = path.join(ROOT, 'packages/ds/src/tokens/internal/preset/apply.ts')
 const SEED  = path.join(ROOT, 'packages/ds/src/tokens/internal/seed/tokens.ts')
-const FOUND = path.join(ROOT, 'packages/ds/src/tokens/foundations')
+const FOUND = path.join(ROOT, 'packages/ds/src/tokens/semantic')
 
 const read = p => fs.readFileSync(p, 'utf8')
 

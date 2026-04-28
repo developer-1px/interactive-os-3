@@ -215,8 +215,8 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 function ensureImport(src: string, name: string): string {
-  // import { ... } from '...tokens/foundations...'
-  // foundations barrel import — `tokens/foundations` 또는 상대경로 `../foundations` 모두 허용
+  // import { ... } from '...tokens/semantic...'
+  // foundations barrel import — `tokens/semantic` 또는 상대경로 `../foundations` 모두 허용
   const re = /import\s*\{([^}]*)\}\s*from\s*(['"][^'"]*foundations['"])/
   const m = src.match(re)
   if (!m) return src // 알 수 없는 import 패턴 — 손대지 않음

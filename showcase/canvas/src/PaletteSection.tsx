@@ -10,7 +10,7 @@
 import type { ReactNode, CSSProperties } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
 import { audit } from 'virtual:ds-audit'
-import * as palette from '@p/ds/tokens/palette'
+import * as palette from '@p/ds/tokens/scalar'
 import { SectionFrame, SubGroup } from './SectionFrame'
 import { ColumnBanner } from './ColumnBanner'
 import { CanvasTokensToc, type TocItem } from './CanvasTokensToc'
@@ -30,7 +30,7 @@ type PaletteGroup = { category: string; exports: FoundationExport[] }
 
 // palette/<cat>.category.ts 자동 수집
 const categoryMetaModules = import.meta.glob<{ default: CategoryMeta }>(
-  '@p/ds/tokens/palette/*.category.ts',
+  '@p/ds/tokens/scalar/*.category.ts',
   { eager: true },
 )
 const CATEGORY_LABEL: Record<string, CategoryMeta> = (() => {

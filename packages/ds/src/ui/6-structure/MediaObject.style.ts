@@ -1,5 +1,5 @@
-import { css, text } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { css, text } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 
 /**
  * MediaObject — 좌측 media 고정폭 + 우측 (title/body/meta) 스택. grid-template-areas.

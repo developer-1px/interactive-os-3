@@ -8,7 +8,7 @@
  */
 import type { ReactNode, CSSProperties } from 'react'
 import type { DemoSpec, FoundationExport } from 'virtual:ds-audit'
-import * as foundations from '@p/ds/tokens/foundations'
+import * as foundations from '@p/ds/tokens/semantic'
 import { TokenPreview, inferKind, type TokenKind } from './preview'
 
 const FN = foundations as unknown as Record<string, (...args: unknown[]) => string>

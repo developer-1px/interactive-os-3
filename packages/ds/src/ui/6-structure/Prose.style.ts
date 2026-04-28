@@ -1,5 +1,5 @@
-import { accent, border, codeSurface, css, hairlineWidth, hierarchy, proximity, radius, text, toneTint, trackingScale, underlineOffset } from '../../tokens/foundations'
-import { leading, pad, weight } from '../../tokens/palette'
+import { accent, border, codeSurface, css, hairlineWidth, hierarchy, proximity, radius, text, toneTint, trackingScale, underlineOffset } from '../../tokens/semantic'
+import { leading, pad, weight } from '../../tokens/scalar'
 
 /**
  * Prose typography — article[data-flow="prose"] 안 시맨틱 태그.

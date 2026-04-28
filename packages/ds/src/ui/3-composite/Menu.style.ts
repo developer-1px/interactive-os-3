@@ -1,5 +1,5 @@
-import { accent, css, dur, ease, grouping, indicator, listReset, onAccent, radius, selectedStrong, text } from '../../tokens/foundations'
-import { pad, rowPadding } from '../../tokens/palette'
+import { accent, css, dur, ease, grouping, indicator, listReset, onAccent, radius, selectedStrong, text } from '../../tokens/semantic'
+import { pad, rowPadding } from '../../tokens/scalar'
 export const cssMenu = () => [
   css`
     button[popovertarget] {

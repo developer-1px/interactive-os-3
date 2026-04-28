@@ -13,8 +13,8 @@
  *   [data-part="canvas-scale"]                  TokenScale aggregator (flex row wrap)
  *   [data-part="canvas-scale"][data-kind=...]   kind 별 복수 layout override (TBD)
  */
-import { css, radius, pair, bg, text, surface, border, typography } from '@p/ds/tokens/foundations'
-import { font, weight, pad } from '@p/ds/tokens/palette'
+import { css, radius, pair, bg, text, surface, border, typography } from '@p/ds/tokens/semantic'
+import { font, weight, pad } from '@p/ds/tokens/scalar'
 
 export const previewCss = css`
   /* ── frame — 160px 정사각, bordered, caption 아래 */

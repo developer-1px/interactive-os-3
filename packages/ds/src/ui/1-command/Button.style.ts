@@ -1,5 +1,5 @@
-import { accent, accentTint, control, css, dur, ease, hairlineWidth, onAccent, radius, square, status, statusTint, surface } from '../../tokens/foundations'
-import { weight, pad } from '../../tokens/palette'
+import { accent, accentTint, control, css, dur, ease, hairlineWidth, onAccent, radius, square, status, statusTint, surface } from '../../tokens/semantic'
+import { weight, pad } from '../../tokens/scalar'
 
 /**
  * Button — 시각 강도는 `data-variant` 로 명시. 위치 기반 자동 분기 ❌.

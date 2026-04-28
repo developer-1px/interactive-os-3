@@ -1,5 +1,5 @@
-import { SHELL_MOBILE_MAX, border, css, grouping, hairlineWidth, radius } from '../foundations'
-import { pad, weight } from '../palette'
+import { SHELL_MOBILE_MAX, border, css, grouping, hairlineWidth, radius } from '../semantic'
+import { pad, weight } from '../scalar'
 
 // shell — OS 셸 크롬 (window-controls, traffic lights, body flex 컨테이너).
 // 특정 앱 이름이 아니라 "window-controls를 가진 main" 을 구조로 매칭.

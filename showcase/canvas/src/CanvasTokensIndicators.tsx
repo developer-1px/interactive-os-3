@@ -4,7 +4,7 @@
  * `data-icon` canonical token 을 grid 로 — ICON_TOKENS SSOT.
  * cell 렌더링은 <TokenPreview kind="icon"> — value 는 var(--ds-icon-X).
  */
-import { ICON_TOKENS } from '@p/ds/tokens/foundations'
+import { ICON_TOKENS } from '@p/ds/tokens/semantic'
 import { TokenPreview } from './preview'
 
 export function CanvasTokensIndicators() {

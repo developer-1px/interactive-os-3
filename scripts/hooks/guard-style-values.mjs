@@ -17,8 +17,8 @@
 import { readFileSync, existsSync } from 'node:fs'
 import { scanText } from '../lib/ds-value-rules.mjs'
 
-const SCAN_RE = /\/src\/ds\/style\/(widgets|shell)\/|\/src\/ds\/style\/states\.ts$/
-const SKIP_RE = /\/src\/ds\/fn\/|\/src\/ds\/style\/preset\//
+const SCAN_RE = /\/packages\/ds\/src\/(style\/widgets|ui|content)\/|\/packages\/ds\/src\/style\/states\.ts$/
+const SKIP_RE = /\/packages\/ds\/src\/tokens\/(scalar|semantic|internal)\/|\/packages\/ds\/src\/style\/preset\//
 
 let payload = ''
 process.stdin.on('data', (c) => { payload += c })

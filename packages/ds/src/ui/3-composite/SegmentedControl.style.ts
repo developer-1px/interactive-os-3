@@ -1,5 +1,5 @@
-import { border, css, hairlineWidth, radius, ring, surface, text } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { border, css, hairlineWidth, radius, ring, surface, text } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 
 /**
  * SegmentedControl — iOS 식 한 덩어리 컨트롤. inner padding + 선택 segment 만 raised.

@@ -1,4 +1,4 @@
-import { accent, css, hairlineWidth } from '../../tokens/foundations'
+import { accent, css, hairlineWidth } from '../../tokens/semantic'
 
 /**
  * ButtonGroup — visually attached cluster of buttons (Material/Polaris/Bootstrap).

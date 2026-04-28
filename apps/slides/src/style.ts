@@ -1,5 +1,5 @@
-import { css, radius } from '@p/ds/tokens/foundations'
-import { pad } from '@p/ds/tokens/palette/space'
+import { css, radius } from '@p/ds/tokens/semantic'
+import { pad } from '@p/ds/tokens/scalar/space'
 
 /** Minimal PPT 시각 어포던스
  *  - 슬라이드 1장 = 16:9 흰 카드(그림자) — "지금 한 장을 보고 있다"

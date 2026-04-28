@@ -1,5 +1,5 @@
-import { accent, accentTint, border, css, dur, ease, ringWidth, hairlineWidth, radius, ring, text } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { accent, accentTint, border, css, dur, ease, ringWidth, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 /**
  * Tabs — 보편적 탭 어포던스.
  *

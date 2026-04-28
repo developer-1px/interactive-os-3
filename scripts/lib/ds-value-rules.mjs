@@ -12,6 +12,17 @@ export const stripColorMixSpace = (line) =>
 
 export const rules = [
   {
+    kind: 'scalar-import-in-widget',
+    level: 'error',
+    hint: 'widget tier (style/widgets·shell·states · ui · content) 에서 tokens/scalar 직접 import 금지 — semantic 토큰 (text·surface·border·proximity·hierarchy·slot·typography(role)·boxSize·radius 등) 사용',
+    test: (line) => {
+      if (!/^\s*import\b/.test(line)) return false
+      if (/from\s+['"][^'"]*\btokens\/scalar(?:\/|['"])/.test(line)) return true
+      if (/from\s+['"]\.{1,2}\/(?:[\w.\-]+\/)*tokens\/scalar(?:\/|['"])/.test(line)) return true
+      return false
+    },
+  },
+  {
     kind: 'non-semantic-color',
     level: 'warn',
     hint: 'non-semantic 색 토큰 — role 기반 semantic 사용 (text/surface/border/accent/status…). 같은 수치라도 의미 다르면 별 role 로 등재. neutral/tint/mix/dim 은 preset·foundations 내부 전용',

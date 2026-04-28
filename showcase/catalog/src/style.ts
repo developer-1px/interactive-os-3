@@ -1,5 +1,5 @@
-import { SHELL_MOBILE_MAX, css, grouping, microLabel, radius, status, surface, text, typography } from '@p/ds/tokens/foundations'
-import { pad } from '@p/ds/tokens/palette'
+import { SHELL_MOBILE_MAX, css, grouping, microLabel, radius, status, surface, text, typography } from '@p/ds/tokens/semantic'
+import { pad } from '@p/ds/tokens/scalar'
 
 // Catalog — ds ui zone-first 감사 대시보드.
 // edu-portal-admin 과 동일한 셸 구조, content 영역은 zone(h2) → component card(h3) 위계.

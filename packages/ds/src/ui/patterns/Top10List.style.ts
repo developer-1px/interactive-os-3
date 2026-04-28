@@ -1,5 +1,5 @@
-import { accent, border, css, hairlineWidth, text, typography } from '../../tokens/foundations'
-import { pad } from '../../tokens/palette'
+import { accent, border, css, hairlineWidth, text, typography } from '../../tokens/semantic'
+import { pad } from '../../tokens/scalar'
 export const cssTop10List = () => css`
   [data-part="top-10"] {
     counter-reset: rank;

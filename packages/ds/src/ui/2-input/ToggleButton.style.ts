@@ -1,4 +1,4 @@
-import { accent, accentTint, css, onAccent } from '../../tokens/foundations'
+import { accent, accentTint, css, onAccent } from '../../tokens/semantic'
 
 /**
  * ToggleButton — pressed=true 시 accent fill 로 시각 강조.

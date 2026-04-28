@@ -1,5 +1,5 @@
-import { css, text, typography } from '../../tokens/foundations'
-import { font, weight, pad } from '../../tokens/palette'
+import { css, text, typography } from '../../tokens/semantic'
+import { font, weight, pad } from '../../tokens/scalar'
 
 /**
  * Heading — 시맨틱 tag(h1~h3, p, small) + data-level로 시각 size.

@@ -1,5 +1,5 @@
-import { accent, css, currentTint, radius, status, text } from '../../tokens/foundations'
-import { font, pad } from '../../tokens/palette'
+import { accent, css, currentTint, radius, status, text } from '../../tokens/semantic'
+import { font, pad } from '../../tokens/scalar'
 export const cssBarChart = () => css`
   [data-part="bar-chart"] {
     margin: 0;
