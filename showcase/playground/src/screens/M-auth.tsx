@@ -1,7 +1,7 @@
 import { Heading, Link, Phone, PhoneTopBar, Row } from '@p/ds'
 import { Button } from '@p/ds/ui/1-command/Button'
 import { Switch } from '@p/ds/ui/2-input/Switch'
-import { Field, FieldLabel } from '@p/ds/ui/3-input/Field'
+import { Field, FieldLabel } from '@p/ds/ui/8-field/Field'
 import { Input } from '@p/ds/ui/2-input/Input'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'

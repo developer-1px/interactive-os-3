@@ -64,17 +64,11 @@ packages/ds/src/ui/
 - [x] Pagination (← 5-display)
 
 
-### 8-field
-- [ ] Field.tsx                 ← 3-input
-- [ ] Stepper.tsx               ← 5-display
+### 8-field ✅
+- [x] Field (← 3-input), Stepper (← 5-display)
 
-### 9-layout
-- [ ] Row.tsx                   ← 8-layout
-- [ ] Column.tsx                ← 8-layout
-- [ ] Grid.tsx                  ← 8-layout
-- [ ] Split.tsx                 ← 8-layout
-- [ ] Carousel.tsx              ← 8-layout
-- [ ] ZoomPanCanvas.tsx         ← 8-layout
+### 9-layout ✅
+- [x] Row · Column · Grid · Split · Carousel · ZoomPanCanvas (← 8-layout)
 
 ## 진행 순서 (작은 단위, 한 번에 하나)
 
@@ -87,9 +81,9 @@ packages/ds/src/ui/
 5. [x] 5-live
 6. [x] 6-structure
 7. [x] 7-landmark
-8. [ ] 8-field
-9. [ ] 9-layout
-10. [ ] 옛 폴더(0-primitives, 1-status, 2-action, 3-input, 4-selection, 5-display, 6-overlay, 8-layout, parts) 청소
+8. [x] 8-field
+9. [x] 9-layout
+10. [x] 옛 폴더(0-primitives, 1-status, 2-action, 3-input, 4-selection, 5-display, 6-overlay, 8-layout, parts) 청소
 11. [ ] lint:ds 최종 통과
 
 ## 메모

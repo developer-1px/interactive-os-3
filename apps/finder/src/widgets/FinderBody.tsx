@@ -6,7 +6,7 @@ import {
   useFeature,
   type Event,
 } from '@p/ds'
-import { Split } from '@p/ds/ui/8-layout/Split'
+import { Split } from '@p/ds/ui/9-layout/Split'
 import { Link } from '@tanstack/react-router'
 import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'

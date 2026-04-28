@@ -1,6 +1,6 @@
 import { Heading, Phone, PhoneTopBar, ProgressBar, Row } from '@p/ds'
 import { Button } from '@p/ds/ui/1-command/Button'
-import { Field, FieldLabel } from '@p/ds/ui/3-input/Field'
+import { Field, FieldLabel } from '@p/ds/ui/8-field/Field'
 import { Input } from '@p/ds/ui/2-input/Input'
 import { Select } from '@p/ds/ui/2-input/Select'
 import { defineScreen, defineGroup } from '../wireframe-registry'

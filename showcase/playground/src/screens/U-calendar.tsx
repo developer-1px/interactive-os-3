@@ -1,5 +1,5 @@
 import { Column, Phone, PhoneTabBar, PhoneTopBar, Row } from '@p/ds'
-import { Grid } from '@p/ds/ui/8-layout/Grid'
+import { Grid } from '@p/ds/ui/9-layout/Grid'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, tabIcons } from '../wireframe-shell'
 import { type } from '@p/ds/tokens/foundations'

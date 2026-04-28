@@ -1,6 +1,6 @@
 import { CheckboxGroup, Heading, Phone, PhoneTabBar, PhoneTopBar, RadioGroup, Row, fromList } from '@p/ds'
 import { Switch } from '@p/ds/ui/2-input/Switch'
-import { Field, FieldDescription, FieldLabel } from '@p/ds/ui/3-input/Field'
+import { Field, FieldDescription, FieldLabel } from '@p/ds/ui/8-field/Field'
 import { Input } from '@p/ds/ui/2-input/Input'
 import { Select } from '@p/ds/ui/2-input/Select'
 import { Slider } from '@p/ds/ui/2-input/Slider'

@@ -1,6 +1,6 @@
 import { CheckboxGroup, Heading, Phone, PhoneTopBar, RadioGroup, fromList } from '@p/ds'
 import { Button } from '@p/ds/ui/1-command/Button'
-import { Field, FieldLabel } from '@p/ds/ui/3-input/Field'
+import { Field, FieldLabel } from '@p/ds/ui/8-field/Field'
 import { Slider } from '@p/ds/ui/2-input/Slider'
 import { defineScreen, defineGroup } from '../wireframe-registry'
 import { Body, PrimaryButton, StickyAction } from '../wireframe-shell'

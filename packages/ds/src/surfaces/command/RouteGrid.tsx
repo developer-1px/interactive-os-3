@@ -4,7 +4,7 @@ import { ROOT, type NormalizedData, type Event } from '../../headless/types'
 import { Card } from '../../ui/6-structure/Card'
 import { Heading } from '../../ui/6-structure/Heading'
 import { Listbox } from '../../ui/3-composite/Listbox'
-import { Grid } from '../../ui/8-layout/Grid'
+import { Grid } from '../../ui/9-layout/Grid'
 
 type Group = { key: string; label: string; entries: PaletteEntry[] }
 
