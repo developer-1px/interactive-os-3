@@ -23,28 +23,29 @@
 // ── Text — fg ladder 의 role alias ──────────────────────────────────────
 /**
  * text(role) — Atlas/Linear fg ladder 의 의미 별칭.
- *   'default' → fg    body (~21:1)
- *   'strong'  → fg    heading (preset 분리 시 별 var 가능)
- *   'subtle'  → fg-2  secondary (~12:1)
- *   'mute'    → fg-4  caption·meta·placeholder (~4.5:1 AA)
- *   'inverse' → Canvas
+ *   'default'   → fg          body (~21:1)
+ *   'strong'    → fg          heading (preset 분리 시 별 var 가능)
+ *   'subtle'    → fg-2        secondary (~12:1)
+ *   'mute'      → fg-4        caption·meta·placeholder (~4.5:1 AA)
+ *   'inverse'   → Canvas
+ *   'on-accent' → accent-on   accent surface 위 텍스트
  *
  * 다른 색은 전용 함수 사용:
  *   - 상태색 → `status(tone)`
  *   - 링크   → `accent()`
- *   - on-accent 텍스트 → `onAccent()`
  *   - disabled → opacity (surface flip 안전)
  *
  * 주의: cell·item 의 "약화"는 mute() opacity 가 surface flip 안전.
  *       text('mute') 는 단독 텍스트 라벨처럼 surface 변경 가능성이 없는 곳에만.
  */
-type TextRole = 'strong' | 'default' | 'subtle' | 'mute' | 'inverse'
+type TextRole = 'strong' | 'default' | 'subtle' | 'mute' | 'inverse' | 'on-accent'
 const TEXT_VAR: Record<TextRole, string> = {
-  strong:    'var(--ds-fg)',
-  default:   'var(--ds-fg)',
-  subtle:    'var(--ds-fg-2)',
-  mute:      'var(--ds-fg-4)',
-  inverse:   'Canvas',
+  strong:      'var(--ds-fg)',
+  default:     'var(--ds-fg)',
+  subtle:      'var(--ds-fg-2)',
+  mute:        'var(--ds-fg-4)',
+  inverse:     'Canvas',
+  'on-accent': 'var(--ds-accent-on)',
 }
 /** @demo type=color fn=text args=["default"] */
 export const text = (role: TextRole = 'default') => TEXT_VAR[role]
@@ -52,16 +53,17 @@ export const text = (role: TextRole = 'default') => TEXT_VAR[role]
 // ── Surface — bg ladder 의 role alias ───────────────────────────────────
 /**
  * surface(role) — Atlas bg ladder.
- *   'subtle'  → bg-sunken   page ground · chip · banner (default)
+ *   'default' → bg          card · popover · input
+ *   'subtle'  → bg-sunken   page ground · chip · banner
  *   'raised'  → bg-elev     popover
  *   'inverse' → CanvasText
  *
- * "default" surface 는 `bg()` 단독 함수를 사용한다 (Tailwind 디팩토).
  * 페어가 필요한 곳은 fn/pair.ts 의 pair({ bg, fg }).
- * @demo type=color fn=surface args=["subtle"]
+ * @demo type=color fn=surface args=["default"]
  */
-type SurfaceRole = 'subtle' | 'raised' | 'inverse'
+type SurfaceRole = 'default' | 'subtle' | 'raised' | 'inverse'
 const SURFACE_VAR: Record<SurfaceRole, string> = {
+  default: 'var(--ds-bg)',
   subtle:  'var(--ds-bg-sunken)',
   raised:  'var(--ds-bg-elev)',
   inverse: 'CanvasText',
@@ -86,27 +88,32 @@ const BORDER_VAR: Record<BorderRole, string> = {
 }
 export const border = (role: BorderRole = 'subtle') => BORDER_VAR[role]
 
-// ── 기존 semantic 토큰 (scalar.ts에서 이전) ────────────────────────────
-/** @demo type=color fn=accent */
-export const accent    = () => `var(--ds-accent)`
-
+// ── Accent — accent slot universal role dispatcher ─────────────────────
 /**
- * accentTint(role) — accent surface/border 변형. 같은 accent 색의 강도 role.
- *   'softest' = 6%   — hover/selected 행 배경 (가장 약한 accent surface)
- *   'soft'    = 12%  — 활성 상태 surface
- *   'medium'  = 18%  — 강한 활성 surface
- *   'border'  = 40%  — accent 톤 경계선
- *   'glow'    = 60%  — focus ring 외곽
- *   'strong'  = 85%  — accent surface 강조 (text inverse 배경)
- * @demo type=color fn=accentTint args=["soft"]
+ * accent(role) — accent 색 슬롯 universal 접근. 강도 role 통합.
+ *   'default' → 100% — 기본 accent (full strength)
+ *   'softest' → 6%   — hover/selected 행 배경 (가장 약한 accent surface)
+ *   'soft'    → 12%  — 활성 상태 surface
+ *   'medium'  → 18%  — 강한 활성 surface
+ *   'border'  → 40%  — accent 톤 경계선
+ *   'glow'    → 60%  — focus ring 외곽
+ *   'strong'  → 85%  — accent surface 강조 (text inverse 배경)
+ *
+ * 무인자 호출 = 'default'. text·surface·border 와 같은 role-based 패턴.
+ *
+ * @demo type=color fn=accent args=["default"]
  */
-export const accentTint = (role: 'softest' | 'soft' | 'medium' | 'border' | 'glow' | 'strong') => {
-  const map = { softest: 6, soft: 12, medium: 18, border: 40, glow: 60, strong: 85 } as const
-  return `color-mix(in oklab, var(--ds-accent) ${map[role]}%, transparent)`
+type AccentRole = 'default' | 'softest' | 'soft' | 'medium' | 'border' | 'glow' | 'strong'
+const ACCENT_PCT: Record<Exclude<AccentRole, 'default'>, number> = {
+  softest: 6, soft: 12, medium: 18, border: 40, glow: 60, strong: 85,
 }
+export const accent = (role: AccentRole = 'default') =>
+  role === 'default'
+    ? `var(--ds-accent)`
+    : `color-mix(in oklab, var(--ds-accent) ${ACCENT_PCT[role]}%, transparent)`
 
 /**
- * statusTint(tone, role) — status 색의 강도 변형. accentTint 와 같은 role 어휘.
+ * statusTint(tone, role) — status 색의 강도 변형. accent 와 같은 role 어휘.
  * @demo type=color fn=statusTint args=["danger","border"]
  */
 export const statusTint = (tone: StatusTone, role: 'soft' | 'border' | 'medium') => {
@@ -149,15 +156,9 @@ export const currentTint = (role: 'subtle' | 'soft' | 'medium' | 'strong' | 'dee
  */
 export const gradientDeep = (color: string) =>
   `color-mix(in oklab, ${color} 70%, CanvasText)`
-/** @demo type=color fn=onAccent */
-export const onAccent  = () => `var(--ds-accent-on)`
-
 export type StatusTone = 'success' | 'warning' | 'danger'
 /** @demo type=color fn=status args=["success"] */
 export const status    = (t: StatusTone) => `var(--ds-${t})`
-
-/** @demo type=color fn=bg */
-export const bg        = () => `var(--ds-bg)`
 
 // ── Scrim — modal/popover 뒤 dim layer ─────────────────────────────────
 /**

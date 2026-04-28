@@ -1,4 +1,4 @@
-import { accent, accentTint, control, css, currentTint, dur, ease, radius, ring } from '../../tokens/semantic'
+import { accent, control, css, currentTint, dur, ease, radius, ring } from '../../tokens/semantic'
 import { font, pad } from '../../tokens/scalar'
 
 /**
@@ -50,7 +50,7 @@ export const cssChip = () => css`
   }
   span[data-part="chip"] > button:hover {
     opacity: 1;
-    background: ${accentTint('medium')};
+    background: ${accent('medium')};
     color: ${accent()};
   }
   span[data-part="chip"] > button:focus-visible {

@@ -13,7 +13,7 @@
  *   [data-part="canvas-scale"]                  TokenScale aggregator (flex row wrap)
  *   [data-part="canvas-scale"][data-kind=...]   kind 별 복수 layout override (TBD)
  */
-import { css, radius, pair, bg, text, surface, border, typography } from '@p/ds/tokens/semantic'
+import { css, radius, pair, text, surface, border, typography } from '@p/ds/tokens/semantic'
 import { font, weight, pad } from '@p/ds/tokens/scalar'
 
 export const previewCss = css`
@@ -26,7 +26,7 @@ export const previewCss = css`
     row-gap: ${pad(1)};
     border: 1px solid ${border()};
     border-radius: ${radius('md')};
-    ${pair({ bg: bg(), fg: text('strong') })}
+    ${pair({ bg: surface('default'), fg: text('strong') })}
     overflow: hidden;
     align-content: start;
   }
@@ -86,7 +86,7 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="pad"] [data-inner] {
     inline-size: 32px;
     block-size: 32px;
-    background: ${bg()};
+    background: ${surface('default')};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('sm')};
   }
@@ -98,7 +98,7 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="radius"] > [data-stage] > div {
     inline-size: 96px;
     block-size: 96px;
-    background: ${bg()};
+    background: ${surface('default')};
     border: 1px solid ${border('subtle')};
   }
 
@@ -109,7 +109,7 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="shadow"] > [data-stage] > div {
     inline-size: 80px;
     block-size: 80px;
-    background: ${bg()};
+    background: ${surface('default')};
     border-radius: ${radius('sm')};
   }
 
@@ -125,7 +125,7 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="outline"] [data-box] {
     inline-size: 56px;
     block-size: 32px;
-    background: ${bg()};
+    background: ${surface('default')};
     border: 1px solid ${border()};
   }
 

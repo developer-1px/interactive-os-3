@@ -1,4 +1,4 @@
-import { accent, accentTint, border, css, hairlineWidth, radius, surface, text } from '../../tokens/semantic'
+import { accent, border, css, hairlineWidth, radius, surface, text } from '../../tokens/semantic'
 import { font, pad } from '../../tokens/scalar'
 
 export const cssStepper = () => css`
@@ -36,7 +36,7 @@ export const cssStepper = () => css`
     color: inherit;
   }
   [data-part="stepper"] > li[data-state="current"] [data-part="step-marker"] {
-    background: ${accentTint('soft')};
+    background: ${accent('soft')};
     border-color: ${accent()};
     color: ${accent()};
   }

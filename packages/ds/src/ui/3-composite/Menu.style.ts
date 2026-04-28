@@ -1,4 +1,4 @@
-import { accent, css, dur, ease, grouping, indicator, listReset, onAccent, radius, selectedStrong, text } from '../../tokens/semantic'
+import { accent, css, dur, ease, grouping, indicator, listReset, radius, selectedStrong, text } from '../../tokens/semantic'
 import { pad, rowPadding } from '../../tokens/scalar'
 export const cssMenu = () => [
   css`
@@ -10,7 +10,7 @@ export const cssMenu = () => [
     }
     button[popovertarget][aria-expanded="true"],
     [role="menuitem"][aria-expanded="true"] {
-      background-color: ${accent()}; color: ${onAccent()};
+      background-color: ${accent()}; color: ${text('on-accent')};
     }
     /* 메뉴 아이템은 global tint(selected)가 아니라 풀 accent fill(selectedStrong)로 강조 —
        팝오버의 짧은 리스트에선 명확한 "이것" 신호가 필요하다. */

@@ -1,4 +1,4 @@
-import { accent, bg, control, css, dur, ease, indicator, onAccent, radius, status } from '../../../tokens/semantic'
+import {accent, control, css, dur, ease, indicator, radius, status, surface, text} from '../../../tokens/semantic'
 import { pad } from '../../../tokens/scalar'
 export const cssToggle = () => [
   css`
@@ -12,7 +12,7 @@ export const cssToggle = () => [
       min-height: 0; block-size: 1.125em;
       padding: 0;
       border: 1.5px solid ${control('border')};
-      background: ${bg()};
+      background: ${surface('default')};
       flex: 0 0 auto;
       cursor: pointer;
       transition:
@@ -43,7 +43,7 @@ export const cssToggle = () => [
     [role="radio"][aria-checked="true"] {
       background: ${accent()};
       border-color: ${accent()};
-      color: ${onAccent()};
+      color: ${text('on-accent')};
     }
 
     [role="radiogroup"] {

@@ -7,7 +7,7 @@
  *
  * 모든 객체 토큰은 React `style` prop 에 그대로 spread 가능한 CSS key 를 사용.
  */
-import { radius, hairlineWidth, accent, onAccent, bg, border } from '@p/ds/tokens/semantic'
+import { radius, hairlineWidth, accent, border } from '@p/ds/tokens/semantic'
 import { pad, weight } from '@p/ds/tokens/scalar'
 
 // ── 공통 divider — row↔row 사이 hairline ─────────────────────────────────
@@ -34,7 +34,7 @@ export const listRow = {
 export const composer = {
   paddingBlock: pad(3),
   borderBlockStart: divider,
-  background: bg(),
+  background: surface('default'),
   inputRadius: radius('pill'),
   inputHeight: 36,
 }
@@ -85,7 +85,7 @@ export const todayPill = (today: boolean) => ({
   lineHeight: '32px' as const,
   borderRadius: radius('pill'),
   background: today ? accent() : undefined,
-  color: today ? onAccent() : undefined,
+  color: today ? text('on-accent') : undefined,
   fontWeight: today ? weight('semibold') : undefined,
 })
 

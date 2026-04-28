@@ -1,4 +1,4 @@
-import { accent, accentTint, css, dur, ease, hairline, keyline, listReset, mute } from '../../tokens/semantic'
+import { accent, css, dur, ease, hairline, keyline, listReset, mute } from '../../tokens/semantic'
 import { pad } from '../../tokens/scalar'
 
 /**
@@ -29,7 +29,7 @@ export const cssOrderableList = () => css`
   }
   ${hairline(`ol[data-part="orderable"] > li`)}
   ol[data-part="orderable"] > li:hover {
-    background: ${accentTint('softest')};
+    background: ${accent('softest')};
   }
 
   /* primary label — flex:1 + truncate */

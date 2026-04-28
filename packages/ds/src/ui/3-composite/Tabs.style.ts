@@ -1,4 +1,4 @@
-import { accent, accentTint, border, css, dur, ease, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
+import { accent, border, css, dur, ease, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
 import { pad } from '../../tokens/scalar'
 /**
  * Tabs — 보편적 탭 어포던스.
@@ -34,7 +34,7 @@ export const cssTabs = () => css`
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-bottom-color: ${accentTint('border')};
+    border-bottom-color: ${accent('border')};
   }
   [role="tablist"]:not([aria-orientation="vertical"]) > [role="tab"][aria-selected="true"] {
     color: ${accent()};
@@ -60,7 +60,7 @@ export const cssTabs = () => css`
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"]:hover:not([aria-disabled="true"]) {
     color: inherit;
-    border-inline-end-color: ${accentTint('border')};
+    border-inline-end-color: ${accent('border')};
   }
   [role="tablist"][aria-orientation="vertical"] > [role="tab"][aria-selected="true"] {
     color: ${accent()};

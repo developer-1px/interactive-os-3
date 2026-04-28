@@ -11,7 +11,7 @@
  * cell 렌더링은 <TokenPreview kind="color">. 그룹 라벨은 Atlas 정본 따라 hardcoded.
  * 값은 foundations/color SSOT 함수 호출.
  */
-import { accent, surface, text, border, status, bg } from '@p/ds/tokens/semantic'
+import { accent, surface, text, border, status } from '@p/ds/tokens/semantic'
 import { SubGroup } from './SectionFrame'
 import { TokenPreview } from './preview'
 
@@ -22,7 +22,7 @@ const COLORS: Record<string, Swatch[]> = {
     { name: 'Accent', call: 'accent()', value: accent() },
   ],
   neutral: [
-    { name: 'Background', call: 'bg()',              value: bg() },
+    { name: 'Background', call: "surface('default')",              value: surface('default') },
     { name: 'Surface',    call: "surface('subtle')", value: surface('subtle') },
     { name: 'Muted',      call: "surface('subtle')",  value: surface('subtle') },
     { name: 'Raised',     call: "surface('raised')", value: surface('raised') },

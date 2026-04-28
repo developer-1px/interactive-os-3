@@ -1,4 +1,4 @@
-import { bg, border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot } from '../../../tokens/semantic'
+import {border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot, surface} from '../../../tokens/semantic'
 import { font, elev, pad, rowPadding } from '../../../tokens/scalar'
 export const cssDialog = () => css`
   :where(dialog) {
@@ -53,7 +53,7 @@ export const cssTooltip = () => css`
      body::before로 dim layer를 깐다 (popover는 top layer라 scrim 위에 떠 있음). */
   [popover][role="dialog"][data-part="popover"] {
     ${grouping(3)}
-    background-color: ${bg()};
+    background-color: ${surface('default')};
     color: inherit;
     margin: 0;
     padding: ${slot.popover.pad};

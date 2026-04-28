@@ -103,12 +103,12 @@ export * from './ui/patterns/MessageBubble'
 export * from './ui/patterns/BarChart'
 export * from './ui/patterns/Top10List'
 // content — 비즈니스 콘텐츠 (도메인 객체 props)
-export * from './content/CourseCard'
-export * from './content/RoleCard'
-export * from './content/PostCard'
-export * from './content/FeedPost'
-export * from './content/ProductCard'
-export * from './content/ContractCard'
+export * from './features/CourseCard'
+export * from './features/RoleCard'
+export * from './features/PostCard'
+export * from './features/FeedPost'
+export * from './features/ProductCard'
+export * from './features/ContractCard'
 // 8-layout — 시각 골격
 export * from './ui/9-layout/Row'
 export * from './ui/9-layout/Column'
@@ -132,7 +132,7 @@ export {
 // L4 templates — page-level 시각 골격 (defineLayout fragment)
 export * from './ui/templates'
 // L5 surfaces — single-instance shell (sidebar variants · command palette)
-export * from './surfaces/sidebar'
+export * from './shells/sidebar'
 // parts — content 부품 어휘 (Avatar, Chip, Thumbnail, ...).
 export * from './ui/6-structure/Avatar'
 export * from './ui/6-structure/AvatarGroup'

@@ -1,5 +1,5 @@
 import { css } from '../css'
-import { accent, bg } from '../color/semantic'
+import {accent, surface} from '../color/semantic'
 import { dim, tint } from '../../scalar/color'
 
 // sel 은 단일/콤마-리스트 둘 다 허용. :where() 로 union 에 pseudo 적용 + specificity 0 유지.
@@ -31,6 +31,6 @@ export const active = (sel: string) => css`
 export const focus = (sel: string) => css`
   ${w(sel)}:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${bg()}, 0 0 0 4px ${tint(accent(), 60)};
+    box-shadow: 0 0 0 2px ${surface('default')}, 0 0 0 4px ${tint(accent(), 60)};
   }
 `

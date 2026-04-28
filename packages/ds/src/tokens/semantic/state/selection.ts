@@ -1,5 +1,5 @@
 import { css } from '../css'
-import { accent, onAccent } from '../color/semantic'
+import {accent, text} from '../color/semantic'
 import { tint } from '../../scalar/color'
 
 const w = (sel: string) => `:where(${sel})`
@@ -32,7 +32,7 @@ export const selected = (sel: string) => css`
 export const selectedStrong = (sel: string, on: string[] = ['[aria-selected="true"]', '[aria-current="true"]', '[aria-checked="true"]', ':focus']) => css`
   ${on.map((s) => `${w(sel)}${s}`).join(',\n  ')} {
     background-color: ${accent()};
-    color: ${onAccent()};
+    color: ${text('on-accent')};
     font-weight: inherit;
   }
 `

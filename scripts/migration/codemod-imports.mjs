@@ -30,12 +30,12 @@ const REWRITES = [
   ['@p/ds/parts/Table', '@p/ds/ui/6-structure/Table'],
   ['@p/ds/parts', '@p/ds/ui/6-structure'],
   // L3 7-patterns split → content/ + ui/patterns/
-  ['@p/ds/ui/7-patterns/ContractCard', '@p/ds/content/ContractCard'],
-  ['@p/ds/ui/7-patterns/CourseCard', '@p/ds/content/CourseCard'],
-  ['@p/ds/ui/7-patterns/RoleCard', '@p/ds/content/RoleCard'],
-  ['@p/ds/ui/7-patterns/ProductCard', '@p/ds/content/ProductCard'],
-  ['@p/ds/ui/7-patterns/PostCard', '@p/ds/content/PostCard'],
-  ['@p/ds/ui/7-patterns/FeedPost', '@p/ds/content/FeedPost'],
+  ['@p/ds/ui/7-patterns/ContractCard', '@p/ds/features/ContractCard'],
+  ['@p/ds/ui/7-patterns/CourseCard', '@p/ds/features/CourseCard'],
+  ['@p/ds/ui/7-patterns/RoleCard', '@p/ds/features/RoleCard'],
+  ['@p/ds/ui/7-patterns/ProductCard', '@p/ds/features/ProductCard'],
+  ['@p/ds/ui/7-patterns/PostCard', '@p/ds/features/PostCard'],
+  ['@p/ds/ui/7-patterns/FeedPost', '@p/ds/features/FeedPost'],
   ['@p/ds/ui/7-patterns', '@p/ds/ui/patterns'],
 ]
 // 더 긴 매칭 우선

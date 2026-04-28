@@ -1,4 +1,4 @@
-import { css, radius, pair, bg, text, surface, border, mute, typography, type as typeRole } from '@p/ds/tokens/semantic'
+import { css, radius, pair, text, surface, border, mute, typography, type as typeRole } from '@p/ds/tokens/semantic'
 import { weight, pad, font, elev } from '@p/ds/tokens/scalar'
 import { TONE } from './canvas-tones'
 import { previewCss } from './preview/preview.style'
@@ -118,7 +118,7 @@ export const canvasCss = css`
     ${typography('mono')}
     font-size: ${font('xs')};
     color: ${text('subtle')};
-    background: ${bg()};
+    background: ${surface('default')};
   }
   [data-part="canvas-divider-card"] code {
     font-size: ${font('xs')};
@@ -555,7 +555,7 @@ export const canvasCss = css`
     min-width: 480px;
     border: 1px solid ${border()};
     border-radius: ${radius('md')};
-    ${pair({ bg: bg(), fg: text('strong') })}
+    ${pair({ bg: surface('default'), fg: text('strong') })}
     overflow: hidden;
   }
 
@@ -570,7 +570,7 @@ export const canvasCss = css`
     align-content: start;
     border: 1px solid ${border()};
     border-radius: ${radius('md')};
-    ${pair({ bg: bg(), fg: text('strong') })}
+    ${pair({ bg: surface('default'), fg: text('strong') })}
     overflow: hidden;
   }
   [data-part="canvas-token-card"] > [data-swatch],
@@ -730,7 +730,7 @@ export const canvasCss = css`
   [data-part="canvas-elev-tower"] [data-surface] {
     inline-size: 160px;
     block-size: 160px;
-    background: ${bg()};
+    background: ${surface('default')};
     border-radius: ${radius('sm')};
   }
   [data-part="canvas-elev-tower"] figcaption {
@@ -792,7 +792,7 @@ export const canvasCss = css`
     row-gap: 0;
     border: 1px solid ${border()};
     border-radius: ${radius('md')};
-    ${pair({ bg: bg(), fg: text('strong') })}
+    ${pair({ bg: surface('default'), fg: text('strong') })}
     overflow: hidden;
     cursor: pointer;
     transition: border-color 120ms ease;

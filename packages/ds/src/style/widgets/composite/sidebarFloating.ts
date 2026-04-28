@@ -1,4 +1,4 @@
-import { SHELL_MOBILE_MAX, bg, border, css, hairlineWidth, hierarchy, radius, scrim, slot } from '../../../tokens/semantic'
+import { SHELL_MOBILE_MAX, border, css, hairlineWidth, hierarchy, radius, scrim, slot, surface } from '../../../tokens/semantic'
 import { elev } from '../../../tokens/scalar'
 
 /**
@@ -25,7 +25,7 @@ export const cssSidebarFloating = () => css`
     block-size: ${slot.fab.size};
     border-radius: ${radius('full')};
     border: ${hairlineWidth()} solid ${border()};
-    background: ${bg()};
+    background: ${surface('default')};
     box-shadow: var(--ds-elev-2);
     display: inline-flex;
     align-items: center;

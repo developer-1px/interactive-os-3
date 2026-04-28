@@ -8,7 +8,6 @@ import { cssValue } from './ui/5-live/Progress.style'
 import { cssSlider } from './ui/2-input/Slider.style'
 import { cssButton } from './ui/1-command/Button.style'
 import { cssButtonGroup } from './ui/1-command/ButtonGroup.style'
-import { cssToggleButton } from './ui/2-input/ToggleButton.style'
 import { cssFeed } from './ui/patterns/Feed.style'
 import { cssBarChart } from './ui/patterns/BarChart.style'
 import { cssLegendDot } from './ui/5-live/LegendDot.style'
@@ -46,7 +45,7 @@ import { cssLayout } from './style/widgets/layout/layout'
 export const widgets = () =>
   [
     // control
-    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssToggleButton(), cssForm(), cssItemRow(), cssToggle(), cssAlert(),
+    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssForm(), cssItemRow(), cssToggle(), cssAlert(),
     // overlay
     cssDialog(), cssTooltip(), cssDetails(), cssAccordion(), cssToast(), cssGlass(),
     // pattern

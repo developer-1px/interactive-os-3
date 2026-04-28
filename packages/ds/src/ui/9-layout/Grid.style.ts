@@ -1,4 +1,4 @@
-import { accent, accentTint, bg, border, control, css, currentTint, dur, ease, emphasize, hairlineWidth, indicator, microLabel, mute, radius, ring, text, tone } from '../../tokens/semantic'
+import { accent, border, control, css, currentTint, dur, ease, emphasize, hairlineWidth, indicator, microLabel, mute, radius, ring, surface, text, tone } from '../../tokens/semantic'
 import { font, weight, pad } from '../../tokens/scalar'
 /**
  * grid 일가 — DataGrid / TreeGrid / Row / RowGroup / RowHeader / ColumnHeader / GridCell.
@@ -65,7 +65,7 @@ export const cssGrid = () => [
     [role="grid"] thead [role="columnheader"],
     [role="treegrid"] thead [role="columnheader"] {
       position: sticky; top: 0; z-index: 1;
-      background: ${bg()};
+      background: ${surface('default')};
     }
 
     /* 첫 셀(이름 등)의 icon+label 콤보 — 수평 정렬과 일관 gap */
@@ -108,7 +108,7 @@ export const cssGrid = () => [
     /* selected 행 — edge-to-edge accent fill, lead bar 제거(Finder는 풀폭) */
     [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"],
     [role="grid"][data-density="compact"] [role="row"][aria-selected="true"] {
-      background: ${accentTint('medium')};
+      background: ${accent('medium')};
       box-shadow: none;
     }
     [role="treegrid"][data-density="compact"] [role="row"][aria-selected="true"] [role="gridcell"],
@@ -208,13 +208,13 @@ export const cssGrid = () => [
 
     /* row selected — tint + 좌측 accent lead bar (2026 표준 패턴) */
     [role="row"][aria-selected="true"] {
-      background: ${accentTint('soft')};
+      background: ${accent('soft')};
       box-shadow: inset 3px 0 0 0 ${accent()};
     }
 
     /* gridcell selected (셀 단위 선택 지원) */
     [role="gridcell"][aria-selected="true"] {
-      background: ${accentTint('medium')};
+      background: ${accent('medium')};
       box-shadow: inset 0 0 0 2px ${accent()};
       border-radius: ${pad(0.75)};
     }

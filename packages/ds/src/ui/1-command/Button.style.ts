@@ -1,4 +1,4 @@
-import { accent, accentTint, control, css, dur, ease, hairlineWidth, onAccent, radius, square, status, statusTint, surface } from '../../tokens/semantic'
+import { accent, control, css, dur, ease, hairlineWidth, radius, square, status, statusTint, surface, text } from '../../tokens/semantic'
 import { weight, pad } from '../../tokens/scalar'
 
 /**
@@ -23,9 +23,9 @@ export const cssButton = () => css`
                 border-color ${dur('fast')} ${ease('out')};
   }
   :where(button:not([data-variant])):hover:not([aria-disabled="true"]) {
-    background: ${accentTint('soft')};
+    background: ${accent('soft')};
     color: ${accent()};
-    border-color: ${accentTint('border')};
+    border-color: ${accent('border')};
   }
 
   /* icon-only — children 비어있고 data-icon 만 있는 버튼은 정사각형 */
@@ -34,10 +34,21 @@ export const cssButton = () => css`
     margin-inline-end: 0;
   }
 
+  /* ── pressed (toggle) — aria-pressed=true 표명 시 accent tint ── */
+  button[aria-pressed="true"] {
+    background: ${accent('soft')};
+    color: ${accent()};
+    border-color: ${accent()};
+  }
+  button[aria-pressed="true"]:hover:not([aria-disabled="true"]) {
+    background: ${accent()};
+    color: ${text('on-accent')};
+  }
+
   /* ── primary ─────────────────────────────────────────────── */
   button[data-variant="primary"] {
     background: ${accent()};
-    color: ${onAccent()};
+    color: ${text('on-accent')};
     border: ${hairlineWidth()} solid ${accent()};
     border-radius: ${radius('md')};
     padding: 0 ${pad(4)};
@@ -45,7 +56,7 @@ export const cssButton = () => css`
     transition: background-color ${dur('fast')} ${ease('out')};
   }
   button[data-variant="primary"]:hover:not([aria-disabled="true"]) {
-    background: ${accentTint('strong')};
+    background: ${accent('strong')};
   }
 
   /* ── destructive ─────────────────────────────────────────── */
@@ -61,7 +72,7 @@ export const cssButton = () => css`
   }
   button[data-variant="destructive"]:hover:not([aria-disabled="true"]) {
     background: ${status('danger')};
-    color: ${onAccent()};
+    color: ${text('on-accent')};
     border-color: ${status('danger')};
   }
 `

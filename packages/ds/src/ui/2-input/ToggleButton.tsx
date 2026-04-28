@@ -18,7 +18,6 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
     <button
       ref={ref}
       type={type}
-      data-part="toggle"
       aria-pressed={pressed}
       aria-disabled={disabled || undefined}
       disabled={disabled}

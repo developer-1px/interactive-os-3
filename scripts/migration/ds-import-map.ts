@@ -287,13 +287,13 @@ export const MIGRATION_RULES: MigrationRule[] = [
   // ─── L3 비즈니스 → content ──────────────────────────────────────────────
   {
     from: '@p/ds/ui/7-patterns/FeedPost',
-    to: '@p/ds/content/FeedPost',
+    to: '@p/ds/features/FeedPost',
     kind: 'moved',
     reason: '비즈니스 콘텐츠 (도메인 객체 props) → content/',
   },
   {
     from: '@p/ds/ui/7-patterns/ContractCard',
-    to: '@p/ds/content/ContractCard',
+    to: '@p/ds/features/ContractCard',
     kind: 'moved',
     reason: '비즈니스 콘텐츠 → content/',
   },
