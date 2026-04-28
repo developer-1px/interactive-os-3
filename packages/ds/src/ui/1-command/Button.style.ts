@@ -13,7 +13,7 @@ import { weight, pad } from '../../tokens/scalar'
 export const cssButton = () => css`
   /* ── default ─────────────────────────────────────────────── */
   :where(button:not([data-variant])) {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     color: inherit;
     border: ${hairlineWidth()} solid ${control('border')};
     border-radius: ${radius('md')};

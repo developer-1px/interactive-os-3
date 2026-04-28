@@ -15,7 +15,7 @@ export const cssAvatarGroup = () => css`
   }
   [data-part="avatar-group"] > [data-part="avatar"]:first-child { margin-inline-start: 0; }
   [data-part="avatar-group"] > [data-part="avatar"][data-overflow] {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     color: ${text('subtle')};
     border: ${hairlineWidth()} solid ${border()};
     display: inline-flex; align-items: center; justify-content: center;

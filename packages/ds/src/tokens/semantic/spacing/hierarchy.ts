@@ -27,7 +27,7 @@ export const hierarchy = {
   /** L0 — icon↔label 등 row 안 atom 간격. row 안에서 가장 좁은 거리. */
   atom: pad(0.5),
   /** L2 — listbox 안 row↔row 간격. flush가 기본(0), 호흡 필요한 surface만 키운다. */
-  group: '0px',
+  group: pad(0),
   /** L3 — h3↔listbox, section↔section. atom보다 명확히 커야 위계가 성립. */
   section: pad(1),
   /** L4 — sidebar/panel 등 surface 자체의 inner padding. */

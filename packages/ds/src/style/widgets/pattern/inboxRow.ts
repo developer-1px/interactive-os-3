@@ -30,7 +30,7 @@ export const cssInboxRow = () => css`
     box-shadow: none;
   }
   article[data-part="card"][data-card="inbox-row"]:hover {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-color: ${border()};
   }
 

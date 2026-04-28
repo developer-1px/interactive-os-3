@@ -73,7 +73,7 @@ export const cssSidebar = () => css`
     gap: ${pad(2)};
     padding: ${slot.sidebar.pad};
     border-radius: ${radius('md')};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     font-size: var(--ds-text-sm);
   }
   nav[data-part="sidebar"] > footer > small {

@@ -18,6 +18,7 @@ export function RouterLink({ to, params, label, ...rest }: RouterLinkProps) {
       // @tanstack/react-router 의 generic 타입을 우회 — uiRegistry leaf 는 string-driven.
       to={to as never}
       params={params as never}
+      activeProps={{ 'aria-current': 'page' }}
       {...rest}
     >
       {label}

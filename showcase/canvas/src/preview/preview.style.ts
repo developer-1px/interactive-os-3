@@ -72,14 +72,14 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="gap"] [data-box] {
     inline-size: 32px;
     block-size: 32px;
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('sm')};
   }
 
   /* ── kind="pad" — outer wraps inner */
   [data-part="canvas-preview"][data-kind="pad"] [data-outer] {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border: 1px dashed ${border('subtle')};
     border-radius: ${radius('sm')};
   }
@@ -93,7 +93,7 @@ export const previewCss = css`
 
   /* ── kind="radius" — rounded box */
   [data-part="canvas-preview"][data-kind="radius"] > [data-stage] {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
   }
   [data-part="canvas-preview"][data-kind="radius"] > [data-stage] > div {
     inline-size: 96px;
@@ -104,7 +104,7 @@ export const previewCss = css`
 
   /* ── kind="shadow" — elevated card on muted bg */
   [data-part="canvas-preview"][data-kind="shadow"] > [data-stage] {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
   }
   [data-part="canvas-preview"][data-kind="shadow"] > [data-stage] > div {
     inline-size: 80px;
@@ -179,7 +179,7 @@ export const previewCss = css`
   [data-part="canvas-preview"][data-kind="breakpoint"] [data-bar] {
     inline-size: 120px;
     block-size: 24px;
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('sm')};
     position: relative;

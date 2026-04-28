@@ -9,7 +9,7 @@ export const cssSegmented = () => css`
   [data-part="segmented"] {
     display: inline-flex;
     padding: ${pad(0.25)};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('md')};
     gap: ${pad(0.25)};

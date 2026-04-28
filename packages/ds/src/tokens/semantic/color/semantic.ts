@@ -22,35 +22,29 @@
 
 // ── Text — fg ladder 의 role alias ──────────────────────────────────────
 /**
- * text(role) — Atlas/Linear 5단 fg ladder 의 의미 별칭.
+ * text(role) — Atlas/Linear fg ladder 의 의미 별칭.
  *   'default' → fg    body (~21:1)
- *   'strong'  → fg    heading
+ *   'strong'  → fg    heading (preset 분리 시 별 var 가능)
  *   'subtle'  → fg-2  secondary (~12:1)
  *   'mute'    → fg-4  caption·meta·placeholder (~4.5:1 AA)
- *   'disabled'→ fg-5  presentational
  *   'inverse' → Canvas
- *   'link'    → accent
- *   'on-accent' → accent-on
- *   'success'/'warning'/'danger' → status
+ *
+ * 다른 색은 전용 함수 사용:
+ *   - 상태색 → `status(tone)`
+ *   - 링크   → `accent()`
+ *   - on-accent 텍스트 → `onAccent()`
+ *   - disabled → opacity (surface flip 안전)
  *
  * 주의: cell·item 의 "약화"는 mute() opacity 가 surface flip 안전.
  *       text('mute') 는 단독 텍스트 라벨처럼 surface 변경 가능성이 없는 곳에만.
  */
-type TextRole =
-  | 'strong' | 'default' | 'subtle' | 'mute' | 'disabled' | 'inverse'
-  | 'link' | 'on-accent' | 'success' | 'warning' | 'danger'
+type TextRole = 'strong' | 'default' | 'subtle' | 'mute' | 'inverse'
 const TEXT_VAR: Record<TextRole, string> = {
   strong:    'var(--ds-fg)',
   default:   'var(--ds-fg)',
   subtle:    'var(--ds-fg-2)',
   mute:      'var(--ds-fg-4)',
-  disabled:  'var(--ds-fg-5)',
   inverse:   'Canvas',
-  link:      'var(--ds-accent)',
-  'on-accent': 'var(--ds-accent-on)',
-  success:   'var(--ds-success)',
-  warning:   'var(--ds-warning)',
-  danger:    'var(--ds-danger)',
 }
 /** @demo type=color fn=text args=["default"] */
 export const text = (role: TextRole = 'default') => TEXT_VAR[role]
@@ -59,18 +53,16 @@ export const text = (role: TextRole = 'default') => TEXT_VAR[role]
 /**
  * surface(role) — Atlas 4단 bg ladder.
  *   'default' → bg          card/popover/input
- *   'subtle'  → bg-sunken   page ground
- *   'muted'   → bg-sunken   chip·banner (alias)
+ *   'subtle'  → bg-sunken   page ground · chip · banner
  *   'raised'  → bg-elev     popover (alias of bg)
  *   'inverse' → CanvasText
  * 페어가 필요한 곳은 fn/pair.ts 의 pair({ bg, fg }).
  * @demo type=color fn=surface args=["subtle"]
  */
-type SurfaceRole = 'default' | 'subtle' | 'muted' | 'raised' | 'inverse'
+type SurfaceRole = 'default' | 'subtle' | 'raised' | 'inverse'
 const SURFACE_VAR: Record<SurfaceRole, string> = {
   default: 'var(--ds-bg)',
   subtle:  'var(--ds-bg-sunken)',
-  muted:   'var(--ds-bg-sunken)',
   raised:  'var(--ds-bg-elev)',
   inverse: 'CanvasText',
 }
@@ -79,22 +71,20 @@ export const surface = (role: SurfaceRole = 'subtle') => SURFACE_VAR[role]
 // ── Border — line ladder 의 role alias ──────────────────────────────────
 /**
  * border(role) — Atlas 3단 line ladder + focus.
- *   'default'  → line          표 hairline·divider
- *   'subtle'   → line          alias (Atlas 는 동일)
+ *   'subtle'   → line          표 hairline·divider (default)
  *   'strong'   → line-2        강조
  *   'emphatic' → line-strong   가장 강한
  *   'focus'    → accent
- * @demo type=color fn=border args=["default"]
+ * @demo type=color fn=border args=["subtle"]
  */
-type BorderRole = 'subtle' | 'default' | 'strong' | 'emphatic' | 'focus'
+type BorderRole = 'subtle' | 'strong' | 'emphatic' | 'focus'
 const BORDER_VAR: Record<BorderRole, string> = {
   subtle:   'var(--ds-line)',
-  default:  'var(--ds-line)',
   strong:   'var(--ds-line-2)',
   emphatic: 'var(--ds-line-strong)',
   focus:    'var(--ds-accent)',
 }
-export const border = (role: BorderRole = 'default') => BORDER_VAR[role]
+export const border = (role: BorderRole = 'subtle') => BORDER_VAR[role]
 
 // ── 기존 semantic 토큰 (scalar.ts에서 이전) ────────────────────────────
 /** @demo type=color fn=accent */

@@ -163,7 +163,7 @@ export const feedCss = css`
     color: inherit;
   }
   main[aria-label='피드'] [data-attachments] a[data-attach='link']:hover {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
   }
   main[aria-label='피드'] [data-attachments] a[data-attach='link'] [data-icon] {
     grid-area: icon;
@@ -212,7 +212,7 @@ export const feedCss = css`
   main[aria-label='피드'] [data-attachments] pre[data-attach='code'] {
     margin: 0;
     padding: ${pad(2.5)} ${pad(3)};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-radius: ${radius('md')};
     overflow-x: auto;
     font: 400 0.8125rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -230,7 +230,7 @@ export const feedCss = css`
     padding: ${pad(1.5)} ${pad(2.5)};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('md')};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     align-self: flex-start;
     max-inline-size: 100%;
   }
@@ -310,7 +310,7 @@ export const feedCss = css`
     padding: ${pad(3)};
     gap: ${pad(2)};
     border-radius: ${radius('lg')};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
   }
   aside[data-part='feed-side'] [data-ds='Row'] {
     align-items: center;

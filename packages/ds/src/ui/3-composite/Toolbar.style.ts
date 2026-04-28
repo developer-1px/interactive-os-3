@@ -50,7 +50,7 @@ export const cssToolbar = () => css`
     align-items: center;
     gap: ${pad(0.25)};
     padding: ${pad(0.5)};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-radius: ${radius('pill')};
   }
   [role="toolbar"] > [role="group"] > button {

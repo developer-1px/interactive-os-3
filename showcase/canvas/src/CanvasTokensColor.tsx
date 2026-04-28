@@ -24,7 +24,7 @@ const COLORS: Record<string, Swatch[]> = {
   neutral: [
     { name: 'Background', call: 'bg()',              value: bg() },
     { name: 'Surface',    call: "surface('subtle')", value: surface('subtle') },
-    { name: 'Muted',      call: "surface('muted')",  value: surface('muted') },
+    { name: 'Muted',      call: "surface('subtle')",  value: surface('subtle') },
     { name: 'Raised',     call: "surface('raised')", value: surface('raised') },
   ],
   text: [

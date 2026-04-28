@@ -23,7 +23,7 @@ export const canvasCss = css`
   [data-part="canvas-app"] {
     position: fixed; inset: 0;
     /* surface owner — bg/fg 페어로 선언. 자식은 inherit, 자체 pair 필요 시 재선언. */
-    ${pair({ bg: surface('muted'), fg: text('strong') })}
+    ${pair({ bg: surface('subtle'), fg: text('strong') })}
     ${typography('body')}
     font-family: system-ui, sans-serif;
   }
@@ -45,7 +45,7 @@ export const canvasCss = css`
     padding: ${pad(2)} ${pad(3)};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('sm')};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     ${typography('monoMicro')}
     color: ${text('subtle')};
   }
@@ -127,7 +127,7 @@ export const canvasCss = css`
     border: 0;
     block-size: 1px;
     inline-size: 480px;
-    background: ${border('default')};
+    background: ${border('subtle')};
     margin: 0;
   }
 
@@ -456,7 +456,7 @@ export const canvasCss = css`
     font-weight: ${weight('semibold')};
     line-height: 1;
     color: ${text('subtle')};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border: 1px solid ${border('subtle')};
     border-radius: ${radius('pill')};
   }

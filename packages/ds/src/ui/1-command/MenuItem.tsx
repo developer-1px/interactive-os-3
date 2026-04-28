@@ -13,7 +13,7 @@ export function MenuItem({ disabled, children, selected, ...rest }: Base & { sel
 
 export function MenuItemCheckbox({ checked, disabled, children, ...rest }: Base & { checked: boolean }) {
   return (
-    <li role="menuitemcheckbox" aria-checked={checked} aria-disabled={disabled} tabIndex={checked ? 0 : -1} {...rest}>
+    <li role="menuitemcheckbox" aria-checked={checked} aria-disabled={disabled || undefined} tabIndex={checked ? 0 : -1} {...rest}>
       {children}
     </li>
   )
@@ -21,7 +21,7 @@ export function MenuItemCheckbox({ checked, disabled, children, ...rest }: Base 
 
 export function MenuItemRadio({ checked, disabled, children, ...rest }: Base & { checked: boolean }) {
   return (
-    <li role="menuitemradio" aria-checked={checked} aria-disabled={disabled} tabIndex={checked ? 0 : -1} {...rest}>
+    <li role="menuitemradio" aria-checked={checked} aria-disabled={disabled || undefined} tabIndex={checked ? 0 : -1} {...rest}>
       {children}
     </li>
   )

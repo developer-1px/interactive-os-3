@@ -14,7 +14,7 @@ export const cssMessageBubble = () => css`
   }
   article[data-part="card"][data-card="message"][data-side="other"] {
     align-self: flex-start;
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-end-start-radius: ${radius('sm')};
   }
   article[data-part="card"][data-card="message"][data-side="me"] {

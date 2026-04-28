@@ -17,14 +17,14 @@ export const cssAuthCard = () => css`
   article[data-part="card"][data-card="auth"] {
     padding: ${slot.auth.pad};                                /* 32px — 호흡 공간 */
     gap: ${slot.auth.slotGap};                                    /* 24px — 슬롯 간 큰 호흡 */
-    border: ${hairlineWidth()} solid ${surface('muted')};
+    border: ${hairlineWidth()} solid ${surface('subtle')};
     border-radius: ${radius('lg')};
     background: var(--ds-bg);
   }
   article[data-part="card"][data-card="auth"]:hover {
     /* hover 강조 안 함 — 폼은 정적 surface */
     box-shadow: none;
-    border-color: ${surface('muted')};
+    border-color: ${surface('subtle')};
   }
 
   /* title 슬롯 — heading 위 + small 서브카피 */
@@ -88,7 +88,7 @@ export const cssAuthCard = () => css`
   article[data-part="card"][data-card="auth"] [role="separator"]::after {
     content: '';
     block-size: ${hairlineWidth()};
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
   }
   article[data-part="card"][data-card="auth"] [role="separator"] > small {
     font-size: var(--ds-text-xs);
@@ -127,7 +127,7 @@ export const cssAuthCard = () => css`
     text-align: center;
     color: ${text('subtle')};
     font-size: var(--ds-text-sm);
-    border-block-start: ${hairlineWidth()} solid ${surface('muted')};
+    border-block-start: ${hairlineWidth()} solid ${surface('subtle')};
     padding-block-start: ${pad(4)};
     margin-block-start: calc(${hierarchy.shell} * -1 + ${pad(2)});  /* card gap 보정 */
   }

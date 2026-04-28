@@ -18,9 +18,9 @@
 ### 1-command
 - [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
 - [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
-- [ ] ToolbarButton      — toolbar 자식, focus roving (demo 추가만; ARIA 점검 미완)
-- [x] MenuItem (← MenuItems) — role=menuitem 단수형 정정
-- [ ] RouterLink         — role=link, aria-current (이름 유지 — 6-structure/Link 와 동시 존재. 통합은 후속 task)
+- [x] ToolbarButton      — ARIA 적합 (role=button native, pressed/disabled, forwardRef). style은 Toolbar parent owner 의도. Button에 forwardRef 추가 시 ToolbarButton 흡수 가능 — 후속
+- [x] MenuItem           — role=menuitem/menuitemcheckbox/menuitemradio. aria-disabled 일관화. demo 를 Option(role=option)에서 MenuItem 로 교정 (role=menu ⊂ role=option 였던 ARIA 위반)
+- [x] RouterLink         — role=link (TanstackLink→a), aria-current="page" 활성 (활성 nav 에 자동 표명). 6-structure/Link 통합은 후속
 - [x] TreeItem (← TreeRow) — role=treeitem 정정 (was Row 어휘)
 - [x] ProgressBar (6-structure) 폐기 — Progress(5-live)와 role=progressbar 중복
 

@@ -73,7 +73,7 @@ export const cssLayout = () => css`
     }
   }
   [data-variant="sunk"]    {
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-radius: ${radius('md')};
     padding: ${pad(3)};
   }

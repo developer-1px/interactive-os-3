@@ -33,7 +33,7 @@ export const cssPage = () => css`
   }
   [data-part="board-page"] button[data-board-ch] > small {
     margin-inline-start: auto;
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     border-radius: ${radius('pill')};
     padding: 0 ${pad(1)};
     font-size: var(--ds-text-xs);

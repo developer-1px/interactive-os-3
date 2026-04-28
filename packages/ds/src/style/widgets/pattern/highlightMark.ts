@@ -12,7 +12,7 @@ export const cssHighlightMark = () => css`
     ${typography('microStrong')}
     line-height: 1.4;
     white-space: nowrap;
-    background: ${surface('muted')};
+    background: ${surface('subtle')};
     color: currentColor;
     cursor: default;
     user-select: none;
@@ -22,5 +22,5 @@ export const cssHighlightMark = () => css`
   mark[data-variant="success"] { ${toneTint('success', 10)} }
   mark[data-variant="warning"] { ${toneTint('warning', 10)} }
   mark[data-variant="danger"]  { ${toneTint('danger', 10)} }
-  mark[data-variant="default"] { color: ${text('subtle')}; background: ${surface('muted')}; }
+  mark[data-variant="default"] { color: ${text('subtle')}; background: ${surface('subtle')}; }
 `

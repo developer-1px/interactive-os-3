@@ -16,7 +16,7 @@ export const cssCode = () => css`
     display: inline-flex;
     align-items: center;
     padding: ${pad(0.25)} ${pad(0.5)};
-    border: ${hairlineWidth()} solid ${border('default')};
+    border: ${hairlineWidth()} solid ${border('subtle')};
     border-block-end-width: 2px;
     border-radius: ${radius('sm')};
     background: var(--ds-bg);
