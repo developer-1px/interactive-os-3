@@ -5,11 +5,12 @@ type ComboboxProps = Omit<ComponentPropsWithoutRef<'input'>, 'role' | 'type'> & 
   controls?: string
   activedescendant?: string
   autocomplete?: 'none' | 'inline' | 'list' | 'both'
+  haspopup?: 'listbox' | 'tree' | 'grid' | 'dialog'
 }
 
 export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
   function Combobox(
-    { expanded, controls, activedescendant, autocomplete = 'list', ...rest },
+    { expanded, controls, activedescendant, autocomplete = 'list', haspopup = 'listbox', ...rest },
     ref,
   ) {
     /* aria-activedescendant 패턴은 실제 DOM focus를 옮기지 않아 브라우저 기본
@@ -32,7 +33,9 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         aria-controls={controls}
         aria-activedescendant={activedescendant}
         aria-autocomplete={autocomplete}
+        aria-haspopup={haspopup}
         {...rest}
+        aria-disabled={rest.disabled || undefined}
       />
     )
   },
