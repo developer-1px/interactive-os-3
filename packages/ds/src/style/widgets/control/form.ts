@@ -1,4 +1,6 @@
-import { accent, border, control, css, dur, ease, hairlineWidth, radius, ring, slot, status, surface, text, toneAlpha, typography } from '../../../tokens/semantic'
+import { accent, border, control, css, dur, ease, hairlineWidth, keyline, radius, ring, slot, status, subgridTracks, surface, text, toneAlpha, typography } from '../../../tokens/semantic'
+
+const { slotGap } = keyline
 import { font, tracking, weight, pad } from '../../../tokens/scalar'
 /**
  * Form 시각 계층 — Field / Section 헤딩 / Aside 서피스의 구성 계약.
@@ -141,9 +143,10 @@ export const cssForm = () => css`
      search element 자체가 시각 컨테이너 (border·radius·padding 보유), 내부 input
      은 chromeless 로 비워 둔다. focus 는 :focus-within 으로 wrapper 가 받는다. */
   :where(search):has(> input[type="search"]) {
-    display: inline-flex;
+    display: inline-grid;
+    grid-template-columns: ${subgridTracks};
     align-items: center;
-    gap: ${pad(1)};
+    column-gap: ${slotGap};
     block-size: ${control('h')};
     min-inline-size: 16ch;
     padding-inline: ${pad(2)};
@@ -161,12 +164,18 @@ export const cssForm = () => css`
     border-color: ${accent()};
     ${ring()}
   }
-  :where(search) > :where([data-icon]) {
-    flex: none;
+  :where(search) > :where([data-slot="leading"]) {
+    grid-column: lead;
     color: ${text('subtle')};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  :where(search) > :where([data-slot="leading"])[data-icon]::before {
+    margin-inline-end: 0;
   }
   :where(search) > input[type="search"] {
-    flex: 1 1 auto;
+    grid-column: label;
     min-inline-size: 0;
     inline-size: 100%;
     block-size: 100%;

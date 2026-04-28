@@ -22,7 +22,7 @@ export const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
       : props['aria-describedby']
     return (
       <search>
-        <span data-icon="search" aria-hidden="true" />
+        <span data-slot="leading" data-icon="search" aria-hidden="true" />
         <input
           ref={ref}
           type="search"
@@ -31,6 +31,8 @@ export const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
           aria-describedby={describedBy}
           aria-invalid={props['aria-invalid'] ?? field?.invalid ?? undefined}
           aria-required={props['aria-required'] ?? field?.required ?? undefined}
+          aria-disabled={props.disabled || undefined}
+          aria-readonly={props.readOnly || undefined}
         />
       </search>
     )
