@@ -12,6 +12,10 @@
 export type CategoryMeta = {
   label: string
   standard: string
+  /** 이 카테고리가 claim 하는 `--ds-*` prefix 들 (longest-first 매칭 SSoT).
+   *  설정 시 playground tokens.categorize.ts:PREFIX_TABLE 가 import.meta.glob 으로 자동 derive.
+   *  미설정 시 분류에 참여하지 않음 (메타만). */
+  prefixes?: ReadonlyArray<string>
 }
 
 export function defineCategory(meta: CategoryMeta): CategoryMeta {

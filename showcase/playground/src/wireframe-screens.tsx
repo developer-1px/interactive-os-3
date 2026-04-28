@@ -39,4 +39,10 @@ export type ScreenDef = {
   readonly patterns: readonly string[]
   readonly parts: readonly string[]
   readonly render: () => ReactNode
+  /**
+   * audit anchor selector 들. /wireframes 의 keyline audit 에서 추가 측정 대상이
+   * 될 요소들을 가리킨다 (예: list row, card, avatar). 미지정이면 audit 은
+   * phone-body 의 outer padding 만 측정한다.
+   */
+  readonly auditAnchors?: readonly string[]
 }

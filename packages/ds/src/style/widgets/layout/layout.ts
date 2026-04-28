@@ -39,6 +39,10 @@ export const cssLayout = () => css`
   [data-ds="Grid"][data-cols="3"]  { --grid-cols: 3;  --grid-min: 14rem; }
   [data-ds="Grid"][data-cols="4"]  { --grid-cols: 4;  --grid-min: 12rem; }
   [data-ds="Grid"][data-cols="6"]  { --grid-cols: 6;  --grid-min: 8rem;  }
+  [data-ds="Grid"][data-cols="9"]  { --grid-cols: 9;  --grid-min: 6rem;
+    /* token canvas — auto-fit reflow ❌, 9 칸 등간격 fixed. 카드 수가 적어도 한 칸씩만 채움. */
+    grid-template-columns: repeat(9, 1fr);
+  }
   [data-ds="Grid"][data-cols="12"] { --grid-cols: 12; --grid-min: 4rem;  }
 
   /* ── flow — one enum chooses gap + alignment bundle ───
@@ -48,6 +52,8 @@ export const cssLayout = () => css`
   [data-flow="form"]    { gap: ${pad(3)}; align-items: stretch; }
   [data-flow="prose"]   { gap: ${pad(4)}; align-items: stretch; }
   [data-flow="split"]   { gap: ${pad(3)}; align-items: center; justify-content: space-between; }
+  /* wide — page-root 가로 폭 제약 없이 viewport 전부 사용. /tokens 같은 wide canvas 용. */
+  [data-flow="wide"]    { gap: ${pad(4)}; align-items: stretch; }
 
   /* ── emphasis — surface + radius + padding bundle ────── */
   [data-emphasis="flat"]    { padding: ${pad(2)}; }

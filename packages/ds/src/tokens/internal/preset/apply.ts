@@ -87,6 +87,28 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
     --ds-control-channel:       var(--ds-neutral-4);
     --ds-control-border-hover:  var(--ds-neutral-5);
 
+    /* ── Scalar tier (de facto: Atlas/Linear/Vercel/Arc) ──
+       palette(neutral-N) 를 위에 한 번 명명한 named bucket. widget CSS 컴파일물에
+       이 이름이 살아있어야 devtools 추적·테마 override 가능 (var 체인 invariant).
+       모두 var(--ds-tone) → CanvasText/Canvas 합성 기반 → light/dark/forced-colors 자동 추종. */
+
+    /* Foreground — 5단 ladder, fg-4 가 AA 4.5:1 경계 (caption) */
+    --ds-fg:           CanvasText;            /* primary body  (~21:1) */
+    --ds-fg-2:         var(--ds-neutral-9);   /* secondary     (~12:1) */
+    --ds-fg-3:         var(--ds-neutral-8);   /* tertiary      (~7:1)  */
+    --ds-fg-4:         var(--ds-neutral-7);   /* muted/caption (~4.5:1 AA) */
+    --ds-fg-5:         var(--ds-neutral-5);   /* disabled (presentational) */
+
+    /* Background — 4단 ladder. --ds-bg 는 elevated(card/popover, 기존 의미 유지) */
+    --ds-bg-elev:      var(--ds-bg);          /* alias — card/popover */
+    --ds-bg-sunken:    var(--ds-base);        /* page ground (well/inset) */
+    --ds-bg-hover:     color-mix(in oklab, CanvasText 6%, transparent);
+
+    /* Lines — 3단 ladder. --ds-line 은 기존 --ds-border 의 alias */
+    --ds-line:         var(--ds-border);
+    --ds-line-2:       var(--ds-neutral-3);
+    --ds-line-strong:  var(--ds-neutral-5);
+
     ${p.color.traffic ? `
     --ds-traffic-close: ${tokenRefToCss(p.color.traffic.close)};
     --ds-traffic-min:   ${tokenRefToCss(p.color.traffic.min)};

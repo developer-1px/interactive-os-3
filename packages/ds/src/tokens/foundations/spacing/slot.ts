@@ -38,8 +38,15 @@ export const slot = {
   sidebar: { pad: pad(2), gap: pad(4), headerPad: pad(2), itemPadY: pad(1.25), itemPadX: pad(2) },
   /** auth card — focused container, 일반 카드보다 큰 호흡. */
   auth:    { pad: pad(8), slotGap: pad(6), formGap: pad(5), buttonPadY: pad(2.5), otpGap: pad(1.5) },
-  /** form 슬롯 — field·fieldset·section 간격. headingMargin 은 h2/h3 하단 (margin 자리). */
-  form:    { gap: pad(3), fieldGap: pad(1), fieldDescGap: pad(0.5), fieldsetGap: pad(1.5),
+  /**
+   * form 슬롯 — field·fieldset·section 간격.
+   *
+   *  pad           : form screen 의 outer padding. iOS Settings · Material Forms 16dp 수렴.
+   *                  Mobile keyline guide 'form' 의 SSoT — phone-body 가 cascade 로 읽음.
+   *  gap           : section 간 gap.
+   *  headingMargin : h2/h3 하단 (margin 자리).
+   */
+  form:    { pad: hierarchy.shell, gap: pad(3), fieldGap: pad(1), fieldDescGap: pad(0.5), fieldsetGap: pad(1.5),
              headingMargin: pad(2), fieldsetMargin: pad(2) },
   /** details/disclosure (summary + content). */
   details: { pad: pad(2), summaryPadY: pad(1.5), summaryPadX: pad(2) },

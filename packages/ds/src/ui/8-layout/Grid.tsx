@@ -3,7 +3,7 @@ import type { Emphasis, Flow } from './Row'
 
 // @slot children — layout primitive (DOM 평탄화 wrapper)
 
-export type GridCols = 1 | 2 | 3 | 4 | 6 | 12
+export type GridCols = 1 | 2 | 3 | 4 | 6 | 9 | 12
 
 export type GridProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   cols?: GridCols

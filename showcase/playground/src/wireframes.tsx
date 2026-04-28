@@ -25,6 +25,7 @@ import { slot } from '@p/ds/tokens/foundations'
 import { getGroups, getGroup } from './wireframe-registry'
 import type { LayoutGuide, ScreenDef } from './wireframe-screens'
 import { Group, wireframesCss, wireframesMobileCss } from './wireframes.chrome'
+import { auditAllScreens, type AuditResult } from './keyline-audit'
 
 // 자기 등록 — `screens/*.tsx` 를 eager 로 import 해서 defineScreen / defineGroup 발동.
 import.meta.glob('./screens/*.tsx', { eager: true })
@@ -35,6 +36,7 @@ function buildDesktopPage(): NormalizedData {
       <style>{wireframesCss}{guideSpacingCss}</style>
 
       <GridOverlayToggle />
+      <KeylineAudit />
 
       {getGroups().map((g) => (
         <Group key={g.id} id={g.id} title={g.title} lede={g.lede}>
@@ -114,6 +116,7 @@ function buildMobilePage(): NormalizedData {
       {/* wireframesCss (overlay 규칙 + toggle base) 도 같이 — mobile bare 라 iframe 복제 없음. */}
       <style>{wireframesCss}{wireframesMobileCss}{guideSpacingCss}</style>
       <GridOverlayToggle />
+      <KeylineAudit />
       {items}
     </div>
   )
@@ -200,12 +203,15 @@ const GUIDE_KEYS: readonly LayoutGuide[] =
   ['list', 'thread', 'feed', 'grid', 'article', 'form', 'hero', 'state']
 
 const guideSpacingCss = GUIDE_KEYS.map((g) => {
-  const s = slot[g] as { pad: string; gap: string }
-  return `[data-screen-guide="${g}"] [data-part="phone-body"] {
-    --phone-body-pad: ${s.pad};
-    --phone-body-gap: ${s.gap};
-  }`
-}).join('\n')
+  const s = slot[g] as { pad?: string; gap?: string }
+  // pad/gap 미정의 키는 emit 생략 — `undefined` 가 CSS var 로 들어가면 var(_, fallback)
+  // 의 fallback 이 발동하지 않고 invalid value 로 0 이 적용되는 cascade 버그 방지.
+  const decls: string[] = []
+  if (s.pad) decls.push(`--phone-body-pad: ${s.pad};`)
+  if (s.gap) decls.push(`--phone-body-gap: ${s.gap};`)
+  if (decls.length === 0) return ''
+  return `[data-screen-guide="${g}"] [data-part="phone-body"] { ${decls.join(' ')} }`
+}).filter(Boolean).join('\n')
 
 function GridOverlayToggle() {
   const [mode, setMode] = useState<GridMode>('auto')
@@ -269,6 +275,86 @@ function GridOverlayToggle() {
         </button>
       ))}
     </div>
+  )
+}
+
+/**
+ * KeylineAudit — 모바일 visual keyline 자동 측정 패널.
+ *
+ * "Run keyline audit" 버튼을 누르면 카탈로그 안 모든 [data-screen][data-screen-grid] 의
+ * phone-body 의 effective outer padding 을 측정하여 grid spec (mobileGrid SSoT) 과
+ * 비교한다. 위반은 wrapper 의 data-audit 속성과 sticky 패널에 표시된다.
+ *
+ * SSoT: ds/tokens/foundations/spacing/keyline.ts → mobileGrid (overlay CSS 와 동일).
+ * 측정 함수: ./keyline-audit.ts.
+ *
+ * 메모리 준수:
+ *  - [No emoji/special-char indicators] 이모지 대신 텍스트 + data-level
+ *  - [Classless] tag + role + ARIA + data-part 만, class 금지
+ */
+function KeylineAudit() {
+  const [results, setResults] = useState<AuditResult[] | null>(null)
+  const [open, setOpen] = useState(false)
+
+  const run = () => {
+    const r = auditAllScreens(document)
+    setResults(r)
+    document.querySelectorAll<HTMLElement>('[data-screen][data-screen-guide]').forEach((el) => {
+      const id = el.dataset.screen
+      const found = r.find((x) => x.screenId === id)
+      if (!found) return
+      el.dataset.audit = found.unmeasured ? 'unmeasured' : found.level
+    })
+    setOpen(true)
+  }
+
+  const summary = results && {
+    ok: results.filter((r) => r.level === 'ok' && !r.unmeasured).length,
+    warn: results.filter((r) => r.level === 'warn').length,
+    fail: results.filter((r) => r.level === 'fail').length,
+    unmeasured: results.filter((r) => r.unmeasured).length,
+  }
+  const violations = results?.flatMap((r) => r.violations) ?? []
+
+  return (
+    <aside data-part="wf-audit" aria-label="Keyline audit">
+      <button type="button" onClick={run}>Run keyline audit</button>
+      {summary && (
+        <span data-part="wf-audit-summary">
+          <span data-level="ok">ok {summary.ok}</span>
+          <span data-level="warn">warn {summary.warn}</span>
+          <span data-level="fail">fail {summary.fail}</span>
+          <span data-level="unmeasured">— {summary.unmeasured}</span>
+        </span>
+      )}
+      {results && open && (
+        <details open onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
+          <summary>{violations.length} violation(s)</summary>
+          {violations.length === 0
+            ? <p>All measured screens pass keyline spec.</p>
+            : (
+              <table>
+                <thead>
+                  <tr><th>Screen</th><th>Guide</th><th>Axis</th><th>Selector</th><th>Expected</th><th>Actual</th><th>Δpx</th></tr>
+                </thead>
+                <tbody>
+                  {violations.map((v, i) => (
+                    <tr key={`${v.screenId}-${i}`}>
+                      <td><a href={`#${v.screenId}`}>{v.screenId}</a></td>
+                      <td>{v.guide}</td>
+                      <td>{v.axis}</td>
+                      <td>{v.selector ?? '—'}</td>
+                      <td>{v.expectedPx.toFixed(1)}</td>
+                      <td>{v.actualPx.toFixed(1)}</td>
+                      <td>{v.deltaPx > 0 ? '+' : ''}{v.deltaPx.toFixed(1)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+        </details>
+      )}
+    </aside>
   )
 }
 

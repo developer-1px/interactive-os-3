@@ -191,6 +191,58 @@ export const wireframesCss = `
     background: var(--ds-accent);
     color: var(--ds-on-accent);
   }
+
+  /* Keyline audit panel — sticky top-left. GridOverlayToggle 와 같은 좌표계 (sticky top). */
+  [data-part="wf-audit"] {
+    position: sticky;
+    top: calc(var(--ds-space) * 2);
+    align-self: flex-start;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: var(--ds-radius-md, 8px);
+    background: var(--ds-bg);
+    border: var(--ds-hairline) solid var(--ds-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    max-inline-size: 480px;
+  }
+  [data-part="wf-audit"] > button {
+    appearance: none;
+    border: var(--ds-hairline) solid var(--ds-border);
+    background: var(--ds-bg);
+    color: var(--ds-fg);
+    padding: 4px 10px;
+    border-radius: var(--ds-radius-pill, 999px);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  [data-part="wf-audit-summary"] { display: inline-flex; gap: 10px; }
+  [data-part="wf-audit-summary"] [data-level="ok"]         { color: oklch(60% 0.12 145); }
+  [data-part="wf-audit-summary"] [data-level="warn"]       { color: oklch(70% 0.14 70); }
+  [data-part="wf-audit-summary"] [data-level="fail"]       { color: oklch(60% 0.18 25); }
+  [data-part="wf-audit-summary"] [data-level="unmeasured"] { color: color-mix(in oklab, currentColor 50%, transparent); }
+  [data-part="wf-audit"] table {
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  [data-part="wf-audit"] th,
+  [data-part="wf-audit"] td {
+    text-align: left;
+    padding: 2px 8px;
+    border-block-end: var(--ds-hairline) solid var(--ds-border);
+    white-space: nowrap;
+  }
+  [data-part="wf-audit"] a { color: var(--ds-accent); text-decoration: none; }
+
+  /* Screen wrapper level marker — desktop catalog 에서 wrapper 둘레에 outline. */
+  [data-part="wf-grid"] > [data-screen][data-audit="warn"] { outline: 2px solid oklch(70% 0.14 70); outline-offset: 6px; }
+  [data-part="wf-grid"] > [data-screen][data-audit="fail"] { outline: 2px solid oklch(60% 0.18 25); outline-offset: 6px; }
 `
 
 // 모바일 shell — TikTok 식 vertical snap feed. device chrome 제거 (viewport = device).
@@ -270,6 +322,15 @@ export const wireframesMobileCss = `
   }
   [data-part="wf-feed"] [data-part="wf-grid-toggle"] button {
     padding: 4px 8px;
+    font-size: 11px;
+  }
+  /* Mobile keyline audit — fixed top-left, 좁게 축소. */
+  [data-part="wf-feed"] [data-part="wf-audit"] {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 8px);
+    left: 8px;
+    align-self: auto;
+    max-inline-size: calc(100vw - 16px);
     font-size: 11px;
   }
 `
