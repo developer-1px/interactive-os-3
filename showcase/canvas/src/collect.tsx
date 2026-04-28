@@ -70,12 +70,15 @@ function buildCompLanes(
     if (!m) continue
     const name = nameOf(m)
     if (name.startsWith('_')) continue
+    const subgroup = subgroupOf?.(m)
+    // _demos/ 하위 파일은 부모 컴포넌트 카드의 demo 슬롯으로 이미 노출되므로 별도 카드 ❌.
+    if (subgroup?.startsWith('_')) continue
     const group = groupOf(m)
     if (!lanes.has(group)) lanes.set(group, [])
     lanes.get(group)!.push({
       name,
       demo: resolveDemo(name, demoIndex.get(name), components[path] as Record<string, unknown> | undefined),
-      subgroup: subgroupOf?.(m),
+      subgroup,
     })
   }
   return [...lanes.keys()].map((lane) => ({

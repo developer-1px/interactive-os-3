@@ -1,17 +1,13 @@
 import { pad } from '../../scalar/space'
 
 /**
- * 모든 수직 리스트 컨테이너가 공유하는 subgrid 축 + spacing 상수.
- *   [lead]  = 체브론·아이콘·아바타 등 선두 슬롯 (auto)
- *   [label] = 메인 콘텐츠 (1fr)
- *   [trail] = 배지·시간·메뉴 버튼 등 후위 슬롯 (auto)
+ * keyline — 수직 리스트 컨테이너의 baseline spacing 상수.
  *
  * Law of Proximity: slotGap < containerPad — 같은 행 안 아이콘·라벨은 붙고,
  * 행끼리는 여유 있게 떨어져야 시각 그룹이 뚜렷해진다.
+ *
+ * 같은 anatomy 의 grid template 은 `layout/subgridTracks` 에 분리.
  */
-
-/** @demo type=value fn=tracks */
-export const tracks = '[lead] auto [label] 1fr [trail] auto'
 
 /** @demo type=value fn=rowGap */
 export const rowGap = pad(2)

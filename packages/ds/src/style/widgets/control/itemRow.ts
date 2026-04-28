@@ -1,4 +1,4 @@
-import { css, keyline } from '../../../tokens/semantic'
+import { css, keyline, subgridTracks } from '../../../tokens/semantic'
 
 /**
  * Item row anatomy — MenuItem · Option · TreeItem 시각 통일.
@@ -26,7 +26,7 @@ const itemRoles = `
 export const cssItemRow = () => css`
   :where(${itemRoles}) {
     display: grid;
-    grid-template-columns: ${keyline.tracks};
+    grid-template-columns: ${subgridTracks};
     align-items: center;
     column-gap: ${keyline.slotGap};
   }
