@@ -1,5 +1,5 @@
 import { MenuList } from '../MenuList'
-import { Option } from '../Option'
+import { Option } from '../../2-input/Option'
 export default () => (
   <MenuList>
     <Option>One</Option>

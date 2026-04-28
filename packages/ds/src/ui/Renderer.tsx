@@ -19,7 +19,7 @@ import {
   type RowNode, type SectionNode, type SplitNode, type TextNode, type UiNode,
 } from '../headless/layout/nodes'
 import { resolveUi } from '../registry'
-import { Split } from './8-layout/Split'
+import { Split } from './9-layout/Split'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>

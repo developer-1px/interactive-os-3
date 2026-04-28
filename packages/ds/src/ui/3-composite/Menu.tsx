@@ -2,7 +2,7 @@ import { useId, type CSSProperties } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type Event } from '../../headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '../../headless/axes'
 import { useRoving } from '../../headless/roving/useRoving'
-import { MenuPopover, type MenuCtx } from '../6-overlay/MenuPopover'
+import { MenuPopover, type MenuCtx } from '../4-window/MenuPopover'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 

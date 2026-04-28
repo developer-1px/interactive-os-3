@@ -1,5 +1,5 @@
 import { ListboxGroup } from '../ListboxGroup'
-import { Option } from '../Option'
+import { Option } from '../../2-input/Option'
 export default () => (
   <ListboxGroup label="Group">
     <Option>Item one</Option>

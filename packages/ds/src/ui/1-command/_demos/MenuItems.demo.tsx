@@ -1,4 +1,4 @@
-import { Option } from '../Option'
+import { Option } from '../../2-input/Option'
 export default () => (
   <ul role="menu">
     <Option>Item 1</Option>
