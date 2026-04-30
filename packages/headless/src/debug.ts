@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from './headless/types'
+import { ROOT, type NormalizedData } from './types'
 
 interface PrintOptions {
   /** 잉여 그룹 라벨 후보를 ⚠로 표시한다. */

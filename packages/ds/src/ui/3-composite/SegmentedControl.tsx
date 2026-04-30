@@ -3,10 +3,10 @@ import {
   ROOT,
   getChildren, getLabel, isDisabled,
   type CollectionProps,
-} from '../../headless/types'
-import { activate, composeAxes, navigate } from '../../headless/axes'
-import { activateOnNavigate } from '../../headless/gesture'
-import { useRoving } from '../../headless/roving/useRoving'
+} from '@p/headless/types'
+import { activate, composeAxes, navigate } from '@p/headless/axes'
+import { activateOnNavigate } from '@p/headless/gesture'
+import { useRoving } from '@p/headless/roving/useRoving'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   'aria-label'?: string

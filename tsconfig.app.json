@@ -26,6 +26,8 @@
     "paths": {
       "@p/ds": ["packages/ds/src/index.ts"],
       "@p/ds/*": ["packages/ds/src/*"],
+      "@p/headless": ["packages/headless/src/index.ts"],
+      "@p/headless/*": ["packages/headless/src/*"],
       "@p/fs": ["packages/fs/src/index.ts"],
       "@p/fs/*": ["packages/fs/src/*"],
       "@p/devtools": ["packages/devtools/src/index.ts"],
@@ -44,6 +46,6 @@
       "@showcase/*": ["showcase/*/src"]
     }
   },
-  "include": ["packages/app/src", "packages/ds/src", "apps/*/src", "showcase/*/src"],
+  "include": ["packages/app/src", "packages/ds/src", "packages/headless/src", "apps/*/src", "showcase/*/src"],
   "exclude": ["packages/ds/src/build.ts"]
 }

@@ -10,14 +10,14 @@
  * `content`/`props.children`.
  */
 import { createContext, createElement, useContext, type ComponentType, type CSSProperties, type ReactNode } from 'react'
-import { ROOT, type NormalizedData } from '../headless/types'
-import { useDebugTree } from '../headless/layout/useDebugTree'
+import { ROOT, type NormalizedData } from '@p/headless/types'
+import { useDebugTree } from '@p/headless/layout/useDebugTree'
 import {
   placementAttrs,
   type AnyNode, type AsideNode, type ColumnNode, type FooterNode,
   type GridNode, type HeaderNode, type MainNode, type NavNode,
   type RowNode, type SectionNode, type SplitNode, type TextNode, type UiNode,
-} from '../headless/layout/nodes'
+} from '@p/headless/layout/nodes'
 import { resolveUi } from '../registry'
 import { Split } from './9-layout/Split'
 

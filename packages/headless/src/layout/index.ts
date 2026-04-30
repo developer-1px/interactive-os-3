@@ -10,4 +10,5 @@ export {
   type UiNode, type TextNode,
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
+  type Register, type UiComponentName,
 } from './nodes'

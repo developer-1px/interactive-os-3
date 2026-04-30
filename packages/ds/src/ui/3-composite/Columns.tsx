@@ -6,9 +6,9 @@ import {
   isDisabled,
   type CollectionProps,
   type NormalizedData,
-} from '../../headless/types'
-import { activate, composeAxes, expand, navigate, typeahead } from '../../headless/axes'
-import { useRoving } from '../../headless/roving/useRoving'
+} from '@p/headless/types'
+import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/axes'
+import { useRoving } from '@p/headless/roving/useRoving'
 
 type ColumnsProps = CollectionProps<Omit<ComponentPropsWithoutRef<'section'>, 'role' | 'onKeyDown'>>
 

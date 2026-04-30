@@ -1,5 +1,5 @@
 import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData } from '../../headless/types'
+import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData } from '@p/headless/types'
 
 const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null

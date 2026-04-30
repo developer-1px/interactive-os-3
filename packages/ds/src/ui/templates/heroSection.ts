@@ -10,8 +10,8 @@
  * mediaSlot 은 좌·우 어느 쪽이든 호출자가 결정 — split flow 의 자연 배치 위에서
  * 라우트가 상하 순서만 책임진다.
  */
-import { defineLayout } from '../../headless/layout/defineLayout'
-import type { NormalizedData } from '../../headless/types'
+import { defineLayout } from '@p/headless/layout/defineLayout'
+import type { NormalizedData } from '@p/headless/types'
 
 export interface HeroSectionProps {
   /** Section 의 root id. */

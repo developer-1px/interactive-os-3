@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { dsCss, wrapAppsLayer } from '@p/ds/css'
 import { applyPreset, defaultPreset, hairlinePreset } from '@p/ds/tokens/internal/preset'
-import { onShortcut } from '@p/ds/headless/key/useShortcut'
+import { onShortcut } from '@p/headless/key/useShortcut'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 

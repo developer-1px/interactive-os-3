@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import type { Tone } from '../../headless/types'
+import type { Tone } from '@p/headless/types'
 
 type SpinnerProps = Omit<ComponentPropsWithoutRef<'span'>, 'children'> & {
   variant?: Tone

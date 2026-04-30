@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { ROOT, type ControlProps } from '../../headless/types'
+import { ROOT, type ControlProps } from '@p/headless/types'
 
 // 모바일/좁은 viewport에서 Aside·Drawer 역할을 하는 sheet — bottom / end / start 방향.
 // Radix·Vaul·Ariakit·Shadcn 수렴 이름 "Sheet". Dialog와 동일하게 native <dialog>.

@@ -1,5 +1,5 @@
 import { useReducer, useMemo } from 'react'
-import type { Event } from '../../headless/types'
+import type { Event } from '@p/headless/types'
 import { INITIAL, keymap, reducer } from './paletteReducer'
 import { usePaletteEntries } from './usePaletteEntries'
 import { toDialogData } from './paletteAdapters'

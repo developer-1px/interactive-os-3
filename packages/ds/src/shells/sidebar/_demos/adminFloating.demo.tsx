@@ -1,5 +1,5 @@
 import { SidebarAdminFloating } from '../adminFloating'
-import { ROOT, type NormalizedData } from '../../../headless/types'
+import { ROOT, type NormalizedData } from '@p/headless/types'
 
 const tree: NormalizedData = {
   entities: {

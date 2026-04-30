@@ -1,5 +1,5 @@
 import { type ReactNode, type KeyboardEvent, type DragEvent, useState } from 'react'
-import { ROOT, getChildren, type ControlProps } from '../../headless/types'
+import { ROOT, getChildren, type ControlProps } from '@p/headless/types'
 
 /**
  * OrderableList — 사용자가 항목 순서를 직접 바꾸는 정렬 리스트.

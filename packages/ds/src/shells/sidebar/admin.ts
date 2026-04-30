@@ -7,7 +7,7 @@
  *   - rail: 56px 폭 + Tree에 data-state="rail" 부여 (CSS가 라벨 숨김 처리)
  *   - width: 명시 시 rail 무시. 기본 240 (rail 모드면 56)
  */
-import { defineWidget } from '../../headless/layout/defineWidget'
+import { defineWidget } from '@p/headless/layout/defineWidget'
 import type { SidebarProps } from './types'
 
 export interface SidebarAdminProps extends SidebarProps {

@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '../../headless/types'
+import { ROOT, type NormalizedData } from '@p/headless/types'
 
 export function toDialogData(open: boolean): NormalizedData {
   return {

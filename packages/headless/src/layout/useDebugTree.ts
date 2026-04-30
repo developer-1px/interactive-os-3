@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { printTree, printHeadingOutline } from '../../debug'
+import { printTree, printHeadingOutline } from '../debug'
 import type { NormalizedData } from '../types'
 
 /**

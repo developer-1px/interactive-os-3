@@ -6,10 +6,10 @@ import {
   isDisabled,
   type CollectionProps,
   type Event,
-} from '../../headless/types'
-import { activate, composeAxes, navigate, typeahead } from '../../headless/axes'
-import { activateOnNavigate } from '../../headless/gesture'
-import { useRoving } from '../../headless/roving/useRoving'
+} from '@p/headless/types'
+import { activate, composeAxes, navigate, typeahead } from '@p/headless/axes'
+import { activateOnNavigate } from '@p/headless/gesture'
+import { useRoving } from '@p/headless/roving/useRoving'
 import { Option } from '../2-input/Option'
 
 type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>

@@ -6,9 +6,9 @@
  * 단독 사용 또는 다른 레이아웃의 mainSlot 안쪽에 합성. 콘텐츠가 넘치면 safe-center
  * 덕분에 자연 스크롤 (layout.ts:158).
  */
-import { ROOT } from '../../headless/types'
-import { defineLayout } from '../../headless/layout/defineLayout'
-import type { NormalizedData } from '../../headless/types'
+import { ROOT } from '@p/headless/types'
+import { defineLayout } from '@p/headless/layout/defineLayout'
+import type { NormalizedData } from '@p/headless/types'
 
 export interface CenteredNarrowProps {
   /** 콘텐츠 Section 의 id. 라우트가 children 을 merge 로 채운다. */

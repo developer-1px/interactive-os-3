@@ -2,7 +2,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useReducer,
   type ComponentPropsWithoutRef, type ReactNode,
 } from 'react'
-import type { Tone } from '../../headless/types'
+import type { Tone } from '@p/headless/types'
 
 export type Toast = {
   id: string

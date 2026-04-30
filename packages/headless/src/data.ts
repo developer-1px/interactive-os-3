@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import type { Event as UiEvent, NormalizedData } from './headless/types'
+import type { Event as UiEvent, NormalizedData } from './types'
 
 /**
  * Resource — ui/ `(data, onEvent)`의 데이터 레이어 평행.

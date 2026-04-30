@@ -10,8 +10,8 @@
  * Header 는 page-level 구조 landmark — layout fragment 로 허용.
  * 좌·우 row 는 'cluster' flow 로 자연 wrap + gap.
  */
-import { defineLayout } from '../../headless/layout/defineLayout'
-import type { NormalizedData } from '../../headless/types'
+import { defineLayout } from '@p/headless/layout/defineLayout'
+import type { NormalizedData } from '@p/headless/types'
 
 export interface PageHeaderProps {
   /** Header 의 root id. 라우트가 외부에서 참조한다. */

@@ -2,22 +2,22 @@
 // 배럴(이 파일)을 import 해도 CSS 합성 모듈을 평가하지 않도록 re-export 만 한다.
 export { dsCss, wrapAppsLayer, APPS_LAYER_DECL } from './css'
 
-export * from './headless/types'
-export * from './data'
-export { reduce } from './headless/state/reduce'
-export { fromTree, fromList, pathAncestors } from './headless/state/fromTree'
-export { useControlState } from './headless/state/useControlState'
-export { useEventBridge } from './headless/state/useEventBridge'
-export { defineFlow, useFlow, type FlowDef } from './headless/flow'
+export * from '@p/headless/types'
+export * from '@p/headless/data'
+export { reduce } from '@p/headless/state/reduce'
+export { fromTree, fromList, pathAncestors } from '@p/headless/state/fromTree'
+export { useControlState } from '@p/headless/state/useControlState'
+export { useEventBridge } from '@p/headless/state/useEventBridge'
+export { defineFlow, useFlow, type FlowDef } from '@p/headless/flow'
 export {
   defineFeature, useFeature,
   type FeatureSpec, type CommandBase,
   type Effect, type QuerySpec, type QueryResult,
   invalidateQuery,
-} from './headless/feature'
-export { useRoving } from './headless/roving/useRoving'
-export { useRovingDOM } from './headless/roving/useRovingDOM'
-export { parentOf } from './headless/axes'
+} from '@p/headless/feature'
+export { useRoving } from '@p/headless/roving/useRoving'
+export { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+export { parentOf } from '@p/headless/axes'
 export {
   navigateOnActivate,
   activateOnNavigate,
@@ -25,12 +25,12 @@ export {
   composeGestures,
   activateProps,
   type GestureHelper,
-} from './headless/gesture'
+} from '@p/headless/gesture'
 export {
   defineMiddleware,
   type Middleware, type Phase,
   type PreDispatchCtx, type PostDispatchCtx, type ResourceCtx,
-} from './headless/middleware'
+} from '@p/headless/middleware'
 export { definePlugin, type PluginManifest } from './plugin'
 // 1-status — 시각 토큰. 다른 컴포넌트의 슬롯으로 들어감.
 export * from './ui/5-live/Badge'
@@ -124,7 +124,7 @@ export {
   type HeaderNode, type FooterNode, type UiNode, type TextNode,
   type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
-} from './headless/layout'
+} from '@p/headless/layout'
 export {
   uiRegistry, resolveUi,
   type UiComponentName, type UiEntry, type Zone,

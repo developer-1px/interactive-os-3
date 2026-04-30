@@ -144,13 +144,13 @@ export const uiRegistry = {
  * Inject literal component names into headless `nodes.ts` so `UiNode.component`
  * narrows to the registered key set. Headless owns the type slot; ui owns the values.
  */
-declare module './headless/layout/nodes' {
+declare module '@p/headless/layout/nodes' {
   interface Register {
     component: keyof typeof uiRegistry
   }
 }
 
-export type { UiComponentName } from './headless/layout/nodes'
+export type { UiComponentName } from '@p/headless/layout/nodes'
 
 /** dev: 미등록 이름이면 throw — 무음 실패 방지 (sound-settings에서 Slider 누락이 이걸로 잡힘). */
 const isDev = (): boolean =>

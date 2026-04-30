@@ -3,9 +3,9 @@ import {
   ROOT,
   getChildren, getLabel, isDisabled,
   type CollectionProps,
-} from '../../headless/types'
-import { composeAxes, navigate } from '../../headless/axes'
-import { useRoving } from '../../headless/roving/useRoving'
+} from '@p/headless/types'
+import { composeAxes, navigate } from '@p/headless/axes'
+import { useRoving } from '@p/headless/roving/useRoving'
 import { ToolbarButton } from '../1-command/ToolbarButton'
 import { Separator } from '../6-structure/Separator'
 

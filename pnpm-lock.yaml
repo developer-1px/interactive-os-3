@@ -102,9 +102,19 @@ importers:
 
   packages/devtools: {}
 
-  packages/ds: {}
+  packages/ds:
+    dependencies:
+      '@p/headless':
+        specifier: workspace:*
+        version: link:../headless
 
   packages/fs: {}
+
+  packages/headless:
+    dependencies:
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
 
   showcase/canvas: {}
 

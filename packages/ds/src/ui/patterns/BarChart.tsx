@@ -3,7 +3,7 @@ import {
   ROOT,
   getChildren,
   type CollectionProps,
-} from '../../headless/types'
+} from '@p/headless/types'
 
 /**
  * BarChart — 가로 막대 차트 (figure 시맨틱). CollectionProps 기반.
