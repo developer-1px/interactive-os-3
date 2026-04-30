@@ -28,6 +28,8 @@ export default defineConfig({
     alias: [
       { find: /^@p\/ds$/, replacement: resolve(__dirname, 'packages/ds/src/index.ts') },
       { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
+      { find: /^@p\/headless$/, replacement: resolve(__dirname, 'packages/headless/src/index.ts') },
+      { find: /^@p\/headless\//, replacement: resolve(__dirname, 'packages/headless/src/') + '/' },
       { find: /^@p\/fs$/, replacement: resolve(__dirname, 'packages/fs/src/index.ts') },
       { find: /^@p\/fs\//, replacement: resolve(__dirname, 'packages/fs/src/') + '/' },
       { find: /^@p\/devtools$/, replacement: resolve(__dirname, 'packages/devtools/src/index.ts') },
