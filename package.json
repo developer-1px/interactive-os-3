@@ -24,6 +24,7 @@
     "audit:css-decls": "tsx scripts/audit-css-decls.ts",
     "converge:css": "tsx scripts/converge-css.ts",
     "audit:hmi": "node scripts/audit-hmi.mjs",
+    "audit:kbd": "node scripts/audit-kbd-conformance.mjs",
     "aria:xray": "node scripts/aria-xray.mjs",
     "aria:tree": "TSX_TSCONFIG_PATH=tsconfig.app.json node --import tsx --loader ./scripts/aria-tree-loader.mjs scripts/aria-tree.ts",
     "preview": "vite preview"
