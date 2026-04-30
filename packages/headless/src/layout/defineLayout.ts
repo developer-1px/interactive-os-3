@@ -10,7 +10,7 @@
  * 구조 landmark 로 허용.
  */
 import type { NormalizedData } from '../types'
-import { validateFragment } from './nodes'
+import { validateFragment } from './validate'
 
 export type LayoutBuilder<P = void> = (props: P) => NormalizedData
 

@@ -3,7 +3,7 @@ export { defineWidget, type WidgetBuilder } from './defineWidget'
 export { defineLayout, type LayoutBuilder } from './defineLayout'
 export { merge } from './merge'
 export {
-  placementAttrs, validatePage, validateFragment, node,
+  node,
   type AnyNode, type NodeType,
   type RowNode, type ColumnNode, type GridNode,
   type AsideNode, type SectionNode, type HeaderNode, type FooterNode,
@@ -12,3 +12,5 @@ export {
   type ItemPlacement, type CommonNodeData, type TypedEntity,
   type Register, type UiComponentName,
 } from './nodes'
+export { placementAttrs } from './placement'
+export { validatePage, validateFragment, type FragmentKind } from './validate'

@@ -7,7 +7,7 @@
  * as ControlProps roles (`data` / `onEvent`).
  */
 import type { NormalizedData } from '../types'
-import { validatePage } from './nodes'
+import { validatePage } from './validate'
 
 export function definePage(page: NormalizedData): NormalizedData {
   if (typeof window !== 'undefined' && import.meta && (import.meta as { env?: { DEV?: boolean } }).env?.DEV) {

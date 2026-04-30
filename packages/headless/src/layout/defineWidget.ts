@@ -7,7 +7,7 @@
  * - validate: orphan/cycle/unknown — root 도달성은 검사하지 않는다.
  */
 import type { NormalizedData } from '../types'
-import { validateFragment } from './nodes'
+import { validateFragment } from './validate'
 
 export type WidgetBuilder<P = void> = (props: P) => NormalizedData
 
