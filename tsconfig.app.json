@@ -43,6 +43,8 @@
       "@showcase/catalog/*": ["showcase/catalog/src/*"],
       "@showcase/foundations": ["showcase/foundations/src/index.ts"],
       "@showcase/foundations/*": ["showcase/foundations/src/*"],
+      "@showcase/headless": ["showcase/headless/src/index.ts"],
+      "@showcase/headless/*": ["showcase/headless/src/*"],
       "@showcase/*": ["showcase/*/src"]
     }
   },
