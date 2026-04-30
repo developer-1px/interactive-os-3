@@ -16,6 +16,7 @@ import { Route as SidebarGalleryRouteImport } from './routes/sidebar-gallery'
 import { Route as KeyboardRouteImport } from './routes/keyboard'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as InspectorRouteImport } from './routes/inspector'
+import { Route as HeadlessRouteImport } from './routes/headless'
 import { Route as GenresRouteImport } from './routes/genres'
 import { Route as FoundationsRouteImport } from './routes/foundations'
 import { Route as EduPortalAdminRouteImport } from './routes/edu-portal-admin'
@@ -88,6 +89,11 @@ const InventoryRoute = InventoryRouteImport.update({
 const InspectorRoute = InspectorRouteImport.update({
   id: '/inspector',
   path: '/inspector',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeadlessRoute = HeadlessRouteImport.update({
+  id: '/headless',
+  path: '/headless',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GenresRoute = GenresRouteImport.update({
@@ -294,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
   '/foundations': typeof FoundationsRoute
   '/genres': typeof GenresRouteWithChildren
+  '/headless': typeof HeadlessRoute
   '/inspector': typeof InspectorRoute
   '/inventory': typeof InventoryRoute
   '/keyboard': typeof KeyboardRoute
@@ -338,6 +345,7 @@ export interface FileRoutesByTo {
   '/compositions': typeof CompositionsRoute
   '/content': typeof ContentRoute
   '/foundations': typeof FoundationsRoute
+  '/headless': typeof HeadlessRoute
   '/inspector': typeof InspectorRoute
   '/inventory': typeof InventoryRoute
   '/keyboard': typeof KeyboardRoute
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
   '/foundations': typeof FoundationsRoute
   '/genres': typeof GenresRouteWithChildren
+  '/headless': typeof HeadlessRoute
   '/inspector': typeof InspectorRoute
   '/inventory': typeof InventoryRoute
   '/keyboard': typeof KeyboardRoute
@@ -434,6 +443,7 @@ export interface FileRouteTypes {
     | '/edu-portal-admin'
     | '/foundations'
     | '/genres'
+    | '/headless'
     | '/inspector'
     | '/inventory'
     | '/keyboard'
@@ -478,6 +488,7 @@ export interface FileRouteTypes {
     | '/compositions'
     | '/content'
     | '/foundations'
+    | '/headless'
     | '/inspector'
     | '/inventory'
     | '/keyboard'
@@ -524,6 +535,7 @@ export interface FileRouteTypes {
     | '/edu-portal-admin'
     | '/foundations'
     | '/genres'
+    | '/headless'
     | '/inspector'
     | '/inventory'
     | '/keyboard'
@@ -572,6 +584,7 @@ export interface RootRouteChildren {
   EduPortalAdminRoute: typeof EduPortalAdminRouteWithChildren
   FoundationsRoute: typeof FoundationsRoute
   GenresRoute: typeof GenresRouteWithChildren
+  HeadlessRoute: typeof HeadlessRoute
   InspectorRoute: typeof InspectorRoute
   InventoryRoute: typeof InventoryRoute
   KeyboardRoute: typeof KeyboardRoute
@@ -635,6 +648,13 @@ declare module '@tanstack/react-router' {
       path: '/inspector'
       fullPath: '/inspector'
       preLoaderRoute: typeof InspectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/headless': {
+      id: '/headless'
+      path: '/headless'
+      fullPath: '/headless'
+      preLoaderRoute: typeof HeadlessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/genres': {
@@ -1003,6 +1023,7 @@ const rootRouteChildren: RootRouteChildren = {
   EduPortalAdminRoute: EduPortalAdminRouteWithChildren,
   FoundationsRoute: FoundationsRoute,
   GenresRoute: GenresRouteWithChildren,
+  HeadlessRoute: HeadlessRoute,
   InspectorRoute: InspectorRoute,
   InventoryRoute: InventoryRoute,
   KeyboardRoute: KeyboardRoute,

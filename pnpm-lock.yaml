@@ -124,6 +124,8 @@ importers:
 
   showcase/foundations: {}
 
+  showcase/headless: {}
+
   showcase/inspector: {}
 
   showcase/keyboard: {}
