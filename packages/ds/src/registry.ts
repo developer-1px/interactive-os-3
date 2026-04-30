@@ -2,7 +2,7 @@
  * Ui leaf registry — maps `node.data.component` string to a ds/ui component
  * and tags it with its tier (folder = source of truth).
  *
- * Tiers (see src/ds/core/INVARIANTS.md):
+ * Tiers (see packages/headless/src/INVARIANTS.md):
  *   1-status · 2-action · 3-input · 4-selection · 5-display ·
  *   6-overlay · 7-patterns · 8-layout
  */

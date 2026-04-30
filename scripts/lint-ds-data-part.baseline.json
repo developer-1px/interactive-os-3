@@ -63,7 +63,6 @@
     "B|packages/ds/src/devices/Phone.tsx|phone-topbar-title",
     "B|packages/ds/src/devices/Phone.tsx|phone-topbar-trail",
     "B|packages/ds/src/devices/Phone.tsx|phone-wifi",
-    "B|packages/ds/src/headless/layout/nodes.ts|card",
     "B|packages/ds/src/style/widgets/composite/page.ts|board-nav",
     "B|packages/ds/src/style/widgets/composite/page.ts|board-page",
     "B|packages/ds/src/style/widgets/composite/page.ts|board-posts",
