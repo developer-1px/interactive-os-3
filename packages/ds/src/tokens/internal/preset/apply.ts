@@ -1,34 +1,11 @@
 import { css } from '../../semantic/css'
-import type {
-  DsPreset,
-  Layer,
-  TokenRef,
-} from './types'
+import type { DsPreset } from './types'
+import { tokenRefToCss, elevationToShadow } from './tokenCss'
 
-export const tokenRefToCss = (t: TokenRef): string => {
-  if (typeof t === 'string') return t
-  const [base, pct, mix] = t.mix
-  return `color-mix(in oklch, ${base} ${pct}%, ${mix})`
-}
-
-const layerToCss = (l: Layer, alphaScale = 1): string => {
-  const color =
-    alphaScale === 1
-      ? tokenRefToCss(l.color)
-      : scaleAlpha(l.color, alphaScale)
-  return `${l.x}px ${l.y}px ${l.blur}px ${l.spread}px ${color}`
-}
-
-const scaleAlpha = (t: TokenRef, k: number): string => {
-  if (typeof t === 'string') return t
-  const [base, pct, mix] = t.mix
-  const scaled = Math.min(100, Math.round(pct * k))
-  return `color-mix(in oklch, ${base} ${scaled}%, ${mix})`
-}
-
-export const elevationToShadow = (layers: Layer[], alphaScale = 1): string =>
-  layers.length === 0 ? 'none' : layers.map((l) => layerToCss(l, alphaScale)).join(', ')
-
+// @FIXME(srp): rootBlock 170 LOC가 color/typography/size/z-index/heading/tracking/
+//   radius/shell 등 ~10개 카테고리를 한꺼번에 emit. 카테고리별 분리 가능성 있으나
+//   ":root 한 블록"이라는 단일 출력의 emit 순서 결합이 가려질 위험.
+//   판단 조건: 카테고리간 변수 cross-reference가 주석/검증으로 명시되면 분리 가능.
 /**
  * Control emphasis ladder:
  *   hairline        (--ds-border, ~12%)  — 경계 분리
