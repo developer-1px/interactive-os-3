@@ -1,15 +1,43 @@
 {
   "name": "@p/headless",
-  "private": true,
   "version": "0.0.0",
+  "description": "ARIA 행동 인프라 — axis 합성, roving tabindex, gesture/intent 변환, FlatLayout 선언적 트리, Resource 단일 데이터 인터페이스. 토큰/CSS/UI 어휘 0건.",
+  "license": "MIT",
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "INVARIANTS.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "peerDependencies": {
     "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

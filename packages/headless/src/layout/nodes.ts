@@ -18,7 +18,6 @@
  *   cols?:     1|2|3|4|6|12  (Grid only)
  */
 import type { ReactNode } from 'react'
-import type { Entity } from '../types'
 
 /**
  * Augmentable slot for the consumer's UI component name set.
@@ -150,7 +149,12 @@ export type AnyNode =
   | MainNode | NavNode | AsideNode | SectionNode | HeaderNode | FooterNode
   | UiNode | TextNode
 
-export type TypedEntity<T extends AnyNode = AnyNode> = Entity & { data: T }
+/**
+ * Entity의 typed variant — Entity는 data?: Record<string,unknown>이지만
+ * node 어휘에서는 data가 항상 AnyNode 하위 타입이라 명시한다. Entity 직접
+ * intersection은 Record<string,unknown> 제약과 충돌해서 generic 좁힘이 깨진다.
+ */
+export type TypedEntity<T extends AnyNode = AnyNode> = { id: string; data: T }
 
 /** Build a <Renderer>-compatible page (wraps entities/relationships passthrough). */
 export function node<T extends AnyNode>(id: string, data: T): TypedEntity<T> {

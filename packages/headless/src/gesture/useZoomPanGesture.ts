@@ -99,17 +99,18 @@ export function useZoomPanGesture(
       }
     }
 
-    // Safari iOS pinch / 뒤로·앞으로 스와이프 차단
-    const onGesture = (e: Event) => (e as unknown as { preventDefault: () => void }).preventDefault()
+    // Safari iOS pinch / 뒤로·앞으로 스와이프 차단. DOM Event (Event 이름 충돌
+    // 방지 위해 globalThis 명시). 헤드리스 Event는 import한 타입.
+    const onGesture: EventListener = (e) => e.preventDefault()
 
     vp.addEventListener('wheel', onWheel, { passive: false })
     vp.addEventListener('pointerdown', onPointerDown)
     vp.addEventListener('pointermove', onPointerMove)
     vp.addEventListener('pointerup', onPointerUp)
     vp.addEventListener('pointercancel', onPointerUp)
-    vp.addEventListener('gesturestart', onGesture as EventListener)
-    vp.addEventListener('gesturechange', onGesture as EventListener)
-    vp.addEventListener('gestureend', onGesture as EventListener)
+    vp.addEventListener('gesturestart', onGesture)
+    vp.addEventListener('gesturechange', onGesture)
+    vp.addEventListener('gestureend', onGesture)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
     return () => {
@@ -118,9 +119,9 @@ export function useZoomPanGesture(
       vp.removeEventListener('pointermove', onPointerMove)
       vp.removeEventListener('pointerup', onPointerUp)
       vp.removeEventListener('pointercancel', onPointerUp)
-      vp.removeEventListener('gesturestart', onGesture as EventListener)
-      vp.removeEventListener('gesturechange', onGesture as EventListener)
-      vp.removeEventListener('gestureend', onGesture as EventListener)
+      vp.removeEventListener('gesturestart', onGesture)
+      vp.removeEventListener('gesturechange', onGesture)
+      vp.removeEventListener('gestureend', onGesture)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
     }

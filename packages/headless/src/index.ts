@@ -30,7 +30,11 @@ export {
 export { useRoving } from './roving/useRoving'
 export { useRovingDOM } from './roving/useRovingDOM'
 
-export { parentOf } from './axes'
+export {
+  composeAxes, parentOf, siblingsOf, enabledSiblings,
+  navigate, activate, expand, typeahead, treeNavigate, treeExpand,
+  type Axis,
+} from './axes'
 export {
   navigateOnActivate,
   activateOnNavigate,
