@@ -19,7 +19,18 @@
  */
 import type { CSSProperties, ReactNode } from 'react'
 import type { Entity, NormalizedData } from '../types'
-import type { UiComponentName } from '../../registry'
+
+/**
+ * Augmentable slot for the consumer's UI component name set.
+ * Consumer (the ui registry) augments via:
+ *   declare module '<this-module>' { interface Register { component: 'Button' | ... } }
+ * If unaugmented, falls back to `string` so headless stays compilable in isolation.
+ */
+export interface Register {}
+
+export type UiComponentName = Register extends { component: infer C extends string }
+  ? C
+  : string
 
 export type Flow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
 export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'

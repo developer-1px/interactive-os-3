@@ -140,14 +140,24 @@ export const uiRegistry = {
   Top10List:     { component: Top10List,     zone: 'pattern' },
 } as const satisfies Record<string, UiEntry>
 
-export type UiComponentName = keyof typeof uiRegistry
+/**
+ * Inject literal component names into headless `nodes.ts` so `UiNode.component`
+ * narrows to the registered key set. Headless owns the type slot; ui owns the values.
+ */
+declare module './headless/layout/nodes' {
+  interface Register {
+    component: keyof typeof uiRegistry
+  }
+}
+
+export type { UiComponentName } from './headless/layout/nodes'
 
 /** dev: 미등록 이름이면 throw — 무음 실패 방지 (sound-settings에서 Slider 누락이 이걸로 잡힘). */
 const isDev = (): boolean =>
   typeof import.meta !== 'undefined' && (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true
 
 export function resolveUi(name: string): AnyCmp | undefined {
-  const entry = uiRegistry[name as UiComponentName]
+  const entry = uiRegistry[name as keyof typeof uiRegistry]
   if (!entry) {
     if (isDev()) {
       throw new Error(
