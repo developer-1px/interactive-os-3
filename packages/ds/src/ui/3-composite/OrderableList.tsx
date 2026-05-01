@@ -1,5 +1,6 @@
 import { type ReactNode, type KeyboardEvent, type DragEvent, useState } from 'react'
 import { ROOT, getChildren, type ControlProps } from '@p/headless/types'
+import { orderableListStyle } from './OrderableList.style'
 
 /**
  * OrderableList — 사용자가 항목 순서를 직접 바꾸는 정렬 리스트.
@@ -65,7 +66,7 @@ export function OrderableList({ data, onReorder, numbered, ...rest }: OrderableL
   const onItemDragEnd = () => { setDragId(null); setOverId(null) }
 
   return (
-    <ol data-part="orderable" {...rest}>
+    <ol className={orderableListStyle.classes.root} data-part="orderable" {...rest}>
       {ids.map((id, i) => {
         const d = data.entities[id]?.data ?? {}
         const isDragging = dragId === id
@@ -84,15 +85,16 @@ export function OrderableList({ data, onReorder, numbered, ...rest }: OrderableL
           >
             <button
               type="button"
+              data-slot="drag"
               data-icon="grip-vertical"
               aria-label={`${i + 1}번째 항목 순서 변경`}
               onKeyDown={onHandleKey}
             />
-            {numbered && <strong>{i + 1}.</strong>}
-            {(d.badge as ReactNode) ?? null}
-            <span>{d.primary as ReactNode}</span>
-            {d.secondary != null && <small>{d.secondary as ReactNode}</small>}
-            {(d.meta as ReactNode) ?? null}
+            {numbered && <strong data-slot="index">{i + 1}.</strong>}
+            {d.badge != null && <span data-slot="badge">{d.badge as ReactNode}</span>}
+            <span data-slot="primary">{d.primary as ReactNode}</span>
+            {d.secondary != null && <small data-slot="secondary">{d.secondary as ReactNode}</small>}
+            {d.meta != null && <span data-slot="meta">{d.meta as ReactNode}</span>}
           </li>
         )
       })}
