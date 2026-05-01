@@ -1,49 +1,112 @@
-import {accent, control, css, dur, ease, radius, ring, shadow, surface} from '../../tokens/semantic'
+import {
+  accent,
+  border,
+  control,
+  css,
+  currentTint,
+  dur,
+  ease,
+  hairlineWidth,
+  radius,
+  ring,
+  surface,
+  text,
+} from '../../tokens/semantic'
+
 export const cssSwitch = () => css`
-  :where([role="switch"]) {
-    /* 가장 보편적 pill switch — iOS(1.65) · Material 3(1.625) · Headless UI(1.8) 수렴. 1.85 로 약간 더 펼침. */
-    --switch-ratio:  1.85;
-    --switch-pad:    2px;
-    --switch-thumb:  calc(${control('h')} - var(--switch-pad) * 2);
-    --switch-travel: calc(${control('h')} * (var(--switch-ratio) - 1));
-    width: calc(${control('h')} * var(--switch-ratio));
-    padding: var(--switch-pad);
+  button[role="switch"] {
+    --switch-track-w: calc(${control('h')} * 1.28);
+    --switch-track-h: calc(${control('h')} * 0.56);
+    --switch-pad: 2px;
+    --switch-thumb: calc(var(--switch-track-h) - var(--switch-pad) * 2);
+    --switch-travel: calc(var(--switch-track-w) - var(--switch-thumb) - var(--switch-pad) * 2);
+
+    position: relative;
+    inline-size: calc(var(--switch-track-w) + 8px);
+    min-inline-size: calc(var(--switch-track-w) + 8px);
+    block-size: ${control('h')};
+    min-block-size: ${control('h')};
+    padding: 0;
+    border: 0;
     border-radius: ${radius('pill')};
-    background: ${control('channel')};
-    min-height: auto; block-size: ${control('h')};
-    display: inline-flex;
-    align-items: center;
+    background: transparent;
+    color: ${text('subtle')};
+    display: inline-grid;
+    place-items: center;
+    vertical-align: middle;
     transition:
-      background-color ${dur('base')} ${ease('out')},
-      box-shadow ${dur('base')} ${ease('out')};
-
-    &[aria-checked="false"]:hover:not([aria-disabled="true"]) {
-      background: ${control('borderHover')};
-    }
-    &[aria-checked="true"] { background: ${accent()}; }
-    &[aria-checked="true"]:hover:not([aria-disabled="true"]) {
-      background: ${accent('strong')};
-    }
-
-    &:focus-visible { ${ring()} }
-
-    &[aria-disabled="true"] {
-      cursor: not-allowed;
-      background: ${control('channel')};
-      opacity: 0.55;
-    }
+      color ${dur('fast')} ${ease('out')};
 
     &::before {
       content: '';
-      width: var(--switch-thumb);
-      height: var(--switch-thumb);
+      inline-size: var(--switch-track-w);
+      block-size: var(--switch-track-h);
+      border: ${hairlineWidth()} solid ${control('border')};
+      border-radius: ${radius('pill')};
+      background: ${surface('subtle')};
+      transition:
+        background-color ${dur('fast')} ${ease('out')},
+        border-color ${dur('fast')} ${ease('out')};
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inline-size: var(--switch-thumb);
+      block-size: var(--switch-thumb);
+      inset-inline-start: calc((100% - var(--switch-track-w)) / 2 + var(--switch-pad));
+      inset-block-start: 50%;
+      border: ${hairlineWidth()} solid ${border()};
       border-radius: ${radius('pill')};
       background: ${surface('default')};
-      box-shadow: ${shadow()};
-      transition: transform ${dur('base')} ${ease('spring')};
+      box-shadow: 0 1px 2px ${currentTint('soft')};
+      transform: translateY(-50%);
+      transition:
+        background-color ${dur('fast')} ${ease('out')},
+        border-color ${dur('fast')} ${ease('out')},
+        transform ${dur('base')} ${ease('spring')};
+    }
+
+    &:hover:not([aria-disabled="true"])::before {
+      border-color: ${control('borderHover')};
+      background: ${control('channel')};
+    }
+
+    &[aria-checked="true"] {
+      color: ${accent()};
     }
     &[aria-checked="true"]::before {
-      transform: translateX(var(--switch-travel));
+      border-color: ${accent('border')};
+      background: ${accent('soft')};
+    }
+    &[aria-checked="true"]::after {
+      border-color: ${accent()};
+      background: ${accent()};
+      transform: translate(var(--switch-travel), -50%);
+    }
+    &[aria-checked="true"]:hover:not([aria-disabled="true"])::before {
+      background: ${accent('medium')};
+    }
+    &[aria-checked="true"]:hover:not([aria-disabled="true"])::after {
+      border-color: ${accent('strong')};
+      background: ${accent('strong')};
+    }
+
+    &:focus-visible {
+      ${ring()}
+    }
+
+    &[aria-disabled="true"] {
+      cursor: not-allowed;
+      color: ${text('mute')};
+    }
+    &[aria-disabled="true"]::before {
+      border-color: ${control('border')};
+      background: ${surface('subtle')};
+    }
+    &[aria-disabled="true"]::after {
+      border-color: ${control('border')};
+      background: ${control('channel')};
     }
   }
 `
