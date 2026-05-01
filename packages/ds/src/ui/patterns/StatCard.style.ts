@@ -16,29 +16,35 @@ export const cssStatCard = () => css`
 
   /* title 슬롯 — label dl + 우측 icon */
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between;
     gap: ${pad(1)};
   }
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > dl { margin: 0; }
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > dl > dt {
     display: inline-flex; align-items: center; gap: ${pad(1)};
     font-size: ${font('sm')};
-    color: ${text('mute')};
-    font-weight: ${weight('medium')};
+    color: ${text('subtle')};
+    font-weight: ${weight('semibold')};
+    line-height: 1.35;
   }
   article[data-part="card"][data-card="stat"] > [data-slot="title"] > header > span[aria-hidden="true"] {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    flex: none;
     font-size: ${font('lg')};
-    opacity: .7;
+    color: ${text('subtle')};
   }
 
   /* body 슬롯 — Heading display 의 KPI 큰 숫자 */
   article[data-part="card"][data-card="stat"] > [data-slot="body"] > [data-part="heading"][data-level="display"] {
     margin: 0;
-    font-size: calc(${font('xl')} * 1.4);
+    font-size: ${font('2xl')};
     font-weight: ${weight('bold')};
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     font-variant-numeric: tabular-nums;
-    line-height: 1.1;
+    line-height: 1;
   }
 
   /* meta 슬롯 — sub 텍스트 */

@@ -1,4 +1,4 @@
-import { SHELL_MOBILE_MAX, css, radius, typography } from '@p/ds/tokens/semantic'
+import { SHELL_MOBILE_MAX, css, radius, text, typography } from '@p/ds/tokens/semantic'
 import { pad } from '@p/ds/tokens/scalar'
 
 // edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content).
@@ -25,7 +25,7 @@ export const eduPortalAdminCss = css`
     ${typography('headingStrong')}; margin: 0;
   }
   header[data-part="topbar"] > hgroup p {
-    opacity: .6; margin: ${pad(0.5)} 0 0;
+    color: ${text('subtle')}; margin: ${pad(0.5)} 0 0;
   }
   header[data-part="topbar"] > [data-part="actions"] {
     display: flex; gap: ${pad(2)};

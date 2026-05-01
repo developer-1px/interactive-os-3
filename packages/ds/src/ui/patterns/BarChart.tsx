@@ -25,14 +25,18 @@ export function BarChart({ data, caption, ...rest }: CollectionProps<Extra>) {
             label?: ReactNode; value?: ReactNode; pct?: number; variant?: string
           }
           const pct = Math.max(0, Math.min(100, Number(d.pct) || 0))
+          const labelText = typeof d.label === 'string' ? d.label : undefined
           return (
             <div key={id} data-variant={d.variant ?? 'info'}>
-              <dt>
-                <span>{d.label}</span>
-                <span>{d.value}</span>
-              </dt>
+              <dt>{d.label}</dt>
               <dd>
-                <meter value={pct} min={0} max={100} />
+                <meter
+                  value={pct}
+                  min={0}
+                  max={100}
+                  aria-label={labelText ? `${labelText} 비율` : undefined}
+                />
+                <span>{d.value}</span>
               </dd>
             </div>
           )
