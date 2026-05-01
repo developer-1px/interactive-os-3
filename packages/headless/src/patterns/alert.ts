@@ -6,7 +6,7 @@ import type { RootProps } from './types'
  *
  * 즉시 announce. live region 자동 (role=alert 가 aria-live=assertive 묵시).
  */
-export function alert(): { rootProps: RootProps } {
+export function alertPattern(): { rootProps: RootProps } {
   return { rootProps: { role: 'alert' } as RootProps }
 }
 
@@ -16,7 +16,7 @@ export function alert(): { rootProps: RootProps } {
  *
  * dialog 변종 — 즉시 주의 필요. role=alertdialog. 나머지는 dialog recipe 와 동일.
  */
-export function alertdialog(): { rootProps: RootProps } {
+export function alertdialogPattern(): { rootProps: RootProps } {
   return {
     rootProps: { role: 'alertdialog', 'aria-modal': true } as unknown as RootProps,
   }

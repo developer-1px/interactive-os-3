@@ -19,7 +19,7 @@ export interface DialogOptions {
  * 동작: open 시 첫 focusable 에 focus, Escape 닫기, 닫힘 시 trigger 로 focus 복귀.
  * focus trap 은 native `<dialog>` 또는 [inert] 사용 권장 — 본 recipe 는 보조.
  */
-export function dialog(
+export function useDialogPattern(
   rootRef: RefObject<HTMLElement | null>,
   opts: DialogOptions,
 ): {

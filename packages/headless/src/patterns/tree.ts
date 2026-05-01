@@ -22,7 +22,7 @@ const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
  *
  * items 는 visible 노드만 평탄화하여 level 포함 반환.
  */
-export function tree(
+export function useTreePattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: TreeOptions = {},

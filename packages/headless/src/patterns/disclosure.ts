@@ -12,7 +12,7 @@ export interface DisclosureOptions {
  *
  * 단순 controlled toggle. uncontrolled 는 useControlState 로 wrap.
  */
-export function disclosure(opts: DisclosureOptions): {
+export function disclosurePattern(opts: DisclosureOptions): {
   triggerProps: ItemProps
   panelProps: RootProps
 } {

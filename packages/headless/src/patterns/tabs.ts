@@ -20,7 +20,7 @@ export interface TabsOptions {
  *
  * tabProps(id)·panelProps(id) 가 `aria-controls`/`aria-labelledby` 자동 연결.
  */
-export function tabs(
+export function useTabsPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: TabsOptions = {},

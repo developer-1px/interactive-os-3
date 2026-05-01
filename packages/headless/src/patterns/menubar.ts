@@ -13,9 +13,9 @@ export interface MenubarOptions {
  * https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
  *
  * 상위 menubar 는 horizontal navigate, 하위 menu open 시 cross-axis vertical.
- * 본 recipe 는 상위 layer 만. 하위 menu 는 `menu()` recipe 를 별도 호출.
+ * 본 recipe 는 상위 layer 만. 하위 menu 는 `useMenuPattern()` recipe 를 별도 호출.
  */
-export function menubar(
+export function useMenubarPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: MenubarOptions = {},

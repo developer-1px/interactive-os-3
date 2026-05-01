@@ -14,7 +14,7 @@ export interface SplitterOptions {
  * entity.data (handleId): { value, min, max, step }
  * Slider와 axis 공유 (numericStep) — 차이는 role=separator + aria-orientation 의미.
  */
-export function splitter(
+export function splitterPattern(
   data: NormalizedData,
   handleId: string,
   onEvent?: (e: UiEvent) => void,

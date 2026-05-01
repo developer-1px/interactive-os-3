@@ -16,7 +16,7 @@ const axis = composeAxes(navigate('vertical'), activate, typeahead)
  *
  * 키보드: ArrowUp/Down · Home/End · Enter/Space · typeahead. Escape 닫기는 소비자.
  */
-export function menu(
+export function useMenuPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: MenuOptions = {},

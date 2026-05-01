@@ -1,6 +1,6 @@
 {
   "name": "@p/headless",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ARIA 행동 인프라 — axis 합성, roving tabindex, gesture/intent 변환, FlatLayout 선언적 트리, Resource 단일 데이터 인터페이스. 토큰/CSS/UI 어휘 0건.",
   "license": "MIT",
   "type": "module",
@@ -19,10 +19,50 @@
       "import": "./dist/patterns/index.js",
       "require": "./dist/patterns/index.cjs"
     },
+    "./axes": {
+      "types": "./dist/axes/index.d.ts",
+      "import": "./dist/axes/index.js",
+      "require": "./dist/axes/index.cjs"
+    },
+    "./feature": {
+      "types": "./dist/feature/index.d.ts",
+      "import": "./dist/feature/index.js",
+      "require": "./dist/feature/index.cjs"
+    },
+    "./gesture": {
+      "types": "./dist/gesture/index.d.ts",
+      "import": "./dist/gesture/index.js",
+      "require": "./dist/gesture/index.cjs"
+    },
+    "./key": {
+      "types": "./dist/key/index.d.ts",
+      "import": "./dist/key/index.js",
+      "require": "./dist/key/index.cjs"
+    },
+    "./layout": {
+      "types": "./dist/layout/index.d.ts",
+      "import": "./dist/layout/index.js",
+      "require": "./dist/layout/index.cjs"
+    },
+    "./roving": {
+      "types": "./dist/roving/index.d.ts",
+      "import": "./dist/roving/index.js",
+      "require": "./dist/roving/index.cjs"
+    },
+    "./state": {
+      "types": "./dist/state/index.d.ts",
+      "import": "./dist/state/index.js",
+      "require": "./dist/state/index.cjs"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js",
       "require": "./dist/*.cjs"
+    },
+    "./*/": {
+      "types": "./dist/*/index.d.ts",
+      "import": "./dist/*/index.js",
+      "require": "./dist/*/index.cjs"
     }
   },
   "files": [

@@ -25,7 +25,7 @@ export interface ComboboxOptions {
  *   Enter — 활성 option activate
  *   Escape — popup 닫기 (소비자가 expanded false 로)
  */
-export function combobox(
+export function useComboboxPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: ComboboxOptions = {},

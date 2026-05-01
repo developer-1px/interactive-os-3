@@ -16,7 +16,7 @@ const axis = composeAxes(navigate('vertical'), navigate('horizontal'), treeExpan
  *
  * row + cell 2축 + branch expand. row 기준 roving (cell focus 는 row 안에서 각자).
  */
-export function treeGrid(
+export function useTreeGridPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: TreeGridOptions = {},

@@ -19,7 +19,7 @@ const axis = composeAxes(navigate('vertical'), expand, activate)
  * 각 item 의 trigger 는 button. expand 상태는 entities[id].data.expanded SSoT.
  * type='single' 은 reducer 에서 다른 형제 닫기.
  */
-export function accordion(
+export function useAccordionPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: AccordionOptions = {},

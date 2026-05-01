@@ -13,7 +13,7 @@ export interface SwitchOptions {
  *
  * Checkbox와 의미 다름 — on/off 즉시 적용. native button + aria-checked.
  */
-export function toggleSwitch(opts: SwitchOptions): { switchProps: ItemProps } {
+export function toggleSwitchPattern(opts: SwitchOptions): { switchProps: ItemProps } {
   const { checked, onCheckedChange, disabled, label } = opts
   const switchProps: ItemProps = {
     role: 'switch',

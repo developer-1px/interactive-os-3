@@ -1,6 +1,6 @@
 import { type ComponentPropsWithoutRef } from 'react'
 import { type CollectionProps } from '@p/headless/types'
-import { listbox } from '@p/headless/patterns'
+import { useListboxPattern } from '@p/headless/patterns'
 import { Option } from '../2-input/Option'
 
 type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> & {
@@ -12,7 +12,7 @@ type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' 
  * 기본 selection-follows-focus.
  */
 export function Listbox({ data, onEvent, autoFocus, selectionFollowsFocus, ...rest }: ListboxProps) {
-  const { rootProps, optionProps, items } = listbox(data, onEvent, { autoFocus, selectionFollowsFocus })
+  const { rootProps, optionProps, items } = useListboxPattern(data, onEvent, { autoFocus, selectionFollowsFocus })
 
   return (
     <ul {...(rootProps as ComponentPropsWithoutRef<'ul'>)} {...rest}>

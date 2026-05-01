@@ -17,7 +17,7 @@ export interface ToolbarOptions {
  *
  * separator 항목은 itemProps role="separator" + tabIndex=-1, roving skip.
  */
-export function toolbar(
+export function useToolbarPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: ToolbarOptions = {},

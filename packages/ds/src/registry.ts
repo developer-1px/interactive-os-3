@@ -30,6 +30,10 @@ import { Textarea } from './ui/2-input/Textarea'
 import { Select } from './ui/2-input/Select'
 import { Checkbox } from './ui/2-input/Checkbox'
 import { Field, FieldLabel, FieldDescription, FieldError } from './ui/8-field/Field'
+import { Fieldset } from './ui/8-field/Fieldset'
+import { CheckboxField } from './ui/8-field/CheckboxField'
+import { SwitchField } from './ui/8-field/SwitchField'
+import { FileInput } from './ui/8-field/FileInput'
 import { Listbox } from './ui/3-composite/Listbox'
 import { Combobox } from './ui/2-input/Combobox'
 import { RouteGrid } from './shells/command/RouteGrid'
@@ -105,6 +109,10 @@ export const uiRegistry = {
   FieldLabel:       { component: FieldLabel,       zone: 'input' },
   FieldDescription: { component: FieldDescription, zone: 'input' },
   FieldError:       { component: FieldError,       zone: 'input' },
+  Fieldset:         { component: Fieldset,         zone: 'input' },
+  CheckboxField:    { component: CheckboxField,    zone: 'input' },
+  SwitchField:      { component: SwitchField,      zone: 'input' },
+  FileInput:        { component: FileInput,        zone: 'input' },
   // input
   Combobox: { component: Combobox, zone: 'input' },
   // collection

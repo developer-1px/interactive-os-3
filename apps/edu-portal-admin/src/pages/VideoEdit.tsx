@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Renderer, definePage, ROOT } from '@p/ds'
 import {
-  fieldNode, checkboxRows, checkboxRels,
-  tagChipNodes, tagChipRels, visibilityRows, visibilityRels,
+  fieldNode, tagChipNodes, tagChipRels,
   type NodeMap, type RelMap,
 } from './videoEditHelpers'
 
@@ -21,6 +20,54 @@ export function VideoEdit() {
   const removeTag = (list: string[], setter: (x: string[]) => void, value: string) =>
     setter(list.filter((t) => t !== value))
 
+  // CheckboxField/SwitchField 노드 생성기 — 한 항목 = 한 노드, Wrap+Row+Checkbox+Text
+  // 4-노드 분해 패턴 종료. ARIA grouping 은 부모 Fieldset 의 native <fieldset>이 담당.
+  const checkboxNodes = <K extends string>(
+    prefix: string,
+    state: Record<K, boolean>,
+    setter: (next: Record<K, boolean>) => void,
+    labels: Record<K, string>,
+  ): NodeMap => {
+    const out: NodeMap = {}
+    for (const k of Object.keys(state) as K[]) {
+      out[`${prefix}-cb-${k}`] = {
+        id: `${prefix}-cb-${k}`,
+        data: {
+          type: 'Ui', component: 'CheckboxField',
+          props: {
+            label: labels[k],
+            checked: state[k],
+            onChange: (next: boolean) => setter({ ...state, [k]: next }),
+          },
+        },
+      }
+    }
+    return out
+  }
+  const switchNodes = (
+    state: typeof visible,
+    setter: (next: typeof visible) => void,
+  ): NodeMap => {
+    const labels: Record<keyof typeof state, string> = {
+      online: '온라인교육 노출', roleMain: '메인 역할 코스 노출', certMain: '메인 자격증 코스 노출',
+    }
+    const out: NodeMap = {}
+    for (const k of Object.keys(state) as (keyof typeof state)[]) {
+      out[`vis-sw-${k}`] = {
+        id: `vis-sw-${k}`,
+        data: {
+          type: 'Ui', component: 'SwitchField',
+          props: {
+            label: labels[k],
+            checked: state[k],
+            onChange: (next: boolean) => setter({ ...state, [k]: next }),
+          },
+        },
+      }
+    }
+    return out
+  }
+
   const entities: NodeMap = {
     [ROOT]: { id: ROOT, data: {} },
     form: { id: 'form', data: { type: 'Row', flow: 'form', label: '영상 편집' } },
@@ -31,8 +78,8 @@ export function VideoEdit() {
     // upload section
     secUpload: { id: 'secUpload', data: { type: 'Section', heading: { content: '영상 파일' } } },
     uploadFile: { id: 'uploadFile', data: {
-      type: 'Ui', component: 'Input',
-      props: { type: 'file', accept: 'video/mp4,video/quicktime', 'aria-label': '영상 업로드' },
+      type: 'Ui', component: 'FileInput',
+      props: { accept: 'video/mp4,video/quicktime', buttonLabel: '영상 업로드', 'aria-label': '영상 업로드' },
     } },
     uploadNote: { id: 'uploadNote', data: { type: 'Text', variant: 'small', content: 'MP4, MOV · 최대 10GB' } },
     uploadProgress: { id: 'uploadProgress', data: {
@@ -56,26 +103,31 @@ export function VideoEdit() {
       props: { defaultValue: '02:10:00', readOnly: true },
     }, '파일 업로드 시 자동 입력'),
 
-    // roles fieldset (native — Checkbox-as-role)
-    rolesWrap: { id: 'rolesWrap', data: { type: 'Column', flow: 'form',
-      label: '역할', roledescription: 'fieldset' } },
-    rolesLegend: { id: 'rolesLegend', data: { type: 'Text', variant: 'strong', content: '역할 *' } },
-    ...checkboxRows('role', roles, setRoles, {
+    // roles fieldset — single Fieldset node, CheckboxField 자식들
+    rolesSet: { id: 'rolesSet', data: {
+      type: 'Ui', component: 'Fieldset',
+      props: { legend: '역할', required: true, 'data-part': 'fieldset' },
+    } },
+    ...checkboxNodes('role', roles, setRoles, {
       dev: '개발자', eng: '엔지니어', sec: '보안', ai: 'AI',
     }),
 
-    certsWrap: { id: 'certsWrap', data: { type: 'Column', flow: 'form', label: '코스',
-      roledescription: 'fieldset' } },
-    certsLegend: { id: 'certsLegend', data: { type: 'Text', variant: 'strong',
-      content: <>코스 <small>(기술자격증 연관 코스 선택)</small></> } },
-    ...checkboxRows('cert', certs, setCerts, { nca: 'NCA', ncp: 'NCP', nce: 'NCE' }),
-    certsNote: { id: 'certsNote', data: { type: 'Text', variant: 'small',
-      content: '해당 자격증 준비에 도움이 되는 영상에 체크하세요.' } },
+    certsSet: { id: 'certsSet', data: {
+      type: 'Ui', component: 'Fieldset',
+      props: {
+        legend: '코스',
+        hint: '(기술자격증 연관 코스 선택)',
+        description: '해당 자격증 준비에 도움이 되는 영상에 체크하세요.',
+        'data-part': 'fieldset',
+      },
+    } },
+    ...checkboxNodes('cert', certs, setCerts, { nca: 'NCA', ncp: 'NCP', nce: 'NCE' }),
 
     // tag inputs
-    tagsWrap: { id: 'tagsWrap', data: { type: 'Column', flow: 'form', label: '주요 키워드',
-      roledescription: 'fieldset' } },
-    tagsLegend: { id: 'tagsLegend', data: { type: 'Text', variant: 'strong', content: '주요 키워드' } },
+    tagsSet: { id: 'tagsSet', data: {
+      type: 'Ui', component: 'Fieldset',
+      props: { legend: '주요 키워드', description: 'Enter로 태그 추가', 'data-part': 'fieldset' },
+    } },
     tagsList: { id: 'tagsList', data: { type: 'Row', flow: 'cluster', label: '키워드 태그' } },
     ...tagChipNodes('tag', tags, (t) => removeTag(tags, setTags, t)),
     tagInputEl: { id: 'tagInputEl', data: {
@@ -94,11 +146,11 @@ export function VideoEdit() {
         'aria-label': '새 키워드 태그',
       },
     } },
-    tagsHint: { id: 'tagsHint', data: { type: 'Text', variant: 'small', content: 'Enter로 태그 추가' } },
 
-    servicesWrap: { id: 'servicesWrap', data: { type: 'Column', flow: 'form', label: '다루는 서비스',
-      roledescription: 'fieldset' } },
-    servicesLegend: { id: 'servicesLegend', data: { type: 'Text', variant: 'strong', content: '다루는 서비스' } },
+    servicesSet: { id: 'servicesSet', data: {
+      type: 'Ui', component: 'Fieldset',
+      props: { legend: '다루는 서비스', 'data-part': 'fieldset' },
+    } },
     servicesList: { id: 'servicesList', data: { type: 'Row', flow: 'cluster', label: '서비스 태그' } },
     ...tagChipNodes('svc', services, (t) => removeTag(services, setServices, t)),
 
@@ -109,28 +161,34 @@ export function VideoEdit() {
 
     // media
     secMedia: { id: 'secMedia', data: { type: 'Section', heading: { content: '미디어 및 첨부파일' } } },
-    thumbLabel: { id: 'thumbLabel', data: { type: 'Text', variant: 'strong', content: '썸네일 이미지' } },
-    thumbFile: { id: 'thumbFile', data: {
-      type: 'Ui', component: 'Input',
-      props: { type: 'file', accept: 'image/*', 'aria-label': '썸네일 이미지' },
-    } },
-    thumbNote: { id: 'thumbNote', data: { type: 'Text', variant: 'small', content: 'JPG, PNG · 권장 1280×720px' } },
-    docsLabel: { id: 'docsLabel', data: { type: 'Text', variant: 'strong', content: '관련 문서' } },
-    docsFile: { id: 'docsFile', data: {
-      type: 'Ui', component: 'Input',
-      props: { type: 'file', multiple: true, 'aria-label': '관련 문서' },
-    } },
-    docsNote: { id: 'docsNote', data: { type: 'Text', variant: 'small', content: 'PDF, PPT, ZIP — 복수 업로드 가능' } },
 
-    urlWrap: { id: 'urlWrap', data: { type: 'Column', flow: 'form', label: '관련 URL',
-      roledescription: 'fieldset' } },
-    urlLegend: { id: 'urlLegend', data: { type: 'Text', variant: 'strong', content: '관련 URL' } },
+    thumbField: { id: 'thumbField', data: { type: 'Ui', component: 'Field', props: { required: false } } },
+    thumbLabel: { id: 'thumbLabel', data: { type: 'Ui', component: 'FieldLabel', content: '썸네일 이미지' } },
+    thumbFile: { id: 'thumbFile', data: {
+      type: 'Ui', component: 'FileInput',
+      props: { accept: 'image/*', buttonLabel: '이미지 선택', 'aria-label': '썸네일 이미지' },
+    } },
+    thumbNote: { id: 'thumbNote', data: { type: 'Ui', component: 'FieldDescription', content: 'JPG, PNG · 권장 1280×720px' } },
+
+    docsField: { id: 'docsField', data: { type: 'Ui', component: 'Field', props: { required: false } } },
+    docsLabel: { id: 'docsLabel', data: { type: 'Ui', component: 'FieldLabel', content: '관련 문서' } },
+    docsFile: { id: 'docsFile', data: {
+      type: 'Ui', component: 'FileInput',
+      props: { multiple: true, buttonLabel: '문서 선택', 'aria-label': '관련 문서' },
+    } },
+    docsNote: { id: 'docsNote', data: { type: 'Ui', component: 'FieldDescription', content: 'PDF, PPT, ZIP — 복수 업로드 가능' } },
+
+    urlSet: { id: 'urlSet', data: {
+      type: 'Ui', component: 'Fieldset',
+      props: { legend: '관련 URL', 'data-part': 'fieldset' },
+    } },
+    urlRow: { id: 'urlRow', data: { type: 'Row', flow: 'cluster' } },
     urlName: { id: 'urlName', data: {
-      type: 'Ui', component: 'Input',
+      type: 'Ui', component: 'Input', grow: true,
       props: { placeholder: 'NCP 공식 가이드', 'aria-label': '표시 이름' },
     } },
     urlAddr: { id: 'urlAddr', data: {
-      type: 'Ui', component: 'Input',
+      type: 'Ui', component: 'Input', grow: true,
       props: { placeholder: 'https://...', 'aria-label': '주소' },
     } },
     urlAdd: { id: 'urlAdd', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '추가' } },
@@ -154,7 +212,7 @@ export function VideoEdit() {
     schedBtn: { id: 'schedBtn', data: { type: 'Ui', component: 'Button', content: '예약 설정' } },
 
     secVis: { id: 'secVis', data: { type: 'Section', heading: { variant: 'h3', content: '노출 설정' } } },
-    ...visibilityRows(visible, setVisible),
+    ...switchNodes(visible, setVisible),
 
     secDanger: { id: 'secDanger', data: { type: 'Section', heading: { variant: 'h3', content: '위험 영역' }, roledescription: 'danger' } },
     delBtn: { id: 'delBtn', data: { type: 'Ui', component: 'Button', props: { variant: 'destructive' }, content: '이 영상 삭제' } },
@@ -170,36 +228,34 @@ export function VideoEdit() {
     secUpload: ['uploadFile', 'uploadNote', 'uploadProgress'],
     secBasic: [
       'f-title', 'f-level', 'f-duration',
-      'rolesWrap', 'certsWrap', 'tagsWrap', 'servicesWrap', 'f-desc',
+      'rolesSet', 'certsSet', 'tagsSet', 'servicesSet', 'f-desc',
     ],
     'f-title':    ['fl-title', 'fc-title'],
     'f-level':    ['fl-level', 'fc-level'],
     'f-duration': ['fl-duration', 'fc-duration', 'fd-duration'],
     'f-desc':     ['fl-desc', 'fc-desc'],
 
-    rolesWrap: ['rolesLegend', ...Object.keys(roles).map((k) => `role-row-${k}`)],
-    ...checkboxRels('role', roles),
+    rolesSet: Object.keys(roles).map((k) => `role-cb-${k}`),
+    certsSet: Object.keys(certs).map((k) => `cert-cb-${k}`),
 
-    certsWrap: ['certsLegend', ...Object.keys(certs).map((k) => `cert-row-${k}`), 'certsNote'],
-    ...checkboxRels('cert', certs),
-
-    tagsWrap: ['tagsLegend', 'tagsList', 'tagInputEl', 'tagsHint'],
+    tagsSet:  ['tagsList', 'tagInputEl'],
     tagsList: tags.map((t) => `tag-chip-${t}`),
     ...tagChipRels(),
 
-    servicesWrap: ['servicesLegend', 'servicesList'],
+    servicesSet:  ['servicesList'],
     servicesList: services.map((t) => `svc-chip-${t}`),
-    ...tagChipRels(),
 
-    secMedia: ['thumbLabel','thumbFile','thumbNote','docsLabel','docsFile','docsNote','urlWrap'],
-    urlWrap: ['urlLegend','urlName','urlAddr','urlAdd'],
+    secMedia: ['thumbField', 'docsField', 'urlSet'],
+    thumbField: ['thumbLabel', 'thumbFile', 'thumbNote'],
+    docsField:  ['docsLabel',  'docsFile',  'docsNote'],
+    urlSet:  ['urlRow'],
+    urlRow:  ['urlName', 'urlAddr', 'urlAdd'],
 
     aside: ['secPublish','secSchedule','secVis','secDanger'],
     secPublish: ['publishBtns'],
     publishBtns: ['publishNow','saveDraft'],
     secSchedule: ['schedDate','schedTime','schedBtn'],
-    secVis: ['vis-row-online','vis-row-roleMain','vis-row-certMain'],
-    ...visibilityRels(visible),
+    secVis: Object.keys(visible).map((k) => `vis-sw-${k}`),
     secDanger: ['delBtn','delNote'],
   }
 

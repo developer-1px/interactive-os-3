@@ -30,35 +30,35 @@ type Recipe<P extends string> = (
 
 | Recipe | W3C APG | 시그니처 | 옵션 | axis 묶음 | items 필드 | 우리 composite |
 |---|---|---|---|---|---|---|
-| `listbox` | [`/listbox/`](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) | `(data, onEvent, opts?) → { rootProps, optionProps, items }` | `selectionFollowsFocus?: boolean` (default `true`), `multiSelectable?: boolean`, `autoFocus?: boolean` | `navigate('vertical') + activate + typeahead` (+ `selectionFollowsFocus` gesture) | `id, label, selected, disabled, posinset, setsize` | `Listbox` |
-| `tabs` | [`/tabs/`](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) | `(data, onEvent, opts?) → { rootProps, tabProps, panelProps, items }` | `orientation?: 'h'\|'v'`, `activationMode?: 'auto'\|'manual'` (default `'auto'`), `autoFocus?: boolean` | `navigate(orientation) + activate` (+ `selectionFollowsFocus` if `auto`) | `id, label, selected, disabled, posinset, setsize` | `Tabs` |
-| `tree` | [`/treeview/`](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `selectionMode?: 'none'\|'single'\|'multiple'`, `autoFocus?: boolean` | `treeNavigate + treeExpand + activate + typeahead` | `id, label, selected, disabled, expanded, level, posinset, setsize, hasChildren` | `Tree` |
-| `radioGroup` | [`/radio/`](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) | `(data, onEvent, opts?) → { rootProps, radioProps, items }` | `orientation?: 'h'\|'v'` (시각만, 키보드는 양축), `autoFocus?: boolean` | `navigate('vertical') + navigate('horizontal') + activate` + `selectionFollowsFocus`(강제) | `id, label, selected, disabled, posinset, setsize` | `RadioGroup` |
-| `toolbar` | [`/toolbar/`](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `orientation?: 'h'\|'v'`, `autoFocus?: boolean` | `navigate(orientation)` | `id, label, disabled, separator?` | `Toolbar` |
+| `useListboxPattern` | [`/listbox/`](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) | `(data, onEvent, opts?) → { rootProps, optionProps, items }` | `selectionFollowsFocus?: boolean` (default `true`), `multiSelectable?: boolean`, `autoFocus?: boolean` | `navigate('vertical') + activate + typeahead` (+ `selectionFollowsFocus` gesture) | `id, label, selected, disabled, posinset, setsize` | `Listbox` |
+| `useTabsPattern` | [`/tabs/`](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) | `(data, onEvent, opts?) → { rootProps, tabProps, panelProps, items }` | `orientation?: 'h'\|'v'`, `activationMode?: 'auto'\|'manual'` (default `'auto'`), `autoFocus?: boolean` | `navigate(orientation) + activate` (+ `selectionFollowsFocus` if `auto`) | `id, label, selected, disabled, posinset, setsize` | `Tabs` |
+| `useTreePattern` | [`/treeview/`](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `selectionMode?: 'none'\|'single'\|'multiple'`, `autoFocus?: boolean` | `treeNavigate + treeExpand + activate + typeahead` | `id, label, selected, disabled, expanded, level, posinset, setsize, hasChildren` | `Tree` |
+| `useRadioGroupPattern` | [`/radio/`](https://www.w3.org/WAI/ARIA/apg/patterns/radio/) | `(data, onEvent, opts?) → { rootProps, radioProps, items }` | `orientation?: 'h'\|'v'` (시각만, 키보드는 양축), `autoFocus?: boolean` | `navigate('vertical') + navigate('horizontal') + activate` + `selectionFollowsFocus`(강제) | `id, label, selected, disabled, posinset, setsize` | `RadioGroup` |
+| `useToolbarPattern` | [`/toolbar/`](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `orientation?: 'h'\|'v'`, `autoFocus?: boolean` | `navigate(orientation)` | `id, label, disabled, separator?` | `Toolbar` |
 
 ### P2 — 패턴 확장 (재료 일부 부족, 신규 axis/모드 동반)
 
 | Recipe | W3C APG | 시그니처 | 옵션 | axis 묶음 | 신규 필요 |
 |---|---|---|---|---|---|
-| `menu` | [`/menu/`](https://www.w3.org/WAI/ARIA/apg/patterns/menu/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `closeOnSelect?: boolean` (default `true`) | `navigate('vertical') + activate + typeahead` | submenu open state if nested |
-| `menubar` | [`/menubar/`](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) | `(data, onEvent, opts?) → { rootProps, menuProps, itemProps, items }` | `orientation?: 'h'\|'v'` (default `'h'`) | `navigate('horizontal')` 상위 + `navigate('vertical') + activate` 하위 | submenu cross-axis |
-| `combobox` | [`/combobox/`](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) | `(data, onEvent, opts?) → { inputProps, popoverProps, listProps, optionProps, items }` | `autocomplete?: 'none'\|'list'\|'both'`, `activeDescendant?: boolean` (default `true` per APG) | input은 `role="combobox"` + `aria-activedescendant`; popup은 `navigate('vertical')` | **`useActiveDescendant` hook 신규** (INVARIANT B11 "Combobox 1곳 예외" 코드화) |
-| `treeGrid` | [`/treegrid/`](https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/) | `(data, onEvent, opts?) → { rootProps, rowProps, cellProps, items }` | `selectionMode?` | grid axis (`useSpatialNavigation` 합성 또는 row+cell 2축) + `treeExpand` | grid 2-axis composition pattern |
-| `disclosure` | [`/disclosure/`](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) | `(opts) → { triggerProps, panelProps }` (data 단일 boolean) | `defaultOpen?`, `open?`, `onOpenChange?` | `activate` | uncontrolled state via `useControlState` |
-| `accordion` | [`/accordion/`](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) | `(data, onEvent, opts?) → { rootProps, headerProps, triggerProps, panelProps, items }` | `type?: 'single'\|'multiple'`, `collapsible?: boolean` | `expand + activate + navigate('vertical')` | 다중 expand 데이터 모델 |
-| `slider` | [`/slider/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider/) · [`/slider-multithumb/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) | `(data, onEvent, opts?) → { rootProps, trackProps, rangeProps, thumbProps }` | `min`, `max`, `step`, `orientation?` | `navigate(orientation) + numeric step axis` | **`numericStep` axis 신규** + pointer capture |
-| `splitter` | [`Window Splitter`](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) | `(data, onEvent, opts?) → { rootProps, paneProps, handleProps }` | `orientation?`, `min`, `max` | `navigate(orientation) + numeric step axis` | slider와 axis 공유 |
-| `switch` | [WAI-ARIA `switch` role](https://www.w3.org/TR/wai-aria-1.2/#switch) | `(opts) → { switchProps }` (단일 boolean) | `defaultChecked?`, `checked?`, `onCheckedChange?` | `activate` | role=switch + aria-checked |
+| `useMenuPattern` | [`/menu/`](https://www.w3.org/WAI/ARIA/apg/patterns/menu/) | `(data, onEvent, opts?) → { rootProps, itemProps, items }` | `closeOnSelect?: boolean` (default `true`) | `navigate('vertical') + activate + typeahead` | submenu open state if nested |
+| `useMenubarPattern` | [`/menubar/`](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) | `(data, onEvent, opts?) → { rootProps, menuProps, itemProps, items }` | `orientation?: 'h'\|'v'` (default `'h'`) | `navigate('horizontal')` 상위 + `navigate('vertical') + activate` 하위 | submenu cross-axis |
+| `useComboboxPattern` | [`/combobox/`](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) | `(data, onEvent, opts?) → { inputProps, popoverProps, listProps, optionProps, items }` | `autocomplete?: 'none'\|'list'\|'both'`, `activeDescendant?: boolean` (default `true` per APG) | input은 `role="combobox"` + `aria-activedescendant`; popup은 `navigate('vertical')` | **`useActiveDescendant` hook 신규** (INVARIANT B11 "Combobox 1곳 예외" 코드화) |
+| `useTreeGridPattern` | [`/treegrid/`](https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/) | `(data, onEvent, opts?) → { rootProps, rowProps, cellProps, items }` | `selectionMode?` | grid axis (`useSpatialNavigation` 합성 또는 row+cell 2축) + `treeExpand` | grid 2-axis composition pattern |
+| `disclosurePattern` | [`/disclosure/`](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) | `(opts) → { triggerProps, panelProps }` (data 단일 boolean) | `defaultOpen?`, `open?`, `onOpenChange?` | `activate` | uncontrolled state via `useControlState` |
+| `useAccordionPattern` | [`/accordion/`](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) | `(data, onEvent, opts?) → { rootProps, headerProps, triggerProps, panelProps, items }` | `type?: 'single'\|'multiple'`, `collapsible?: boolean` | `expand + activate + navigate('vertical')` | 다중 expand 데이터 모델 |
+| `sliderPattern` | [`/slider/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider/) · [`/slider-multithumb/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) | `(data, onEvent, opts?) → { rootProps, trackProps, rangeProps, thumbProps }` | `min`, `max`, `step`, `orientation?` | `navigate(orientation) + numeric step axis` | **`numericStep` axis 신규** + pointer capture |
+| `splitterPattern` | [`Window Splitter`](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) | `(data, onEvent, opts?) → { rootProps, paneProps, handleProps }` | `orientation?`, `min`, `max` | `navigate(orientation) + numeric step axis` | slider와 axis 공유 |
+| `toggleSwitchPattern` | [WAI-ARIA `toggleSwitchPattern` role](https://www.w3.org/TR/wai-aria-1.2/#switch) | `(opts) → { switchProps }` (단일 boolean) | `defaultChecked?`, `checked?`, `onCheckedChange?` | `activate` | role=switch + aria-checked |
 
 ### P3 — 보조 패턴
 
 | Recipe | W3C 출처 | 비고 |
 |---|---|---|
-| `navigationList` | [HTML `<nav>` landmark](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element) + `aria-current="page"` | sidebar≠listbox 의미 분리. 키보드는 native Tab/Enter 디폴트, 옵션으로 spatial roving |
+| `navigationListPattern` | [HTML `<nav>` landmark](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element) + `aria-current="page"` | sidebar≠listbox 의미 분리. 키보드는 native Tab/Enter 디폴트, 옵션으로 spatial roving |
 | `link` | [HTML `<a>`](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element) | recipe 불필요? — native `<a>` 면 충분. 정렬 검토 후 결정 |
-| `dialog` | [`/dialog-modal/`](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | focus trap + Escape + return focus. 우리 INVARIANT 14 (focus ⊃ global) 와 결합 |
-| `tooltip` | [`/tooltip/`](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) | hover/focus delay state |
-| `alert` / `alertdialog` | [`/alertdialog/`](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) | dialog 변종 |
+| `useDialogPattern` | [`/dialog-modal/`](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | focus trap + Escape + return focus. 우리 INVARIANT 14 (focus ⊃ global) 와 결합 |
+| `useTooltipPattern` | [`/tooltip/`](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) | hover/focus delay state |
+| `alertPattern` / `alertdialogPattern` | [`/alertdialog/`](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) | dialog 변종 |
 
 ### 비-recipe (이미 primitive 로 충분)
 
@@ -92,30 +92,30 @@ type Recipe<P extends string> = (
 
 | VOC | recipe | 우선순위 |
 |---|---|---|
-| #1 Toolbar | `toolbar` (또는 native + `useSpatialNavigation`) | P1 ✅ 이미 1차 가능 |
-| #2 Listbox 정적 | `listbox` | P1 |
-| #3 Listbox styled | `listbox` (DS가 wrap) | P1 |
-| #4 Tabs | `tabs` (`activationMode`) | P1 |
-| #5 Menu Button | `menu` + `disclosure` + `dialog` 합성 | P2 |
-| #6 Menubar | `menubar` | P2 |
-| #7 Sidebar Navigation | `navigationList` + docs/lint | P3 |
-| #8 Combobox | `combobox` + `useActiveDescendant` | P2 (axis 갭 동반) |
-| #9 Tree | `tree` | P1 |
-| #10 TreeGrid | `treeGrid` | P2 |
+| #1 Toolbar | `useToolbarPattern` (또는 native + `useSpatialNavigation`) | P1 ✅ 이미 1차 가능 |
+| #2 Listbox 정적 | `useListboxPattern` | P1 |
+| #3 Listbox styled | `useListboxPattern` (DS가 wrap) | P1 |
+| #4 Tabs | `useTabsPattern` (`activationMode`) | P1 |
+| #5 Menu Button | `useMenuPattern` + `disclosurePattern` + `useDialogPattern` 합성 | P2 |
+| #6 Menubar | `useMenubarPattern` | P2 |
+| #7 Sidebar Navigation | `navigationListPattern` + docs/lint | P3 |
+| #8 Combobox | `useComboboxPattern` + `useActiveDescendant` | P2 (axis 갭 동반) |
+| #9 Tree | `useTreePattern` | P1 |
+| #10 TreeGrid | `useTreeGridPattern` | P2 |
 | #11 ZoomPan | non-recipe (primitive 유지) | docs 만 |
-| #12 Splitter | `splitter` + `numericStep` axis | P2 |
-| #13 Slider | `slider` + `numericStep` axis | P2 |
-| #14 Disclosure / Accordion | `disclosure` / `accordion` | P2 |
-| #15 Switch / RadioGroup | `switch` / `radioGroup` | P1 (radio) / P2 (switch) |
+| #12 Splitter | `splitterPattern` + `numericStep` axis | P2 |
+| #13 Slider | `sliderPattern` + `numericStep` axis | P2 |
+| #14 Disclosure / Accordion | `disclosurePattern` / `useAccordionPattern` | P2 |
+| #15 Switch / RadioGroup | `toggleSwitchPattern` / `useRadioGroupPattern` | P1 (radio) / P2 (switch) |
 | #16-19 만족 | — | — |
 | #20 DS authoring 가이드 | docs (이 문서가 시작점) | docs |
 
 ## 구현 순서
 
 1. **L0 코어 갭 보강** — `useActiveDescendant`, `multiSelect`, `numericStep`, `selectionFollowsFocus` symmetric. recipe 없이도 정체성 부합
-2. **P1 5개 recipe** — `listbox` `tabs` `tree` `radioGroup` `toolbar`. 우리 composite 5개 마이그레이션으로 dogfood
-3. **P2 9개 recipe** — `menu` `menubar` `combobox` `treeGrid` `disclosure` `accordion` `slider` `splitter` `switch`
-4. **P3 5개 recipe** — `navigationList` `dialog` `tooltip` `alert` `alertdialog`
+2. **P1 5개 recipe** — `useListboxPattern` `useTabsPattern` `useTreePattern` `useRadioGroupPattern` `useToolbarPattern`. 우리 composite 5개 마이그레이션으로 dogfood
+3. **P2 9개 recipe** — `useMenuPattern` `useMenubarPattern` `useComboboxPattern` `useTreeGridPattern` `disclosurePattern` `useAccordionPattern` `sliderPattern` `splitterPattern` `toggleSwitchPattern`
+4. **P3 5개 recipe** — `navigationListPattern` `useDialogPattern` `useTooltipPattern` `alertPattern` `alertdialogPattern`
 5. **외부 답변** — 거절 케이스(컴파운드 컴포넌트 요구) 정중 거절 + 로드맵 공지
 
 ## 정체성 invariant (각 recipe 가 자동 통과해야)
@@ -127,4 +127,4 @@ type Recipe<P extends string> = (
 - ✅ INVARIANTS B16 (activate 단발 emit) — recipe 는 결국 `onEvent` 한 채널
 - ✅ INVARIANTS C17 (출처 없으면 구현 없다) — recipe 의 모든 동작은 axis/gesture 파생, 새 어휘 0
 - ✅ 메모리 *Minimize choices for LLM* — `1 role = 1 recipe`
-- ✅ 메모리 *Vocabulary closed* — recipe 이름은 W3C APG `/patterns/` URL 자구 그대로
+- ✅ 메모리 *Vocabulary closed* — **subpath / 파일명**은 W3C APG `/patterns/` URL slug 그대로. **export 이름**은 React Rules of Hooks 준수 (hook 호출 내장 → `useXPattern`, pure → `xPattern`)

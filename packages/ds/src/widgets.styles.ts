@@ -20,6 +20,7 @@ import { cssSegmented } from './ui/3-composite/SegmentedControl.style'
 import { cssOrderableList } from './ui/3-composite/OrderableList.style'
 import { cssPagination } from './ui/7-landmark/Pagination.style'
 import { cssStepper } from './ui/8-field/Stepper.style'
+import { cssField } from './ui/8-field/Field.style'
 import { cssMenu } from './ui/3-composite/Menu.style'
 import { cssTabs } from './ui/3-composite/Tabs.style'
 import { cssTree } from './ui/3-composite/Tree.style'
@@ -57,7 +58,7 @@ export const widgets = () =>
     cssLegendDot(), cssSpinner(), cssTop10List(),
     /* data-card="*" 패턴은 src/index.ts 가 content layer 로 별도 등록. */
     // collection
-    cssListbox(), cssSegmented(), cssOrderableList(), cssPagination(), cssStepper(), cssMenu(), cssTabs(), cssTree(),
+    cssListbox(), cssSegmented(), cssOrderableList(), cssPagination(), cssStepper(), cssField(), cssMenu(), cssTabs(), cssTree(),
     // composite
     cssGrid(), cssToolbar(), cssSidebar(), cssSidebarFloating(),
     // layout

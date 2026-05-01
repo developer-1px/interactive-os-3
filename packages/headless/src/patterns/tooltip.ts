@@ -15,7 +15,7 @@ export interface TooltipOptions {
  *
  * hover/focus 로 열림, blur/Escape 로 닫힘. `aria-describedby` 로 trigger ↔ tip 연결.
  */
-export function tooltip(
+export function useTooltipPattern(
   triggerRef: RefObject<HTMLElement | null>,
   opts: TooltipOptions = {},
 ): {

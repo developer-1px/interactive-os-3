@@ -19,7 +19,7 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   outDir: 'dist',
-  splitting: false,
+  splitting: true,
   treeshake: true,
   external: ['react', 'react-dom'],
 })

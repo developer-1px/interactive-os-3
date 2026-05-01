@@ -23,7 +23,7 @@ const axis = composeAxes(navigate('vertical'), activate, typeahead)
  * 키보드: ArrowUp/Down · Home/End · Enter/Space · typeahead.
  * 선택: 기본 selection-follows-focus (Arrow 만으로 선택 이동).
  */
-export function listbox(
+export function useListboxPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: ListboxOptions = {},

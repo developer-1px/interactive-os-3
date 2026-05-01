@@ -16,7 +16,7 @@ export interface SliderOptions {
  *
  * pointer drag 는 소비자 책임 (ref + onPointerDown → value 계산 → onEvent 'value').
  */
-export function slider(
+export function sliderPattern(
   data: NormalizedData,
   thumbId: string,
   onEvent?: (e: UiEvent) => void,

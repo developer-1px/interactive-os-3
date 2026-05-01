@@ -21,7 +21,7 @@ export interface NavigationListOptions {
  * https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
  * https://www.w3.org/TR/wai-aria-1.2/#aria-current
  */
-export function navigationList(
+export function navigationListPattern(
   data: NormalizedData,
   _onEvent?: (e: UiEvent) => void,
   opts: NavigationListOptions = {},

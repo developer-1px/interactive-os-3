@@ -20,7 +20,7 @@ const axis = composeAxes(navigate('vertical'), navigate('horizontal'), activate)
  *
  * 항상 selection-follows-focus (APG 강제). single-select.
  */
-export function radioGroup(
+export function useRadioGroupPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
   opts: RadioGroupOptions = {},
