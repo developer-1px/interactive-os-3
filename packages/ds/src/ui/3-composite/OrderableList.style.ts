@@ -116,22 +116,6 @@ export const orderableListStyle = defineStyleContract('OrderableList', {
       box-shadow: inset 0 2px 0 0 ${accent()};
     }
 
-    @media (max-width: 720px) {
-      & > li {
-        grid-template-columns: ${control('h')} 3ch minmax(0, 1fr);
-        grid-template-areas:
-          "drag index primary"
-          "drag index secondary"
-          "drag index meta";
-      }
-      & > li > [data-slot="badge"] {
-        grid-area: primary;
-        justify-self: end;
-      }
-      & > li > [data-slot="meta"] {
-        justify-self: start;
-      }
-    }
   `,
 })
 

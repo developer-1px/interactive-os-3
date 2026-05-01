@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import {
   videos, roleCategories, certCategories,
@@ -63,14 +63,11 @@ export function VideoOrder() {
   // eslint-disable-next-line react-hooks/purity -- "isNew" 라벨링용 시각 — frame 단위 정확도 충분
   const now = Date.now()
   const order = current ? orders[current.id] ?? [] : []
-  const items = useMemo(
-    () => order.map((id) => videos.find((v) => v.id === id)).filter((v): v is VideoRow => Boolean(v)),
-    [order],
-  )
+  const items = order.map((id) => videos.find((v) => v.id === id)).filter((v): v is VideoRow => Boolean(v))
   const dirty = current
     ? (orders[current.id] ?? []).join('|') !== (baseline[current.id] ?? []).join('|')
     : false
-  const broken = useMemo(() => levelOrderBroken(items), [items])
+  const broken = levelOrderBroken(items)
 
   const onReorder = (fromId: string, toId: string) => {
     if (!current) return
@@ -118,7 +115,7 @@ export function VideoOrder() {
     } },
 
     ...(broken ? {
-      warn: { id: 'warn', data: { type: 'Text', variant: 'small', content: '⚠ 난이도가 거꾸로 정렬된 구간이 있어요. 드래그로 흐름을 맞춰주세요.' } },
+      warn: { id: 'warn', data: { type: 'Text', variant: 'small', content: '난이도가 거꾸로 정렬된 구간이 있어요. 드래그로 흐름을 맞춰주세요.' } },
     } : {}),
 
     list: { id: 'list', data: {
@@ -137,7 +134,7 @@ export function VideoOrder() {
     } },
     saveBtn: { id: 'saveBtn', data: {
       type: 'Ui', component: 'Button',
-      props: { onClick: save, disabled: !dirty },
+      props: { onClick: save, disabled: !dirty, variant: dirty ? 'primary' : undefined },
       content: '저장',
     } },
   }
@@ -183,7 +180,7 @@ function buildListData(items: VideoRow[], now: number): NormalizedData {
       id: v.id,
       data: {
         primary: v.title,
-        secondary: <>{v.duration} · {v.createdAt}</>,
+        secondary: `${v.duration} · ${v.createdAt}`,
         meta: (
           <>
             {v.status !== '게시 중' && <mark data-variant={STATUS_TONE[v.status]}>{v.status}</mark>}
