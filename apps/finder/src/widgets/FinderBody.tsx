@@ -44,7 +44,7 @@ export function FinderBody() {
       >
         <section data-part="pane" data-pane="sidebar">
           <header data-part="pane-toolbar">
-            <button type="button" aria-label="사이드바 접기" data-icon="sidebar" />
+            <button type="button" aria-label="사이드바 접기" data-icon="panel-left" />
           </header>
           <nav data-part="sidebar" aria-label="사이드바">
             <section aria-labelledby="sidebar-recent">

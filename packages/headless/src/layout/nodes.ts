@@ -13,9 +13,9 @@
  *   align?: 'start'|'center'|'end'|'stretch' → align-self via [data-ds-align]
  *
  * Container attrs mirror ds/css/layout.ts vocabulary:
- *   flow?:     'list'|'cluster'|'form'|'prose'|'split'
+ *   flow?:     'list'|'cluster'|'form'|'prose'|'split'|'wide'
  *   emphasis?: 'flat'|'raised'|'sunk'|'callout'
- *   cols?:     1|2|3|4|6|12  (Grid only)
+ *   cols?:     1|2|3|4|6|9|12  (Grid only)
  */
 import type { ReactNode } from 'react'
 
@@ -31,9 +31,9 @@ export type UiComponentName = Register extends { component: infer C extends stri
   ? C
   : string
 
-export type LayoutFlow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
+export type LayoutFlow = 'list' | 'cluster' | 'form' | 'prose' | 'split' | 'wide'
 export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'
-export type GridCols = 1 | 2 | 3 | 4 | 6 | 12
+export type GridCols = 1 | 2 | 3 | 4 | 6 | 9 | 12
 export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'muted' | 'small' | 'strong'
 export type Align = 'start' | 'center' | 'end' | 'stretch'
 
@@ -71,17 +71,22 @@ export interface CommonNodeData extends ItemPlacement {
 export interface RowNode extends CommonNodeData {
   type: 'Row'
   flow?: LayoutFlow
+  /** Canonical visual hierarchy token. */
+  emphasis?: Emphasis
+  /** Back-compat alias for older FlatLayout declarations. */
   variant?: Emphasis
 }
 export interface ColumnNode extends CommonNodeData {
   type: 'Column'
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
 }
 export interface GridNode extends CommonNodeData {
   type: 'Grid'
   cols?: GridCols
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
   /** Card 슬롯 row track owner — 자식 article[data-part="card"]가 subgrid로 상속받는다. */
   cardGrid?: boolean
@@ -102,24 +107,28 @@ export interface SplitNode extends CommonNodeData {
 export interface AsideNode extends CommonNodeData {
   type: 'Aside'
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
 }
 /** Page main landmark. Renders <main role=main>. 페이지당 1개. */
 export interface MainNode extends CommonNodeData {
   type: 'Main'
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
 }
 /** Navigation landmark. Renders <nav role=navigation>. */
 export interface NavNode extends CommonNodeData {
   type: 'Nav'
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
 }
 export interface SectionNode extends CommonNodeData {
   type: 'Section'
   heading?: { variant?: TextVariant; content: string }
   flow?: LayoutFlow
+  emphasis?: Emphasis
   variant?: Emphasis
 }
 export interface HeaderNode extends CommonNodeData {

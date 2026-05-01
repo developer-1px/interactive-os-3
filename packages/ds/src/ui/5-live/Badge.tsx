@@ -1,12 +1,16 @@
 import type { ComponentPropsWithoutRef } from 'react'
 import type { Tone } from '@p/headless/types'
 
-export type BadgeTone = Tone
+export type BadgeTone = Tone | 'neutral'
 
 type BadgeProps = ComponentPropsWithoutRef<'mark'> & {
-  variant?: Tone
+  variant?: BadgeTone
+  /** Legacy alias. Prefer variant. */
+  tone?: BadgeTone
 }
 
-export function Badge({ tone = 'neutral', ...rest }: BadgeProps) {
-  return <mark data-variant={tone} {...rest} />
+const toneAttr = (tone: BadgeTone | undefined) => tone === 'neutral' ? 'default' : tone
+
+export function Badge({ variant, tone, ...rest }: BadgeProps) {
+  return <mark data-variant={toneAttr(variant ?? tone ?? 'default')} {...rest} />
 }

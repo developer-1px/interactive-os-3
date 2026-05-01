@@ -3,8 +3,10 @@ import type { Tone } from '@p/headless/types'
 
 type LegendDotProps = ComponentPropsWithoutRef<'span'> & {
   variant?: Tone
+  /** Legacy alias. Prefer variant. */
+  tone?: Tone
 }
 
-export function LegendDot({ tone = 'neutral', ...rest }: LegendDotProps) {
-  return <span data-part="legend-dot" data-variant={tone} {...rest} />
+export function LegendDot({ variant, tone, ...rest }: LegendDotProps) {
+  return <span data-part="legend-dot" data-variant={variant ?? tone ?? 'default'} {...rest} />
 }

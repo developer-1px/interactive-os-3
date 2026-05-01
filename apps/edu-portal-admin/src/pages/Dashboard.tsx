@@ -1,7 +1,6 @@
-/* eslint-disable no-restricted-syntax -- TODO: entity content의 inline style을 ds Text 변형/widget으로 이전 */
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Renderer, definePage, ROOT, Badge, fromList, type NormalizedData } from '@p/ds'
+import { Renderer, definePage, ROOT, Badge, Button, Progress, Row, fromList, type NormalizedData } from '@p/ds'
 import { kpi, videos } from '../entities/data'
 import { PAGE_PATHS } from '../entities/data'
 
@@ -43,7 +42,7 @@ export function Dashboard() {
   const data: NormalizedData = {
     entities: {
       [ROOT]: { id: ROOT, data: {} },
-      page: { id: 'page', data: { type: 'Column', flow: 'form' } },
+      page: { id: 'page', data: { type: 'Column', flow: 'wide' } },
 
       /* ── 기간 필터 ─────────────────────────────────────────────── */
       filter: { id: 'filter', data: { type: 'Row', flow: 'cluster', label: '기간 필터' } },
@@ -86,7 +85,7 @@ export function Dashboard() {
       } },
 
       /* ── KPI (heading 없음 — 원본 충실) ───────────────────────── */
-      kpiGrid: { id: 'kpiGrid', data: { type: 'Grid', cols: 5, flow: 'form', label: '주요 지표' } },
+      kpiGrid: { id: 'kpiGrid', data: { type: 'Grid', cols: 6, flow: 'form', label: '주요 지표', cardGrid: true } },
       ...kpiNodes(),
 
       /* ── Charts row: 역할별 | 레벨별 (grid cols=2) ─────────── */
@@ -114,9 +113,8 @@ export function Dashboard() {
       } },
       dropHdr: { id: 'dropHdr', data: { type: 'Header', flow: 'split' } },
       dropTitleGroup: { id: 'dropTitleGroup', data: { type: 'Column', flow: 'list', grow: true } },
-      dropTitle: { id: 'dropTitle', data: { type: 'Text', variant: 'h2',
-        content: <>영상별 이탈율 <small style={{ fontSize: 'var(--ds-text-sm)', fontWeight: 400, opacity: .6 }}>— 50% 미만 시청 후 이탈</small></>,
-      } },
+      dropTitle: { id: 'dropTitle', data: { type: 'Text', variant: 'h2', content: '영상별 이탈율' } },
+      dropSub: { id: 'dropSub', data: { type: 'Text', variant: 'small', content: '50% 미만 시청 후 이탈' } },
       dropActions: { id: 'dropActions', data: { type: 'Row', flow: 'cluster' } },
       dropLegend: { id: 'dropLegend', data: { type: 'Row', flow: 'cluster' } },
       dropLegDanger:  { id: 'dropLegDanger',  data: { type: 'Ui', component: 'LegendDot', props: { variant: 'danger',  children: '≥40% 위험' } } },
@@ -133,7 +131,7 @@ export function Dashboard() {
           </>
         ),
       } },
-      dropTable: { id: 'dropTable', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '영상별 이탈율' } } },
+      dropTable: { id: 'dropTable', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '영상별 이탈율', 'data-density': 'compact' } } },
       dropHeadGroup: { id: 'dropHeadGroup', data: { type: 'Ui', component: 'RowGroup' } },
       dropHeadRow:   { id: 'dropHeadRow',   data: { type: 'Ui', component: 'DataGridRow' } },
       ...headerCellNodes('drop', ['영상 제목','레벨','수강 신청','이탈 수','이탈율','위험도','']),
@@ -152,7 +150,7 @@ export function Dashboard() {
       recentSeeAll: { id: 'recentSeeAll', data: {
         type: 'Ui', component: 'Button', props: { onClick: onSeeAll }, content: '전체 보기',
       } },
-      recentGrid: { id: 'recentGrid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '최근 등록 영상' } } },
+      recentGrid: { id: 'recentGrid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '최근 등록 영상', 'data-density': 'compact' } } },
       recentHeadGroup: { id: 'recentHeadGroup', data: { type: 'Ui', component: 'RowGroup' } },
       recentHeadRow:   { id: 'recentHeadRow',   data: { type: 'Ui', component: 'DataGridRow' } },
       ...headerCellNodes('recent', ['','영상 제목','레벨','역할','수강 신청','완료율','별점','상태','등록일']),
@@ -162,7 +160,7 @@ export function Dashboard() {
       /* ── Top10 grid-2 ─────────────────────────────────────── */
       topGrid: { id: 'topGrid', data: { type: 'Grid', cols: 2, flow: 'form' } },
       kwSec: { id: 'kwSec', data: {
-        type: 'Section', heading: { variant: 'h3', content: '🔍 검색키워드 Top 10' }, emphasis: 'raised',
+        type: 'Section', heading: { variant: 'h3', content: '검색키워드 Top 10' }, emphasis: 'raised',
       } },
       kwSub: { id: 'kwSub', data: { type: 'Text', variant: 'small', content: '이번 주 기준' } },
       kwList: { id: 'kwList', data: {
@@ -176,7 +174,7 @@ export function Dashboard() {
         },
       } },
       vidSec: { id: 'vidSec', data: {
-        type: 'Section', heading: { variant: 'h3', content: '▶ 가장 많이 재생된 영상 Top 10' }, emphasis: 'raised',
+        type: 'Section', heading: { variant: 'h3', content: '가장 많이 재생된 영상 Top 10' }, emphasis: 'raised',
       } },
       vidSub: { id: 'vidSub', data: { type: 'Text', variant: 'small', content: '이번 주 기준' } },
       vidList: { id: 'vidList', data: {
@@ -209,7 +207,7 @@ export function Dashboard() {
 
       dropSec: ['dropHdr', 'dropTable', 'dropFoot'],
       dropHdr: ['dropTitleGroup', 'dropActions'],
-      dropTitleGroup: ['dropTitle'],
+      dropTitleGroup: ['dropTitle', 'dropSub'],
       dropActions: ['dropLegend', 'dropSort'],
       dropLegend: ['dropLegDanger','dropLegWarning','dropLegSuccess'],
       dropTable: ['dropHeadGroup', 'dropBodyGroup'],
@@ -325,15 +323,15 @@ function videoRowNodes(prefix: string) {
     const statusTone = v.status === '게시 중' ? 'success' : v.status === '임시저장' ? 'default' : v.status === '예약' ? 'info' : 'default'
     const completionCell = v.completion == null
       ? '—'
-      : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <progress value={v.completion} max={100} style={{ inlineSize: 60 }} aria-label={`완료율 ${v.completion}%`} />
+      : <Row flow="cluster">
+          <Progress value={v.completion} max={100} aria-label={`완료율 ${v.completion}%`} />
           <small>{v.completion}%</small>
-        </span>
-    const roleChips = <span style={{ display: 'inline-flex', gap: 4, flexWrap: 'wrap' }}>
+        </Row>
+    const roleChips = <Row flow="cluster">
       {v.roles.map((r) => <Badge key={r} variant="default">{r}</Badge>)}
-    </span>
+    </Row>
     const cells: Array<[string, unknown]> = [
-      [`thumb`, <span aria-hidden="true" data-ds-thumb>🎬</span>],
+      [`thumb`, <span data-icon="video" aria-hidden="true" />],
       [`title`, <>{v.title}<br /><small>{v.duration} · {v.tags.join(', ')}</small></>],
       [`level`, <Badge variant={levelTone}>{v.level}</Badge>],
       [`roles`, roleChips],
@@ -370,10 +368,10 @@ function dropoutRowNodes(goEdit: (id: string) => void) {
       data: { type: 'Ui', component: 'DataGridRow' },
     }
     const levelTone = r.level === '초급' ? 'success' : r.level === '중급' ? 'warning' : 'danger'
-    const rateCell = <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-      <progress value={r.rate} max={100} style={{ inlineSize: 60 }} aria-label={`이탈율 ${r.rate}%`} />
+    const rateCell = <Row flow="cluster">
+      <Progress value={r.rate} max={100} aria-label={`이탈율 ${r.rate}%`} />
       <strong>{r.rate}%</strong>
-    </span>
+    </Row>
     const cells: Array<[string, unknown]> = [
       [`title`, r.title],
       [`level`, <Badge variant={levelTone}>{r.level}</Badge>],
@@ -381,7 +379,7 @@ function dropoutRowNodes(goEdit: (id: string) => void) {
       [`dropouts`, r.dropouts],
       [`rate`, rateCell],
       [`risk`, <Badge variant={r.risk}>{r.riskLabel}</Badge>],
-      [`action`, <button type="button" onClick={() => goEdit(r.id)}>수정</button>],
+      [`action`, <Button onClick={() => goEdit(r.id)}>수정</Button>],
     ]
     for (const [key, content] of cells) {
       out[`drop-c-${r.id}-${key}`] = {

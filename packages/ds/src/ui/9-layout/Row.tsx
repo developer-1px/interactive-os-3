@@ -6,6 +6,7 @@ export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'
 
 export type RowProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   flow?: Flow
+  emphasis?: Emphasis
   variant?: Emphasis
   children?: ReactNode
 }
@@ -15,12 +16,12 @@ export type RowProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
  * 스타일은 [data-ds="Row"] (구조적 식별자; className/variant class가 아님).
  * 접근성 그룹이 필요하면 Aside / MenuGroup / ListboxGroup 같은 의미 역할 컴포넌트를 쓴다.
  */
-export function Row({ flow, emphasis, children, ...rest }: RowProps) {
+export function Row({ flow, emphasis, variant, children, ...rest }: RowProps) {
   return (
     <div
       data-ds="Row"
       data-flow={flow}
-      data-variant={emphasis}
+      data-variant={emphasis ?? variant}
       {...rest}
     >
       {children}

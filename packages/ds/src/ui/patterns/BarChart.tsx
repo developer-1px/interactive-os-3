@@ -27,10 +27,12 @@ export function BarChart({ data, caption, ...rest }: CollectionProps<Extra>) {
           const pct = Math.max(0, Math.min(100, Number(d.pct) || 0))
           return (
             <div key={id} data-variant={d.variant ?? 'info'}>
-              <dt>{d.label}</dt>
+              <dt>
+                <span>{d.label}</span>
+                <span>{d.value}</span>
+              </dt>
               <dd>
                 <meter value={pct} min={0} max={100} />
-                <span>{d.value}</span>
               </dd>
             </div>
           )

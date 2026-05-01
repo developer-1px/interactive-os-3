@@ -87,5 +87,5 @@ export const sidebar: SidebarItem[] = [
   { id: 'packages',    label: 'packages',   path: '/packages',          icon: 'dir' },
   { id: 'ds',          label: 'ds',         path: '/packages/ds/src',   icon: 'palette' },
   { id: 'finder',      label: 'finder',     path: '/apps/finder/src',   icon: 'dirOpen' },
-  { id: 'screenshots', label: 'screenshots', path: '/docs/screenshots', icon: 'image' },
+  { id: 'screenshots', label: 'screenshots', path: '/docs/screenshots', icon: 'fileImage' },
 ]

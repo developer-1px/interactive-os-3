@@ -5,6 +5,7 @@ import type { Emphasis, Flow } from './Row'
 
 export type ColumnProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
   flow?: Flow
+  emphasis?: Emphasis
   variant?: Emphasis
   children?: ReactNode
 }
@@ -13,12 +14,12 @@ export type ColumnProps = Omit<ComponentPropsWithoutRef<'div'>, 'role'> & {
  * Vertical flex container. 순수 시각 primitive — 의미 role을 방출하지 않는다.
  * 스타일은 [data-ds="Column"]. 의미 그룹은 Aside / Section / MenuGroup 등을 사용.
  */
-export function Column({ flow, emphasis, children, ...rest }: ColumnProps) {
+export function Column({ flow, emphasis, variant, children, ...rest }: ColumnProps) {
   return (
     <div
       data-ds="Column"
       data-flow={flow}
-      data-variant={emphasis}
+      data-variant={emphasis ?? variant}
       {...rest}
     >
       {children}

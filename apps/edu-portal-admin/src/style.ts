@@ -31,8 +31,11 @@ export const eduPortalAdminCss = css`
     display: flex; gap: ${pad(2)};
   }
   section[data-part="content"] {
-    flex: 1; overflow: auto; padding: ${pad(6)};
-    display: flex; flex-direction: column; gap: ${pad(6)};
+    flex: 1; overflow: auto; padding: ${pad(4)};
+    display: flex; flex-direction: column; gap: ${pad(4)};
+  }
+  main[data-part="edu-portal-admin-app"] section[data-part="content"] > [data-page-root] {
+    padding: 0;
   }
 
   /* nav-toggle은 데스크톱에서 숨김 — admin/catalog 공통 */

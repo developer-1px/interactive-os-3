@@ -112,10 +112,10 @@ const buildFav = (pinned: string) =>
   })
 
 const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
-  { id: 'icons',   label: '아이콘',  icon: 'grid' },
+  { id: 'icons',   label: '아이콘',  icon: 'layout-grid' },
   { id: 'list',    label: '리스트',  icon: 'list' },
-  { id: 'columns', label: '컬럼',    icon: 'columns' },
-  { id: 'gallery', label: '갤러리',  icon: 'image' },
+  { id: 'columns', label: '컬럼',    icon: 'columns-3' },
+  { id: 'gallery', label: '갤러리',  icon: 'gallery-vertical' },
 ]
 
 const buildToolbar = (mode: ViewMode): NormalizedData => ({
@@ -195,4 +195,3 @@ function viewFn(s: FinderState, q: {
     preview: buildPreview(s.url, q.tree.data, q.text.data, q.image.data),
   }
 }
-

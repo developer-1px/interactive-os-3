@@ -63,6 +63,11 @@ import urlCalendar from 'lucide-static/icons/calendar.svg?url'
 import urlCalendarDays from 'lucide-static/icons/calendar-days.svg?url'
 import urlCalendarRange from 'lucide-static/icons/calendar-range.svg?url'
 import urlGripVertical from 'lucide-static/icons/grip-vertical.svg?url'
+import urlMenu from 'lucide-static/icons/menu.svg?url'
+import urlPanelLeft from 'lucide-static/icons/panel-left.svg?url'
+import urlChartColumn from 'lucide-static/icons/chart-column.svg?url'
+import urlAward from 'lucide-static/icons/award.svg?url'
+import urlArrowUpDown from 'lucide-static/icons/arrow-up-down.svg?url'
 import urlCode from 'lucide-static/icons/code.svg?url'
 import urlWrench from 'lucide-static/icons/wrench.svg?url'
 import urlShield from 'lucide-static/icons/shield.svg?url'
@@ -133,6 +138,11 @@ const urlByBasename: Record<string, string> = {
   'calendar-days': urlCalendarDays,
   'calendar-range': urlCalendarRange,
   'grip-vertical': urlGripVertical,
+  menu: urlMenu,
+  'panel-left': urlPanelLeft,
+  'chart-column': urlChartColumn,
+  award: urlAward,
+  'arrow-up-down': urlArrowUpDown,
   code: urlCode,
   wrench: urlWrench,
   shield: urlShield,
@@ -188,6 +198,7 @@ export const ICON_TOKENS = [
   'heart', 'message-circle', 'share', 'more',
   'calendar', 'calendar-days', 'calendar-range',
   'grip-vertical', 'chevron-left',
+  'menu', 'panel-left', 'chart-column', 'award', 'arrow-up-down',
   'code', 'wrench', 'shield', 'bot',
   'link', 'external-link', 'paperclip', 'git-commit',
 ] as const

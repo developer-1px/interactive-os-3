@@ -48,12 +48,12 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { id: 'dashboard',     label: '대시보드',      icon: 'chart',   section: '메인' },
+  { id: 'dashboard',     label: '대시보드',      icon: 'chart-column', section: '메인' },
   { id: 'video-list',    label: '영상 관리',     icon: 'video',   section: '콘텐츠', badge: 12 },
   { id: 'video-new',     label: '영상 등록',     icon: 'plus',    section: '콘텐츠' },
-  { id: 'role-category', label: '역할 카테고리', icon: 'folder',  section: '설정' },
-  { id: 'cert-category', label: '코스 카테고리', icon: 'medal',   section: '설정' },
-  { id: 'video-order',   label: '영상 순서 관리', icon: 'sort',   section: '설정' },
+  { id: 'role-category', label: '역할 카테고리', icon: 'dir',     section: '설정' },
+  { id: 'cert-category', label: '코스 카테고리', icon: 'award',   section: '설정' },
+  { id: 'video-order',   label: '영상 순서 관리', icon: 'arrow-up-down', section: '설정' },
 ]
 
 export interface VideoRow {
@@ -167,14 +167,14 @@ export function videoCountOf(c: { videoIds: string[] }): number {
 // 카테고리 → Badge tone 매핑. VideoList·VideoOrder 가 같은 출처를 공유한다.
 // 레벨은 난이도 척도 — "danger/success" 는 의미 오용이라 neutral 계열만 사용.
 // 상태는 실제 운영 의미(게시/예약/비공개)라 semantic tone 사용 OK.
-export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
+export type Tone = 'default' | 'info' | 'success' | 'warning' | 'danger'
 
 export const LEVEL_TONE: Record<VideoRow['level'], Tone> = {
-  '초급': 'neutral', '중급': 'neutral', '고급': 'info',
+  '초급': 'default', '중급': 'default', '고급': 'info',
 }
 
 export const STATUS_TONE: Record<VideoRow['status'], Tone> = {
-  '게시 중': 'success', '예약': 'info', '임시저장': 'neutral', '숨김': 'danger',
+  '게시 중': 'success', '예약': 'info', '임시저장': 'default', '숨김': 'danger',
 }
 
 // change 문자열에서 ↑/↓ 글리프 제거 — 방향 시각은 changeDir prop + StatCard가 lucide

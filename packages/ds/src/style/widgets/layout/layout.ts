@@ -30,30 +30,30 @@ export const cssLayout = () => css`
     display: grid;
     grid-template-columns: repeat(
       auto-fit,
-      minmax(max(var(--grid-min, 16rem), 100% / var(--grid-cols, 2) - 0.01px), 1fr)
+      minmax(max(var(--grid-min, 16rem), var(--grid-target, calc(100% / var(--grid-cols, 2)))), 1fr)
     );
     min-inline-size: 0;
   }
-  [data-ds="Grid"][data-cols="1"]  { --grid-cols: 1;  --grid-min: 100%;  }
-  [data-ds="Grid"][data-cols="2"]  { --grid-cols: 2;  --grid-min: 18rem; }
-  [data-ds="Grid"][data-cols="3"]  { --grid-cols: 3;  --grid-min: 14rem; }
-  [data-ds="Grid"][data-cols="4"]  { --grid-cols: 4;  --grid-min: 12rem; }
-  [data-ds="Grid"][data-cols="6"]  { --grid-cols: 6;  --grid-min: 8rem;  }
+  [data-ds="Grid"][data-cols="1"]  { --grid-cols: 1;  --grid-min: 100%; --grid-target: 100%; }
+  [data-ds="Grid"][data-cols="2"]  { --grid-cols: 2;  --grid-min: 18rem; --grid-target: calc((100% - var(--grid-gap, 0px)) / 2); }
+  [data-ds="Grid"][data-cols="3"]  { --grid-cols: 3;  --grid-min: 14rem; --grid-target: calc((100% - var(--grid-gap, 0px) - var(--grid-gap, 0px)) / 3); }
+  [data-ds="Grid"][data-cols="4"]  { --grid-cols: 4;  --grid-min: 12rem; --grid-target: calc((100% - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px)) / 4); }
+  [data-ds="Grid"][data-cols="6"]  { --grid-cols: 6;  --grid-min: 8rem;  --grid-target: calc((100% - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px)) / 6); }
   [data-ds="Grid"][data-cols="9"]  { --grid-cols: 9;  --grid-min: 6rem;
     /* token canvas — auto-fit reflow ❌, 9 칸 등간격 fixed. 카드 수가 적어도 한 칸씩만 채움. */
     grid-template-columns: repeat(9, 1fr);
   }
-  [data-ds="Grid"][data-cols="12"] { --grid-cols: 12; --grid-min: 4rem;  }
+  [data-ds="Grid"][data-cols="12"] { --grid-cols: 12; --grid-min: 4rem;  --grid-target: calc((100% - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px) - var(--grid-gap, 0px)) / 12); }
 
   /* ── flow — one enum chooses gap + alignment bundle ───
      data-flow는 Renderer가 Row/Column/Grid/Aside/Section/Header/Footer에만 주입한다. */
-  [data-flow="list"]    { gap: ${pad(1)}; align-items: stretch; }
-  [data-flow="cluster"] { gap: ${pad(2)}; align-items: center; flex-wrap: wrap; }
-  [data-flow="form"]    { gap: ${pad(3)}; align-items: stretch; }
-  [data-flow="prose"]   { gap: ${pad(4)}; align-items: stretch; }
-  [data-flow="split"]   { gap: ${pad(3)}; align-items: center; justify-content: space-between; }
+  [data-flow="list"]    { --grid-gap: ${pad(1)}; gap: var(--grid-gap); align-items: stretch; }
+  [data-flow="cluster"] { --grid-gap: ${pad(2)}; gap: var(--grid-gap); align-items: center; flex-wrap: wrap; }
+  [data-flow="form"]    { --grid-gap: ${pad(3)}; gap: var(--grid-gap); align-items: stretch; }
+  [data-flow="prose"]   { --grid-gap: ${pad(4)}; gap: var(--grid-gap); align-items: stretch; }
+  [data-flow="split"]   { --grid-gap: ${pad(3)}; gap: var(--grid-gap); align-items: center; justify-content: space-between; }
   /* wide — page-root 가로 폭 제약 없이 viewport 전부 사용. /tokens 같은 wide canvas 용. */
-  [data-flow="wide"]    { gap: ${pad(4)}; align-items: stretch; }
+  [data-flow="wide"]    { --grid-gap: ${pad(4)}; gap: var(--grid-gap); align-items: stretch; }
 
   /* ── emphasis — surface + radius + padding bundle ────── */
   [data-variant="flat"]    { padding: ${pad(2)}; }

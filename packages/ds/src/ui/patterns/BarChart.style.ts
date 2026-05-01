@@ -7,19 +7,32 @@ export const cssBarChart = () => css`
   }
   [data-part="bar-chart"] > dl {
     margin: 0;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    row-gap: ${pad(1)};
-    column-gap: ${pad(2)};
+    display: flex;
+    flex-direction: column;
+    gap: ${pad(1.25)};
   }
-  [data-part="bar-chart"] > dl > div { display: contents; }
+  [data-part="bar-chart"] > dl > div {
+    display: grid;
+    gap: ${pad(0.75)};
+  }
   [data-part="bar-chart"] dt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: ${pad(2)};
     font-size: ${font('sm')};
     color: ${text('subtle')};
   }
+  [data-part="bar-chart"] dt > span:last-child {
+    flex: none;
+    font-size: ${font('xs')};
+    font-variant-numeric: tabular-nums;
+    color: ${text('mute')};
+    min-inline-size: 3ch;
+    text-align: end;
+  }
   [data-part="bar-chart"] dd {
     margin: 0;
-    display: contents;
   }
   [data-part="bar-chart"] meter {
     appearance: none;
@@ -45,12 +58,6 @@ export const cssBarChart = () => css`
     transition: inline-size .3s ease;
   }
   [data-part="bar-chart"] meter::-moz-meter-bar { background: currentColor; }
-  [data-part="bar-chart"] dd > span {
-    font-size: ${font('xs')};
-    font-variant-numeric: tabular-nums;
-    color: ${text('mute')};
-    min-inline-size: 3ch; text-align: end;
-  }
   [data-part="bar-chart"] > dl > div[data-variant="info"]    { color: ${accent()}; }
   [data-part="bar-chart"] > dl > div[data-variant="success"] { color: ${status('success')}; }
   [data-part="bar-chart"] > dl > div[data-variant="warning"] { color: ${status('warning')}; }

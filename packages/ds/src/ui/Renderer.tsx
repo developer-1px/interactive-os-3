@@ -23,6 +23,7 @@ import { Split } from './9-layout/Split'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCmp = ComponentType<any>
+type EmphasisData = { emphasis?: string; variant?: string }
 
 /**
  * 라우트 로컬 Ui 레지스트리. ds 레이어가 src/routes 를 import 하지 못하므로
@@ -87,6 +88,8 @@ function NodeView({ page, id, pageRoot }: { page: NormalizedData; id: string; pa
   }
 }
 
+const emphasisOf = (d: EmphasisData) => d.emphasis ?? d.variant
+
 // ── containers ─────────────────────────────────────────────────────
 
 function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; d: RowNode; pageRoot?: boolean }) {
@@ -96,7 +99,7 @@ function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; 
     <div
       data-ds="Row"
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
@@ -117,7 +120,7 @@ function ColumnView({ page, id, d, pageRoot }: { page: NormalizedData; id: strin
     <div
       data-ds="Column"
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
       aria-label={d.label}
@@ -139,7 +142,7 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       data-ds="Grid"
       data-cols={d.cols}
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       data-card-grid={d.cardGrid ? '' : undefined}
       data-page-root={pageRoot ? '' : undefined}
       role={named ? 'group' : undefined}
@@ -183,7 +186,7 @@ function MainView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
   return (
     <main
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
@@ -201,7 +204,7 @@ function NavView({ page, id, d }: { page: NormalizedData; id: string; d: NavNode
   return (
     <nav
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
       data-part={d.roledescription}
@@ -218,7 +221,7 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
   return (
     <aside
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
       data-part={d.roledescription}
@@ -236,7 +239,7 @@ function SectionView({ page, id, d, pageRoot }: { page: NormalizedData; id: stri
   return (
     <section
       data-flow={d.flow}
-      data-variant={d.emphasis}
+      data-variant={emphasisOf(d)}
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label && !headingId ? d.label : undefined}
       aria-labelledby={d.labelledBy ?? headingId}
@@ -352,4 +355,3 @@ function Heading({
     default: return <h2 id={id}>{children}</h2>
   }
 }
-

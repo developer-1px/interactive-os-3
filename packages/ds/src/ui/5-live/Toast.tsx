@@ -77,8 +77,8 @@ export function ToastProvider({ children, defaultDuration = 5000, ...regionProps
 }
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
-  const { duration, tone = 'neutral', role } = toast
-  const ariaRole = role ?? (tone === 'danger' || tone === 'warning' ? 'alert' : 'status')
+  const { duration, variant = 'default', role } = toast
+  const ariaRole = role ?? (variant === 'danger' || variant === 'warning' ? 'alert' : 'status')
 
   useEffect(() => {
     if (!duration) return
@@ -87,7 +87,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
   }, [duration, onDismiss])
 
   return (
-    <li data-part="toast" data-variant={tone} role={ariaRole} aria-live={ariaRole === 'alert' ? 'assertive' : 'polite'}>
+    <li data-part="toast" data-variant={variant} role={ariaRole} aria-live={ariaRole === 'alert' ? 'assertive' : 'polite'}>
       <div data-slot="title">{toast.title}</div>
       {toast.description && <div data-slot="description">{toast.description}</div>}
       <button type="button" data-part="toast-dismiss" aria-label="Dismiss" onClick={onDismiss}>✕</button>
