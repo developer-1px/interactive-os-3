@@ -1,4 +1,4 @@
-import { css, text, typography } from '../tokens/semantic'
+import { border, css, hairlineWidth, surface, text, typography } from '../tokens/semantic'
 import { font, pad } from '../tokens/scalar'
 import { defineStyleContract } from '../style/contract'
 import { roleCardContract } from './RoleCard.contract'
@@ -79,6 +79,12 @@ export const roleCardStyle = defineStyleContract(roleCardContract.name, {
       align-items: center;
       gap: ${pad(1)};
       min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="title"] > header > mark {
+      flex: none;
+      background: ${surface('subtle')};
+      color: ${text('subtle')};
+      border: ${hairlineWidth()} solid ${border()};
     }
     &[data-part="card"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
       margin: 0;

@@ -1,4 +1,4 @@
-import { accent, css, currentTint, gradientDeep, on, radius, status, text, typography } from '../tokens/semantic'
+import { accent, border, css, currentTint, gradientDeep, hairlineWidth, on, radius, status, surface, text, typography } from '../tokens/semantic'
 import { font, weight, pad } from '../tokens/scalar'
 import { defineStyleContract } from '../style/contract'
 import { courseCardContract } from './CourseCard.contract'
@@ -71,6 +71,12 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       align-items: center;
       gap: ${pad(1)};
       min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="title"] > header > mark {
+      flex: none;
+      background: ${surface('subtle')};
+      color: ${text('subtle')};
+      border: ${hairlineWidth()} solid ${border()};
     }
     &[data-part="card"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
       margin: 0;

@@ -1,5 +1,6 @@
 import { accent, border, css, grouping, hairlineWidth, radius } from '../../../tokens/semantic'
 import { elev } from '../../../tokens/scalar'
+import { buttonStyle } from '../../../ui/1-command/Button.style'
 // 모바일 글래스 — iOS 26 Liquid Glass / Material 3 Expressive 트렌드 수렴.
 // hover:none + pointer:coarse 환경에서만 발동하여 데스크톱 외형 유지.
 //
@@ -11,7 +12,7 @@ import { elev } from '../../../tokens/scalar'
 // - 색은 그대로, 표면만 교체 (semantic 토큰 재사용)
 export const cssGlass = () => css`
   @media (hover: none) and (pointer: coarse) {
-    :where(button):not([data-variant="primary"]) {
+    :where(.${buttonStyle.classes.root}):not([data-variant="primary"]) {
       background: color-mix(in oklch, Canvas 70%, transparent);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
               backdrop-filter: blur(20px) saturate(180%);
