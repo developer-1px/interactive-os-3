@@ -41,7 +41,7 @@ const loadAppsLayer = async () => {
     { eduPortalAdminCss },
     { markdownCss },
     { slidesCss },
-    { inboxCss, chatCss, feedCss },
+    { inboxCss, chatCss, feedCss, genrePagesCss },
     { plugins },
     { composeRegistry },
   ] = await Promise.all([
@@ -62,7 +62,7 @@ const loadAppsLayer = async () => {
     void router.navigate({ to: '/finder/$', params: { _splat: splat } })
   })
   appsStyleEl.textContent = wrapAppsLayer([
-    inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, keyboardCss, markdownCss, slidesCss, inboxCss, chatCss, feedCss,
+    inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, keyboardCss, markdownCss, slidesCss, inboxCss, chatCss, feedCss, genrePagesCss,
   ])
 }
 

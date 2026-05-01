@@ -1,9 +1,9 @@
-import { css, hierarchy, radius, surface, text, typography } from '../../../tokens/semantic'
-import { weight, pad } from '../../../tokens/scalar'
+import { css, hierarchy, radius, surface, text, typography } from '@p/ds/tokens/semantic'
+import { weight, pad } from '@p/ds/tokens/scalar'
 
 // Chat / Board / Feed / Shop — *-page 패밀리 컨테이너 + side-collapse 패턴.
 // (개별 카드/버블 시각은 widgets/pattern/* owner. 여기는 page 컨테이너만.)
-export const cssPage = () => css`
+export const genrePagesCss = () => css`
   /* Chat 메시지 버블 — me/other 정렬은 messageBubble.ts owner. */
   [data-part="chat-page"] [data-variant="sunk"]:has([data-part^="message-"]) {
     gap: ${pad(1.5)};

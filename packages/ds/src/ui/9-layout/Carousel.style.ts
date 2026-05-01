@@ -1,8 +1,4 @@
-import { css, grouping, keyline, radius } from '../../../tokens/semantic'
-
-export const cssTabPanel = () => css`
-  :where([role="tabpanel"]) { padding: ${keyline.containerPad}; }
-`
+import { css, grouping, keyline, radius } from '../../tokens/semantic'
 
 export const cssCarousel = () => css`
   :where(section[data-part="carousel"]) {

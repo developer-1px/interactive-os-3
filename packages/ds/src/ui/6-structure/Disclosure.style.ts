@@ -1,6 +1,7 @@
-import { border, css, hairlineWidth, icon, radius } from '../../../tokens/semantic'
-import { font, weight, pad } from '../../../tokens/scalar'
-export const cssDetails = () => css`
+import { border, css, hairlineWidth, icon, radius } from '../../tokens/semantic'
+import { font, weight, pad } from '../../tokens/scalar'
+
+export const cssDisclosure = () => css`
   :where(details) {
     border: ${hairlineWidth()} solid ${border()};
     border-radius: ${radius('sm')};

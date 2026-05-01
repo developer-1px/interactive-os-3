@@ -4,6 +4,8 @@
 
 // ─── 1:1 co-located (ui sibling) ────────────────────────────────────────
 import { cssSwitch } from './ui/2-input/Switch.style'
+import { cssCheckbox } from './ui/2-input/Checkbox.style'
+import { cssRadio } from './ui/2-input/Radio.style'
 import { cssValue } from './ui/5-live/Progress.style'
 import { cssSlider } from './ui/2-input/Slider.style'
 import { cssButton } from './ui/1-command/Button.style'
@@ -28,35 +30,36 @@ import { cssSplit } from './ui/9-layout/Split.style'
 // ─── 잔존 (orphan / shared, 미공유 CSS) ───────────────────────────────────
 import { cssForm } from './style/widgets/control/form'
 import { cssItemRow } from './style/widgets/control/itemRow'
-import { cssToggle, cssAlert } from './style/widgets/control/toggle'
-import { cssDialog, cssTooltip } from './style/widgets/overlay/overlay'
-import { cssDetails } from './style/widgets/overlay/details'
+import { cssAlert } from './style/widgets/control/toggle'
+import { cssDialog } from './ui/4-window/Dialog.style'
+import { cssTooltip } from './ui/4-window/Tooltip.style'
+import { cssPopover } from './style/widgets/overlay/overlay'
+import { cssDisclosure } from './ui/6-structure/Disclosure.style'
 import { cssAccordion } from './ui/6-structure/Accordion.style'
 import { cssToast } from './ui/5-live/Toast.style'
 import { cssGlass } from './style/widgets/overlay/glass'
-import { cssTabPanel, cssCarousel } from './style/widgets/pattern/bar'
-import { cssHighlightMark } from './style/widgets/pattern/highlightMark'
-import { cssSidebar } from './style/widgets/composite/sidebar'
-import { cssSidebarFloating } from './style/widgets/composite/sidebarFloating'
-import { cssPage } from './style/widgets/composite/page'
+import { cssCarousel } from './ui/9-layout/Carousel.style'
+import { cssMark } from './ui/5-live/Mark.style'
+import { cssSidebar } from './shells/sidebar/sidebar.style'
+import { cssSidebarFloating } from './shells/sidebar/sidebarFloating.style'
 import { cssLayout } from './style/widgets/layout/layout'
 
 // 모든 css* 는 () => string lazy 통일.
 export const widgets = () =>
   [
     // control
-    cssSwitch(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssForm(), cssItemRow(), cssToggle(), cssAlert(),
+    cssSwitch(), cssCheckbox(), cssRadio(), cssValue(), cssSlider(), cssButton(), cssButtonGroup(), cssForm(), cssItemRow(), cssAlert(),
     // overlay
-    cssDialog(), cssTooltip(), cssDetails(), cssAccordion(), cssToast(), cssGlass(),
+    cssDialog(), cssTooltip(), cssPopover(), cssDisclosure(), cssAccordion(), cssToast(), cssGlass(),
     // pattern
-    cssFeed(), cssTabPanel(), cssCarousel(),
-    cssHighlightMark(), cssBarChart(),
+    cssFeed(), cssCarousel(),
+    cssMark(), cssBarChart(),
     cssLegendDot(), cssSpinner(), cssTop10List(),
     /* data-card="*" 패턴은 src/index.ts 가 content layer 로 별도 등록. */
     // collection
     cssListbox(), cssSegmented(), cssOrderableList(), cssPagination(), cssStepper(), cssMenu(), cssTabs(), cssTree(),
     // composite
-    cssGrid(), cssToolbar(), cssSidebar(), cssSidebarFloating(), cssPage(),
+    cssGrid(), cssToolbar(), cssSidebar(), cssSidebarFloating(),
     // layout
     cssLayout(), cssSplit(),
   ].join('\n')

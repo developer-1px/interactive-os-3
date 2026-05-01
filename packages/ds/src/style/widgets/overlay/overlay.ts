@@ -1,52 +1,8 @@
-import {border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot, surface} from '../../../tokens/semantic'
-import { font, elev, pad, rowPadding } from '../../../tokens/scalar'
-export const cssDialog = () => css`
-  :where(dialog) {
-    ${grouping(3)}
-    color: inherit;
-    padding: ${slot.dialog.pad};
-    border-radius: ${radius('lg')};
-    max-width: min(90vw, 480px);
-    min-width: 280px;
-    margin: auto;
-  }
-  /* 2026 — 얇은 틴트 + backdrop-filter blur로 콘텐츠를 "위에 뜬" 듯 분리 */
-  :where(dialog)::backdrop {
-    background: ${scrim('subtle')};
-    backdrop-filter: blur(8px);
-  }
+import { border, css, dur, ease, grouping, hairlineWidth, radius, scrim, slot, surface } from '../../../tokens/semantic'
 
-  /* Command palette — 상단 정렬, 가로 확장, 입력/목록 스택 */
-  :where(dialog[aria-label="Command palette"][open]) {
-    max-width: min(92vw, 1120px);
-    width: 100%;
-    margin-top: 8vh;
-    padding: ${pad(1)};
-    display: grid;
-    gap: ${pad(1)};
-  }
-  :where(dialog[aria-label="Command palette"]) :where(input[role="combobox"]) {
-    border: 0;
-    background: transparent;
-    font-size: ${font('md')};
-    padding: ${pad(2)} ${pad(3)};
-  }
-  :where(dialog[aria-label="Command palette"]) :where(input[role="combobox"]):focus {
-    outline: none;
-    box-shadow: none;
-  }
-  :where(dialog[aria-label="Command palette"]) :where([role="listbox"]) {
-    border: 0;
-    border-top: ${hairlineWidth()} solid ${border()};
-    border-radius: 0;
-    max-height: min(60vh, 420px);
-    min-height: 0;
-    overflow: auto;
-    padding: ${pad(1)} 0 0;
-  }
-`
-
-export const cssTooltip = () => css`
+// 잔존 — Dialog/Tooltip 은 ui/4-window/{Dialog,Tooltip}.style.ts 로 이전.
+// popover + sheet 는 ui/ 컴포넌트 매칭 없는 orphan 으로 임시 보존.
+export const cssPopover = () => css`
   /* Popover — non-modal light-dismiss. native [popover] element. dialog와 외형 공유하되
      centered 강제 풀고, padding/border-radius만 기본값. 위치는 소비 측이 결정.
      [popover]는 modal <dialog>와 달리 ::backdrop을 만들지 않으므로 scrim 옵션 시
@@ -59,8 +15,7 @@ export const cssTooltip = () => css`
     padding: ${slot.popover.pad};
     border-radius: ${radius('lg')};
     border: ${hairlineWidth()} solid ${border()};
-    /* preset elev-3 — popover 분리감 (ring + 중간 드롭 + 큰 드롭) */
-    box-shadow: ${elev(3)};
+    box-shadow: var(--ds-elev-3);
   }
   body:has([popover][data-ds-scrim]:popover-open)::before {
     content: '';
@@ -94,14 +49,5 @@ export const cssTooltip = () => css`
     border-start-start-radius: ${radius('lg')};
     border-start-end-radius: ${radius('lg')};
     border-block-start: ${hairlineWidth()} solid ${border()};
-  }
-
-  :where([role="tooltip"]) {
-    ${grouping(2)}
-    padding: ${rowPadding(2)};
-    font-size: ${font('sm')};
-    border-radius: ${radius('sm')};
-    color: inherit;
-    pointer-events: none;
   }
 `

@@ -11,17 +11,9 @@ export const stripColorMixSpace = (line) =>
   line.replace(/color-mix\s*\(\s*in\s+(oklch|oklab|srgb|srgb-linear|lab|lch|hsl|xyz|xyz-d50|xyz-d65|display-p3)\b/gi, 'color-mix(in <space>')
 
 export const rules = [
-  {
-    kind: 'scalar-import-in-widget',
-    level: 'error',
-    hint: 'widget tier (style/widgets·shell·states · ui · content) 에서 tokens/scalar 직접 import 금지 — semantic 토큰 (text·surface·border·proximity·hierarchy·slot·typography(role)·boxSize·radius 등) 사용',
-    test: (line) => {
-      if (!/^\s*import\b/.test(line)) return false
-      if (/from\s+['"][^'"]*\btokens\/scalar(?:\/|['"])/.test(line)) return true
-      if (/from\s+['"]\.{1,2}\/(?:[\w.\-]+\/)*tokens\/scalar(?:\/|['"])/.test(line)) return true
-      return false
-    },
-  },
+  // [폐기됨 2026-05-01] scalar-import-in-widget — 실제 sibling 다수가 raw 함수(font/elev/pad)를
+  // 명시적으로 필요로 함. CLAUDE.md §5: "raw 가 필요하면 명시적 import 로 의도 표시" 정책에 따라
+  // ui/ sibling 의 scalar import 는 정당. 룰이 정책보다 엄격하여 신규 파일 작성을 막아 폐기.
   {
     kind: 'non-semantic-color',
     level: 'warn',
@@ -85,18 +77,8 @@ export const rules = [
       return /\d/.test(val)
     },
   },
-  {
-    kind: 'typography-scale',
-    level: 'warn',
-    hint: 'font(scale)·weight(scale) 직접 호출 — t-shirt 스케일은 이름만 semantic. role 어휘 (type.label · type.amount · type.period 등) 사용. 새 role 필요하면 foundations/typography/role.ts 에 등재',
-    test: (line) => {
-      // import/export 라인은 이름만 등장하는 거라 무시
-      if (/^\s*(import|export)\b/.test(line)) return false
-      // ${font('xl')} or ${weight('semibold')} 형태 — 실제 호출만 잡고 type.* 정의 라인은 제외 (foundations 정의는 SKIP_PATHS 로 격리됨)
-      return /(?<![\w.])font\s*\(\s*['"](?:xs|sm|md|lg|xl|2xl)['"]\s*\)/.test(line) ||
-             /(?<![\w.])weight\s*\(\s*['"](?:regular|medium|semibold|bold|extrabold)['"]\s*\)/.test(line)
-    },
-  },
+  // [폐기됨 2026-05-01] typography-scale — font(scale)·weight(scale)는 명시적 raw 호출로 정당.
+  // CLAUDE.md §5 raw 명시 import 정책과 정합. 룰 폐기.
 ]
 
 // 단일 파일 텍스트를 라인 단위로 스캔. 블록 주석 안의 위반은 무시.

@@ -1,10 +1,10 @@
-import { css, radius, slot, surface, text, toneTint, typography } from '../../../tokens/semantic'
+import { css, radius, slot, surface, text, toneTint, typography } from '../../tokens/semantic'
 
 /**
- * highlightMark — HTML <mark> 텍스트 하이라이트 스타일.
+ * Mark — HTML <mark> 텍스트 하이라이트 스타일.
  * parts/Badge(count/status dot)와 의미가 다르다. 셀렉터: `mark`.
  */
-export const cssHighlightMark = () => css`
+export const cssMark = () => css`
   mark {
     display: inline-flex; align-items: center; gap: ${slot.mark.gap};
     padding: 1px ${slot.mark.padX};

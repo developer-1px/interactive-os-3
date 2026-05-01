@@ -1,4 +1,4 @@
-import { accent, border, css, dur, ease, hairlineWidth, radius, ring, text } from '../../tokens/semantic'
+import { accent, border, css, dur, ease, hairlineWidth, keyline, radius, ring, text } from '../../tokens/semantic'
 import { pad } from '../../tokens/scalar'
 /**
  * Tabs — 보편적 탭 어포던스.
@@ -74,8 +74,8 @@ export const cssTabs = () => css`
   }
 
   /* --- tabpanel --- */
-  [role="tabpanel"] {
-    padding: ${pad(3)} 0;
+  :where([role="tabpanel"]) {
+    padding: ${keyline.containerPad};
   }
   [role="tabpanel"]:focus-visible {
     ${ring()}
