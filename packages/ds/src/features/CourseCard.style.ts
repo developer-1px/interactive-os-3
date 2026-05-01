@@ -1,73 +1,107 @@
 import { accent, css, currentTint, gradientDeep, on, radius, status, text, typography } from '../tokens/semantic'
 import { font, weight, pad } from '../tokens/scalar'
+import { defineStyleContract } from '../style/contract'
+import { courseCardContract } from './CourseCard.contract'
 
 /**
- * CourseCard slot inner styling — Card primitive 슬롯 안의 코스 특화 시각.
- * 카드 root layout(flex stack/border)은 parts/card.ts owner.
+ * CourseCard generated class contract.
+ *
+ * root class가 component boundary를 소유하고, tag/slot selector는 그 아래에서만
+ * anatomy를 고른다. 전역 `article[data-card="course"]` selector는 쓰지 않는다.
  */
-export const cssCourseCard = () => css`
-  /* preview 슬롯 — abbr 그라데이션 배지 (작은 정사각). 일반 preview override. */
-  article[data-part="card"][data-card="course"] > [data-slot="preview"] {
-    min-block-size: 0;
-    inline-size: 56px; block-size: 56px;
-    padding: 0;
-    border: 0;
-    border-radius: ${radius('md')};
-    align-self: start;
-  }
-  article[data-part="card"][data-card="course"] > [data-slot="preview"] > figure {
-    margin: 0;
-    inline-size: 100%; block-size: 100%;
-    border-radius: ${radius('md')};
-    display: grid; place-items: center;
-    font-size: ${font('sm')};
-    font-weight: ${weight('extrabold')};
-    letter-spacing: -0.02em;
-    color: ${on('accent')};
-    background: linear-gradient(135deg, ${accent()}, ${gradientDeep(accent())});
-  }
-  article[data-part="card"][data-card="course"][data-variant="success"] > [data-slot="preview"] > figure {
-    color: ${on('success')};
-    background: linear-gradient(135deg, ${status('success')}, ${gradientDeep(status('success'))});
-  }
-  article[data-part="card"][data-card="course"][data-variant="warning"] > [data-slot="preview"] > figure {
-    color: ${on('warning')};
-    background: linear-gradient(135deg, ${status('warning')}, ${gradientDeep(status('warning'))});
-  }
-  article[data-part="card"][data-card="course"][data-variant="danger"] > [data-slot="preview"] > figure {
-    color: ${on('danger')};
-    background: linear-gradient(135deg, ${status('danger')}, ${gradientDeep(status('danger'))});
-  }
-  article[data-part="card"][data-card="course"][data-variant="default"] > [data-slot="preview"] > figure {
-    background: linear-gradient(135deg, ${currentTint('strong')}, ${currentTint('deep')});
-  }
+export const courseCardStyle = defineStyleContract(courseCardContract.name, {
+  root: css`
+    &[data-part="card"] {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: ${pad(2)};
+      row-gap: ${pad(1)};
+    }
 
-  /* title 슬롯 — h3 + meta 가로 묶음 */
-  article[data-part="card"][data-card="course"] > [data-slot="title"] > header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: ${pad(2)};
-  }
-  article[data-part="card"][data-card="course"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
-    margin: 0;
-    ${typography('bodyStrong')}
-    letter-spacing: -0.01em;
-  }
+    &[data-part="card"] > [data-slot="preview"] {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      min-block-size: 0;
+      inline-size: 56px;
+      block-size: 56px;
+      padding: 0;
+      border: 0;
+      border-radius: ${radius('md')};
+      align-self: start;
+    }
+    &[data-part="card"] > [data-slot="title"],
+    &[data-part="card"] > [data-slot="body"],
+    &[data-part="card"] > [data-slot="footer"] {
+      grid-column: 2;
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="preview"] > figure {
+      margin: 0;
+      inline-size: 100%;
+      block-size: 100%;
+      border-radius: ${radius('md')};
+      display: grid;
+      place-items: center;
+      font-size: ${font('sm')};
+      font-weight: ${weight('extrabold')};
+      letter-spacing: 0;
+      color: ${on('accent')};
+      background: linear-gradient(135deg, ${accent()}, ${gradientDeep(accent())});
+    }
+    &[data-part="card"][data-variant="success"] > [data-slot="preview"] > figure {
+      color: ${on('success')};
+      background: linear-gradient(135deg, ${status('success')}, ${gradientDeep(status('success'))});
+    }
+    &[data-part="card"][data-variant="warning"] > [data-slot="preview"] > figure {
+      color: ${on('warning')};
+      background: linear-gradient(135deg, ${status('warning')}, ${gradientDeep(status('warning'))});
+    }
+    &[data-part="card"][data-variant="danger"] > [data-slot="preview"] > figure {
+      color: ${on('danger')};
+      background: linear-gradient(135deg, ${status('danger')}, ${gradientDeep(status('danger'))});
+    }
+    &[data-part="card"][data-variant="default"] > [data-slot="preview"] > figure {
+      background: linear-gradient(135deg, ${currentTint('strong')}, ${currentTint('deep')});
+    }
 
-  /* body 슬롯 — desc */
-  article[data-part="card"][data-card="course"] > [data-slot="body"] > p {
-    margin: 0;
-    font-size: ${font('sm')};
-    color: ${text('mute')};
-    line-height: 1.5;
-  }
+    &[data-part="card"] > [data-slot="title"] > header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: ${pad(1)};
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
+      margin: 0;
+      ${typography('bodyStrong')}
+    }
+    &[data-part="card"] > [data-slot="body"] > p {
+      margin: 0;
+      font-size: ${font('sm')};
+      color: ${text('mute')};
+      line-height: 1.5;
+    }
 
-  /* footer 슬롯 — 최종 수정일 + actions */
-  article[data-part="card"][data-card="course"] > [data-slot="footer"] > footer {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: ${pad(2)};
-  }
-  article[data-part="card"][data-card="course"] > [data-slot="footer"] > footer > small {
-    font-size: ${font('xs')};
-    color: ${text('mute')};
-  }
-`
+    &[data-part="card"] > [data-slot="footer"] > footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: ${pad(2)};
+    }
+    &[data-part="card"] > [data-slot="footer"] > footer > small {
+      font-size: ${font('xs')};
+      color: ${text('mute')};
+      white-space: nowrap;
+    }
+    &[data-part="card"] [data-slot="actions"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: ${pad(1)};
+    }
+  `,
+})
+
+export const cssCourseCard = () => courseCardStyle.css

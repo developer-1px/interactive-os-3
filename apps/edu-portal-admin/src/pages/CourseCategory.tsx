@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '@p/ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { certCategories as initial, type CertCategory } from '../entities/data'
 
 type Tone = 'success' | 'info' | 'warning' | 'danger' | 'neutral'
@@ -22,6 +22,8 @@ export function CourseCategory() {
   const [list, setList] = useState(initial)
   const toggle = (id: string) =>
     setList((prev) => prev.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)))
+  const edit = (_id: string) => undefined
+  const remove = (_id: string) => undefined
 
   const entities: NormalizedData['entities'] = {
     [ROOT]: { id: ROOT, data: {} },
@@ -30,14 +32,14 @@ export function CourseCategory() {
     main: { id: 'main', data: { type: 'Column', flow: 'form', grow: true } },
 
     list: { id: 'list', data: { type: 'Column', flow: 'list', label: '코스 카테고리' } },
-    ...certCardNodes(list, toggle),
+    ...certCardNodes(list, toggle, edit, remove),
     addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 코스 카테고리 추가' } },
 
     aside:     { id: 'aside',     data: { type: 'Aside', flow: 'form', width: 300 } },
     infoSec:   { id: 'infoSec',   data: { type: 'Section', labelledBy: 'info-h' } },
     infoH:     { id: 'infoH',     data: { type: 'Text', variant: 'h3', content: '안내' } },
     infoBody:  { id: 'infoBody',  data: {
-      type: 'Text', variant: 'body',
+      type: 'Ui', component: 'Block',
       content: (
         <ul>
           <li><strong>[+ 코스 카테고리 추가]</strong>로 NCA·NCP·NCE 외 새 코스를 등록합니다.</li>
@@ -51,7 +53,7 @@ export function CourseCategory() {
     statsSec:  { id: 'statsSec',  data: { type: 'Section', labelledBy: 'stats-h' } },
     statsH:    { id: 'statsH',    data: { type: 'Text', variant: 'h3', content: '코스별 현황' } },
     statsBody: { id: 'statsBody', data: {
-      type: 'Text', variant: 'body',
+      type: 'Ui', component: 'Block',
       content: <CourseStats list={list} />,
     } },
   }
@@ -69,7 +71,12 @@ export function CourseCategory() {
   return <Renderer page={definePage({ entities, relationships })} />
 }
 
-function certCardNodes(list: CertCategory[], toggle: (id: string) => void) {
+function certCardNodes(
+  list: CertCategory[],
+  toggle: (id: string) => void,
+  edit: (id: string) => void,
+  remove: (id: string) => void,
+) {
   const out: NormalizedData['entities'] = {}
   for (const c of list) {
     out[`card-${c.id}`] = {
@@ -77,23 +84,17 @@ function certCardNodes(list: CertCategory[], toggle: (id: string) => void) {
       data: {
         type: 'Ui', component: 'CourseCard',
         props: {
+          id: c.id,
           abbr: c.name,
           name: c.desc.split(' — ')[0] ?? c.desc,
           desc: c.desc.split(' — ')[1] ?? '',
           variant: toneByLevel[c.level],
-          meta: <mark data-variant="info">{levelLabel[c.level]} · 영상 {c.videoIds.length}개</mark>,
-          actions: (
-            <>
-              <Switch
-                checked={c.visible}
-                aria-label={`${c.name} 노출`}
-                onClick={() => toggle(c.id)}
-              />
-              <button type="button">수정</button>
-              {!c.locked && <button type="button">삭제</button>}
-            </>
-          ),
-          footer: c.visible ? '노출 중' : '숨김',
+          meta: `${levelLabel[c.level]} · 영상 ${c.videoIds.length}개`,
+          visible: c.visible,
+          locked: c.locked,
+          onToggleVisible: toggle,
+          onEdit: edit,
+          onDelete: remove,
         },
       },
     }

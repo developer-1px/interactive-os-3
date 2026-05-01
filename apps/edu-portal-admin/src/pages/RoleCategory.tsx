@@ -23,7 +23,7 @@ export function RoleCategory() {
     aside: { id: 'aside', data: { type: 'Aside', flow: 'form', width: 300 } },
     asideH: { id: 'asideH', data: { type: 'Text', variant: 'h3', content: '안내' } },
     asideBody: { id: 'asideBody', data: {
-      type: 'Text', variant: 'body',
+      type: 'Ui', component: 'Block',
       content: (
         <ul>
           <li><strong>드래그</strong>로 카테고리 노출 순서를 변경할 수 있습니다.</li>

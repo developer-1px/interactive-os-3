@@ -101,6 +101,50 @@ if (statExists(roleCategory)) {
     const match = text.match(check.pattern)
     if (match?.index != null) add(roleCategory, lineOf(text, match.index), check.message, lineAt(text, match.index))
   }
+
+  if (!text.includes('id: c.id')) {
+    add(roleCategory, 1, 'RoleCategory must pass entity id into RoleCard intents', '')
+  }
+}
+
+const courseCard = join(ROOT, 'packages/ds/src/features/CourseCard.tsx')
+if (statExists(courseCard)) {
+  const text = readFileSync(courseCard, 'utf8')
+  const checks = [
+    { pattern: /\bReactNode\b/, message: 'CourseCard pilot must not expose ReactNode slots' },
+    { pattern: /\bactions\??\s*:/, message: 'CourseCard pilot must not expose actions prop' },
+    { pattern: /\bmeta\??\s*:\s*ReactNode\b/, message: 'CourseCard meta must stay data-shaped, not JSX-shaped' },
+    { pattern: /\babbr\??\s*:\s*ReactNode\b/, message: 'CourseCard abbr must stay text-shaped, not JSX-shaped' },
+    { pattern: /\bfooter\??\s*:\s*ReactNode\b/, message: 'CourseCard footer must stay owned by CourseCard' },
+  ]
+  for (const check of checks) {
+    const match = text.match(check.pattern)
+    if (match?.index != null) add(courseCard, lineOf(text, match.index), check.message, lineAt(text, match.index))
+  }
+
+  if (!text.includes('className={courseCardStyle.classes.root}')) {
+    add(courseCard, 1, 'CourseCard root must use generated courseCardStyle.classes.root boundary', '')
+  }
+}
+
+const courseCategory = join(ROOT, 'apps/edu-portal-admin/src/pages/CourseCategory.tsx')
+if (statExists(courseCategory)) {
+  const text = readFileSync(courseCategory, 'utf8')
+  const checks = [
+    { pattern: /\bactions\s*:/, message: 'CourseCategory must not pass JSX actions into CourseCard' },
+    { pattern: /\bmeta\s*:\s*</, message: 'CourseCategory must not pass JSX meta into CourseCard' },
+    { pattern: /\bfooter\s*:/, message: 'CourseCategory must not pass footer slot into CourseCard' },
+    { pattern: /<button\b/, message: 'CourseCategory must use CourseCard action intents or DS Button, not raw button' },
+    { pattern: /component:\s*['"]CourseCard['"][\s\S]*?<Switch\b/, message: 'CourseCategory must not inline Switch inside CourseCard props' },
+  ]
+  for (const check of checks) {
+    const match = text.match(check.pattern)
+    if (match?.index != null) add(courseCategory, lineOf(text, match.index), check.message, lineAt(text, match.index))
+  }
+
+  if (!text.includes('id: c.id')) {
+    add(courseCategory, 1, 'CourseCategory must pass entity id into CourseCard intents', '')
+  }
 }
 
 findings.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line)

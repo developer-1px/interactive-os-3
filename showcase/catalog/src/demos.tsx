@@ -129,8 +129,8 @@ function CourseCardDemo() {
       name="Naver Cloud Associate"
       desc="입문자를 위한 클라우드 기초"
       variant="success"
-      meta={<Badge variant="info">입문 · 영상 24개</Badge>}
-      footer="최종 수정 2일 전"
+      meta="입문 · 영상 24개"
+      visible
     />
   )
 }

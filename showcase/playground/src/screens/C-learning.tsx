@@ -33,10 +33,10 @@ const Learn_Catalog = defineScreen({
           ])}
           onEvent={() => {}}
         />
-        <CourseCard abbr="TS" name="TypeScript 심화" desc="타입 추론과 generics" variant="accent" meta={<small>240 분</small>} />
-        <CourseCard abbr="RX" name="RxJS 기초"     desc="Observable · Operator" variant="info" meta={<small>180 분</small>} />
-        <CourseCard abbr="GO" name="Go 동시성"     desc="goroutine · channel" variant="success" meta={<small>320 분</small>} />
-        <CourseCard abbr="AI" name="LLM 앱 개발"   desc="prompt · tool use · agent" variant="warning" meta={<small>420 분</small>} />
+        <CourseCard abbr="TS" name="TypeScript 심화" desc="타입 추론과 generics" variant="accent" meta="240분" />
+        <CourseCard abbr="RX" name="RxJS 기초"     desc="Observable · Operator" variant="info" meta="180분" />
+        <CourseCard abbr="GO" name="Go 동시성"     desc="goroutine · channel" variant="success" meta="320분" />
+        <CourseCard abbr="AI" name="LLM 앱 개발"   desc="prompt · tool use · agent" variant="warning" meta="420분" />
       </Body>
     </Phone>
   ),

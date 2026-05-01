@@ -1,50 +1,82 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
+import { Badge } from '../ui/5-live/Badge'
+import { Button } from '../ui/1-command/Button'
 import { Card } from '../ui/6-structure/Card'
 import { Heading } from '../ui/6-structure/Heading'
+import { Switch } from '../ui/2-input/Switch'
+import { courseCardStyle } from './CourseCard.style'
 
 /**
  * CourseCard — 코스 카테고리 카드. Card 슬롯에 어휘 바인딩.
- *
- * 슬롯 매핑:
- *   preview → figure (좌측 abbr 배지)
- *   title   → h3 + 우측 meta
- *   body    → desc 보조 텍스트
- *   footer  → 최종 수정일 + actions
+ * 페이지는 data와 action intent만 넘기고, 카드 anatomy와 controls는 CourseCard가 소유한다.
  */
-type CourseCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children'> & {
-  abbr: ReactNode
-  name: ReactNode
-  desc?: ReactNode
+type CourseCardProps = Omit<ComponentPropsWithoutRef<'article'>, 'children' | 'className'> & {
+  id?: string
+  abbr: string
+  name: string
+  desc?: string
   variant?: 'info' | 'success' | 'warning' | 'danger' | 'accent' | 'default'
-  actions?: ReactNode
-  meta?: ReactNode
-  footer?: ReactNode
+  meta?: string
+  visible?: boolean
+  locked?: boolean
+  onToggleVisible?: (id?: string) => void
+  onEdit?: (id?: string) => void
+  onDelete?: (id?: string) => void
 }
 
 export function CourseCard({
-  abbr, name, desc, variant = 'info', actions, meta, footer, ...rest
+  id,
+  abbr,
+  name,
+  desc,
+  variant = 'info',
+  meta,
+  visible,
+  locked,
+  onToggleVisible,
+  onEdit,
+  onDelete,
+  ...rest
 }: CourseCardProps) {
+  const hasActions = onToggleVisible || onEdit || (!locked && onDelete)
+  const visibleText = typeof visible === 'boolean' ? (visible ? '노출 중' : '숨김') : undefined
+
   return (
     <Card
+      {...rest}
       data-card="course"
       data-variant={variant}
+      className={courseCardStyle.classes.root}
       slots={{
         preview: <figure aria-hidden="true">{abbr}</figure>,
         title: (
           <header>
             <Heading level="h3">{name}</Heading>
-            {meta}
+            {meta && <Badge variant="info">{meta}</Badge>}
           </header>
         ),
         body: desc ? <p>{desc}</p> : null,
-        footer: (footer || actions) ? (
+        footer: (visibleText || hasActions) ? (
           <footer>
-            {footer && <small>{footer}</small>}
-            {actions}
+            {visibleText && <small>{visibleText}</small>}
+            {hasActions && (
+              <div data-slot="actions">
+                {onToggleVisible && typeof visible === 'boolean' && (
+                  <Switch
+                    checked={visible}
+                    aria-label={`${name} 노출`}
+                    onClick={() => onToggleVisible(id)}
+                  />
+                )}
+                {onEdit && <Button onClick={() => onEdit(id)}>수정</Button>}
+                {!locked && onDelete && (
+                  <Button variant="destructive" onClick={() => onDelete(id)}>삭제</Button>
+                )}
+              </div>
+            )}
           </footer>
         ) : null,
       }}
-      {...rest}
     />
   )
 }
