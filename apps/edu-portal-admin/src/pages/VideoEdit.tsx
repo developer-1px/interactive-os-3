@@ -157,7 +157,7 @@ export function VideoEdit() {
     ...visibilityRows(visible, setVisible),
 
     secDanger: { id: 'secDanger', data: { type: 'Section', heading: { variant: 'h3', content: '위험 영역' }, roledescription: 'danger' } },
-    delBtn: { id: 'delBtn', data: { type: 'Ui', component: 'Button', content: '이 영상 삭제' } },
+    delBtn: { id: 'delBtn', data: { type: 'Ui', component: 'Button', props: { variant: 'destructive' }, content: '이 영상 삭제' } },
     delNote: { id: 'delNote', data: { type: 'Text', variant: 'small',
       content: '수강 이력이 있는 경우 삭제 전 확인이 필요합니다' } },
   }
@@ -205,4 +205,3 @@ export function VideoEdit() {
 
   return <Renderer page={definePage({ entities, relationships })} />
 }
-

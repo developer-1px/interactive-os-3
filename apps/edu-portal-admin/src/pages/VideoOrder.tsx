@@ -13,6 +13,8 @@ const NEW_THRESHOLD_MS = 7 * 86_400_000
 const visibleRoles = roleCategories.filter((c) => c.visible)
 const visibleCerts = certCategories.filter((c) => c.visible)
 const allCategories = [...roleCategories, ...certCategories]
+type SegmentOption = { id: string; label: string; selected: boolean }
+type ActivateLike = { type: string; id?: string }
 
 function parseDate(s: string): number {
   const [y, m, d] = s.split('.').map(Number)
@@ -85,28 +87,35 @@ export function VideoOrder() {
 
   const entities: NormalizedData['entities'] = {
     [ROOT]: { id: ROOT, data: {} },
-    page: { id: 'page', data: { type: 'Column', flow: 'list' } },
+    page: { id: 'page', data: { type: 'Column', flow: 'form' } },
 
-    modeTabs: { id: 'modeTabs', data: { type: 'Ui', component: 'TabList', props: { 'aria-label': '순서 기준' } } },
-    modeRole: { id: 'modeRole', data: {
-      type: 'Ui', component: 'Tab',
-      props: { selected: mode === 'role', onClick: () => switchMode('role') },
-      content: '역할별',
-    } },
-    modeCert: { id: 'modeCert', data: {
-      type: 'Ui', component: 'Tab',
-      props: { selected: mode === 'cert', onClick: () => switchMode('cert') },
-      content: '코스별',
+    modeTabs: { id: 'modeTabs', data: {
+      type: 'Ui', component: 'SegmentedControl',
+      props: {
+        'aria-label': '순서 기준',
+        data: segmentData([
+          { id: 'role', label: '역할별', selected: mode === 'role' },
+          { id: 'cert', label: '코스별', selected: mode === 'cert' },
+        ]),
+        onEvent: (e: ActivateLike) => {
+          if (e.type === 'activate' && (e.id === 'role' || e.id === 'cert')) switchMode(e.id)
+        },
+      },
     } },
 
     panel: { id: 'panel', data: { type: 'Ui', component: 'TabPanel', props: { 'aria-label': mode === 'role' ? '역할별' : '코스별' } } },
     subTabs: { id: 'subTabs', data: {
-      type: 'Ui', component: 'TabList',
-      props: { 'aria-label': mode === 'role' ? '역할 선택' : '코스 선택' },
+      type: 'Ui', component: 'SegmentedControl',
+      props: {
+        'aria-label': mode === 'role' ? '역할 선택' : '코스 선택',
+        data: segmentData(categorySegments(cats, orders, subId)),
+        onEvent: (e: ActivateLike) => {
+          if (e.type === 'activate' && e.id) setSubId(e.id)
+        },
+      },
     } },
-    ...subTabNodes(cats, orders, subId, setSubId),
 
-    body: { id: 'body', data: { type: 'Column', flow: 'list', width: 820 } },
+    body: { id: 'body', data: { type: 'Column', flow: 'list', maxWidth: 820 } },
     catHdr: { id: 'catHdr', data: { type: 'Header', flow: 'split' } },
     catName: { id: 'catName', data: { type: 'Text', variant: 'h3', content: current?.name ?? '—' } },
     catTotal: { id: 'catTotal', data: {
@@ -142,10 +151,8 @@ export function VideoOrder() {
   const relationships: NormalizedData['relationships'] = {
     [ROOT]: ['page'],
     page: ['modeTabs', 'panel'],
-    modeTabs: ['modeRole', 'modeCert'],
     panel: ['subTabs', 'body'],
     body: ['catHdr', ...(broken ? ['warn'] : []), 'list', 'footer'],
-    subTabs: cats.map((c) => `sub-${c.id}`),
     catHdr: ['catName', 'catTotal'],
     footer: ['footNote', 'saveBtn'],
   }
@@ -153,24 +160,29 @@ export function VideoOrder() {
   return <Renderer page={definePage({ entities, relationships })} />
 }
 
-function subTabNodes(
+function segmentData(options: SegmentOption[]): NormalizedData {
+  return {
+    entities: Object.fromEntries([
+      [ROOT, { id: ROOT, data: {} }],
+      ...options.map((option) => [
+        option.id,
+        { id: option.id, data: { label: option.label, selected: option.selected } },
+      ]),
+    ]),
+    relationships: { [ROOT]: options.map((option) => option.id) },
+  }
+}
+
+function categorySegments(
   categories: typeof roleCategories | typeof certCategories,
   orders: Record<string, string[]>,
-  subId: string, setSubId: (id: string) => void,
-) {
-  const out: NormalizedData['entities'] = {}
-  for (const c of categories) {
-    const count = orders[c.id]?.length ?? c.videoIds.length
-    out[`sub-${c.id}`] = {
-      id: `sub-${c.id}`,
-      data: {
-        type: 'Ui', component: 'Tab',
-        props: { selected: c.id === subId, onClick: () => setSubId(c.id) },
-        content: `${c.name} (${count})`,
-      },
-    }
-  }
-  return out
+  subId: string,
+): SegmentOption[] {
+  return categories.map((c) => ({
+    id: c.id,
+    label: `${c.name} (${orders[c.id]?.length ?? c.videoIds.length})`,
+    selected: c.id === subId,
+  }))
 }
 
 function buildListData(items: VideoRow[], now: number): NormalizedData {

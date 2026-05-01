@@ -7,8 +7,9 @@ import {
 import { activate, composeAxes, navigate } from '@p/headless/axes'
 import { activateOnNavigate } from '@p/headless/gesture'
 import { useRoving } from '@p/headless/roving/useRoving'
+import { segmentedControlStyle } from './SegmentedControl.style'
 
-type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
+type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown' | 'className' | 'aria-orientation'> & {
   'aria-label'?: string
 }
 
@@ -28,7 +29,13 @@ export function SegmentedControl({ data, onEvent, autoFocus, ...rest }: Collecti
   const kids = getChildren(data, ROOT)
 
   return (
-    <div role="radiogroup" data-part="segmented" onKeyDown={delegate.onKeyDown} {...rest}>
+    <div
+      {...rest}
+      role="radiogroup"
+      aria-orientation="horizontal"
+      className={segmentedControlStyle.classes.root}
+      onKeyDown={delegate.onKeyDown}
+    >
       {kids.map((id) => {
         const d = data.entities[id]?.data ?? {}
         const checked = Boolean(d.selected)
@@ -39,7 +46,6 @@ export function SegmentedControl({ data, onEvent, autoFocus, ...rest }: Collecti
             type="button"
             role="radio"
             data-id={id}
-            data-part="segment"
             ref={bindFocus(id)}
             aria-checked={checked}
             aria-disabled={disabled || undefined}

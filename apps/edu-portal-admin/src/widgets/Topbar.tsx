@@ -38,7 +38,7 @@ export function Topbar() {
         props: {
           onClick: () => router.navigate({ to: PAGE_PATHS[action.to] }),
           'data-icon': action.icon,
-          variant: 'primary',
+          variant: action.variant,
         },
         content: action.label,
       },

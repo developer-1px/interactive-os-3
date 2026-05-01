@@ -35,6 +35,7 @@ import { Combobox } from './ui/2-input/Combobox'
 import { RouteGrid } from './shells/command/RouteGrid'
 import { Tree } from './ui/3-composite/Tree'
 import { Toolbar } from './ui/3-composite/Toolbar'
+import { SegmentedControl } from './ui/3-composite/SegmentedControl'
 import { TabList, Tab, TabPanel } from './ui/3-composite/Tabs'
 import { OrderableList } from './ui/3-composite/OrderableList'
 import { DataGrid } from './ui/3-composite/DataGrid'
@@ -109,6 +110,7 @@ export const uiRegistry = {
   RouteGrid: { component: RouteGrid, zone: 'collection' },
   Tree:    { component: Tree,    zone: 'collection' },
   Toolbar: { component: Toolbar, zone: 'collection' },
+  SegmentedControl: { component: SegmentedControl, zone: 'collection' },
   TabList: { component: TabList, zone: 'collection' },
   Tab:     { component: Tab,     zone: 'collection' },
   TabPanel:{ component: TabPanel,zone: 'collection' },

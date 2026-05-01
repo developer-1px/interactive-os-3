@@ -1,6 +1,7 @@
 import { OrderableList } from '../OrderableList'
 export default () => (
   <OrderableList
+    aria-label="Demo order"
     data={{
       entities: {
         __root__: { id: '__root__', data: {} },

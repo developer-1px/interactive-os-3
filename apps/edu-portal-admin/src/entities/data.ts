@@ -13,14 +13,16 @@ export interface PageAction {
   to: PageId
   /** lucide 아이콘 이름. */
   icon: string
+  /** 화면 단위 CTA에만 primary, 위험 행동에만 destructive. */
+  variant?: 'primary' | 'destructive'
 }
 
 export const PAGE_TITLES: Record<PageId, { title: string; sub: string; action?: PageAction }> = {
   'dashboard':      { title: '대시보드',       sub: '교육 포털 운영 현황' },
-  'video-list':     { title: '영상 관리',      sub: '', action: { label: '영상 등록',     to: 'video-new',     icon: 'plus' } },
+  'video-list':     { title: '영상 관리',      sub: '', action: { label: '영상 등록',     to: 'video-new',     icon: 'plus', variant: 'primary' } },
   'video-new':      { title: '영상 등록',      sub: '', action: { label: '목록으로',      to: 'video-list',    icon: 'arrow-left' } },
-  'role-category':  { title: '역할 카테고리',  sub: '', action: { label: '카테고리 추가', to: 'role-category', icon: 'plus' } },
-  'cert-category':  { title: '코스 카테고리',  sub: '', action: { label: '카테고리 추가', to: 'cert-category', icon: 'plus' } },
+  'role-category':  { title: '역할 카테고리',  sub: '' },
+  'cert-category':  { title: '코스 카테고리',  sub: '' },
   'video-order':    { title: '영상 순서 관리', sub: '' },
 }
 
@@ -35,6 +37,7 @@ export const PAGE_PATHS: Record<PageId, string> = {
 
 export function activePage(pathname: string): PageId {
   const match = (Object.entries(PAGE_PATHS) as [PageId, string][])
+    .sort((a, b) => b[1].length - a[1].length)
     .find(([, p]) => pathname === p || pathname.startsWith(p + '/'))
   return match?.[0] ?? 'dashboard'
 }
