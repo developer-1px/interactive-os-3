@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { SECTIONS, type Digest, type SectionId } from './data'
 import { buildSettingsPage } from './build'
@@ -20,7 +20,7 @@ function useSectionNav(active: SectionId, setActive: (id: SectionId) => void) {
     return { entities, relationships: { __root__: SECTIONS.map(([id]) => id) } }
   }, [active])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') setActive(ev.id as SectionId)

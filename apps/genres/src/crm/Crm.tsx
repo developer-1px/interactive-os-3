@@ -1,6 +1,6 @@
 /** CRM — 대량 테이블 + bulk action + drawer. */
 import { useMemo, useState } from 'react'
-import { Renderer, definePage, ROOT, useControlState, type Event, type NormalizedData } from '@p/ds'
+import { Renderer, definePage, ROOT, useControlState, type UiEvent, type NormalizedData } from '@p/ds'
 import { BULK_ACTS, CONTACTS } from './data'
 import { buildCrmPage } from './build'
 
@@ -34,7 +34,7 @@ export function Crm() {
   const toggleAll = () => setSel(allChecked ? new Set() : new Set(rows.map((r) => r.id)))
 
   const [bulkBarData, bulkBarDispatch] = useControlState(useMemo(() => bulkBarBase(), []))
-  const onBulkBar = (e: Event) => {
+  const onBulkBar = (e: UiEvent) => {
     bulkBarDispatch(e)
     if (e.type === 'activate') {
       const found = BULK_ACTS.find(([id]) => id === e.id)

@@ -3,7 +3,7 @@ import {
   ROOT,
   getChildren, getLabel, isDisabled,
   type CollectionProps,
-  type Event,
+  type UiEvent,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
 import { activateOnNavigate } from '@p/headless/gesture'
@@ -19,7 +19,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
  */
 export function TabList({ data, onEvent, orientation = 'horizontal', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation), activate)
-  const relay = (e: Event) => activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
+  const relay = (e: UiEvent) => activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
   const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 

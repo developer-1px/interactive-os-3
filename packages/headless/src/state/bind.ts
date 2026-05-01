@@ -1,6 +1,6 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
 import type { Axis } from '../axes'
-import type { Event, NormalizedData } from '../types'
+import type { UiEvent, NormalizedData } from '../types'
 import { fromKeyboardEvent } from '../key'
 import { clickTrigger, keyTrigger } from '../trigger'
 
@@ -12,7 +12,7 @@ export interface AxisBindings {
 export const bindAxis = (
   axis: Axis,
   d: NormalizedData,
-  onEvent: (e: Event) => void,
+  onEvent: (e: UiEvent) => void,
 ): AxisBindings => ({
   onKey: (ke, id) => {
     const events = axis(d, id, keyTrigger(fromKeyboardEvent(ke)))

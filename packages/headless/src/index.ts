@@ -57,7 +57,7 @@ export {
   type RowNode as LayoutRowNode, type ColumnNode as LayoutColumnNode,
   type GridNode as LayoutGridNode, type AsideNode, type SectionNode,
   type HeaderNode, type FooterNode, type UiNode, type TextNode,
-  type Flow, type Emphasis, type GridCols, type TextVariant, type Align,
+  type LayoutFlow, type Emphasis, type GridCols, type TextVariant, type Align,
   type ItemPlacement, type CommonNodeData, type TypedEntity,
   type Register, type UiComponentName,
 } from './layout'

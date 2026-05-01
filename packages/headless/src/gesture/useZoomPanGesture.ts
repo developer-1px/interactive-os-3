@@ -1,9 +1,9 @@
 import { useEffect, type RefObject } from 'react'
-import type { Event } from '../types'
+import type { UiEvent } from '../types'
 
 /**
  * useZoomPanGesture — raw browser 이벤트(wheel/pointer/key/Safari gesture)를
- * pan/zoom Event로 번역해 onEvent로 emit.
+ * pan/zoom UiEvent로 번역해 onEvent로 emit.
  *
  * 상태(x, y, s)는 entity.data 안에 산다 — useZoomPanGesture 자체는 상태 보유 X.
  * gesture/intent 분리: 이 훅은 입력 어댑터, 변환·clamp는 reduce의 pan/zoom 핸들러.
@@ -27,7 +27,7 @@ export interface ZoomPanOptions {
 export function useZoomPanGesture(
   ref: RefObject<HTMLElement | null>,
   id: string,
-  onEvent: (e: Event) => void,
+  onEvent: (e: UiEvent) => void,
   opts: ZoomPanOptions & { stageRef?: RefObject<HTMLElement | null> } = {},
 ) {
   const zoomFactor = opts.zoomFactor ?? 1.0035
@@ -99,8 +99,8 @@ export function useZoomPanGesture(
       }
     }
 
-    // Safari iOS pinch / 뒤로·앞으로 스와이프 차단. DOM Event (Event 이름 충돌
-    // 방지 위해 globalThis 명시). 헤드리스 Event는 import한 타입.
+    // Safari iOS pinch / 뒤로·앞으로 스와이프 차단. EventListener로 직접 타이핑해
+    // DOM Event를 받음 (헤드리스 UiEvent와 무관 — 그쪽은 onEvent 시그니처에서만).
     const onGesture: EventListener = (e) => e.preventDefault()
 
     vp.addEventListener('wheel', onWheel, { passive: false })

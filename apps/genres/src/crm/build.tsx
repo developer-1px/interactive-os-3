@@ -1,12 +1,12 @@
-import { Badge, ROOT, type Event, type NormalizedData } from '@p/ds'
+import { Badge, ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { CONTACTS, HEADS, stageTone, type Contact } from './data'
 
 export interface CrmState {
   sel: Set<string>; open: string | null; q: string
   toggle: (id: string) => void; toggleAll: () => void
   setOpen: (id: string | null) => void; setQ: (v: string) => void
-  bulkBar: { data: NormalizedData; onEvent: (e: Event) => void }
-  pageNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  bulkBar: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  pageNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 const rowCells = (c: Contact, sel: Set<string>, toggle: (id: string) => void) => [
@@ -56,7 +56,7 @@ export function buildCrmPage(s: CrmState): NormalizedData {
       pageNav: { id: 'pageNav', data: { type: 'Ui', component: 'Toolbar', props: { data: s.pageNav.data, onEvent: s.pageNav.onEvent, 'aria-label': '페이지' } } },
       drawer: { id: 'drawer', data: { type: 'Ui', component: 'Dialog', props: {
         data: { entities: { [ROOT]: { id: ROOT, data: { open: Boolean(current), label: '연락처 상세' } } }, relationships: {} },
-        onEvent: (e: Event) => { if (e.type === 'open' && !e.open) s.setOpen(null) },
+        onEvent: (e: UiEvent) => { if (e.type === 'open' && !e.open) s.setOpen(null) },
         children: current ? renderContact(current) : null,
       } } },
     },

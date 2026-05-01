@@ -3,7 +3,7 @@
  *  phase 별 시그니처는 핸들러 내부 분기로 narrow.
  *  capability 패키지(history·clipboard 등)가 plugin manifest 의 middlewares 로 등록한다. */
 
-import type { Event, NormalizedData } from './types'
+import type { UiEvent, NormalizedData } from './types'
 
 export type Phase =
   | 'pre-dispatch'         // raw event → reducer 직전 (기존 gestures 와 등가)
@@ -13,7 +13,7 @@ export type Phase =
 
 export interface PreDispatchCtx {
   data: NormalizedData
-  event: Event
+  event: UiEvent
 }
 export interface PostDispatchCtx<S = unknown, C = unknown> {
   prev: S
@@ -26,7 +26,7 @@ export interface ResourceCtx<V = unknown> {
 }
 
 export type MiddlewareFn =
-  | ((ctx: PreDispatchCtx) => Event[] | void)
+  | ((ctx: PreDispatchCtx) => UiEvent[] | void)
   | ((ctx: PostDispatchCtx) => void)
   | ((ctx: ResourceCtx) => void)
 

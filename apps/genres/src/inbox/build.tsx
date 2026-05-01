@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { MESSAGES, folders, labelTone, type FolderId } from './data'
 
 const currentFolderLabel = (f: FolderId) => folders.find((x) => x.id === f)?.label ?? '메일'
@@ -9,9 +9,9 @@ const MAIL_COLS = ['from', 'time', 'subject', 'preview'] as const
 export interface InboxState {
   folder: FolderId; selectedId: string
   setFolder: (f: FolderId) => void; setSelected: (id: string) => void
-  folderNav: { data: NormalizedData; onEvent: (e: Event) => void }
-  listTools: { data: NormalizedData; onEvent: (e: Event) => void }
-  detailActions: { data: NormalizedData; onEvent: (e: Event) => void }
+  folderNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  listTools: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  detailActions: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildInboxPage(s: InboxState): NormalizedData {

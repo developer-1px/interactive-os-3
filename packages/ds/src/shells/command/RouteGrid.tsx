@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { PaletteEntry } from './usePaletteEntries'
-import { ROOT, type NormalizedData, type Event } from '@p/headless/types'
+import { ROOT, type NormalizedData, type UiEvent } from '@p/headless/types'
 import { Card } from '../../ui/6-structure/Card'
 import { Heading } from '../../ui/6-structure/Heading'
 import { Listbox } from '../../ui/3-composite/Listbox'
@@ -47,7 +47,7 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
 
   const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries])
 
-  const onListEvent = (ev: Event) => {
+  const onListEvent = (ev: UiEvent) => {
     if (ev.type !== 'activate' || !ev.id) return
     const entry = byId.get(ev.id)
     if (entry) onSelect?.(entry)

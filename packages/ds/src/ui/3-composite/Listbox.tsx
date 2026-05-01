@@ -5,7 +5,7 @@ import {
   getLabel,
   isDisabled,
   type CollectionProps,
-  type Event,
+  type UiEvent,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate, typeahead } from '@p/headless/axes'
 import { activateOnNavigate } from '@p/headless/gesture'
@@ -22,7 +22,7 @@ const axis = composeAxes(navigate('vertical'), activate, typeahead)
  * 같이 갱신한다. 클릭/Enter/Space는 그대로 activate.
  */
 export function Listbox({ data, onEvent, autoFocus, ...rest }: ListboxProps) {
-  const relay = (e: Event) =>
+  const relay = (e: UiEvent) =>
     activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
   const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)

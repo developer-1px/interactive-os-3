@@ -8,7 +8,11 @@ export interface NormalizedData {
   relationships: Record<string, string[]>
 }
 
-export type Event =
+/**
+ * UiEvent — ui ↔ headless 통신의 단일 어휘. DOM `Event` global과 충돌 방지를 위해
+ * `Ui` prefix 명시. (이전 이름: `Event`)
+ */
+export type UiEvent =
   | { type: 'navigate'; id: string }
   | { type: 'activate'; id: string }
   | { type: 'expand'; id: string; open: boolean }
@@ -46,7 +50,7 @@ export const getTypeahead = (d: NormalizedData): { buf: string; deadline: number
 export interface ControlProps {
   data: NormalizedData
   /** 상호작용 컴포넌트는 필수. Display-only Collection(Top10List/BarChart 류)은 생략 가능. */
-  onEvent?: (e: Event) => void
+  onEvent?: (e: UiEvent) => void
 }
 
 /**

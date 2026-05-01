@@ -13,7 +13,7 @@
 import { useMemo } from 'react'
 import {
   Renderer, definePage, sidebarAdmin, SidebarAdminFloating, useControlState, navigateOnActivate,
-  ROOT, EXPANDED, type Event, type NormalizedData,
+  ROOT, EXPANDED, type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { ProseSample } from './sample'
 
@@ -70,7 +70,7 @@ export function Content() {
   const tree0 = useMemo(() => buildCatalogTree(), [])
   const [tree, dispatch] = useControlState(tree0)
 
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     navigateOnActivate(tree, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') scrollToAnchor(ev.id)

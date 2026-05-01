@@ -1,9 +1,9 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { POSTS, channels, activeLabel } from './data'
 
 export interface BoardState {
   active: string; setActive: (id: string) => void
-  channelNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  channelNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildBoardPage(s: BoardState): NormalizedData {

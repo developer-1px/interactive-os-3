@@ -1,4 +1,4 @@
-import { Listbox, fromList, type Event } from '@p/ds'
+import { Listbox, fromList, type UiEvent } from '@p/ds'
 import type { Slide } from '../entities/schema'
 
 /** 썸네일 필름스트립 — 현재 deck 의 슬라이드 N장을 16:9 미니 카드로 나열.
@@ -14,7 +14,7 @@ export function ThumbnailStrip({
       selected: i === activeIndex,
     })),
   )
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     if (e.type === 'activate' && typeof e.id === 'string') {
       const i = Number(e.id)
       if (Number.isInteger(i) && i >= 0 && i < slides.length) onJump(i)

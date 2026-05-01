@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { BLOCK_OPTS, type Block, type BlockKind } from './data'
 
 export interface EditorState {
@@ -6,8 +6,8 @@ export interface EditorState {
   current?: Block
   setSelected: (id: string) => void; setTitle: (v: string) => void; setPublic: (v: boolean) => void
   updateText: (id: string, v: string) => void; updateKind: (id: string, k: BlockKind) => void
-  outlineNav: { data: NormalizedData; onEvent: (e: Event) => void }
-  toolbar: { data: NormalizedData; onEvent: (e: Event) => void }
+  outlineNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  toolbar: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildEditorPage(s: EditorState): NormalizedData {

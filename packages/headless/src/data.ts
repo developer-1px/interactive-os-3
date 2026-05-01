@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import type { Event as UiEvent, NormalizedData } from './types'
+import type { UiEvent as UiEvent, NormalizedData } from './types'
 
 /**
  * Resource — ui/ `(data, onEvent)`의 데이터 레이어 평행.
@@ -7,7 +7,7 @@ import type { Event as UiEvent, NormalizedData } from './types'
  * 종류별 훅(useFsTree/useFsText/useView…)은 만들지 않는다 — 인터페이스 분기는 ds 원칙 위반.
  *
  * onEvent 옵션: ui/ event를 직접 수용한다. (e, ctx) => 다음 값 (또는 undefined로 무시).
- * 도메인 라우트는 더 이상 Event → resource action 매퍼를 매번 작성하지 않는다.
+ * 도메인 라우트는 더 이상 UiEvent → resource action 매퍼를 매번 작성하지 않는다.
  */
 
 export type ResourceEvent<T> =

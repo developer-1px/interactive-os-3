@@ -1,13 +1,13 @@
 import type { Axis } from './axis'
-import type { Event, NormalizedData } from '../types'
+import type { UiEvent, NormalizedData } from '../types'
 import { getChildren, getExpanded, isDisabled, isMetaId } from '../types'
 import { parentOf } from './index'
 
 type Branch = 'branchClosed' | 'branchOpen' | 'leaf'
 type Ctx = { d: NormalizedData; id: string; kids: string[] }
-type Action = (c: Ctx) => Event[] | null
+type Action = (c: Ctx) => UiEvent[] | null
 
-const toParentOrNull = (d: NormalizedData, id: string): Event[] | null => {
+const toParentOrNull = (d: NormalizedData, id: string): UiEvent[] | null => {
   const p = parentOf(d, id)
   return p && !isMetaId(p) ? [{ type: 'navigate', id: p }] : null
 }

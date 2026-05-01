@@ -1,6 +1,6 @@
 import {
   defineFlow, fromTree, navigateOnActivate, useFlow, writeResource,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { sidebar, smartGroups, isSmartPath } from '../features/data'
 import { pathResource, pinnedRootResource } from '../features/resources'
@@ -42,7 +42,7 @@ const favFlow = defineFlow<string>({
   metaScope: ['navigate', 'typeahead'],
 })
 
-export type SidebarNav = { data: NormalizedData; onEvent: (e: Event) => void }
+export type SidebarNav = { data: NormalizedData; onEvent: (e: UiEvent) => void }
 
 export function useSidebarNav(): { recent: SidebarNav; fav: SidebarNav } {
   const [recentData, recentEvent] = useFlow(recentFlow)
@@ -50,7 +50,7 @@ export function useSidebarNav(): { recent: SidebarNav; fav: SidebarNav } {
   // fav 활성화는 pinnedRoot 갱신만. URL 은 그대로 — "그 폴더를 columns 의 root 로 본다"
   // 의미. 사용자가 깊은 path 에 있어도 fav 클릭으로 anchor 를 옮겨가며 columns chain 을
   // 그 anchor 기준으로 보게 한다.
-  const favEvent = (e: Event) => {
+  const favEvent = (e: UiEvent) => {
     if (e.type === 'activate' && !isSmartPath(e.id)) {
       writeResource(pinnedRootResource, e.id)
     }

@@ -10,7 +10,7 @@
 import { useLayoutEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import {
-  Listbox, fromTree, navigateOnActivate, useControlState, type Event,
+  Listbox, fromTree, navigateOnActivate, useControlState, type UiEvent,
   Renderer, definePage, ROOT, type NormalizedData,
 } from '@p/ds'
 import {
@@ -124,7 +124,7 @@ function DirList({ node, onNavigate }: { node: FsNode; onNavigate: (p: string) =
     [kids],
   )
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') onNavigate(ev.id)
@@ -148,7 +148,7 @@ function SmartList({
     [items],
   )
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') onNavigate(ev.id)

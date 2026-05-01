@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { Event, NormalizedData } from './types'
+import type { UiEvent, NormalizedData } from './types'
 import type { GestureHelper } from './gesture'
 import type { Resource } from './data'
 import { useResource } from './data'
@@ -15,7 +15,7 @@ import { useEventBridge } from './state/useEventBridge'
  * 라우트는 flow 정의 1개 + `useFlow(flow)` 한 줄. consumer에 분기 코드 0.
  */
 
-const DEFAULT_META_SCOPE: ReadonlyArray<Event['type']> = ['navigate', 'typeahead']
+const DEFAULT_META_SCOPE: ReadonlyArray<UiEvent['type']> = ['navigate', 'typeahead']
 
 export interface FlowDef<V, Args extends unknown[] = []> {
   /** 진실 원천 — URL/store/in-memory 어느 쪽이든 useResource 단일 인터페이스로 합류. */
@@ -25,7 +25,7 @@ export interface FlowDef<V, Args extends unknown[] = []> {
   /** raw event → event[] 변환. 기본 = identity. */
   gestures?: GestureHelper
   /** ds-meta로 흘릴 event 종류. base 시드가 owner인 키(예: URL-driven의 EXPANDED)는 제외. */
-  metaScope?: ReadonlyArray<Event['type']>
+  metaScope?: ReadonlyArray<UiEvent['type']>
 }
 
 export function defineFlow<V, Args extends unknown[] = []>(
@@ -39,7 +39,7 @@ const noopGesture: GestureHelper = (_d, e) => [e]
 export function useFlow<V, Args extends unknown[] = []>(
   flow: FlowDef<V, Args>,
   ...args: Args
-): [NormalizedData, (e: Event) => void] {
+): [NormalizedData, (e: UiEvent) => void] {
   const [value, dispatchValue] = useResource(flow.source, ...args)
   const base = useMemo(() => flow.base(value), [value, flow])
   const [data, dispatchMeta] = useControlState(base)

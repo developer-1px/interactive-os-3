@@ -4,7 +4,7 @@ import { audit, type AuditData } from 'virtual:ds-audit'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
-  type Event,
+  type UiEvent,
 } from '@p/ds'
 import { applyPreset, defaultPreset, hairlinePreset, type DsPreset } from '@p/ds/tokens/internal/preset'
 import { buildFoundationsPage, navBase, presetToolsBase } from './build'
@@ -38,7 +38,7 @@ export function Foundations() {
     [filter, byFile, exports.length, leaks.length, missingDemos.length],
   )
   const [navData, navDispatch] = useControlState(navData0)
-  const onNavEvent = (e: Event) =>
+  const onNavEvent = (e: UiEvent) =>
     navigateOnActivate(navData, e).forEach((ev) => {
       navDispatch(ev)
       if (ev.type === 'activate') setFilter(ev.id)
@@ -46,7 +46,7 @@ export function Foundations() {
 
   const presetData0 = useMemo(() => presetToolsBase(presets, presetId), [presetId])
   const [presetData, presetDispatch] = useControlState(presetData0)
-  const onPresetEvent = (e: Event) => {
+  const onPresetEvent = (e: UiEvent) => {
     presetDispatch(e)
     if (e.type === 'activate') setPresetId(e.id)
   }

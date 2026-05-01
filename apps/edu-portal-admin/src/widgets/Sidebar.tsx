@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useRouter, useRouterState } from '@tanstack/react-router'
 import {
   Renderer, definePage, sidebarAdmin, useControlState, navigateOnActivate,
-  ROOT, EXPANDED, type Event, type NormalizedData,
+  ROOT, EXPANDED, type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { activePage, navItems, PAGE_PATHS, type PageId } from '../entities/data'
 
@@ -40,7 +40,7 @@ export function Sidebar() {
   const tree0 = useMemo(() => buildNavTree(page), [page])
   const [tree, dispatch] = useControlState(tree0)
 
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     navigateOnActivate(tree, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') {

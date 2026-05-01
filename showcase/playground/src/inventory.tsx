@@ -20,7 +20,7 @@ import {
   Heading,
   fromList,
   uiRegistry,
-  type Event,
+  type UiEvent,
 } from '@p/ds'
 import { Table } from '@p/ds/ui/6-structure/Table'
 
@@ -190,7 +190,7 @@ export function Inventory() {
     [active],
   )
 
-  const onSidebar = (e: Event) => {
+  const onSidebar = (e: UiEvent) => {
     if (e.type === 'activate') setActive(e.id as Category)
   }
 

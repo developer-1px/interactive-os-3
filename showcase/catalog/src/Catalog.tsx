@@ -4,7 +4,7 @@ import { contracts, type Contract, type Kind } from 'virtual:ds-contracts'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
-  ROOT, FOCUS, EXPANDED, type Event, type NormalizedData,
+  ROOT, FOCUS, EXPANDED, type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { demos } from './demos'
 import { buildCatalogPage } from './build'
@@ -104,7 +104,7 @@ export function Catalog() {
     [selection, grouped, expanded],
   )
   const [navData, navDispatch] = useControlState(navData0)
-  const onNavEvent = (e: Event) => {
+  const onNavEvent = (e: UiEvent) => {
     navigateOnActivate(navData, e).forEach((ev) => {
       navDispatch(ev)
       if (ev.type === 'navigate' || ev.type === 'activate') {

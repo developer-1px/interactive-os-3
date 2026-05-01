@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
   SidebarAdminFloating,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { NAV, POSTS } from './data'
 import { buildFeedPage } from './build'
@@ -44,7 +44,7 @@ function useFeedNav() {
     return { entities, relationships: { __root__: NAV.map(([id]) => id) } }
   }, [active])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') setActive(ev.id)
@@ -55,7 +55,7 @@ function useFeedNav() {
 function useRxn(postId: string, likes: number, comments: number, shared: number, liked: boolean, onToggle: () => void) {
   const base = useMemo(() => rxnBase(postId, likes, comments, shared, liked), [postId, likes, comments, shared, liked])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'activate' && e.id === `rxLike-${postId}`) onToggle()
   }
@@ -68,7 +68,7 @@ export function Feed() {
   const nav = useFeedNav()
   const [feedTabsData, feedTabsDispatch] = useControlState(useMemo(() => feedTabsBase(), []))
   const feedTabs = { data: feedTabsData, onEvent: feedTabsDispatch }
-  const rxn: Record<string, { data: NormalizedData; onEvent: (e: Event) => void }> = {}
+  const rxn: Record<string, { data: NormalizedData; onEvent: (e: UiEvent) => void }> = {}
   for (const p of POSTS) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     rxn[p.id] = useRxn(p.id, p.likes, p.comments, p.shared, liked.has(p.id), () => toggle(p.id))

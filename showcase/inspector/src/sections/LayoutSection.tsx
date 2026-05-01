@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import {
   NumberInput, Toolbar, ROOT, FOCUS, useControlState,
-  type NormalizedData, type Event,
+  type NormalizedData, type UiEvent,
 } from '@p/ds'
 import { Field } from '../Field'
 import type { Selection } from '../types'
@@ -29,7 +29,7 @@ export function LayoutSection({ sel, set }: {
     relationships: { [ROOT]: ['horizontal', 'vertical'] },
   }), [sel.layoutDir])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'activate') set({ layoutDir: e.id as Dir })
   }

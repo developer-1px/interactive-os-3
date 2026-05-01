@@ -1,5 +1,5 @@
 import { createElement, type ReactNode } from 'react'
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import type { AuditData } from 'virtual:ds-audit'
 import type { TableColumn } from '@p/ds/ui/6-structure/Table'
 import { PARTS, COVERAGE_NOTE } from './partsCatalog'
@@ -14,8 +14,8 @@ export interface FoundationsState {
   leaks: AuditData['leaks']
   byFile: [string, AuditData['exports']][]
   missingDemos: AuditData['exports']
-  nav: { data: NormalizedData; onEvent: (e: Event) => void }
-  presetTools: { data: NormalizedData; onEvent: (e: Event) => void }
+  nav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  presetTools: { data: NormalizedData; onEvent: (e: UiEvent) => void }
   renderDemo: (e: AuditData['exports'][number]) => ReactNode
 }
 

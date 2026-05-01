@@ -1,12 +1,12 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { INITIAL, MEMBERS, activeLabel, statusLabel, statusTone, type Msg } from './data'
 
 export interface ChatState {
   active: string; draft: string; stream: Record<string, Msg[]>
   setActive: (id: string) => void; setDraft: (v: string) => void; send: () => void
-  pubNav: { data: NormalizedData; onEvent: (e: Event) => void }
-  dmNav: { data: NormalizedData; onEvent: (e: Event) => void }
-  mainActions: { data: NormalizedData; onEvent: (e: Event) => void }
+  pubNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  dmNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  mainActions: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildChatPage(s: ChatState): NormalizedData {

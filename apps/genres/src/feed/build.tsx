@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { NAV, POSTS, SUGGESTIONS, TRENDS, type Attachment } from './data'
 
 function AttachmentItem({ a }: { a: Attachment }) {
@@ -48,9 +48,9 @@ function Attachments({ list }: { list: readonly Attachment[] }) {
 
 export interface FeedState {
   liked: Set<string>; toggle: (id: string) => void
-  nav: { data: NormalizedData; onEvent: (e: Event) => void }
-  feedTabs: { data: NormalizedData; onEvent: (e: Event) => void }
-  rxn: Record<string, { data: NormalizedData; onEvent: (e: Event) => void }>
+  nav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  feedTabs: { data: NormalizedData; onEvent: (e: UiEvent) => void }
+  rxn: Record<string, { data: NormalizedData; onEvent: (e: UiEvent) => void }>
 }
 
 export function buildFeedPage(s: FeedState): NormalizedData {

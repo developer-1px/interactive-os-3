@@ -4,7 +4,7 @@ import {
   SearchBox,
   Toolbar,
   useFeature,
-  type Event,
+  type UiEvent,
 } from '@p/ds'
 import { Split } from '@p/ds/ui/9-layout/Split'
 import { Link } from '@tanstack/react-router'
@@ -19,17 +19,17 @@ import { extToPreviewKind, type ViewMode } from '../entities/types'
 export function FinderBody() {
   const [view, dispatch] = useFeature(finderFeature)
 
-  const onColumns = (e: Event) => {
+  const onColumns = (e: UiEvent) => {
     if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
     else if (e.type === 'expand') dispatch({ type: 'expandCol', id: e.id, open: e.open })
   }
-  const onRecent = (e: Event) => {
+  const onRecent = (e: UiEvent) => {
     if (e.type === 'activate') dispatch({ type: 'activateRec', id: e.id })
   }
-  const onFav = (e: Event) => {
+  const onFav = (e: UiEvent) => {
     if (e.type === 'activate') dispatch({ type: 'pinFav', id: e.id })
   }
-  const onView = (e: Event) => {
+  const onView = (e: UiEvent) => {
     if (e.type === 'activate') dispatch({ type: 'setMode', mode: e.id as ViewMode })
   }
 

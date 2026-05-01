@@ -1,9 +1,9 @@
-import { ROOT, fromList, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, fromList, type UiEvent, type NormalizedData } from '@p/ds'
 import { kpis, regionBars, sources, weekBars, type Range } from './data'
 
 export interface AnalyticsState {
   range: Range; setRange: (r: Range) => void
-  rangeNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  rangeNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildAnalyticsPage(s: AnalyticsState): NormalizedData {

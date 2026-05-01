@@ -1,4 +1,4 @@
-import { ROOT, type Event, type NormalizedData } from '@p/ds'
+import { ROOT, type UiEvent, type NormalizedData } from '@p/ds'
 import { DIGEST_OPTS, sectionLabel, splitRow, splitRowRels, type Digest, type SectionId } from './data'
 
 export interface SettingsState {
@@ -6,7 +6,7 @@ export interface SettingsState {
   notifEmail: boolean; notifPush: boolean; notifDigest: Digest
   setSection: (s: SectionId) => void; setName: (v: string) => void; setEmail: (v: string) => void
   setNotifEmail: (v: boolean) => void; setNotifPush: (v: boolean) => void; setNotifDigest: (v: Digest) => void
-  sectionNav: { data: NormalizedData; onEvent: (e: Event) => void }
+  sectionNav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
 }
 
 export function buildSettingsPage(s: SettingsState): NormalizedData {

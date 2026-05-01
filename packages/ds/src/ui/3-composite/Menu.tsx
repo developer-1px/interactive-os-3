@@ -1,5 +1,5 @@
 import { useId, type CSSProperties } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type Event } from '@p/headless/types'
+import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type UiEvent } from '@p/headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/axes'
 import { useRoving } from '@p/headless/roving/useRoving'
 import { MenuPopover, type MenuCtx } from '../4-window/MenuPopover'
@@ -12,20 +12,20 @@ export function Menu({ data, onEvent }: CollectionProps) {
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`
   const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
 
-  const clickEvents = (id: string): Event[] => {
+  const clickEvents = (id: string): UiEvent[] => {
     if (isDisabled(data, id)) return []
     const kids = getChildren(data, id)
     if (!kids.length) return [{ type: 'activate', id }]
     const open = expanded.has(id)
-    const events: Event[] = [{ type: 'expand', id, open: !open }]
+    const events: UiEvent[] = [{ type: 'expand', id, open: !open }]
     const first = !open ? firstEnabled(id) : undefined
     if (first) events.push({ type: 'navigate', id: first })
     return events
   }
 
-  const toggleEvents = (id: string, open: boolean): Event[] => {
+  const toggleEvents = (id: string, open: boolean): UiEvent[] => {
     if (id === ROOT) {
-      const events: Event[] = [{ type: 'open', id: ROOT, open }]
+      const events: UiEvent[] = [{ type: 'open', id: ROOT, open }]
       const first = open ? firstEnabled(ROOT) : undefined
       if (first) events.push({ type: 'navigate', id: first })
       return events

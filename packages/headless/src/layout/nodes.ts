@@ -31,7 +31,7 @@ export type UiComponentName = Register extends { component: infer C extends stri
   ? C
   : string
 
-export type Flow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
+export type LayoutFlow = 'list' | 'cluster' | 'form' | 'prose' | 'split'
 export type Emphasis = 'flat' | 'raised' | 'sunk' | 'callout'
 export type GridCols = 1 | 2 | 3 | 4 | 6 | 12
 export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'muted' | 'small' | 'strong'
@@ -70,18 +70,18 @@ export interface CommonNodeData extends ItemPlacement {
 
 export interface RowNode extends CommonNodeData {
   type: 'Row'
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 export interface ColumnNode extends CommonNodeData {
   type: 'Column'
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 export interface GridNode extends CommonNodeData {
   type: 'Grid'
   cols?: GridCols
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
   /** Card 슬롯 row track owner — 자식 article[data-part="card"]가 subgrid로 상속받는다. */
   cardGrid?: boolean
@@ -101,34 +101,34 @@ export interface SplitNode extends CommonNodeData {
 
 export interface AsideNode extends CommonNodeData {
   type: 'Aside'
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 /** Page main landmark. Renders <main role=main>. 페이지당 1개. */
 export interface MainNode extends CommonNodeData {
   type: 'Main'
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 /** Navigation landmark. Renders <nav role=navigation>. */
 export interface NavNode extends CommonNodeData {
   type: 'Nav'
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 export interface SectionNode extends CommonNodeData {
   type: 'Section'
   heading?: { variant?: TextVariant; content: string }
-  flow?: Flow
+  flow?: LayoutFlow
   variant?: Emphasis
 }
 export interface HeaderNode extends CommonNodeData {
   type: 'Header'
-  flow?: Flow
+  flow?: LayoutFlow
 }
 export interface FooterNode extends CommonNodeData {
   type: 'Footer'
-  flow?: Flow
+  flow?: LayoutFlow
 }
 export interface UiNode extends CommonNodeData {
   type: 'Ui'

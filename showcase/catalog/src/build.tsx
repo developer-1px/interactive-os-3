@@ -10,7 +10,7 @@
 import type { ReactNode } from 'react'
 import {
   merge,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { holyGrail } from '@p/ds/ui/templates'
 import { sidebarAdmin } from '@p/ds/shells/sidebar'
@@ -22,7 +22,7 @@ export interface CatalogState {
   visibleTiers: Tier[]
   grouped: Record<Tier, Contract[]>
   headerLabel: string
-  nav: { data: NormalizedData; onEvent: (e: Event) => void }
+  nav: { data: NormalizedData; onEvent: (e: UiEvent) => void }
   renderDemo: (name: string) => ReactNode
 }
 

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { channels } from './data'
 import { buildBoardPage } from './build'
@@ -26,7 +26,7 @@ function useChannelNav(active: string, setActive: (id: string) => void) {
     return { entities, relationships: { __root__: channels.map((c) => c.id) } }
   }, [active])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') setActive(ev.id)

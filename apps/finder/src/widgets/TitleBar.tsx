@@ -1,6 +1,6 @@
 import {
   Toolbar, ROOT, FOCUS, useControlState,
-  type NormalizedData, type Event,
+  type NormalizedData, type UiEvent,
 } from '@p/ds'
 import { smartGroupOf } from '../features/data'
 import type { ViewMode } from '../entities/types'
@@ -39,7 +39,7 @@ export function TitleBar({
 }) {
   const name = titleOf(path)
   const [data, dispatch] = useControlState(buildViewToolbar(view))
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'activate') onViewChange(e.id as ViewMode)
   }

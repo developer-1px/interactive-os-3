@@ -1,8 +1,8 @@
-import { EXPANDED, FOCUS, TYPEAHEAD, type Event, type NormalizedData } from '../types'
+import { EXPANDED, FOCUS, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
 
-type Handler<T extends Event['type']> = (
+type Handler<T extends UiEvent['type']> = (
   d: NormalizedData,
-  e: Extract<Event, { type: T }>,
+  e: Extract<UiEvent, { type: T }>,
 ) => NormalizedData
 
 const setMeta = (d: NormalizedData, id: string, data: Record<string, unknown>): NormalizedData => ({
@@ -31,7 +31,7 @@ const toggleExpanded = (d: NormalizedData, id: string, open: boolean): Normalize
 
 const identity = (d: NormalizedData) => d
 
-const handlers: { [K in Event['type']]: Handler<K> } = {
+const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   navigate: (d, e) => setMeta(d, FOCUS, { id: e.id }),
   expand: (d, e) => toggleExpanded(d, e.id, e.open),
   open: (d, e) => toggleExpanded(d, e.id, e.open),
@@ -59,5 +59,5 @@ const handlers: { [K in Event['type']]: Handler<K> } = {
   },
 }
 
-export const reduce = (d: NormalizedData, e: Event): NormalizedData =>
-  (handlers[e.type] as Handler<Event['type']>)(d, e)
+export const reduce = (d: NormalizedData, e: UiEvent): NormalizedData =>
+  (handlers[e.type] as Handler<UiEvent['type']>)(d, e)

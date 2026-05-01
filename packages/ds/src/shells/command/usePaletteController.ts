@@ -1,5 +1,5 @@
 import { useReducer, useMemo } from 'react'
-import type { Event } from '@p/headless/types'
+import type { UiEvent } from '@p/headless/types'
 import { INITIAL, keymap, reducer } from './paletteReducer'
 import { usePaletteEntries } from './usePaletteEntries'
 import { toDialogData } from './paletteAdapters'
@@ -16,7 +16,7 @@ export function usePaletteController() {
     dispatch(action)
   }
 
-  const onDialogEvent = (ev: Event) => {
+  const onDialogEvent = (ev: UiEvent) => {
     if (ev.type === 'open' && !ev.open) dispatch({ type: 'close' })
   }
 

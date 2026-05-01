@@ -1,6 +1,6 @@
 import { useMemo, useReducer, useRef } from 'react'
 import { reduce } from '../state/reduce'
-import { EXPANDED, FOCUS, TYPEAHEAD, type Event, type NormalizedData } from '../types'
+import { EXPANDED, FOCUS, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
 
 const EMPTY: NormalizedData = { entities: {}, relationships: {} }
 const SEED_KEYS = [FOCUS, EXPANDED, TYPEAHEAD] as const
@@ -21,10 +21,10 @@ const hydrate = (base: NormalizedData): NormalizedData => {
   return Object.keys(entities).length > 0 ? { entities, relationships: {} } : EMPTY
 }
 
-export function useControlState(base: NormalizedData): [NormalizedData, (e: Event) => void] {
+export function useControlState(base: NormalizedData): [NormalizedData, (e: UiEvent) => void] {
   const [meta, rawDispatch] = useReducer(reduce, base, hydrate)
   const touched = useRef<Set<string>>(new Set())
-  const dispatch = (e: Event) => {
+  const dispatch = (e: UiEvent) => {
     if (e.type === 'navigate') touched.current.add(FOCUS)
     else if (e.type === 'expand' || e.type === 'open') touched.current.add(EXPANDED)
     else if (e.type === 'typeahead') touched.current.add(TYPEAHEAD)

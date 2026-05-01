@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate, ROOT,
   SidebarAdminFloating,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { FMT_ACTS, INITIAL, type Block, type BlockKind } from './data'
 import { buildEditorPage } from './build'
@@ -43,7 +43,7 @@ function useOutlineNav(blocks: Block[], selected: string, setSelected: (id: stri
     return { entities, relationships: { __root__: items.map((b) => b.id) } }
   }, [selected, items])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') setSelected(ev.id)
@@ -62,7 +62,7 @@ export function Editor() {
   const outlineNav = useOutlineNav(blocks, selected, setSelected)
   const toolbarBaseData = useMemo(() => toolbarBase(current?.kind), [current?.kind])
   const [toolbarData, toolbarDispatch] = useControlState(toolbarBaseData)
-  const onToolbarEvent = (e: Event) => {
+  const onToolbarEvent = (e: UiEvent) => {
     toolbarDispatch(e)
     if (e.type === 'activate' && current && e.id.startsWith('t-')) {
       updateKind(current.id, e.id.slice(2) as BlockKind)

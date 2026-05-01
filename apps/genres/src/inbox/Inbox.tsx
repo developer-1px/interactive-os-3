@@ -4,7 +4,7 @@ import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
   ROOT,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { buildInboxPage } from './build'
 import { folders, ACTS, type FolderId } from './data'
@@ -54,20 +54,20 @@ export function Inbox() {
 
   const folderBase = useMemo(() => folderNavBase(folder), [folder])
   const [navData, navDispatch] = useControlState(folderBase)
-  const onFolderEvent = (e: Event) =>
+  const onFolderEvent = (e: UiEvent) =>
     navigateOnActivate(navData, e).forEach((ev) => {
       navDispatch(ev)
       if (ev.type === 'activate') setFolder(ev.id as FolderId)
     })
 
   const [listToolsData, listToolsDispatch] = useControlState(useMemo(() => listToolsBase(), []))
-  const onListToolsEvent = (e: Event) => {
+  const onListToolsEvent = (e: UiEvent) => {
     listToolsDispatch(e)
     if (e.type === 'activate' && e.id === 'btnCompose') alert('compose')
   }
 
   const [detailActionsData, detailActionsDispatch] = useControlState(useMemo(() => detailActionsBase(), []))
-  const onDetailActionsEvent = (e: Event) => detailActionsDispatch(e)
+  const onDetailActionsEvent = (e: UiEvent) => detailActionsDispatch(e)
 
   return (
     <>

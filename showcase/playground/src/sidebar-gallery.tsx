@@ -7,7 +7,7 @@ import {
   sampleSidebarTree,
   sidebarAdmin,
   useControlState,
-  type Event as DsEvent,
+  type UiEvent as DsEvent,
   type NormalizedData,
 } from '@p/ds'
 

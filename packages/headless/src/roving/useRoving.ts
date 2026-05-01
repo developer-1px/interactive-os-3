@@ -1,7 +1,7 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
 import type { Axis } from '../axes'
 import { bindAxis } from '../state/bind'
-import { getExpanded, getFocus, type Event, type NormalizedData } from '../types'
+import { getExpanded, getFocus, type UiEvent, type NormalizedData } from '../types'
 import { useFocusBridge } from '../focus'
 
 // rovingItem 기본기: data-id 기반 이벤트 위임을 hook 내부에서 소유한다.
@@ -13,7 +13,7 @@ const idFrom = (e: { target: EventTarget }): string | null =>
 export function useRoving(
   axis: Axis,
   data: NormalizedData,
-  onEvent: (e: Event) => void,
+  onEvent: (e: UiEvent) => void,
   options: { autoFocus?: boolean } = {},
 ) {
   const focusId = getFocus(data)

@@ -1,4 +1,4 @@
-import { getChildren, getExpanded, type Event, type NormalizedData } from '../types'
+import { getChildren, getExpanded, type UiEvent, type NormalizedData } from '../types'
 
 // 제스처(activate) → 의도(expand/navigate) 변환 헬퍼.
 // ui/ role은 activate 단발만 emit. 소비자가 자기 reducer 직전에 골라 통과시킨다.
@@ -6,7 +6,7 @@ import { getChildren, getExpanded, type Event, type NormalizedData } from '../ty
 // 키보드 axes(composeAxes)와 대칭: 마우스/터치/Enter 모두 activate로 합류 →
 // 같은 헬퍼가 의도 이벤트로 분해.
 
-export type GestureHelper = (d: NormalizedData, e: Event) => Event[]
+export type GestureHelper = (d: NormalizedData, e: UiEvent) => UiEvent[]
 
 // 활성화 시 포커스도 함께 이동 (selection-follows-focus / click-sets-focus).
 export const navigateOnActivate: GestureHelper = (_d, e) =>
@@ -34,7 +34,7 @@ export const expandBranchOnActivate: GestureHelper = (d, e) => {
 
 // 헬퍼 조합. 왼쪽부터 차례로 통과.
 export const composeGestures = (...fns: GestureHelper[]): GestureHelper =>
-  (d, e) => fns.reduce<Event[]>((evs, fn) => evs.flatMap((ev) => fn(d, ev)), [e])
+  (d, e) => fns.reduce<UiEvent[]>((evs, fn) => evs.flatMap((ev) => fn(d, ev)), [e])
 
 // JSX-children 스타일 row/cell 등 (data, onEvent) 흐름 밖의 DOM 요소를 위한 활성화 헬퍼.
 // 클릭과 Enter/Space 키를 단일 activate 콜백으로 합류시킨다.

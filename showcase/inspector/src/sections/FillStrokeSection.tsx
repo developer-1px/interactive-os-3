@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import {
   ColorInput, Input, NumberInput, Toolbar, ROOT, FOCUS, useControlState,
-  type NormalizedData, type Event,
+  type NormalizedData, type UiEvent,
 } from '@p/ds'
 import { Field } from '../Field'
 import type { Selection, StrokeStyle } from '../types'
@@ -66,7 +66,7 @@ function StrokeStyleToolbar({ value, onChange }: { value: StrokeStyle; onChange:
     relationships: { [ROOT]: [...STROKE_STYLES] },
   }), [value])
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) => {
+  const onEvent = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'activate') onChange(e.id as StrokeStyle)
   }

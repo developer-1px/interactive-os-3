@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import {
   Renderer, definePage, useControlState, navigateOnActivate,
   SidebarAdminFloating,
-  type Event, type NormalizedData,
+  type UiEvent, type NormalizedData,
 } from '@p/ds'
 import { ROOT } from '@p/ds'
 import { ACTS, INITIAL, channels, now, type Channel, type Msg } from './data'
@@ -36,7 +36,7 @@ function useChannelList(items: Channel[], active: string, setActive: (id: string
   }, [active, items])
 
   const [data, dispatch] = useControlState(base)
-  const onEvent = (e: Event) =>
+  const onEvent = (e: UiEvent) =>
     navigateOnActivate(data, e).forEach((ev) => {
       dispatch(ev)
       if (ev.type === 'activate') setActive(ev.id)
