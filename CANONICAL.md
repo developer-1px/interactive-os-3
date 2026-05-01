@@ -20,7 +20,7 @@
 | C2 | **상태는 직렬화 가능** | useState 값은 JSON.stringify 가능해야 한다. DOM·함수·Promise를 상태에 두지 않는다 |
 | C3 | **분기는 데이터 룩업** | switch/if 체인 → 선언적 map. 실행 시점이 아닌 정의 시점에 결정 가능해야 한다 |
 | C4 | **명령형은 경계로** | DOM·네트워크·시간 같은 부작용은 ds/core 또는 resource로 격리. widget·route는 선언만 |
-| C5 | **이름이 곧 셀렉터** | 스타일 전용 className 금지. tag + role + aria + data-part로 셀렉트한다 |
+| C5 | **이름이 곧 계약 경계** | 앱/LLM authored className 금지. DS 내부 generated class가 component root를 소유하고, tag + role + aria + data-slot은 그 경계 안에서만 셀렉트한다 |
 | C6 | **정본 ≠ 이상형** | 코드에 한 곳도 안 쓰이는 형태를 정본으로 못 박지 않는다 |
 
 ---
@@ -52,8 +52,8 @@
 - **신뢰된 HTML payload entity**: 외부 라이브러리가 HTML 문자열로 내놓는 결과(마크다운·코드 하이라이트 등)는 명명된 entity 안에서만 `dangerouslySetInnerHTML`을 사용한다. 정본 entity 위치: `src/ds/ui/0-primitive/` (`Prose`, `CodeBlock`). 라우트·widget이 직접 호출 금지 · 임시: 없음 · 유산: route 안 직접 dangerouslySetInnerHTML
 
 ### 셀렉터·스타일
-- **셀렉터 어휘**: tag + role + aria + data-part · 임시: 시연/카탈로그 라우트 본문의 raw role · 유산: 스타일 전용 className
-- **data-part**: content 부품 어휘 (src/ds/parts/) · 임시: 없음 · 유산: aria-roledescription을 namespace로 쓰는 곳
+- **셀렉터 어휘**: DS generated class(root ownership) + tag + role + aria + data-slot · 임시: 시연/카탈로그 라우트 본문의 raw role · 유산: 앱/LLM authored className, 전역 tag/role/data-part 부품 셀렉터
+- **data-part**: 디버그/계약 표식. 스타일 소유권은 `defineStyleContract()` generated class가 가진다 · 임시: 없음 · 유산: aria-roledescription 또는 data-part를 namespace/style owner로 쓰는 곳
 - **색**: semantic token만 import. palette gray N 직접 X · 임시: foundations 내부 정의 · 유산: 컴포넌트가 palette 직접 import
 - **색 weight·opacity**: surface 소유자만 색 보유. item은 mute()/emphasize() · 임시: 없음 · 유산: cell-level color: dim(N)
 
