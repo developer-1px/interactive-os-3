@@ -84,6 +84,10 @@ export const roleCardStyle = defineStyleContract(roleCardContract.name, {
       margin: 0;
       ${typography('bodyStrong')}
     }
+    &[data-part="card"] > [data-slot="footer"] > footer {
+      display: flex;
+      justify-content: flex-end;
+    }
     &[data-part="card"] [data-slot="actions"] {
       display: inline-flex;
       align-items: center;

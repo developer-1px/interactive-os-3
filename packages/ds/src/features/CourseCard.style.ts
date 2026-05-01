@@ -88,6 +88,7 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       align-items: center;
       justify-content: space-between;
       gap: ${pad(2)};
+      min-inline-size: 0;
     }
     &[data-part="card"] > [data-slot="footer"] > footer > small {
       font-size: ${font('xs')};

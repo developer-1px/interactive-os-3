@@ -71,17 +71,19 @@ export function RoleCard({
         ),
         body: desc ? <p>{desc}</p> : null,
         footer: hasActions ? (
-          <div data-slot="actions">
-            {onToggleVisible && typeof visible === 'boolean' && (
-              <Switch
-                checked={visible}
-                aria-label={`${name} 노출`}
-                onClick={() => onToggleVisible(id)}
-              />
-            )}
-            {onEdit && <Button onClick={() => onEdit(id)}>수정</Button>}
-            {onDelete && <Button variant="destructive" onClick={() => onDelete(id)}>삭제</Button>}
-          </div>
+          <footer>
+            <div data-slot="actions">
+              {onToggleVisible && typeof visible === 'boolean' && (
+                <Switch
+                  checked={visible}
+                  aria-label={`${name} 노출`}
+                  onClick={() => onToggleVisible(id)}
+                />
+              )}
+              {onEdit && <Button onClick={() => onEdit(id)}>수정</Button>}
+              {onDelete && <Button variant="destructive" onClick={() => onDelete(id)}>삭제</Button>}
+            </div>
+          </footer>
         ) : null,
       }}
     />
