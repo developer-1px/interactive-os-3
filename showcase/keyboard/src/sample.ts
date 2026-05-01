@@ -1,5 +1,5 @@
 /** /keyboard 페이지 — 공용 샘플 데이터 + ControlState 훅. */
-import { fromList, fromTree, useControlState } from '@p/ds'
+import { fromTree, useControlState } from '@p/ds'
 
 export const sampleTree = [
   { id: 'eng', label: '엔지니어링', kids: [
@@ -30,6 +30,6 @@ export function useTreeData(expandedIds: string[] = ['eng'], focusId: string | n
   return useControlState(base)
 }
 export function useListData(focusId: string | null = 'apple') {
-  const base = fromList(sampleList, { getId, toData, focusId })
+  const base = fromTree(sampleList, { getId, toData, focusId })
   return useControlState(base)
 }

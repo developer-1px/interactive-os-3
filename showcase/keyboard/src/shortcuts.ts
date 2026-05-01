@@ -59,3 +59,83 @@ export const SELECT_KEYS = [
   ['Enter / Space', '리스트 열기 / 선택'],
   ['Esc', '닫기'],
 ] as const
+
+export const ACCORDION_KEYS = [
+  ['Tab', '다음 panel header'],
+  ['Enter / Space', 'header toggle (expand/collapse)'],
+  ['↑ / ↓', 'panel 간 이동 (브라우저 기본 / native details)'],
+] as const
+
+export const DISCLOSURE_KEYS = [
+  ['Enter / Space', 'expand / collapse'],
+  ['Tab', '다음 컨트롤'],
+] as const
+
+export const SWITCH_KEYS = [
+  ['Space', 'toggle on/off'],
+  ['Enter', 'toggle (form submit 위험 — Switch는 Space 권장)'],
+] as const
+
+export const SLIDER_KEYS = [
+  ['→ / ↑', '+1'],
+  ['← / ↓', '-1'],
+  ['PageUp', '+10 (큰 단계)'],
+  ['PageDown', '-10 (큰 단계)'],
+  ['Home', 'min'],
+  ['End', 'max'],
+] as const
+
+export const SEGMENTED_KEYS = [
+  ...ARROW_HORI,
+  ['focus 이동', '선택도 같이 이동 (selection follows focus)'],
+] as const
+
+export const TOGGLEGROUP_KEYS = [
+  ...ARROW_HORI,
+  ['Enter / Space', '개별 toggle on/off'],
+] as const
+
+export const PAGINATION_KEYS = [
+  ['Tab', '페이지 버튼 간 이동 (자연 tab order)'],
+  ['Enter / Space', '페이지로 이동'],
+] as const
+
+export const STEPPER_KEYS = [
+  ['Tab', '다음 step (자연 reading order)'],
+  ['—', 'Stepper는 표시(presentational). 활성화 트리거는 별도 버튼이 가짐'],
+] as const
+
+export const MENUBAR_KEYS = [
+  ...ARROW_HORI,
+  ['↓', '서브메뉴 열기 (구현 시)'],
+  ['Enter / Space', 'menuitem 활성'],
+] as const
+
+export const SPINBUTTON_KEYS = [
+  ['↑', '+step'],
+  ['↓', '-step'],
+  ['PageUp', '+10·step (브라우저별)'],
+  ['PageDown', '-10·step (브라우저별)'],
+  ['Home', 'min'],
+  ['End', 'max'],
+  ['숫자 입력', '직접 타이핑'],
+] as const
+
+export const DATAGRID_KEYS = [
+  ['↓ / ↑', '행 이동 (row-focus 모델)'],
+  ['Home / End', '첫 행 / 마지막 행'],
+  ['Enter', '편집·activate (소비자 정의)'],
+] as const
+
+export const TREEGRID_KEYS = [
+  ['↓ / ↑', '행 이동'],
+  ['→', '확장 / 자식 행으로'],
+  ['←', '축소 / 부모 행으로'],
+  ['Home / End', '첫 / 마지막 행'],
+] as const
+
+export const DIALOG_KEYS = [
+  ['Tab', 'modal 내부 순환 (focus trap, native <dialog>)'],
+  ['Esc', '닫기 (native cancel)'],
+  ['Enter', '기본 버튼 (form 위임)'],
+] as const

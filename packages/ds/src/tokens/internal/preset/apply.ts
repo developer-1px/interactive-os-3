@@ -1,6 +1,7 @@
 import { css } from '../../semantic/css'
 import type { DsPreset } from './types'
 import { tokenRefToCss, elevationToShadow } from './tokenCss'
+import { llmAliasBlock } from './llmAliases'
 
 // @FIXME(srp): rootBlock 170 LOC가 color/typography/size/z-index/heading/tracking/
 //   radius/shell 등 ~10개 카테고리를 한꺼번에 emit. 카테고리별 분리 가능성 있으나
@@ -27,12 +28,12 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
        유지해 base 위에서 살짝 떠 보이게 한다. 페이지 자체 배경은 --ds-base. */
     --ds-bg:     ${tokenRefToCss(p.color.bg)};
     /* --ds-tone = 정직한 neutral 대신 미세한 warm cast(papery) 입힌 회색 소스.
-       seed.variantHue/toneChroma로 preset 갈아끼울 수 있게 변수화. CanvasText 베이스를
+       seed.toneHue/toneChroma로 preset 갈아끼울 수 있게 변수화. CanvasText 베이스를
        hued chip과 합쳐, OS dark mode 추적은 유지하되 톤은 살짝 따뜻하게. */
-    --ds-tone-hue:    ${p.seed.variantHue ?? 70};
-    --ds-tone-chroma: ${p.seed.variantChroma ?? 0.018};
+    --ds-tone-hue:    ${p.seed.toneHue ?? 70};
+    --ds-tone-chroma: ${p.seed.toneChroma ?? 0.018};
     /* tone-tint: hued chip이 CanvasText에 섞이는 비율 (%). 18%=감지 임계, 0=정직한 회색. */
-    --ds-tone-tint:   ${p.seed.variantTint ?? 18};
+    --ds-tone-tint:   ${p.seed.toneTint ?? 18};
     /* step-scale: neutral 1~9 곡선 전체 배율. 1=기본, <1=대비 약화(soft), >1=대비 강화(punchy). */
     --ds-step-scale:  ${p.seed.stepScale ?? 1};
     --ds-tone: color-mix(in oklch,
@@ -181,6 +182,8 @@ const rootBlock = (p: DsPreset, alphaScale = 1) => {
 
     /* hairline shadow 전환기 호환 — 과거 단일 --ds-shadow 소비처 fallback */
     --ds-shadow: var(--ds-elev-2);
+
+    ${llmAliasBlock()}
   `
 }
 

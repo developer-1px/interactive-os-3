@@ -18,7 +18,8 @@ type TreeGridProps = Omit<ComponentPropsWithoutRef<'table'>, 'role' | 'onKeyDown
 export function TreeGrid({ children, ...rest }: TreeGridProps) {
   const { onKeyDown, ref } = useRovingDOM<HTMLTableElement>(null, {
     orientation: 'vertical',
-    itemSelector: '[role="row"]',
+    // 헤더 행 제외 — 본문 행만 roving.
+    itemSelector: '[role="row"]:not(:has(> [role="columnheader"]))',
   })
   return (
     <table ref={ref} role="treegrid" onKeyDown={onKeyDown} {...rest}>

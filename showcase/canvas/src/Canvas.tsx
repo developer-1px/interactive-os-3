@@ -135,6 +135,7 @@ const CompCard = memo(function CompCard({ node }: { node: CompNode }) {
   const isSelected = useIsSelected(node.name)
   return (
     <figure
+      id={node.name}
       data-part="canvas-comp-card"
       data-selected={isSelected || undefined}
       onClick={() => setSelected(getSelected() === node.name ? null : node.name)}

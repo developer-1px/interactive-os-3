@@ -12,8 +12,12 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
 }
 
+/**
+ * APG radiogroup: 양 축 화살표 모두 navigate. orientation 은 시각·aria-orientation 만.
+ * 키보드는 vertical+horizontal 모두 — Home/End 는 하나의 navigate 가 처리하면 충분.
+ */
 export function RadioGroup({ data, onEvent, orientation = 'vertical', autoFocus, ...rest }: CollectionProps<Extra>) {
-  const axis = composeAxes(navigate(orientation), activate)
+  const axis = composeAxes(navigate('vertical'), navigate('horizontal'), activate)
   const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
   const kids = getChildren(data, ROOT)
 

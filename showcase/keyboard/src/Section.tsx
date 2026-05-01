@@ -1,17 +1,38 @@
-/** /keyboard 페이지 — Section · FixtureFrame · ShortcutTable · FocusTracker. */
+/** /keyboard 페이지 — Group · Section · FixtureFrame · ShortcutTable · FocusTracker. */
 import { useState, useRef, useEffect, type ReactNode } from 'react'
+
+export function Group({ title, caption, children }: {
+  title: string
+  caption?: string
+  children: ReactNode
+}) {
+  const id = `kbgrp-${title}`
+  return (
+    <section data-part="kb-group" aria-labelledby={id}>
+      <header data-ds="Column">
+        <h2 id={id}>{title}</h2>
+        {caption && <p data-part="kb-group-caption">{caption}</p>}
+      </header>
+      {children}
+    </section>
+  )
+}
 
 export function FocusTracker() {
   const [info, setInfo] = useState({ tag: '—', role: '—', label: '—', activeId: '—' })
   useEffect(() => {
     const update = () => {
       const el = document.activeElement as HTMLElement | null
-      if (!el) return
+      if (!el || el === document.body) {
+        setInfo({ tag: '—', role: '—', label: '—', activeId: '—' })
+        return
+      }
+      const rawLabel = el.getAttribute('aria-label') ?? el.innerText?.trim() ?? ''
       setInfo({
         tag: el.tagName.toLowerCase(),
         role: el.getAttribute('role') ?? '—',
-        label: el.getAttribute('aria-label') ?? el.textContent?.trim().slice(0, 40) ?? '—',
-        activeId: el.getAttribute('aria-activedescendant') ?? el.id ?? '—',
+        label: rawLabel.length > 40 ? rawLabel.slice(0, 40) + '…' : (rawLabel || '—'),
+        activeId: el.getAttribute('aria-activedescendant') ?? (el.getAttribute('data-id') || el.id || '—'),
       })
     }
     document.addEventListener('focusin', update)
@@ -38,8 +59,8 @@ export function Section({ title, shortcuts, children }: {
   children: ReactNode
 }) {
   return (
-    <section aria-labelledby={`kb-${title}`}>
-      <h2 id={`kb-${title}`}>{title}</h2>
+    <section aria-labelledby={`kb-${title}`} data-part="kb-section">
+      <h3 id={`kb-${title}`}>{title}</h3>
       <div data-ds="Row">
         <FixtureFrame>{children}</FixtureFrame>
         <ShortcutTable rows={shortcuts} />
@@ -71,8 +92,8 @@ function ShortcutTable({ rows }: { rows: ReadonlyArray<readonly [string, string]
     <table data-part="key-map">
       <thead><tr><th scope="col">key</th><th scope="col">action</th></tr></thead>
       <tbody>
-        {rows.map(([k, a]) => (
-          <tr key={k}><th scope="row"><kbd>{k}</kbd></th><td>{a}</td></tr>
+        {rows.map(([k, a], i) => (
+          <tr key={`${k}-${i}`}><th scope="row"><kbd>{k}</kbd></th><td>{a}</td></tr>
         ))}
       </tbody>
     </table>

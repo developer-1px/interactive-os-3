@@ -123,6 +123,7 @@
 
 #### 토큰 (V축 세부)
 - **토큰 계층**: palette(raw scale) → foundations(semantic role/slot/mixin) → style(preset/seed/shell/states) 3층. widget은 semantic 이상만 import · 임시: 없음
+- **토큰 변수명 경계**: system-facing CSS 변수는 `--ds-*`가 정본. LLM-facing 공개 subset은 preset 출력에서 `--color-bg-*`·`--color-text-*`·`--color-border-*`·`--color-action-*`·`--color-state-*`·`--space-*`·`--radius-*`·`--shadow-*`·`--focus-*`·`--size-*`·`--z-*`·`--duration-*`·`--ease-*` alias로만 노출한다. alias의 의미 값은 `--ds-*` 그래프에서 파생하고, `0`·`50%` 같은 CSS 기하 상수만 예외다. component-specific token은 만들지 않는다 · 임시: 없음
 - **위계 토큰**: foundations/layout/hierarchy.ts atom < section < surface < shell 5단 (Gestalt sys layer) · 임시: 없음
 
 #### 알려진 일탈 (수렴 대상)
