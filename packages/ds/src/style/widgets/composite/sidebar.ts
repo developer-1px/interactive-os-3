@@ -81,15 +81,12 @@ export const cssSidebar = () => css`
     font-size: var(--ds-text-xs);
   }
 
-  /* tree.ts indicator()가 [role="treeitem"]::before를 visibility:hidden로 시작시키고
-     [aria-expanded]에서만 보이게 한다(chevron 토글 패턴). 사이드바에서는 [data-icon]
-     leaf도 같은 ::before slot에 lucide 아이콘을 그리므로 visibility를 다시 켠다.
-     mask-image는 [data-icon="<token>"]::before가 이미 덮어 chevron mask와 충돌하지 않는다. */
-  nav[data-part="sidebar"] [role="treeitem"][data-icon]::before {
-    visibility: visible;
+  /* Tree는 아이콘을 item이 아니라 leading slot에 둔다. current item은 같은 ARIA
+     selector로 색이 승격되므로 아이콘 opacity만 맞춰준다. */
+  nav[data-part="sidebar"] [role="treeitem"] > [data-slot="leading"]::before {
     opacity: .75;
   }
-  nav[data-part="sidebar"] [role="treeitem"][aria-current="page"][data-icon]::before {
+  nav[data-part="sidebar"] [role="treeitem"][aria-current]:not([aria-current="false"]) > [data-slot="leading"]::before {
     opacity: 1;
   }
 

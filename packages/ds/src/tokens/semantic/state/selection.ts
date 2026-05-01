@@ -3,6 +3,7 @@ import {accent, text} from '../color/semantic'
 import { tint } from '../../scalar/color'
 
 const w = (sel: string) => `:where(${sel})`
+const current = '[aria-current]:not([aria-current="false"])'
 
 // highlighted — 키보드 탐색 강조. tint + accent 텍스트로 톤 다운.
 /** @demo type=selector fn=highlighted args=["li"] */
@@ -17,7 +18,7 @@ export const highlighted = (sel: string) => css`
 /** @demo type=selector fn=selected args=["li"] */
 export const selected = (sel: string) => css`
   ${w(sel)}[aria-selected="true"],
-  ${w(sel)}[aria-current="true"],
+  ${w(sel)}${current},
   ${w(sel)}[aria-pressed="true"],
   ${w(sel)}[aria-checked="true"] {
     background-color: ${tint(accent(), 14)};
@@ -29,7 +30,7 @@ export const selected = (sel: string) => css`
 // selectedStrong — 풀 accent fill. 짧은 팝오버 리스트(menu)처럼 "지금 이거" 강조가
 // 필요한 컨텍스트에서 widget이 호출한다. 텍스트 대비를 위해 onAccent 사용.
 /** @demo type=selector fn=selectedStrong args=["li"] */
-export const selectedStrong = (sel: string, on: string[] = ['[aria-selected="true"]', '[aria-current="true"]', '[aria-checked="true"]', ':focus']) => css`
+export const selectedStrong = (sel: string, on: string[] = ['[aria-selected="true"]', current, '[aria-checked="true"]', ':focus']) => css`
   ${on.map((s) => `${w(sel)}${s}`).join(',\n  ')} {
     background-color: ${accent()};
     color: ${text('on-accent')};

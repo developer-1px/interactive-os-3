@@ -20,7 +20,7 @@ function buildNavTree(page: PageId): NormalizedData {
     for (const it of navItems.filter((n) => n.section === section)) {
       entities[it.id] = {
         id: it.id,
-        data: { label: it.label, icon: it.icon, badge: it.badge, selected: it.id === page },
+        data: { label: it.label, icon: it.icon, badge: it.badge, current: it.id === page || undefined },
       }
     }
   }

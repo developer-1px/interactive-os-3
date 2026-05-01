@@ -5,7 +5,7 @@
 const triggers: Record<string, string> = {
   highlighted:    ':focus',
   selected:       '[aria-selected="true"]',
-  selectedStrong: '[aria-current="true"]',
+  selectedStrong: '[aria-current]:not([aria-current="false"])',
   disabled:       '[aria-disabled="true"]',
 }
 export default triggers
