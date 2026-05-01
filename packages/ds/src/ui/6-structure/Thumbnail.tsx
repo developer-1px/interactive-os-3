@@ -4,7 +4,7 @@ type ThumbnailProps = ComponentPropsWithoutRef<'img'> & {
   src: string
   alt: string
   /** aspect ratio — data-ratio attribute로 스타일에 전달. */
-  ratio?: '1/1' | '16/9' | '4/3' | '3/4'
+  ratio?: 'square' | '1/1' | '16/9' | '4/3' | '3/4'
 }
 
 /**

@@ -17,4 +17,5 @@ export const cssThumbnail = () => css`
   img[data-part="thumbnail"][data-ratio="4/3"]  { aspect-ratio: 4 / 3; }
   img[data-part="thumbnail"][data-ratio="3/4"]  { aspect-ratio: 3 / 4; }
   img[data-part="thumbnail"][data-ratio="1/1"]  { aspect-ratio: 1 / 1; }
+  img[data-part="thumbnail"][data-ratio="square"]  { aspect-ratio: 1 / 1; }
 `

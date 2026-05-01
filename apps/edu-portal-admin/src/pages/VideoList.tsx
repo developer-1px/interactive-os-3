@@ -80,8 +80,8 @@ export function VideoList() {
       h_completion: { id: 'h_completion', data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('completion'), 'data-num': 'true' }, content: <button type="button" onClick={() => onSort('completion')}>완료율</button> } },
       h_rating:     { id: 'h_rating',     data: { type: 'Ui', component: 'ColumnHeader', props: { 'data-num': 'true' }, content: '별점' } },
       h_status:     { id: 'h_status',     data: { type: 'Ui', component: 'ColumnHeader', content: '상태' } },
-      h_visible:    { id: 'h_visible',    data: { type: 'Ui', component: 'ColumnHeader', content: '노출' } },
-      h_createdAt:  { id: 'h_createdAt',  data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('createdAt'),   'data-num': 'true' }, content: <button type="button" onClick={() => onSort('createdAt')}>등록일</button> } },
+      h_visible:    { id: 'h_visible',    data: { type: 'Ui', component: 'ColumnHeader', props: { 'data-nowrap': 'true' }, content: '노출' } },
+      h_createdAt:  { id: 'h_createdAt',  data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('createdAt'),   'data-num': 'true', 'data-nowrap': 'true' }, content: <button type="button" onClick={() => onSort('createdAt')}>등록일</button> } },
       h_manage:     { id: 'h_manage',     data: { type: 'Ui', component: 'ColumnHeader', props: { 'aria-label': '관리' }, content: '' } },
 
       bodyGroup: { id: 'bodyGroup', data: { type: 'Ui', component: 'RowGroup' } },
@@ -168,18 +168,18 @@ function bodyRowNodes(items: typeof videos): EntityMap {
     out[`c-${v.id}-status`] = { id: `c-${v.id}-status`, data: { type: 'Ui', component: 'GridCell' } }
     out[`b-${v.id}-status`] = { id: `b-${v.id}-status`, data: { type: 'Ui', component: 'Badge', props: { tone: STATUS_TONE[v.status] ?? 'neutral' }, content: v.status } }
 
-    out[`c-${v.id}-visible`] = { id: `c-${v.id}-visible`, data: { type: 'Ui', component: 'GridCell',
+    out[`c-${v.id}-visible`] = { id: `c-${v.id}-visible`, data: { type: 'Ui', component: 'GridCell', props: { 'data-nowrap': 'true' },
     } }
     out[`visible-${v.id}`] = { id: `visible-${v.id}`, data: {
       type: 'Text', variant: v.visible ? 'strong' : 'muted', content: v.visible ? '노출' : '숨김',
     } }
 
-    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' } } }
+    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true', 'data-nowrap': 'true' } } }
     out[`createdAt-${v.id}`] = { id: `createdAt-${v.id}`, data: {
       type: 'Text', variant: 'small', content: v.createdAt,
     } }
 
-    out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' } } }
+    out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true', 'data-nowrap': 'true' } } }
     out[`manage-${v.id}`] = { id: `manage-${v.id}`, data: {
       type: 'Ui', component: 'Link',
       props: { to: EDIT_ROUTE, params: { id: v.id }, label: '수정', 'aria-label': `${v.title} 수정` },

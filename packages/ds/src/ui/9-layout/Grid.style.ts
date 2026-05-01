@@ -128,6 +128,10 @@ export const cssGrid = () => [
     [role="columnheader"][data-num="true"] {
       text-align: end;
     }
+    [role="gridcell"][data-nowrap="true"],
+    [role="columnheader"][data-nowrap="true"] {
+      white-space: nowrap;
+    }
 
     /* columnheader — 얇은 상단 리본. 배경은 덜 때리고 글자를 강조. */
     [role="columnheader"] {
