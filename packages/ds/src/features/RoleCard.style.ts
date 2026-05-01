@@ -1,58 +1,104 @@
 import { css, text, typography } from '../tokens/semantic'
 import { font, pad } from '../tokens/scalar'
+import { defineStyleContract } from '../style/contract'
+import { roleCardContract } from './RoleCard.contract'
 
 /**
- * RoleCard slot inner styling — drag handle + icon + 본문/액션.
- * 카드 root layout(flex stack/border)은 parts/card.ts owner.
+ * RoleCard generated class contract.
+ *
+ * root class가 component boundary를 소유하고, tag/slot selector는 그 아래에서만
+ * anatomy를 고른다. 전역 `article[data-card="role"]` selector는 쓰지 않는다.
  */
-export const cssRoleCard = () => css`
-  /* preview 슬롯 — drag handle + icon 가로 묶음 (작은 줄). 일반 preview override. */
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] {
-    min-block-size: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    align-self: start;
-  }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure {
-    margin: 0;
-    display: flex; align-items: center; gap: ${pad(2)};
-  }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"] {
-    padding: ${pad(0.5)};
-    background: transparent; border: 0;
-    color: ${text('mute')};
-    font-size: ${font('lg')};
-    line-height: 1;
-    cursor: grab;
-  }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:hover { color: ${text('subtle')}; }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > button[aria-label*="드래그"]:active { cursor: grabbing; }
-  article[data-part="card"][data-card="role"] > [data-slot="preview"] > figure > span {
-    font-size: ${font('xl')};
-    line-height: 1;
-    inline-size: 28px;
-    text-align: center;
-  }
+export const roleCardStyle = defineStyleContract(roleCardContract.name, {
+  root: css`
+    &[data-part="card"] {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: ${pad(2)};
+      row-gap: ${pad(1)};
+    }
+    &[data-part="card"] > [data-slot="preview"] {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      min-block-size: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      align-self: start;
+    }
+    &[data-part="card"] > [data-slot="title"] {
+      grid-column: 2;
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="body"] {
+      grid-column: 2;
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="footer"] {
+      grid-column: 2;
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="preview"] > figure {
+      margin: 0;
+      display: inline-grid;
+      grid-template-columns: auto auto;
+      align-items: center;
+      gap: ${pad(1)};
+    }
+    &[data-part="card"] [data-slot="drag"] {
+      padding: ${pad(0.5)};
+      background: transparent;
+      border: 0;
+      color: ${text('mute')};
+      cursor: grab;
+    }
+    &[data-part="card"] [data-slot="drag"]::before {
+      margin-inline-end: 0;
+    }
+    &[data-part="card"] [data-slot="drag"]:hover {
+      color: ${text('subtle')};
+    }
+    &[data-part="card"] [data-slot="drag"]:active {
+      cursor: grabbing;
+    }
+    &[data-part="card"] [data-slot="icon"] {
+      display: inline-grid;
+      place-items: center;
+      inline-size: 2rem;
+      block-size: 2rem;
+      color: ${text('subtle')};
+      font-size: ${font('xl')};
+    }
+    &[data-part="card"] [data-slot="icon"]::before {
+      margin-inline-end: 0;
+    }
+    &[data-part="card"] > [data-slot="title"] > header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: ${pad(1)};
+      min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
+      margin: 0;
+      ${typography('bodyStrong')}
+    }
+    &[data-part="card"] [data-slot="actions"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: ${pad(1)};
+      inline-size: 100%;
+    }
+    &[data-part="card"] > [data-slot="body"] > p {
+      margin: 0;
+      font-size: ${font('sm')};
+      color: ${text('mute')};
+      line-height: 1.5;
+    }
+  `,
+})
 
-  /* title 슬롯 — h3 + 우측 meta+actions */
-  article[data-part="card"][data-card="role"] > [data-slot="title"] > header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: ${pad(2)};
-  }
-  article[data-part="card"][data-card="role"] > [data-slot="title"] [data-part="heading"][data-level="h3"] {
-    margin: 0;
-    ${typography('bodyStrong')}
-  }
-  article[data-part="card"][data-card="role"] > [data-slot="title"] > header > div {
-    display: flex; align-items: center; gap: ${pad(1)};
-  }
-
-  /* body 슬롯 — desc */
-  article[data-part="card"][data-card="role"] > [data-slot="body"] > p {
-    margin: 0;
-    font-size: ${font('sm')};
-    color: ${text('mute')};
-    line-height: 1.5;
-  }
-`
+export const cssRoleCard = () => roleCardStyle.css

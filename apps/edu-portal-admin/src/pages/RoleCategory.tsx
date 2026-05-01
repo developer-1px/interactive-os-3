@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Renderer, definePage, ROOT, Switch, type NormalizedData } from '@p/ds'
+import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { roleCategories as initial, type RoleCategory as RoleCategoryT } from '../entities/data'
 
 export function RoleCategory() {
   const [list, setList] = useState(initial)
   const toggle = (id: string) =>
     setList((prev) => prev.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)))
+  const edit = (_id: string) => undefined
+  const remove = (_id: string) => undefined
 
   const entities: NormalizedData['entities'] = {
     [ROOT]: { id: ROOT, data: {} },
@@ -14,7 +16,7 @@ export function RoleCategory() {
     main: { id: 'main', data: { type: 'Column', flow: 'form', grow: true } },
 
     rolesList: { id: 'rolesList', data: { type: 'Column', flow: 'list', label: '역할 카테고리' } },
-    ...roleCardNodes(list, toggle),
+    ...roleCardNodes(list, toggle, edit, remove),
 
     addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 역할 카테고리 추가' } },
 
@@ -44,7 +46,12 @@ export function RoleCategory() {
   return <Renderer page={definePage({ entities, relationships })} />
 }
 
-function roleCardNodes(list: RoleCategoryT[], toggle: (id: string) => void) {
+function roleCardNodes(
+  list: RoleCategoryT[],
+  toggle: (id: string) => void,
+  edit: (id: string) => void,
+  remove: (id: string) => void,
+) {
   const out: NormalizedData['entities'] = {}
   for (const c of list) {
     out[`card-${c.id}`] = {
@@ -52,21 +59,15 @@ function roleCardNodes(list: RoleCategoryT[], toggle: (id: string) => void) {
       data: {
         type: 'Ui', component: 'RoleCard',
         props: {
+          id: c.id,
           icon: c.icon,
           name: c.name,
           desc: c.desc,
-          meta: <mark data-variant="info">영상 {c.videoIds.length}개</mark>,
-          actions: (
-            <>
-              <Switch
-                checked={c.visible}
-                aria-label={`${c.name} 노출`}
-                onClick={() => toggle(c.id)}
-              />
-              <button type="button">수정</button>
-              <button type="button">삭제</button>
-            </>
-          ),
+          meta: `영상 ${c.videoIds.length}개`,
+          visible: c.visible,
+          onToggleVisible: toggle,
+          onEdit: edit,
+          onDelete: remove,
         },
       },
     }
