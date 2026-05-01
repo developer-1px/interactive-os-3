@@ -40,6 +40,7 @@ import { TabList, Tab, TabPanel } from './ui/3-composite/Tabs'
 import { OrderableList } from './ui/3-composite/OrderableList'
 import { DataGrid } from './ui/3-composite/DataGrid'
 import { DataGridRow } from './ui/3-composite/DataGridRow'
+import { HeaderGroup } from './ui/3-composite/HeaderGroup'
 import { RowGroup } from './ui/3-composite/RowGroup'
 import { ColumnHeader } from './ui/3-composite/ColumnHeader'
 import { RowHeader } from './ui/3-composite/RowHeader'
@@ -61,6 +62,7 @@ import { FeedPost } from './features/FeedPost'
 import { ProductCard } from './features/ProductCard'
 import { ContractCard } from './features/ContractCard'
 import { Card } from './ui/6-structure/Card'
+import { Thumbnail } from './ui/6-structure/Thumbnail'
 import { Table } from './ui/6-structure/Table'
 import { BarChart } from './ui/patterns/BarChart'
 import { Top10List } from './ui/patterns/Top10List'
@@ -118,6 +120,7 @@ export const uiRegistry = {
   OrderableList: { component: OrderableList, zone: 'composite' },
   DataGrid:      { component: DataGrid,      zone: 'composite' },
   DataGridRow:   { component: DataGridRow,   zone: 'composite' },
+  HeaderGroup:   { component: HeaderGroup,   zone: 'composite' },
   RowGroup:      { component: RowGroup,      zone: 'composite' },
   ColumnHeader:  { component: ColumnHeader,  zone: 'composite' },
   RowHeader:     { component: RowHeader,     zone: 'composite' },
@@ -137,6 +140,7 @@ export const uiRegistry = {
   ProductCard:   { component: ProductCard,   zone: 'pattern' },
   ContractCard:  { component: ContractCard,  zone: 'pattern' },
   Card:          { component: Card,          zone: 'pattern' },
+  Thumbnail:     { component: Thumbnail,     zone: 'pattern' },
   Table:         { component: Table,         zone: 'pattern' },
   BarChart:      { component: BarChart,      zone: 'pattern' },
   Top10List:     { component: Top10List,     zone: 'pattern' },

@@ -1,10 +1,13 @@
-/* eslint-disable no-restricted-syntax -- TODO: 셀 inline style을 ds Text 변형/widget으로 이전 */
 import { useState } from 'react'
 import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
 import { videos, LEVEL_TONE, STATUS_TONE } from '../entities/data'
 
 type SortKey = 'title' | 'enrolled' | 'completion' | 'createdAt'
 type SortDir = 'ascending' | 'descending'
+type EntityMap = NormalizedData['entities']
+type RelationshipMap = NormalizedData['relationships']
+
+const EDIT_ROUTE = '/edu-portal-admin/videos/$id/edit'
 
 export function VideoList() {
   const [q, setQ] = useState('')
@@ -45,7 +48,6 @@ export function VideoList() {
         type: 'Ui', component: 'Input',
         props: { 'aria-label': '검색', placeholder: '영상 제목, 키워드 검색', value: q, onChange: (e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value) },
       } },
-      tb_search: { id: 'tb_search', data: { type: 'Ui', component: 'Button', content: '검색' } },
       tb_sep: { id: 'tb_sep', data: { type: 'Ui', component: 'Separator', props: { orientation: 'vertical' } } },
       tb_level: { id: 'tb_level', data: {
         type: 'Ui', component: 'Select',
@@ -68,7 +70,7 @@ export function VideoList() {
 
       // DataGrid
       grid: { id: 'grid', data: { type: 'Ui', component: 'DataGrid', props: { 'aria-label': '영상 목록' } } },
-      headGroup: { id: 'headGroup', data: { type: 'Ui', component: 'RowGroup' } },
+      headGroup: { id: 'headGroup', data: { type: 'Ui', component: 'HeaderGroup' } },
       headRow: { id: 'headRow', data: { type: 'Ui', component: 'DataGridRow' } },
       h_thumb:      { id: 'h_thumb',      data: { type: 'Ui', component: 'ColumnHeader', props: { 'aria-label': '썸네일' }, content: '' } },
       h_title:      { id: 'h_title',      data: { type: 'Ui', component: 'ColumnHeader', props: { sort: sortOf('title') },      content: <button type="button" onClick={() => onSort('title')}>영상 제목</button> } },
@@ -88,7 +90,7 @@ export function VideoList() {
     relationships: {
       [ROOT]: ['page'],
       page: ['toolbar', 'grid'],
-      toolbar: ['tb_q','tb_search','tb_sep','tb_level','tb_role','tb_status','tb_count'],
+      toolbar: ['tb_q','tb_sep','tb_level','tb_role','tb_status','tb_count'],
       grid: ['headGroup', 'bodyGroup'],
       headGroup: ['headRow'],
       headRow: ['h_thumb','h_title','h_level','h_roles','h_enrolled','h_completion','h_rating','h_status','h_visible','h_createdAt','h_manage'],
@@ -103,45 +105,63 @@ export function VideoList() {
 // 썸네일 — picsum.photos seeded로 id마다 안정된 이미지. 16:9, 120x68.
 const thumbUrl = (id: string) => `https://picsum.photos/seed/${id}/240/136`
 
-function bodyRowNodes(items: typeof videos) {
-  const out: Record<string, { id: string; data: Record<string, unknown> }> = {}
+function bodyRowNodes(items: typeof videos): EntityMap {
+  const out: EntityMap = {}
   for (const v of items) {
     out[`row-${v.id}`] = { id: `row-${v.id}`, data: { type: 'Ui', component: 'DataGridRow' } }
 
-    const detailHref = `/edu-portal-admin/videos/${v.id}/edit`
-
-    // 썸네일 — 영상 목록의 주 시각. <a>로 감싸서 pressable 신호 확보.
     out[`c-${v.id}-thumb`] = { id: `c-${v.id}-thumb`, data: {
       type: 'Ui', component: 'GridCell',
-      content: <a href={detailHref} aria-label={`${v.title} 수정`}><img src={thumbUrl(v.id)} alt="" width={120} height={68} loading="lazy" style={{ display: 'block', borderRadius: 'var(--ds-radius-md)', objectFit: 'cover', background: 'var(--ds-base)' }} /></a>,
+    } }
+    out[`thumb-${v.id}`] = { id: `thumb-${v.id}`, data: {
+      type: 'Ui', component: 'Thumbnail',
+      width: 120,
+      props: { src: thumbUrl(v.id), alt: '', ratio: '16/9', loading: 'lazy' },
     } }
 
-    // title은 pressable link (상세로), duration은 읽기 전용 메타.
     out[`c-${v.id}-title`] = { id: `c-${v.id}-title`, data: {
       type: 'Ui', component: 'GridCell',
-      content: <>
-        <a href={detailHref} style={{ display: 'block', fontWeight: 600, marginBlockEnd: 2 }}>{v.title}</a>
-        <small style={{ color: 'var(--ds-muted)', fontVariantNumeric: 'tabular-nums' }}>{v.duration}</small>
-      </>,
+    } }
+    out[`titleStack-${v.id}`] = { id: `titleStack-${v.id}`, data: { type: 'Column', flow: 'list' } }
+    out[`titleLink-${v.id}`] = { id: `titleLink-${v.id}`, data: {
+      type: 'Ui', component: 'Link',
+      props: { to: EDIT_ROUTE, params: { id: v.id }, label: v.title, 'aria-label': `${v.title} 수정` },
+    } }
+    out[`titleMeta-${v.id}`] = { id: `titleMeta-${v.id}`, data: {
+      type: 'Text', variant: 'small', content: v.duration,
     } }
 
     out[`c-${v.id}-level`]  = { id: `c-${v.id}-level`,  data: { type: 'Ui', component: 'GridCell' } }
     out[`b-${v.id}-level`]  = { id: `b-${v.id}-level`,  data: { type: 'Ui', component: 'Badge', props: { tone: LEVEL_TONE[v.level] ?? 'neutral' }, content: v.level } }
 
-    out[`c-${v.id}-roles`]  = { id: `c-${v.id}-roles`,  data: { type: 'Ui', component: 'GridCell', content: <span style={{ color: 'var(--ds-muted)' }}>{v.roles.join(', ')}</span> } }
+    out[`c-${v.id}-roles`]  = { id: `c-${v.id}-roles`,  data: { type: 'Ui', component: 'GridCell' } }
+    out[`roles-${v.id}`] = { id: `roles-${v.id}`, data: { type: 'Row', flow: 'cluster' } }
+    v.roles.forEach((role, index) => {
+      out[`role-${v.id}-${index}`] = { id: `role-${v.id}-${index}`, data: {
+        type: 'Ui', component: 'Badge', props: { variant: 'default' }, content: role,
+      } }
+    })
 
     out[`c-${v.id}-enrolled`] = { id: `c-${v.id}-enrolled`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: v.enrolled } }
 
-    // completion → Progress + % (폭 120px로 확장해 시각 신호 충분히)
-    out[`c-${v.id}-completion`] = { id: `c-${v.id}-completion`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
-      content: v.completion == null
-        ? <span style={{ color: 'var(--ds-muted)' }}>—</span>
-        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, justifyContent: 'flex-end' }}><progress value={v.completion} max={100} aria-label={`완료율 ${v.completion}%`} style={{ inlineSize: 120 }} /><strong>{v.completion}%</strong></span>,
-    } }
+    out[`c-${v.id}-completion`] = { id: `c-${v.id}-completion`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' } } }
+    if (v.completion == null) {
+      out[`completionEmpty-${v.id}`] = { id: `completionEmpty-${v.id}`, data: { type: 'Text', variant: 'muted', content: '—' } }
+    } else {
+      out[`completion-${v.id}`] = { id: `completion-${v.id}`, data: { type: 'Row', flow: 'cluster' } }
+      out[`completionBar-${v.id}`] = { id: `completionBar-${v.id}`, data: {
+        type: 'Ui', component: 'Progress',
+        width: 96,
+        props: { value: v.completion, max: 100, 'aria-label': `완료율 ${v.completion}%` },
+      } }
+      out[`completionValue-${v.id}`] = { id: `completionValue-${v.id}`, data: {
+        type: 'Text', variant: 'strong', content: `${v.completion}%`, width: 44, align: 'end',
+      } }
+    }
 
     out[`c-${v.id}-rating`] = { id: `c-${v.id}-rating`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' },
       content: v.rating == null
-        ? <span style={{ color: 'var(--ds-muted)' }}>—</span>
+        ? '—'
         : <span data-icon="star" aria-label={`별점 ${v.rating}`}>{v.rating}</span>,
     } }
 
@@ -149,27 +169,46 @@ function bodyRowNodes(items: typeof videos) {
     out[`b-${v.id}-status`] = { id: `b-${v.id}-status`, data: { type: 'Ui', component: 'Badge', props: { tone: STATUS_TONE[v.status] ?? 'neutral' }, content: v.status } }
 
     out[`c-${v.id}-visible`] = { id: `c-${v.id}-visible`, data: { type: 'Ui', component: 'GridCell',
-      content: v.visible
-        ? <span style={{ color: 'var(--ds-fg)' }}>노출</span>
-        : <span style={{ color: 'var(--ds-muted)' }}>숨김</span>,
+    } }
+    out[`visible-${v.id}`] = { id: `visible-${v.id}`, data: {
+      type: 'Text', variant: v.visible ? 'strong' : 'muted', content: v.visible ? '노출' : '숨김',
     } }
 
-    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' }, content: <span style={{ color: 'var(--ds-muted)' }}>{v.createdAt}</span> } }
+    out[`c-${v.id}-createdAt`] = { id: `c-${v.id}-createdAt`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' } } }
+    out[`createdAt-${v.id}`] = { id: `createdAt-${v.id}`, data: {
+      type: 'Text', variant: 'small', content: v.createdAt,
+    } }
 
-    out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell' } }
-    out[`b-${v.id}-manage`] = { id: `b-${v.id}-manage`, data: { type: 'Ui', component: 'Button', content: '수정' } }
+    out[`c-${v.id}-manage`] = { id: `c-${v.id}-manage`, data: { type: 'Ui', component: 'GridCell', props: { 'data-num': 'true' } } }
+    out[`manage-${v.id}`] = { id: `manage-${v.id}`, data: {
+      type: 'Ui', component: 'Link',
+      props: { to: EDIT_ROUTE, params: { id: v.id }, label: '수정', 'aria-label': `${v.title} 수정` },
+    } }
   }
   return out
 }
 
-function bodyRowRels(items: typeof videos) {
-  const out: Record<string, string[]> = {}
+function bodyRowRels(items: typeof videos): RelationshipMap {
+  const out: RelationshipMap = {}
   const keys = ['thumb','title','level','roles','enrolled','completion','rating','status','visible','createdAt','manage']
   for (const v of items) {
     out[`row-${v.id}`] = keys.map((k) => `c-${v.id}-${k}`)
+    out[`c-${v.id}-thumb`] = [`thumb-${v.id}`]
+    out[`c-${v.id}-title`] = [`titleStack-${v.id}`]
+    out[`titleStack-${v.id}`] = [`titleLink-${v.id}`, `titleMeta-${v.id}`]
     out[`c-${v.id}-level`]   = [`b-${v.id}-level`]
+    out[`c-${v.id}-roles`] = [`roles-${v.id}`]
+    out[`roles-${v.id}`] = v.roles.map((_, index) => `role-${v.id}-${index}`)
+    out[`c-${v.id}-completion`] = [
+      v.completion == null ? `completionEmpty-${v.id}` : `completion-${v.id}`,
+    ]
+    if (v.completion != null) {
+      out[`completion-${v.id}`] = [`completionBar-${v.id}`, `completionValue-${v.id}`]
+    }
     out[`c-${v.id}-status`]  = [`b-${v.id}-status`]
-    out[`c-${v.id}-manage`]  = [`b-${v.id}-manage`]
+    out[`c-${v.id}-visible`] = [`visible-${v.id}`]
+    out[`c-${v.id}-createdAt`] = [`createdAt-${v.id}`]
+    out[`c-${v.id}-manage`]  = [`manage-${v.id}`]
   }
   return out
 }
