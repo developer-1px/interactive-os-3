@@ -33,7 +33,7 @@ export function CourseCategory() {
 
     list: { id: 'list', data: { type: 'Column', flow: 'list', label: '코스 카테고리' } },
     ...certCardNodes(list, toggle, edit, remove),
-    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 코스 카테고리 추가' } },
+    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus', variant: 'primary' }, content: '새 코스 카테고리 추가' } },
 
     aside:     { id: 'aside',     data: { type: 'Aside', flow: 'form', width: 300 } },
     infoSec:   { id: 'infoSec',   data: { type: 'Section', labelledBy: 'info-h' } },

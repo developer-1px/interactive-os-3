@@ -1,4 +1,4 @@
-import { SHELL_MOBILE_MAX, css, radius, text, typography } from '@p/ds/tokens/semantic'
+import { SHELL_MOBILE_MAX, border, css, hairlineWidth, radius, surface, text, typography } from '@p/ds/tokens/semantic'
 import { pad } from '@p/ds/tokens/scalar'
 
 // edu-portal-admin — admin 백오피스 셸 (sidebar | workspace / topbar + content).
@@ -36,6 +36,16 @@ export const eduPortalAdminCss = css`
   }
   main[data-part="edu-portal-admin-app"] section[data-part="content"] > [data-page-root] {
     padding: 0;
+    inline-size: 100%;
+    max-inline-size: 72rem;
+    margin-inline: auto;
+  }
+  main[data-part="edu-portal-admin-app"] section[data-part="content"] > [data-page-root] > aside:not([data-part]) {
+    background: ${surface()};
+    border: ${hairlineWidth()} solid ${border()};
+    border-inline-start: ${hairlineWidth()} solid ${border()};
+    border-left: ${hairlineWidth()} solid ${border()};
+    border-radius: ${radius('md')};
   }
 
   /* nav-toggle은 데스크톱에서 숨김 — admin/catalog 공통 */

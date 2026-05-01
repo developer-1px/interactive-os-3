@@ -68,7 +68,7 @@ export function CourseCard({
                     onClick={() => onToggleVisible(id)}
                   />
                 )}
-                {onEdit && <Button onClick={() => onEdit(id)}>수정</Button>}
+                {onEdit && <Button data-icon="edit" onClick={() => onEdit(id)}>수정</Button>}
                 {!locked && onDelete && (
                   <Button variant="destructive" onClick={() => onDelete(id)}>삭제</Button>
                 )}

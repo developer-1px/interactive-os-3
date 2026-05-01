@@ -17,6 +17,7 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       align-items: start;
       column-gap: ${pad(2)};
       row-gap: ${pad(1)};
+      padding: ${pad(2)};
     }
 
     &[data-part="card"] > [data-slot="preview"] {
@@ -75,6 +76,7 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       display: flex;
       flex-direction: row;
       align-items: center;
+      flex-wrap: wrap;
       gap: ${pad(1)};
       min-inline-size: 0;
     }
@@ -99,11 +101,17 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: ${pad(2)};
+      gap: ${pad(1.5)};
     }
     &[data-part="card"] > [data-slot="footer"] > div > small {
+      display: inline-flex;
+      align-items: center;
       font-size: ${font('xs')};
-      color: ${text('mute')};
+      color: ${text('subtle')};
+      background: ${surface('subtle')};
+      border: ${hairlineWidth()} solid ${border()};
+      border-radius: ${radius('pill')};
+      padding: ${pad(0.5)} ${pad(1.5)};
       white-space: nowrap;
     }
     &[data-part="card"] [data-slot="actions"] {
@@ -111,7 +119,7 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       align-items: center;
       justify-content: flex-end;
       flex-wrap: wrap;
-      gap: ${pad(1)};
+      gap: ${pad(1.5)};
     }
   `,
 })
