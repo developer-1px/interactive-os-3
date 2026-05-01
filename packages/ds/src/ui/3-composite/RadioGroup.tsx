@@ -5,7 +5,7 @@ import {
   type CollectionProps,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { Radio } from '../2-input/Radio'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
@@ -18,7 +18,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
  */
 export function RadioGroup({ data, onEvent, orientation = 'vertical', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate('vertical'), navigate('horizontal'), activate)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent ?? (() => {}), { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

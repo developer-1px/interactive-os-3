@@ -1,7 +1,7 @@
 import { Fragment, type CSSProperties, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type NormalizedData } from '@p/headless/types'
 import { composeAxes, activate, treeExpand, treeNavigate, typeahead } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 
 type TreeProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>
 
@@ -11,7 +11,7 @@ const readField = <T,>(data: NormalizedData, id: string, key: string): T | undef
   data.entities[id]?.data?.[key] as T | undefined
 
 export function Tree({ data, onEvent, autoFocus, ...rest }: TreeProps) {
-  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
+  const { focusId, expanded, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent ?? (() => {}), { autoFocus })
 
   const render = (parent: string, level: number): ReactNode => {
     // entity.data.kind === 'group'은 비대화형 라벨 — role="none", 키보드 진입/선택 ❌.

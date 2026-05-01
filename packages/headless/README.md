@@ -19,10 +19,10 @@ npm install file:../ds/packages/headless
 ## 한 줄 사용
 
 ```tsx
-import { useRovingDOM } from '@p/headless'
+import { useSpatialNavigation } from '@p/headless'
 
 function Toolbar() {
-  const { ref, onKeyDown } = useRovingDOM<HTMLDivElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, {
     orientation: 'horizontal',
   })
   return (
@@ -39,8 +39,8 @@ function Toolbar() {
 |---|---|
 | **Types** | `Entity` · `NormalizedData` · `Event` · `ROOT` · `CollectionProps` · `ControlProps` |
 | **Axes** | `composeAxes` · `navigate` · `activate` · `expand` · `treeNavigate` · `typeahead` |
-| **Roving** | `useRoving` · `useRovingDOM` |
-| **Gesture** | `composeGestures` · `navigateOnActivate` · `activateOnNavigate` · `expandBranchOnActivate` · `activateProps` |
+| **Roving** | `useRovingTabIndex` · `useSpatialNavigation` |
+| **Gesture** | `composeGestures` · `navigateOnActivate` · `selectionFollowsFocus` · `expandBranchOnActivate` · `activateProps` |
 | **State** | `reduce` · `fromTree` · `fromList` · `useControlState` · `useEventBridge` |
 | **Flow** | `defineFlow` · `useFlow` · `Resource` · `useResource` · `defineResource` |
 | **Feature** | `defineFeature` · `useFeature` · `invalidateQuery` |
@@ -51,7 +51,7 @@ function Toolbar() {
 
 ```ts
 import { composeAxes, navigate } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { definePage } from '@p/headless/layout'
 ```
 

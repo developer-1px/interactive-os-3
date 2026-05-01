@@ -28,8 +28,18 @@ function groupEntries(entries: PaletteEntry[]): Group[] {
 
 function toData(entries: PaletteEntry[]): NormalizedData {
   const ents: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
-  for (const e of entries) ents[e.id] = { id: e.id, data: { label: e.label } }
+  for (const e of entries) ents[e.id] = { id: e.id, data: { label: e.label, badge: e.to } }
   return { entities: ents, relationships: { [ROOT]: entries.map((e) => e.id) } }
+}
+
+function matches(entry: PaletteEntry, query: string): boolean {
+  const q = query.trim().toLowerCase()
+  if (!q) return true
+  return (
+    entry.label.toLowerCase().includes(q) ||
+    entry.to.toLowerCase().includes(q) ||
+    categoryOf(entry).toLowerCase().includes(q)
+  )
 }
 
 export interface RouteGridProps {
@@ -40,8 +50,7 @@ export interface RouteGridProps {
 
 export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    const filtered = q ? entries.filter((e) => e.label.toLowerCase().includes(q)) : entries
+    const filtered = entries.filter((e) => matches(e, query))
     return groupEntries(filtered)
   }, [entries, query])
 
@@ -54,13 +63,13 @@ export function RouteGrid({ entries, query = '', onSelect }: RouteGridProps) {
   }
 
   return (
-    <Grid cols={3} flow="list" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+    <Grid cols={3} flow="list">
       {visible.map((g) => (
         <Card
           key={g.key}
           slots={{
             title: <Heading level="h3">{g.label}</Heading>,
-            body: <Listbox data={toData(g.entries)} onEvent={onListEvent} />,
+            body: <Listbox data={toData(g.entries)} onEvent={onListEvent} selectionFollowsFocus={false} />,
           }}
         />
       ))}

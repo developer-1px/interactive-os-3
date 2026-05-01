@@ -15,12 +15,12 @@ export {
   type Effect, type QuerySpec, type QueryResult,
   invalidateQuery,
 } from '@p/headless/feature'
-export { useRoving } from '@p/headless/roving/useRoving'
-export { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+export { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
+export { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 export { parentOf } from '@p/headless/axes'
 export {
   navigateOnActivate,
-  activateOnNavigate,
+  selectionFollowsFocus,
   expandBranchOnActivate,
   composeGestures,
   activateProps,

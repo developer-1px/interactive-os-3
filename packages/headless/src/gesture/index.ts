@@ -15,7 +15,7 @@ export const navigateOnActivate: GestureHelper = (_d, e) =>
 // 포커스 이동 시 활성화도 함께 발행 — APG single-select listbox/tabs 기본 동작
 // "selection follows focus": ↑↓로 옵션 옮기면 즉시 선택까지 이동.
 // disabled 옵션엔 발행하지 않는다 (focus만 통과시키고 활성화는 skip).
-export const activateOnNavigate: GestureHelper = (d, e) => {
+export const selectionFollowsFocus: GestureHelper = (d, e) => {
   if (e.type !== 'navigate') return [e]
   const ent = d.entities[e.id]
   if (ent?.data?.disabled) return [e]

@@ -41,8 +41,8 @@ export function HeadlessLab() {
         title="Roving"
         oneLiner="그룹당 Tab stop = 1개. APG roving tabindex 자동."
         api={[
-          ['useRoving(axis, data, onEvent, opts)', '{ focusId, bindFocus, delegate }'],
-          ['useRovingDOM(ref?, opts)', '{ ref, onKeyDown } — JSX-children 컴포넌트용'],
+          ['useRovingTabIndex(axis, data, onEvent, opts)', '{ focusId, bindFocus, delegate }'],
+          ['useSpatialNavigation(ref?, opts)', '{ ref, onKeyDown } — JSX-children 컴포넌트용'],
         ]}
         demo={<RovingDemo />}
       />
@@ -52,7 +52,7 @@ export function HeadlessLab() {
         api={[
           ['composeGestures(...fns)', 'GestureHelper'],
           ['navigateOnActivate', '활성화 시 focus도 같이'],
-          ['activateOnNavigate', 'focus 이동 시 activate도 발행 (selection-follows-focus)'],
+          ['selectionFollowsFocus', 'focus 이동 시 activate도 발행 (selection-follows-focus)'],
           ['expandBranchOnActivate', '자식 있으면 expand, 없으면 navigate'],
           ['activateProps(onActivate)', '{ onClick, onKeyDown } — 클릭+Enter/Space 합류'],
         ]}

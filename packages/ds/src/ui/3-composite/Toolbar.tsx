@@ -5,7 +5,7 @@ import {
   type CollectionProps,
 } from '@p/headless/types'
 import { composeAxes, navigate } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { ToolbarButton } from '../1-command/ToolbarButton'
 import { Separator } from '../6-structure/Separator'
 
@@ -20,7 +20,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
  */
 export function Toolbar({ data, onEvent, orientation = 'horizontal', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation))
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent ?? (() => {}), { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

@@ -27,17 +27,19 @@ export {
   invalidateQuery,
 } from './feature'
 
-export { useRoving } from './roving/useRoving'
-export { useRovingDOM } from './roving/useRovingDOM'
+export { useRovingTabIndex } from './roving/useRovingTabIndex'
+export { useSpatialNavigation } from './roving/useSpatialNavigation'
+export { useActiveDescendant } from './roving/useActiveDescendant'
 
 export {
   composeAxes, parentOf, siblingsOf, enabledSiblings,
   navigate, activate, expand, typeahead, treeNavigate, treeExpand,
+  multiSelect, numericStep,
   type Axis,
 } from './axes'
 export {
   navigateOnActivate,
-  activateOnNavigate,
+  selectionFollowsFocus,
   expandBranchOnActivate,
   composeGestures,
   activateProps,

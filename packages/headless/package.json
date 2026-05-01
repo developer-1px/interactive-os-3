@@ -14,6 +14,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./patterns": {
+      "types": "./dist/patterns/index.d.ts",
+      "import": "./dist/patterns/index.js",
+      "require": "./dist/patterns/index.cjs"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js",
@@ -23,6 +28,7 @@
   "files": [
     "dist",
     "INVARIANTS.md",
+    "PATTERNS.md",
     "README.md"
   ],
   "scripts": {

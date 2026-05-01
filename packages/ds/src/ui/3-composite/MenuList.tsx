@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 
 // @slot children — composable (wrapper/label/subpart)
 type MenuListProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> & {
@@ -7,7 +7,7 @@ type MenuListProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> 
 }
 
 export function MenuList({ children, ...rest }: MenuListProps) {
-  const { onKeyDown, ref } = useRovingDOM<HTMLUListElement>(null, { orientation: 'vertical' })
+  const { onKeyDown, ref } = useSpatialNavigation<HTMLUListElement>(null, { orientation: 'vertical' })
   return (
     <ul ref={ref} role="menu" onKeyDown={onKeyDown} {...rest}>
       {children}

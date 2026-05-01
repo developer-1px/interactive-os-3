@@ -13,6 +13,7 @@ declare module '@tanstack/react-router' {
       label: string
       to: string
       params?: Record<string, string>
+      category?: string
     }
   }
 }

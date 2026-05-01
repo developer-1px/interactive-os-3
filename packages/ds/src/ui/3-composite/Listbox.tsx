@@ -1,54 +1,36 @@
 import { type ComponentPropsWithoutRef } from 'react'
-import {
-  ROOT,
-  getChildren,
-  getLabel,
-  isDisabled,
-  type CollectionProps,
-  type UiEvent,
-} from '@p/headless/types'
-import { activate, composeAxes, navigate, typeahead } from '@p/headless/axes'
-import { activateOnNavigate } from '@p/headless/gesture'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { type CollectionProps } from '@p/headless/types'
+import { listbox } from '@p/headless/patterns'
 import { Option } from '../2-input/Option'
 
-type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'>>
-
-const axis = composeAxes(navigate('vertical'), activate, typeahead)
+type ListboxProps = CollectionProps<Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> & {
+  selectionFollowsFocus?: boolean
+}>
 
 /**
- * Listbox — APG single-select listbox 기본 동작은 **selection follows focus**.
- * ↑↓로 옵션을 옮기면 즉시 활성화(activate)도 함께 emit → 소비자는 선택 상태를
- * 같이 갱신한다. 클릭/Enter/Space는 그대로 activate.
+ * Listbox — APG single-select listbox. `@p/headless/patterns/listbox` recipe wrapping.
+ * 기본 selection-follows-focus.
  */
-export function Listbox({ data, onEvent, autoFocus, ...rest }: ListboxProps) {
-  const relay = (e: UiEvent) =>
-    activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
-  const kids = getChildren(data, ROOT)
+export function Listbox({ data, onEvent, autoFocus, selectionFollowsFocus, ...rest }: ListboxProps) {
+  const { rootProps, optionProps, items } = listbox(data, onEvent, { autoFocus, selectionFollowsFocus })
 
   return (
-    <ul role="listbox" {...delegate} {...rest}>
-      {kids.map((id, i) => {
-        const d = data.entities[id]?.data ?? {}
-        const selected = Boolean(d.selected)
-        const disabled = isDisabled(data, id)
+    <ul {...(rootProps as ComponentPropsWithoutRef<'ul'>)} {...rest}>
+      {items.map((it) => {
+        const d = data.entities[it.id]?.data ?? {}
         return (
           <Option
-            key={id}
-            id={id}
-            data-id={id}
-            ref={bindFocus(id)}
-            posinset={i + 1}
-            setsize={kids.length}
-            selected={selected}
-            disabled={disabled}
-            tabIndex={focusId === id ? 0 : -1}
-            data-icon={d.icon as string | undefined}
+            key={it.id}
+            {...(optionProps(it.id) as ComponentPropsWithoutRef<'li'>)}
+            posinset={it.posinset}
+            setsize={it.setsize}
+            selected={it.selected}
+            disabled={it.disabled}
+            icon={d.icon as string | undefined}
             data-badge={d.badge as string | number | undefined}
             aria-haspopup={d.haspopup as ComponentPropsWithoutRef<'li'>['aria-haspopup']}
           >
-            {getLabel(data, id)}
+            {it.label}
           </Option>
         )
       })}

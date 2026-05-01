@@ -1,8 +1,8 @@
-import { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 import { TreeRow } from '../TreeRow'
 import { GridCell } from '../GridCell'
 export default () => {
-  const { ref, onKeyDown } = useRovingDOM<HTMLTableElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLTableElement>(null, {
     orientation: 'both',
     itemSelector: '[role="row"], [role="gridcell"], [role="columnheader"], [role="rowheader"]',
   })

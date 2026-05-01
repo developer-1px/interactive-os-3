@@ -6,8 +6,8 @@ import {
   type UiEvent,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
-import { activateOnNavigate } from '@p/headless/gesture'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { selectionFollowsFocus } from '@p/headless/gesture'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
   orientation?: 'horizontal' | 'vertical'
@@ -19,8 +19,8 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
  */
 export function TabList({ data, onEvent, orientation = 'horizontal', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation), activate)
-  const relay = (e: UiEvent) => activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
+  const relay = (e: UiEvent) => selectionFollowsFocus(data, e).forEach((ev) => onEvent?.(ev))
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

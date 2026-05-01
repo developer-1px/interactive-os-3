@@ -1,8 +1,8 @@
-import { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 import { Option } from '../Option'
 
 export default function OptionDemo() {
-  const { ref, onKeyDown } = useRovingDOM<HTMLUListElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLUListElement>(null, {
     orientation: 'vertical',
     itemSelector: '[role="option"]',
   })

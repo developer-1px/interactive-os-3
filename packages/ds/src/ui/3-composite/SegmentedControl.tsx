@@ -5,8 +5,8 @@ import {
   type CollectionProps,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
-import { activateOnNavigate } from '@p/headless/gesture'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { selectionFollowsFocus } from '@p/headless/gesture'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { segmentedControlStyle } from './SegmentedControl.style'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown' | 'className' | 'aria-orientation'> & {
@@ -24,8 +24,8 @@ const axis = composeAxes(navigate('horizontal'), activate)
  * APG radiogroup pattern: roving + arrow-follows-selection. selection follows focus.
  */
 export function SegmentedControl({ data, onEvent, autoFocus, ...rest }: CollectionProps<Extra>) {
-  const relay = (e: any) => activateOnNavigate(data, e).forEach((ev) => onEvent?.(ev))
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
+  const relay = (e: any) => selectionFollowsFocus(data, e).forEach((ev) => onEvent?.(ev))
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

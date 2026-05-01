@@ -8,7 +8,7 @@ import {
   type NormalizedData,
 } from '@p/headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 
 type ColumnsProps = CollectionProps<Omit<ComponentPropsWithoutRef<'section'>, 'role' | 'onKeyDown'>>
 
@@ -20,7 +20,7 @@ const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): str
 }
 
 export function Columns({ data, onEvent, autoFocus, ...rest }: ColumnsProps) {
-  const { focusId, expanded, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
+  const { focusId, expanded, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent ?? (() => {}), { autoFocus })
 
   return (
     <section data-part="columns" {...delegate} {...rest}>

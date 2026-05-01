@@ -5,7 +5,7 @@ import {
   type CollectionProps,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { ToggleButton } from '../2-input/ToggleButton'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
@@ -23,7 +23,7 @@ type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
  */
 export function ToggleGroup({ data, onEvent, orientation = 'horizontal', autoFocus, ...rest }: CollectionProps<Extra>) {
   const axis = composeAxes(navigate(orientation), activate)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent ?? (() => {}), { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent ?? (() => {}), { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (

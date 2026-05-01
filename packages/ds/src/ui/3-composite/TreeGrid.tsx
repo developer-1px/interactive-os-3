@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 
 /**
  * TreeGrid — APG treegrid (계층 가능). focus model = **row-focus**.
@@ -16,7 +16,7 @@ type TreeGridProps = Omit<ComponentPropsWithoutRef<'table'>, 'role' | 'onKeyDown
 }
 
 export function TreeGrid({ children, ...rest }: TreeGridProps) {
-  const { onKeyDown, ref } = useRovingDOM<HTMLTableElement>(null, {
+  const { onKeyDown, ref } = useSpatialNavigation<HTMLTableElement>(null, {
     orientation: 'vertical',
     // 헤더 행 제외 — 본문 행만 roving.
     itemSelector: '[role="row"]:not(:has(> [role="columnheader"]))',

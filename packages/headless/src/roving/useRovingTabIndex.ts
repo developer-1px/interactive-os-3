@@ -10,7 +10,7 @@ import { useFocusBridge } from '../focus'
 const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
 
-export function useRoving(
+export function useRovingTabIndex(
   axis: Axis,
   data: NormalizedData,
   onEvent: (e: UiEvent) => void,

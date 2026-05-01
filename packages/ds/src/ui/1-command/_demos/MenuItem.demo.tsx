@@ -1,8 +1,8 @@
-import { useRovingDOM } from '@p/headless/roving/useRovingDOM'
+import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 import { MenuItem, MenuItemCheckbox, MenuItemRadio } from '../MenuItem'
 
 export default function MenuItemDemo() {
-  const { ref, onKeyDown } = useRovingDOM<HTMLUListElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLUListElement>(null, {
     orientation: 'vertical',
     itemSelector: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
   })

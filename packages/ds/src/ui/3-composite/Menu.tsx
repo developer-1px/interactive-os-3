@@ -1,14 +1,14 @@
 import { useId, type CSSProperties } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type UiEvent } from '@p/headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { MenuPopover, type MenuCtx } from '../4-window/MenuPopover'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
 export function Menu({ data, onEvent }: CollectionProps) {
   const popoverId = useId()
-  const { focusId, expanded, onKey, bindFocus } = useRoving(axis, data, onEvent)
+  const { focusId, expanded, onKey, bindFocus } = useRovingTabIndex(axis, data, onEvent)
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`
   const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
 

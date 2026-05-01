@@ -5,7 +5,7 @@ import {
   type CollectionProps, type UiEvent,
 } from '@p/headless/types'
 import { activate, composeAxes, navigate } from '@p/headless/axes'
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { Checkbox } from '../2-input/Checkbox'
 
 type Extra = Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'onKeyDown'> & {
@@ -17,7 +17,7 @@ export function CheckboxGroup({ data, onEvent, orientation = 'vertical', autoFoc
   const checkedIds = getExpanded(data)
   const toggle = (id: string): UiEvent => ({ type: 'expand', id, open: !checkedIds.has(id) })
   const relay = (e: UiEvent) => onEvent?.(e.type === 'activate' ? toggle(e.id) : e)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay, { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
   const kids = getChildren(data, ROOT)
 
   return (
