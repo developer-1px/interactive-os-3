@@ -13,7 +13,7 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
   root: css`
     &[data-part="card"] {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: start;
       column-gap: ${pad(2)};
       row-gap: ${pad(1)};
@@ -31,10 +31,16 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       align-self: start;
     }
     &[data-part="card"] > [data-slot="title"],
-    &[data-part="card"] > [data-slot="body"],
-    &[data-part="card"] > [data-slot="footer"] {
+    &[data-part="card"] > [data-slot="body"] {
       grid-column: 2;
       min-inline-size: 0;
+    }
+    &[data-part="card"] > [data-slot="footer"] {
+      grid-column: 3;
+      grid-row: 1 / span 3;
+      align-self: center;
+      justify-self: end;
+      min-inline-size: max-content;
     }
     &[data-part="card"] > [data-slot="preview"] > figure {
       margin: 0;
@@ -89,14 +95,13 @@ export const courseCardStyle = defineStyleContract(courseCardContract.name, {
       line-height: 1.5;
     }
 
-    &[data-part="card"] > [data-slot="footer"] > footer {
+    &[data-part="card"] > [data-slot="footer"] > div {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: ${pad(2)};
-      min-inline-size: 0;
     }
-    &[data-part="card"] > [data-slot="footer"] > footer > small {
+    &[data-part="card"] > [data-slot="footer"] > div > small {
       font-size: ${font('xs')};
       color: ${text('mute')};
       white-space: nowrap;

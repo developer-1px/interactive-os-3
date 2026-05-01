@@ -57,7 +57,7 @@ export function CourseCard({
         ),
         body: desc ? <p>{desc}</p> : null,
         footer: (visibleText || hasActions) ? (
-          <footer>
+          <div>
             {visibleText && <small>{visibleText}</small>}
             {hasActions && (
               <div data-slot="actions">
@@ -74,7 +74,7 @@ export function CourseCard({
                 )}
               </div>
             )}
-          </footer>
+          </div>
         ) : null,
       }}
     />
