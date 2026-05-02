@@ -1,13 +1,15 @@
 # Coding rules — read before editing
 
-이 프로젝트는 메모리에 누적된 규약이 많다. 새 페이지·컴포넌트·문서를 만들기 전에 이 체크리스트를 통과해야 한다. **위반은 silent regression — 빌드가 통과해도 위계·접근성·일관성이 깨진다.**
+이 repo 의 제품은 **`@p/headless`** 단 하나. ARIA 행동 인프라(axes · roving · gesture · flow · feature · resource · FlatLayout). visual·token·CSS 어휘는 `@p/headless` 의 책임 밖이다.
+
+쇼케이스 앱(`apps/finder`·`apps/slides`·`apps/edu-portal-admin`·`apps/markdown`·`apps/headless-site`)은 `@p/headless` + **Tailwind v3** 조합으로 구현되어, "real app on bare headless" 의 살아있는 증거다.
 
 ## 기본 자세
 
-- **이 repo의 제품은 `packages/*` 라이브러리다.** `apps/*`와 `showcase/*`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다. 재사용 가능한 동작·계약·어휘는 먼저 `packages/*`에 두고, 쇼케이스는 public/workspace export를 소비해서 검증한다.
-- **디자인 컴포넌트 방향성은 이 repo의 의의에서 제외됐다.** visual component·brand/theme·디자인 토큰 제품화는 `aria-design-system`이 맡는다. 이 repo의 `@p/ds`는 남아 있는 검증/호환 표면으로만 다루고, 새 시각 컴포넌트 제품 방향을 여기서 키우지 않는다.
-- **분류·이름·위계의 정합 출처는 변하지 않는 W3C/WHATWG spec 만.** 우선순위: 1) **W3C WAI-ARIA + APG** (role taxonomy) → 2) **WHATWG HTML Living Standard** (semantic element 어휘) → 3) **W3C CSS · WCAG** (필요 시). Material 3·Radix·FSD·Polaris·Panda·shadcn 등 라이브러리·DS 차용 ❌ (5~10년 주기로 교체·fork). ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
-- **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** *이름·구조* 가 아니라 *행동* 을 차용 (Radix·Base·Ariakit·RAC 최소 2곳 수렴). 두 축 분리: 이름 = spec, 동작 = lib.
+- **제품은 `packages/headless` 단 하나.** 다른 패키지(`app`·`fs`·`devtools`)는 셸·유틸. `apps/*` 는 헤드리스 검증·증명용.
+- **시각 결정은 Tailwind 가 표현.** 별도 토큰 시스템·CSS-in-JS·classless 어휘 ❌. Tailwind utility class 만으로 표현 가능한 정도가 시각 자유도.
+- **분류·이름·위계의 정합 출처는 W3C/WHATWG spec.** 1) WAI-ARIA + APG (role taxonomy) → 2) WHATWG HTML Living Standard (semantic element) → 3) WCAG. Material 3·Radix·shadcn 등 라이브러리·DS 어휘 차용 ❌.
+- **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** *이름·구조* 가 아니라 *행동* 을 차용 (Radix·Base·Ariakit·RAC 최소 2곳 수렴).
 - **하란 것 이상으로 하지 않는다.** 시키지 않은 리팩토링·추가 기능·예방적 추상화 금지.
 - **코드 양을 늘리려 하지 않는다.** 있는 것으로 해결 가능하면 있는 것으로. 새 파일·새 어휘·새 wrapper 는 마지막 수단.
 
@@ -17,134 +19,83 @@
 >
 > 자유도는 버그의 표면적이다. 선언으로 묶을 수 있는 것은 전부 선언으로 묶어 LLM이 같은 결과로 수렴하게 한다.
 
-이 한 줄이 아래 7개 invariant 로 펼쳐진다. 모든 규약은 이 중 하나의 면(facet)이다 — 충돌하면 추구미가 이긴다.
-
 | # | Invariant | 한 줄 |
 |---|-----------|-------|
-| 1 | **Schema-first (zod)** | 새 데이터 형태는 zod schema 먼저, 사용은 그 다음. 타입은 주석이 아니라 런타임 gate. |
-| 2 | **Serializable-first** | 페이지·flow·state는 plain object 로 왕복 가능해야 한다. 함수·class·ref 가 들어가면 명령형 잔재. |
+| 1 | **Schema-first (zod)** | 새 데이터 형태는 zod schema 먼저. 타입은 주석이 아니라 런타임 gate. |
+| 2 | **Serializable-first** | 페이지·flow·state 는 plain object 로 왕복 가능. 함수·class·ref 가 들어가면 명령형 잔재. |
 | 3 | **One direction** | data → ui → event → reducer → data. 양방향 바인딩·역참조·side channel ❌. |
-| 4 | **Hierarchy monotonic (Gestalt)** | 자손은 조상보다 약한 분리. 같은 의미 = 같은 형태. flow prop · hierarchy 토큰만으로 표현. |
-| 5 | **Declare, don't assemble (FlatLayout)** | 새 라우트 = `definePage` entities tree. JSX 조립은 escape hatch. |
-| 6 | **Vocabulary closed (ARIA/호환 어휘)** | 어휘는 WAI-ARIA/WHATWG와 기존 `@p/ds` 검증 표면에 닫혀있다. 새 디자인 컴포넌트 어휘는 `aria-design-system` 소유다. |
-| 7 | **Search before create (있는거 쓰기)** | 만들기 전 grep. 동의어가 있으면 그쪽으로 수렴 — 새로 만들면 동의어 드리프트. |
+| 4 | **Headless behavior, Tailwind visuals** | 행동 = `@p/headless` 패턴 (useListboxPattern, useToolbarPattern, useTreeGridPattern, useRovingTabIndex…) · 시각 = Tailwind utility class. 두 축 절대 섞지 않는다. |
+| 5 | **Declare, don't assemble** | 새 라우트 / 큰 트리는 `definePage` entities tree 가능. 단순한 화면은 직접 JSX. 두 길 모두 OK. |
+| 6 | **Vocabulary closed (ARIA)** | 어휘는 WAI-ARIA/WHATWG 에 닫혀있다. `role="…"`, `aria-*`, semantic HTML 그대로 사용. 새 어휘 만들지 않는다. |
+| 7 | **Search before create** | 만들기 전 grep. 동의어가 있으면 그쪽으로 수렴 — 새로 만들면 동의어 드리프트. |
 
-## 0. 시작 전 30초 체크
+## 0. 시작 전 체크
 
 | 만들 것 | 먼저 할 일 |
 |--------|-----------|
-| 새 라우트/페이지 | `definePage` (FlatLayout) 로 만든다. JSX 조립 ❌ |
-| 새 콘텐츠 부품 | `packages/ds/src/parts/` 먼저 grep — 있으면 그걸 쓴다 |
-| 새 ui 부품 | `packages/ds/src/ui/<tier>/` 먼저 grep |
-| 레이아웃 (간격·정렬) | `Row/Column/Grid` + `flow` prop. raw `<div>` ❌ |
-| 표/리스트/카드 | `Table` (비교) · `Listbox/Tree` (관리) · `Card Grid` (시각 브라우징) |
-| 아이콘 | `<span data-icon="<token>" />`. 이모지·특수기호 ❌ |
-| 폼 필드 | `Field/Input/Select/Checkbox` ui. raw `<input>` 은 escape hatch |
+| 새 라우트/페이지 | `apps/<app>/src/widgets/` 에 `.tsx` 추가, Tailwind class 직접. 라우트는 `packages/app/src/routes/` |
+| 키보드 nav 가 필요한 컬렉션 | `useListboxPattern`·`useToolbarPattern`·`useTreeGridPattern`·`useTreePattern`·`useTabsPattern`·`useMenuPattern`·`useRadioGroupPattern`·`useNavigationListPattern` 중 하나 (`@p/headless/patterns`) |
+| 단일 키 단축키 | `useShortcut('mod+k', handler)` (`@p/headless/key/useShortcut`) |
+| 자유 위치 roving | `useRovingTabIndex(axis, data, onEvent)` 직접 사용 |
+| 데이터 read/write | `useResource(resource, ...args)` 단일 인터페이스 |
+| ui ↔ resource wiring | `defineFlow` + `useFlow` |
+| 폼·UI 상태가 외부 데이터와 결합 | `defineFeature` + `useFeature` |
 
-## 1. 레이아웃 — FlatLayout이 canonical
+## 1. 시각 = Tailwind v3
 
-**ds 프로젝트의 레이아웃은 `definePage` + `Renderer` 가 정본이다.** Row/Column/Grid 를 JSX 로 조립하는 건 임시 — 새 페이지는 entities tree 로 작성한다.
+- Tailwind utility class 직접. 별도 토큰 wrapper 만들지 않는다.
+- 색은 Tailwind 의 `neutral-{50..900}` · `red`·`emerald`·`blue` 등 기본 팔레트 그대로.
+- `prose` 가 필요하면 `@tailwindcss/typography` 추가 (현재 미설치 — 필요 시 설치).
+- 임의 값은 `[]` arbitrary syntax: `w-[min(100%,42rem)]`, `grid-rows-[auto_1fr]`.
 
-```tsx
-// ✅ canonical
-import { Renderer, definePage, ROOT } from '@p/ds'
+## 2. 행동 = @p/headless
 
-export function MyPage() {
-  return <Renderer page={definePage({
-    entities: {
-      [ROOT]: { id: ROOT, data: {} },
-      page:   { id: 'page', data: { type: 'Column', flow: 'form' } },
-      sec1:   { id: 'sec1', data: { type: 'Section', heading: { content: 'State' } } },
-      // ...
-    },
-    relationships: { [ROOT]: ['page'], page: ['sec1', 'sec2'], ... },
-  })} />
-}
+핵심 import 경로:
+```ts
+import {
+  useResource, useFlow, useFeature,
+  useRovingTabIndex, useSpatialNavigation, useActiveDescendant,
+  composeAxes, navigate, expand, activate, typeahead,
+  fromList, fromTree, pathAncestors,
+  defineFlow, defineFeature, defineResource,
+  ROOT, FOCUS, EXPANDED, type NormalizedData, type UiEvent,
+} from '@p/headless'
+
+import {
+  useListboxPattern, useToolbarPattern, useTabsPattern,
+  useTreeGridPattern, useTreePattern, useMenuPattern,
+  useRadioGroupPattern, useNavigationListPattern,
+  useDialogPattern, useDisclosurePattern, useComboboxPattern,
+  useSliderPattern, useSplitterPattern, useSwitchPattern,
+} from '@p/headless/patterns'
+
+import { useShortcut, onShortcut } from '@p/headless/key/useShortcut'
 ```
 
-**레퍼런스**: `apps/edu-portal-admin/src/pages/Dashboard.tsx`. 노드 타입은 `packages/ds/src/layout/nodes.ts` (Row/Column/Grid/Section/Header/Footer/Aside/Ui/Text). 등록된 Ui 컴포넌트는 `registry.ts`. 등록 안 된 ReactNode 는 `{ type: 'Ui', component: 'Block', content: <…/> }` 로 끼운다 (escape hatch 정당).
+## 3. ARIA — semantic HTML 우선
 
-## 2. Gestalt 위계 = recursive Proximity
+- `<button>`, `<nav>`, `<main>`, `<section>`, `<aside>`, `<header>`, `<footer>`, `<article>`, `<dl>/<dt>/<dd>`, `<table>`, `<ul>/<ol>/<li>` 그대로.
+- 컬렉션 패턴: `role="listbox"` + `role="option"`, `role="treegrid"` + `role="row"` + `role="gridcell"|rowheader"`, `role="toolbar"` + `aria-pressed`, etc.
+- `aria-selected`, `aria-expanded`, `aria-disabled`, `aria-pressed`, `aria-haspopup`, `aria-current`, `aria-label`, `aria-labelledby`, `aria-controls` — APG 그대로.
+- `data-icon` 같은 임의 namespace 만들지 않는다. 아이콘은 inline emoji/SVG 또는 lucide-static (rendered as `<span>`).
 
-같은 위계는 같은 gap, 다른 위계는 다른 gap. **flow prop 으로 자동 적용된다 — 직접 padding/margin/gap CSS 쓰지 말 것.**
+## 4. 폴더 규약
 
-| flow | gap | 용도 |
-|------|-----|-----|
-| `cluster` | pad(2) | chip 줄·툴바·legend |
-| `list`    | pad(1) | 같은 위계 형제 (row↔row) |
-| `form`    | pad(3) | 폼 그룹·section↔section |
-| `prose`   | pad(4) | 페이지 root·문서 흐름 |
-| `split`   | pad(3) | space-between (header) |
+- 라우트 = `packages/app/src/routes/<path>.tsx` (TanStack file-based routing).
+- 앱 = `apps/<name>/src/widgets/<Name>.tsx` (위젯) · `features/` (data/feature spec) · `entities/` (zod schema).
+- 패키지 = `packages/<name>/src/`.
+- 데이터 read/write 는 `useResource` 만으로 표면. 종류별 훅 만들지 않는다.
 
-위계 토큰 (`foundations/spacing/hierarchy.ts`): atom < group < section < surface < shell. **단조 증가 invariant** — 자손이 조상보다 큰 분리를 가지면 위계가 깨진다.
+## 5. 검증 — 페이지 만들고 끝낼 때
 
-라우트 추가 시 `audit-hmi` 또는 `keyline-loop` 으로 invariant 체크.
+1. `npx tsc --noEmit -p tsconfig.app.json` — 타입
+2. `npx vite dev` — 콘솔 에러 0
+3. 키보드만으로 모든 인터랙션 가능한지 (Tab + Arrow + Enter + Escape)
 
-## 3. 부품 재사용 — 만들기 전에 찾는다
+## 6. 참조
 
-새 부품을 만들기 전 반드시 검색:
+- `packages/headless/INVARIANTS.md` — 헤드리스 invariant
+- `packages/headless/PATTERNS.md` — pattern recipe 시그니처
+- 메모리 (사용자 글로벌 누적 규약): `~/.claude/projects/-Users-user-Desktop-ds/memory/MEMORY.md`
 
-```bash
-ls packages/ds/src/parts/      # Card·Table·KeyValue·Heading·Tag·Code·Callout·Badge·Avatar·Thumbnail·Skeleton·EmptyState·Breadcrumb·Progress·Link·Timestamp
-ls packages/ds/src/ui/         # 0-primitives · 1-status · 2-action · 3-input · 4-selection · 5-display · 6-overlay · 7-patterns · 8-layout
-```
-
-Memory: "있는 ds 부품으로 조립" — Card·Heading·KeyValue·Code·Tag 등 parts에서 먼저 찾는다. raw `<dl>·<button>·<table>` 또는 custom CSS 손으로 만들지 말 것.
-
-## 4. 금지 패턴 (자주 위반됨)
-
-| ❌ 금지 | ✅ 대안 |
-|--------|--------|
-| `<div data-grid="...">·data-section="..."` 등 임의 namespace | `data-ds="Row\|Column\|Grid"` 만 허용. 의미 그룹은 Section/Aside 노드 |
-| `style={{ padding, gap, margin }}` 인라인 | `flow` prop + hierarchy 토큰 |
-| raw `role="button"` 등 escape hatch | 해당 role 의 ui 컴포넌트를 만들어서 쓴다. `as` prop 은 최후 수단 |
-| 이모지·특수기호 인디케이터 (✅·🟢·★) | `data-icon="<token>"` |
-| ghost 약화에 `opacity` | semantic 색 (text subtle) |
-| `aria-roledescription` 을 셀렉터 namespace 로 | `data-part="<name>"` 사용 |
-| `*.style.ts` 안 전역 tag/role/data-part 셀렉터로 부품 root 소유 | `defineStyleContract()` generated class boundary 안에서만 tag/role/ARIA/data-slot 셀렉터 사용. `data-part` 는 디버그/계약 표식이지 스타일 소유권이 아님 |
-| `useMemo·useCallback` | 등장하면 SRP 실패 신호 — 책임 경계 재설계 (`/srp`) |
-| 앱/LLM authored `className` 추가 | arbitrary className 금지. DS 내부 `defineStyleContract()` generated class만 허용 |
-| ui prop 으로 children JSX | data 주도: `(data, onEvent)` 단일 인터페이스 |
-
-## 5. 색·토큰
-
-**레이어 폴더 분리** (palette re-export ❌):
-- raw scale (인자=숫자): `from '@p/ds/tokens/palette'` — `pad`, `neutral`, `elev`, `tint`, `mix`, `dim`, `level`, `rowPadding`, `emStep`, `insetStep`
-- semantic role (인자=slot/role 이름): `from '@p/ds/tokens/foundations'` — `text`, `surface`, `border`, `accent`, `font`, `weight`, `radius`, `slot`, `proximity`, ...
-
-widget 은 semantic 우선. raw 가 필요하면 *명시적으로* palette 에서 import (의도 표시). foundations 는 raw 를 re-export 하지 않는다 — 두 layer 가 import 경로로 분리.
-
-color pair 는 surface 소유자만 (item 이 자기 색을 선언 ❌).
-
-## 6. 반응형 경계
-
-- viewport·해상도 분기는 **CSS 만**. JS matchMedia 훅 ❌
-- shell·control 은 desktop·mobile **별도 구현** (CSS 로 reshape ❌)
-- Grid 같은 컨텐츠만 reflow
-
-## 7. data·flow
-
-- 데이터 read/write 는 `useResource` 단일 인터페이스 `(value, dispatch(event))`
-- ui ↔ resource 연결은 `defineFlow` + `useFlow` 한 줄. resource.onEvent 가 intent 라우터 흡수
-- Content vs Control 무조건 분리 — 비즈니스 콘텐츠는 entity 로 (사용처 1곳이어도 승격)
-
-## 8. 문서·파일 규약
-
-- inbox 문서: `docs/YYYY/YYYY-MM/YYYY-MM-DD/NN_{slug}.md` (NN = 그 날 max+1, zero-padded)
-- 새 라우트 = 새 파일 (`packages/app/src/routes/<path>.tsx`). router.tsx 수정 ❌
-- staticData.palette 로 cmd+k 자동 등록
-
-## 9. 검증 — 페이지 만들고 끝낼 때
-
-1. `npx tsc -b --noEmit` — 타입
-2. dev 서버에서 preview snapshot — 콘솔 에러 0
-3. `audit-hmi` / `keyline-loop` — 위계·정렬 단조성
-
-## 10. 참조
-
-- 메모리 (모든 규약 SSoT): `~/.claude/projects/-Users-user-Desktop-ds/memory/MEMORY.md`
-- canonical 선언서: `CANONICAL.md`
-- ui tier 라벨: canvas LANE_LABEL (Primitives·Status·Action·Input·Selection·Display·Overlay·Patterns·Layout)
-- ds parts 셀렉터 namespace: `data-part="<name>"`
-
-**원칙**: minimize choices for LLM — 1 role = 1 component, variant 금지, prop 이름은 ARIA 그대로. 꼼수 대신 항상 de facto 표준 (Radix·Base·Ariakit·RAC 최소 2곳 수렴 패턴).
+**원칙**: minimize choices for LLM — 1 role = 1 ARIA 패턴, prop 이름은 ARIA 그대로. 시각 결정은 Tailwind 에 위임. 새 어휘·새 wrapper 만들기 전에 grep.

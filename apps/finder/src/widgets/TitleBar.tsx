@@ -45,7 +45,7 @@ export function TitleBar({
     dispatch(e)
     if (e.type === 'activate') onViewChange(e.id as ViewMode)
   }
-  const { rootProps, optionProps, items } = useToolbarPattern(data, onEvent)
+  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
 
   return (
     <header className="flex items-center gap-3 border-b border-neutral-200 bg-white px-3 py-2">
@@ -75,7 +75,7 @@ export function TitleBar({
             <button
               key={it.id}
               type="button"
-              {...(optionProps(it.id) as ComponentPropsWithoutRef<'button'>)}
+              {...(itemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
               aria-pressed={pressed}
               className={
                 'px-2 py-1 text-xs ' +

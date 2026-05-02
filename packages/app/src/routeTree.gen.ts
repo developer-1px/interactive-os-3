@@ -9,121 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WireframesRouteImport } from './routes/wireframes'
-import { Route as TokensRouteImport } from './routes/tokens'
-import { Route as SoundSettingsRouteImport } from './routes/sound-settings'
-import { Route as SidebarGalleryRouteImport } from './routes/sidebar-gallery'
-import { Route as KeyboardRouteImport } from './routes/keyboard'
-import { Route as InventoryRouteImport } from './routes/inventory'
-import { Route as InspectorRouteImport } from './routes/inspector'
-import { Route as HeadlessRouteImport } from './routes/headless'
-import { Route as GenresRouteImport } from './routes/genres'
-import { Route as FoundationsRouteImport } from './routes/foundations'
 import { Route as EduPortalAdminRouteImport } from './routes/edu-portal-admin'
-import { Route as ContentRouteImport } from './routes/content'
-import { Route as CompositionsRouteImport } from './routes/compositions'
-import { Route as CanvasRouteImport } from './routes/canvas'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GenresIndexRouteImport } from './routes/genres.index'
 import { Route as EduPortalAdminIndexRouteImport } from './routes/edu-portal-admin.index'
-import { Route as CanvasIndexRouteImport } from './routes/canvas.index'
 import { Route as SlidesSplatRouteImport } from './routes/slides.$'
 import { Route as MarkdownSplatRouteImport } from './routes/markdown.$'
-import { Route as GenresShopRouteImport } from './routes/genres.shop'
-import { Route as GenresSettingsRouteImport } from './routes/genres.settings'
-import { Route as GenresInboxRouteImport } from './routes/genres.inbox'
-import { Route as GenresFeedRouteImport } from './routes/genres.feed'
-import { Route as GenresEditorRouteImport } from './routes/genres.editor'
-import { Route as GenresCrmRouteImport } from './routes/genres.crm'
-import { Route as GenresChatRouteImport } from './routes/genres.chat'
-import { Route as GenresBoardRouteImport } from './routes/genres.board'
-import { Route as GenresAnalyticsRouteImport } from './routes/genres.analytics'
 import { Route as FinderSplatRouteImport } from './routes/finder.$'
 import { Route as EduPortalAdminVideosRouteImport } from './routes/edu-portal-admin.videos'
 import { Route as EduPortalAdminVideoOrderRouteImport } from './routes/edu-portal-admin.video-order'
 import { Route as EduPortalAdminRoleCategoriesRouteImport } from './routes/edu-portal-admin.role-categories'
 import { Route as EduPortalAdminDashboardRouteImport } from './routes/edu-portal-admin.dashboard'
 import { Route as EduPortalAdminCourseCategoriesRouteImport } from './routes/edu-portal-admin.course-categories'
-import { Route as DevtoolsFinderSpecRouteImport } from './routes/devtools.finder-spec'
-import { Route as CanvasTokensRouteImport } from './routes/canvas.tokens'
-import { Route as CanvasTemplatesRouteImport } from './routes/canvas.templates'
-import { Route as CanvasPrimitivesRouteImport } from './routes/canvas.primitives'
-import { Route as CanvasPatternsRouteImport } from './routes/canvas.patterns'
-import { Route as CanvasFoundationsRouteImport } from './routes/canvas.foundations'
-import { Route as CanvasDevicesRouteImport } from './routes/canvas.devices'
 import { Route as EduPortalAdminVideosIndexRouteImport } from './routes/edu-portal-admin.videos.index'
-import { Route as MFinderSplatRouteImport } from './routes/m.finder.$'
 import { Route as EduPortalAdminVideosNewRouteImport } from './routes/edu-portal-admin.videos.new'
 import { Route as EduPortalAdminVideosIdEditRouteImport } from './routes/edu-portal-admin.videos.$id.edit'
 
-const WireframesRoute = WireframesRouteImport.update({
-  id: '/wireframes',
-  path: '/wireframes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TokensRoute = TokensRouteImport.update({
-  id: '/tokens',
-  path: '/tokens',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SoundSettingsRoute = SoundSettingsRouteImport.update({
-  id: '/sound-settings',
-  path: '/sound-settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SidebarGalleryRoute = SidebarGalleryRouteImport.update({
-  id: '/sidebar-gallery',
-  path: '/sidebar-gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KeyboardRoute = KeyboardRouteImport.update({
-  id: '/keyboard',
-  path: '/keyboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InventoryRoute = InventoryRouteImport.update({
-  id: '/inventory',
-  path: '/inventory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InspectorRoute = InspectorRouteImport.update({
-  id: '/inspector',
-  path: '/inspector',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HeadlessRoute = HeadlessRouteImport.update({
-  id: '/headless',
-  path: '/headless',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GenresRoute = GenresRouteImport.update({
-  id: '/genres',
-  path: '/genres',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FoundationsRoute = FoundationsRouteImport.update({
-  id: '/foundations',
-  path: '/foundations',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EduPortalAdminRoute = EduPortalAdminRouteImport.update({
   id: '/edu-portal-admin',
   path: '/edu-portal-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContentRoute = ContentRouteImport.update({
-  id: '/content',
-  path: '/content',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CompositionsRoute = CompositionsRouteImport.update({
-  id: '/compositions',
-  path: '/compositions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CanvasRoute = CanvasRouteImport.update({
-  id: '/canvas',
-  path: '/canvas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -131,20 +34,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GenresIndexRoute = GenresIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => GenresRoute,
-} as any)
 const EduPortalAdminIndexRoute = EduPortalAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EduPortalAdminRoute,
-} as any)
-const CanvasIndexRoute = CanvasIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CanvasRoute,
 } as any)
 const SlidesSplatRoute = SlidesSplatRouteImport.update({
   id: '/slides/$',
@@ -155,51 +48,6 @@ const MarkdownSplatRoute = MarkdownSplatRouteImport.update({
   id: '/markdown/$',
   path: '/markdown/$',
   getParentRoute: () => rootRouteImport,
-} as any)
-const GenresShopRoute = GenresShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresSettingsRoute = GenresSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresInboxRoute = GenresInboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresFeedRoute = GenresFeedRouteImport.update({
-  id: '/feed',
-  path: '/feed',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresEditorRoute = GenresEditorRouteImport.update({
-  id: '/editor',
-  path: '/editor',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresCrmRoute = GenresCrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresChatRoute = GenresChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresBoardRoute = GenresBoardRouteImport.update({
-  id: '/board',
-  path: '/board',
-  getParentRoute: () => GenresRoute,
-} as any)
-const GenresAnalyticsRoute = GenresAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => GenresRoute,
 } as any)
 const FinderSplatRoute = FinderSplatRouteImport.update({
   id: '/finder/$',
@@ -234,52 +82,12 @@ const EduPortalAdminCourseCategoriesRoute =
     path: '/course-categories',
     getParentRoute: () => EduPortalAdminRoute,
   } as any)
-const DevtoolsFinderSpecRoute = DevtoolsFinderSpecRouteImport.update({
-  id: '/devtools/finder-spec',
-  path: '/devtools/finder-spec',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CanvasTokensRoute = CanvasTokensRouteImport.update({
-  id: '/tokens',
-  path: '/tokens',
-  getParentRoute: () => CanvasRoute,
-} as any)
-const CanvasTemplatesRoute = CanvasTemplatesRouteImport.update({
-  id: '/templates',
-  path: '/templates',
-  getParentRoute: () => CanvasRoute,
-} as any)
-const CanvasPrimitivesRoute = CanvasPrimitivesRouteImport.update({
-  id: '/primitives',
-  path: '/primitives',
-  getParentRoute: () => CanvasRoute,
-} as any)
-const CanvasPatternsRoute = CanvasPatternsRouteImport.update({
-  id: '/patterns',
-  path: '/patterns',
-  getParentRoute: () => CanvasRoute,
-} as any)
-const CanvasFoundationsRoute = CanvasFoundationsRouteImport.update({
-  id: '/foundations',
-  path: '/foundations',
-  getParentRoute: () => CanvasRoute,
-} as any)
-const CanvasDevicesRoute = CanvasDevicesRouteImport.update({
-  id: '/devices',
-  path: '/devices',
-  getParentRoute: () => CanvasRoute,
-} as any)
 const EduPortalAdminVideosIndexRoute =
   EduPortalAdminVideosIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => EduPortalAdminVideosRoute,
   } as any)
-const MFinderSplatRoute = MFinderSplatRouteImport.update({
-  id: '/m/finder/$',
-  path: '/m/finder/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EduPortalAdminVideosNewRoute = EduPortalAdminVideosNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -294,142 +102,48 @@ const EduPortalAdminVideosIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/canvas': typeof CanvasRouteWithChildren
-  '/compositions': typeof CompositionsRoute
-  '/content': typeof ContentRoute
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
-  '/foundations': typeof FoundationsRoute
-  '/genres': typeof GenresRouteWithChildren
-  '/headless': typeof HeadlessRoute
-  '/inspector': typeof InspectorRoute
-  '/inventory': typeof InventoryRoute
-  '/keyboard': typeof KeyboardRoute
-  '/sidebar-gallery': typeof SidebarGalleryRoute
-  '/sound-settings': typeof SoundSettingsRoute
-  '/tokens': typeof TokensRoute
-  '/wireframes': typeof WireframesRoute
-  '/canvas/devices': typeof CanvasDevicesRoute
-  '/canvas/foundations': typeof CanvasFoundationsRoute
-  '/canvas/patterns': typeof CanvasPatternsRoute
-  '/canvas/primitives': typeof CanvasPrimitivesRoute
-  '/canvas/templates': typeof CanvasTemplatesRoute
-  '/canvas/tokens': typeof CanvasTokensRoute
-  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
   '/edu-portal-admin/video-order': typeof EduPortalAdminVideoOrderRoute
   '/edu-portal-admin/videos': typeof EduPortalAdminVideosRouteWithChildren
   '/finder/$': typeof FinderSplatRoute
-  '/genres/analytics': typeof GenresAnalyticsRoute
-  '/genres/board': typeof GenresBoardRoute
-  '/genres/chat': typeof GenresChatRoute
-  '/genres/crm': typeof GenresCrmRoute
-  '/genres/editor': typeof GenresEditorRoute
-  '/genres/feed': typeof GenresFeedRoute
-  '/genres/inbox': typeof GenresInboxRoute
-  '/genres/settings': typeof GenresSettingsRoute
-  '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
   '/slides/$': typeof SlidesSplatRoute
-  '/canvas/': typeof CanvasIndexRoute
   '/edu-portal-admin/': typeof EduPortalAdminIndexRoute
-  '/genres/': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
-  '/m/finder/$': typeof MFinderSplatRoute
   '/edu-portal-admin/videos/': typeof EduPortalAdminVideosIndexRoute
   '/edu-portal-admin/videos/$id/edit': typeof EduPortalAdminVideosIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/compositions': typeof CompositionsRoute
-  '/content': typeof ContentRoute
-  '/foundations': typeof FoundationsRoute
-  '/headless': typeof HeadlessRoute
-  '/inspector': typeof InspectorRoute
-  '/inventory': typeof InventoryRoute
-  '/keyboard': typeof KeyboardRoute
-  '/sidebar-gallery': typeof SidebarGalleryRoute
-  '/sound-settings': typeof SoundSettingsRoute
-  '/tokens': typeof TokensRoute
-  '/wireframes': typeof WireframesRoute
-  '/canvas/devices': typeof CanvasDevicesRoute
-  '/canvas/foundations': typeof CanvasFoundationsRoute
-  '/canvas/patterns': typeof CanvasPatternsRoute
-  '/canvas/primitives': typeof CanvasPrimitivesRoute
-  '/canvas/templates': typeof CanvasTemplatesRoute
-  '/canvas/tokens': typeof CanvasTokensRoute
-  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
   '/edu-portal-admin/video-order': typeof EduPortalAdminVideoOrderRoute
   '/finder/$': typeof FinderSplatRoute
-  '/genres/analytics': typeof GenresAnalyticsRoute
-  '/genres/board': typeof GenresBoardRoute
-  '/genres/chat': typeof GenresChatRoute
-  '/genres/crm': typeof GenresCrmRoute
-  '/genres/editor': typeof GenresEditorRoute
-  '/genres/feed': typeof GenresFeedRoute
-  '/genres/inbox': typeof GenresInboxRoute
-  '/genres/settings': typeof GenresSettingsRoute
-  '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
   '/slides/$': typeof SlidesSplatRoute
-  '/canvas': typeof CanvasIndexRoute
   '/edu-portal-admin': typeof EduPortalAdminIndexRoute
-  '/genres': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
-  '/m/finder/$': typeof MFinderSplatRoute
   '/edu-portal-admin/videos': typeof EduPortalAdminVideosIndexRoute
   '/edu-portal-admin/videos/$id/edit': typeof EduPortalAdminVideosIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/canvas': typeof CanvasRouteWithChildren
-  '/compositions': typeof CompositionsRoute
-  '/content': typeof ContentRoute
   '/edu-portal-admin': typeof EduPortalAdminRouteWithChildren
-  '/foundations': typeof FoundationsRoute
-  '/genres': typeof GenresRouteWithChildren
-  '/headless': typeof HeadlessRoute
-  '/inspector': typeof InspectorRoute
-  '/inventory': typeof InventoryRoute
-  '/keyboard': typeof KeyboardRoute
-  '/sidebar-gallery': typeof SidebarGalleryRoute
-  '/sound-settings': typeof SoundSettingsRoute
-  '/tokens': typeof TokensRoute
-  '/wireframes': typeof WireframesRoute
-  '/canvas/devices': typeof CanvasDevicesRoute
-  '/canvas/foundations': typeof CanvasFoundationsRoute
-  '/canvas/patterns': typeof CanvasPatternsRoute
-  '/canvas/primitives': typeof CanvasPrimitivesRoute
-  '/canvas/templates': typeof CanvasTemplatesRoute
-  '/canvas/tokens': typeof CanvasTokensRoute
-  '/devtools/finder-spec': typeof DevtoolsFinderSpecRoute
   '/edu-portal-admin/course-categories': typeof EduPortalAdminCourseCategoriesRoute
   '/edu-portal-admin/dashboard': typeof EduPortalAdminDashboardRoute
   '/edu-portal-admin/role-categories': typeof EduPortalAdminRoleCategoriesRoute
   '/edu-portal-admin/video-order': typeof EduPortalAdminVideoOrderRoute
   '/edu-portal-admin/videos': typeof EduPortalAdminVideosRouteWithChildren
   '/finder/$': typeof FinderSplatRoute
-  '/genres/analytics': typeof GenresAnalyticsRoute
-  '/genres/board': typeof GenresBoardRoute
-  '/genres/chat': typeof GenresChatRoute
-  '/genres/crm': typeof GenresCrmRoute
-  '/genres/editor': typeof GenresEditorRoute
-  '/genres/feed': typeof GenresFeedRoute
-  '/genres/inbox': typeof GenresInboxRoute
-  '/genres/settings': typeof GenresSettingsRoute
-  '/genres/shop': typeof GenresShopRoute
   '/markdown/$': typeof MarkdownSplatRoute
   '/slides/$': typeof SlidesSplatRoute
-  '/canvas/': typeof CanvasIndexRoute
   '/edu-portal-admin/': typeof EduPortalAdminIndexRoute
-  '/genres/': typeof GenresIndexRoute
   '/edu-portal-admin/videos/new': typeof EduPortalAdminVideosNewRoute
-  '/m/finder/$': typeof MFinderSplatRoute
   '/edu-portal-admin/videos/': typeof EduPortalAdminVideosIndexRoute
   '/edu-portal-admin/videos/$id/edit': typeof EduPortalAdminVideosIdEditRoute
 }
@@ -437,266 +151,66 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/canvas'
-    | '/compositions'
-    | '/content'
     | '/edu-portal-admin'
-    | '/foundations'
-    | '/genres'
-    | '/headless'
-    | '/inspector'
-    | '/inventory'
-    | '/keyboard'
-    | '/sidebar-gallery'
-    | '/sound-settings'
-    | '/tokens'
-    | '/wireframes'
-    | '/canvas/devices'
-    | '/canvas/foundations'
-    | '/canvas/patterns'
-    | '/canvas/primitives'
-    | '/canvas/templates'
-    | '/canvas/tokens'
-    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
     | '/edu-portal-admin/video-order'
     | '/edu-portal-admin/videos'
     | '/finder/$'
-    | '/genres/analytics'
-    | '/genres/board'
-    | '/genres/chat'
-    | '/genres/crm'
-    | '/genres/editor'
-    | '/genres/feed'
-    | '/genres/inbox'
-    | '/genres/settings'
-    | '/genres/shop'
     | '/markdown/$'
     | '/slides/$'
-    | '/canvas/'
     | '/edu-portal-admin/'
-    | '/genres/'
     | '/edu-portal-admin/videos/new'
-    | '/m/finder/$'
     | '/edu-portal-admin/videos/'
     | '/edu-portal-admin/videos/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/compositions'
-    | '/content'
-    | '/foundations'
-    | '/headless'
-    | '/inspector'
-    | '/inventory'
-    | '/keyboard'
-    | '/sidebar-gallery'
-    | '/sound-settings'
-    | '/tokens'
-    | '/wireframes'
-    | '/canvas/devices'
-    | '/canvas/foundations'
-    | '/canvas/patterns'
-    | '/canvas/primitives'
-    | '/canvas/templates'
-    | '/canvas/tokens'
-    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
     | '/edu-portal-admin/video-order'
     | '/finder/$'
-    | '/genres/analytics'
-    | '/genres/board'
-    | '/genres/chat'
-    | '/genres/crm'
-    | '/genres/editor'
-    | '/genres/feed'
-    | '/genres/inbox'
-    | '/genres/settings'
-    | '/genres/shop'
     | '/markdown/$'
     | '/slides/$'
-    | '/canvas'
     | '/edu-portal-admin'
-    | '/genres'
     | '/edu-portal-admin/videos/new'
-    | '/m/finder/$'
     | '/edu-portal-admin/videos'
     | '/edu-portal-admin/videos/$id/edit'
   id:
     | '__root__'
     | '/'
-    | '/canvas'
-    | '/compositions'
-    | '/content'
     | '/edu-portal-admin'
-    | '/foundations'
-    | '/genres'
-    | '/headless'
-    | '/inspector'
-    | '/inventory'
-    | '/keyboard'
-    | '/sidebar-gallery'
-    | '/sound-settings'
-    | '/tokens'
-    | '/wireframes'
-    | '/canvas/devices'
-    | '/canvas/foundations'
-    | '/canvas/patterns'
-    | '/canvas/primitives'
-    | '/canvas/templates'
-    | '/canvas/tokens'
-    | '/devtools/finder-spec'
     | '/edu-portal-admin/course-categories'
     | '/edu-portal-admin/dashboard'
     | '/edu-portal-admin/role-categories'
     | '/edu-portal-admin/video-order'
     | '/edu-portal-admin/videos'
     | '/finder/$'
-    | '/genres/analytics'
-    | '/genres/board'
-    | '/genres/chat'
-    | '/genres/crm'
-    | '/genres/editor'
-    | '/genres/feed'
-    | '/genres/inbox'
-    | '/genres/settings'
-    | '/genres/shop'
     | '/markdown/$'
     | '/slides/$'
-    | '/canvas/'
     | '/edu-portal-admin/'
-    | '/genres/'
     | '/edu-portal-admin/videos/new'
-    | '/m/finder/$'
     | '/edu-portal-admin/videos/'
     | '/edu-portal-admin/videos/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CanvasRoute: typeof CanvasRouteWithChildren
-  CompositionsRoute: typeof CompositionsRoute
-  ContentRoute: typeof ContentRoute
   EduPortalAdminRoute: typeof EduPortalAdminRouteWithChildren
-  FoundationsRoute: typeof FoundationsRoute
-  GenresRoute: typeof GenresRouteWithChildren
-  HeadlessRoute: typeof HeadlessRoute
-  InspectorRoute: typeof InspectorRoute
-  InventoryRoute: typeof InventoryRoute
-  KeyboardRoute: typeof KeyboardRoute
-  SidebarGalleryRoute: typeof SidebarGalleryRoute
-  SoundSettingsRoute: typeof SoundSettingsRoute
-  TokensRoute: typeof TokensRoute
-  WireframesRoute: typeof WireframesRoute
-  DevtoolsFinderSpecRoute: typeof DevtoolsFinderSpecRoute
   FinderSplatRoute: typeof FinderSplatRoute
   MarkdownSplatRoute: typeof MarkdownSplatRoute
   SlidesSplatRoute: typeof SlidesSplatRoute
-  MFinderSplatRoute: typeof MFinderSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wireframes': {
-      id: '/wireframes'
-      path: '/wireframes'
-      fullPath: '/wireframes'
-      preLoaderRoute: typeof WireframesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tokens': {
-      id: '/tokens'
-      path: '/tokens'
-      fullPath: '/tokens'
-      preLoaderRoute: typeof TokensRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sound-settings': {
-      id: '/sound-settings'
-      path: '/sound-settings'
-      fullPath: '/sound-settings'
-      preLoaderRoute: typeof SoundSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sidebar-gallery': {
-      id: '/sidebar-gallery'
-      path: '/sidebar-gallery'
-      fullPath: '/sidebar-gallery'
-      preLoaderRoute: typeof SidebarGalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/keyboard': {
-      id: '/keyboard'
-      path: '/keyboard'
-      fullPath: '/keyboard'
-      preLoaderRoute: typeof KeyboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inventory': {
-      id: '/inventory'
-      path: '/inventory'
-      fullPath: '/inventory'
-      preLoaderRoute: typeof InventoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inspector': {
-      id: '/inspector'
-      path: '/inspector'
-      fullPath: '/inspector'
-      preLoaderRoute: typeof InspectorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/headless': {
-      id: '/headless'
-      path: '/headless'
-      fullPath: '/headless'
-      preLoaderRoute: typeof HeadlessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/genres': {
-      id: '/genres'
-      path: '/genres'
-      fullPath: '/genres'
-      preLoaderRoute: typeof GenresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/foundations': {
-      id: '/foundations'
-      path: '/foundations'
-      fullPath: '/foundations'
-      preLoaderRoute: typeof FoundationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/edu-portal-admin': {
       id: '/edu-portal-admin'
       path: '/edu-portal-admin'
       fullPath: '/edu-portal-admin'
       preLoaderRoute: typeof EduPortalAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/content': {
-      id: '/content'
-      path: '/content'
-      fullPath: '/content'
-      preLoaderRoute: typeof ContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/compositions': {
-      id: '/compositions'
-      path: '/compositions'
-      fullPath: '/compositions'
-      preLoaderRoute: typeof CompositionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/canvas': {
-      id: '/canvas'
-      path: '/canvas'
-      fullPath: '/canvas'
-      preLoaderRoute: typeof CanvasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -706,26 +220,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/genres/': {
-      id: '/genres/'
-      path: '/'
-      fullPath: '/genres/'
-      preLoaderRoute: typeof GenresIndexRouteImport
-      parentRoute: typeof GenresRoute
-    }
     '/edu-portal-admin/': {
       id: '/edu-portal-admin/'
       path: '/'
       fullPath: '/edu-portal-admin/'
       preLoaderRoute: typeof EduPortalAdminIndexRouteImport
       parentRoute: typeof EduPortalAdminRoute
-    }
-    '/canvas/': {
-      id: '/canvas/'
-      path: '/'
-      fullPath: '/canvas/'
-      preLoaderRoute: typeof CanvasIndexRouteImport
-      parentRoute: typeof CanvasRoute
     }
     '/slides/$': {
       id: '/slides/$'
@@ -740,69 +240,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/markdown/$'
       preLoaderRoute: typeof MarkdownSplatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/genres/shop': {
-      id: '/genres/shop'
-      path: '/shop'
-      fullPath: '/genres/shop'
-      preLoaderRoute: typeof GenresShopRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/settings': {
-      id: '/genres/settings'
-      path: '/settings'
-      fullPath: '/genres/settings'
-      preLoaderRoute: typeof GenresSettingsRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/inbox': {
-      id: '/genres/inbox'
-      path: '/inbox'
-      fullPath: '/genres/inbox'
-      preLoaderRoute: typeof GenresInboxRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/feed': {
-      id: '/genres/feed'
-      path: '/feed'
-      fullPath: '/genres/feed'
-      preLoaderRoute: typeof GenresFeedRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/editor': {
-      id: '/genres/editor'
-      path: '/editor'
-      fullPath: '/genres/editor'
-      preLoaderRoute: typeof GenresEditorRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/crm': {
-      id: '/genres/crm'
-      path: '/crm'
-      fullPath: '/genres/crm'
-      preLoaderRoute: typeof GenresCrmRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/chat': {
-      id: '/genres/chat'
-      path: '/chat'
-      fullPath: '/genres/chat'
-      preLoaderRoute: typeof GenresChatRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/board': {
-      id: '/genres/board'
-      path: '/board'
-      fullPath: '/genres/board'
-      preLoaderRoute: typeof GenresBoardRouteImport
-      parentRoute: typeof GenresRoute
-    }
-    '/genres/analytics': {
-      id: '/genres/analytics'
-      path: '/analytics'
-      fullPath: '/genres/analytics'
-      preLoaderRoute: typeof GenresAnalyticsRouteImport
-      parentRoute: typeof GenresRoute
     }
     '/finder/$': {
       id: '/finder/$'
@@ -846,68 +283,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EduPortalAdminCourseCategoriesRouteImport
       parentRoute: typeof EduPortalAdminRoute
     }
-    '/devtools/finder-spec': {
-      id: '/devtools/finder-spec'
-      path: '/devtools/finder-spec'
-      fullPath: '/devtools/finder-spec'
-      preLoaderRoute: typeof DevtoolsFinderSpecRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/canvas/tokens': {
-      id: '/canvas/tokens'
-      path: '/tokens'
-      fullPath: '/canvas/tokens'
-      preLoaderRoute: typeof CanvasTokensRouteImport
-      parentRoute: typeof CanvasRoute
-    }
-    '/canvas/templates': {
-      id: '/canvas/templates'
-      path: '/templates'
-      fullPath: '/canvas/templates'
-      preLoaderRoute: typeof CanvasTemplatesRouteImport
-      parentRoute: typeof CanvasRoute
-    }
-    '/canvas/primitives': {
-      id: '/canvas/primitives'
-      path: '/primitives'
-      fullPath: '/canvas/primitives'
-      preLoaderRoute: typeof CanvasPrimitivesRouteImport
-      parentRoute: typeof CanvasRoute
-    }
-    '/canvas/patterns': {
-      id: '/canvas/patterns'
-      path: '/patterns'
-      fullPath: '/canvas/patterns'
-      preLoaderRoute: typeof CanvasPatternsRouteImport
-      parentRoute: typeof CanvasRoute
-    }
-    '/canvas/foundations': {
-      id: '/canvas/foundations'
-      path: '/foundations'
-      fullPath: '/canvas/foundations'
-      preLoaderRoute: typeof CanvasFoundationsRouteImport
-      parentRoute: typeof CanvasRoute
-    }
-    '/canvas/devices': {
-      id: '/canvas/devices'
-      path: '/devices'
-      fullPath: '/canvas/devices'
-      preLoaderRoute: typeof CanvasDevicesRouteImport
-      parentRoute: typeof CanvasRoute
-    }
     '/edu-portal-admin/videos/': {
       id: '/edu-portal-admin/videos/'
       path: '/'
       fullPath: '/edu-portal-admin/videos/'
       preLoaderRoute: typeof EduPortalAdminVideosIndexRouteImport
       parentRoute: typeof EduPortalAdminVideosRoute
-    }
-    '/m/finder/$': {
-      id: '/m/finder/$'
-      path: '/m/finder/$'
-      fullPath: '/m/finder/$'
-      preLoaderRoute: typeof MFinderSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/edu-portal-admin/videos/new': {
       id: '/edu-portal-admin/videos/new'
@@ -925,29 +306,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface CanvasRouteChildren {
-  CanvasDevicesRoute: typeof CanvasDevicesRoute
-  CanvasFoundationsRoute: typeof CanvasFoundationsRoute
-  CanvasPatternsRoute: typeof CanvasPatternsRoute
-  CanvasPrimitivesRoute: typeof CanvasPrimitivesRoute
-  CanvasTemplatesRoute: typeof CanvasTemplatesRoute
-  CanvasTokensRoute: typeof CanvasTokensRoute
-  CanvasIndexRoute: typeof CanvasIndexRoute
-}
-
-const CanvasRouteChildren: CanvasRouteChildren = {
-  CanvasDevicesRoute: CanvasDevicesRoute,
-  CanvasFoundationsRoute: CanvasFoundationsRoute,
-  CanvasPatternsRoute: CanvasPatternsRoute,
-  CanvasPrimitivesRoute: CanvasPrimitivesRoute,
-  CanvasTemplatesRoute: CanvasTemplatesRoute,
-  CanvasTokensRoute: CanvasTokensRoute,
-  CanvasIndexRoute: CanvasIndexRoute,
-}
-
-const CanvasRouteWithChildren =
-  CanvasRoute._addFileChildren(CanvasRouteChildren)
 
 interface EduPortalAdminVideosRouteChildren {
   EduPortalAdminVideosNewRoute: typeof EduPortalAdminVideosNewRoute
@@ -986,56 +344,12 @@ const EduPortalAdminRouteWithChildren = EduPortalAdminRoute._addFileChildren(
   EduPortalAdminRouteChildren,
 )
 
-interface GenresRouteChildren {
-  GenresAnalyticsRoute: typeof GenresAnalyticsRoute
-  GenresBoardRoute: typeof GenresBoardRoute
-  GenresChatRoute: typeof GenresChatRoute
-  GenresCrmRoute: typeof GenresCrmRoute
-  GenresEditorRoute: typeof GenresEditorRoute
-  GenresFeedRoute: typeof GenresFeedRoute
-  GenresInboxRoute: typeof GenresInboxRoute
-  GenresSettingsRoute: typeof GenresSettingsRoute
-  GenresShopRoute: typeof GenresShopRoute
-  GenresIndexRoute: typeof GenresIndexRoute
-}
-
-const GenresRouteChildren: GenresRouteChildren = {
-  GenresAnalyticsRoute: GenresAnalyticsRoute,
-  GenresBoardRoute: GenresBoardRoute,
-  GenresChatRoute: GenresChatRoute,
-  GenresCrmRoute: GenresCrmRoute,
-  GenresEditorRoute: GenresEditorRoute,
-  GenresFeedRoute: GenresFeedRoute,
-  GenresInboxRoute: GenresInboxRoute,
-  GenresSettingsRoute: GenresSettingsRoute,
-  GenresShopRoute: GenresShopRoute,
-  GenresIndexRoute: GenresIndexRoute,
-}
-
-const GenresRouteWithChildren =
-  GenresRoute._addFileChildren(GenresRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CanvasRoute: CanvasRouteWithChildren,
-  CompositionsRoute: CompositionsRoute,
-  ContentRoute: ContentRoute,
   EduPortalAdminRoute: EduPortalAdminRouteWithChildren,
-  FoundationsRoute: FoundationsRoute,
-  GenresRoute: GenresRouteWithChildren,
-  HeadlessRoute: HeadlessRoute,
-  InspectorRoute: InspectorRoute,
-  InventoryRoute: InventoryRoute,
-  KeyboardRoute: KeyboardRoute,
-  SidebarGalleryRoute: SidebarGalleryRoute,
-  SoundSettingsRoute: SoundSettingsRoute,
-  TokensRoute: TokensRoute,
-  WireframesRoute: WireframesRoute,
-  DevtoolsFinderSpecRoute: DevtoolsFinderSpecRoute,
   FinderSplatRoute: FinderSplatRoute,
   MarkdownSplatRoute: MarkdownSplatRoute,
   SlidesSplatRoute: SlidesSplatRoute,
-  MFinderSplatRoute: MFinderSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

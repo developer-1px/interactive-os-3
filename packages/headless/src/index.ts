@@ -6,7 +6,7 @@
  * feature (effects+queries) · middleware.
  *
  * Knows nothing about: tokens · CSS · component vocabulary.
- * Consumers (e.g. @p/ds) augment `Register` interface in `./layout/nodes` to
+ * Consumers augment the `Register` interface in `./layout/nodes` to
  * inject their UI component name set into `UiNode.component` typing.
  */
 
@@ -17,8 +17,9 @@ export * from './data'
 export { reduce } from './state/reduce'
 export { composeReducers, applyGesture, type Reducer } from './state/compose'
 export { singleSelect, multiSelectToggle } from './state/selection'
+export { singleExpand } from './state/expansion'
 export { setValue } from './state/value'
-export { reduceWithDefaults } from './state/defaults'
+export { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
 export { fromTree, fromList, pathAncestors } from './state/fromTree'
 export { useControlState } from './state/useControlState'
 export { useEventBridge } from './state/useEventBridge'

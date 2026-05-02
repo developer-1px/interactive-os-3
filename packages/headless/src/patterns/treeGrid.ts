@@ -1,14 +1,15 @@
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, treeExpand, treeNavigate } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
 export interface TreeGridOptions {
-  selectionMode?: 'none' | 'single' | 'multiple'
+  multiSelectable?: boolean
   autoFocus?: boolean
 }
 
-const axis = composeAxes(treeNavigate, treeExpand, activate)
+const singleAxis = composeAxes(treeNavigate, treeExpand, activate)
+const multiAxis = composeAxes(multiSelect, treeNavigate, treeExpand, activate)
 
 /**
  * treeGrid — APG `/treegrid/` recipe.
@@ -27,7 +28,8 @@ export function useTreeGridPattern(
   cellProps: (rowId: string, colIndex: number) => ItemProps
   items: TreeItem[]
 } {
-  const { autoFocus } = opts
+  const { autoFocus, multiSelectable } = opts
+  const axis = multiSelectable ? multiAxis : singleAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -51,7 +53,11 @@ export function useTreeGridPattern(
   }
   walk(ROOT, 1)
 
-  const rootProps: RootProps = { role: 'treegrid', ...delegate } as RootProps
+  const rootProps: RootProps = {
+    role: 'treegrid',
+    'aria-multiselectable': multiSelectable || undefined,
+    ...delegate,
+  } as RootProps
 
   const rowProps = (id: string): ItemProps => {
     const it = flat.find((x) => x.id === id)

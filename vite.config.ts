@@ -4,8 +4,6 @@ import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import fsTree from './vite-plugin-fs'
-import dsAudit from './vite-plugin-ds-audit'
-import dsContracts from './vite-plugin-ds-contracts'
 import { inspectorPlugin } from './vite-plugin-inspector'
 
 const spaFallback = () => ({
@@ -26,8 +24,6 @@ export default defineConfig({
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
   resolve: {
     alias: [
-      { find: /^@p\/ds$/, replacement: resolve(__dirname, 'packages/ds/src/index.ts') },
-      { find: /^@p\/ds\//, replacement: resolve(__dirname, 'packages/ds/src/') + '/' },
       { find: /^@p\/headless$/, replacement: resolve(__dirname, 'packages/headless/src/index.ts') },
       { find: /^@p\/headless\//, replacement: resolve(__dirname, 'packages/headless/src/') + '/' },
       { find: /^@p\/fs$/, replacement: resolve(__dirname, 'packages/fs/src/index.ts') },
@@ -55,8 +51,6 @@ export default defineConfig({
     react(),
     inspectorPlugin(),
     fsTree(),
-    dsAudit(),
-    dsContracts(),
     spaFallback(),
   ],
 })

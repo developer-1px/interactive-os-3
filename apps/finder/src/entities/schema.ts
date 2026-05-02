@@ -1,10 +1,9 @@
 import { z } from 'zod'
-import type { IconToken } from '@p/ds/tokens/semantic/iconography/icon'
 
 /** finder 도메인 UI 엔티티 zod 스키마.
  *  fs entity(FsNode)는 @p/fs/schema 가 owner — 여기서는 finder UI 메타만. */
 
-const iconToken = z.custom<IconToken>((v) => typeof v === 'string')
+const iconToken = z.string()
 
 export { FsNodeSchema } from '@p/fs'
 export type { FsNode } from '@p/fs'

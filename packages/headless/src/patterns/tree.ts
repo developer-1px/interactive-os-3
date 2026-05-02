@@ -2,16 +2,17 @@ import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { activate, composeAxes, treeExpand, treeNavigate, typeahead } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
 export interface TreeOptions {
-  selectionMode?: 'none' | 'single' | 'multiple'
+  multiSelectable?: boolean
   autoFocus?: boolean
 }
 
-const axis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
+const singleAxis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
+const multiAxis = composeAxes(multiSelect, treeNavigate, treeExpand, activate, typeahead)
 
 /**
  * tree — APG `/treeview/` recipe.
@@ -31,7 +32,8 @@ export function useTreePattern(
   itemProps: (id: string) => ItemProps
   items: TreeItem[]
 } {
-  const { autoFocus } = opts
+  const { autoFocus, multiSelectable } = opts
+  const axis = multiSelectable ? multiAxis : singleAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -60,7 +62,11 @@ export function useTreePattern(
   }
   walk(ROOT, 1)
 
-  const rootProps: RootProps = { role: 'tree', ...delegate } as RootProps
+  const rootProps: RootProps = {
+    role: 'tree',
+    'aria-multiselectable': multiSelectable || undefined,
+    ...delegate,
+  } as RootProps
 
   const itemProps = (id: string): ItemProps => {
     const it = flat.find((x) => x.id === id)

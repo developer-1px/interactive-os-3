@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { VideoList } from '@apps/edu-portal-admin/pages/VideoList'
+import { VideoList } from '@apps/edu-portal-admin'
 
 export const Route = createFileRoute('/edu-portal-admin/videos/')({
   component: VideoList,

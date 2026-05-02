@@ -1,76 +1,17 @@
-import { useState } from 'react'
-import { Renderer, definePage, ROOT, type NormalizedData } from '@p/ds'
-import { roleCategories as initial, type RoleCategory as RoleCategoryT } from '../entities/data'
+import { roleCategories } from '../entities/data'
 
 export function RoleCategory() {
-  const [list, setList] = useState(initial)
-  const toggle = (id: string) =>
-    setList((prev) => prev.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)))
-  const edit = (_id: string) => undefined
-  const remove = (_id: string) => undefined
-
-  const entities: NormalizedData['entities'] = {
-    [ROOT]: { id: ROOT, data: {} },
-    page: { id: 'page', data: { type: 'Row', flow: 'form' } },
-
-    main: { id: 'main', data: { type: 'Column', flow: 'form', grow: true } },
-
-    rolesList: { id: 'rolesList', data: { type: 'Column', flow: 'list', label: '역할 카테고리' } },
-    ...roleCardNodes(list, toggle, edit, remove),
-
-    addBtn: { id: 'addBtn', data: { type: 'Ui', component: 'Button', props: { 'data-icon': 'plus' }, content: '새 역할 카테고리 추가' } },
-
-    aside: { id: 'aside', data: { type: 'Aside', flow: 'form', width: 300 } },
-    asideH: { id: 'asideH', data: { type: 'Text', variant: 'h3', content: '안내' } },
-    asideBody: { id: 'asideBody', data: {
-      type: 'Ui', component: 'Block',
-      content: (
-        <ul>
-          <li><strong>드래그</strong>로 카테고리 노출 순서를 변경할 수 있습니다.</li>
-          <li><strong>노출/숨김</strong> 토글로 메인 화면 노출 여부를 즉시 제어합니다.</li>
-          <li>카테고리 <strong>아이콘</strong>을 클릭하면 변경할 수 있습니다.</li>
-          <li>카테고리 삭제 시 소속 영상은 삭제되지 않습니다.</li>
-        </ul>
-      ),
-    } },
-  }
-
-  const relationships: NormalizedData['relationships'] = {
-    [ROOT]: ['page'],
-    page: ['main', 'aside'],
-    main: ['rolesList', 'addBtn'],
-    rolesList: list.map((c) => `card-${c.id}`),
-    aside: ['asideH', 'asideBody'],
-  }
-
-  return <Renderer page={definePage({ entities, relationships })} />
-}
-
-function roleCardNodes(
-  list: RoleCategoryT[],
-  toggle: (id: string) => void,
-  edit: (id: string) => void,
-  remove: (id: string) => void,
-) {
-  const out: NormalizedData['entities'] = {}
-  for (const c of list) {
-    out[`card-${c.id}`] = {
-      id: `card-${c.id}`,
-      data: {
-        type: 'Ui', component: 'RoleCard',
-        props: {
-          id: c.id,
-          icon: c.icon,
-          name: c.name,
-          desc: c.desc,
-          meta: `영상 ${c.videoIds.length}개`,
-          visible: c.visible,
-          onToggleVisible: toggle,
-          onEdit: edit,
-          onDelete: remove,
-        },
-      },
-    }
-  }
-  return out
+  return (
+    <section aria-labelledby="rc-h" className="flex flex-col gap-3">
+      <h2 id="rc-h" className="text-lg font-semibold text-neutral-900">직무 카테고리</h2>
+      <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-2 lg:grid-cols-3">
+        {roleCategories.map((r) => (
+          <li key={r.id} className="rounded border border-neutral-200 bg-white p-3">
+            <div className="font-medium text-neutral-900">{r.name}</div>
+            <div className="text-xs text-neutral-500">{r.desc}</div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
 }

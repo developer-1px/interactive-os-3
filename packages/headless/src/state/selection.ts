@@ -37,13 +37,11 @@ export const singleSelect: Reducer = (d, e) => {
 }
 
 /**
- * multiSelectToggle — multi-selection reducer fragment.
- *
- * On `activate`, toggles `selected` on `e.id` only. Other entities untouched.
- * APG-aligned: listbox(multi), checkbox group.
+ * multiSelectToggle — toggles `selected` on `e.id` for `select` events.
+ * APG-aligned: listbox(multi), tree(multi), checkbox group.
  */
 export const multiSelectToggle: Reducer = (d, e) => {
-  if (e.type !== 'activate') return d
+  if (e.type !== 'select') return d
   const ent = d.entities[e.id]
   if (!ent || isMetaId(e.id)) return d
   return {

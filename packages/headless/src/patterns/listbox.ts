@@ -1,27 +1,25 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, navigate, typeahead } from '../axes'
+import { activate, composeAxes, multiSelect, navigate, typeahead } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface ListboxOptions {
-  /** APG single-select listbox 기본은 selection follows focus (true). */
+  /** Default: `!multiSelectable` (APG: single sff, multi explicit toggle). */
   selectionFollowsFocus?: boolean
   multiSelectable?: boolean
   autoFocus?: boolean
-  /** ROOT 외 다른 entity 를 컨테이너로 쓸 때 (Menu 안의 sub listbox 등). */
+  /** Container entity for nested listboxes (e.g. inside a Menu); defaults to ROOT. */
   containerId?: string
 }
 
-const axis = composeAxes(navigate('vertical'), activate, typeahead)
+const singleAxis = composeAxes(navigate('vertical'), activate, typeahead)
+const multiAxis = composeAxes(navigate('vertical'), multiSelect, activate, typeahead)
 
 /**
  * listbox — APG `/listbox/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
- *
- * 키보드: ArrowUp/Down · Home/End · Enter/Space · typeahead.
- * 선택: 기본 selection-follows-focus (Arrow 만으로 선택 이동).
  */
 export function useListboxPattern(
   data: NormalizedData,
@@ -32,7 +30,8 @@ export function useListboxPattern(
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { selectionFollowsFocus: sff = true, multiSelectable, autoFocus, containerId = ROOT } = opts
+  const { multiSelectable, autoFocus, containerId = ROOT } = opts
+  const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
   const relay = useCallback(
     (e: UiEvent) => {
@@ -43,6 +42,7 @@ export function useListboxPattern(
     [data, onEvent, sff],
   )
 
+  const axis = multiSelectable ? multiAxis : singleAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
     autoFocus,
     containerId,

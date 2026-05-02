@@ -4,8 +4,6 @@ import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface AccordionOptions {
-  type?: 'single' | 'multiple'
-  collapsible?: boolean
   autoFocus?: boolean
   idPrefix?: string
 }
@@ -17,7 +15,7 @@ const axis = composeAxes(navigate('vertical'), expand, activate)
  * https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
  *
  * 각 item 의 trigger 는 button. expand 상태는 entities[id].data.expanded SSoT.
- * type='single' 은 reducer 에서 다른 형제 닫기.
+ * 'single' (한 항목만 열림) 모드는 소비자가 reducer 에 `singleExpand` 합성으로 표현.
  */
 export function useAccordionPattern(
   data: NormalizedData,

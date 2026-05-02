@@ -19,10 +19,6 @@ type FeatureView = {
 export function FinderBody() {
   const [view, dispatch] = useFeature(finderFeature) as unknown as [FeatureView, (cmd: { type: string; [k: string]: unknown }) => void]
 
-  const onColumnsEvent = (e: UiEvent) => {
-    if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
-    else if (e.type === 'expand') dispatch({ type: 'expandCol', id: e.id, open: e.open })
-  }
   const onRecent = (e: UiEvent) => {
     if (e.type === 'activate') dispatch({ type: 'activateRec', id: e.id })
   }
@@ -131,7 +127,7 @@ function SidebarSection({
 }
 
 function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
-  const { rootProps, optionProps, items } = useToolbarPattern(data, onEvent)
+  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
   return (
     <div
       {...(rootProps as ComponentPropsWithoutRef<'div'>)}
@@ -145,7 +141,7 @@ function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiE
           <button
             key={it.id}
             type="button"
-            {...(optionProps(it.id) as ComponentPropsWithoutRef<'button'>)}
+            {...(itemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
             aria-pressed={pressed}
             className={
               'px-2 py-1 text-xs ' +
