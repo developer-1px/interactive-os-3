@@ -96,6 +96,9 @@ importers:
 
   apps/headless-site:
     dependencies:
+      '@p/devtools':
+        specifier: workspace:*
+        version: link:../../packages/devtools
       '@p/headless':
         specifier: workspace:*
         version: link:../../packages/headless
