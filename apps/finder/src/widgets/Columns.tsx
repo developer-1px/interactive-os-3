@@ -1,18 +1,26 @@
 import {
-  Columns as ColumnsRole,
+  ROOT,
+  getChildren,
+  getLabel,
+  isDisabled,
   defineFlow,
   expandBranchOnActivate,
   fromTree,
   pathAncestors,
   readResource,
   useFlow,
-} from '@p/ds'
+  useRovingTabIndex,
+  composeAxes,
+  navigate,
+  expand,
+  activate,
+  typeahead,
+  type NormalizedData,
+} from '@p/headless'
 import { walk } from '../features/data'
 import { pathResource, pinnedRootResource, treeResource } from '../features/resources'
-import { extToIcon } from '../entities/types'
 
-/** Finder columns flow — URL이 진실 원천. EXPANDED 는 base seed(pathAncestors) 가 owner.
- *  pinnedRoot 는 base 내부 readResource 로 흡수 — module-level 단일 정의. */
+/** Finder columns flow — URL이 진실 원천. */
 const columnsFlow = defineFlow<string>({
   source: pathResource,
   base: (path = '/') => {
@@ -27,7 +35,6 @@ const columnsFlow = defineFlow<string>({
       getKids: (n) => n.children,
       toData: (n) => ({
         label: n.name,
-        icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
         selected: n.path === path,
       }),
       focusId: cwd?.path ?? path,
@@ -38,7 +45,70 @@ const columnsFlow = defineFlow<string>({
   metaScope: ['navigate', 'typeahead'],
 })
 
+const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
+
+/** chainFrom — 루트→리프 column 경로. expanded set을 따라 한 칸씩 펼침. */
+const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): string[] => {
+  const open = getChildren(d, cur).find((k) => exp.has(k) && getChildren(d, k).length > 0)
+  return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
+}
+
 export function Columns() {
   const [data, onEvent] = useFlow(columnsFlow)
-  return <ColumnsRole data={data} onEvent={onEvent} aria-label="컬럼" />
+  const { focusId, expanded, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
+
+  return (
+    <section
+      aria-label="컬럼"
+      {...delegate}
+      className="flex h-full flex-row overflow-x-auto"
+    >
+      {chainFrom(data, expanded).map((parent) => {
+        const kids = getChildren(data, parent)
+        const label = parent === ROOT ? 'root' : getLabel(data, parent)
+        return (
+          <nav
+            key={parent}
+            aria-label={label}
+            className="w-56 flex-none overflow-y-auto border-r border-neutral-200 bg-white"
+          >
+            <ul role="listbox" className="m-0 list-none p-1">
+              {kids.map((id, i) => {
+                const hasKids = getChildren(data, id).length > 0
+                const isOpen = expanded.has(id)
+                const disabled = isDisabled(data, id)
+                const d = data.entities[id]?.data ?? {}
+                const selected = Boolean(d.selected)
+                return (
+                  <li
+                    key={id}
+                    role="option"
+                    data-id={id}
+                    ref={bindFocus(id)}
+                    aria-posinset={i + 1}
+                    aria-setsize={kids.length}
+                    aria-selected={selected || undefined}
+                    aria-haspopup={hasKids ? 'menu' : undefined}
+                    aria-expanded={hasKids ? isOpen : undefined}
+                    aria-disabled={disabled || undefined}
+                    tabIndex={focusId === id ? 0 : -1}
+                    className={
+                      'flex cursor-pointer items-center justify-between rounded px-2 py-1 text-sm ' +
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+                      (selected
+                        ? 'bg-neutral-900 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100')
+                    }
+                  >
+                    <span className="truncate">{getLabel(data, id)}</span>
+                    {hasKids && <span aria-hidden className="text-xs text-neutral-400">›</span>}
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+        )
+      })}
+    </section>
+  )
 }

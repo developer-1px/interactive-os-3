@@ -1,7 +1,7 @@
 import {
   defineFlow, fromTree, navigateOnActivate, useFlow, writeResource,
   type UiEvent, type NormalizedData,
-} from '@p/ds'
+} from '@p/headless'
 import { sidebar, smartGroups, isSmartPath } from '../features/data'
 import { pathResource, pinnedRootResource } from '../features/resources'
 import type { SidebarItem, SmartGroupItem } from '../entities/types'

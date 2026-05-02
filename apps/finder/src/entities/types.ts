@@ -1,5 +1,6 @@
-import type { IconToken } from '@p/ds/tokens/semantic/iconography/icon'
 import type { FsNode, PreviewKind } from './schema'
+
+type IconToken = string
 
 export type {
   FsNode, SidebarItem, SmartGroupId, SmartGroupItem,

@@ -1,4 +1,4 @@
-import { defineResource, parentOf, writeResource, ROOT } from '@p/ds'
+import { defineResource, parentOf, writeResource, ROOT } from '@p/headless'
 import { finderNavigate } from './nav'
 import {
   loadText,

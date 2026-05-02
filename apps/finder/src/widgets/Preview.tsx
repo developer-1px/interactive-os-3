@@ -1,19 +1,16 @@
-import { useResource } from '@p/ds'
-import { CodeBlock } from '@p/ds/ui/6-structure/CodeBlock'
-import { Prose } from '@p/ds/ui/6-structure/Prose'
+import { useResource } from '@p/headless'
 import { formatDate, formatSize } from '../features/data'
+import { extToLang, extToPreviewKind, type FsNode } from '../entities/types'
 import {
   textResource, imageResource, codeHtmlResource, markdownHtmlResource,
 } from '../features/resources'
-import { extToIcon, extToLang, extToPreviewKind, type FsNode } from '../entities/types'
 import type { PreviewVM } from '../features/feature'
 
-/** PreviewPane — feature.view.preview 의 VM 을 받아 aside 마크업 + Meta 렌더.
- *  파일 본문은 PreviewBody 가 자기 fetch 로 처리. */
+/** PreviewPane — feature.view.preview VM 을 받아 renders the right preview body. */
 export function PreviewPane({ vm }: { vm: PreviewVM }) {
   const show = vm.kind !== 'empty' && vm.kind !== 'dir'
   return (
-    <aside data-part="preview" aria-label="미리보기" aria-hidden={!show}>
+    <aside aria-label="미리보기" aria-hidden={!show} className="flex flex-col gap-3">
       {show && 'node' in vm && (
         <>
           <PreviewBody node={vm.node} />
@@ -44,11 +41,13 @@ function Header({ node, note }: { node: FsNode; note?: string }) {
   const kind = isDir ? '폴더' : (node.ext ?? '파일').toUpperCase()
   const sub = isDir ? kind : `${kind} · ${formatSize(node.size)}`
   return (
-    <header>
-      <figure data-icon={isDir ? 'dir' : extToIcon(node.ext)} aria-hidden />
-      <hgroup>
-        <h2>{node.name}</h2>
-        <p>{note ?? sub}</p>
+    <header className="flex flex-col items-center gap-2 py-4">
+      <div aria-hidden className="grid h-16 w-16 place-items-center rounded bg-neutral-100 text-2xl text-neutral-500">
+        {isDir ? '📁' : '📄'}
+      </div>
+      <hgroup className="text-center">
+        <h2 className="text-sm font-semibold text-neutral-900">{node.name}</h2>
+        <p className="text-xs text-neutral-500">{note ?? sub}</p>
       </hgroup>
     </header>
   )
@@ -57,11 +56,19 @@ function Header({ node, note }: { node: FsNode; note?: string }) {
 function Meta({ node }: { node: FsNode }) {
   const isDir = node.type === 'dir'
   return (
-    <dl>
-      <dt>종류</dt><dd>{isDir ? '폴더' : (node.ext || '파일')}</dd>
-      <dt>경로</dt><dd title={node.path}>{node.path}</dd>
-      {!isDir && node.size != null && <><dt>크기</dt><dd>{formatSize(node.size)}</dd></>}
-      {node.mtime && <><dt>수정일</dt><dd>{formatDate(node.mtime)}</dd></>}
+    <dl className="grid grid-cols-[5rem_1fr] gap-x-2 gap-y-1 text-xs">
+      <dt className="text-neutral-500">종류</dt>
+      <dd className="text-neutral-800">{isDir ? '폴더' : (node.ext || '파일')}</dd>
+      <dt className="text-neutral-500">경로</dt>
+      <dd className="break-all text-neutral-800" title={node.path}>{node.path}</dd>
+      {!isDir && node.size != null && <>
+        <dt className="text-neutral-500">크기</dt>
+        <dd className="text-neutral-800">{formatSize(node.size)}</dd>
+      </>}
+      {node.mtime && <>
+        <dt className="text-neutral-500">수정일</dt>
+        <dd className="text-neutral-800">{formatDate(node.mtime)}</dd>
+      </>}
     </dl>
   )
 }
@@ -70,26 +77,26 @@ function ImageView({ node }: { node: FsNode }) {
   const [src] = useResource(imageResource, node.path)
   if (src === undefined) return <Header node={node} note="이미지 로딩 중…" />
   if (src === null) return <Header node={node} note="이미지를 찾을 수 없습니다" />
-  return <img src={src} alt={node.name} />
+  return <img src={src} alt={node.name} className="mx-auto max-h-80 max-w-full rounded border border-neutral-200" />
 }
 
 function TextView({ node }: { node: FsNode }) {
   const [text] = useResource(textResource, node.path)
-  if (text == null) return <pre aria-busy="true" />
-  return <pre>{text}</pre>
+  if (text == null) return <pre aria-busy="true" className="rounded bg-neutral-50 p-3 text-xs" />
+  return <pre className="overflow-auto rounded bg-neutral-50 p-3 text-xs leading-relaxed">{text}</pre>
 }
 
 function CodeView({ node }: { node: FsNode }) {
   const lang = extToLang(node.ext)
   const [text] = useResource(textResource, node.path)
   const [html] = useResource(codeHtmlResource, node.path, lang)
-  if (text == null) return <pre aria-busy="true" />
-  if (html == null) return <pre data-lang={lang}>{text}</pre>
-  return <CodeBlock lang={lang} html={html} />
+  if (text == null) return <pre aria-busy="true" className="rounded bg-neutral-50 p-3 text-xs" />
+  if (html == null) return <pre data-lang={lang} className="overflow-auto rounded bg-neutral-50 p-3 text-xs">{text}</pre>
+  return <div className="overflow-auto rounded bg-neutral-50 p-3 text-xs [&_pre]:m-0" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 function MarkdownView({ node }: { node: FsNode }) {
   const [html] = useResource(markdownHtmlResource, node.path)
-  if (html == null) return <article aria-busy="true" />
-  return <Prose html={html} />
+  if (html == null) return <article aria-busy="true" className="text-sm" />
+  return <article className="text-sm leading-relaxed text-neutral-800 [&_h1]:mt-3 [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:mt-2 [&_h2]:text-base [&_h2]:font-semibold [&_p]:my-2 [&_code]:rounded [&_code]:bg-neutral-100 [&_code]:px-1" dangerouslySetInnerHTML={{ __html: html }} />
 }

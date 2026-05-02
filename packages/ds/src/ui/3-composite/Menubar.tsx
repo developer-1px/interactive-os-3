@@ -4,6 +4,7 @@ import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/
 import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { useSpatialNavigation } from '@p/headless/roving/useSpatialNavigation'
 import { MenuPopover, type MenuCtx } from '../4-window/MenuPopover'
+import { isMenuChecked, readMenuRole, type MenuApgOptions } from './menuModel'
 
 // @slot children — composable (wrapper/label/subpart)
 type StaticMenubarProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDown'> & {
@@ -13,6 +14,7 @@ type StaticMenubarProps = Omit<ComponentPropsWithoutRef<'ul'>, 'role' | 'onKeyDo
 
 type DataMenubarProps = CollectionProps<{
   orientation?: 'horizontal' | 'vertical'
+  apg?: MenuApgOptions
   'aria-label'?: string
 }>
 
@@ -44,7 +46,7 @@ function StaticMenubar(props: StaticMenubarProps) {
   )
 }
 
-function DataMenubar({ data, onEvent, orientation = 'horizontal', ...rest }: DataMenubarProps) {
+function DataMenubar({ data, onEvent, orientation = 'horizontal', apg, ...rest }: DataMenubarProps) {
   const id = useId()
   const emit = onEvent ?? (() => {})
   const topAxis = composeAxes(navigate(orientation), expand, activate, typeahead)
@@ -52,11 +54,13 @@ function DataMenubar({ data, onEvent, orientation = 'horizontal', ...rest }: Dat
   const { focusId, expanded, onKey, bindFocus } = useRovingTabIndex(topAxis, data, emit)
   const submenu = useRovingTabIndex(menuAxis, data, emit)
   const kids = getChildren(data, ROOT)
-  const branches = kids.filter((kid) => getChildren(data, kid).length > 0)
+  const branches = kids.filter((kid) => readMenuRole(data, kid) !== 'separator' && getChildren(data, kid).length > 0)
   const anchorName = (itemId: string) => `--menubar-anchor-${id.replace(/[^a-zA-Z0-9]/g, '')}-${itemId}`
 
   const clickEvents = (itemId: string): UiEvent[] => {
     if (isDisabled(data, itemId)) return []
+    const role = readMenuRole(data, itemId)
+    if (role === 'separator') return []
     const itemKids = getChildren(data, itemId)
     if (!itemKids.length) return [{ type: 'activate', id: itemId }]
     const open = expanded.has(itemId)
@@ -76,7 +80,28 @@ function DataMenubar({ data, onEvent, orientation = 'horizontal', ...rest }: Dat
     anchorName,
     bindFocus: submenu.bindFocus,
     onToggle: (itemId, open) => toggleEvents(itemId, open).forEach(emit),
-    onKey: submenu.onKey,
+    onKey: (event, itemId) => {
+      const role = readMenuRole(data, itemId)
+      if (
+        event.key === ' '
+        && apg?.selectionActivation !== 'activate'
+        && (role === 'menuitemcheckbox' || role === 'menuitemradio')
+      ) {
+        emit({ type: 'select', id: itemId })
+        event.preventDefault()
+        return true
+      }
+      if (
+        (event.key === 'Enter' || event.key === ' ')
+        && apg?.parentActivation === 'activate'
+        && getChildren(data, itemId).length > 0
+      ) {
+        emit({ type: 'activate', id: itemId })
+        event.preventDefault()
+        return true
+      }
+      return submenu.onKey(event, itemId)
+    },
     onClick: (itemId) => clickEvents(itemId).forEach(emit),
   }
 
@@ -94,16 +119,21 @@ function DataMenubar({ data, onEvent, orientation = 'horizontal', ...rest }: Dat
     <>
       <ul role="menubar" aria-orientation={orientation} {...rest}>
         {kids.map((itemId, i) => {
+          const role = readMenuRole(data, itemId)
+          if (role === 'separator') {
+            return <li key={itemId} role="separator" aria-orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'} />
+          }
           const branch = getChildren(data, itemId).length > 0
           const disabled = isDisabled(data, itemId)
           const focused = focusId === itemId
           return (
             <li
               key={itemId}
-              role="menuitem"
+              role={role}
               data-id={itemId}
               tabIndex={focused ? 0 : -1}
               ref={bindFocus(itemId)}
+              aria-checked={role === 'menuitemcheckbox' || role === 'menuitemradio' ? isMenuChecked(data, itemId) : undefined}
               aria-disabled={disabled || undefined}
               aria-haspopup={branch ? 'menu' : undefined}
               aria-expanded={branch ? expanded.has(itemId) : undefined}

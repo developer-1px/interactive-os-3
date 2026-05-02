@@ -1,12 +1,14 @@
-import { useId, type CSSProperties } from 'react'
+import { useId, type CSSProperties, type KeyboardEvent } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type CollectionProps, type UiEvent } from '@p/headless/types'
 import { activate, composeAxes, expand, navigate, typeahead } from '@p/headless/axes'
 import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { MenuPopover, type MenuCtx } from '../4-window/MenuPopover'
+import { readMenuRole, type MenuApgOptions } from './menuModel'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
+type MenuProps = CollectionProps<{ apg?: MenuApgOptions }>
 
-export function Menu({ data, onEvent }: CollectionProps) {
+export function Menu({ data, onEvent, apg }: MenuProps) {
   const popoverId = useId()
   const emit = onEvent ?? (() => {})
   const { focusId, expanded, onKey, bindFocus } = useRovingTabIndex(axis, data, emit)
@@ -24,6 +26,29 @@ export function Menu({ data, onEvent }: CollectionProps) {
     return events
   }
 
+  const keyEvents = (event: KeyboardEvent, id: string): boolean => {
+    const role = readMenuRole(data, id)
+    if (
+      event.key === ' '
+      && apg?.selectionActivation !== 'activate'
+      && (role === 'menuitemcheckbox' || role === 'menuitemradio')
+    ) {
+      emit({ type: 'select', id })
+      event.preventDefault()
+      return true
+    }
+    if (
+      (event.key === 'Enter' || event.key === ' ')
+      && apg?.parentActivation === 'activate'
+      && getChildren(data, id).length > 0
+    ) {
+      emit({ type: 'activate', id })
+      event.preventDefault()
+      return true
+    }
+    return onKey(event, id)
+  }
+
   const toggleEvents = (id: string, open: boolean): UiEvent[] => {
     if (id === ROOT) {
       const events: UiEvent[] = [{ type: 'open', id: ROOT, open }]
@@ -37,7 +62,7 @@ export function Menu({ data, onEvent }: CollectionProps) {
   const ctx: MenuCtx = {
     data, focusId, expanded, anchorName, bindFocus,
     onToggle: (id, open) => toggleEvents(id, open).forEach(emit),
-    onKey,
+    onKey: keyEvents,
     onClick: (id) => clickEvents(id).forEach(emit),
   }
 

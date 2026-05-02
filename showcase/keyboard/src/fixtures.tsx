@@ -260,6 +260,11 @@ export function MenubarFixture() {
       api: { id: 'api', data: { label: 'API' } },
       undo: { id: 'undo', data: { label: '되돌리기' } },
       redo: { id: 'redo', data: { label: '다시 실행' } },
+      sepEdit: { id: 'sepEdit', data: { role: 'separator' } },
+      ruler: { id: 'ruler', data: { label: '눈금자 보기', role: 'checkbox', checked: true } },
+      theme: { id: 'theme', data: { label: '테마' } },
+      light: { id: 'light', data: { label: '밝게', role: 'radio', checked: true } },
+      dark: { id: 'dark', data: { label: '어둡게', role: 'radio' } },
       zoom: { id: 'zoom', data: { label: '확대/축소' } },
       z100: { id: 'z100', data: { label: '100%' } },
       z150: { id: 'z150', data: { label: '150%' } },
@@ -271,14 +276,15 @@ export function MenubarFixture() {
       file: ['new', 'open', 'recent'],
       recent: ['readme', 'app', 'section'],
       section: ['intro', 'api'],
-      edit: ['undo', 'redo'],
+      edit: ['undo', 'redo', 'sepEdit', 'ruler', 'theme'],
+      theme: ['light', 'dark'],
       view: ['zoom'],
       zoom: ['z100', 'z150'],
       help: ['docs', 'shortcuts'],
     },
   }
   const [data, onEvent] = useControlState(menubar)
-  return <Menubar data={data} onEvent={onEvent} aria-label="앱 메뉴" />
+  return <Menubar data={data} onEvent={onEvent} apg={{ case: 'editor' }} aria-label="앱 메뉴" />
 }
 
 export function SpinButtonFixture() {

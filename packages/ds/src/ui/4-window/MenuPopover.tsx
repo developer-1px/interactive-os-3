@@ -1,5 +1,6 @@
 import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData } from '@p/headless/types'
+import { isMenuChecked, readMenuRole } from '../3-composite/menuModel'
 
 const idFrom = (e: { target: EventTarget }): string | null =>
   (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
@@ -27,7 +28,7 @@ export function MenuPopover({
 }: { ctx: Ctx; parentId: string; style: CSSProperties; domId?: string }) {
   const { data, focusId, expanded, anchorName, onToggle, onKey, onClick, bindFocus } = ctx
   const kids = getChildren(data, parentId)
-  const branches = kids.filter((id) => getChildren(data, id).length > 0)
+  const branches = kids.filter((id) => readMenuRole(data, id) !== 'separator' && getChildren(data, id).length > 0)
   const wantOpen = parentId === ROOT ? undefined : expanded.has(parentId)
 
   const onUlClick = (e: MouseEvent) => {
@@ -49,12 +50,17 @@ export function MenuPopover({
     >
       <ul role="menu" onClick={onUlClick} onKeyDown={onUlKey}>
         {kids.map((id, i) => {
+          const role = readMenuRole(data, id)
+          if (role === 'separator') {
+            return <li key={id} role="separator" aria-orientation="horizontal" />
+          }
           const branch = getChildren(data, id).length > 0
           const disabled = isDisabled(data, id)
           const focused = focusId === id
           return (
-            <li key={id} role="menuitem" data-id={id} tabIndex={focused ? 0 : -1}
+            <li key={id} role={role} data-id={id} tabIndex={focused ? 0 : -1}
               ref={bindFocus(id)}
+              aria-checked={role === 'menuitemcheckbox' || role === 'menuitemradio' ? isMenuChecked(data, id) : undefined}
               aria-disabled={disabled || undefined}
               aria-haspopup={branch ? 'menu' : undefined}
               aria-expanded={branch ? expanded.has(id) : undefined}

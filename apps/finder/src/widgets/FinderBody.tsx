@@ -1,25 +1,25 @@
-import {
-  Columns as ColumnsRole,
-  Listbox,
-  SearchBox,
-  Toolbar,
-  useFeature,
-  type UiEvent,
-} from '@p/ds'
-import { Split } from '@p/ds/ui/9-layout/Split'
+import type { ComponentPropsWithoutRef } from 'react'
+import { useFeature, type NormalizedData, type UiEvent } from '@p/headless'
+import { useListboxPattern, useToolbarPattern } from '@p/headless/patterns'
 import { Link } from '@tanstack/react-router'
 import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'
+import { Columns } from './Columns'
 import { extToPreviewKind, type ViewMode } from '../entities/types'
 
-/**
- * Finder 본문 — sidebar(recent/fav Listbox) + Columns view + Preview pane.
- * useFeature(finderFeature) 로 상태 일괄 관리. 라우트 로컬 Ui leaf.
- */
-export function FinderBody() {
-  const [view, dispatch] = useFeature(finderFeature)
+type FeatureView = {
+  titlebar: { path: string; mode: ViewMode; query: string; busy: boolean }
+  toolbar: NormalizedData
+  sidebar: { recent: NormalizedData; fav: NormalizedData; tags: NormalizedData }
+  columns: NormalizedData
+  preview: { kind: 'empty' } | { kind: 'dir' | 'image' | 'text'; node: { path: string; ext?: string }; [k: string]: unknown }
+}
 
-  const onColumns = (e: UiEvent) => {
+/** Finder 본문 — sidebar + columns + preview. ds 의존성 0건. */
+export function FinderBody() {
+  const [view, dispatch] = useFeature(finderFeature) as unknown as [FeatureView, (cmd: { type: string; [k: string]: unknown }) => void]
+
+  const onColumnsEvent = (e: UiEvent) => {
     if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
     else if (e.type === 'expand') dispatch({ type: 'expandCol', id: e.id, open: e.open })
   }
@@ -33,64 +33,130 @@ export function FinderBody() {
     if (e.type === 'activate') dispatch({ type: 'setMode', mode: e.id as ViewMode })
   }
 
+  const previewIsMd = view.preview.kind === 'text' && 'node' in view.preview &&
+    extToPreviewKind(view.preview.node.ext) === 'markdown'
+
   return (
-    <main data-part="finder" aria-label={`Finder — ${view.titlebar.path}`} data-view={view.titlebar.mode}>
-      <Split
-        data-part="body"
-        id="finder-sidebar"
-        axis="row"
-        defaultSizes={[1, 5]}
-        minSizes={[180, 480]}
-      >
-        <section data-part="pane" data-pane="sidebar">
-          <header data-part="pane-toolbar">
-            <button type="button" aria-label="사이드바 접기" data-icon="panel-left" />
-          </header>
-          <nav data-part="sidebar" aria-label="사이드바">
-            <section aria-labelledby="sidebar-recent">
-              <h3 id="sidebar-recent">최근 항목</h3>
-              <Listbox data={view.sidebar.recent} onEvent={onRecent} aria-labelledby="sidebar-recent" />
-            </section>
-            <section aria-labelledby="sidebar-fav">
-              <h3 id="sidebar-fav">즐겨찾기</h3>
-              <Listbox data={view.sidebar.fav} onEvent={onFav} aria-labelledby="sidebar-fav" />
-            </section>
-            <section aria-labelledby="sidebar-tags">
-              <h3 id="sidebar-tags">태그</h3>
-              <Listbox data={view.sidebar.tags} onEvent={onRecent} aria-labelledby="sidebar-tags" />
-            </section>
-          </nav>
-        </section>
-        <div data-part="finder-main">
-          <section data-part="pane" data-pane="columns">
-            <header data-part="pane-toolbar">
-              <Toolbar data={view.toolbar} onEvent={onView} aria-label="보기 모드" />
-            </header>
-            <ColumnsRole data={view.columns} onEvent={onColumns} aria-label="컬럼" />
-          </section>
-          <section data-part="pane" data-pane="preview">
-            <header data-part="pane-toolbar">
-              <SearchBox
-                aria-label="검색"
-                placeholder="검색"
-                value={view.titlebar.query}
-                onChange={(e) => dispatch({ type: 'setQuery', q: e.currentTarget.value })}
-              />
-              {'node' in view.preview && extToPreviewKind(view.preview.node.ext) === 'markdown' && (
-                <Link
-                  to="/markdown/$"
-                  params={{ _splat: view.preview.node.path.replace(/^\//, '') }}
-                  aria-label="전체 화면으로 열기"
-                >
-                  전체 화면으로 열기
-                  <span data-icon="external-link" aria-hidden="true" />
-                </Link>
-              )}
-            </header>
-            <PreviewPane vm={view.preview} />
-          </section>
+    <main
+      aria-label={`Finder — ${view.titlebar.path}`}
+      data-view={view.titlebar.mode}
+      className="grid h-svh w-full grid-cols-[14rem_1fr_22rem] bg-neutral-50"
+    >
+      <aside className="flex flex-col overflow-hidden border-r border-neutral-200 bg-white">
+        <header className="flex items-center border-b border-neutral-200 px-2 py-2">
+          <button type="button" aria-label="사이드바 접기" className="rounded p-1 text-neutral-500 hover:bg-neutral-100">≡</button>
+        </header>
+        <nav aria-label="사이드바" className="flex flex-col gap-4 overflow-y-auto p-2">
+          <SidebarSection title="최근 항목" data={view.sidebar.recent} onEvent={onRecent} />
+          <SidebarSection title="즐겨찾기" data={view.sidebar.fav} onEvent={onFav} />
+          <SidebarSection title="태그" data={view.sidebar.tags} onEvent={onRecent} />
+        </nav>
+      </aside>
+
+      <section className="flex flex-col overflow-hidden">
+        <header className="flex items-center justify-end border-b border-neutral-200 bg-white px-3 py-2">
+          <ViewToolbar data={view.toolbar} onEvent={onView} />
+        </header>
+        <div className="flex-1 overflow-hidden">
+          <Columns />
         </div>
-      </Split>
+      </section>
+
+      <section className="flex flex-col overflow-hidden border-l border-neutral-200 bg-white">
+        <header className="flex items-center gap-2 border-b border-neutral-200 px-3 py-2">
+          <input
+            type="search"
+            aria-label="검색"
+            placeholder="검색"
+            value={view.titlebar.query}
+            onChange={(e) => dispatch({ type: 'setQuery', q: e.currentTarget.value })}
+            className="flex-1 rounded border border-neutral-200 bg-neutral-50 px-2 py-1 text-sm outline-none focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900"
+          />
+          {previewIsMd && 'node' in view.preview && (
+            <Link
+              to="/markdown/$"
+              params={{ _splat: view.preview.node.path.replace(/^\//, '') }}
+              aria-label="전체 화면으로 열기"
+              className="text-xs text-blue-600 underline"
+            >전체 화면 ↗</Link>
+          )}
+        </header>
+        <div className="flex-1 overflow-auto p-3">
+          <PreviewPane vm={view.preview as never} />
+        </div>
+      </section>
     </main>
+  )
+}
+
+function SidebarSection({
+  title, data, onEvent,
+}: { title: string; data: NormalizedData; onEvent: (e: UiEvent) => void }) {
+  const headingId = `sb-${title.replace(/\s+/g, '-')}`
+  const { rootProps, optionProps, items } = useListboxPattern(data, onEvent)
+  if (items.length === 0) return null
+  return (
+    <section aria-labelledby={headingId}>
+      <h3 id={headingId} className="px-1 py-1 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">{title}</h3>
+      <ul
+        {...(rootProps as ComponentPropsWithoutRef<'ul'>)}
+        aria-labelledby={headingId}
+        className="m-0 list-none p-0"
+      >
+        {items.map((it) => {
+          const d = data.entities[it.id]?.data ?? {}
+          return (
+            <li
+              key={it.id}
+              {...(optionProps(it.id) as ComponentPropsWithoutRef<'li'>)}
+              aria-posinset={it.posinset}
+              aria-setsize={it.setsize}
+              aria-selected={it.selected || undefined}
+              aria-disabled={it.disabled || undefined}
+              className={
+                'cursor-pointer rounded px-2 py-1 text-sm ' +
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+                (it.selected
+                  ? 'bg-neutral-900 text-white'
+                  : 'text-neutral-700 hover:bg-neutral-100')
+              }
+            >
+              {String(d.label ?? it.label)}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+  )
+}
+
+function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
+  const { rootProps, optionProps, items } = useToolbarPattern(data, onEvent)
+  return (
+    <div
+      {...(rootProps as ComponentPropsWithoutRef<'div'>)}
+      aria-label="뷰 모드"
+      className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
+    >
+      {items.map((it) => {
+        const d = data.entities[it.id]?.data ?? {}
+        const pressed = Boolean(d.pressed)
+        return (
+          <button
+            key={it.id}
+            type="button"
+            {...(optionProps(it.id) as ComponentPropsWithoutRef<'button'>)}
+            aria-pressed={pressed}
+            className={
+              'px-2 py-1 text-xs ' +
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+              (pressed ? 'rounded bg-white text-neutral-900 shadow-sm' : 'text-neutral-500')
+            }
+          >
+            {String(d.label ?? it.label)}
+          </button>
+        )
+      })}
+    </div>
   )
 }
