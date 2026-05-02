@@ -89,22 +89,3 @@ export function useListboxPattern(
 
   return { rootProps, optionProps, items }
 }
-
-/**
- * ARIA-facing alias for React authors and LLMs.
- *
- * Same behavior as `useListboxPattern`, but the returned prop names mirror
- * the ARIA roles directly: `listbox` owns `option` children.
- */
-export function useAriaListbox(
-  data: NormalizedData,
-  onEvent?: (e: UiEvent) => void,
-  opts: ListboxOptions = {},
-): {
-  listboxProps: RootProps
-  optionProps: (id: string) => ItemProps
-  options: BaseItem[]
-} {
-  const { rootProps, optionProps, items } = useListboxPattern(data, onEvent, opts)
-  return { listboxProps: rootProps, optionProps, options: items }
-}

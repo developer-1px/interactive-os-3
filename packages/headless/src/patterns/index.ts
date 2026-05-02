@@ -18,7 +18,7 @@
  * 자세한 명세는 packages/headless/PATTERNS.md
  */
 
-export { useAriaListbox, useListboxPattern, type ListboxOptions } from './listbox'
+export { useListboxPattern, type ListboxOptions } from './listbox'
 export { useTabsPattern, type TabsOptions } from './tabs'
 export { useTreePattern, type TreeOptions } from './tree'
 export { useRadioGroupPattern, type RadioGroupOptions } from './radioGroup'
