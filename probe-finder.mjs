@@ -65,7 +65,7 @@ try {
   // 4) Try arrow-down inside columns
   const focusInfo = await page.evaluate(() => {
     const li = document.querySelector('section[aria-label="컬럼"] li[role="option"]')
-    if (li) (li as HTMLElement).focus()
+    if (li) li.focus()
     return { focused: document.activeElement?.tagName + ':' + document.activeElement?.textContent?.slice(0,20) }
   })
   console.log('focus before key:', focusInfo)
