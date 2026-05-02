@@ -1,5 +1,5 @@
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, treeExpand, navigate } from '../axes'
+import { activate, composeAxes, treeExpand, treeNavigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
@@ -8,13 +8,14 @@ export interface TreeGridOptions {
   autoFocus?: boolean
 }
 
-const axis = composeAxes(navigate('vertical'), navigate('horizontal'), treeExpand, activate)
+const axis = composeAxes(treeNavigate, treeExpand, activate)
 
 /**
  * treeGrid — APG `/treegrid/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/
  *
- * row + cell 2축 + branch expand. row 기준 roving (cell focus 는 row 안에서 각자).
+ * tree visible order navigation + branch expand. Focus stays on rows; cells
+ * expose grid semantics through rowheader/gridcell + aria-colindex.
  */
 export function useTreeGridPattern(
   data: NormalizedData,
@@ -72,6 +73,7 @@ export function useTreeGridPattern(
     role: colIndex === 0 ? 'rowheader' : 'gridcell',
     'data-row': rowId,
     'data-col': colIndex,
+    'aria-colindex': colIndex + 1,
   } as unknown as ItemProps)
 
   return { rootProps, rowProps, cellProps, items: flat }
