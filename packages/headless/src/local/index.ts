@@ -9,7 +9,8 @@
  * 정체성 분리 — `useResource` 가 정본, 이건 quick-start helper.
  */
 import { useState } from 'react'
-import { reduceWithDefaults, type Reducer } from '../state/selection'
+import type { Reducer } from '../state/compose'
+import { reduceWithDefaults } from '../state/defaults'
 import type { NormalizedData, UiEvent } from '../types'
 
 export function useLocalData(

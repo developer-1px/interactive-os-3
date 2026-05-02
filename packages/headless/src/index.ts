@@ -14,12 +14,10 @@ export * from './types'
 export * from './data'
 
 export { reduce } from './state/reduce'
-export {
-  composeReducers, applyGesture,
-  singleSelect, multiSelectToggle, setValue,
-  reduceWithDefaults,
-  type Reducer,
-} from './state/selection'
+export { composeReducers, applyGesture, type Reducer } from './state/compose'
+export { singleSelect, multiSelectToggle } from './state/selection'
+export { setValue } from './state/value'
+export { reduceWithDefaults } from './state/defaults'
 export { fromTree, fromList, pathAncestors } from './state/fromTree'
 export { useControlState } from './state/useControlState'
 export { useEventBridge } from './state/useEventBridge'
