@@ -165,7 +165,7 @@ msg="${type}(${short_scope}): ${subject}"
 git commit -q -m "$msg
 
 Auto-committed by Stop hook (scripts/auto-commit.sh).
-Branch: $branch · ${count} files · +${add_lines}/-${del_lines}
+Branch: $branch · $(plural "$count") · +${add_lines}/-${del_lines}
 " 2>&1 | tail -3 || true
 
 exit 0
