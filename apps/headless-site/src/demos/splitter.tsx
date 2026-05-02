@@ -1,6 +1,6 @@
 import { ROOT, type NormalizedData } from '@p/headless'
 import { splitterPattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Splitter',

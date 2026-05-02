@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { fromList } from '@p/headless'
 import { useMenuPattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Menu',

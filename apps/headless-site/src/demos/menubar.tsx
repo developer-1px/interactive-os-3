@@ -1,6 +1,6 @@
 import { fromList } from '@p/headless'
 import { useMenubarPattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Menubar',

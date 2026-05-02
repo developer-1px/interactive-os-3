@@ -1,14 +1,14 @@
 import {
+  applyGesture,
   composeReducers,
   expandOnActivate,
   reduce,
   ROOT,
   setValue,
   type NormalizedData,
-  type Reducer,
 } from '@p/headless'
 import { useAccordionPattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Accordion',
@@ -27,11 +27,7 @@ const initial: NormalizedData = {
   relationships: { [ROOT]: ['a', 'b', 'c'] },
 }
 
-// Accordion reducer = expandOnActivate gesture transforms activate events,
-// then base reducer handles the resulting navigate/expand stream.
-const base = composeReducers(reduce, setValue)
-const accordionReducer: Reducer = (d, e) =>
-  expandOnActivate(d, e).reduce<NormalizedData>((acc, ev) => base(acc, ev), d)
+const accordionReducer = applyGesture(expandOnActivate, composeReducers(reduce, setValue))
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(initial, accordionReducer)

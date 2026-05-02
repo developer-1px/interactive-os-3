@@ -15,7 +15,8 @@ export * from './data'
 
 export { reduce } from './state/reduce'
 export {
-  composeReducers, singleSelect, multiSelectToggle, setValue,
+  composeReducers, applyGesture,
+  singleSelect, multiSelectToggle, setValue,
   reduceWithDefaults,
   type Reducer,
 } from './state/selection'

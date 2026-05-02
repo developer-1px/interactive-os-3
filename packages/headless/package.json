@@ -39,6 +39,11 @@
       "import": "./dist/key/index.js",
       "require": "./dist/key/index.cjs"
     },
+    "./local": {
+      "types": "./dist/local/index.d.ts",
+      "import": "./dist/local/index.js",
+      "require": "./dist/local/index.cjs"
+    },
     "./layout": {
       "types": "./dist/layout/index.d.ts",
       "import": "./dist/layout/index.js",

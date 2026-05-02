@@ -1,6 +1,6 @@
 import { fromTree } from '@p/headless'
 import { useTreeGridPattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Tree Grid',

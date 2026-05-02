@@ -1,4 +1,5 @@
 import { FOCUS, isMetaId, type NormalizedData, type UiEvent } from '../types'
+import type { GestureHelper } from '../gesture'
 import { reduce } from './reduce'
 
 export type Reducer = (d: NormalizedData, e: UiEvent) => NormalizedData
@@ -83,6 +84,29 @@ export const multiSelectToggle: Reducer = (d, e) => {
     },
   }
 }
+
+/**
+ * applyGesture — gesture + reducer 합성. gesture가 활성 이벤트를 의도 이벤트
+ * 스트림으로 변환한 뒤, reducer가 각 이벤트를 적용해 최종 state로 reduce.
+ *
+ * 이전:
+ *   const myReduce: Reducer = (d, e) =>
+ *     gesture(d, e).reduce<NormalizedData>((acc, ev) => base(acc, ev), d)
+ *
+ * 이후:
+ *   const myReduce = applyGesture(gesture, base)
+ *
+ * 예시:
+ *   // accordion: activate → expand 토글
+ *   const accReducer = applyGesture(expandOnActivate, composeReducers(reduce, setValue))
+ *
+ *   // tree: branch click → expand, leaf click → select
+ *   const treeReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
+ */
+export const applyGesture =
+  (gesture: GestureHelper, reducer: Reducer): Reducer =>
+  (d, e) =>
+    gesture(d, e).reduce<NormalizedData>((acc, ev) => reducer(acc, ev), d)
 
 /**
  * reduceWithDefaults — drop-in complete reducer.

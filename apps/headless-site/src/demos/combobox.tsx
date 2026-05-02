@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { fromList, reduce, type UiEvent } from '@p/headless'
+import { fromList, reduce, ROOT, type UiEvent } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
 
 export const meta = {
@@ -17,12 +17,12 @@ export default function Demo() {
   const [focusId, setFocusId] = useState<string | null>(null)
 
   // data is derived from query (not local state) — filter must re-flow when typing.
+  // narrow한 결과의 첫 매치를 auto-highlight: 1개로 좁아지면 Enter로 즉시 선택.
   const data = useMemo(() => {
     const filtered = ALL.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
     const list = fromList(filtered.map((label) => ({ label })))
-    return focusId && list.entities[focusId]
-      ? reduce(list, { type: 'navigate', id: focusId })
-      : list
+    const validFocus = focusId && list.entities[focusId] ? focusId : list.relationships[ROOT]?.[0]
+    return validFocus ? reduce(list, { type: 'navigate', id: validFocus }) : list
   }, [query, focusId])
 
   const onEvent = (e: UiEvent) => {
@@ -51,7 +51,7 @@ export default function Demo() {
         onChange={(e) => {
           setQuery(e.target.value)
           setExpanded(true)
-          setFocusId(null)
+          setFocusId(null) // useMemo가 첫 매치로 재설정
         }}
         onFocus={() => setExpanded(true)}
         onBlur={() => setTimeout(() => setExpanded(false), 100)}

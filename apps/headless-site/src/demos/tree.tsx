@@ -1,15 +1,11 @@
 import {
-  composeReducers,
+  applyGesture,
   expandBranchOnActivate,
   fromTree,
-  reduce,
-  setValue,
-  singleSelect,
-  type NormalizedData,
-  type Reducer,
+  reduceWithDefaults,
 } from '@p/headless'
 import { useTreePattern } from '@p/headless/patterns'
-import { useLocalData } from './_useLocalData'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Tree',
@@ -43,11 +39,7 @@ const tree: Node[] = [
   { id: 'pkg', label: 'package.json' },
 ]
 
-// Tree reducer = expandBranchOnActivate gesture (folders toggle, leaves select)
-// composed with base + singleSelect + setValue.
-const base = composeReducers(reduce, singleSelect, setValue)
-const treeReducer: Reducer = (d, e) =>
-  expandBranchOnActivate(d, e).reduce<NormalizedData>((acc, ev) => base(acc, ev), d)
+const treeReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(
