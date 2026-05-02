@@ -51,12 +51,17 @@ function MenuDemo() {
       open:  { id: 'open',  data: { label: '열기...' } },
       save:  { id: 'save',  data: { label: '저장' } },
       recent:{ id: 'recent',data: { label: '최근 항목' } },
+      project:{ id: 'project',data: { label: '프로젝트' } },
       r1:    { id: 'r1',    data: { label: 'README.md' } },
       r2:    { id: 'r2',    data: { label: 'index.ts' } },
+      p1:    { id: 'p1',    data: { label: 'admin' } },
+      p2:    { id: 'p2',    data: { label: 'showcase' } },
     },
     relationships: {
       [ROOT]: ['new', 'open', 'recent', 'save'],
       recent: ['r1', 'r2'],
+      r2: ['project'],
+      project: ['p1', 'p2'],
     },
   }
   const [data, onEvent] = useControlState(menu)

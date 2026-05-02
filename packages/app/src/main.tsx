@@ -40,7 +40,6 @@ const loadAppsLayer = async () => {
     { inspectorCss },
     { eduPortalAdminCss },
     { markdownCss },
-    { slidesCss },
     { inboxCss, chatCss, feedCss, genrePagesCss },
     { plugins },
     { composeRegistry },
@@ -52,7 +51,6 @@ const loadAppsLayer = async () => {
     import('@showcase/inspector'),
     import('@apps/edu-portal-admin'),
     import('@apps/markdown'),
-    import('@apps/slides'),
     import('@apps/genres'),
     import('./boot/plugins'),
     import('./boot/registry'),
@@ -62,7 +60,7 @@ const loadAppsLayer = async () => {
     void router.navigate({ to: '/finder/$', params: { _splat: splat } })
   })
   appsStyleEl.textContent = wrapAppsLayer([
-    inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, keyboardCss, markdownCss, slidesCss, inboxCss, chatCss, feedCss, genrePagesCss,
+    inspectorCss, finderCss, finderMobileCss, eduPortalAdminCss, catalogCss, canvasCss, keyboardCss, markdownCss, inboxCss, chatCss, feedCss, genrePagesCss,
   ])
 }
 

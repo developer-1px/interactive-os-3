@@ -6,7 +6,7 @@ import {
   Combobox, Select,
   Accordion, Disclosure, Switch, Slider, NumberInput,
   SegmentedControl, ToggleGroup, Pagination, Stepper,
-  Menubar, MenuItem,
+  Menubar,
   DataGrid, DataGridRow, RowGroup, ColumnHeader, GridCell,
   TreeGrid, TreeRow,
   Dialog, Button,
@@ -23,10 +23,18 @@ export function MenuFixture() {
       open:   { id: 'open',   data: { label: '열기...' } },
       save:   { id: 'save',   data: { label: '저장' } },
       recent: { id: 'recent', data: { label: '최근 항목' } },
+      project:{ id: 'project',data: { label: '프로젝트' } },
       r1:     { id: 'r1',     data: { label: 'README.md' } },
       r2:     { id: 'r2',     data: { label: 'index.ts' } },
+      p1:     { id: 'p1',     data: { label: 'admin' } },
+      p2:     { id: 'p2',     data: { label: 'showcase' } },
     },
-    relationships: { [ROOT]: ['new', 'open', 'recent', 'save'], recent: ['r1', 'r2'] },
+    relationships: {
+      [ROOT]: ['new', 'open', 'recent', 'save'],
+      recent: ['r1', 'r2'],
+      r2: ['project'],
+      project: ['p1', 'p2'],
+    },
   }
   const [data, onEvent] = useControlState(menu)
   return <Menu data={data} onEvent={onEvent} />
@@ -234,14 +242,43 @@ export function PaginationFixture() {
 }
 
 export function MenubarFixture() {
-  return (
-    <Menubar aria-label="앱 메뉴">
-      <MenuItem>파일</MenuItem>
-      <MenuItem>편집</MenuItem>
-      <MenuItem>보기</MenuItem>
-      <MenuItem>도움말</MenuItem>
-    </Menubar>
-  )
+  const menubar: NormalizedData = {
+    entities: {
+      [ROOT]: { id: ROOT, data: {} },
+      [FOCUS]: { id: FOCUS, data: { id: 'file' } },
+      file: { id: 'file', data: { label: '파일' } },
+      edit: { id: 'edit', data: { label: '편집' } },
+      view: { id: 'view', data: { label: '보기' } },
+      help: { id: 'help', data: { label: '도움말' } },
+      new: { id: 'new', data: { label: '새 파일' } },
+      open: { id: 'open', data: { label: '열기...' } },
+      recent: { id: 'recent', data: { label: '최근 항목' } },
+      readme: { id: 'readme', data: { label: 'README.md' } },
+      app: { id: 'app', data: { label: 'app.tsx' } },
+      section: { id: 'section', data: { label: '섹션' } },
+      intro: { id: 'intro', data: { label: '소개' } },
+      api: { id: 'api', data: { label: 'API' } },
+      undo: { id: 'undo', data: { label: '되돌리기' } },
+      redo: { id: 'redo', data: { label: '다시 실행' } },
+      zoom: { id: 'zoom', data: { label: '확대/축소' } },
+      z100: { id: 'z100', data: { label: '100%' } },
+      z150: { id: 'z150', data: { label: '150%' } },
+      docs: { id: 'docs', data: { label: '문서' } },
+      shortcuts: { id: 'shortcuts', data: { label: '단축키' } },
+    },
+    relationships: {
+      [ROOT]: ['file', 'edit', 'view', 'help'],
+      file: ['new', 'open', 'recent'],
+      recent: ['readme', 'app', 'section'],
+      section: ['intro', 'api'],
+      edit: ['undo', 'redo'],
+      view: ['zoom'],
+      zoom: ['z100', 'z150'],
+      help: ['docs', 'shortcuts'],
+    },
+  }
+  const [data, onEvent] = useControlState(menubar)
+  return <Menubar data={data} onEvent={onEvent} aria-label="앱 메뉴" />
 }
 
 export function SpinButtonFixture() {
