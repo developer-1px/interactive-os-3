@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import type { ItemProps, RootProps } from './types'
 
 export interface DialogOptions {
@@ -9,13 +9,29 @@ export interface DialogOptions {
   alert?: boolean
   /** focus 복귀 대상. trigger element ref 권장. */
   returnFocusRef?: RefObject<HTMLElement | null>
+  /** open 직후 우선 focus 대상. 없으면 첫 focusable, 그것도 없으면 dialog root. */
+  initialFocusRef?: RefObject<HTMLElement | null>
+  returnFocus?: boolean
   ariaLabel?: string
   ariaLabelledBy?: string
   ariaDescribedBy?: string
 }
 
 const FOCUSABLE_SELECTOR =
-  'button:not([disabled]),[tabindex]:not([tabindex="-1"]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])'
+  [
+    'a[href]',
+    'area[href]',
+    'button:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    'iframe',
+    'audio[controls]',
+    'video[controls]',
+    '[contenteditable="true"]',
+    'summary',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',')
 
 /**
  * dialog — APG `/dialog-modal/` recipe.
@@ -31,14 +47,28 @@ export function useDialogPattern(
   rootProps: RootProps
   closeProps: ItemProps
 } {
-  const { open, onOpenChange, modal = true, alert = false, returnFocusRef, ariaLabel, ariaLabelledBy, ariaDescribedBy } = opts
+  const {
+    open,
+    onOpenChange,
+    modal = true,
+    alert = false,
+    returnFocusRef,
+    initialFocusRef,
+    returnFocus = true,
+    ariaLabel,
+    ariaLabelledBy,
+    ariaDescribedBy,
+  } = opts
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     if (!open) return
     const root = rootRef.current
     if (!root) return
-    const first = root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
-    first?.focus()
+    const active = document.activeElement
+    previousFocusRef.current = active instanceof HTMLElement ? active : null
+    const first = initialFocusRef?.current ?? root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? root
+    first.focus({ preventScroll: true })
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
@@ -67,9 +97,11 @@ export function useDialogPattern(
     document.addEventListener('keydown', onKey)
     return () => {
       document.removeEventListener('keydown', onKey)
-      returnFocusRef?.current?.focus()
+      if (!returnFocus) return
+      const target = returnFocusRef?.current ?? previousFocusRef.current
+      if (target && document.contains(target)) target.focus({ preventScroll: true })
     }
-  }, [open, rootRef, onOpenChange, returnFocusRef, modal])
+  }, [open, rootRef, onOpenChange, returnFocusRef, initialFocusRef, returnFocus, modal])
 
   const rootProps: RootProps = {
     role: alert ? 'alertdialog' : 'dialog',
@@ -78,12 +110,13 @@ export function useDialogPattern(
     'aria-labelledby': ariaLabelledBy,
     'aria-describedby': ariaDescribedBy,
     ref: rootRef as React.Ref<HTMLElement>,
+    tabIndex: -1,
     hidden: !open,
     'data-state': open ? 'open' : 'closed',
   } as unknown as RootProps
 
   const closeProps: ItemProps = {
-    'aria-label': 'Close',
+    type: 'button',
     onClick: () => onOpenChange?.(false),
   } as unknown as ItemProps
 

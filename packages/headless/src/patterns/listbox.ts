@@ -43,7 +43,10 @@ export function useListboxPattern(
     [data, onEvent, sff],
   )
 
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
+    autoFocus,
+    containerId,
+  })
   const ids = getChildren(data, containerId)
 
   const items: BaseItem[] = ids.map((id, i) => {

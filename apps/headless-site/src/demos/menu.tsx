@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { activate, fromList, navigate } from '@p/headless'
 import { useMenuPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
@@ -14,18 +14,30 @@ export const meta = {
 
 export default function Demo() {
   const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const closeMenu = () => {
+    setOpen(false)
+    requestAnimationFrame(() => triggerRef.current?.focus())
+  }
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'New file' }, { label: 'Open…' }, { label: 'Save' }, { label: 'Close' }]),
   )
   const { rootProps, itemProps, items } = useMenuPattern(data, (e) => {
     onEvent(e)
-    if (e.type === 'activate') setOpen(false)
-  })
+    if (e.type === 'activate') closeMenu()
+  }, { autoFocus: open, onEscape: closeMenu })
 
   return (
     <div className="relative inline-block">
       <button
+        ref={triggerRef}
         onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' && !open) {
+            e.preventDefault()
+            setOpen(true)
+          }
+        }}
         aria-expanded={open}
         aria-haspopup="menu"
         className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-stone-50"

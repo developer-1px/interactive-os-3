@@ -59,6 +59,9 @@ export interface CommonNodeData extends ItemPlacement {
   type: NodeType
   label?: string
   labelledBy?: string
+  /** Debug/contract marker rendered as `data-part`. */
+  part?: string
+  /** @deprecated Use `part`; this is not ARIA roledescription. */
   roledescription?: string
   /** Native `hidden` attribute. Keeps node in DOM but removes from render. */
   hidden?: boolean

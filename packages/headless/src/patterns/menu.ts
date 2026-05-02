@@ -6,6 +6,7 @@ import type { BaseItem, ItemProps, RootProps } from './types'
 export interface MenuOptions {
   closeOnSelect?: boolean
   autoFocus?: boolean
+  onEscape?: () => void
 }
 
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
@@ -25,7 +26,7 @@ export function useMenuPattern(
   itemProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { autoFocus } = opts
+  const { autoFocus, onEscape } = opts
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -43,7 +44,18 @@ export function useMenuPattern(
     }
   })
 
-  const rootProps: RootProps = { role: 'menu', ...delegate } as RootProps
+  const rootProps: RootProps = {
+    role: 'menu',
+    ...delegate,
+    onKeyDown: (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onEscape?.()
+        return
+      }
+      delegate.onKeyDown(e)
+    },
+  } as RootProps
 
   const itemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)

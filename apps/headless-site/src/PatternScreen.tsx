@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { KINDS } from './kind'
 import { fmtKey } from './keys'
 import type { Entry } from './registry'
@@ -15,7 +16,7 @@ export function PatternScreen({
   const keys = entry.keys?.() ?? []
 
   return (
-    <section id={slug} className="snap-start h-screen flex flex-col">
+    <section id={slug} tabIndex={-1} className="snap-start h-screen flex flex-col">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
         <span
           className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${KINDS[kind].badge}`}
@@ -79,19 +80,27 @@ export function PatternScreen({
 }
 
 function CopyButton({ text }: { text: string }) {
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const handle = async () => {
     try {
       await navigator.clipboard.writeText(text)
+      setState('copied')
     } catch {
-      /* clipboard rejection (no user gesture, etc.) — silently fail */
+      setState('failed')
     }
   }
   return (
-    <button
-      onClick={handle}
-      className="rounded border border-stone-700 bg-stone-800 px-2 py-0.5 text-xs text-stone-300 hover:bg-stone-700"
-    >
-      Copy
-    </button>
+    <span className="inline-flex items-center gap-2">
+      <span aria-live="polite" className="text-[10px] text-stone-500">
+        {state === 'copied' ? 'Copied' : state === 'failed' ? 'Copy failed' : ''}
+      </span>
+      <button
+        type="button"
+        onClick={handle}
+        className="rounded border border-stone-700 bg-stone-800 px-2 py-0.5 text-xs text-stone-300 hover:bg-stone-700"
+      >
+        Copy
+      </button>
+    </span>
   )
 }

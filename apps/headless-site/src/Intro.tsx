@@ -3,7 +3,7 @@ import { ENTRIES } from './registry'
 
 export function Intro() {
   return (
-    <section id="intro" className="snap-start min-h-screen flex items-center">
+    <section id="intro" tabIndex={-1} className="snap-start min-h-screen flex items-center">
       <div className="mx-auto max-w-5xl px-8 py-12 w-full">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-1 text-xs font-medium text-stone-700">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />

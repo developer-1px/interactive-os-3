@@ -29,6 +29,7 @@ export default function Demo() {
 
   const onEvent = (e: UiEvent) => {
     if (e.type === 'navigate') setFocusId(e.id)
+    if (e.type === 'expand') setExpanded(e.open)
     if (e.type === 'activate') {
       const ent = data.entities[e.id]
       const label = ent?.data?.label
@@ -42,7 +43,7 @@ export default function Demo() {
   const { inputProps, popoverProps, listProps, optionProps, items } = useComboboxPattern(
     data,
     onEvent,
-    { expanded },
+    { expanded, onExpandedChange: setExpanded },
   )
 
   return (

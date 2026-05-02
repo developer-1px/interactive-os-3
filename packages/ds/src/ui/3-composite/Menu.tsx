@@ -8,7 +8,8 @@ const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
 export function Menu({ data, onEvent }: CollectionProps) {
   const popoverId = useId()
-  const { focusId, expanded, onKey, bindFocus } = useRovingTabIndex(axis, data, onEvent)
+  const emit = onEvent ?? (() => {})
+  const { focusId, expanded, onKey, bindFocus } = useRovingTabIndex(axis, data, emit)
   const anchorName = (id: string) => `--menu-anchor-${popoverId.replace(/[^a-zA-Z0-9]/g, '')}-${id}`
   const firstEnabled = (p: string) => getChildren(data, p).find((k) => !isDisabled(data, k))
 
@@ -35,9 +36,9 @@ export function Menu({ data, onEvent }: CollectionProps) {
 
   const ctx: MenuCtx = {
     data, focusId, expanded, anchorName, bindFocus,
-    onToggle: (id, open) => toggleEvents(id, open).forEach(onEvent),
+    onToggle: (id, open) => toggleEvents(id, open).forEach(emit),
     onKey,
-    onClick: (id) => clickEvents(id).forEach(onEvent),
+    onClick: (id) => clickEvents(id).forEach(emit),
   }
 
   return (

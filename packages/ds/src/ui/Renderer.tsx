@@ -89,6 +89,7 @@ function NodeView({ page, id, pageRoot }: { page: NormalizedData; id: string; pa
 }
 
 const emphasisOf = (d: EmphasisData) => d.emphasis ?? d.variant
+const partOf = (d: { part?: string; roledescription?: string }) => d.part ?? d.roledescription
 
 // ── containers ─────────────────────────────────────────────────────
 
@@ -104,7 +105,7 @@ function RowView({ page, id, d, pageRoot }: { page: NormalizedData; id: string; 
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -125,7 +126,7 @@ function ColumnView({ page, id, d, pageRoot }: { page: NormalizedData; id: strin
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -148,7 +149,7 @@ function GridView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       role={named ? 'group' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -171,7 +172,7 @@ function SplitView({ page, id, d, pageRoot }: { page: NormalizedData; id: string
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
       data-page-root={pageRoot ? '' : undefined}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       style={phStyle}
       {...phAttr}
@@ -190,7 +191,7 @@ function MainView({ page, id, d, pageRoot }: { page: NormalizedData; id: string;
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -207,7 +208,7 @@ function NavView({ page, id, d }: { page: NormalizedData; id: string; d: NavNode
       data-variant={emphasisOf(d)}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -224,7 +225,7 @@ function AsideView({ page, id, d }: { page: NormalizedData; id: string; d: Aside
       data-variant={emphasisOf(d)}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -243,7 +244,7 @@ function SectionView({ page, id, d, pageRoot }: { page: NormalizedData; id: stri
       data-page-root={pageRoot ? '' : undefined}
       aria-label={d.label && !headingId ? d.label : undefined}
       aria-labelledby={d.labelledBy ?? headingId}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -260,7 +261,7 @@ function HeaderView({ page, id, d }: { page: NormalizedData; id: string; d: Head
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >
@@ -276,7 +277,7 @@ function FooterView({ page, id, d }: { page: NormalizedData; id: string; d: Foot
       data-flow={d.flow}
       aria-label={d.label}
       aria-labelledby={d.labelledBy}
-      data-part={d.roledescription}
+      data-part={partOf(d)}
       hidden={d.hidden || undefined}
       {...ph}
     >

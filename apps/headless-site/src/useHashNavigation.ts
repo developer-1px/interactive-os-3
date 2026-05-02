@@ -14,6 +14,7 @@ export function useHashNavigation() {
       setHash(next)
       const target = next ? document.getElementById(next) : document.getElementById('intro')
       target?.scrollIntoView({ behavior: 'instant' })
+      if (next) target?.focus({ preventScroll: true })
     }
     handle()
     window.addEventListener('hashchange', handle)

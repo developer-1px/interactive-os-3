@@ -1,0 +1,50 @@
+import { z } from 'zod'
+
+/**
+ * Runtime contract for the headless data rail.
+ *
+ * The public TypeScript types stay intentionally small, but production
+ * consumers need a real gate before declarations reach reducers/renderers.
+ */
+export const EntitySchema = z.object({
+  id: z.string().min(1),
+  data: z.record(z.string(), z.unknown()).optional(),
+})
+
+export const NormalizedDataSchema = z.object({
+  entities: z.record(z.string(), EntitySchema),
+  relationships: z.record(z.string(), z.array(z.string())),
+})
+
+export const UiEventSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('navigate'), id: z.string().min(1) }),
+  z.object({ type: z.literal('activate'), id: z.string().min(1) }),
+  z.object({ type: z.literal('expand'), id: z.string().min(1), open: z.boolean() }),
+  z.object({ type: z.literal('select'), id: z.string().min(1) }),
+  z.object({ type: z.literal('value'), id: z.string().min(1), value: z.unknown() }),
+  z.object({ type: z.literal('open'), id: z.string().min(1), open: z.boolean() }),
+  z.object({ type: z.literal('typeahead'), buf: z.string(), deadline: z.number().finite() }),
+  z.object({
+    type: z.literal('pan'),
+    id: z.string().min(1),
+    dx: z.number().finite(),
+    dy: z.number().finite(),
+  }),
+  z.object({
+    type: z.literal('zoom'),
+    id: z.string().min(1),
+    cx: z.number().finite(),
+    cy: z.number().finite(),
+    k: z.number().finite().positive(),
+  }),
+])
+
+export type EntityInput = z.infer<typeof EntitySchema>
+export type NormalizedDataInput = z.infer<typeof NormalizedDataSchema>
+export type UiEventInput = z.infer<typeof UiEventSchema>
+
+export const parseNormalizedData = (value: unknown): NormalizedDataInput =>
+  NormalizedDataSchema.parse(value)
+
+export const parseUiEvent = (value: unknown): UiEventInput =>
+  UiEventSchema.parse(value)

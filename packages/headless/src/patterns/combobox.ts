@@ -9,6 +9,7 @@ export interface ComboboxOptions {
   /** APG combobox 기본은 input 에 focus 유지 + aria-activedescendant. */
   activeDescendant?: boolean
   expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
   idPrefix?: string
 }
 
@@ -36,15 +37,15 @@ export function useComboboxPattern(
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { autocomplete = 'list', expanded = false, idPrefix = 'cmbx' } = opts
+  const { autocomplete = 'list', expanded = false, onExpandedChange, idPrefix = 'cmbx' } = opts
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const activeId = getFocus(data) ?? null
-  useActiveDescendant(inputRef, expanded ? activeId : null)
 
   const ids = getChildren(data, ROOT)
   const listId = `${idPrefix}-list`
   const optionDomId = (id: string) => `${idPrefix}-opt-${id}`
+  useActiveDescendant(inputRef, expanded && activeId ? optionDomId(activeId) : null)
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id]?.data ?? {}
@@ -58,26 +59,40 @@ export function useComboboxPattern(
     }
   })
 
+  const requestExpanded = (open: boolean) => {
+    onExpandedChange?.(open)
+    onEvent?.({ type: 'expand', id: ROOT, open })
+  }
+
+  const navigateTo = (e: React.KeyboardEvent, id: string | undefined) => {
+    if (!id || !onEvent) return
+    e.preventDefault()
+    if (!expanded) requestExpanded(true)
+    onEvent({ type: 'navigate', id })
+  }
+
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (!onEvent) return
     if (e.key === 'ArrowDown') {
       const next = activeId
         ? ids[Math.min(ids.length - 1, ids.indexOf(activeId) + 1)]
         : ids[0]
-      if (next) { e.preventDefault(); onEvent({ type: 'navigate', id: next }) }
+      navigateTo(e, next)
     } else if (e.key === 'ArrowUp') {
       const prev = activeId
         ? ids[Math.max(0, ids.indexOf(activeId) - 1)]
         : ids[ids.length - 1]
-      if (prev) { e.preventDefault(); onEvent({ type: 'navigate', id: prev }) }
+      navigateTo(e, prev)
     } else if (e.key === 'Home' && expanded) {
-      e.preventDefault(); onEvent({ type: 'navigate', id: ids[0] })
+      navigateTo(e, ids[0])
     } else if (e.key === 'End' && expanded) {
-      e.preventDefault(); onEvent({ type: 'navigate', id: ids[ids.length - 1] })
-    } else if (e.key === 'Enter' && activeId) {
-      e.preventDefault(); onEvent({ type: 'activate', id: activeId })
+      navigateTo(e, ids[ids.length - 1])
+    } else if (e.key === 'Enter' && activeId && onEvent) {
+      e.preventDefault()
+      onEvent({ type: 'activate', id: activeId })
+      requestExpanded(false)
     } else if (e.key === 'Escape') {
-      onEvent({ type: 'expand', id: ROOT, open: false })
+      e.preventDefault()
+      requestExpanded(false)
     }
   }
 

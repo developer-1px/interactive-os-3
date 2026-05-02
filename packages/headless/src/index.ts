@@ -11,6 +11,7 @@
  */
 
 export * from './types'
+export * from './schema'
 export * from './data'
 
 export { reduce } from './state/reduce'

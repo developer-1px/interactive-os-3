@@ -21,5 +21,5 @@ export default defineConfig({
   outDir: 'dist',
   splitting: true,
   treeshake: true,
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'zod'],
 })
