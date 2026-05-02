@@ -1,5 +1,6 @@
 import { KINDS, KIND_LIST } from './kind'
 import { ENTRIES } from './registry'
+import { WRAPPER_ENTRIES } from '../wrapper-site/registry'
 
 export function Intro() {
   return (
@@ -45,7 +46,7 @@ export function Intro() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">
             Patterns · click to jump
           </h2>
-          <div className="mt-3 grid gap-2 md:grid-cols-3">
+          <div className="mt-3 grid gap-2 md:grid-cols-4">
             {KIND_LIST.map((kind) => (
               <div key={kind}>
                 <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
@@ -66,6 +67,24 @@ export function Intro() {
                 </ul>
               </div>
             ))}
+            <div>
+              <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-cyan-600">
+                Wrappers
+              </h3>
+              <ul className="space-y-0.5">
+                {WRAPPER_ENTRIES.map((entry) => (
+                  <li key={entry.slug}>
+                    <a
+                      href={`/wrappers#${entry.slug}`}
+                      className="flex items-center justify-between rounded px-2 py-1 text-sm text-stone-700 hover:bg-stone-100"
+                    >
+                      <span>{entry.title}</span>
+                      <code className="text-[10px] font-mono text-stone-400">#{entry.slug}</code>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
