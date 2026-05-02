@@ -7,7 +7,7 @@ import {
   treeExpand,
   treeNavigate,
 } from '@p/headless'
-import { dedupe, probe } from '../../keys'
+import { dedupe, probe } from '../../../headless-site/keys'
 import type { TreeSlotProps, TreeSlots } from './slots'
 
 interface Node {

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PatternsRouteImport } from './routes/patterns'
+import { Route as CollectionsRouteImport } from './routes/collections'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppsAdminRouteImport } from './routes/apps.admin'
 import { Route as AppsAdminIndexRouteImport } from './routes/apps.admin.index'
@@ -28,6 +29,11 @@ import { Route as AppsAdminVideosIdEditRouteImport } from './routes/apps.admin.v
 const PatternsRoute = PatternsRouteImport.update({
   id: '/patterns',
   path: '/patterns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsRoute = CollectionsRouteImport.update({
+  id: '/collections',
+  path: '/collections',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -104,6 +110,7 @@ const AppsAdminVideosIdEditRoute = AppsAdminVideosIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
   '/patterns': typeof PatternsRoute
   '/apps/admin': typeof AppsAdminRouteWithChildren
   '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
   '/patterns': typeof PatternsRoute
   '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
   '/apps/admin/dashboard': typeof AppsAdminDashboardRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
   '/patterns': typeof PatternsRoute
   '/apps/admin': typeof AppsAdminRouteWithChildren
   '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/collections'
     | '/patterns'
     | '/apps/admin'
     | '/apps/admin/course-categories'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/collections'
     | '/patterns'
     | '/apps/admin/course-categories'
     | '/apps/admin/dashboard'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/collections'
     | '/patterns'
     | '/apps/admin'
     | '/apps/admin/course-categories'
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CollectionsRoute: typeof CollectionsRoute
   PatternsRoute: typeof PatternsRoute
   AppsAdminRoute: typeof AppsAdminRouteWithChildren
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/patterns'
       fullPath: '/patterns'
       preLoaderRoute: typeof PatternsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections': {
+      id: '/collections'
+      path: '/collections'
+      fullPath: '/collections'
+      preLoaderRoute: typeof CollectionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -363,6 +383,7 @@ const AppsAdminRouteWithChildren = AppsAdminRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CollectionsRoute: CollectionsRoute,
   PatternsRoute: PatternsRoute,
   AppsAdminRoute: AppsAdminRouteWithChildren,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
