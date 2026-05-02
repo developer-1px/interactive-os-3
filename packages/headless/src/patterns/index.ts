@@ -32,11 +32,16 @@ export { useAccordionPattern, type AccordionOptions } from './accordion'
 export { useDialogPattern, type DialogOptions } from './dialog'
 export { useTooltipPattern, type TooltipOptions } from './tooltip'
 
+export { useFeedPattern, type FeedOptions } from './feed'
+export { useGridPattern, type GridOptions, type GridCell } from './grid'
+export { useCarouselPattern, type CarouselOptions, type CarouselSlide } from './carousel'
+export { spinbuttonPattern, type SpinbuttonOptions } from './spinbutton'
+
 export { disclosurePattern, type DisclosureOptions } from './disclosure'
 export { sliderPattern, type SliderOptions } from './slider'
 export { splitterPattern, type SplitterOptions } from './splitter'
 export { toggleSwitchPattern, type SwitchOptions } from './switch'
 export { navigationListPattern, type NavigationListOptions } from './navigationList'
-export { alertPattern, alertdialogPattern } from './alert'
+export { alertPattern, alertdialogPattern, type AlertdialogOptions } from './alert'
 
 export type { BaseItem, TreeItem, ToolbarItem, RootProps, ItemProps } from './types'

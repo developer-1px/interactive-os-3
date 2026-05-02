@@ -4,12 +4,20 @@ import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface MenuOptions {
+  /** aria-orientation. Spec implicit value: 'vertical'. */
+  orientation?: 'horizontal' | 'vertical'
   closeOnSelect?: boolean
   autoFocus?: boolean
   onEscape?: () => void
+  /** aria-label — ARIA: menu requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
-const axis = composeAxes(navigate('vertical'), activate, typeahead)
+const axisFor = (orientation: 'horizontal' | 'vertical') =>
+  composeAxes(navigate(orientation), activate, typeahead)
+const verticalAxis = axisFor('vertical')
+const horizontalAxis = axisFor('horizontal')
 
 /**
  * menu — APG `/menu/` recipe.
@@ -26,7 +34,8 @@ export function useMenuPattern(
   itemProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { autoFocus, onEscape } = opts
+  const { autoFocus, onEscape, orientation = 'vertical', label, labelledBy } = opts
+  const axis = orientation === 'horizontal' ? horizontalAxis : verticalAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -46,6 +55,9 @@ export function useMenuPattern(
 
   const rootProps: RootProps = {
     role: 'menu',
+    'aria-orientation': orientation,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
     onKeyDown: (e) => {
       if (e.key === 'Escape') {
@@ -60,13 +72,23 @@ export function useMenuPattern(
   const itemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
+    const ent = data.entities[id]?.data ?? {}
+    const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
+    // ARIA 1.2: menuitemcheckbox supports tri-state (true | false | "mixed"); menuitemradio is binary.
+    const rawChecked = ent.checked ?? ent.selected
+    const checked: boolean | 'mixed' | undefined =
+      kind === 'menuitem' ? undefined
+        : rawChecked === 'mixed' ? 'mixed'
+        : Boolean(rawChecked)
     return {
-      role: 'menuitem',
+      role: kind,
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
       'aria-disabled': it?.disabled || undefined,
+      'aria-checked': checked,
       'data-disabled': it?.disabled ? '' : undefined,
+      'data-checked': checked === true ? '' : checked === 'mixed' ? 'mixed' : undefined,
     } as unknown as ItemProps
   }
 

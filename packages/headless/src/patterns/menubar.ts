@@ -6,6 +6,9 @@ import type { BaseItem, ItemProps, RootProps } from './types'
 export interface MenubarOptions {
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean
+  /** aria-label — ARIA: menubar requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
 /**
@@ -24,7 +27,7 @@ export function useMenubarPattern(
   itemProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { orientation = 'horizontal', autoFocus } = opts
+  const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
   const axis = composeAxes(navigate(orientation), activate)
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
@@ -46,6 +49,8 @@ export function useMenubarPattern(
   const rootProps: RootProps = {
     role: 'menubar',
     'aria-orientation': orientation,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

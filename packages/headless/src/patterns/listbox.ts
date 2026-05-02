@@ -6,17 +6,33 @@ import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface ListboxOptions {
+  /** aria-orientation. Spec implicit value: 'vertical'. */
+  orientation?: 'horizontal' | 'vertical'
   /** Default: `!multiSelectable` (APG: single sff, multi explicit toggle). */
   selectionFollowsFocus?: boolean
+  /** aria-multiselectable. */
   multiSelectable?: boolean
   autoFocus?: boolean
   /** Container entity for nested listboxes (e.g. inside a Menu); defaults to ROOT. */
   containerId?: string
+  /** aria-required (form context). */
+  required?: boolean
+  /** aria-readonly (form context). */
+  readOnly?: boolean
+  /** aria-invalid (form context). */
+  invalid?: boolean
+  /** aria-disabled (whole-listbox disabled). */
+  disabled?: boolean
+  /** aria-label — ARIA: listbox requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
-const singleAxis = composeAxes(navigate('vertical'), activate, typeahead)
 // multiSelect must precede navigate — otherwise navigate matches Shift+Arrow first and the range branch never runs.
-const multiAxis = composeAxes(multiSelect, navigate('vertical'), activate, typeahead)
+const axisFor = (orientation: 'horizontal' | 'vertical', multi: boolean) =>
+  multi
+    ? composeAxes(multiSelect, navigate(orientation), activate, typeahead)
+    : composeAxes(navigate(orientation), activate, typeahead)
 
 /**
  * listbox — APG `/listbox/` recipe.
@@ -31,7 +47,10 @@ export function useListboxPattern(
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { multiSelectable, autoFocus, containerId = ROOT } = opts
+  const {
+    multiSelectable, autoFocus, containerId = ROOT, orientation = 'vertical',
+    required, readOnly, invalid, disabled, label, labelledBy,
+  } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
   const relay = useCallback(
@@ -43,7 +62,7 @@ export function useListboxPattern(
     [data, onEvent, sff],
   )
 
-  const axis = multiSelectable ? multiAxis : singleAxis
+  const axis = axisFor(orientation, !!multiSelectable)
   const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
     autoFocus,
     containerId,
@@ -66,6 +85,13 @@ export function useListboxPattern(
   const rootProps: RootProps = {
     role: 'listbox',
     'aria-multiselectable': multiSelectable || undefined,
+    'aria-orientation': orientation,
+    'aria-required': required || undefined,
+    'aria-readonly': readOnly || undefined,
+    'aria-invalid': invalid || undefined,
+    'aria-disabled': disabled || undefined,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

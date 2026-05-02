@@ -4,13 +4,30 @@ import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface ComboboxOptions {
-  /** APG: 'none' | 'list' | 'both'. */
+  /** aria-autocomplete. APG: 'none' | 'list' | 'both'. */
   autocomplete?: 'none' | 'list' | 'both'
+  /** aria-haspopup. Spec implicit: 'listbox'. */
+  haspopup?: 'listbox' | 'tree' | 'grid' | 'dialog'
   /** APG combobox 기본은 input 에 focus 유지 + aria-activedescendant. */
   activeDescendant?: boolean
+  /** aria-expanded — controlled. */
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
   idPrefix?: string
+  /** aria-required (form context). */
+  required?: boolean
+  /** aria-readonly. */
+  readOnly?: boolean
+  /** aria-invalid. */
+  invalid?: boolean
+  /** aria-disabled — combobox 전체 비활성. */
+  disabled?: boolean
+  /** aria-label — combobox 입력 자체의 접근 가능 이름 (ARIA 필수). */
+  label?: string
+  labelledBy?: string
+  /** popup listbox 의 aria-label 또는 aria-labelledby. */
+  popupLabel?: string
+  popupLabelledBy?: string
 }
 
 /**
@@ -37,7 +54,11 @@ export function useComboboxPattern(
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { autocomplete = 'list', expanded = false, onExpandedChange, idPrefix = 'cmbx' } = opts
+  const {
+    autocomplete = 'list', haspopup = 'listbox',
+    expanded = false, onExpandedChange, idPrefix = 'cmbx',
+    required, readOnly, invalid, disabled, label, labelledBy, popupLabel, popupLabelledBy,
+  } = opts
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const activeId = getFocus(data) ?? null
@@ -61,7 +82,7 @@ export function useComboboxPattern(
 
   const requestExpanded = (open: boolean) => {
     onExpandedChange?.(open)
-    onEvent?.({ type: 'expand', id: ROOT, open })
+    onEvent?.({ type: 'open', id: ROOT, open })
   }
 
   const navigateTo = (e: React.KeyboardEvent, id: string | undefined) => {
@@ -102,7 +123,13 @@ export function useComboboxPattern(
     'aria-autocomplete': autocomplete,
     'aria-expanded': expanded,
     'aria-controls': listId,
-    'aria-haspopup': 'listbox',
+    'aria-haspopup': haspopup,
+    'aria-required': required || undefined,
+    'aria-readonly': readOnly || undefined,
+    'aria-invalid': invalid || undefined,
+    'aria-disabled': disabled || undefined,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     onKeyDown,
   } as unknown as ItemProps
 
@@ -114,7 +141,9 @@ export function useComboboxPattern(
   const listProps: RootProps = {
     role: 'listbox',
     id: listId,
-  } as RootProps
+    'aria-label': popupLabel,
+    'aria-labelledby': popupLabelledBy,
+  } as unknown as RootProps
 
   const optionProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)

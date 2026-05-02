@@ -12,9 +12,10 @@ export interface DialogOptions {
   /** open 직후 우선 focus 대상. 없으면 첫 focusable, 그것도 없으면 dialog root. */
   initialFocusRef?: RefObject<HTMLElement | null>
   returnFocus?: boolean
-  ariaLabel?: string
-  ariaLabelledBy?: string
-  ariaDescribedBy?: string
+  /** aria-label — ARIA: dialog/alertdialog requires accessible name. */
+  label?: string
+  labelledBy?: string
+  describedBy?: string
 }
 
 const FOCUSABLE_SELECTOR =
@@ -55,9 +56,9 @@ export function useDialogPattern(
     returnFocusRef,
     initialFocusRef,
     returnFocus = true,
-    ariaLabel,
-    ariaLabelledBy,
-    ariaDescribedBy,
+    label,
+    labelledBy,
+    describedBy,
   } = opts
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
@@ -106,9 +107,9 @@ export function useDialogPattern(
   const rootProps: RootProps = {
     role: alert ? 'alertdialog' : 'dialog',
     'aria-modal': modal,
-    'aria-label': ariaLabel,
-    'aria-labelledby': ariaLabelledBy,
-    'aria-describedby': ariaDescribedBy,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
+    'aria-describedby': describedBy,
     ref: rootRef as React.Ref<HTMLElement>,
     tabIndex: -1,
     hidden: !open,

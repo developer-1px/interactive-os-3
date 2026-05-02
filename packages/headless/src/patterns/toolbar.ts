@@ -6,6 +6,10 @@ import type { ItemProps, RootProps, ToolbarItem } from './types'
 export interface ToolbarOptions {
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean
+  /** aria-label — APG: toolbar requires accessible name. */
+  label?: string
+  /** aria-labelledby (외부 heading element 연결). */
+  labelledBy?: string
 }
 
 /**
@@ -26,7 +30,7 @@ export function useToolbarPattern(
   itemProps: (id: string) => ItemProps
   items: ToolbarItem[]
 } {
-  const { orientation = 'horizontal', autoFocus } = opts
+  const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
 
   const axis = composeAxes(navigate(orientation), activate)
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
@@ -47,6 +51,8 @@ export function useToolbarPattern(
   const rootProps: RootProps = {
     role: 'toolbar',
     'aria-orientation': orientation,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

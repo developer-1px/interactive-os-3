@@ -1,4 +1,4 @@
-import { EXPANDED, FOCUS, SELECT_ANCHOR, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
+import { EXPANDED, FOCUS, OPEN, SELECT_ANCHOR, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
 
 type Handler<T extends UiEvent['type']> = (
   d: NormalizedData,
@@ -21,20 +21,20 @@ const mergeData = (d: NormalizedData, id: string, patch: Record<string, unknown>
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
 
-const toggleExpanded = (d: NormalizedData, id: string, open: boolean): NormalizedData => {
-  const prev = (d.entities[EXPANDED]?.data?.ids as string[]) ?? []
+const toggleSetMeta = (d: NormalizedData, metaKey: string, id: string, on: boolean): NormalizedData => {
+  const prev = (d.entities[metaKey]?.data?.ids as string[]) ?? []
   const has = prev.includes(id)
-  if (open === has) return d
-  const next = open ? [...prev, id] : prev.filter((x) => x !== id)
-  return setMeta(d, EXPANDED, { ids: next })
+  if (on === has) return d
+  const next = on ? [...prev, id] : prev.filter((x) => x !== id)
+  return setMeta(d, metaKey, { ids: next })
 }
 
 const identity = (d: NormalizedData) => d
 
 const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   navigate: (d, e) => setMeta(d, FOCUS, { id: e.id }),
-  expand: (d, e) => toggleExpanded(d, e.id, e.open),
-  open: (d, e) => toggleExpanded(d, e.id, e.open),
+  expand: (d, e) => toggleSetMeta(d, EXPANDED, e.id, e.open),
+  open: (d, e) => toggleSetMeta(d, OPEN, e.id, e.open),
   typeahead: (d, e) => setMeta(d, TYPEAHEAD, { buf: e.buf, deadline: e.deadline }),
   activate: identity,
   select: (d, e) => setMeta(d, SELECT_ANCHOR, { id: e.id }),

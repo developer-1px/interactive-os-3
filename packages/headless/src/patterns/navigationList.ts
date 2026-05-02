@@ -5,7 +5,9 @@ export interface NavigationListOptions {
   /** 'none'(default, native Tab) | 'roving'(Arrow 추가). */
   keyboardNavigation?: 'none' | 'roving'
   orientation?: 'horizontal' | 'vertical'
-  ariaLabel?: string
+  /** aria-label — ARIA: navigation landmark requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
 /**
@@ -30,7 +32,7 @@ export function navigationListPattern(
   linkProps: (id: string) => ItemProps
   items: { id: string; label: string; href?: string; current: boolean }[]
 } {
-  const { ariaLabel } = opts
+  const { label, labelledBy } = opts
   const ids = getChildren(data, ROOT)
   const items = ids.map((id) => {
     const ent = data.entities[id]?.data ?? {}
@@ -44,7 +46,8 @@ export function navigationListPattern(
 
   const rootProps: RootProps = {
     role: 'navigation',
-    'aria-label': ariaLabel,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
   } as unknown as RootProps
 
   const linkProps = (id: string): ItemProps => {

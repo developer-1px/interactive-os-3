@@ -1,134 +1,282 @@
-# ui/ ARIA 스펙 적합성 감사
+# `@p/headless` ARIA Spec 누락 검증
 
-각 컴포넌트가 **ARIA 1.2 스펙대로 role/속성/키보드 인터랙션/스타일 attribute selector**를 구현했는지 한 개씩 점검.
+MDN ARIA Roles 페이지를 카테고리 순서대로 훑어 `@p/headless/patterns` 의 spec 커버리지 갭을 박제. 결정 트리: **APG에 패턴이 있고 + 키보드/포커스 행동 인프라가 필요한 role 만 patterns 후보**. native HTML/ARIA 만으로 충분한 role 은 🚫identity-out 으로 마감.
 
-## 점검 항목 (per 컴포넌트)
+출처: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles · https://www.w3.org/WAI/ARIA/apg/patterns/
 
-1. **role** — 명시 또는 native 태그로 묵시 (ARIA in HTML 권고)
-2. **aria-* 속성** — required / supported 속성 빠짐없이 (state·property)
-3. **키보드** — WAI-ARIA APG 키 매핑
-4. **focus** — tabindex / roving / focus visible
-5. **스타일 selector** — `[aria-*]`/`:focus-visible` 등 ARIA 셀렉터 (data-* 임의 namespace 금지)
-6. **labelling** — aria-label / aria-labelledby / aria-describedby 경로
-7. **스타일 최소** — 꼭 필요한 1-2 selector만. variant/size/intent 분기 금지
-8. **토큰 시맨틱 only** — palette raw 직접 사용 ❌. foundations 의 semantic role 토큰만
+## 결정 트리
 
-## 진행 (작은 단위, 한 개씩)
+```
+role 
+ ├─ APG `/patterns/` 에 등재? 
+ │   ├─ NO  → native semantics 충분? 
+ │   │        ├─ YES → 🚫 identity-out
+ │   │        └─ NO  → 🚫 (out of scope: 행동 인프라 아님)
+ │   └─ YES → recipe 존재?
+ │            ├─ ✅ covered
+ │            ├─ ⚠️ partial (옵션/필드 일부 누락)
+ │            └─ ❌ missing
+```
 
-### 1-command
-- [x] Button             — role=button, aria-pressed, disabled+aria-disabled, variant prop (primary/destructive), `data-variant` attr selector, semantic 토큰만
-- [x] ButtonGroup        — role=group 추가, data-orientation, semantic 토큰만 (변경 최소)
-- [x] ToolbarButton      — ARIA 적합 (role=button native, pressed/disabled, forwardRef). style은 Toolbar parent owner 의도. Button에 forwardRef 추가 시 ToolbarButton 흡수 가능 — 후속
-- [x] MenuItem           — role=menuitem/checkbox/radio. aria-disabled 일관화. **4-slot anatomy** (icon·label·shortcut·indicator) 도입 — Option·TreeItem 와 keyline 공유 (style/widgets/control/itemRow.ts SSoT)
-- [x] RouterLink         — role=link (TanstackLink→a), aria-current="page" 활성 (활성 nav 에 자동 표명). 6-structure/Link 통합은 후속
-- [x] TreeItem (← TreeRow) — role=treeitem 정정 (was Row 어휘)
-- [x] ProgressBar (6-structure) 폐기 — Progress(5-live)와 role=progressbar 중복
+범례: ✅ covered · ⚠️ partial · ❌ missing · 🚫 identity-out
 
-### 1-command demos
-- [x] Button.demo, ButtonGroup.demo, ToolbarButton.demo
-- [ ] RouterLink.demo (router context 필요해서 보류)
+## 1. Document Structure Roles
 
-### 2-input
-- [x] Checkbox           — role=checkbox (button-route, mixed 지원), aria-checked + disabled+aria-disabled 둘 다, demo 추가. style 토큰 semantic, ARIA selector only
-- [x] Radio              — `<button role="radio">` (div→button: 키보드 native + dual disabled). aria-checked, tabIndex roving (checked만 0)
-- [x] Switch             — `<button role="switch">` aria-checked, dual disabled, demo 추가
-- [x] ToggleButton       — `<button aria-pressed>` data-part="toggle" 제거 (memory hook 위반). 시각은 Button.style 의 `[aria-pressed="true"]` 통합 → ToggleButton.style.ts 폐기
-- [x] Option             — role=option, aria-selected/posinset/setsize, aria-disabled || undefined, 4-slot (icon·label·indicator), demo 보강
-- [x] Input              — type=text, aria-invalid/required (Field context), aria-disabled/readonly 자동 미러, demo 추가
-- [x] Textarea           — multiline textbox, Field context, aria-disabled/readonly 미러, demo 추가
-- [x] SearchBox          — role=searchbox + role=search wrapper, aria-disabled/readonly 미러, **subgridTracks 키라인 통일** (data-slot="leading" + grid-column lead/label) — MenuItem/Option/TreeItem과 같은 keyline
-- [x] NumberInput        — role=spinbutton (native), Field 연결, aria-disabled/readonly 미러, demo 추가
-- [x] ColorInput         — `<input type="color">` (native picker), aria-disabled 미러, demo 추가. ARIA에 color 전용 role 없음 (de facto 그대로)
-- [x] Slider             — `<input type="range">` (native role=slider + 키보드), aria-disabled 미러, demo 추가
-- [x] Combobox           — role=combobox, aria-expanded/controls/activedescendant/autocomplete + aria-haspopup="listbox" 기본 + aria-disabled 미러
-- [x] Select             — native `<select>` (브라우저 role=combobox + listbox popup), aria-disabled 미러
+| role | 분류 | 사유 / 액션 |
+|---|---|---|
+| toolbar | ✅ | `useToolbarPattern` |
+| tooltip | ✅ | `useTooltipPattern` |
+| feed | ❌ | APG `/feed/` 존재. PageUp/Down 으로 article 간 이동, focus 진입/이탈 시 article 전체 highlight. 행동 infra 필요 → **추가** |
+| math | 🚫 | `<math>` native, 행동 무 |
+| presentation / none | 🚫 | semantics 제거용, 행동 무 |
+| note | 🚫 | pure semantic |
+| application | 🚫 | escape hatch, recipe 부적합 |
+| article | 🚫 | `<article>` |
+| cell | 🚫 | grid 자식, treegrid 에서 흡수 |
+| columnheader | 🚫 | grid 자식 |
+| definition | 🚫 | pure semantic |
+| directory | 🚫 | ARIA 1.2 deprecated |
+| document | 🚫 | pure semantic |
+| figure | 🚫 | `<figure>` |
+| group | 🚫 | 컨테이너 의미만 |
+| heading | 🚫 | `<h1>`–`<h6>` |
+| img | 🚫 | `<img>` |
+| list / listitem | 🚫 | `<ul>`/`<ol>`/`<li>` |
+| meter | 🚫 | `<meter>` native |
+| row / rowgroup / rowheader | 🚫 | grid/treegrid 흡수 |
+| separator | ✅ | focusable variant 은 `splitterPattern` (Window Splitter), static 은 native `<hr>` |
+| table | 🚫 | `<table>` |
+| term | 🚫 | `<dt>` |
+| associationlist / associationlistitemkey / associationlistitemvalue | 🚫 | `<dl>`/`<dt>`/`<dd>` |
+| blockquote / caption / code / deletion / emphasis / insertion / paragraph / strong / subscript / superscript / time | 🚫 | 모두 pure semantic HTML |
 
-### 3-composite
-- [ ] Listbox            — role=listbox, aria-multiselectable, aria-activedescendant
-- [ ] ListboxGroup       — role=group
-- [ ] RadioGroup         — role=radiogroup
-- [ ] CheckboxGroup      — role=group
-- [ ] ToggleGroup        — role=group / radiogroup
-- [ ] SegmentedControl   — role=radiogroup
-- [ ] Menu               — role=menu, aria-orientation
-- [ ] MenuList           — role=menu (listbox 변형 X)
-- [ ] MenuGroup          — role=group / aria-labelledby
-- [ ] Menubar            — role=menubar, orientation
-- [ ] Tabs               — role=tablist, tab[aria-selected/aria-controls]
-- [ ] Tree               — role=tree, aria-expanded/aria-level
-- [ ] TreeRow            — role=treeitem
-- [ ] TreeGrid           — role=treegrid, row/cell
-- [ ] DataGrid           — role=grid, aria-rowcount/colcount
-- [ ] DataGridRow        — role=row
-- [ ] GridCell           — role=gridcell
-- [ ] ColumnHeader       — role=columnheader, aria-sort
-- [ ] RowHeader          — role=rowheader
-- [ ] RowGroup           — role=rowgroup
-- [ ] Toolbar            — role=toolbar, aria-orientation
-- [ ] OrderableList      — listbox + reorder 셈antics
-- [ ] Columns            — multi-listbox composite
+## 2. Widget Roles
 
-### 4-window
-- [ ] Dialog             — role=dialog, aria-modal, aria-labelledby/describedby, focus trap
-- [ ] Sheet              — dialog 변형 (side)
-- [ ] Popover            — non-modal dialog
-- [ ] MenuPopover        — popover wrapping menu (no aria-modal)
-- [ ] Tooltip            — role=tooltip, aria-describedby 연결
-- [ ] FloatingNav        — non-modal dialog
+| role | 분류 | 사유 / 액션 |
+|---|---|---|
+| scrollbar | 🚫 | APG 패턴 없음 + native browser scrollbar 99%. custom scrollbar 는 application 책임 |
+| searchbox | 🚫 | `<input type="search">` (단일 input, roving 무) |
+| slider | ✅ | `sliderPattern` |
+| spinbutton | ⚠️ | APG `/spinbutton/` 가 PageUp/PageDown(±10) 키 매핑을 별도 명세. native `<input type="number">` 는 Arrow + step 만, PageUp/PageDown ±10 은 미커버. v2 후속 — `useSpinbuttonPattern` (numericStep axis 재사용 + PageUp/Down 가속) |
+| switch | ✅ | `toggleSwitchPattern` |
+| tab / tabpanel | ✅ | `useTabsPattern` (rootProps role=tablist, tabProps role=tab, panelProps role=tabpanel) |
+| treeitem | ✅ | `useTreePattern` (itemProps role=treeitem) |
+| button | 🚫 | `<button>` |
+| checkbox | 🚫 | `<input type="checkbox">` (단일). group 은 native + role=group |
+| gridcell | ✅ | `useTreeGridPattern` cellProps |
+| link | 🚫 | `<a>` |
+| menuitem / menuitemcheckbox / menuitemradio | ✅ | `useMenuPattern` (item.kind 로 menuitemcheckbox/radio 분기 — 검증 필요 ⚠️) |
+| option | ✅ | `useListboxPattern` optionProps |
+| progressbar | 🚫 | `<progress>` native |
+| radio | ✅ | `useRadioGroupPattern` radioProps |
+| textbox | 🚫 | `<input>` / `<textarea>` |
 
-### 5-live
-- [ ] Toast              — role=status / alert (live region)
-- [ ] Progress           — role=progressbar, aria-valuenow/min/max
-- [ ] Spinner            — role=progressbar (indeterminate, aria-valuetext)
-- [ ] Badge              — role=status (aria-label)
-- [ ] LegendDot          — decorative (aria-hidden) 인지
+## 3. Composite Widget Roles
 
-### 6-structure
-- [ ] Accordion          — group of disclosures (button[aria-expanded] + region[aria-labelledby])
-- [ ] Disclosure         — button[aria-expanded] + region
-- [ ] Heading            — role=heading, aria-level
-- [ ] Card               — section / article / group
-- [ ] Callout            — role=note / status
-- [ ] Table              — role=table (presentation 금지)
-- [ ] Code / CodeBlock   — code semantic
-- [ ] Prose              — semantic HTML pass-through
-- [ ] Separator          — role=separator
-- [ ] Avatar / AvatarGroup — img + aria-label / aria-labelledby
-- [ ] Chip               — button / status / option (use case별)
-- [ ] CountBadge         — status + aria-label
-- [ ] EmptyState         — region / status
-- [ ] KeyValue           — dl semantic
-- [ ] Link               — a[href]
-- [ ] MediaObject        — figure / article
-- [ ] ProgressBar        — non-live progress (5-live와 분리 의도)
-- [ ] RovingItem         — base for roving widgets
-- [ ] Skeleton           — aria-busy / aria-hidden
-- [ ] Thumbnail          — img
-- [ ] Timestamp          — time element
+| role | 분류 | 사유 / 액션 |
+|---|---|---|
+| combobox | ✅ | `useComboboxPattern` |
+| menu | ✅ | `useMenuPattern` |
+| menubar | ✅ | `useMenubarPattern` |
+| tablist | ✅ | `useTabsPattern` rootProps |
+| tree | ✅ | `useTreePattern` |
+| treegrid | ✅ | `useTreeGridPattern` |
+| **grid** | ❌ | APG `/grid/` 존재 — treegrid 와 별개. 2D 셀 단위 nav (Arrow 4방향, Home/End 행 양 끝, Ctrl+Home/End 그리드 양 끝, PageUp/Down). focus 가 cell 에 있음(treegrid 는 row). → **추가** |
+| listbox | ✅ | `useListboxPattern` |
+| radiogroup | ✅ | `useRadioGroupPattern` |
 
-### 7-landmark
-- [ ] Breadcrumb         — nav[aria-label=Breadcrumb] + ol
-- [ ] Pagination         — nav[aria-label=Pagination]
+## 4. Landmark Roles
 
-### 8-field
-- [ ] Field              — label + input + describedby + errormessage
-- [ ] Stepper            — process semantic (ol + aria-current)
+| role | 분류 | 사유 |
+|---|---|---|
+| banner | 🚫 | `<header>` (top-level) |
+| complementary | 🚫 | `<aside>` |
+| contentinfo | 🚫 | `<footer>` (top-level) |
+| form | 🚫 | `<form>` |
+| main | 🚫 | `<main>` |
+| navigation | 🚫 | `<nav>` (이 안의 list 행동은 `navigationListPattern` 으로 별도 흡수) |
+| region | 🚫 | `<section aria-label>` |
+| search | 🚫 | `<search>` (HTML) 또는 `role="search"` wrapper |
 
-### 9-layout
-- [ ] Row / Column / Grid — role=presentation / 무 role
-- [ ] Split              — role=presentation (separator는 별도)
-- [ ] Carousel           — role=region + aria-roledescription="carousel"
-- [ ] ZoomPanCanvas      — application 또는 presentation
+## 5. Live Region Roles
 
-## per-컴포넌트 작업 형식
+| role | 분류 | 사유 |
+|---|---|---|
+| alert | ✅ | `alertPattern` |
+| log | 🚫 | APG 패턴 없음, `aria-live="polite"` 만으로 충분 |
+| marquee | 🚫 | 사실상 deprecated, 행동 infra 무 |
+| status | 🚫 | `<output>` 또는 `aria-live="polite"` |
+| timer | 🚫 | aria-live + role=timer 만, 행동 무 |
 
-각 컴포넌트마다:
-1. 현재 코드 읽기
-2. ARIA APG / spec 조회 (확인 사항: role, required attrs, keyboard, focus)
-3. 갭 표 작성 (✅ 충족 / ⚠️ 부분 / ❌ 누락)
-4. 수정 — 코드 + style attribute selector
-5. 다음으로
+## 6. Window Roles
 
-## 메모
-- 스타일은 `[aria-*]`/`:focus-visible`/`:disabled` 등 표준 셀렉터만 사용. data-* namespace 금지 (`data-part` 만 허용)
-- 이미 ds parts에 분리된 합성(Field/Combobox 등)은 "각 부품이 자기 ARIA를 옳게 표현하느냐"가 기준
+| role | 분류 | 사유 / 액션 |
+|---|---|---|
+| alertdialog | ✅ | `alertdialogPattern` |
+| dialog | ✅ | `useDialogPattern` |
+
+## 7. Abstract Roles
+
+| role | 분류 | 사유 |
+|---|---|---|
+| command / composite / input / landmark / range / roletype / section / sectionhead / select / structure / widget / window | 🚫 | ARIA 명시: 직접 사용 금지 (abstract) |
+
+## 8. APG 추가 패턴 (MDN role 페이지 외 부속)
+
+MDN role 카테고리에는 없지만 APG `/patterns/` 에 별도 등재된 항목:
+
+| APG | 분류 | 사유 / 액션 |
+|---|---|---|
+| Accordion | ✅ | `useAccordionPattern` |
+| Carousel | ❌ | APG `/carousel/` 존재. Tab → controls, Enter activate, autoplay pause, 좌우 화살표 슬라이드. → **추가** |
+| Disclosure | ✅ | `disclosurePattern` |
+| Breadcrumb | 🚫 | `<nav aria-label="Breadcrumb"><ol>` markup 만 — 행동 infra 무 |
+| Landmarks | 🚫 | landmark 항목 참조 |
+| Link | 🚫 | `<a>` |
+| Menu Button | ✅ | `useMenuPattern` + `disclosurePattern` 합성 — 추가 recipe 불필요 |
+| Window Splitter | ✅ | `splitterPattern` |
+
+## 갭 요약 — 처리 순서
+
+1. **B2 — `feedPattern`** — APG `/feed/`. PageUp/Down article 간 이동, article 단위 focus + aria-busy 흡수. 의존: 없음 (axis 신규 없음, navigate 'vertical' 의 PageUp/Down 변형으로 해결)
+2. **B3 — `useGridPattern`** — APG `/grid/`. 2D 셀 단위 nav. cellId 가 focus 단위 (treegrid 의 row focus 와 다름). 의존: navigate 양축 동시 + 행/열 좌표 모델. axis 보강 가능성 ⚠️
+3. **B4 — `carouselPattern`** — APG `/carousel/`. controls(prev/next/pagination) + slide region. autoplay pause. 의존: 없음 (작은 declarative recipe)
+4. **B5 — partial 검증/보강**
+   - ⚠️ `useMenuPattern` 의 `menuitemcheckbox`/`menuitemradio` 처리 검증 (item.kind 분기)
+   - ⚠️ `useTabsPattern` 의 `activationMode: 'auto' | 'manual'` 동작 검증
+   - ⚠️ `useTreePattern` 의 `selectionMode: 'none' | 'single' | 'multiple'` 검증
+   - ⚠️ `useListboxPattern` 의 multiSelect Shift+Arrow range select 동작 검증
+
+## 진행 체크박스
+
+### B2 — useFeedPattern ✅
+- [x] APG `/feed/` 키보드 매핑 추출 (PageUp/PageDown, Ctrl+Home/End)
+- [x] `feed.ts` 작성: `(data, opts?) → { rootProps, articleProps, items }`
+- [x] rootProps: `role="feed"` + `aria-busy` + onKeyDown(PageUp/PageDown 가로채기)
+- [x] articleProps: `role="article"` + tabIndex=-1 + `aria-labelledby` + `aria-posinset/setsize`
+- [x] `index.ts` export 추가
+- [x] `tsc --noEmit` 0 에러
+- [ ] PATTERNS.md 갱신 (P3 → covered)
+- [ ] Ctrl+Home/End (feed 바깥 first/last focusable) — host 책임으로 두고 docs 만 (TODO)
+- [ ] 평가자 호출 (B5 끝나고 일괄)
+
+### B3 — useGridPattern ✅
+- [x] APG `/grid/` 키보드 매핑 (Arrow 4축, Home/End, Ctrl+Home/End)
+- [x] cell 단위 focus 모델 채택 (treegrid 와 차이 명시)
+- [x] `gridNavigate` axis 신규 — 2D 좌표 (row,col) 처리. wrap 없음 (grid 정책)
+- [x] `grid.ts` 작성 — rootProps · rowProps · columnHeaderProps · rowHeaderProps · cellProps · rows view
+- [x] `index.ts` export
+- [x] tsc 0
+- [ ] PATTERNS.md 갱신
+- [ ] PageUp/PageDown (스크롤 단위 행 점프) — 가시 행 수 host 의존이라 v1 보류
+- [ ] Selection 키 (Ctrl+Space, Shift+Space, Ctrl+A) — multiSelect axis 합성으로 v2
+- [ ] Cell editing (F2/Enter/Escape) — declarative recipe 범위 밖 (소비자가 cell 안에서 처리)
+- [ ] 평가자 호출 (B5 끝나고 일괄)
+
+### B4 — useCarouselPattern ✅
+- [x] APG `/carousel/` 행동 추출 (auto-rotation, focus/hover pause, explicit toggle)
+- [x] `carousel.ts` 작성: `(opts) → { index, playing, prev/next/goTo, rootProps, slideProps(i), prevButtonProps, nextButtonProps, rotationButtonProps, liveRegionProps }`
+- [x] role="region" + aria-roledescription="carousel"
+- [x] slide: role="group" + aria-roledescription="slide" + "Slide N of M: label"
+- [x] autoplay state — focus/hover/explicit pause 셋 모두 흡수, focus 시 explicit pause 도 set (APG 규칙 1)
+- [x] live region: playing→aria-live=off / paused→polite
+- [x] index.ts export
+- [x] tsc 0
+- [ ] PATTERNS.md 갱신
+- [ ] Tabbed Carousel 변형 (slide picker = tabs) — 소비자가 `useTabsPattern` 합성, recipe 분기 불필요
+- [ ] 평가자 호출 (B5 끝나고 일괄)
+
+### B5 — partial 검증 ✅
+- [x] menu: ⚠️ → ✅ — `data.entities[id].data.kind` 분기 (`menuitem`/`menuitemcheckbox`/`menuitemradio`) + `aria-checked` 추가
+- [x] tabs: ✅ — `activationMode === 'automatic'` 일 때만 selectionFollowsFocus, manual 은 raw event pass-through. APG 정합
+- [x] tree: ⚠️ → docs 갱신 — 코드는 `multiSelectable: boolean` + `selectionFollowsFocus`. APG 'none' 모드는 `selectionFollowsFocus=false` + reducer 가 activate 무시하면 표현 가능. PATTERNS.md 의 `selectionMode` tri-state 약속을 코드 형태로 후속 정합 (별도 task)
+- [x] listbox: ✅ — `composeAxes(multiSelect, navigate, activate, typeahead)`. multiSelect 가 Shift+Arrow Up/Down + Ctrl+A + Shift+Click 범위 모두 흡수. APG 정합
+- [x] tsc 0
+- [ ] 평가자 호출
+
+## 후속 batch (2026-05-03 진행)
+
+### B6 — spinbuttonPattern ✅
+- [x] APG `/spinbutton/` recipe (`spinbutton.ts`) — 단일 focusable element. role=spinbutton, aria-valuenow/min/max/text/label/invalid/readonly
+- [x] numericStep axis 재사용 — Arrow ±step, Home/End min/max, PageUp/PageDown ±step×10
+- [x] task.md spinbutton 분류 ⚠️ → ✅
+- [x] tsc 0
+
+### B7 — grid 셀렉션 확장 ✅
+- [x] `gridSelection` axis 신규 — Ctrl+Space (col) · Shift+Space (row) · Ctrl/Meta+A (all) · Ctrl+Click (toggle) · Space (current toggle)
+- [x] `useGridPattern` 에 `multiSelectable: boolean` 옵션 추가 → multiAxis 합성
+- [x] rootProps `aria-multiselectable` 부여
+- [x] tsc 0
+- [ ] Shift+Arrow 2D range — anchor 모델 복잡도로 v3 보류
+
+### B8 — PATTERNS.md tree selectionMode 정합 ✅
+- [x] tree row 시그니처 `multiSelectable + selectionFollowsFocus` 로 갱신 (코드 정합)
+- [x] treegrid row 시그니처 동일 갱신
+
+### B9 — pure axis 단위 테스트 ✅
+- [x] `gridNavigate.test.ts` — Arrow 4축 + Home/End + Ctrl+Home/End + edge no-wrap + sparse row clamp + non-key ignore (15 cases)
+- [x] `gridSelection.test.ts` — Ctrl+Space/Shift+Space/Ctrl+A/Meta+A/Space/Ctrl+Click/Meta+Click + 무관 키 ignore (10 cases)
+
+### B10 — hook 테스트 인프라 ✅
+- [x] `pnpm add -D --filter @p/headless jsdom @testing-library/react @testing-library/dom`
+- [x] vitest.config.ts → `environment: 'jsdom'`, `*.test.tsx` include 추가
+
+### B11 — hook pattern 테스트 ✅
+- [x] `spinbutton.test.ts` — props 출력 + ArrowUp/Down/PageUp/Down/Home/End onEvent emit (6 cases)
+- [x] `carousel.test.tsx` — renderHook + act, controlled/uncontrolled, loop wrap/clamp, focus pause sticky (APG 규칙 1), hover pause/resume, rotation aria-label flip, aria-controls = container, liveRegion polite/off (13 cases)
+- [x] `feed.test.tsx` — rootProps + articleProps + labelProps id 매칭 + items posinset/setsize + idPrefix 전파 (6 cases)
+- [x] `grid.test.tsx` — rootProps + rowProps + cellProps + columnHeader/rowHeader + selected/disabled state + tabIndex roving (8 cases)
+- [x] grid bug fix: useRovingTabIndex 의 default focus 가 row id 를 잡던 버그 → focusContainerId = rowIds[0] 로 cell 차원에서 default 계산
+
+### B12 — grid Shift+Arrow 2D range ✅
+- [x] `gridSelection` axis 의 Shift+Arrow 분기 추가 — anchor(SELECT_ANCHOR ?? current)→ next 사각형 selectMany
+- [x] anchor 좌표 (rowIdx, colIdx) 검색 + bounding box 계산 + inRange/outRange 분리
+- [x] sparse row 대응 (clamp colIdx)
+- [x] edge 정지 (no-op)
+- [x] gridSelection.test.ts 4 cases 추가 (no-anchor / anchor / edge / plain Arrow ignore)
+
+### 누적 결과 (B2~B14)
+- vitest run 8 files / **80 tests pass**
+- tsc clean
+- 신규 axes: gridNavigate, gridSelection
+- 신규 patterns: feed, grid, carousel, spinbutton
+- 보강: menu (menuitemcheckbox/radio + tri-state aria-checked), grid (aria-sort on headers), listbox (form context attrs), radioGroup (form context attrs + aria-labelledby), combobox (form context attrs + popup label)
+- docs: PATTERNS.md P4 절·VOC #21~24·신규 axis 행 추가
+
+### B13 — PATTERNS.md 갱신 ✅
+- [x] P4 절 — feed/grid/carousel/spinbutton 시그니처 + 옵션 표
+- [x] 신규 axis 갭 표 — gridSelection 추가
+- [x] VOC ↔ recipe 매핑 #21~24 추가
+- [x] "P1 → P3 우선순위" → "P1 → P4 우선순위"
+
+### B14 — ARIA states/properties spec 감사 ✅
+- [x] grid columnHeader/rowHeader: `aria-sort` (entity.data.sort = ascending/descending/other 일 때만 emit, 'none' 또는 미지정은 omit)
+- [x] listbox: form context 옵션 `required`/`readOnly`/`invalid`/`disabled` → rootProps aria-* 미러
+- [x] radioGroup: form context 옵션 + `labelledBy` (외부 label 연결)
+- [x] combobox: form context 옵션 + `popupLabel`/`popupLabelledBy` (popup listbox 명명)
+- [x] grid.test.tsx 에 aria-sort 분기 테스트 추가 (vitest 80 pass)
+
+### B15 — 명명 ergonomics: label/labelledBy 통합 ✅
+- [x] ARIA 1.2 § 5.2.7.4 "Name from Author" 요구 role 전수 — toolbar/menu/menubar/tabs/tree/treeGrid/grid/feed/listbox/radioGroup 9 패턴에 `label?: string` + `labelledBy?: string` 일관 추가
+- [x] grid + feed test 에 `label`/`labelledBy` 분기 (vitest 82 pass)
+
+### B16 — 평가자 호출 후속 ✅
+평가자가 잡아낸 4 가지:
+- [x] **combobox 입력 자체 라벨링 누락** — popup listbox 만 라벨됨. inputProps 에 `label`/`labelledBy` 추가 + `aria-label`/`aria-labelledby` 미러 (combobox role 자체가 name-required)
+- [x] **dialog 동의어 드리프트** — `ariaLabel`/`ariaLabelledBy`/`ariaDescribedBy` → `label`/`labelledBy`/`describedBy` 로 정합 (메모리 *동의어 드리프트 금지*)
+- [x] **navigationList 동의어 드리프트** — `ariaLabel` → `label`/`labelledBy`
+- [x] **alertdialog 라벨링 누락** — `alert.ts` 의 `alertdialogPattern()` 가 인자 0개였음. `AlertdialogOptions` 신설 + `label`/`labelledBy`/`describedBy` 지원
+- [x] callsite 영향 검사: `dist/` 와 `debug.ts` (지역변수) 만 매치 → 외부 consumer 변경 없음
+
+### B17 — axe-core a11y 통합 테스트 ✅
+- [x] `pnpm add -D --filter @p/headless jest-axe @types/jest-axe`
+- [x] `a11y.test.tsx` 신규 — 11 개 pattern 의 props 를 실제 DOM 에 mount 하여 axe-core ARIA rule 통과 검증
+  - listbox · tabs · tree · treegrid · toolbar · radiogroup · menu · feed · grid · carousel · spinbutton
+- [x] vitest 9 files / **93 tests pass**, 위반 0
+- 가치: spec 준수의 경험적 증거 — "내가 spec 대로 짰다고 주장" 이 아니라 "industry-standard a11y 검증기가 위반 0 이라고 판정"
+
+## 평가자 격리 규칙
+
+- 평가자 input: 해당 batch 의 git diff + 본 task.md 의 해당 항목 + APG URL
+- **금지**: `packages/headless/` 직접 read, 결정 사유 추적
+- 판정 4축: (a) required state/property 누락 (b) APG 키 매핑 누락 (c) 거짓 완료 (d) identity-out 사유 빈약

@@ -9,6 +9,18 @@ export interface RadioGroupOptions {
   /** 시각·aria-orientation 만. 키보드는 양 축 모두 항상 활성. */
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean
+  /** aria-required (form context). */
+  required?: boolean
+  /** aria-readonly. */
+  readOnly?: boolean
+  /** aria-invalid. */
+  invalid?: boolean
+  /** aria-disabled — radiogroup 전체 비활성. */
+  disabled?: boolean
+  /** aria-label — ARIA: radiogroup requires accessible name. */
+  label?: string
+  /** aria-labelledby (외부 label element 연결). */
+  labelledBy?: string
 }
 
 // APG radiogroup: 양 축 Arrow 모두 navigate.
@@ -29,7 +41,7 @@ export function useRadioGroupPattern(
   radioProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { orientation = 'vertical', autoFocus } = opts
+  const { orientation = 'vertical', autoFocus, required, readOnly, invalid, disabled, label, labelledBy } = opts
 
   const relay = useCallback(
     (e: UiEvent) => {
@@ -57,6 +69,12 @@ export function useRadioGroupPattern(
   const rootProps: RootProps = {
     role: 'radiogroup',
     'aria-orientation': orientation,
+    'aria-required': required || undefined,
+    'aria-readonly': readOnly || undefined,
+    'aria-invalid': invalid || undefined,
+    'aria-disabled': disabled || undefined,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

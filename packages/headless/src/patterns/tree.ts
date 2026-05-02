@@ -1,15 +1,26 @@
+import { useCallback } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
 import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead } from '../axes'
+import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
 export interface TreeOptions {
+  /** aria-orientation. Spec implicit value: 'vertical'. */
+  orientation?: 'horizontal' | 'vertical'
+  /** Default: `!multiSelectable` (APG: single sff, multi explicit toggle). */
+  selectionFollowsFocus?: boolean
+  /** aria-multiselectable. */
   multiSelectable?: boolean
-  selectionMode?: 'none' | 'single' | 'multiple'
   autoFocus?: boolean
+  /** Container entity for nested trees; defaults to ROOT. */
+  containerId?: string
+  /** aria-label — ARIA: tree requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
 const singleAxis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
@@ -18,11 +29,6 @@ const multiAxis = composeAxes(multiSelect, treeNavigate, treeExpand, activate, t
 /**
  * tree — APG `/treeview/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
- *
- * 키보드: Arrow↑↓ visible 노드 이동, Arrow→ expand/내려가기, Arrow← collapse/부모,
- * Home/End, typeahead, Enter/Space activate.
- *
- * items 는 visible 노드만 평탄화하여 level 포함 반환.
  */
 export function useTreePattern(
   data: NormalizedData,
@@ -33,12 +39,26 @@ export function useTreePattern(
   itemProps: (id: string) => ItemProps
   items: TreeItem[]
 } {
-  const { autoFocus, multiSelectable, selectionMode } = opts
-  const isMultiSelectable = multiSelectable || selectionMode === 'multiple'
-  const axis = isMultiSelectable ? multiAxis : singleAxis
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    axis, data, onEvent ?? (() => {}), { autoFocus },
+  const {
+    autoFocus, multiSelectable, containerId = ROOT, orientation = 'vertical',
+    label, labelledBy,
+  } = opts
+  const sff = opts.selectionFollowsFocus ?? !multiSelectable
+
+  const relay = useCallback(
+    (e: UiEvent) => {
+      if (!onEvent) return
+      const out = sff ? applySelectionFollowsFocus(data, e) : [e]
+      out.forEach(onEvent)
+    },
+    [data, onEvent, sff],
   )
+
+  const axis = multiSelectable ? multiAxis : singleAxis
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
+    autoFocus,
+    containerId,
+  })
   const expanded = getExpanded(data)
 
   const flat: TreeItem[] = []
@@ -62,12 +82,15 @@ export function useTreePattern(
       if (isExpanded) walk(id, level + 1)
     })
   }
-  walk(ROOT, 1)
+  walk(containerId, 1)
   const itemMap = new Map(flat.map((it) => [it.id, it]))
 
   const rootProps: RootProps = {
     role: 'tree',
-    'aria-multiselectable': isMultiSelectable || undefined,
+    'aria-multiselectable': multiSelectable || undefined,
+    'aria-orientation': orientation,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

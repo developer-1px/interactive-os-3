@@ -12,6 +12,9 @@ export interface TabsOptions {
   autoFocus?: boolean
   /** stable id prefix (SSR-safe). */
   idPrefix?: string
+  /** aria-label — ARIA: tablist requires accessible name. */
+  label?: string
+  labelledBy?: string
 }
 
 /**
@@ -35,6 +38,8 @@ export function useTabsPattern(
     activationMode = 'automatic',
     autoFocus,
     idPrefix = 'tabs',
+    label,
+    labelledBy,
   } = opts
 
   const axis = composeAxes(navigate(orientation), activate)
@@ -68,6 +73,8 @@ export function useTabsPattern(
   const rootProps: RootProps = {
     role: 'tablist',
     'aria-orientation': orientation,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
 

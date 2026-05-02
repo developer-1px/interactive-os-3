@@ -10,14 +10,29 @@ export function alertPattern(): { rootProps: RootProps } {
   return { rootProps: { role: 'alert' } as RootProps }
 }
 
+export interface AlertdialogOptions {
+  /** aria-label — ARIA: alertdialog requires accessible name. */
+  label?: string
+  labelledBy?: string
+  describedBy?: string
+}
+
 /**
  * alertdialog — APG `/alertdialog/`.
  * https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
  *
- * dialog 변종 — 즉시 주의 필요. role=alertdialog. 나머지는 dialog recipe 와 동일.
+ * dialog 변종 — 즉시 주의 필요. role=alertdialog. focus trap 등 동작은 useDialogPattern 사용.
+ * 본 함수는 declarative props 만 — 행동까지 필요하면 `useDialogPattern({ alert: true })`.
  */
-export function alertdialogPattern(): { rootProps: RootProps } {
+export function alertdialogPattern(opts: AlertdialogOptions = {}): { rootProps: RootProps } {
+  const { label, labelledBy, describedBy } = opts
   return {
-    rootProps: { role: 'alertdialog', 'aria-modal': true } as unknown as RootProps,
+    rootProps: {
+      role: 'alertdialog',
+      'aria-modal': true,
+      'aria-label': label,
+      'aria-labelledby': labelledBy,
+      'aria-describedby': describedBy,
+    } as unknown as RootProps,
   }
 }

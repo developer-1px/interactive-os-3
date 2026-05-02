@@ -32,7 +32,10 @@ export const isMetaId = (id: string) => id.startsWith('__') && id.endsWith('__')
 
 export const ROOT = metaId('root')
 export const FOCUS = metaId('focus')
+/** Set of ids that are "expanded" — accordion items, tree branches, disclosure. Domain: spatial fold. */
 export const EXPANDED = metaId('expanded')
+/** Set of ids that are "open" — modals, popovers, combobox listboxes. Domain: floating overlay visibility. */
+export const OPEN = metaId('open')
 export const TYPEAHEAD = metaId('typeahead')
 export const SELECT_ANCHOR = metaId('selectAnchor')
 
@@ -44,6 +47,9 @@ export const getFocus = (d: NormalizedData): string | null =>
 
 export const getExpanded = (d: NormalizedData): Set<string> =>
   new Set(readMeta<string[]>(d, EXPANDED, 'ids', []))
+
+export const getOpen = (d: NormalizedData): Set<string> =>
+  new Set(readMeta<string[]>(d, OPEN, 'ids', []))
 
 export const getTypeahead = (d: NormalizedData): { buf: string; deadline: number } => ({
   buf: readMeta<string>(d, TYPEAHEAD, 'buf', ''),
