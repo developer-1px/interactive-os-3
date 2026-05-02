@@ -19,6 +19,10 @@ type FeatureView = {
 export function FinderBody() {
   const [view, dispatch] = useFeature(finderFeature) as unknown as [FeatureView, (cmd: { type: string; [k: string]: unknown }) => void]
 
+  const onColumns = (e: UiEvent) => {
+    if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
+    else if (e.type === 'expand') dispatch({ type: 'expandCol', id: e.id, open: e.open })
+  }
   const onRecent = (e: UiEvent) => {
     if (e.type === 'activate') dispatch({ type: 'activateRec', id: e.id })
   }
@@ -54,7 +58,7 @@ export function FinderBody() {
           <ViewToolbar data={view.toolbar} onEvent={onView} />
         </header>
         <div className="flex-1 overflow-hidden">
-          <Columns />
+          <Columns data={view.columns} onEvent={onColumns} />
         </div>
       </section>
 

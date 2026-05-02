@@ -8,19 +8,19 @@ import {
   type TreeSlots,
 } from './slots'
 
-export interface TreeProps {
-  store: NormalizedData
-  value: NormalizedData
+export interface TreeProps<TItem extends object = Record<string, unknown>> {
+  data: NormalizedData
   onEvent: (event: UiEvent) => void
   'aria-label': string
-  slots?: TreeSlots
+  slots?: TreeSlots<TItem>
 }
 
-export function Tree({ store, value, onEvent, slots = {}, 'aria-label': ariaLabel }: TreeProps) {
-  const data = {
-    entities: { ...store.entities, ...value.entities },
-    relationships: store.relationships,
-  }
+export function Tree<TItem extends object = Record<string, unknown>>({
+  data,
+  onEvent,
+  slots = {},
+  'aria-label': ariaLabel,
+}: TreeProps<TItem>) {
   const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
   const hasSlots = Object.keys(slots).length > 0
 
@@ -31,7 +31,7 @@ export function Tree({ store, value, onEvent, slots = {}, 'aria-label': ariaLabe
       className="w-72 rounded-md border border-stone-200 bg-white p-1 text-sm text-stone-900"
     >
       {items.map((item) => {
-        const itemData = data.entities[item.id]?.data ?? {}
+        const itemData = (data.entities[item.id]?.data ?? {}) as TItem
         return (
           <li
             key={item.id}

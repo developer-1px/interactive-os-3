@@ -3,12 +3,7 @@ import {
   getChildren,
   getLabel,
   isDisabled,
-  defineFlow,
-  expandBranchOnActivate,
-  fromTree,
-  pathAncestors,
-  readResource,
-  useFlow,
+  getExpanded,
   useRovingTabIndex,
   composeAxes,
   navigate,
@@ -16,34 +11,8 @@ import {
   activate,
   typeahead,
   type NormalizedData,
+  type UiEvent,
 } from '@p/headless'
-import { walk } from '../features/data'
-import { pathResource, pinnedRootResource, treeResource } from '../features/resources'
-
-/** Finder columns flow — URL이 진실 원천. */
-const columnsFlow = defineFlow<string>({
-  source: pathResource,
-  base: (path = '/') => {
-    const tree = readResource(treeResource)
-    if (!tree) return { entities: {}, relationships: {} }
-    const pinned = readResource(pinnedRootResource) ?? '/'
-    const rootNode = pinned === '/' ? tree : (walk(pinned).at(-1) ?? tree)
-    const c = walk(path)
-    const cwd = c[c.length - 1]?.type === 'dir' ? c[c.length - 1] : c[c.length - 2] ?? tree
-    return fromTree(rootNode.children ?? [], {
-      getId: (n) => n.path,
-      getKids: (n) => n.children,
-      toData: (n) => ({
-        label: n.name,
-        selected: n.path === path,
-      }),
-      focusId: cwd?.path ?? path,
-      expandedIds: pathAncestors(path),
-    })
-  },
-  gestures: expandBranchOnActivate,
-  metaScope: ['navigate', 'typeahead'],
-})
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 
@@ -53,9 +22,10 @@ const chainFrom = (d: NormalizedData, exp: Set<string>, cur: string = ROOT): str
   return open ? [cur, ...chainFrom(d, exp, open)] : [cur]
 }
 
-export function Columns() {
-  const [data, onEvent] = useFlow(columnsFlow)
-  const { focusId, expanded, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
+/** Finder columns view — presentational. data·onEvent 를 부모에서 받아 Miller column 으로 렌더. */
+export function Columns({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
+  const expanded = getExpanded(data)
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
 
   return (
     <section

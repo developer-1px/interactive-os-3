@@ -10,8 +10,8 @@ export function Intro() {
         </h1>
         <p className="mt-4 text-base leading-7 text-stone-600">
           Wrappers keep ARIA structure, roving focus, and reducer events inside the
-          component. Examples on this route show the intended usage surface: store, value, onEvent,
-          and named slots.
+          component. Examples on this route show the intended usage surface: normalized data,
+          onEvent, and item-data slots.
         </p>
       </div>
     </section>

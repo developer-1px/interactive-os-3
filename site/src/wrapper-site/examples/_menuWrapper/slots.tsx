@@ -1,30 +1,32 @@
 import type { BaseItem } from '@p/headless/patterns'
 import type { ReactNode } from 'react'
 
-export type MenuSlot = (props: MenuSlotProps) => ReactNode
+export type MenuSlot<TItem extends object = Record<string, unknown>> = (
+  props: MenuSlotProps<TItem>
+) => ReactNode
 
-export interface MenuSlotProps {
+export interface MenuSlotProps<TItem extends object = Record<string, unknown>> {
   item: BaseItem
-  data: Record<string, unknown>
+  data: TItem
 }
 
-export interface MenuSlots {
-  icon?: MenuSlot
-  label?: MenuSlot
-  shortcut?: MenuSlot
+export interface MenuSlots<TItem extends object = Record<string, unknown>> {
+  icon?: MenuSlot<TItem>
+  label?: MenuSlot<TItem>
+  shortcut?: MenuSlot<TItem>
 }
 
-export function renderSlot(
-  slot: MenuSlot | undefined,
-  fallback: MenuSlot,
+export function renderSlot<TItem extends object>(
+  slot: MenuSlot<TItem> | undefined,
+  fallback: MenuSlot<TItem>,
   item: BaseItem,
-  data: Record<string, unknown>,
+  data: TItem,
 ) {
   const Slot = slot ?? fallback
   return <Slot item={item} data={data} />
 }
 
-export function defaultLabel({ item }: MenuSlotProps) {
+export function defaultLabel<TItem extends object>({ item }: MenuSlotProps<TItem>) {
   return item.label
 }
 

@@ -1,23 +1,22 @@
-import type { NormalizedData, UiEvent } from '@p/headless'
+import { ROOT, type NormalizedData, type UiEvent } from '@p/headless'
 import { useMenuPattern } from '@p/headless/patterns'
 import { useRef, useState } from 'react'
 import { defaultLabel, emptySlot, renderSlot, type MenuSlots } from './slots'
 
-export interface MenuProps {
-  store: NormalizedData
-  value: NormalizedData
+export interface MenuProps<TItem extends object = Record<string, unknown>> {
+  data: NormalizedData
   onEvent: (event: UiEvent) => void
-  label: string
-  slots?: MenuSlots
+  slots?: MenuSlots<TItem>
 }
 
-export function Menu({ store, value, onEvent, label, slots = {} }: MenuProps) {
+export function Menu<TItem extends object = Record<string, unknown>>({
+  data,
+  onEvent,
+  slots = {},
+}: MenuProps<TItem>) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const data = {
-    entities: { ...store.entities, ...value.entities },
-    relationships: store.relationships,
-  }
+  const label = (data.entities[ROOT]?.data?.label as string | undefined) ?? 'Menu'
   const closeMenu = () => {
     setOpen(false)
     requestAnimationFrame(() => triggerRef.current?.focus())
@@ -56,7 +55,7 @@ export function Menu({ store, value, onEvent, label, slots = {} }: MenuProps) {
           className="absolute left-0 top-full z-10 mt-1 w-56 rounded-md border border-stone-200 bg-white p-1 text-sm shadow-lg"
         >
           {items.map((item) => {
-            const itemData = data.entities[item.id]?.data ?? {}
+            const itemData = (data.entities[item.id]?.data ?? {}) as TItem
             return (
               <li
                 key={item.id}
