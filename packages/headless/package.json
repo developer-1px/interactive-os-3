@@ -78,6 +78,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "test": "vitest run --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
@@ -89,7 +90,8 @@
   },
   "devDependencies": {
     "tsup": "^8.5.1",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.5"
   },
   "publishConfig": {
     "access": "public"
