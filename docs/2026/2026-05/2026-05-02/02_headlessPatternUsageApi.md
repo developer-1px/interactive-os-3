@@ -175,6 +175,28 @@ Tree/Menu 계열에서 `ui.items`는 **visible flat order**다. recursive render
 ui.props(part, target?, hostProps?)
 ```
 
+실제 overload는 네 가지뿐이다.
+
+```ts
+ui.props(containerPart)
+ui.props(containerPart, hostProps)
+ui.props(itemPart, item)
+ui.props(itemPart, item, hostProps)
+```
+
+`undefined` placeholder를 넘기지 않는다.
+
+```tsx
+// ✅ target 없는 part
+<div {...tabs.props('tablist', { className: styles.tablist })} />
+
+// ✅ target 있는 part
+<button {...tabs.props('tab', item, { className: styles.tab })} />
+
+// ❌ 금지
+<div {...tabs.props('tablist', undefined, { className: styles.tablist })} />
+```
+
 규칙:
 
 - `part`는 pattern별 닫힌 ARIA/APG 어휘다.
@@ -214,7 +236,7 @@ ui.props(part, target?, hostProps?)
 | `tree` | `tree`, `treeitem` | `{ selectedIds?: string[]; expandedIds?: string[]; activeId?: string }` | `{ selectionMode?: 'none' \| 'single' \| 'multiple' }` | `tree → div`, `treeitem → div` |
 | `treegrid` | `treegrid`, `row`, `cell`, `columnheader` | `{ selectedIds?: string[]; expandedIds?: string[]; activeId?: string }` | `{ selectionMode?: 'none' \| 'single' \| 'multiple' }` | `treegrid → div`, `row → div`, `cell → div` |
 | `combobox` | `combobox`, `trigger`, `popup`, `option` | `{ open?: boolean; selectedId?: string; inputValue?: string; activeId?: string }` | `{ autocomplete?: 'none' \| 'list' \| 'both' }` | `combobox → input`, `trigger → button`, `popup → div`, `option → div` |
-| `menu` | `menu`, `menuitem` | `{ open?: boolean; activeId?: string }` | `{ closeOnSelect?: boolean }` | `menu → div`, `menuitem → button/div` |
+| `menu` | `trigger`, `menu`, `menuitem` | `{ open?: boolean; activeId?: string }` | `{ closeOnSelect?: boolean }` | `trigger → button`, `menu → div`, `menuitem → button/div` |
 | `menubar` | `menubar`, `menu`, `menuitem` | `{ openIds?: string[]; activeId?: string }` | `{ orientation?: 'horizontal' \| 'vertical' }` | `menubar → div`, `menu → div`, `menuitem → button/div` |
 | `toolbar` | `toolbar`, `control` | `{ activeId?: string }` | `{ orientation?: 'horizontal' \| 'vertical' }` | `toolbar → div`, `control → button/input/select` |
 | `radiogroup` | `radiogroup`, `radio` | `{ selectedId?: string }` | `{ orientation?: 'horizontal' \| 'vertical' }` | `radiogroup → div`, `radio → button/div` |
@@ -223,10 +245,10 @@ ui.props(part, target?, hostProps?)
 | `splitter` | `separator`, `pane` | `{ value: number }` | `{ min?: number; max?: number; orientation?: 'horizontal' \| 'vertical' }` | `separator → div`, `pane → div` |
 | `disclosure` | `button`, `panel` | `{ open: boolean }` | `{}` | `button → button`, `panel → div/section` |
 | `accordion` | `accordion`, `button`, `panel` | `{ expandedIds: string[] }` | `{ mode?: 'single' \| 'multiple'; collapsible?: boolean }` | `accordion → div`, `button → button`, `panel → div/section` |
-| `dialog` | `dialog`, `title`, `description` | `{ open: boolean }` | `{ modal?: boolean }` | `dialog → dialog/section`, `title → h*`, `description → p/div` |
+| `dialog` | `trigger`, `dialog`, `title`, `description`, `close` | `{ open: boolean }` | `{ modal?: boolean }` | `trigger → button`, `dialog → dialog/section`, `title → h*`, `description → p/div`, `close → button` |
 | `tooltip` | `trigger`, `tooltip` | `{ open: boolean }` | `{ delay?: number }` | `trigger → button/anchor`, `tooltip → div` |
 | `alert` | `alert` | `{}` | `{}` | `alert → div` |
-| `alertdialog` | `alertdialog`, `title`, `description`, `cancel`, `action` | `{ open: boolean }` | `{ modal?: boolean }` | `alertdialog → dialog/section`, actions → button |
+| `alertdialog` | `trigger`, `alertdialog`, `title`, `description`, `cancel`, `action` | `{ open: boolean }` | `{ modal?: boolean }` | `trigger → button`, `alertdialog → dialog/section`, actions → button |
 
 TypeScript는 pattern별로 잘못된 part를 거부해야 한다.
 
@@ -236,6 +258,24 @@ tabs.props('option', item)    // type error
 tabs.props('tabpanel')        // type error: target required
 tabs.props('tablist', item)   // type error: target forbidden
 ```
+
+Target 규칙:
+
+- container/landmark/popup/dialog/title/description/trigger part는 target을 받지 않는다.
+- collection item part는 target을 반드시 받는다.
+- paired part는 같은 item target을 받는다. 예: `tabs.props('tab', item)` + `tabs.props('tabpanel', item)`.
+- `slider.props('thumb', thumb)`의 `thumb` target은 `slider.items`에서 온다. slider는 입력 `items`를 받지 않아도 `value`에서 thumb view를 만든다.
+- `cell`은 row item과 column index가 필요하다.
+
+```tsx
+treegrid.props('cell', { row: item, column: 0 })
+```
+
+Open state 렌더 규칙:
+
+- `trigger`는 항상 렌더한다.
+- `popup`, `tooltip`, `dialog`, `alertdialog`는 `ui.state.open`일 때 렌더한다.
+- `disclosure`/`accordion` panel은 항상 렌더해도 되지만, canonical usage는 `props`가 hidden/aria 연결을 소유하게 둔다.
 
 ## Usage: Listbox
 
@@ -338,6 +378,95 @@ return (
 ```
 
 `tree.items`는 visible flat order이므로 recursive render가 아니다.
+
+## Usage: Slider
+
+Slider는 입력 `items`를 받지 않는다. `value`에서 thumb view를 만든다.
+
+```tsx
+const slider = usePattern('slider', {
+  defaultState: {
+    value: 50,
+  },
+  options: {
+    min: 0,
+    max: 100,
+    step: 1,
+    orientation: 'horizontal',
+  },
+})
+
+return (
+  <div {...slider.props('slider')}>
+    <div {...slider.props('track')}>
+      <div {...slider.props('range')} />
+    </div>
+
+    {slider.items.map((thumb) => (
+      <div key={thumb.id} {...slider.props('thumb', thumb)} />
+    ))}
+  </div>
+)
+```
+
+## Usage: Dialog
+
+Dialog 계열은 `trigger`를 항상 렌더하고, dialog surface는 `state.open`일 때 렌더한다.
+
+```tsx
+const dialog = usePattern('dialog', {
+  defaultState: {
+    open: false,
+  },
+  options: {
+    modal: true,
+  },
+})
+
+return (
+  <>
+    <button {...dialog.props('trigger')}>Open</button>
+
+    {dialog.state.open ? (
+      <section {...dialog.props('dialog')}>
+        <h2 {...dialog.props('title')}>Settings</h2>
+        <p {...dialog.props('description')}>Update workspace preferences.</p>
+        <button {...dialog.props('close')}>Close</button>
+      </section>
+    ) : null}
+  </>
+)
+```
+
+## Usage: Alert Dialog
+
+`trigger`는 opener, `cancel`과 `action`은 열린 alertdialog 내부 action이다.
+
+```tsx
+const alertdialog = usePattern('alertdialog', {
+  defaultState: {
+    open: false,
+  },
+  options: {
+    modal: true,
+  },
+})
+
+return (
+  <>
+    <button {...alertdialog.props('trigger')}>Delete</button>
+
+    {alertdialog.state.open ? (
+      <section {...alertdialog.props('alertdialog')}>
+        <h2 {...alertdialog.props('title')}>Delete item?</h2>
+        <p {...alertdialog.props('description')}>This action cannot be undone.</p>
+        <button {...alertdialog.props('cancel')}>Cancel</button>
+        <button {...alertdialog.props('action')}>Delete</button>
+      </section>
+    ) : null}
+  </>
+)
+```
 
 ## Usage: Controlled Wrapper
 
@@ -480,4 +609,3 @@ raw ARIA 조립 금지:
 ```tsx
 <div {...listbox.props('option', item)} />
 ```
-
