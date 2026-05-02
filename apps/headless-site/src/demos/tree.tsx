@@ -1,4 +1,4 @@
-import { fromTree } from '@p/headless'
+import { fromTree, type UiEvent } from '@p/headless'
 import { useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from './_useLocalData'
 
@@ -43,7 +43,19 @@ export default function Demo() {
       expandedIds: ['src', 'demos'],
     }),
   )
-  const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
+  // tree: clicking a branch toggles its expand state (file-explorer convention)
+  const onTreeEvent = (e: UiEvent) => {
+    if (e.type === 'activate') {
+      const hasKids = (data.relationships[e.id] ?? []).length > 0
+      if (hasKids) {
+        const expandedIds = (data.entities.__expanded__?.data?.ids as string[]) ?? []
+        onEvent({ type: 'expand', id: e.id, open: !expandedIds.includes(e.id) })
+        return
+      }
+    }
+    onEvent(e)
+  }
+  const { rootProps, itemProps, items } = useTreePattern(data, onTreeEvent)
 
   return (
     <ul

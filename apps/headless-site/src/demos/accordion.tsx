@@ -1,4 +1,4 @@
-import { ROOT, type NormalizedData } from '@p/headless'
+import { ROOT, type NormalizedData, type UiEvent } from '@p/headless'
 import { useAccordionPattern } from '@p/headless/patterns'
 import { useLocalData } from './_useLocalData'
 
@@ -21,7 +21,18 @@ const initial: NormalizedData = {
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(initial)
-  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onEvent)
+  // accordion: click activates a header → toggle its expand state.
+  // (the headless `expand` axis only fires on Arrow keys, not clicks)
+  const onAccordionEvent = (e: UiEvent) => {
+    if (e.type === 'activate') {
+      const expandedIds = (data.entities.__expanded__?.data?.ids as string[]) ?? []
+      const isOpen = expandedIds.includes(e.id)
+      onEvent({ type: 'expand', id: e.id, open: !isOpen })
+      return
+    }
+    onEvent(e)
+  }
+  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onAccordionEvent)
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
