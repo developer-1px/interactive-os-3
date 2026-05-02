@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import { useEffect, useState, type ComponentType } from 'react'
 import { fmtKey, keysFor } from './keys'
 
 type Kind = 'pure' | 'ref' | 'collection'
@@ -24,20 +24,31 @@ const sources = import.meta.glob<string>('./demos/*.tsx', {
 
 interface Entry extends DemoMeta {
   filename: string
+  slug: string
   Component: ComponentType
   source: string
 }
 
 const KIND_ORDER: Record<Kind, number> = { pure: 0, ref: 1, collection: 2 }
 
+const slugFor = (filename: string) =>
+  filename
+    .replace(/\.tsx$/, '')
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .toLowerCase()
+
 const ENTRIES: Entry[] = Object.entries(modules)
   .filter(([path]) => !path.includes('/_'))
-  .map(([path, mod]) => ({
-    ...mod.meta,
-    Component: mod.default,
-    source: sources[path] ?? '',
-    filename: path.split('/').pop()!,
-  }))
+  .map(([path, mod]) => {
+    const filename = path.split('/').pop()!
+    return {
+      ...mod.meta,
+      Component: mod.default,
+      source: sources[path] ?? '',
+      filename,
+      slug: slugFor(filename),
+    }
+  })
   .sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind] || a.title.localeCompare(b.title))
 
 const KIND_LABEL: Record<Kind, string> = {
@@ -52,20 +63,105 @@ const KIND_BADGE: Record<Kind, string> = {
   collection: 'bg-sky-100 text-sky-900 ring-sky-200',
 }
 
+function useHashNavigation() {
+  const [hash, setHash] = useState(() => window.location.hash.slice(1))
+
+  useEffect(() => {
+    const handle = () => {
+      const next = window.location.hash.slice(1)
+      setHash(next)
+      const target = next ? document.getElementById(next) : document.getElementById('intro')
+      target?.scrollIntoView({ behavior: 'instant' })
+    }
+    handle() // jump on mount if hash present
+    window.addEventListener('hashchange', handle)
+    return () => window.removeEventListener('hashchange', handle)
+  }, [])
+
+  return hash
+}
+
 export function App() {
+  const activeHash = useHashNavigation()
+
   return (
     <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
       <Intro />
       {ENTRIES.map((entry, i) => (
-        <PatternScreen key={entry.filename} entry={entry} index={i} total={ENTRIES.length} />
+        <PatternScreen key={entry.slug} entry={entry} index={i} total={ENTRIES.length} />
       ))}
+      <Sidebar activeSlug={activeHash} />
     </div>
+  )
+}
+
+function Sidebar({ activeSlug }: { activeSlug: string }) {
+  const [open, setOpen] = useState(false)
+  const groups: Kind[] = ['pure', 'ref', 'collection']
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="fixed right-4 top-4 z-50 rounded-md border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow hover:bg-stone-50"
+      >
+        {open ? 'Close' : `Index (${ENTRIES.length})`}
+      </button>
+      {open && (
+        <nav
+          aria-label="Pattern index"
+          className="fixed right-4 top-14 z-50 max-h-[80vh] w-72 overflow-auto rounded-lg border border-stone-200 bg-white p-3 shadow-xl"
+        >
+          <a
+            href="#intro"
+            onClick={() => setOpen(false)}
+            className="mb-3 block rounded px-2 py-1 text-xs font-medium text-stone-600 hover:bg-stone-100"
+          >
+            ← Intro
+          </a>
+          {groups.map((kind) => {
+            const list = ENTRIES.filter((e) => e.kind === kind)
+            if (!list.length) return null
+            return (
+              <div key={kind} className="mb-3">
+                <h3 className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                  {KIND_LABEL[kind]} · {list.length}
+                </h3>
+                <ul>
+                  {list.map((e) => {
+                    const isActive = activeSlug === e.slug
+                    return (
+                      <li key={e.slug}>
+                        <a
+                          href={`#${e.slug}`}
+                          onClick={() => setOpen(false)}
+                          className={`flex items-center justify-between rounded px-2 py-1 text-sm ${
+                            isActive ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100'
+                          }`}
+                        >
+                          <span>{e.title}</span>
+                          <code
+                            className={`text-[10px] font-mono ${isActive ? 'text-stone-300' : 'text-stone-400'}`}
+                          >
+                            #{e.slug}
+                          </code>
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
+        </nav>
+      )}
+    </>
   )
 }
 
 function Intro() {
   return (
-    <section className="snap-start min-h-screen flex items-center">
+    <section id="intro" className="snap-start min-h-screen flex items-center">
       <div className="mx-auto max-w-5xl px-8 py-12 w-full">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-1 text-xs font-medium text-stone-700">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -101,7 +197,35 @@ function Intro() {
           >
             W3C APG ↗
           </a>
-          <span className="ml-auto text-xs text-stone-500">scroll ↓ to browse {ENTRIES.length} patterns</span>
+        </div>
+
+        {/* Inline pattern grid — clickable + deep-linkable */}
+        <div className="mt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">
+            Patterns · click to jump
+          </h2>
+          <div className="mt-3 grid gap-2 md:grid-cols-3">
+            {(['pure', 'ref', 'collection'] as Kind[]).map((kind) => (
+              <div key={kind}>
+                <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                  {KIND_LABEL[kind]}
+                </h3>
+                <ul className="space-y-0.5">
+                  {ENTRIES.filter((e) => e.kind === kind).map((e) => (
+                    <li key={e.slug}>
+                      <a
+                        href={`#${e.slug}`}
+                        className="flex items-center justify-between rounded px-2 py-1 text-sm text-stone-700 hover:bg-stone-100"
+                      >
+                        <span>{e.title}</span>
+                        <code className="text-[10px] font-mono text-stone-400">#{e.slug}</code>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -126,12 +250,12 @@ function PatternScreen({
   index: number
   total: number
 }) {
-  const { Component, title, apg, kind, blurb, source, filename } = entry
+  const { Component, title, apg, kind, blurb, source, filename, slug } = entry
   const keys = keysFor(title)
 
   return (
-    <section className="snap-start h-screen flex flex-col">
-      <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4">
+    <section id={slug} className="snap-start h-screen flex flex-col">
+      <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
         <span
           className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${KIND_BADGE[kind]}`}
         >
@@ -146,6 +270,13 @@ function PatternScreen({
           className="ml-auto text-xs text-stone-500 underline underline-offset-4 hover:text-stone-900"
         >
           APG ↗
+        </a>
+        <a
+          href={`#${slug}`}
+          className="text-xs font-mono text-stone-400 hover:text-stone-700"
+          title="Permalink"
+        >
+          #{slug}
         </a>
         <span className="text-xs font-mono text-stone-400">
           {index + 1} / {total}
