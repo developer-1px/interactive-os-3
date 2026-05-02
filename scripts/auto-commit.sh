@@ -122,7 +122,12 @@ fi
 
 # scope 단축 — 흔한 path prefix 를 친근한 이름으로
 short_scope=$(echo "$scope" \
-  | sed -E 's|^apps/([^/]+).*|\1|; s|^packages/([^/]+).*|\1|; s|^site/src/([^/]+).*|site/\1|; s|^site$|site|; s|^scripts.*|scripts|; s|^docs.*|docs|')
+  | sed -E 's#^apps/([^/]+).*#\1#' \
+  | sed -E 's#^packages/([^/]+).*#\1#' \
+  | sed -E 's#^site/src/([^/]+).*#site/\1#' \
+  | sed -E 's#^site$#site#' \
+  | sed -E 's#^scripts.*#scripts#' \
+  | sed -E 's#^docs.*#docs#')
 
 # 2f. subject — 변경 파일 basename 상위 2~3개 (확장자/.test 제거)
 basenames=()
@@ -130,10 +135,13 @@ while IFS= read -r b; do
   [[ -n "$b" ]] && basenames+=("$b")
 done < <(printf '%s\n' "${files[@]}" \
   | awk -F/ '{print $NF}' \
-  | sed -E 's|\.(test|spec)\.(tsx?|jsx?)$||; s|\.(tsx?|jsx?|md|css|cjs|mjs|json|yaml|yml|sh)$||' \
+  | sed -E 's#\.(test|spec)\.(ts|tsx|js|jsx)$##' \
+  | sed -E 's#\.(tsx?|jsx?|md|css|cjs|mjs|json|yaml|yml|sh)$##' \
   | sort -u | head -4)
 
 n_base=${#basenames[@]}
+plural() { (( $1 == 1 )) && echo "1 file" || echo "$1 files"; }
+
 if (( n_base == 1 )); then
   subject="${basenames[0]}"
 elif (( n_base == 2 )); then
@@ -143,7 +151,7 @@ elif (( n_base == 3 )); then
 elif (( n_base >= 4 )); then
   subject="${basenames[0]} · ${basenames[1]} · ${basenames[2]} +$((count - 3))"
 else
-  subject="$count files"
+  subject="$(plural "$count")"
 fi
 
 # 길이 제한 (subject ≤ 60)
