@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { multiSelectToggle, singleSelect } from './selection'
-import { fromTree } from './fromTree'
-import { FOCUS, getFocus, type NormalizedData } from '../types'
+import { fromList, fromTree } from './fromTree'
+import { reduceWithMultiSelect } from './defaults'
+import { multiSelect } from '../axes/multiSelect'
+import { clickTrigger, keyTrigger } from '../trigger'
+import { FOCUS, getFocus, type NormalizedData, type UiEvent } from '../types'
 
 const list = (): NormalizedData =>
   fromTree(
@@ -95,6 +98,40 @@ describe('multiSelectToggle reducer', () => {
     const data = list()
     expect(multiSelectToggle(data, { type: 'selectMany', ids: ['a'], to: true })).toBe(data) // a already selected
     expect(multiSelectToggle(data, { type: 'selectMany', ids: [], to: true })).toBe(data) // empty
+  })
+
+  it('integration — click flow through multiSelect axis + reduceWithMultiSelect produces toggle accumulation', () => {
+    const apply = (d: NormalizedData, evs: UiEvent[] | null) =>
+      (evs ?? []).reduce(reduceWithMultiSelect, d)
+
+    let d = fromList([{ label: 'A' }, { label: 'B' }, { label: 'C' }])
+    const ids = ['__0', '__1', '__2']
+
+    // click A — focus moves, A selected
+    d = apply(d, multiSelect(d, ids[0], clickTrigger()))
+    expect(getFocus(d)).toBe(ids[0])
+    expect(d.entities[ids[0]]?.data?.selected).toBe(true)
+
+    // click B — A still selected (multi), B selected, focus moves
+    d = apply(d, multiSelect(d, ids[1], clickTrigger()))
+    expect(d.entities[ids[0]]?.data?.selected).toBe(true)
+    expect(d.entities[ids[1]]?.data?.selected).toBe(true)
+    expect(getFocus(d)).toBe(ids[1])
+
+    // click A again — A deselected (toggle), B still selected
+    d = apply(d, multiSelect(d, ids[0], clickTrigger()))
+    expect(d.entities[ids[0]]?.data?.selected).toBe(false)
+    expect(d.entities[ids[1]]?.data?.selected).toBe(true)
+  })
+
+  it('integration — Ctrl+A through reduceWithMultiSelect selects all in one batch', () => {
+    let d = fromList([{ label: 'A' }, { label: 'B' }, { label: 'C' }])
+    const events = multiSelect(d, '__0', keyTrigger({ key: 'a', ctrl: true }))
+    expect(events).toEqual([{ type: 'selectMany', ids: ['__0', '__1', '__2'], to: true }])
+    d = (events ?? []).reduce(reduceWithMultiSelect, d)
+    expect(d.entities.__0?.data?.selected).toBe(true)
+    expect(d.entities.__1?.data?.selected).toBe(true)
+    expect(d.entities.__2?.data?.selected).toBe(true)
   })
 
   it('single + multi reducers can coexist in one composition (no vocabulary collision)', () => {

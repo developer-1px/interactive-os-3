@@ -1,4 +1,4 @@
-import { EXPANDED, FOCUS, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
+import { EXPANDED, FOCUS, SELECT_ANCHOR, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
 
 type Handler<T extends UiEvent['type']> = (
   d: NormalizedData,
@@ -37,7 +37,7 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   open: (d, e) => toggleExpanded(d, e.id, e.open),
   typeahead: (d, e) => setMeta(d, TYPEAHEAD, { buf: e.buf, deadline: e.deadline }),
   activate: identity,
-  select: identity,
+  select: (d, e) => setMeta(d, SELECT_ANCHOR, { id: e.id }),
   selectMany: identity,
   value: identity,
   pan: (d, e) => {

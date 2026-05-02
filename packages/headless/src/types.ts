@@ -34,6 +34,7 @@ export const ROOT = metaId('root')
 export const FOCUS = metaId('focus')
 export const EXPANDED = metaId('expanded')
 export const TYPEAHEAD = metaId('typeahead')
+export const SELECT_ANCHOR = metaId('selectAnchor')
 
 const readMeta = <T>(d: NormalizedData, id: string, key: string, fallback: T): T =>
   (d.entities[id]?.data?.[key] as T) ?? fallback
@@ -48,6 +49,9 @@ export const getTypeahead = (d: NormalizedData): { buf: string; deadline: number
   buf: readMeta<string>(d, TYPEAHEAD, 'buf', ''),
   deadline: readMeta<number>(d, TYPEAHEAD, 'deadline', 0),
 })
+
+export const getSelectAnchor = (d: NormalizedData): string | null =>
+  readMeta<string | null>(d, SELECT_ANCHOR, 'id', null)
 
 export interface ControlProps {
   data: NormalizedData

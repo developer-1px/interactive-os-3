@@ -21,8 +21,10 @@ export const bindAxis = (
     ke.preventDefault()
     return true
   },
-  onClick: (_me, id) => {
-    const events = axis(d, id, clickTrigger)
+  onClick: (me, id) => {
+    const events = axis(d, id, clickTrigger({
+      shift: me.shiftKey, ctrl: me.ctrlKey, alt: me.altKey, meta: me.metaKey,
+    }))
     if (!events) return false
     events.forEach(onEvent)
     return true

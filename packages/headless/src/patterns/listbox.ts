@@ -15,7 +15,8 @@ export interface ListboxOptions {
 }
 
 const singleAxis = composeAxes(navigate('vertical'), activate, typeahead)
-const multiAxis = composeAxes(navigate('vertical'), multiSelect, activate, typeahead)
+// multiSelect must precede navigate — otherwise navigate matches Shift+Arrow first and the range branch never runs.
+const multiAxis = composeAxes(multiSelect, navigate('vertical'), activate, typeahead)
 
 /**
  * listbox — APG `/listbox/` recipe.
