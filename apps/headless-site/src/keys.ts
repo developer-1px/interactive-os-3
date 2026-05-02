@@ -1,24 +1,13 @@
 /**
- * SSoT keyboard-key derivation.
+ * SSoT keyboard-key derivation utilities.
  *
- * Each axis (navigate / activate / expand / typeahead / numericStep /
- * treeNavigate / treeExpand) is probed with synthetic key triggers — the keys
- * it responds to (returns non-empty event list) become its key set.
+ * `probe(axis)` 가 axis 에 합성 KeyTrigger 를 던져 응답 키를 자동 수집한다.
+ * axis 가 SSoT — 키 변경하면 칩이 자동 갱신.
  *
- * Pattern → axes mapping mirrors the actual `composeAxes(...)` call in each
- * pattern source. If a pattern adds a new axis, update its entry here.
+ * 패턴 별 사용은 각 demo 의 `meta.keys` 함수가 owns (co-location). 이 파일은
+ * 도구만 제공한다.
  */
-import {
-  ROOT,
-  activate,
-  expand,
-  navigate,
-  numericStep,
-  treeExpand,
-  treeNavigate,
-  type Axis,
-  type NormalizedData,
-} from '@p/headless'
+import { ROOT, type Axis, type NormalizedData } from '@p/headless'
 
 const PROBE_KEYS = [
   'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
@@ -37,7 +26,7 @@ const dummy: NormalizedData = {
   relationships: { [ROOT]: ['a', 'b', 'c'], c: ['d'] },
 }
 
-function probe(axis: Axis): string[] {
+export function probe(axis: Axis): string[] {
   const out: string[] = []
   for (const key of PROBE_KEYS) {
     try {
@@ -61,46 +50,4 @@ const KEY_GLYPH: Record<string, string> = {
 
 export const fmtKey = (k: string) => KEY_GLYPH[k] ?? k
 
-const dedupe = (xs: string[]) => Array.from(new Set(xs))
-
-/**
- * Pattern title → keys it responds to.
- * Mirrors `composeAxes(...)` calls in each pattern source.
- */
-export const PATTERN_KEYS: Record<string, () => string[]> = {
-  // Collection — axis-driven
-  Tabs: () => dedupe([...probe(navigate('horizontal')), ...probe(activate), 'A–Z']),
-  Listbox: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z']),
-  Tree: () => dedupe([...probe(treeNavigate), ...probe(treeExpand), ...probe(activate), 'A–Z']),
-  'Radio Group': () => dedupe([
-    ...probe(navigate('vertical')),
-    ...probe(navigate('horizontal')),
-    ...probe(activate),
-  ]),
-  Toolbar: () => dedupe(probe(navigate('horizontal'))),
-  Menu: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z']),
-  Menubar: () => dedupe(probe(navigate('horizontal'))),
-  Combobox: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'Escape']),
-  'Tree Grid': () => dedupe([...probe(treeNavigate), ...probe(treeExpand), ...probe(activate)]),
-  Accordion: () => dedupe([...probe(navigate('vertical')), ...probe(expand), ...probe(activate)]),
-  Slider: () => dedupe(probe(numericStep('horizontal'))),
-  Splitter: () => dedupe(probe(numericStep('vertical'))),
-  'Navigation List': () => [],
-
-  // Custom — composed by user
-  'Sidebar (custom)': () =>
-    dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z', 'Cmd+1…9']),
-
-  // Pure / Ref — keys live in the pattern body, not a composable axis
-  Disclosure: () => ['Enter', ' '],
-  Switch: () => ['Enter', ' '],
-  Tooltip: () => ['Escape'],
-  Dialog: () => ['Escape'],
-  'Alert Dialog': () => ['Escape'],
-  Alert: () => [],
-}
-
-export function keysFor(title: string): string[] {
-  const fn = PATTERN_KEYS[title]
-  return fn ? fn() : []
-}
+export const dedupe = <T>(xs: T[]) => Array.from(new Set(xs))

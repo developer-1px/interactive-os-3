@@ -1,5 +1,5 @@
-import { KIND_BADGE, KIND_LABEL } from './kind'
-import { fmtKey, keysFor } from './keys'
+import { KINDS } from './kind'
+import { fmtKey } from './keys'
 import type { Entry } from './registry'
 
 export function PatternScreen({
@@ -12,15 +12,15 @@ export function PatternScreen({
   total: number
 }) {
   const { Component, title, apg, kind, blurb, source, filename, slug } = entry
-  const keys = keysFor(title)
+  const keys = entry.keys?.() ?? []
 
   return (
     <section id={slug} className="snap-start h-screen flex flex-col">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
         <span
-          className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${KIND_BADGE[kind]}`}
+          className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${KINDS[kind].badge}`}
         >
-          {KIND_LABEL[kind]}
+          {KINDS[kind].label}
         </span>
         <h2 className="text-xl font-bold text-stone-900">{title}</h2>
         <p className="text-sm text-stone-600">{blurb}</p>

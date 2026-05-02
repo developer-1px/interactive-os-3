@@ -5,7 +5,8 @@ export const meta = {
   title: 'Dialog',
   apg: 'dialog-modal',
   kind: 'ref' as const,
-  blurb: 'First-focusable on open · Escape closes · returnFocus to trigger on close.',
+  blurb: 'First-focusable on open · Escape closes · returnFocus to trigger on close · Tab cycles within.',
+  keys: () => ['Escape', 'Tab'],
 }
 
 export default function Demo() {

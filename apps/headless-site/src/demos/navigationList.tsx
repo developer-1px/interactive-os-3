@@ -7,6 +7,7 @@ export const meta = {
   apg: 'navigation-list',
   kind: 'collection' as const,
   blurb: 'role="navigation" wrapping a list of links · aria-current="page" on the active one.',
+  keys: () => [],
 }
 
 function build(currentId: string): NormalizedData {

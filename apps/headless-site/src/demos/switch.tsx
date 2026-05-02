@@ -6,6 +6,7 @@ export const meta = {
   apg: 'switch',
   kind: 'pure' as const,
   blurb: 'role="switch" · Space/Enter activate · semantically distinct from checkbox.',
+  keys: () => ['Enter', ' '],
 }
 
 export default function Demo() {

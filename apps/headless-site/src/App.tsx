@@ -1,3 +1,4 @@
+import { ReproRecorderOverlay } from '@p/devtools'
 import { Intro } from './Intro'
 import { PatternScreen } from './PatternScreen'
 import { Sidebar } from './Sidebar'
@@ -14,6 +15,7 @@ export function App() {
         <PatternScreen key={entry.slug} entry={entry} index={i} total={ENTRIES.length} />
       ))}
       <Sidebar activeSlug={activeHash} />
+      <ReproRecorderOverlay />
     </div>
   )
 }

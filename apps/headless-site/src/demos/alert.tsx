@@ -6,6 +6,7 @@ export const meta = {
   apg: 'alert',
   kind: 'pure' as const,
   blurb: 'role="alert" — assistive tech announces inserted/changed content immediately.',
+  keys: () => [],
 }
 
 export default function Demo() {

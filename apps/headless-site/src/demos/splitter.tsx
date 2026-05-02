@@ -1,12 +1,14 @@
-import { ROOT, type NormalizedData } from '@p/headless'
+import { numericStep, ROOT, type NormalizedData } from '@p/headless'
 import { splitterPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Splitter',
   apg: 'windowsplitter',
   kind: 'collection' as const,
   blurb: 'role="separator" + aria-valuenow · numeric step axis shared with slider.',
+  keys: () => dedupe(probe(numericStep('vertical'))),
 }
 
 const initial: NormalizedData = {

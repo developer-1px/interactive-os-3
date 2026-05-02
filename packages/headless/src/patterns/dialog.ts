@@ -14,12 +14,15 @@ export interface DialogOptions {
   ariaDescribedBy?: string
 }
 
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]),[tabindex]:not([tabindex="-1"]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])'
+
 /**
  * dialog — APG `/dialog-modal/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
  *
- * 동작: open 시 첫 focusable 에 focus, Escape 닫기, 닫힘 시 trigger 로 focus 복귀.
- * focus trap 은 native `<dialog>` 또는 [inert] 사용 권장 — 본 recipe 는 보조.
+ * 동작: open 시 첫 focusable 에 focus, Escape 닫기, 닫힘 시 trigger 로 focus
+ * 복귀, modal 일 때 Tab 이 dialog 내부에서 순환 (focus trap).
  */
 export function useDialogPattern(
   rootRef: RefObject<HTMLElement | null>,
@@ -34,25 +37,39 @@ export function useDialogPattern(
     if (!open) return
     const root = rootRef.current
     if (!root) return
-    // open: focus first focusable
-    const first = root.querySelector<HTMLElement>(
-      'button:not([disabled]),[tabindex]:not([tabindex="-1"]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])',
-    )
+    const first = root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
     first?.focus()
-    // Escape close
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
         onOpenChange?.(false)
+        return
+      }
+      // Tab focus trap (modal only)
+      if (modal && e.key === 'Tab') {
+        const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+        if (!focusables.length) {
+          e.preventDefault()
+          return
+        }
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        const active = document.activeElement as HTMLElement | null
+        if (e.shiftKey && (active === first || !root.contains(active))) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && (active === last || !root.contains(active))) {
+          e.preventDefault()
+          first.focus()
+        }
       }
     }
     document.addEventListener('keydown', onKey)
     return () => {
       document.removeEventListener('keydown', onKey)
-      // close: return focus
       returnFocusRef?.current?.focus()
     }
-  }, [open, rootRef, onOpenChange, returnFocusRef])
+  }, [open, rootRef, onOpenChange, returnFocusRef, modal])
 
   const rootProps: RootProps = {
     role: alert ? 'alertdialog' : 'dialog',

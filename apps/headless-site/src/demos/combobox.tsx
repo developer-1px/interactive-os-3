@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react'
-import { fromList, reduce, ROOT, type UiEvent } from '@p/headless'
+import { activate, fromList, navigate, reduce, ROOT, type UiEvent } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Combobox',
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'role="combobox" · aria-activedescendant on input · APG single exception to roving (B11).',
+  keys: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'Escape']),
 }
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']

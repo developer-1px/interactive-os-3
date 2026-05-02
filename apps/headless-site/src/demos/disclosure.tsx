@@ -6,6 +6,7 @@ export const meta = {
   apg: 'disclosure',
   kind: 'pure' as const,
   blurb: 'Controlled boolean. aria-expanded · aria-controls · role="region" auto-wired.',
+  keys: () => ['Enter', ' '],
 }
 
 export default function Demo() {

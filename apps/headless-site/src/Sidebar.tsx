@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { KIND_LABEL, type Kind } from './kind'
+import { KINDS, KIND_LIST } from './kind'
 import { ENTRIES } from './registry'
-
-const GROUPS: Kind[] = ['pure', 'ref', 'collection', 'custom']
 
 /**
  * Fixed top-right index button + popover. Lets the user (or an LLM tester) jump
@@ -16,14 +14,14 @@ export function Sidebar({ activeSlug }: { activeSlug: string }) {
     <>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="fixed right-4 top-4 z-50 rounded-md border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow hover:bg-stone-50"
+        className="fixed left-4 top-4 z-50 rounded-md border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow hover:bg-stone-50"
       >
         {open ? 'Close' : `Index (${ENTRIES.length})`}
       </button>
       {open && (
         <nav
           aria-label="Pattern index"
-          className="fixed right-4 top-14 z-50 max-h-[80vh] w-72 overflow-auto rounded-lg border border-stone-200 bg-white p-3 shadow-xl"
+          className="fixed left-4 top-14 z-50 max-h-[80vh] w-72 overflow-auto rounded-lg border border-stone-200 bg-white p-3 shadow-xl"
         >
           <a
             href="#intro"
@@ -32,13 +30,13 @@ export function Sidebar({ activeSlug }: { activeSlug: string }) {
           >
             ← Intro
           </a>
-          {GROUPS.map((kind) => {
+          {KIND_LIST.map((kind) => {
             const list = ENTRIES.filter((e) => e.kind === kind)
             if (!list.length) return null
             return (
               <div key={kind} className="mb-3">
                 <h3 className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
-                  {KIND_LABEL[kind]} · {list.length}
+                  {KINDS[kind].label} · {list.length}
                 </h3>
                 <ul>
                   {list.map((e) => {

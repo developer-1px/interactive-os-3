@@ -1,7 +1,10 @@
 import {
+  activate,
   applyGesture,
   composeReducers,
+  expand,
   expandOnActivate,
+  navigate,
   reduce,
   ROOT,
   setValue,
@@ -9,12 +12,14 @@ import {
 } from '@p/headless'
 import { useAccordionPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Accordion',
   apg: 'accordion',
   kind: 'collection' as const,
   blurb: 'Roving + expand axis · click toggles via expandOnActivate gesture · proper header/button nesting.',
+  keys: () => dedupe([...probe(navigate('vertical')), ...probe(expand), ...probe(activate)]),
 }
 
 const initial: NormalizedData = {

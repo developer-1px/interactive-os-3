@@ -99,17 +99,15 @@ export function ReproRecorderOverlay() {
     return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
-  if (!recording) return null
-
   return (
     <button
       onClick={toggle}
-      style={activeStyle}
-      title="Cmd+Shift+\ to stop recording"
+      style={recording ? activeStyle : styles.button}
+      title={recording ? 'Cmd+Shift+\\ to stop recording' : 'Cmd+Shift+\\ to start recording'}
     >
-      <span style={pulsingDot} />
-      STOP
-      <span style={styles.timer}>{formatTime(elapsed)}</span>
+      <span style={recording ? pulsingDot : styles.dot} />
+      {recording ? 'STOP' : 'REC'}
+      {recording && <span style={styles.timer}>{formatTime(elapsed)}</span>}
       <style>{`@keyframes repro-pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>
     </button>
   )

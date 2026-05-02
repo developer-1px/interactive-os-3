@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { fromList } from '@p/headless'
+import { activate, fromList, navigate } from '@p/headless'
 import { useMenuPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Menu',
   apg: 'menu',
   kind: 'collection' as const,
   blurb: 'role="menu" · vertical Arrow nav · typeahead · activate emits via onEvent.',
+  keys: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z']),
 }
 
 export default function Demo() {

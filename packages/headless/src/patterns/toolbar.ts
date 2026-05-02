@@ -1,5 +1,5 @@
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { composeAxes, navigate } from '../axes'
+import { activate, composeAxes, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, ToolbarItem } from './types'
 
@@ -28,7 +28,7 @@ export function useToolbarPattern(
 } {
   const { orientation = 'horizontal', autoFocus } = opts
 
-  const axis = composeAxes(navigate(orientation))
+  const axis = composeAxes(navigate(orientation), activate)
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )

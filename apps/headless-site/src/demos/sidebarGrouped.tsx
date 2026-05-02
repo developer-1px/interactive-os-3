@@ -1,7 +1,8 @@
 import { Fragment, type KeyboardEvent } from 'react'
-import { fromList } from '@p/headless'
+import { activate, fromList, navigate } from '@p/headless'
 import { useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Sidebar (custom)',
@@ -9,6 +10,8 @@ export const meta = {
   kind: 'custom' as const,
   blurb:
     'Label-grouped listbox · ↑/↓ roving, A–Z typeahead · Cmd+1/2/3 direct jump. patterns + 한 줄 keydown wrap 으로 조립.',
+  keys: () =>
+    dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z', 'Cmd+1…9']),
 }
 
 const ITEMS = [

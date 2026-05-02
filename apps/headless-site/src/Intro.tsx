@@ -1,7 +1,5 @@
-import { KIND_LABEL, type Kind } from './kind'
+import { KINDS, KIND_LIST } from './kind'
 import { ENTRIES } from './registry'
-
-const GROUPS: Kind[] = ['pure', 'ref', 'collection', 'custom']
 
 export function Intro() {
   return (
@@ -48,10 +46,10 @@ export function Intro() {
             Patterns · click to jump
           </h2>
           <div className="mt-3 grid gap-2 md:grid-cols-3">
-            {GROUPS.map((kind) => (
+            {KIND_LIST.map((kind) => (
               <div key={kind}>
                 <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
-                  {KIND_LABEL[kind]}
+                  {KINDS[kind].label}
                 </h3>
                 <ul className="space-y-0.5">
                   {ENTRIES.filter((e) => e.kind === kind).map((e) => (

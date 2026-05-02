@@ -6,6 +6,7 @@ export const meta = {
   apg: 'tooltip',
   kind: 'ref' as const,
   blurb: 'Hover/focus delays · Escape closes · trigger ↔ tip linked via aria-describedby.',
+  keys: () => ['Escape'],
 }
 
 export default function Demo() {

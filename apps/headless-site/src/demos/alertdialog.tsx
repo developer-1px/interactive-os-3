@@ -6,6 +6,7 @@ export const meta = {
   apg: 'alertdialog',
   kind: 'pure' as const,
   blurb: 'role="alertdialog" — useDialogPattern({ alert: true }) 한 줄. dialog와 동작 동일, role만 다름.',
+  keys: () => ['Escape'],
 }
 
 export default function Demo() {

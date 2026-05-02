@@ -1,11 +1,13 @@
 import type { ComponentType } from 'react'
-import { KIND_ORDER, type Kind } from './kind'
+import { KINDS, type Kind } from './kind'
 
 export interface DemoMeta {
   title: string
   apg: string
   kind: Kind
   blurb: string
+  /** Demo 가 자기 키를 owns — registry 가 자동 수집. PATTERN_KEYS 매핑 폐기. */
+  keys?: () => string[]
 }
 
 interface DemoModule {
@@ -45,4 +47,4 @@ export const ENTRIES: Entry[] = Object.entries(modules)
       slug: slugFor(filename),
     }
   })
-  .sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind] || a.title.localeCompare(b.title))
+  .sort((a, b) => KINDS[a.kind].order - KINDS[b.kind].order || a.title.localeCompare(b.title))

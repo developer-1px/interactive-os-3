@@ -1,12 +1,14 @@
-import { fromTree } from '@p/headless'
+import { activate, fromTree, treeExpand, treeNavigate } from '@p/headless'
 import { useTreeGridPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Tree Grid',
   apg: 'treegrid',
   kind: 'collection' as const,
   blurb: '2-axis (row × cell) navigation · expandable rows · combines tree + grid keyboard model.',
+  keys: () => dedupe([...probe(treeNavigate), ...probe(treeExpand), ...probe(activate)]),
 }
 
 interface Row {
