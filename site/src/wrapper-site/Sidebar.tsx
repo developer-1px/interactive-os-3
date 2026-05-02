@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { COLLECTION_ENTRIES } from './registry'
+import { WRAPPER_ENTRIES } from './registry'
 
 export function Sidebar({ activeSlug }: { activeSlug: string }) {
   const [open, setOpen] = useState(false)
@@ -11,11 +11,11 @@ export function Sidebar({ activeSlug }: { activeSlug: string }) {
         onClick={() => setOpen((value) => !value)}
         className="fixed left-4 top-4 z-50 rounded-md border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow hover:bg-stone-50"
       >
-        {open ? 'Close' : `Collections (${COLLECTION_ENTRIES.length})`}
+        {open ? 'Close' : `Wrappers (${WRAPPER_ENTRIES.length})`}
       </button>
       {open && (
         <nav
-          aria-label="Collection index"
+          aria-label="Wrapper index"
           className="fixed left-4 top-14 z-50 max-h-[80vh] w-72 overflow-auto rounded-lg border border-stone-200 bg-white p-3 shadow-xl"
         >
           <a
@@ -26,7 +26,7 @@ export function Sidebar({ activeSlug }: { activeSlug: string }) {
             Intro
           </a>
           <ul>
-            {COLLECTION_ENTRIES.map((entry) => {
+            {WRAPPER_ENTRIES.map((entry) => {
               const isActive = activeSlug === entry.slug
               return (
                 <li key={entry.slug}>

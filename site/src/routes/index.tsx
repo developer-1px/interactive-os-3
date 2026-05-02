@@ -3,7 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 
 const APPS: { to: string; params?: Record<string, string>; title: string; sub: string }[] = [
   { to: '/patterns', title: 'Patterns', sub: 'APG recipes — listbox, treegrid, menu, dialog, slider …' },
-  { to: '/collections', title: 'Collections', sub: 'Wrapper candidates — store, value, onEvent, named slots' },
+  { to: '/wrappers', title: 'Wrappers', sub: 'Wrapper layer — store, value, onEvent, named slots' },
   { to: '/apps/finder/$', params: { _splat: '' }, title: 'Finder', sub: 'Mac Finder column view — keyboard-first navigation' },
   { to: '/apps/slides/$', params: { _splat: 'docs/slides-sample.md' }, title: 'Slides', sub: 'Markdown deck — ←/→, PageDown, F, ESC' },
   { to: '/apps/admin', title: 'Admin', sub: 'Course/role categories, video CRUD, ordering' },

@@ -1,21 +1,21 @@
 import { Intro } from './Intro'
-import { CollectionScreen } from './CollectionScreen'
+import { WrapperScreen } from './WrapperScreen'
 import { Sidebar } from './Sidebar'
-import { COLLECTION_ENTRIES } from './registry'
+import { WRAPPER_ENTRIES } from './registry'
 import { useHashNavigation } from '../headless-site/useHashNavigation'
 
-export function CollectionApp() {
+export function WrapperApp() {
   const activeHash = useHashNavigation()
 
   return (
     <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
       <Intro />
-      {COLLECTION_ENTRIES.map((entry, index) => (
-        <CollectionScreen
+      {WRAPPER_ENTRIES.map((entry, index) => (
+        <WrapperScreen
           key={entry.slug}
           entry={entry}
           index={index}
-          total={COLLECTION_ENTRIES.length}
+          total={WRAPPER_ENTRIES.length}
         />
       ))}
       <Sidebar activeSlug={activeHash} />

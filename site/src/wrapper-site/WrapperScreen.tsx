@@ -1,13 +1,13 @@
 import { fmtKey } from '../headless-site/keys'
 import { CopyButton } from './CopyButton'
-import type { CollectionEntry } from './registry'
+import type { WrapperEntry } from './registry'
 
-export function CollectionScreen({
+export function WrapperScreen({
   entry,
   index,
   total,
 }: {
-  entry: CollectionEntry
+  entry: WrapperEntry
   index: number
   total: number
 }) {
@@ -18,7 +18,7 @@ export function CollectionScreen({
     <section id={slug} tabIndex={-1} className="snap-start h-screen flex flex-col">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
         <span className="rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-cyan-50 text-cyan-700 ring-cyan-200">
-          Collection
+          Wrapper
         </span>
         <h2 className="text-xl font-bold text-stone-900">{title}</h2>
         <p className="text-sm text-stone-600">{blurb}</p>
