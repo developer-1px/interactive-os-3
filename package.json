@@ -2,7 +2,7 @@
   "name": "ds",
   "private": true,
   "version": "0.0.0",
-  "description": "Package-first workspace for @p libraries and their showcase validation surfaces.",
+  "description": "ARIA/headless package workspace with showcase validation surfaces.",
   "type": "module",
   "scripts": {
     "dev": "vite",

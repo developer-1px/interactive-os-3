@@ -29,7 +29,7 @@ updated: 2026-04-30
 ```ts
 import {
   // types
-  ROOT, type Entity, type NormalizedData, type Event,
+  ROOT, type Entity, type NormalizedData, type UiEvent,
   type CollectionProps, type ControlProps,
 
   // axes
@@ -37,11 +37,11 @@ import {
   treeNavigate, treeExpand, parentOf,
 
   // roving
-  useRoving, useRovingDOM,
+  useRovingTabIndex, useSpatialNavigation, useActiveDescendant,
 
   // gesture
-  composeGestures, navigateOnActivate, activateOnNavigate,
-  expandBranchOnActivate, activateProps,
+  composeGestures, navigateOnActivate, selectionFollowsFocus,
+  expandBranchOnActivate, expandOnActivate, activateProps,
 
   // state
   reduce, fromTree, fromList, pathAncestors,
@@ -78,21 +78,21 @@ const data: NormalizedData = {
 }
 ```
 
-`Event` union: `{ type: 'navigate' | 'activate' | 'expand' | 'typeahead' | ... }` — ui ↔ headless 통신 어휘.
+`UiEvent` union: `{ type: 'navigate' | 'activate' | 'expand' | 'select' | 'value' | 'open' | 'typeahead' | 'pan' | 'zoom' }` — ui ↔ headless 통신 어휘.
 
 ## 2. Roving — Tab stop = 1
 
-### data-driven (`useRoving`)
+### data-driven (`useRovingTabIndex`)
 
 ```tsx
 import {
-  ROOT, useRoving, composeAxes, navigate, activate,
+  ROOT, useRovingTabIndex, composeAxes, navigate, activate,
   type CollectionProps,
 } from '@p/headless'
 
 function MyToolbar({ data, onEvent }: CollectionProps) {
   const axis = composeAxes(navigate('horizontal'), activate)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent)
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
   const ids = data.relationships[ROOT] ?? []
 
   return (
@@ -113,20 +113,20 @@ function MyToolbar({ data, onEvent }: CollectionProps) {
 ```
 
 핵심:
-- `useRoving`은 `{ focusId, expanded, bindFocus, delegate, onKey, onClick }` 반환
+- `useRovingTabIndex`는 `{ focusId, bindFocus, delegate }` 반환
 - **`data-id` 속성이 필수** — `delegate`가 closest `[data-id]`로 이벤트 위임
 - `bindFocus(id)`는 ref callback `(el: HTMLElement | null) => void` 반환
 - `{...delegate}`로 onClick/onKeyDown 한 번에 부착
 
-### composition (`useRovingDOM`)
+### composition (`useSpatialNavigation`)
 
 JSX-children 자유 컴포넌트(Toolbar/Tabs/Menubar).
 
 ```tsx
-import { useRovingDOM } from '@p/headless'
+import { useSpatialNavigation } from '@p/headless'
 
 function MyToolbar() {
-  const { ref, onKeyDown } = useRovingDOM<HTMLDivElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, {
     orientation: 'horizontal',
   })
   return (
@@ -141,7 +141,7 @@ function MyToolbar() {
 
 옵션:
 ```ts
-useRovingDOM(null, {
+useSpatialNavigation(null, {
   orientation: 'horizontal' | 'vertical' | 'both',
   homeEnd: true,           // 기본
   wrap: true,              // 기본 — 끝→처음 순환
@@ -174,15 +174,15 @@ const treeGridAxis = composeAxes(treeNavigate, treeExpand, activate)
 ui/는 activate 단발만 emit. 소비자가 reducer 직전에 의도(navigate/expand)로 분해.
 
 ```ts
-import { composeGestures, navigateOnActivate, activateOnNavigate } from '@p/headless'
+import { composeGestures, navigateOnActivate, selectionFollowsFocus, type UiEvent } from '@p/headless'
 
 // selection-follows-focus (single-select listbox/tabs 기본)
 const listboxGesture = composeGestures(
   navigateOnActivate,    // click 시 focus도 함께
-  activateOnNavigate,    // ↑↓로 focus 이동 시 즉시 activate
+  selectionFollowsFocus, // ↑↓로 focus 이동 시 즉시 activate
 )
 
-const onIntent = (e: Event) => {
+const onIntent = (e: UiEvent) => {
   const events = listboxGesture(data, e)
   for (const ev of events) onEvent(ev)
 }
@@ -412,7 +412,7 @@ const logging = defineMiddleware({
   phase: 'pre-dispatch',
   fn: (ctx) => {
     console.log('[event]', ctx.event)
-    return [ctx.event]   // pre-dispatch는 Event[] 반환 가능 (변환/필터)
+    return [ctx.event]   // pre-dispatch는 UiEvent[] 반환 가능 (변환/필터)
   },
 })
 

@@ -37,12 +37,12 @@ function Toolbar() {
 
 | 카테고리 | 핵심 export |
 |---|---|
-| **Types** | `Entity` · `NormalizedData` · `Event` · `ROOT` · `CollectionProps` · `ControlProps` |
+| **Types** | `Entity` · `NormalizedData` · `UiEvent` · `ROOT` · `CollectionProps` · `ControlProps` |
 | **Axes** | `composeAxes` · `navigate` · `activate` · `expand` · `treeNavigate` · `typeahead` |
 | **Roving** | `useRovingTabIndex` · `useSpatialNavigation` |
 | **Gesture** | `composeGestures` · `navigateOnActivate` · `selectionFollowsFocus` · `expandBranchOnActivate` · `activateProps` |
 | **State** | `reduce` · `fromTree` · `fromList` · `useControlState` · `useEventBridge` |
-| **Flow** | `defineFlow` · `useFlow` · `Resource` · `useResource` · `defineResource` |
+| **Flow** | `defineFlow` · `useFlow` · `FlowDef` · `Resource` · `useResource` · `defineResource` · `readResource` · `writeResource` |
 | **Feature** | `defineFeature` · `useFeature` · `invalidateQuery` |
 | **Layout** | `definePage` · `defineLayout` · `defineWidget` · `merge` · `node` · `placementAttrs` · `validatePage` |
 | **Middleware** | `defineMiddleware` |

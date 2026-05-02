@@ -80,10 +80,10 @@ resolve: {
 
 | 카테고리 | 핵심 export | 한 줄 |
 |---|---|---|
-| **Types** | `Entity` · `NormalizedData` · `Event` · `ROOT` · `CollectionProps` · `ControlProps` | 모든 모듈의 데이터 표현 |
-| **Axes** | `composeAxes` · `navigate` · `activate` · `expand` · `treeNavigate` · `typeahead` · `parentOf` | 키 → Event 변환 분기 |
-| **Roving** | `useRoving` · `useRovingDOM` | APG roving tabindex |
-| **Gesture** | `composeGestures` · `navigateOnActivate` · `activateOnNavigate` · `expandBranchOnActivate` · `activateProps` | activate → 의도 변환 |
+| **Types** | `Entity` · `NormalizedData` · `UiEvent` · `ROOT` · `CollectionProps` · `ControlProps` | 모든 모듈의 데이터 표현 |
+| **Axes** | `composeAxes` · `navigate` · `activate` · `expand` · `treeNavigate` · `typeahead` · `parentOf` | 키 → UiEvent 변환 분기 |
+| **Roving** | `useRovingTabIndex` · `useSpatialNavigation` · `useActiveDescendant` | APG roving tabindex / spatial navigation / active descendant |
+| **Gesture** | `composeGestures` · `navigateOnActivate` · `selectionFollowsFocus` · `expandBranchOnActivate` · `expandOnActivate` · `activateProps` | activate → 의도 변환 |
 | **State** | `reduce` · `fromTree` · `fromList` · `pathAncestors` · `useControlState` · `useEventBridge` | Entity tree 상태 |
 | **Flow** | `defineFlow` · `useFlow` · `Resource` · `useResource` · `defineResource` · `read/writeResource` | ui ↔ Resource wiring |
 | **Feature** | `defineFeature` · `useFeature` · `invalidateQuery` | effect/query 묶음 |
@@ -109,19 +109,18 @@ const data: NormalizedData = {
 }
 ```
 
-`Event` union(`navigate`/`activate`/`expand`/`typeahead`/...)이 ui ↔ headless 간 유일한 통신 어휘.
+`UiEvent` union(`navigate`/`activate`/`expand`/`select`/`value`/`open`/`typeahead`/`pan`/`zoom`)이 ui ↔ headless 간 유일한 통신 어휘.
 
 #### 4-2. Roving — Tab stop = 1 (APG 강제)
 
-##### data-driven (`useRoving`)
+##### data-driven (`useRovingTabIndex`)
 
 ```tsx
-import { useRoving } from '@p/headless'
-import { composeAxes, navigate, activate } from '@p/headless'
+import { ROOT, useRovingTabIndex, composeAxes, navigate, activate } from '@p/headless'
 
 function MyToolbar({ data, onEvent }) {
   const axis = composeAxes(navigate('horizontal'), activate)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, onEvent)
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
 
   return (
     <div role="toolbar" onKeyDown={delegate.onKeyDown}>
@@ -140,15 +139,15 @@ function MyToolbar({ data, onEvent }) {
 }
 ```
 
-##### composition (`useRovingDOM`)
+##### composition (`useSpatialNavigation`)
 
 JSX-children 자유 컴포넌트(Toolbar/Tabs/Menubar) — DOM에서 tabbable 자동 순회.
 
 ```tsx
-import { useRovingDOM } from '@p/headless'
+import { useSpatialNavigation } from '@p/headless'
 
 function MyToolbar() {
-  const { ref, onKeyDown } = useRovingDOM<HTMLDivElement>(null, {
+  const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, {
     orientation: 'horizontal',
   })
   return (
@@ -164,7 +163,7 @@ function MyToolbar() {
 특수 selector(예: TreeGrid/Listbox 식 `[role="row"]` 묶음):
 
 ```ts
-useRovingDOM(null, {
+useSpatialNavigation(null, {
   orientation: 'both',
   itemSelector: '[role="row"], [role="gridcell"]',
 })
@@ -197,16 +196,16 @@ const treeGridAxis = composeAxes(treeNavigate, treeExpand, activate)
 ui/는 activate 단발만 emit. 소비자가 reducer 직전에 의도(navigate/expand)로 분해.
 
 ```ts
-import { composeGestures, navigateOnActivate, activateOnNavigate } from '@p/headless'
+import { composeGestures, navigateOnActivate, selectionFollowsFocus, type UiEvent } from '@p/headless'
 
 // selection-follows-focus: focus 이동 시 즉시 select도 발행
 const listboxGesture = composeGestures(
   navigateOnActivate,    // click → focus도 같이
-  activateOnNavigate,    // ↑↓로 focus 이동 시 즉시 activate
+  selectionFollowsFocus, // ↑↓로 focus 이동 시 즉시 activate
 )
 
 // reducer 직전:
-function relay(e: Event) {
+function relay(e: UiEvent) {
   const events = listboxGesture(data, e)
   for (const ev of events) onEvent(ev)
 }
@@ -317,9 +316,9 @@ export function MyPage() { return <Renderer page={page} /> }
 ```ts
 import { defineLayout, defineWidget, merge } from '@p/headless'
 
-const shell = defineLayout({ /* nav + main + content slot */ })
-const cartWidget = defineWidget({ /* aside landmark */ })
-const finalPage = merge(shell, cartWidget)
+const shell = defineLayout(() => ({ /* nav + main + content slot */ }))
+const cartWidget = defineWidget(() => ({ /* aside landmark */ }))
+const finalPage = merge(shell(), cartWidget())
 ```
 
 #### 4-9. Middleware — dispatch 파이프라인
@@ -415,7 +414,7 @@ ds 모노레포에 있는 audit 스크립트들 — headless를 채택한 consum
 
 | 스크립트 | 검사 |
 |---|---|
-| `lint:ds:keyboard` | `role=*` 마크업이 useRoving/composeAxes/onKeyDown 중 하나 부착했는지 |
+| `lint:ds:keyboard` | `role=*` 마크업이 useRovingTabIndex/useSpatialNavigation/composeAxes/onKeyDown 중 하나 부착했는지 |
 | `audit:hmi` | hierarchy 단조성 invariant (visual gestalt) |
 | `audit:keyline` | sibling 간 시각 정렬 invariant |
 | `audit:kbd` | APG 키 시퀀스 동작 (puppeteer) |
@@ -427,7 +426,7 @@ ds 모노레포에 있는 audit 스크립트들 — headless를 채택한 consum
 - [ ] React 19 peer 확인
 - [ ] 컴포넌트 어휘를 직접 작성 (registry로 augment)
 - [ ] 모든 collection을 `(data, onEvent)` 단일 인터페이스로 통일
-- [ ] JSX-children 자유 컴포넌트는 `useRovingDOM`로 전환
+- [ ] JSX-children 자유 컴포넌트는 `useSpatialNavigation`으로 전환
 - [ ] role 마다 axis 조합을 `composeAxes`로 1줄 선언
 - [ ] page 시각 골격을 `definePage` entity tree로 작성
 - [ ] `validatePage`/`validateFragment` dev gate 켜기

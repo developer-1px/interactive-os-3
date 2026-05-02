@@ -1,6 +1,10 @@
-# @p/ds — style layer canonical
+# @p/ds — validation/compat style surface
 
-DS는 두 가지만 제공한다:
+`@p/ds`는 더 이상 이 repo의 디자인 컴포넌트 제품 방향이 아니다. visual component, brand/theme, 디자인 토큰 제품화는 `aria-design-system` 소유다.
+
+이 패키지는 남아 있는 ARIA/headless 계약을 검증하기 위한 호환 표면으로 취급한다. 새 시각 컴포넌트 제품 방향을 여기서 키우지 않는다.
+
+`@p/ds` 호환 표면은 두 가지만 유지한다:
 
 ```
 tokens/      ref(scalar) + sys(semantic) + internal

@@ -14,11 +14,11 @@ export function HeadlessLab() {
     <>
       <Section
         title="Types"
-        oneLiner="모든 헤드리스 모듈의 데이터 표현 — Entity tree + Event union."
+        oneLiner="모든 헤드리스 모듈의 데이터 표현 — Entity tree + UiEvent union."
         api={[
           ['interface Entity', '{ id: string; data?: Record<string, unknown> }'],
           ['interface NormalizedData', '{ entities: Record<string, Entity>; relationships: Record<string, string[]> }'],
-          ['type Event', '{ navigate | activate | expand | typeahead | ... }'],
+          ['type UiEvent', '{ navigate | activate | expand | select | value | open | typeahead | pan | zoom }'],
           ['const ROOT', '"__root__"'],
           ['interface CollectionProps', '{ data, onEvent, autoFocus?, "aria-label"? }'],
           ['interface ControlProps', '{ data, onEvent, children? }'],
@@ -26,7 +26,7 @@ export function HeadlessLab() {
       />
       <Section
         title="Axes"
-        oneLiner="키 → Event 변환 분기. composeAxes로 축을 합성."
+        oneLiner="키 → UiEvent 변환 분기. composeAxes로 축을 합성."
         api={[
           ['composeAxes(...axes)', 'Axis'],
           ['navigate(orientation)', 'Axis — Arrow/Home/End'],
@@ -73,8 +73,8 @@ export function HeadlessLab() {
         title="Flow"
         oneLiner="ui ↔ Resource 1줄 wiring. ui event → resource 다음 값 매핑."
         api={[
-          ['defineFlow({ resource, args, onEvent })', 'FlowDef'],
-          ['useFlow(flow)', '[value, dispatch]'],
+          ['defineFlow({ source, base, gestures?, metaScope? })', 'FlowDef'],
+          ['useFlow(flow, ...args)', '[data, onEvent]'],
           ['Resource<T, Args>', '{ key, load?, initial?, subscribe?, serialize?, onEvent? }'],
           ['useResource(r, ...args)', '[value, dispatch]'],
           ['defineResource(spec)', 'Resource passthrough'],
@@ -87,9 +87,9 @@ export function HeadlessLab() {
         title="Feature"
         oneLiner="effect + query + command 묶음. react-query/redux 슬림 대안."
         api={[
-          ['defineFeature({ commands, effects, queries })', 'FeatureSpec'],
-          ['useFeature(feature)', '{ run(command), useQuery(name, ...args) }'],
-          ['invalidateQuery(feature, name, ...args)', '쿼리 무효화'],
+          ['defineFeature({ state, on, query?, view, effect? })', 'FeatureSpec'],
+          ['useFeature(feature)', '[view, dispatch]'],
+          ['invalidateQuery(key)', '쿼리 무효화'],
         ]}
       />
       <Section

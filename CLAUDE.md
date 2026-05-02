@@ -5,6 +5,7 @@
 ## 기본 자세
 
 - **이 repo의 제품은 `packages/*` 라이브러리다.** `apps/*`와 `showcase/*`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다. 재사용 가능한 동작·계약·어휘는 먼저 `packages/*`에 두고, 쇼케이스는 public/workspace export를 소비해서 검증한다.
+- **디자인 컴포넌트 방향성은 이 repo의 의의에서 제외됐다.** visual component·brand/theme·디자인 토큰 제품화는 `aria-design-system`이 맡는다. 이 repo의 `@p/ds`는 남아 있는 검증/호환 표면으로만 다루고, 새 시각 컴포넌트 제품 방향을 여기서 키우지 않는다.
 - **분류·이름·위계의 정합 출처는 변하지 않는 W3C/WHATWG spec 만.** 우선순위: 1) **W3C WAI-ARIA + APG** (role taxonomy) → 2) **WHATWG HTML Living Standard** (semantic element 어휘) → 3) **W3C CSS · WCAG** (필요 시). Material 3·Radix·FSD·Polaris·Panda·shadcn 등 라이브러리·DS 차용 ❌ (5~10년 주기로 교체·fork). ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
 - **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** *이름·구조* 가 아니라 *행동* 을 차용 (Radix·Base·Ariakit·RAC 최소 2곳 수렴). 두 축 분리: 이름 = spec, 동작 = lib.
 - **하란 것 이상으로 하지 않는다.** 시키지 않은 리팩토링·추가 기능·예방적 추상화 금지.
@@ -25,7 +26,7 @@
 | 3 | **One direction** | data → ui → event → reducer → data. 양방향 바인딩·역참조·side channel ❌. |
 | 4 | **Hierarchy monotonic (Gestalt)** | 자손은 조상보다 약한 분리. 같은 의미 = 같은 형태. flow prop · hierarchy 토큰만으로 표현. |
 | 5 | **Declare, don't assemble (FlatLayout)** | 새 라우트 = `definePage` entities tree. JSX 조립은 escape hatch. |
-| 6 | **Vocabulary closed (디자인시스템)** | 어휘는 ds/parts · ui · foundations · icon token 에 닫혀있다. 새 단어는 ds 에 먼저 등재. |
+| 6 | **Vocabulary closed (ARIA/호환 어휘)** | 어휘는 WAI-ARIA/WHATWG와 기존 `@p/ds` 검증 표면에 닫혀있다. 새 디자인 컴포넌트 어휘는 `aria-design-system` 소유다. |
 | 7 | **Search before create (있는거 쓰기)** | 만들기 전 grep. 동의어가 있으면 그쪽으로 수렴 — 새로 만들면 동의어 드리프트. |
 
 ## 0. 시작 전 30초 체크

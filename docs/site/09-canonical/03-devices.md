@@ -39,7 +39,7 @@ ds (packages/ds/src)
 ├─ ② 정본 형태 강제 — "어떻게 만들어야 하는가"
 │  │
 │  ├─ core/                                  [입력/이벤트/상태 단일 인터페이스]
-│  │  ├─ types.ts             ─ ControlProps(data, onEvent), Event union
+│  │  ├─ types.ts             ─ ControlProps(data, onEvent), UiEvent union
 │  │  ├─ trigger.ts           ─ activateProps(onActivate)  ← click + Enter/Space 통합
 │  │  ├─ gesture.ts           ─ activate → navigate/expand 도출 헬퍼
 │  │  ├─ key.ts               ─ 키 이름 정본
@@ -52,8 +52,8 @@ ds (packages/ds/src)
 │  │  │   └─ treeNavigate · treeExpand
 │  │  │
 │  │  ├─ hooks/
-│  │  │   ├─ useRoving · useRovingDOM   ─ roving self-attach
-│  │  │   ├─ useEventBridge             ─ Event union 라우터
+│  │  │   ├─ useRovingTabIndex · useSpatialNavigation · useActiveDescendant
+│  │  │   ├─ useEventBridge             ─ UiEvent union 라우터
 │  │  │   ├─ useShortcut · focus · useControlState
 │  │  │   └─ ※ useMemo·useCallback 0개 (SRP 신호)
 │  │  │
@@ -129,7 +129,7 @@ ds (packages/ds/src)
   │
   ├──▶ ① 어휘 정의       (ui/ · parts/ · layout/)
   │       │
-  │       └──▶ ② 형태 강제   (core — Event union · ControlProps · Flow)
+  │       └──▶ ② 형태 강제   (core — UiEvent union · ControlProps · Flow)
   │              │
   │              └──▶ ③ 시각 강제   (palette → foundations → style)
   │                     │

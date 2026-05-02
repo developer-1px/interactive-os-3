@@ -69,7 +69,8 @@
 - **cmd+k 등록**: staticData.palette · 임시: 없음 · 유산: 별도 등록 코드
 
 ### 패키지·플러그인
-- **패키지 우선 구조**: pnpm workspace 모노레포. 제품은 `packages/<X>` 라이브러리(`@p/headless`·`@p/ds`·`@p/app`·`@p/fs`·`@p/devtools`)다. `apps/<X>`와 `showcase/<X>`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다 · 임시: 없음 · 유산: 앱 구현 안에 재사용 behavior/API를 숨기는 구조
+- **패키지 우선 구조**: pnpm workspace 모노레포. 제품 의의는 ARIA/headless behavior와 검증 인프라 패키지(`@p/headless` 중심)다. `apps/<X>`와 `showcase/<X>`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다 · 임시: 없음 · 유산: 앱 구현 안에 재사용 behavior/API를 숨기는 구조
+- **디자인 컴포넌트 소유권**: visual component·brand/theme·디자인 토큰 제품 방향성은 이 repo가 아니라 `aria-design-system`이 맡는다. 이 repo의 `@p/ds`는 기존 검증/호환 표면으로만 취급한다 · 임시: 없음 · 유산: `@p/ds`를 디자인 컴포넌트 제품으로 확장하는 구조
 - **검증 앱 내부 구조 (FSD)**: 큰 apps/<X>/src/는 실제 사용 시나리오 검증을 위해 FSD 레이어로 분할 가능 — `entities/`(zod schema·types·헬퍼) · `features/`(feature·resources·data·nav 도메인 흐름) · `widgets/`(composite UI 컴포넌트·hook) · 선택 `<variant>/`(mobile 등) · 루트 `index.ts·plugin.ts·style.ts`. 단, 재사용 가능한 계약은 apps가 아니라 `packages/*`에 둔다 · 임시: 작은 검증 앱(파일 ≤ 5개)은 평탄 유지 — 분할 비용 > 이익 · 유산: 큰 앱(>10 파일)이 평탄 분포로 책임 혼재
 - **쇼케이스 내부 구조**: showcase/<X>/src/는 보통 평탄 (단일 검증 표면). 큰 시연만 1개 서브폴더(`samples/`·`sections/`·`pages/`·`demos/` 중 의미 정확한 것 1개) · 임시: 없음 · 유산: 한 패키지 안에 같은 종류 서브폴더 2개
 - **Plugin manifest**: 패키지마다 `definePlugin({ name, routes?, widgets?, middlewares?, capabilities? })`를 default export. schemas·resources·features는 패키지 내부 detail이라 manifest 등록 대상 아님 · 임시: 없음 · 유산: 라우트가 다른 라우트의 내부에 직접 import (markdown→finder/data 등)
@@ -85,7 +86,9 @@
 - **prop 이름**: ARIA 그대로. 인위적 통일 금지 · 임시: 없음
 - **escape hatch**: raw `role="..."` 0개 · 임시: 시연/카탈로그 라우트 본문 · 유산: `as` prop (최후 수단)
 
-### ds 패키지 레이어 (직교 2축 구조)
+### ds 검증/호환 레이어 (직교 2축 구조)
+
+> `@p/ds`는 이 repo의 디자인 컴포넌트 제품 방향이 아니다. 남아 있는 시각·토큰·role 컴포넌트 코드는 ARIA/headless 계약을 검증하기 위한 호환 표면이며, 새 디자인 컴포넌트 제품화는 `aria-design-system` 소유다.
 
 `packages/ds/src/` 의 레이어는 단일 사다리가 아니라 **Visual 축(V) · Behavior 축(B) 직교**다. 두 축은 서로를 import 하지 않으며, `ui/` 에서 처음 합류한다. 실측 의존도(2026-04-27)로 검증됨.
 
@@ -161,3 +164,4 @@
 - 2026-04-26 · FSD 정본 채택 — 큰 앱에 entities/features/widgets 레이어 적용. 시드: apps/finder (entities: schema·types · features: feature·resources·data·nav · widgets: 7 components + useSidebarNav + mobile/). apps/edu-portal-admin도 entities/widgets + pages 유지로 적용
 - 2026-04-27 · slides 정본 채택: apps/slides 신설 (FSD). 슬라이드 분할 정본 = 줄 단독 `^---$` 1개 (Marpit/Slidev/Deckset 3곳 수렴). `splitMarkdown`/`SlideSchema`/`DeckSchema` 시드. 라우트 /slides/$, finder Sidebar 재사용, Prose entity로 슬라이드 본문 격리, 키 ←→/PgUp PgDn/Space/Home/End 네비
 - 2026-05-02 · 프로젝트 방향 전환 정본화: repo 제품은 `packages/*` 라이브러리, `apps/*`와 `showcase/*`는 패키지 검증용 소비자 쇼케이스로 재정의. 재사용 가능한 behavior/API는 앱 안에 숨기지 않고 패키지에 둔다.
+- 2026-05-02 · 디자인 컴포넌트 방향성 제거: visual component·brand/theme·디자인 토큰 제품화는 `aria-design-system` 소유. 이 repo의 `@p/ds`는 ARIA/headless 검증/호환 표면으로 격하.
