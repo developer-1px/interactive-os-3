@@ -4,6 +4,7 @@
 
 ## 기본 자세
 
+- **이 repo의 제품은 `packages/*` 라이브러리다.** `apps/*`와 `showcase/*`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다. 재사용 가능한 동작·계약·어휘는 먼저 `packages/*`에 두고, 쇼케이스는 public/workspace export를 소비해서 검증한다.
 - **분류·이름·위계의 정합 출처는 변하지 않는 W3C/WHATWG spec 만.** 우선순위: 1) **W3C WAI-ARIA + APG** (role taxonomy) → 2) **WHATWG HTML Living Standard** (semantic element 어휘) → 3) **W3C CSS · WCAG** (필요 시). Material 3·Radix·FSD·Polaris·Panda·shadcn 등 라이브러리·DS 차용 ❌ (5~10년 주기로 교체·fork). ARIA 외는 4개 layer (`tokens/`·`primitives/`·`features/`·`stories/`) 로만 인정.
 - **구현 패턴(키보드·포커스·접근성 동작) 의 de facto 는 따른다.** *이름·구조* 가 아니라 *행동* 을 차용 (Radix·Base·Ariakit·RAC 최소 2곳 수렴). 두 축 분리: 이름 = spec, 동작 = lib.
 - **하란 것 이상으로 하지 않는다.** 시키지 않은 리팩토링·추가 기능·예방적 추상화 금지.

@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# ds
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+패키지 우선 라이브러리 workspace.
 
-Currently, two official plugins are available:
+이 repo의 제품은 `packages/*`에 있는 `@p/*` 라이브러리다. `apps/*`와 `showcase/*`는 독립 제품 앱이 아니라, 그 패키지를 소비자 관점에서 검사하는 쇼케이스이자 검증 harness다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Workspace
 
-## React Compiler
+| 위치 | 역할 |
+|---|---|
+| `packages/*` | 제공되는 라이브러리 패키지. 재사용 가능한 API, behavior, token, UI 계약은 여기에서 시작한다. |
+| `apps/*` | 패키지를 실제 시나리오처럼 소비하는 큰 검증 쇼케이스. 기능을 숨겨 넣는 곳이 아니다. |
+| `showcase/*` | 좁은 단위의 시각, 접근성, 키보드, 토큰 검증 표면. |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 작업 기준
 
-## Expanding the ESLint configuration
+1. 새 재사용 동작이나 계약은 먼저 `packages/*`에 둔다.
+2. `apps/*`와 `showcase/*`는 패키지의 public/workspace export를 소비해서 검증한다.
+3. 쇼케이스에서 필요한 기능이 생기면 쇼케이스 전용 구현보다 패키지 API 확장을 먼저 검토한다.
+4. 검증은 패키지 build/typecheck와 관련 쇼케이스 실행 결과를 함께 본다.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Commands
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev
+pnpm build
+pnpm --filter @p/headless build
+pnpm --filter @p/headless typecheck
 ```
