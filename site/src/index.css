@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body, #root { height: 100%; }
 html { scroll-behavior: smooth; }
 [hidden] { display: none !important; }
-
-#root { min-height: 100svh; display: flex; flex-direction: column; }
-#root > * { flex: 1 1 auto; min-block-size: 0; }

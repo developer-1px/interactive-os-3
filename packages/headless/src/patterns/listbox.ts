@@ -60,6 +60,7 @@ export function useListboxPattern(
       setsize: ids.length,
     }
   })
+  const itemMap = new Map(items.map((it) => [it.id, it]))
 
   const rootProps: RootProps = {
     role: 'listbox',
@@ -68,7 +69,7 @@ export function useListboxPattern(
   } as RootProps
 
   const optionProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
+    const it = itemMap.get(id)
     const isFocus = focusId === id
     return {
       role: 'option',

@@ -38,6 +38,7 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   typeahead: (d, e) => setMeta(d, TYPEAHEAD, { buf: e.buf, deadline: e.deadline }),
   activate: identity,
   select: identity,
+  selectMany: identity,
   value: identity,
   pan: (d, e) => {
     const cur = d.entities[e.id]?.data ?? {}

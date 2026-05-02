@@ -52,6 +52,7 @@ export function useTreeGridPattern(
     })
   }
   walk(ROOT, 1)
+  const rowMap = new Map(flat.map((it) => [it.id, it]))
 
   const rootProps: RootProps = {
     role: 'treegrid',
@@ -60,7 +61,7 @@ export function useTreeGridPattern(
   } as RootProps
 
   const rowProps = (id: string): ItemProps => {
-    const it = flat.find((x) => x.id === id)
+    const it = rowMap.get(id)
     const isFocus = focusId === id
     return {
       role: 'row',

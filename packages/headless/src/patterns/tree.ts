@@ -61,6 +61,7 @@ export function useTreePattern(
     })
   }
   walk(ROOT, 1)
+  const itemMap = new Map(flat.map((it) => [it.id, it]))
 
   const rootProps: RootProps = {
     role: 'tree',
@@ -69,7 +70,7 @@ export function useTreePattern(
   } as RootProps
 
   const itemProps = (id: string): ItemProps => {
-    const it = flat.find((x) => x.id === id)
+    const it = itemMap.get(id)
     const isFocus = focusId === id
     return {
       role: 'treeitem',

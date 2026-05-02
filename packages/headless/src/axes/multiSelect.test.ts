@@ -34,18 +34,16 @@ describe('multiSelect axis', () => {
     expect(multiSelect(list(), 'b', key('Spacebar'))).toEqual([{ type: 'select', id: 'b' }])
   })
 
-  it('Ctrl+A emits select for every enabled sibling', () => {
-    const out = multiSelect(list(), 'a', key('a', { ctrl: true }))
-    expect(out).toEqual([
-      { type: 'select', id: 'a' },
-      { type: 'select', id: 'b' },
-      { type: 'select', id: 'd' },
+  it('Ctrl+A emits a single selectMany batch with enabled siblings', () => {
+    expect(multiSelect(list(), 'a', key('a', { ctrl: true }))).toEqual([
+      { type: 'selectMany', ids: ['a', 'b', 'd'], to: true },
     ])
   })
 
   it('Meta+A behaves the same as Ctrl+A (mac)', () => {
-    const out = multiSelect(list(), 'a', key('A', { meta: true }))
-    expect(out?.map((e) => e.type)).toEqual(['select', 'select', 'select'])
+    expect(multiSelect(list(), 'a', key('A', { meta: true }))).toEqual([
+      { type: 'selectMany', ids: ['a', 'b', 'd'], to: true },
+    ])
   })
 
   it('Shift+ArrowDown moves focus and selects the next enabled sibling', () => {

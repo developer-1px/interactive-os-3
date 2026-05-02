@@ -37,18 +37,34 @@ export const singleSelect: Reducer = (d, e) => {
 }
 
 /**
- * multiSelectToggle — toggles `selected` on `e.id` for `select` events.
+ * multiSelectToggle — toggles `selected` on `select` (per-id) and `selectMany`
+ * (batch). Batch path is O(N) with a single entities spread regardless of N.
  * APG-aligned: listbox(multi), tree(multi), checkbox group.
  */
 export const multiSelectToggle: Reducer = (d, e) => {
-  if (e.type !== 'select') return d
-  const ent = d.entities[e.id]
-  if (!ent || isMetaId(e.id)) return d
-  return {
-    ...d,
-    entities: {
-      ...d.entities,
-      [e.id]: { ...ent, data: { ...ent.data, selected: !ent.data?.selected } },
-    },
+  if (e.type === 'select') {
+    const ent = d.entities[e.id]
+    if (!ent || isMetaId(e.id)) return d
+    return {
+      ...d,
+      entities: {
+        ...d.entities,
+        [e.id]: { ...ent, data: { ...ent.data, selected: !ent.data?.selected } },
+      },
+    }
   }
+  if (e.type === 'selectMany') {
+    const entities = { ...d.entities }
+    let mutated = false
+    for (const id of e.ids) {
+      const ent = entities[id]
+      if (!ent || isMetaId(id)) continue
+      const next = e.to ?? !ent.data?.selected
+      if (Boolean(ent.data?.selected) === next) continue
+      entities[id] = { ...ent, data: { ...ent.data, selected: next } }
+      mutated = true
+    }
+    return mutated ? { ...d, entities } : d
+  }
+  return d
 }

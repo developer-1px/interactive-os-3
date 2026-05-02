@@ -3,15 +3,19 @@ module.exports = {
   content: {
     relative: true,
     files: [
-      './index.html',
-      './packages/app/src/**/*.{ts,tsx}',
+      './site/index.html',
+      './site/src/**/*.{ts,tsx}',
       './packages/headless/src/**/*.{ts,tsx}',
       './apps/*/src/**/*.{ts,tsx}',
-      './showcase/*/src/**/*.{ts,tsx}',
     ],
   },
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+    },
   },
   plugins: [],
 }

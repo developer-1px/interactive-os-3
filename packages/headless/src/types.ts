@@ -17,6 +17,8 @@ export type UiEvent =
   | { type: 'activate'; id: string }
   | { type: 'expand'; id: string; open: boolean }
   | { type: 'select'; id: string }
+  /** Batch select for multi-mode all/range/none — O(N) instead of N×O(N²) per-event spread. `to` undefined ⇒ toggle. */
+  | { type: 'selectMany'; ids: string[]; to?: boolean }
   | { type: 'value'; id: string; value: unknown }
   | { type: 'open'; id: string; open: boolean }
   | { type: 'typeahead'; buf: string; deadline: number }

@@ -47,6 +47,7 @@ export function useAccordionPattern(
       setsize: ids.length,
     }
   })
+  const itemMap = new Map(items.map((it) => [it.id, it]))
 
   const triggerId = (id: string) => `${idPrefix}-trigger-${id}`
   const panelId = (id: string) => `${idPrefix}-panel-${id}`
@@ -56,7 +57,7 @@ export function useAccordionPattern(
   const headerProps = (_id: string): ItemProps => ({ role: 'heading', 'aria-level': 3 } as unknown as ItemProps)
 
   const triggerProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
+    const it = itemMap.get(id)
     const isFocus = focusId === id
     return {
       id: triggerId(id),
@@ -71,7 +72,7 @@ export function useAccordionPattern(
   }
 
   const panelProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
+    const it = itemMap.get(id)
     return {
       role: 'region',
       id: panelId(id),

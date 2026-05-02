@@ -72,6 +72,31 @@ describe('multiSelectToggle reducer', () => {
     expect(getFocus(next)).toBe('a')
   })
 
+  it('selectMany with to=true selects every id, leaves already-selected alone', () => {
+    const next = multiSelectToggle(list(), { type: 'selectMany', ids: ['a', 'b', 'c'], to: true })
+    expect(next.entities.a?.data?.selected).toBe(true)
+    expect(next.entities.b?.data?.selected).toBe(true)
+    expect(next.entities.c?.data?.selected).toBe(true)
+  })
+
+  it('selectMany with to=false deselects every id', () => {
+    const next = multiSelectToggle(list(), { type: 'selectMany', ids: ['a', 'b'], to: false })
+    expect(next.entities.a?.data?.selected).toBe(false)
+    expect(next.entities.b?.data?.selected).toBeFalsy()
+  })
+
+  it('selectMany without `to` toggles each id independently', () => {
+    const next = multiSelectToggle(list(), { type: 'selectMany', ids: ['a', 'b'] })
+    expect(next.entities.a?.data?.selected).toBe(false) // was true, toggled
+    expect(next.entities.b?.data?.selected).toBe(true) // was undefined, toggled
+  })
+
+  it('selectMany returns same reference when no entity actually changed', () => {
+    const data = list()
+    expect(multiSelectToggle(data, { type: 'selectMany', ids: ['a'], to: true })).toBe(data) // a already selected
+    expect(multiSelectToggle(data, { type: 'selectMany', ids: [], to: true })).toBe(data) // empty
+  })
+
   it('single + multi reducers can coexist in one composition (no vocabulary collision)', () => {
     const data = list()
     const afterActivate = multiSelectToggle(singleSelect(data, { type: 'activate', id: 'b' }), {

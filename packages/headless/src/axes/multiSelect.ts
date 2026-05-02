@@ -1,5 +1,4 @@
 import type { Axis } from './axis'
-import type { UiEvent } from '../types'
 import { enabledSiblings } from './index'
 
 /**
@@ -21,8 +20,7 @@ export const multiSelect: Axis = (d, id, t) => {
   }
 
   if ((t.ctrl || t.meta) && (t.key === 'a' || t.key === 'A')) {
-    const ids = enabledSiblings(d, id)
-    return ids.map((sid): UiEvent => ({ type: 'select', id: sid }))
+    return [{ type: 'selectMany', ids: enabledSiblings(d, id), to: true }]
   }
 
   if (t.shift && (t.key === 'ArrowDown' || t.key === 'ArrowUp')) {
