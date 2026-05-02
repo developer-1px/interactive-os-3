@@ -1,4 +1,4 @@
-import { isMetaId, type NormalizedData, type UiEvent } from '../types'
+import { FOCUS, isMetaId, type NormalizedData, type UiEvent } from '../types'
 import { reduce } from './reduce'
 
 export type Reducer = (d: NormalizedData, e: UiEvent) => NormalizedData
@@ -17,9 +17,11 @@ export const composeReducers =
 /**
  * singleSelect — single-selection reducer fragment.
  *
- * On `activate`, marks `e.id` as selected and clears `selected` on all other
- * non-meta entities. APG-aligned: tabs/listbox(single)/radio/menu/menubar all
- * follow this pattern.
+ * On `activate`:
+ *  - marks `e.id` as selected, clears others (`selected: false`)
+ *  - moves FOCUS to `e.id` ("selected = focused" — APG single-select semantics)
+ *
+ * APG-aligned: tabs / listbox(single) / radio / menu / menubar follow this.
  *
  * Compose with `reduce`:
  *   const myReduce = composeReducers(reduce, singleSelect)
@@ -36,6 +38,12 @@ export const singleSelect: Reducer = (d, e) => {
     const willBe = id === e.id
     if (wasSelected === willBe) continue
     entities[id] = { ...ent, data: { ...ent.data, selected: willBe } }
+    mutated = true
+  }
+  // selected → focused (single-select)
+  const prevFocus = d.entities[FOCUS]?.data?.id as string | undefined
+  if (prevFocus !== e.id) {
+    entities[FOCUS] = { id: FOCUS, data: { id: e.id } }
     mutated = true
   }
   return mutated ? { ...d, entities } : d

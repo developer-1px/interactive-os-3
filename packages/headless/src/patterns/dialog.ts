@@ -5,6 +5,8 @@ export interface DialogOptions {
   open: boolean
   onOpenChange?: (open: boolean) => void
   modal?: boolean
+  /** APG `alertdialog` 변종 — role 만 다르고 동작 동일. */
+  alert?: boolean
   /** focus 복귀 대상. trigger element ref 권장. */
   returnFocusRef?: RefObject<HTMLElement | null>
   ariaLabel?: string
@@ -26,7 +28,7 @@ export function useDialogPattern(
   rootProps: RootProps
   closeProps: ItemProps
 } {
-  const { open, onOpenChange, modal = true, returnFocusRef, ariaLabel, ariaLabelledBy, ariaDescribedBy } = opts
+  const { open, onOpenChange, modal = true, alert = false, returnFocusRef, ariaLabel, ariaLabelledBy, ariaDescribedBy } = opts
 
   useEffect(() => {
     if (!open) return
@@ -53,7 +55,7 @@ export function useDialogPattern(
   }, [open, rootRef, onOpenChange, returnFocusRef])
 
   const rootProps: RootProps = {
-    role: modal ? 'dialog' : 'dialog',
+    role: alert ? 'alertdialog' : 'dialog',
     'aria-modal': modal,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledBy,
