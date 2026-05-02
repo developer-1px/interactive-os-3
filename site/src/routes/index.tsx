@@ -20,9 +20,9 @@ function Landing() {
           declarative page tree, single resource interface. Visuals via Tailwind. No tokens, no CSS-in-JS.
         </p>
       </header>
-      <section aria-labelledby="apps-h" className="flex flex-col gap-3">
-        <h2 id="apps-h" className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-          Real apps built on bare headless
+      <section aria-labelledby="surfaces-h" className="flex flex-col gap-3">
+        <h2 id="surfaces-h" className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
+          Verification surfaces
         </h2>
         <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2">
           {APPS.map((a) => (
