@@ -87,6 +87,10 @@ export const PATTERN_KEYS: Record<string, () => string[]> = {
   Splitter: () => dedupe(probe(numericStep('vertical'))),
   'Navigation List': () => [],
 
+  // Custom — composed by user
+  'Sidebar (custom)': () =>
+    dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z', 'Cmd+1…9']),
+
   // Pure / Ref — keys live in the pattern body, not a composable axis
   Disclosure: () => ['Enter', ' '],
   Switch: () => ['Enter', ' '],

@@ -1,7 +1,7 @@
 import { useEffect, useState, type ComponentType } from 'react'
 import { fmtKey, keysFor } from './keys'
 
-type Kind = 'pure' | 'ref' | 'collection'
+type Kind = 'pure' | 'ref' | 'collection' | 'custom'
 
 interface DemoMeta {
   title: string
@@ -29,7 +29,7 @@ interface Entry extends DemoMeta {
   source: string
 }
 
-const KIND_ORDER: Record<Kind, number> = { pure: 0, ref: 1, collection: 2 }
+const KIND_ORDER: Record<Kind, number> = { pure: 0, ref: 1, collection: 2, custom: 3 }
 
 const slugFor = (filename: string) =>
   filename
@@ -55,12 +55,14 @@ const KIND_LABEL: Record<Kind, string> = {
   pure: 'Pure recipe',
   ref: 'Ref-based',
   collection: 'Collection',
+  custom: 'Custom (composed)',
 }
 
 const KIND_BADGE: Record<Kind, string> = {
   pure: 'bg-emerald-100 text-emerald-900 ring-emerald-200',
   ref: 'bg-amber-100 text-amber-900 ring-amber-200',
   collection: 'bg-sky-100 text-sky-900 ring-sky-200',
+  custom: 'bg-violet-100 text-violet-900 ring-violet-200',
 }
 
 function useHashNavigation() {
@@ -97,7 +99,7 @@ export function App() {
 
 function Sidebar({ activeSlug }: { activeSlug: string }) {
   const [open, setOpen] = useState(false)
-  const groups: Kind[] = ['pure', 'ref', 'collection']
+  const groups: Kind[] = ['pure', 'ref', 'collection', 'custom']
 
   return (
     <>
@@ -205,7 +207,7 @@ function Intro() {
             Patterns · click to jump
           </h2>
           <div className="mt-3 grid gap-2 md:grid-cols-3">
-            {(['pure', 'ref', 'collection'] as Kind[]).map((kind) => (
+            {(['pure', 'ref', 'collection', 'custom'] as Kind[]).map((kind) => (
               <div key={kind}>
                 <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
                   {KIND_LABEL[kind]}
