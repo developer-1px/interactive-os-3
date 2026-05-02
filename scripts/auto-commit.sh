@@ -11,9 +11,11 @@
 #
 # Message:
 #  - <type>(<scope>): <subject>  형식 (Conventional Commits 결)
-#  - type   : staged diff 통계로 추론 (test/docs/style/refactor/feat/fix/chore/remove)
-#  - scope  : 변경 파일 path 의 공통 prefix (apps/<x>, packages/<x>, site/<dir>, root)
-#  - subject: 변경 파일 basename 상위 2~3개
+#  - type   : staged diff 통계로 추론 (test/docs/chore/remove/rename/refactor/feat/fix/update)
+#  - scope  : 변경 파일 path 의 공통 prefix (apps/<x> → <x>, packages/<x> → <x>, site/<dir>, scripts, docs, root)
+#  - subject: 변경 파일 basename 상위 2~3개 · 확장자 제거
+#
+# bash 3.2 호환 (macOS 기본). mapfile/readarray 사용 ❌.
 
 set -uo pipefail
 
@@ -35,34 +37,39 @@ last_ts=$(git log -1 --format=%ct 2>/dev/null || echo 0)
 now_ts=$(date +%s)
 (( now_ts - last_ts < 30 )) && exit 0
 
-# ── 1. 스테이징 (settings.json 류는 의도적 커밋만, 자동 제외) ────────────
+# ── 1. 스테이징 (settings.json 류는 의도적 커밋만) ──────────────────────
 git add -A -- ':!.claude/settings.json' ':!.claude/settings.local.json' 2>/dev/null
 if git diff --cached --quiet; then
   exit 0
 fi
 
 # ── 2. 메시지 추론 ───────────────────────────────────────────────────────
-# 2a. 변경 파일 목록 (staged)
-mapfile -t files < <(git diff --cached --name-only)
+# 2a. 변경 파일 목록 (staged) — bash 3 호환
+files=()
+while IFS= read -r f; do
+  [[ -n "$f" ]] && files+=("$f")
+done < <(git diff --cached --name-only)
 count=${#files[@]}
+(( count == 0 )) && exit 0
 
-# 2b. 추가/삭제 라인 수, status 패턴
+# 2b. 추가/삭제 라인 수
 stats=$(git diff --cached --shortstat 2>/dev/null)
-add_lines=$(echo "$stats" | grep -oE '[0-9]+ insert' | grep -oE '[0-9]+' || echo 0)
-del_lines=$(echo "$stats" | grep -oE '[0-9]+ delet' | grep -oE '[0-9]+' || echo 0)
+add_lines=$(echo "$stats" | grep -oE '[0-9]+ insert' | grep -oE '[0-9]+' || true)
+del_lines=$(echo "$stats" | grep -oE '[0-9]+ delet' | grep -oE '[0-9]+' || true)
 add_lines=${add_lines:-0}
 del_lines=${del_lines:-0}
 
-# 2c. 변경 status 카운트 (A/M/D/R)
+# 2c. status code 카운트 (A/M/D/R)
 status_codes=$(git diff --cached --name-status 2>/dev/null | awk '{print substr($1,1,1)}')
-n_add=$(echo "$status_codes" | grep -c "^A" || true)
-n_mod=$(echo "$status_codes" | grep -c "^M" || true)
-n_del=$(echo "$status_codes" | grep -c "^D" || true)
-n_ren=$(echo "$status_codes" | grep -c "^R" || true)
+n_add=$(echo "$status_codes" | grep -c "^A" || true); n_add=${n_add:-0}
+n_mod=$(echo "$status_codes" | grep -c "^M" || true); n_mod=${n_mod:-0}
+n_del=$(echo "$status_codes" | grep -c "^D" || true); n_del=${n_del:-0}
+n_ren=$(echo "$status_codes" | grep -c "^R" || true); n_ren=${n_ren:-0}
 
 # 2d. type 추론 — 모든 파일이 같은 카테고리에 속하면 그 라벨, 아니면 휴리스틱
 all_match() {
   local re="$1"
+  local f
   for f in "${files[@]}"; do [[ "$f" =~ $re ]] || return 1; done
   return 0
 }
@@ -80,56 +87,64 @@ fi
 
 # 2e. scope 추론 — 변경 파일들의 공통 path prefix
 scope=""
-common_prefix() {
-  # 첫 파일의 디렉토리부터 시작해 모든 파일이 그 prefix 로 시작하는 가장 깊은 공통 경로
-  local first="$1"
-  shift
-  local prefix
-  prefix=$(dirname "$first")
-  while [[ -n "$prefix" && "$prefix" != "." && "$prefix" != "/" ]]; do
-    local all_in=1
-    for f in "$@"; do
-      [[ "$f" == "$prefix"/* || "$f" == "$prefix" ]] || { all_in=0; break; }
-    done
-    if (( all_in )); then echo "$prefix"; return; fi
-    prefix=$(dirname "$prefix")
-  done
-}
 
 if (( count == 1 )); then
   scope=$(dirname "${files[0]}")
   [[ "$scope" == "." ]] && scope="root"
 else
-  pref=$(common_prefix "${files[@]}")
-  if [[ -n "$pref" ]]; then
-    scope="$pref"
-  else
-    # 공통 prefix 가 없으면 top-level area 들의 union
-    mapfile -t areas < <(printf '%s\n' "${files[@]}" | awk -F/ 'NF>=2 {print $1} NF==1 {print "root"}' | sort -u)
-    if (( ${#areas[@]} == 1 )); then scope="${areas[0]}"
-    elif (( ${#areas[@]} <= 2 )); then scope=$(IFS='+'; echo "${areas[*]}")
-    else scope="repo"
+  # 가장 깊은 공통 디렉토리 — 첫 파일의 디렉토리부터 거슬러 올라가며 모든 파일이 그 prefix 인지 확인
+  prefix=$(dirname "${files[0]}")
+  while [[ -n "$prefix" && "$prefix" != "." && "$prefix" != "/" ]]; do
+    all_in=1
+    for f in "${files[@]}"; do
+      case "$f" in
+        "$prefix"/*|"$prefix") ;;
+        *) all_in=0; break ;;
+      esac
+    done
+    if (( all_in )); then scope="$prefix"; break; fi
+    prefix=$(dirname "$prefix")
+  done
+
+  # 공통 prefix 가 없으면 top-level area 들의 union (최대 2개)
+  if [[ -z "$scope" ]]; then
+    areas_uniq=$(printf '%s\n' "${files[@]}" | awk -F/ 'NF>=2 {print $1} NF==1 {print "root"}' | sort -u)
+    n_areas=$(echo "$areas_uniq" | grep -c .)
+    if (( n_areas == 1 )); then
+      scope="$areas_uniq"
+    elif (( n_areas <= 2 )); then
+      scope=$(echo "$areas_uniq" | paste -sd "+" -)
+    else
+      scope="repo"
     fi
   fi
 fi
 
-# scope 단축 — apps/finder/src/widgets → finder, packages/headless/src/state → headless
+# scope 단축 — 흔한 path prefix 를 친근한 이름으로
 short_scope=$(echo "$scope" \
   | sed -E 's|^apps/([^/]+).*|\1|; s|^packages/([^/]+).*|\1|; s|^site/src/([^/]+).*|site/\1|; s|^site$|site|; s|^scripts.*|scripts|; s|^docs.*|docs|')
 
-# 2f. subject — 변경 파일 basename 상위 2~3개 (확장자 제거)
-mapfile -t basenames < <(printf '%s\n' "${files[@]}" | awk -F/ '{print $NF}' | sed -E 's|\.(test|spec)?\.?(tsx?|jsx?|md|css|cjs|mjs|json|yaml|yml)$||' | sort -u | head -4)
+# 2f. subject — 변경 파일 basename 상위 2~3개 (확장자/.test 제거)
+basenames=()
+while IFS= read -r b; do
+  [[ -n "$b" ]] && basenames+=("$b")
+done < <(printf '%s\n' "${files[@]}" \
+  | awk -F/ '{print $NF}' \
+  | sed -E 's|\.(test|spec)\.(tsx?|jsx?)$||; s|\.(tsx?|jsx?|md|css|cjs|mjs|json|yaml|yml|sh)$||' \
+  | sort -u | head -4)
 
-if (( ${#basenames[@]} == 1 )); then
+n_base=${#basenames[@]}
+if (( n_base == 1 )); then
   subject="${basenames[0]}"
-elif (( ${#basenames[@]} <= 3 )); then
-  subject=$(IFS=' · '; echo "${basenames[*]}")
-else
+elif (( n_base == 2 )); then
+  subject="${basenames[0]} · ${basenames[1]}"
+elif (( n_base == 3 )); then
+  subject="${basenames[0]} · ${basenames[1]} · ${basenames[2]}"
+elif (( n_base >= 4 )); then
   subject="${basenames[0]} · ${basenames[1]} · ${basenames[2]} +$((count - 3))"
+else
+  subject="$count files"
 fi
-
-# subject 가 비었으면 fallback
-[[ -z "$subject" ]] && subject="$count files"
 
 # 길이 제한 (subject ≤ 60)
 if (( ${#subject} > 60 )); then
