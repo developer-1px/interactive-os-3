@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { fmtKey, keysFor } from './keys'
 
 type Kind = 'pure' | 'ref' | 'collection'
 
@@ -126,10 +127,11 @@ function PatternScreen({
   total: number
 }) {
   const { Component, title, apg, kind, blurb, source, filename } = entry
+  const keys = keysFor(title)
 
   return (
     <section className="snap-start h-screen flex flex-col">
-      <header className="flex items-baseline gap-3 border-b border-stone-200 bg-white px-8 py-4">
+      <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4">
         <span
           className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${KIND_BADGE[kind]}`}
         >
@@ -148,11 +150,24 @@ function PatternScreen({
         <span className="text-xs font-mono text-stone-400">
           {index + 1} / {total}
         </span>
+        {keys.length > 0 && (
+          <div className="flex w-full flex-wrap items-center gap-1.5">
+            <span className="text-[10px] uppercase tracking-wider text-stone-400">Keys</span>
+            {keys.map((k) => (
+              <kbd
+                key={k}
+                className="rounded border border-stone-300 bg-stone-50 px-1.5 py-0.5 text-[11px] font-mono text-stone-700 shadow-[0_1px_0_0_#d6d3d1]"
+              >
+                {fmtKey(k)}
+              </kbd>
+            ))}
+          </div>
+        )}
       </header>
 
       <div className="grid flex-1 grid-cols-2 overflow-hidden">
         <div className="grid place-items-center overflow-auto bg-stone-50 p-8">
-          <div className="rounded-xl border border-stone-200 bg-white p-8 shadow-sm">
+          <div className="w-[420px]">
             <Component />
           </div>
         </div>
