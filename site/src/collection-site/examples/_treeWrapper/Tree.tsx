@@ -1,6 +1,7 @@
 import type { NormalizedData, UiEvent } from '@p/headless'
 import { useTreePattern } from '@p/headless/patterns'
 import {
+  branchIndicator,
   defaultLabel,
   emptySlot,
   renderSlot,
@@ -41,7 +42,7 @@ export function Tree({ store, value, onEvent, slots = {}, 'aria-label': ariaLabe
             {hasSlots ? (
               <span className="grid grid-cols-[1rem_2rem_1fr_auto] items-center gap-1">
                 <span data-slot="indicator" className="text-center text-stone-400">
-                  {renderSlot(slots.indicator, emptySlot, item, itemData)}
+                  {renderSlot(slots.indicator, branchIndicator, item, itemData)}
                 </span>
                 <span data-slot="icon" className="font-mono text-[10px] uppercase text-stone-500">
                   {renderSlot(slots.icon, emptySlot, item, itemData)}
@@ -54,7 +55,12 @@ export function Tree({ store, value, onEvent, slots = {}, 'aria-label': ariaLabe
                 </span>
               </span>
             ) : (
-              item.label
+              <span className="inline-flex items-center gap-1">
+                <span data-slot="indicator" className="inline-block w-4 text-center text-stone-400">
+                  {branchIndicator({ item, data: itemData })}
+                </span>
+                <span>{item.label}</span>
+              </span>
             )}
           </li>
         )
