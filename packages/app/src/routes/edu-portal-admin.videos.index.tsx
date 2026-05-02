@@ -1,7 +1,0 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { VideoList } from '@apps/edu-portal-admin'
-
-export const Route = createFileRoute('/edu-portal-admin/videos/')({
-  component: VideoList,
-  staticData: { palette: { label: 'EDU · 영상 관리', to: '/edu-portal-admin/videos' } },
-})

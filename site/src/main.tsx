@@ -24,7 +24,7 @@ const loadAppsLayer = async () => {
     import('@apps/finder'),
   ])
   setFinderNav((splat) => {
-    void router.navigate({ to: '/finder/$', params: { _splat: splat } })
+    void router.navigate({ to: '/apps/finder/$', params: { _splat: splat } })
   })
 }
 

@@ -27,12 +27,12 @@ export const PAGE_TITLES: Record<PageId, { title: string; sub: string; action?: 
 }
 
 export const PAGE_PATHS: Record<PageId, string> = {
-  'dashboard':      '/edu-portal-admin/dashboard',
-  'video-list':     '/edu-portal-admin/videos',
-  'video-new':      '/edu-portal-admin/videos/new',
-  'role-category':  '/edu-portal-admin/role-categories',
-  'cert-category':  '/edu-portal-admin/course-categories',
-  'video-order':    '/edu-portal-admin/video-order',
+  'dashboard':      '/apps/admin/dashboard',
+  'video-list':     '/apps/admin/videos',
+  'video-new':      '/apps/admin/videos/new',
+  'role-category':  '/apps/admin/role-categories',
+  'cert-category':  '/apps/admin/course-categories',
+  'video-order':    '/apps/admin/video-order',
 }
 
 export function activePage(pathname: string): PageId {

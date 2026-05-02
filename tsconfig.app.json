@@ -30,11 +30,11 @@
       "@p/fs/*": ["packages/fs/src/*"],
       "@p/devtools": ["packages/devtools/src/index.ts"],
       "@p/devtools/*": ["packages/devtools/src/*"],
-      "@p/app": ["packages/app/src/main.tsx"],
-      "@p/app/*": ["packages/app/src/*"],
+      "@p/site": ["site/src/main.tsx"],
+      "@p/site/*": ["site/src/*"],
       "@apps/*": ["apps/*/src/index.ts", "apps/*/src"]
     }
   },
-  "include": ["packages/app/src", "packages/headless/src", "apps/*/src"],
+  "include": ["site/src", "packages/headless/src", "apps/*/src"],
   "exclude": []
 }

@@ -27,7 +27,7 @@ export function Markdown() {
       className="mx-auto flex h-svh w-full max-w-3xl flex-col gap-4 p-6"
     >
       <nav aria-label="경로" className="flex items-center gap-3 text-xs text-neutral-500">
-        <Link to="/finder/$" params={{ _splat: '' }} className="text-blue-600 hover:underline">← Finder</Link>
+        <Link to="/apps/finder/$" params={{ _splat: '' }} className="text-blue-600 hover:underline">← Finder</Link>
         <span>{path}</span>
       </nav>
       <article

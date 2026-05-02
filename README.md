@@ -1,30 +1,82 @@
-# ds
+# @p/headless
 
-ARIA/headless 패키지 검증 workspace.
+**ARIA-correct headless behavior infra** — axes composition, roving tabindex,
+gesture/intent split, declarative page tree (FlatLayout), single resource
+interface, feature spec.
 
-이 repo의 의의는 ARIA/headless behavior, 선언형 상태/레이아웃 계약, 그리고 그 패키지를 소비자 관점에서 검증하는 것이다. 디자인 컴포넌트의 제품 방향성은 이 repo에서 빠졌고, `aria-design-system`이 맡는다.
+The repo is one product (`@p/headless`) plus a single integrated showcase site
+that proves it can ship real apps without ds layer.
 
-## Workspace
+## Layout
 
-| 위치 | 역할 |
-|---|---|
-| `packages/*` | ARIA/headless behavior와 검증 인프라 패키지. 시각 디자인 컴포넌트 제품은 여기서 키우지 않는다. |
-| `apps/*` | 패키지를 실제 시나리오처럼 소비하는 큰 검증 쇼케이스. 기능을 숨겨 넣는 곳이 아니다. |
-| `showcase/*` | 좁은 단위의 ARIA 패턴, 키보드, 상태 전이, 통합 검증 표면. |
+```
+.
+├── packages/
+│   ├── headless/           ⭐ THE PRODUCT — published, MIT
+│   ├── fs/                 internal — markdown / file-tree / shiki helpers
+│   └── devtools/           internal — repro recorder · spacing overlay
+│
+├── site/                   ⭐ THE SITE — single deployable
+│   ├── index.html
+│   └── src/
+│       ├── main.tsx
+│       ├── router.tsx
+│       ├── routes/         TanStack file-based routing
+│       │   ├── index.tsx           landing (hero + showcase grid)
+│       │   ├── patterns.tsx        absorbs old apps/headless-site
+│       │   ├── apps.finder.$.tsx   → @apps/finder (Mac Finder)
+│       │   ├── apps.slides.$.tsx   → @apps/slides (markdown deck)
+│       │   ├── apps.admin.*.tsx    → @apps/edu-portal-admin (CRUD admin)
+│       │   └── apps.markdown.$.tsx → @apps/markdown (markdown viewer)
+│       └── headless-site/  patterns catalog source (lifted from old apps/headless-site)
+│
+├── apps/                   workspace packages, consumed by site/
+│   ├── finder/             keyboard-first file browser
+│   ├── slides/             markdown → 16:9 deck
+│   ├── edu-portal-admin/   admin shell + 6 pages
+│   └── markdown/           markdown viewer
+│
+└── docs/                   markdown content (slides samples, READMEs)
+```
 
-## 작업 기준
+## Stack
 
-1. 새 재사용 동작이나 ARIA 계약은 먼저 `packages/*`에 둔다.
-2. `apps/*`와 `showcase/*`는 패키지의 public/workspace export를 소비해서 검증한다.
-3. 쇼케이스에서 필요한 기능이 생기면 쇼케이스 전용 구현보다 패키지 API 확장을 먼저 검토한다.
-4. 디자인 컴포넌트, visual token, brand/theme 방향성은 `aria-design-system`으로 보낸다.
-5. 검증은 패키지 build/typecheck와 관련 쇼케이스 실행 결과를 함께 본다.
+- **Behavior**: `@p/headless` ARIA pattern recipes (`useListboxPattern`,
+  `useToolbarPattern`, `useTreeGridPattern`, `useRovingTabIndex`,
+  `useShortcut`, etc.).
+- **Visuals**: Tailwind v3 utility classes inline. No design tokens,
+  no CSS-in-JS, no classless cascade — visual decisions live where they
+  render.
+- **Routing**: TanStack file-based routing, single Vite app.
 
 ## Commands
 
 ```bash
-pnpm dev
-pnpm build
-pnpm --filter @p/headless build
-pnpm --filter @p/headless typecheck
+pnpm install
+pnpm dev          # vite dev — http://localhost:5173
+pnpm build        # tsc -b && vite build (outputs dist/)
+pnpm preview      # serve dist/
 ```
+
+## URLs (dev)
+
+| Path | What |
+|---|---|
+| `/` | Landing — product blurb + showcase cards |
+| `/patterns` | APG recipe catalog (snap-y scroll, hash anchors per pattern) |
+| `/apps/finder/` | Mac Finder column view |
+| `/apps/slides/docs/slides-sample.md` | Slides deck |
+| `/apps/admin/dashboard` | Admin dashboard (KPI cards) |
+| `/apps/admin/videos` | Admin videos table |
+| `/apps/markdown/README.md` | Markdown viewer |
+
+## Working agreement
+
+1. New reusable behavior → `packages/headless`.
+2. New visual decision → Tailwind utility class inline. No new token wrappers.
+3. New showcase app → `apps/<name>` workspace package, route added under
+   `site/src/routes/apps.<name>.*.tsx`.
+4. Naming follows W3C / WHATWG (ARIA roles, semantic HTML). Library name
+   borrowing forbidden.
+5. See `CLAUDE.md` for the full invariant set and `packages/headless/INVARIANTS.md`
+   for behavior-layer contracts.

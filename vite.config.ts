@@ -21,7 +21,13 @@ const spaFallback = () => ({
 })
 
 export default defineConfig({
+  root: resolve(__dirname, 'site'),
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
+  publicDir: resolve(__dirname, 'public'),
+  build: {
+    outDir: resolve(__dirname, 'dist'),
+    emptyOutDir: true,
+  },
   resolve: {
     alias: [
       { find: /^@p\/headless$/, replacement: resolve(__dirname, 'packages/headless/src/index.ts') },
@@ -30,19 +36,17 @@ export default defineConfig({
       { find: /^@p\/fs\//, replacement: resolve(__dirname, 'packages/fs/src/') + '/' },
       { find: /^@p\/devtools$/, replacement: resolve(__dirname, 'packages/devtools/src/index.ts') },
       { find: /^@p\/devtools\//, replacement: resolve(__dirname, 'packages/devtools/src/') + '/' },
-      { find: /^@p\/app$/, replacement: resolve(__dirname, 'packages/app/src/main.tsx') },
-      { find: /^@p\/app\//, replacement: resolve(__dirname, 'packages/app/src/') + '/' },
+      { find: /^@p\/site$/, replacement: resolve(__dirname, 'site/src/main.tsx') },
+      { find: /^@p\/site\//, replacement: resolve(__dirname, 'site/src/') + '/' },
       { find: /^@apps\/([^/]+)$/, replacement: resolve(__dirname, 'apps') + '/$1/src/index.ts' },
       { find: /^@apps\/([^/]+)\//, replacement: resolve(__dirname, 'apps') + '/$1/src/' },
-      { find: /^@showcase\/([^/]+)$/, replacement: resolve(__dirname, 'showcase') + '/$1/src/index.ts' },
-      { find: /^@showcase\/([^/]+)\//, replacement: resolve(__dirname, 'showcase') + '/$1/src/' },
     ],
   },
   plugins: [
     tanstackRouter({
       target: 'react',
-      routesDirectory: 'packages/app/src/routes',
-      generatedRouteTree: 'packages/app/src/routeTree.gen.ts',
+      routesDirectory: resolve(__dirname, 'site/src/routes'),
+      generatedRouteTree: resolve(__dirname, 'site/src/routeTree.gen.ts'),
       autoCodeSplitting: true,
       // 컴포넌트 파일(PascalCase)은 라우트로 해석하지 않는다.
       // 라우트 파일은 모두 lowercase / dot-segment 규약(예: finder.$.tsx)을 따른다.

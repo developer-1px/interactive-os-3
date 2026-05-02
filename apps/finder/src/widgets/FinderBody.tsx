@@ -70,7 +70,7 @@ export function FinderBody() {
           />
           {previewIsMd && 'node' in view.preview && (
             <Link
-              to="/markdown/$"
+              to="/apps/markdown/$"
               params={{ _splat: view.preview.node.path.replace(/^\//, '') }}
               aria-label="전체 화면으로 열기"
               className="text-xs text-blue-600 underline"
