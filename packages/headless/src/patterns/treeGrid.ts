@@ -5,6 +5,7 @@ import type { ItemProps, RootProps, TreeItem } from './types'
 
 export interface TreeGridOptions {
   multiSelectable?: boolean
+  selectionMode?: 'none' | 'single' | 'multiple'
   autoFocus?: boolean
 }
 
@@ -28,8 +29,9 @@ export function useTreeGridPattern(
   cellProps: (rowId: string, colIndex: number) => ItemProps
   items: TreeItem[]
 } {
-  const { autoFocus, multiSelectable } = opts
-  const axis = multiSelectable ? multiAxis : singleAxis
+  const { autoFocus, multiSelectable, selectionMode } = opts
+  const isMultiSelectable = multiSelectable || selectionMode === 'multiple'
+  const axis = isMultiSelectable ? multiAxis : singleAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -56,7 +58,7 @@ export function useTreeGridPattern(
 
   const rootProps: RootProps = {
     role: 'treegrid',
-    'aria-multiselectable': multiSelectable || undefined,
+    'aria-multiselectable': isMultiSelectable || undefined,
     ...delegate,
   } as RootProps
 

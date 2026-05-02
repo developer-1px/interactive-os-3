@@ -8,6 +8,7 @@ import type { ItemProps, RootProps, TreeItem } from './types'
 
 export interface TreeOptions {
   multiSelectable?: boolean
+  selectionMode?: 'none' | 'single' | 'multiple'
   autoFocus?: boolean
 }
 
@@ -32,8 +33,9 @@ export function useTreePattern(
   itemProps: (id: string) => ItemProps
   items: TreeItem[]
 } {
-  const { autoFocus, multiSelectable } = opts
-  const axis = multiSelectable ? multiAxis : singleAxis
+  const { autoFocus, multiSelectable, selectionMode } = opts
+  const isMultiSelectable = multiSelectable || selectionMode === 'multiple'
+  const axis = isMultiSelectable ? multiAxis : singleAxis
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )
@@ -65,7 +67,7 @@ export function useTreePattern(
 
   const rootProps: RootProps = {
     role: 'tree',
-    'aria-multiselectable': multiSelectable || undefined,
+    'aria-multiselectable': isMultiSelectable || undefined,
     ...delegate,
   } as RootProps
 
