@@ -5,7 +5,14 @@ import { keyTrigger } from '../trigger'
 
 const key = (k: string) => keyTrigger({ key: k })
 
-const data = fromTree(
+interface N {
+  id: string
+  label: string
+  disabled?: boolean
+  kids?: N[]
+}
+
+const data = fromTree<N>(
   [
     {
       id: 'a',
@@ -34,7 +41,7 @@ describe('expand axis', () => {
   })
 
   it('ArrowRight on a branch skips disabled children when picking first', () => {
-    const onlyDisabled = fromTree(
+    const onlyDisabled = fromTree<N>(
       [{ id: 'p', label: 'P', kids: [{ id: 'k1', label: 'K1', disabled: true }, { id: 'k2', label: 'K2' }] }],
       { getId: (n) => n.id, getKids: (n) => n.kids, toData: (n) => ({ label: n.label, disabled: n.disabled }) },
     )
@@ -67,7 +74,7 @@ describe('expand axis', () => {
   })
 
   it('disabled branches are not openable', () => {
-    const disabledBranch = fromTree(
+    const disabledBranch = fromTree<N>(
       [{ id: 'p', label: 'P', disabled: true, kids: [{ id: 'k', label: 'K' }] }],
       { getId: (n) => n.id, getKids: (n) => n.kids, toData: (n) => ({ label: n.label, disabled: n.disabled }) },
     )

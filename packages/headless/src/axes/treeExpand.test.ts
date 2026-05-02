@@ -5,8 +5,15 @@ import { keyTrigger } from '../trigger'
 
 const key = (k: string) => keyTrigger({ key: k })
 
+interface N {
+  id: string
+  label: string
+  disabled?: boolean
+  kids?: N[]
+}
+
 const tree = (expandedIds: string[] = []) =>
-  fromTree(
+  fromTree<N>(
     [
       {
         id: 'docs',
@@ -92,7 +99,7 @@ describe('treeExpand axis — Enter / Space (toggle)', () => {
 
 describe('treeExpand axis — disabled / non-mapped', () => {
   it('disabled branch ignores all keys', () => {
-    const disabledTree = fromTree(
+    const disabledTree = fromTree<N>(
       [{ id: 'p', label: 'P', disabled: true, kids: [{ id: 'k', label: 'K' }] }],
       { getId: (n) => n.id, getKids: (n) => n.kids, toData: (n) => ({ label: n.label, disabled: n.disabled }) },
     )
