@@ -9,7 +9,7 @@
 | `scripts/lint-ds-contracts.mjs` | 컴포넌트 인터페이스 — `ControlProps(data, onEvent)` 데이터 주도 (children JSX 금지) |
 | `scripts/lint-ds-serializable.mjs` | C2 상태 직렬화 — useState 값에 함수·DOM·Promise 보관 금지 |
 | `scripts/lint-ds-invariants.mjs` | 헌장 C1~C6 종합 — 정본 위반 패턴 정적 감지 |
-| `scripts/lint-ds-keyboard.mjs` | gesture/intent · roving — 소비자 onKeyDown 분기 차단, `activateProps`·`useRovingDOM` 적용 |
+| `scripts/lint-ds-keyboard.mjs` | gesture/intent · roving — 소비자 onKeyDown 분기 차단, `activateProps`·`useSpatialNavigation` 적용 |
 | `scripts/lint-ds-shell.mjs` | 반응형 — shell DOM의 JS 분기·matchMedia 차단 (CSS only) |
 | `scripts/lint-ds-values.mjs` | 토큰 — palette gray N 직접 import 차단, semantic만 허용 |
 | `scripts/lint-ds-css-orphans.mjs` | content widget — 사용처 없는 style 정리 |

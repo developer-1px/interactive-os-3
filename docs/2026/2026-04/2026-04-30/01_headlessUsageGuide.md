@@ -258,28 +258,32 @@ react-query/redux 슬림 대안.
 ```ts
 import { defineFeature, useFeature } from '@p/headless'
 
+type CartState = { items: string[] }
+type CartCmd = { type: 'addItem'; id: string } | { type: 'removeItem'; id: string }
+
 const cartFeature = defineFeature({
-  commands: {
-    addItem: (id: string) => ({ type: 'addItem', id }),
+  state: { items: [] } as CartState,
+  on: {
+    addItem: (state: CartState, cmd: Extract<CartCmd, { type: 'addItem' }>) => ({
+      items: [...state.items, cmd.id],
+    }),
+    removeItem: (state: CartState, cmd: Extract<CartCmd, { type: 'removeItem' }>) => ({
+      items: state.items.filter((id) => id !== cmd.id),
+    }),
   },
-  effects: {
-    addItem: async (cmd, ctx) => {
-      await fetch('/api/cart', { method: 'POST', body: JSON.stringify(cmd) })
-      ctx.invalidate('items')
-    },
-  },
-  queries: {
-    items: () => fetch('/api/cart').then(r => r.json()),
-  },
+  query: () => ({
+    products: { key: ['products'], fn: () => fetch('/api/products').then(r => r.json()) },
+  }),
+  view: (state, queries) => ({ items: state.items, products: queries.products.data ?? [] }),
+  effect: (state) => [{ kind: 'title', text: `Cart (${state.items.length})` }],
 })
 
 function Cart() {
-  const { run, useQuery } = useFeature(cartFeature)
-  const items = useQuery('items')
+  const [view, dispatch] = useFeature(cartFeature)
   return (
     <>
-      {items?.map(i => <span key={i.id}>{i.name}</span>)}
-      <button onClick={() => run({ type: 'addItem', id: 'x' })}>Add</button>
+      {view.items.map(id => <span key={id}>{id}</span>)}
+      <button onClick={() => dispatch({ type: 'addItem', id: 'x' })}>Add</button>
     </>
   )
 }

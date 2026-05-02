@@ -67,7 +67,7 @@ const { rootProps, optionProps, items } = listbox(data, onEvent, opts?)
 
 | # | 요청 | 응답 |
 |---|---|---|
-| 1 | Toolbar useRovingDOM | `useRovingDOM`은 `useSpatialNavigation`으로 개명 + 알고리즘 진짜 좌표 기반(`getBoundingClientRect`) 으로 교체. `toolbar` recipe 도 추가 |
+| 1 | Toolbar useSpatialNavigation | `useSpatialNavigation`은 알고리즘 진짜 좌표 기반(`getBoundingClientRect`) 으로 교체. `toolbar` recipe 도 추가 |
 | 2 | Listbox 정적 | ✅ `listbox` recipe |
 | 3 | Listbox styled | ✅ DS가 wrap. recipe 가 unstyled 베이스 |
 | 4 | Tabs (`activationMode`) | ✅ `tabs` recipe + `'automatic'\|'manual'` 옵션 |
@@ -82,7 +82,7 @@ const { rootProps, optionProps, items } = listbox(data, onEvent, opts?)
 | 13 | Slider | ✅ `slider` recipe + `numericStep` axis 신규 |
 | 14 | Disclosure / Accordion | ✅ `disclosure`/`accordion` recipe |
 | 15 | Switch / RadioGroup | ✅ `toggleSwitch`/`radioGroup` recipe |
-| 16 | Data-driven Collection | ✅ 변경 없음 — 이미 `useRoving + composeAxes` 만족 사례 |
+| 16 | Data-driven Collection | ✅ 변경 없음 — 이미 `useRovingTabIndex + composeAxes` 만족 사례 |
 | 17 | Feature (screen state) | ✅ 변경 없음 — `defineFeature/useFeature` 만족 사례 |
 | 18 | Layout DSL | ✅ 변경 없음 — `definePage` 만족 사례 |
 | 19 | Escape hatch | ✅ 변경 없음 — primitive 그대로 |
@@ -123,15 +123,15 @@ const { rootProps, optionProps, items } = listbox(data, onEvent, opts?)
 ### Before (기존, 22줄 boilerplate)
 
 ```tsx
-import { useRoving } from '@p/headless/roving/useRoving'
+import { useRovingTabIndex } from '@p/headless/roving/useRovingTabIndex'
 import { composeAxes, navigate, activate, typeahead } from '@p/headless/axes'
-import { activateOnNavigate } from '@p/headless/gesture'
+import { selectionFollowsFocus } from '@p/headless/gesture'
 import { ROOT, getChildren, getLabel, isDisabled } from '@p/headless/types'
 
 const axis = composeAxes(navigate('vertical'), activate, typeahead)
 function Picker({ data, onEvent }) {
-  const relay = (e) => activateOnNavigate(data, e).forEach(onEvent)
-  const { focusId, bindFocus, delegate } = useRoving(axis, data, relay)
+  const relay = (e) => selectionFollowsFocus(data, e).forEach(onEvent)
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay)
   const ids = getChildren(data, ROOT)
   return (
     <ul role="listbox" {...delegate}>

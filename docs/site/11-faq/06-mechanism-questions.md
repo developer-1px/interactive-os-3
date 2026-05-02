@@ -30,7 +30,7 @@ C2는 **상태(state)** 의 직렬화를 말하는 것이지 **이벤트 채널*
 
 상태 층 — `value`. JSON 가능해야 한다. store에 저장되는 값으로 직렬화 round-trip 대상이다. 이벤트 층 — `dispatch(e)`의 `e: ResourceEvent<T>`. `{ type: 'set', value }`, `{ type: 'patch', partial }`, `{ type: 'refetch' }`, `{ type: 'invalidate' }` — 모두 데이터 객체다. 이게 직렬화 가능해야 한다. **dispatch 함수 자체는 채널이지 상태가 아니다**.
 
-같은 구분이 React redux/elm/Flux 전통에 있다. `store.dispatch`는 함수지만 `action`은 plain object다. 직렬화·diff·재생(replay)·time-travel은 action에 대해 일어난다. ds도 정확히 그 모델이다. `defineFlow + useFlow`는 "resource.onEvent가 intent 라우터 흡수"라고 명시한다. `e`는 `Event`(plain object)이고 router는 `(e, ctx) => nextValue` 순수 함수에 가깝게 정의된다. 함수 prop은 흐르지만, 흐르는 것은 그 함수가 호출될 때 전달될 직렬화 가능한 event다.
+같은 구분이 React redux/elm/Flux 전통에 있다. `store.dispatch`는 함수지만 `action`은 plain object다. 직렬화·diff·재생(replay)·time-travel은 action에 대해 일어난다. ds도 정확히 그 모델이다. `defineFlow + useFlow`는 "resource.onEvent가 intent 라우터 흡수"라고 명시한다. `e`는 `UiEvent`(plain object)이고 router는 `(e, ctx) => nextValue` 순수 함수에 가깝게 정의된다. 함수 prop은 흐르지만, 흐르는 것은 그 함수가 호출될 때 전달될 직렬화 가능한 event다.
 
 따라서 C2 위반이 아니다. 위반은 `useState({ ref: domNode })` 같은 케이스다 — 값에 함수·DOM이 박힌 경우. dispatch는 useState 값이 아니다. C2 문구를 "**state 값**은 직렬화 가능"으로 명시화하면 오해를 줄일 여지가 있다.
 

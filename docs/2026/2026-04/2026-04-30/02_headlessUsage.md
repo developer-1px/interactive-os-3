@@ -200,10 +200,10 @@ import { activateProps } from '@p/headless'
 ## 5. State — reducer + bridge
 
 ```tsx
-import { useControlState, fromList } from '@p/headless'
+import { useControlState, fromTree } from '@p/headless'
 
 function Demo() {
-  const initial = fromList(
+  const initial = fromTree(
     [{ id: 'a', label: 'Apple' }, { id: 'b', label: 'Banana' }],
     { getId: i => i.id, toData: i => ({ label: i.label }) },
   )
@@ -258,7 +258,7 @@ const userFlow = defineFlow({
     relationships: { [ROOT]: [] },
   }),
   // 옵션:
-  // gestures: composeGestures(navigateOnActivate),
+  // gestures: composeGestures(selectionFollowsFocus),
   // metaScope: ['navigate', 'typeahead'],   // ds-meta로만 흘릴 event
 })
 
@@ -311,7 +311,7 @@ function Cart() {
 쿼리 무효화:
 ```ts
 import { invalidateQuery } from '@p/headless'
-invalidateQuery('queryName')
+invalidateQuery(['queryName'])
 ```
 
 ## 9. Layout — FlatLayout

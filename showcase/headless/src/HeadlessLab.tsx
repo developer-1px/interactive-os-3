@@ -63,7 +63,7 @@ export function HeadlessLab() {
         api={[
           ['reduce(d, e)', 'NormalizedData — pure reducer (focus/expanded/typeahead)'],
           ['fromTree(spec)', 'NormalizedData — flat spec → tree'],
-          ['fromList(items, opts)', 'NormalizedData — list spec → flat tree'],
+          ['fromList(items)', 'NormalizedData — Record[] → flat tree'],
           ['pathAncestors(d, id)', 'string[] — root까지 조상 id 체인'],
           ['useControlState(initial)', '[data, dispatch] — reducer hook'],
           ['useEventBridge(data, onEvent, ...)', 'event router 다리'],
@@ -97,8 +97,8 @@ export function HeadlessLab() {
         oneLiner="페이지 트리를 plain object로 선언 — 직렬화 가능, JSX 조립 0줄."
         api={[
           ['definePage({ entities, relationships })', 'NormalizedData'],
-          ['defineLayout(spec)', 'LayoutBuilder — 페이지 시각 골격 fragment'],
-          ['defineWidget(spec)', 'WidgetBuilder — landmark 가진 fragment'],
+          ['defineLayout(build)', 'LayoutBuilder — 페이지 시각 골격 fragment'],
+          ['defineWidget(build)', 'WidgetBuilder — landmark 가진 fragment'],
           ['merge(layout, ...widgets)', '최종 page'],
           ['node(id, data)', 'TypedEntity'],
           ['placementAttrs(d)', '{ style, data-ds-grow, data-ds-align, ... }'],
