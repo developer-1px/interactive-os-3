@@ -14,6 +14,11 @@ export * from './types'
 export * from './data'
 
 export { reduce } from './state/reduce'
+export {
+  composeReducers, singleSelect, multiSelectToggle, setValue,
+  reduceWithDefaults,
+  type Reducer,
+} from './state/selection'
 export { fromTree, fromList, pathAncestors } from './state/fromTree'
 export { useControlState } from './state/useControlState'
 export { useEventBridge } from './state/useEventBridge'
@@ -41,6 +46,7 @@ export {
   navigateOnActivate,
   selectionFollowsFocus,
   expandBranchOnActivate,
+  expandOnActivate,
   composeGestures,
   activateProps,
   type GestureHelper,

@@ -1,4 +1,12 @@
-import { ROOT, type NormalizedData, type UiEvent } from '@p/headless'
+import {
+  composeReducers,
+  expandOnActivate,
+  reduce,
+  ROOT,
+  setValue,
+  type NormalizedData,
+  type Reducer,
+} from '@p/headless'
 import { useAccordionPattern } from '@p/headless/patterns'
 import { useLocalData } from './_useLocalData'
 
@@ -6,7 +14,7 @@ export const meta = {
   title: 'Accordion',
   apg: 'accordion',
   kind: 'collection' as const,
-  blurb: 'Roving + expand axis · proper header/button nesting · single or multiple expand.',
+  blurb: 'Roving + expand axis · click toggles via expandOnActivate gesture · proper header/button nesting.',
 }
 
 const initial: NormalizedData = {
@@ -19,20 +27,15 @@ const initial: NormalizedData = {
   relationships: { [ROOT]: ['a', 'b', 'c'] },
 }
 
+// Accordion reducer = expandOnActivate gesture transforms activate events,
+// then base reducer handles the resulting navigate/expand stream.
+const base = composeReducers(reduce, setValue)
+const accordionReducer: Reducer = (d, e) =>
+  expandOnActivate(d, e).reduce<NormalizedData>((acc, ev) => base(acc, ev), d)
+
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial)
-  // accordion: click activates a header → toggle its expand state.
-  // (the headless `expand` axis only fires on Arrow keys, not clicks)
-  const onAccordionEvent = (e: UiEvent) => {
-    if (e.type === 'activate') {
-      const expandedIds = (data.entities.__expanded__?.data?.ids as string[]) ?? []
-      const isOpen = expandedIds.includes(e.id)
-      onEvent({ type: 'expand', id: e.id, open: !isOpen })
-      return
-    }
-    onEvent(e)
-  }
-  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onAccordionEvent)
+  const [data, onEvent] = useLocalData(initial, accordionReducer)
+  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onEvent)
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">

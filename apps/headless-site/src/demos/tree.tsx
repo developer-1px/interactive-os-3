@@ -1,4 +1,13 @@
-import { fromTree, type UiEvent } from '@p/headless'
+import {
+  composeReducers,
+  expandBranchOnActivate,
+  fromTree,
+  reduce,
+  setValue,
+  singleSelect,
+  type NormalizedData,
+  type Reducer,
+} from '@p/headless'
 import { useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from './_useLocalData'
 
@@ -6,7 +15,7 @@ export const meta = {
   title: 'Tree',
   apg: 'treeview',
   kind: 'collection' as const,
-  blurb: 'Hierarchical roving · Arrow expand/collapse · level/posinset/setsize auto-computed.',
+  blurb: 'Hierarchical roving · click on a branch toggles expand (expandBranchOnActivate gesture) · level/posinset auto.',
 }
 
 interface Node {
@@ -34,28 +43,24 @@ const tree: Node[] = [
   { id: 'pkg', label: 'package.json' },
 ]
 
+// Tree reducer = expandBranchOnActivate gesture (folders toggle, leaves select)
+// composed with base + singleSelect + setValue.
+const base = composeReducers(reduce, singleSelect, setValue)
+const treeReducer: Reducer = (d, e) =>
+  expandBranchOnActivate(d, e).reduce<NormalizedData>((acc, ev) => base(acc, ev), d)
+
 export default function Demo() {
-  const [data, onEvent] = useLocalData(() =>
-    fromTree(tree, {
-      getId: (n) => n.id,
-      getKids: (n) => n.children,
-      toData: (n) => ({ label: n.label }),
-      expandedIds: ['src', 'demos'],
-    }),
+  const [data, onEvent] = useLocalData(
+    () =>
+      fromTree(tree, {
+        getId: (n) => n.id,
+        getKids: (n) => n.children,
+        toData: (n) => ({ label: n.label }),
+        expandedIds: ['src', 'demos'],
+      }),
+    treeReducer,
   )
-  // tree: clicking a branch toggles its expand state (file-explorer convention)
-  const onTreeEvent = (e: UiEvent) => {
-    if (e.type === 'activate') {
-      const hasKids = (data.relationships[e.id] ?? []).length > 0
-      if (hasKids) {
-        const expandedIds = (data.entities.__expanded__?.data?.ids as string[]) ?? []
-        onEvent({ type: 'expand', id: e.id, open: !expandedIds.includes(e.id) })
-        return
-      }
-    }
-    onEvent(e)
-  }
-  const { rootProps, itemProps, items } = useTreePattern(data, onTreeEvent)
+  const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
 
   return (
     <ul

@@ -32,6 +32,15 @@ export const expandBranchOnActivate: GestureHelper = (d, e) => {
   return [{ type: 'navigate', id: e.id }, { type: 'expand', id: e.id, open: !open }]
 }
 
+// 자식 유무 무관, activate 시 expand 토글 + navigate.
+// Accordion 처럼 "항목 자체가 expandable"한 role 용 — 자식은 panel content이고
+// relationships에는 자식이 없는 경우. Tree/Menu는 expandBranchOnActivate 사용.
+export const expandOnActivate: GestureHelper = (d, e) => {
+  if (e.type !== 'activate') return [e]
+  const open = getExpanded(d).has(e.id)
+  return [{ type: 'navigate', id: e.id }, { type: 'expand', id: e.id, open: !open }]
+}
+
 // 헬퍼 조합. 왼쪽부터 차례로 통과.
 export const composeGestures = (...fns: GestureHelper[]): GestureHelper =>
   (d, e) => fns.reduce<UiEvent[]>((evs, fn) => evs.flatMap((ev) => fn(d, ev)), [e])
