@@ -40,7 +40,7 @@ updated: 2026-04-25
 
 ### 후속 마이그레이션 — 1~3 진행
 
-토큰화·EduPortalAdmin 마이그레이션·lint를 `lint:ds:all`에 등록. lint 위반 10 → 0, ShellSwitch 채택 1/9 → useShellMode 채택 2/9.
+토큰화·EduPortalAdmin 마이그레이션·lint 등록. lint 위반 10 → 0, ShellSwitch 채택 1/9 → useShellMode 채택 2/9.
 
 ### 사용자의 방향 전환 — 전체 제거
 

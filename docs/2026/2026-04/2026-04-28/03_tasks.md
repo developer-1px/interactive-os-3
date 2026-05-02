@@ -33,7 +33,7 @@ tags: [design-system, canvas, gap-fix, plan]
 - [x] Task 5 — breakpoint foundation lane 격상 🟡
 - [x] Task 6 — border foundation lane (hairline 분리) 🟡 — `borderWidth` · `borderStyle` 추가, hairline 셀렉터 mixin은 shape에 그대로 (라우트 호환)
 
-각 task 끝마다 `npx tsc -b --noEmit` + `pnpm lint:ds:all` + /canvas screenshot.
+각 task 끝마다 `npx tsc -b --noEmit` + 관련 DS lint 체크 + /canvas screenshot.
 
 ## Out of scope
 

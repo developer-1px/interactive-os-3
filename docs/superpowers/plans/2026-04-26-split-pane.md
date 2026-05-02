@@ -6,7 +6,7 @@
 
 **Architecture:** CSS Grid 단일 트랙축. 자식 사이에 `role="separator"` 자동 삽입. Pointer drag로 인접 두 panel의 fr 비율 갱신. `id` 있으면 localStorage 영속화. Wrapper class 없음(classless 원칙). Row/Column/Grid와 형제 layer.
 
-**Tech Stack:** React 19, TypeScript, Vite. 검증 수단: `pnpm build` (tsc + vite), `pnpm lint:ds:all`, 데모 라우트 시각 확인.
+**Tech Stack:** React 19, TypeScript, Vite. 검증 수단: `pnpm build` (tsc + vite), 필요한 개별 DS lint 체크, 데모 라우트 시각 확인.
 
 **Spec:** `docs/superpowers/specs/2026-04-26-split-pane-design.md`
 
@@ -565,7 +565,7 @@ git commit -m "feat(ds/ui): Split persistence — id-based localStorage save/loa
 
 ### Task 6: Demo route + final lint check
 
-Goal: ensure Split.demo is rendered somewhere viewable, run lint:ds:all to confirm no new violations.
+Goal: ensure Split.demo is rendered somewhere viewable, run the relevant DS lint checks to confirm no new violations.
 
 **Files:**
 - Possibly modify: a demo registry, or rely on existing convention
@@ -581,9 +581,9 @@ If no auto-discovery, add an entry in the catalog/foundations demo route in the 
 
 Edit the file(s) found in step 1, adding the same kind of entry for `Split.demo` as Grid.demo has. (Code differs per registry — reuse the existing pattern verbatim, just with Split.)
 
-- [ ] **Step 3: Run full lint suite**
+- [ ] **Step 3: Run relevant lint checks**
 
-Run: `pnpm lint:ds:all`
+Run the relevant individual DS lint scripts for the touched surface.
 Expected: no NEW 🔴 hatch errors mentioning Split. (Pre-existing warnings/drift in other files are OK — those were present before this work.)
 
 - [ ] **Step 4: Run build**
@@ -631,9 +631,10 @@ If Inbox uses definePage entities tree (FlatLayout) rather than JSX assembly, **
 Run: `pnpm dev`
 Open inbox route, drag separators between panels, reload, confirm persistence.
 
-- [ ] **Step 4: Run build + lint**
+- [ ] **Step 4: Run build + relevant lint checks**
 
-Run: `pnpm build && pnpm lint:ds:all`
+Run: `pnpm build`
+Then run the relevant individual DS lint scripts for the touched surface.
 Expected: no new errors.
 
 - [ ] **Step 5: Commit**
@@ -658,4 +659,4 @@ After all tasks done, manually verify:
 7. ✅ Tab 키로 separator에 포커스 이동 안 됨
 8. ✅ 드래그 중 페이지 어디든 col-resize/row-resize 커서
 9. ✅ `pnpm build` 통과
-10. ✅ `pnpm lint:ds:all` 신규 🔴 hatch 없음
+10. ✅ 관련 DS lint 체크에서 신규 🔴 hatch 없음

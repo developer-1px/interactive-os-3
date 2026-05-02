@@ -359,7 +359,7 @@ export function Tokens() {
 
 **검증**:
 1. `npx tsc -b --noEmit` — 타입
-2. `pnpm lint:ds:all` — 정적 규약
+2. 관련 DS lint 체크 — 정적 규약
 3. `/tokens` dev 스샷 — 카테고리 섹션 13~15개, ETC bucket 비어있거나 작음
 4. 신규 카테고리 추가 시뮬: 임의 `--ds-test-foo: 1` 추가 → ETC 섹션에 자동 등장 (OCP 검증)
 
@@ -378,4 +378,4 @@ export function Tokens() {
 
 ## 자율 진행
 
-§1·§2 🟢 → `/go` 로 자율 이관. W1→W12 위상정렬 그대로 단일 에이전트 순차 실행 권장 (병렬 dispatch 이득 < 한 파일 컨텍스트 비용). 검증 게이트 = `tsc -b` + `lint:ds:all` + `/tokens` dev 스샷.
+§1·§2 🟢 → `/go` 로 자율 이관. W1→W12 위상정렬 그대로 단일 에이전트 순차 실행 권장 (병렬 dispatch 이득 < 한 파일 컨텍스트 비용). 검증 게이트 = `tsc -b` + 관련 DS lint 체크 + `/tokens` dev 스샷.

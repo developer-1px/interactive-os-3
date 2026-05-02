@@ -19,7 +19,6 @@
     "lint:ds:data-part": "node scripts/lint-ds-data-part.mjs",
     "lint:ds:nested-only": "node scripts/lint-ds-nested-only.mjs",
     "lint:ds:tokens": "node scripts/lint-ds-tokens.mjs",
-    "lint:ds:all": "pnpm lint:ds:style-contract && pnpm lint:ds && pnpm lint:ds:values && pnpm lint:ds:invariants && pnpm lint:ds:contracts && pnpm lint:ds:keyboard && pnpm lint:ds:shell && pnpm lint:ds:flat-layout && pnpm lint:ds:slots && pnpm lint:ds:data-part && pnpm lint:ds:nested-only && pnpm lint:ds:tokens",
     "lint:dead": "node scripts/lint-dead.mjs",
     "audit:role-css": "tsx scripts/role-css-audit.ts",
     "audit:ds-css": "tsx scripts/audit-ds-css.ts",

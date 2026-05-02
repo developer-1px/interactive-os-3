@@ -77,7 +77,7 @@ tags: [design-system, audit, progress, mece]
 
 | 항목 | 상태 | 비고 |
 |------|:---:|------|
-| Lint 정적 규약 | ✅ | `lint:ds:all` (raw role · data-ds · 인라인 style) |
+| Lint 정적 규약 | ✅ | DS lint 체크 (raw role · data-ds · 인라인 style) |
 | TypeScript 게이트 | ✅ | `tsc -b --noEmit` |
 | zod 런타임 게이트 | ✅ | invariant 1번 |
 | HMI invariant (위계 단조) | ✅ | `audit-hmi` · hmi-loop 스킬 |

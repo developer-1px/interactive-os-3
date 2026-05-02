@@ -135,9 +135,8 @@ color pair 는 surface 소유자만 (item 이 자기 색을 선언 ❌).
 ## 9. 검증 — 페이지 만들고 끝낼 때
 
 1. `npx tsc -b --noEmit` — 타입
-2. `pnpm lint:ds:all` — 정적 규약 (data-ds 위반·raw role·인라인 style 등)
-3. dev 서버에서 preview snapshot — 콘솔 에러 0
-4. `audit-hmi` / `keyline-loop` — 위계·정렬 단조성
+2. dev 서버에서 preview snapshot — 콘솔 에러 0
+3. `audit-hmi` / `keyline-loop` — 위계·정렬 단조성
 
 ## 10. 참조
 

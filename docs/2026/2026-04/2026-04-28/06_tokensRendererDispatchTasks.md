@@ -12,7 +12,7 @@ related:
 > **PRD**: [05_tokensRendererDispatchPrd.md](./05_tokensRendererDispatchPrd.md)
 > **현 상태**: 외과적 in-place 패치 (Stage 0) 완료. 본체 분해 (Stage 1~) 는 한 턴씩 진행.
 
-각 Stage = 1 턴 = 1 commit 단위. 의존 위상 정렬됨 (앞 Stage 만 의존). 검증 게이트 = `npx tsc -b --noEmit` + `pnpm lint:ds:all` 로 신규 에러 0 + dev `/tokens` 스샷 회귀 0.
+각 Stage = 1 턴 = 1 commit 단위. 의존 위상 정렬됨 (앞 Stage 만 의존). 검증 게이트 = `npx tsc -b --noEmit` + 관련 DS lint 체크로 신규 에러 0 + dev `/tokens` 스샷 회귀 0.
 
 ## 스코프 (재정의)
 
