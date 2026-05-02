@@ -1,8 +1,9 @@
-import { Listbox, fromList, type UiEvent } from '@p/ds'
+import { fromList, useRovingTabIndex, composeAxes, navigate, activate, type UiEvent } from '@p/headless'
 import type { Slide } from '../entities/schema'
 
-/** 썸네일 필름스트립 — 현재 deck 의 슬라이드 N장을 16:9 미니 카드로 나열.
- *  각 썸네일은 "1 · 첫 줄 헤딩" 라벨. activate → 해당 index 로 점프. */
+const axis = composeAxes(navigate('horizontal'), activate)
+
+/** 썸네일 필름스트립 — 16:9 미니 카드 N장. ←/→ + Home/End + Enter/Space + click 으로 점프. */
 export function ThumbnailStrip({
   slides, activeIndex, onJump,
 }: { slides: Slide[]; activeIndex: number; onJump: (i: number) => void }) {
@@ -20,9 +21,42 @@ export function ThumbnailStrip({
       if (Number.isInteger(i) && i >= 0 && i < slides.length) onJump(i)
     }
   }
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, onEvent)
+
   return (
-    <nav data-part="thumbnails" aria-label="슬라이드 썸네일">
-      <Listbox data={data} onEvent={onEvent} aria-label="썸네일" />
+    <nav aria-label="슬라이드 썸네일">
+      <ul
+        role="listbox"
+        aria-label="썸네일"
+        {...delegate}
+        className="m-0 flex list-none flex-row gap-2 overflow-x-auto p-0 py-1"
+      >
+        {slides.map((_, i) => {
+          const id = String(i)
+          const focused = id === focusId
+          const selected = i === activeIndex
+          return (
+            <li
+              key={id}
+              role="option"
+              data-id={id}
+              tabIndex={focused ? 0 : -1}
+              aria-selected={selected}
+              ref={bindFocus(id)}
+              className={
+                'aspect-video w-24 flex-none cursor-pointer rounded border bg-white px-2 py-1 ' +
+                'flex items-start text-xs leading-tight ' +
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+                (selected
+                  ? 'border-neutral-900 text-neutral-900 shadow-[0_0_0_1px_currentColor]'
+                  : 'border-neutral-200 text-neutral-500')
+              }
+            >
+              {i + 1}
+            </li>
+          )
+        })}
+      </ul>
     </nav>
   )
 }
