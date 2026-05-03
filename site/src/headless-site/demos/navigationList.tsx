@@ -1,33 +1,26 @@
-import { useState } from 'react'
-import {
-  navigationListPattern,
-  type NavLink,
-  type NavigationListEvent,
-} from '@p/headless/patterns'
+import { fromList, singleCurrent } from '@p/headless'
+import { navigationListPattern } from '@p/headless/patterns'
+import { useLocalData } from '@p/headless/local'
 
 export const meta = {
   title: 'Navigation List',
   apg: 'navigation-list',
-  kind: 'bundle' as const,
+  kind: 'collection' as const,
   blurb: 'role="navigation" wrapping a list of links · aria-current="page" on the active one.',
   keys: () => [],
 }
 
-const initialItems: NavLink[] = [
-  { id: 'home', label: 'Home', href: '#home' },
-  { id: 'docs', label: 'Docs', href: '#docs', current: true },
-  { id: 'api', label: 'Api', href: '#api' },
-  { id: 'guides', label: 'Guides', href: '#guides' },
-]
-
 export default function Demo() {
-  const [items, setItems] = useState(initialItems)
-  const dispatch = (e: NavigationListEvent) => {
-    if (e.type === 'activate') {
-      setItems((xs) => xs.map((it) => ({ ...it, current: it.id === e.id })))
-    }
-  }
-  const { rootProps, linkProps } = navigationListPattern(items, dispatch, { label: 'Primary' })
+  const [data, onEvent] = useLocalData(
+    () => fromList([
+      { id: 'home', label: 'Home', href: '#home' },
+      { id: 'docs', label: 'Docs', href: '#docs', current: true },
+      { id: 'api', label: 'Api', href: '#api' },
+      { id: 'guides', label: 'Guides', href: '#guides' },
+    ]),
+    singleCurrent,
+  )
+  const { rootProps, linkProps, items } = navigationListPattern(data, onEvent, { label: 'Primary' })
 
   return (
     <nav {...rootProps} className="rounded-md border border-stone-200 bg-white p-2">

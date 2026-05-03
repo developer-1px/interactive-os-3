@@ -11,6 +11,8 @@ export interface TooltipOptions {
   /** 숨기기 delay (ms). */
   delayHide?: number
   idPrefix?: string
+  /** 외부에서 trigger ref 를 제어해야 할 때 주입. 미주입 시 내부 ref 생성. */
+  triggerRef?: RefObject<HTMLElement | null>
 }
 
 /**
@@ -18,16 +20,19 @@ export interface TooltipOptions {
  * https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
  *
  * hover/focus 로 열림, blur/Escape 로 닫힘. `aria-describedby` 로 trigger ↔ tip 연결.
+ *
+ * @example
+ *   const { triggerProps, tipProps, open } = useTooltipPattern({ idPrefix: 'save' })
  */
-export function useTooltipPattern(
-  triggerRef: RefObject<HTMLElement | null>,
-  opts: TooltipOptions = {},
-): {
+export function useTooltipPattern(opts: TooltipOptions = {}): {
   open: boolean
+  triggerRef: RefObject<HTMLElement | null>
   triggerProps: ItemProps
   tipProps: RootProps
 } {
   const { delayShow = 400, delayHide = 100, idPrefix = 'tip' } = opts
+  const internalRef = useRef<HTMLElement | null>(null)
+  const triggerRef = opts.triggerRef ?? internalRef
   const [open, setOpen] = useState(false)
   const tipId = `${idPrefix}-content`
   const tRef = useRef<number | null>(null)
@@ -63,5 +68,5 @@ export function useTooltipPattern(
     'data-state': open ? 'open' : 'closed',
   } as unknown as RootProps
 
-  return { open, triggerProps, tipProps }
+  return { open, triggerRef, triggerProps, tipProps }
 }

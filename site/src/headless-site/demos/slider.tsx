@@ -5,7 +5,7 @@ import { dedupe, probe } from '../keys'
 export const meta = {
   title: 'Slider',
   apg: 'slider',
-  kind: 'pure' as const,
+  kind: 'single-value' as const,
   blurb: 'numericStep axis · Arrow ±step · Home/End · aria-valuemin/max/now on thumb. 단일 number — useLocalValue.',
   keys: () => dedupe(probe(sliderAxis())),
 }

@@ -21,13 +21,6 @@ export interface TreeItem extends BaseItem {
   hasChildren: boolean
 }
 
-export interface ToolbarItem {
-  id: string
-  label?: string
-  disabled?: boolean
-  separator?: boolean
-}
-
 /** rootProps — pattern 컨테이너에 spread. role/aria-* 필수, ref/onKey 포함. */
 export type RootProps = HTMLAttributes<HTMLElement> & {
   role: string

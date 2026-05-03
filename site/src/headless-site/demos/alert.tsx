@@ -4,7 +4,7 @@ import { alertPattern } from '@p/headless/patterns'
 export const meta = {
   title: 'Alert',
   apg: 'alert',
-  kind: 'pure' as const,
+  kind: 'overlay' as const,
   blurb: 'role="alert" — assistive tech announces inserted/changed content immediately.',
   keys: () => [],
 }

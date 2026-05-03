@@ -1,6 +1,5 @@
-/** defineFeature — 한 화면 = 한 spec. 5 슬롯, 1 컨셉("state 의 pure 함수들"). */
+/** defineFeature — 한 화면 = 한 spec. 4 슬롯, 1 컨셉("state 의 pure 함수들"). */
 
-import type { Effect } from './effects'
 import type { QueryResult, QuerySpec } from './query'
 
 export interface CommandBase { type: string }
@@ -25,8 +24,6 @@ export interface FeatureSpec<
   query?: (s: S) => Q
   /** state + query → ViewModel. slot 단위 데이터. */
   view: (s: S, q: QueryResults<Q>) => V
-  /** state 의 함수로 외부 동기화 명세. runtime 이 prev/next diff 후 실행. */
-  effect?: (s: S) => Effect[]
 }
 
 /** identity — 타입 추론 + 런타임 검증 hook. */

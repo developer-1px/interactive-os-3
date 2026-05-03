@@ -1,4 +1,4 @@
-import { useResource } from '@p/headless'
+import { useResource } from '@p/headless/store'
 import { formatDate, formatSize } from '../features/data'
 import { extToLang, extToPreviewKind, type FsNode } from '../entities/types'
 import {

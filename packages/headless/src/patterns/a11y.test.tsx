@@ -110,9 +110,9 @@ describe('axe-core ARIA compliance', () => {
   })
 
   it('toolbar', async () => {
-    const items = [{ id: 'save', label: 'save' }, { id: 'open', label: 'open' }]
+    const data = flat(['save', 'open'])
     function C() {
-      const { rootProps, itemProps } = useToolbarPattern(items, undefined, { label: 'Editor' })
+      const { rootProps, itemProps, items } = useToolbarPattern(data, undefined, { label: 'Editor' })
       return (
         <div {...rootProps}>
           {items.map((it) => (

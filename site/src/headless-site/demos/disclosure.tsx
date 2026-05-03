@@ -1,4 +1,4 @@
-import { getExpanded, type NormalizedData } from '@p/headless'
+import { fromList, getExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
@@ -6,20 +6,15 @@ import { dedupe, probe } from '../keys'
 export const meta = {
   title: 'Disclosure',
   apg: 'disclosure',
-  kind: 'pure' as const,
+  kind: 'single-value' as const,
   blurb: 'data 차원 — meta.expanded set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
   keys: () => dedupe(probe(disclosureAxis())),
 }
 
 const PANEL_ID = 'details'
-const initial: NormalizedData = {
-  entities: { [PANEL_ID]: {} },
-  relationships: {},
-  meta: { root: [PANEL_ID] },
-}
 
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial)
+  const [data, onEvent] = useLocalData(() => fromList([{ id: PANEL_ID }]))
   const open = getExpanded(data).has(PANEL_ID)
   const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, onEvent)
 

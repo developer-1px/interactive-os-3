@@ -4,15 +4,14 @@ import { dialogKeys, useDialogPattern } from '@p/headless/patterns'
 export const meta = {
   title: 'Dialog',
   apg: 'dialog-modal',
-  kind: 'ref' as const,
+  kind: 'overlay' as const,
   blurb: 'First-focusable on open · Escape closes · returnFocus to trigger on close · Tab cycles within.',
   keys: () => dialogKeys(),
 }
 
 export default function Demo() {
-  const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const { rootProps, closeProps, open, setOpen } = useDialogPattern(ref, {
+  const { rootProps, closeProps, open, setOpen } = useDialogPattern({
     returnFocusRef: triggerRef,
     label: 'Confirm action',
   })
@@ -29,7 +28,6 @@ export default function Demo() {
       {open && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/30 p-4">
           <div
-            ref={ref}
             {...rootProps}
             className="w-full max-w-sm rounded-lg bg-white p-5 shadow-xl"
           >

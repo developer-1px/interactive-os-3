@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import { useFeature, type NormalizedData, type UiEvent } from '@p/headless'
-import { useListboxPattern, useToolbarPattern, type ToolbarEvent, type ToolbarItem } from '@p/headless/patterns'
+import { type NormalizedData, type UiEvent } from '@p/headless'
+import { useFeature } from '@p/headless/store'
+import { useListboxPattern, useToolbarPattern } from '@p/headless/patterns'
 import { Link } from '@tanstack/react-router'
 import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'
@@ -131,38 +132,27 @@ function SidebarSection({
 }
 
 function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
-  // feature 가 NormalizedData 로 toolbar 를 표현 (pressed/label 포함). pattern 호출 직전 items 로 추출.
-  const items: ToolbarItem[] = (data.meta?.root ?? []).map((id) => ({
-    id,
-    label: String(data.entities[id]?.label ?? id),
-    disabled: Boolean(data.entities[id]?.disabled),
-  }))
-  const dispatch = (e: ToolbarEvent) => onEvent({ type: e.type, id: e.id })
-  const { rootProps, itemProps } = useToolbarPattern(items, dispatch)
+  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
   return (
     <div
       {...(rootProps as ComponentPropsWithoutRef<'div'>)}
       aria-label="뷰 모드"
       className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
     >
-      {items.map((it) => {
-        const pressed = Boolean(data.entities[it.id]?.pressed)
-        return (
-          <button
-            key={it.id}
-            type="button"
-            {...(itemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
-            aria-pressed={pressed}
-            className={
-              'px-2 py-1 text-xs ' +
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
-              (pressed ? 'rounded bg-white text-neutral-900 shadow-sm' : 'text-neutral-500')
-            }
-          >
-            {it.label}
-          </button>
-        )
-      })}
+      {items.map((it) => (
+        <button
+          key={it.id}
+          type="button"
+          {...(itemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
+          className={
+            'px-2 py-1 text-xs ' +
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+            (it.selected ? 'rounded bg-white text-neutral-900 shadow-sm' : 'text-neutral-500')
+          }
+        >
+          {it.label}
+        </button>
+      ))}
     </div>
   )
 }

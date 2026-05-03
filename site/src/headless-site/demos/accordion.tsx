@@ -1,39 +1,28 @@
-import { useState } from 'react'
-import {
-  accordionAxis,
-  useAccordionPattern,
-  type AccordionEvent,
-  type AccordionItem,
-} from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { accordionAxis, useAccordionPattern } from '@p/headless/patterns'
+import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Accordion',
   apg: 'accordion',
-  kind: 'bundle' as const,
+  kind: 'collection' as const,
   blurb: 'N independent disclosures + header roving · click toggles · proper header/button nesting.',
   keys: () => dedupe(probe(accordionAxis())),
 }
 
-const initialItems: AccordionItem[] = [
-  { id: 'a', label: 'What is @p/headless?' },
-  { id: 'b', label: 'Why ARIA-first?' },
-  { id: 'c', label: 'Bring my own styles?' },
-]
-
 export default function Demo() {
-  const [items, setItems] = useState(initialItems)
-  const dispatch = (e: AccordionEvent) => {
-    if (e.type === 'expand') {
-      setItems((xs) => xs.map((it) => (it.id === e.id ? { ...it, expanded: e.open } : it)))
-    }
-  }
-  const { rootProps, headerProps, triggerProps, panelProps, items: rendered } =
-    useAccordionPattern(items, dispatch)
+  const [data, onEvent] = useLocalData(() => fromList([
+    { id: 'a', label: 'What is @p/headless?' },
+    { id: 'b', label: 'Why ARIA-first?' },
+    { id: 'c', label: 'Bring my own styles?' },
+  ]))
+  const { rootProps, headerProps, triggerProps, panelProps, items } =
+    useAccordionPattern(data, onEvent)
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
-      {rendered.map((item) => (
+      {items.map((item) => (
         <div key={item.id}>
           <h3 {...headerProps(item.id)} className="m-0">
             <button

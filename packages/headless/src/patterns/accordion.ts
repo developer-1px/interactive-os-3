@@ -1,19 +1,7 @@
-import { useMemo } from 'react'
-import type { NormalizedData, UiEvent } from '../types'
+import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, expand, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { ItemProps, RootProps } from './types'
-
-export interface AccordionItem {
-  id: string
-  label?: string
-  expanded?: boolean
-  disabled?: boolean
-}
-
-export type AccordionEvent =
-  | { type: 'expand'; id: string; open: boolean }
-  | { type: 'navigate'; id: string }
+import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface AccordionOptions {
   /** 'multiple' (default): 여러 패널 동시 열림. 'single': APG single-mode — 한 항목만 열림 (형제 자동 collapse). */
@@ -30,76 +18,62 @@ const axis = accordionAxis()
  * accordion — APG `/accordion/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
  *
- * N 개 독립 disclosure + 헤더 roving 의 *bundle*. picker 가 아니므로 NormalizedData
- * 가 아니라 `AccordionItem[]` 직접 받음. 각 item 의 `expanded` 가 SSoT.
- *
- * @example
- *   const [items, setItems] = useState<AccordionItem[]>([
- *     { id: 'a', label: 'What?', expanded: false }, ...
- *   ])
- *   const dispatch = (e: AccordionEvent) => {
- *     if (e.type === 'expand') {
- *       setItems(xs => xs.map(it => it.id === e.id ? { ...it, expanded: e.open } : it))
- *     }
- *   }
- *   const { triggerProps, panelProps, ... } = useAccordionPattern(items, dispatch)
+ * `meta.expanded` 가 expanded 항목 SSoT. `single` mode 는 패턴이 형제 자동
+ * collapse 를 emit. activate(click) → expand toggle.
  */
 export function useAccordionPattern(
-  items: AccordionItem[],
-  dispatch?: (e: AccordionEvent) => void,
+  data: NormalizedData,
+  onEvent?: (e: UiEvent) => void,
   opts: AccordionOptions = {},
 ): {
   rootProps: RootProps
   headerProps: (id: string) => ItemProps
   triggerProps: (id: string) => ItemProps
   panelProps: (id: string) => ItemProps
-  items: (AccordionItem & { posinset: number; setsize: number })[]
+  items: (BaseItem & { expanded: boolean })[]
 } {
   const { mode = 'multiple', autoFocus, idPrefix = 'acc' } = opts
 
-  // axis 인프라 재사용을 위해 items[] → NormalizedData 로 lift (외부 API 엔 보이지 않음).
-  const synth: NormalizedData = useMemo(() => ({
-    entities: Object.fromEntries(items.map((it) => [it.id, {
-      label: it.label,
-      disabled: it.disabled,
-    }])),
-    relationships: {},
-    meta: {
-      root: items.map((it) => it.id),
-      expanded: items.filter((it) => it.expanded).map((it) => it.id),
-    },
-  }), [items])
+  const ids = getChildren(data, ROOT)
+  const expandedSet = getExpanded(data)
 
-  // single mode: open 시 형제 자동 collapse — pattern 안에서 batch dispatch.
+  // single mode 는 open 시 형제 자동 collapse 를 emit.
   const intent = (e: UiEvent) => {
-    if (e.type === 'navigate') { dispatch?.({ type: 'navigate', id: e.id }); return }
+    if (e.type === 'navigate') { onEvent?.(e); return }
     if (e.type === 'expand') {
       if (mode === 'single' && e.open) {
-        for (const it of items) {
-          if (it.id !== e.id && it.expanded) dispatch?.({ type: 'expand', id: it.id, open: false })
+        for (const sib of ids) {
+          if (sib !== e.id && expandedSet.has(sib)) onEvent?.({ type: 'expand', id: sib, open: false })
         }
       }
-      dispatch?.({ type: 'expand', id: e.id, open: e.open })
+      onEvent?.(e)
       return
     }
-    // activate(click) → expand toggle (gesture: expandOnActivate).
     if (e.type === 'activate') {
-      const target = items.find((it) => it.id === e.id)
-      if (!target) return
-      const next = !target.expanded
+      const next = !expandedSet.has(e.id)
       if (mode === 'single' && next) {
-        for (const it of items) {
-          if (it.id !== e.id && it.expanded) dispatch?.({ type: 'expand', id: it.id, open: false })
+        for (const sib of ids) {
+          if (sib !== e.id && expandedSet.has(sib)) onEvent?.({ type: 'expand', id: sib, open: false })
         }
       }
-      dispatch?.({ type: 'expand', id: e.id, open: next })
+      onEvent?.({ type: 'expand', id: e.id, open: next })
     }
   }
 
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, synth, intent, { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, intent, { autoFocus })
 
   const triggerId = (id: string) => `${idPrefix}-trigger-${id}`
   const panelId = (id: string) => `${idPrefix}-panel-${id}`
+
+  const items = ids.map((id, i) => ({
+    id,
+    label: getLabel(data, id),
+    selected: false,
+    disabled: isDisabled(data, id),
+    posinset: i + 1,
+    setsize: ids.length,
+    expanded: expandedSet.has(id),
+  }))
 
   const rootProps: RootProps = { role: 'presentation', ...delegate } as unknown as RootProps
 
@@ -107,37 +81,30 @@ export function useAccordionPattern(
     ({ role: 'heading', 'aria-level': 3 } as unknown as ItemProps)
 
   const triggerProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
+    const open = expandedSet.has(id)
     return {
       id: triggerId(id),
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
-      'aria-expanded': it?.expanded ?? false,
+      'aria-expanded': open,
       'aria-controls': panelId(id),
-      'aria-disabled': it?.disabled || undefined,
-      'data-state': it?.expanded ? 'open' : 'closed',
+      'aria-disabled': isDisabled(data, id) || undefined,
+      'data-state': open ? 'open' : 'closed',
     } as unknown as ItemProps
   }
 
   const panelProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
+    const open = expandedSet.has(id)
     return {
       role: 'region',
       id: panelId(id),
       'aria-labelledby': triggerId(id),
-      hidden: !it?.expanded,
-      'data-state': it?.expanded ? 'open' : 'closed',
+      hidden: !open,
+      'data-state': open ? 'open' : 'closed',
     } as unknown as ItemProps
   }
 
-  return {
-    rootProps,
-    headerProps,
-    triggerProps,
-    panelProps,
-    items: items.map((it, i) => ({ ...it, posinset: i + 1, setsize: items.length })),
-  }
+  return { rootProps, headerProps, triggerProps, panelProps, items }
 }
-

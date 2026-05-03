@@ -5,7 +5,7 @@ import { dedupe, probe } from '../keys'
 export const meta = {
   title: 'Splitter',
   apg: 'windowsplitter',
-  kind: 'pure' as const,
+  kind: 'single-value' as const,
   blurb: 'role="separator" + aria-valuenow · numeric step axis shared with slider. 단일 number — useLocalValue.',
   keys: () => dedupe(probe(splitterAxis())),
 }

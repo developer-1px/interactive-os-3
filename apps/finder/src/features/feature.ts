@@ -4,18 +4,16 @@
  *  on       (s, cmd) → s'  pure
  *  query    외부 데이터 = state 의 함수 (tree / 파일 텍스트 / 이미지)
  *  view     state + query → ViewModel { titlebar, sidebar, columns, preview }
- *  effect   외부 동기화 = state 의 함수 (URL navigate, focus)
  *
  *  proof: 아직 라우트에 wiring 되지 않음. /devtools/finder-feature 에서 단독 검증. */
 
 import {
-  defineFeature,
   fromList,
   fromTree,
   pathAncestors,
   type NormalizedData,
-  type QuerySpec,
 } from '@p/headless'
+import { defineFeature, type QuerySpec } from '@p/headless/store'
 import {
   getTree, loadText, getImageUrl, sidebar as favItems, smartGroups, walk,
   tagGroups, tagItems, isTagPath,

@@ -28,6 +28,8 @@ export interface DialogOptions {
   label?: string
   labelledBy?: string
   describedBy?: string
+  /** 외부에서 root ref 를 제어해야 할 때 주입. 미주입 시 내부 ref 생성. */
+  rootRef?: RefObject<HTMLElement | null>
 }
 
 const FOCUSABLE_SELECTOR =
@@ -53,10 +55,8 @@ const FOCUSABLE_SELECTOR =
  * 동작: open 시 첫 focusable 에 focus, Escape 닫기, 닫힘 시 trigger 로 focus
  * 복귀, modal 일 때 Tab 이 dialog 내부에서 순환 (focus trap).
  */
-export function useDialogPattern(
-  rootRef: RefObject<HTMLElement | null>,
-  opts: DialogOptions = {},
-): {
+export function useDialogPattern(opts: DialogOptions = {}): {
+  rootRef: RefObject<HTMLElement | null>
   rootProps: RootProps
   closeProps: ItemProps
   open: boolean
@@ -75,6 +75,8 @@ export function useDialogPattern(
     labelledBy,
     describedBy,
   } = opts
+  const internalRootRef = useRef<HTMLElement | null>(null)
+  const rootRef = opts.rootRef ?? internalRootRef
   const [internalOpen, setInternalOpen] = useState(defaultOpen)
   const isControlled = openProp !== undefined
   const open = isControlled ? openProp : internalOpen
@@ -143,5 +145,5 @@ export function useDialogPattern(
     onClick: () => setOpen(false),
   } as unknown as ItemProps
 
-  return { rootProps, closeProps, open, setOpen }
+  return { rootRef, rootProps, closeProps, open, setOpen }
 }

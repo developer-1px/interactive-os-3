@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import type { UiEvent as UiEvent, NormalizedData } from './types'
+import type { UiEvent as UiEvent, NormalizedData } from '../types'
 
 /**
  * Resource — ui/ `(data, onEvent)`의 데이터 레이어 평행.
@@ -173,13 +173,4 @@ export function writeResource<T, Args extends unknown[] = []>(
   const key = resource.key(...args)
   setValue(key, value)
   resource.serialize?.(key, value, ...args)
-}
-
-/** 컴포넌트 외부에서 현재 값 읽기 (구독 없음). */
-export function readResource<T, Args extends unknown[] = []>(
-  resource: Resource<T, Args>,
-  ...args: Args
-): T | undefined {
-  const key = resource.key(...args)
-  return getEntry(key).value as T | undefined
 }

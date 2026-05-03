@@ -1,17 +1,15 @@
-import { useRef } from 'react'
 import { tooltipKeys, useTooltipPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Tooltip',
   apg: 'tooltip',
-  kind: 'ref' as const,
+  kind: 'overlay' as const,
   blurb: 'Hover/focus delays · Escape closes · trigger ↔ tip linked via aria-describedby.',
   keys: () => tooltipKeys(),
 }
 
 export default function Demo() {
-  const ref = useRef<HTMLButtonElement>(null)
-  const { open, triggerProps, tipProps } = useTooltipPattern(ref)
+  const { open, triggerProps, tipProps } = useTooltipPattern()
 
   return (
     <div className="relative inline-block">

@@ -5,7 +5,7 @@ import { dedupe, probe } from '../keys'
 export const meta = {
   title: 'Switch',
   apg: 'switch',
-  kind: 'pure' as const,
+  kind: 'single-value' as const,
   blurb: 'role="switch" · Space/Enter activate. 단일 boolean — useLocalValue 한 줄.',
   keys: () => dedupe(probe(switchAxis())),
 }
