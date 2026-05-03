@@ -1,26 +1,14 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import {
-  useControlState,
-  type NormalizedData, type UiEvent,
-} from '@p/headless'
-import { useToolbarPattern } from '@p/headless/patterns'
+import { useToolbarPattern, type ToolbarEvent, type ToolbarItem } from '@p/headless/patterns'
 import { smartGroupOf } from '../features/data'
 import type { ViewMode } from '../entities/types'
 
-const VIEW_ITEMS: { id: ViewMode; label: string }[] = [
+const VIEW_ITEMS: ToolbarItem[] = [
   { id: 'icons',   label: '아이콘' },
   { id: 'list',    label: '목록' },
   { id: 'columns', label: '컬럼' },
   { id: 'gallery', label: '갤러리' },
 ]
-
-const buildViewToolbar = (view: ViewMode): NormalizedData => ({
-  entities: Object.fromEntries(
-    VIEW_ITEMS.map((v) => [v.id, { label: v.label, pressed: view === v.id }]),
-  ),
-  relationships: {},
-  meta: { root: VIEW_ITEMS.map((v) => v.id), focus: view },
-})
 
 const titleOf = (path: string) => {
   const smart = smartGroupOf(path)
@@ -37,12 +25,10 @@ export function TitleBar({
   onViewChange: (v: ViewMode) => void
 }) {
   const name = titleOf(path)
-  const [data, dispatch] = useControlState(buildViewToolbar(view))
-  const onEvent = (e: UiEvent) => {
-    dispatch(e)
+  const dispatch = (e: ToolbarEvent) => {
     if (e.type === 'activate') onViewChange(e.id as ViewMode)
   }
-  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
+  const { rootProps, itemProps } = useToolbarPattern(VIEW_ITEMS, dispatch)
 
   return (
     <header className="flex items-center gap-3 border-b border-neutral-200 bg-white px-3 py-2">
@@ -65,9 +51,8 @@ export function TitleBar({
         aria-label="뷰 모드"
         className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
       >
-        {items.map((it) => {
-          const d = data.entities[it.id] ?? {}
-          const pressed = Boolean(d.pressed)
+        {VIEW_ITEMS.map((it) => {
+          const pressed = view === it.id
           return (
             <button
               key={it.id}
@@ -80,7 +65,7 @@ export function TitleBar({
                 (pressed ? 'rounded bg-white text-neutral-900 shadow-sm' : 'text-neutral-500')
               }
             >
-              {String(d.label ?? it.label)}
+              {it.label}
             </button>
           )
         })}

@@ -22,7 +22,7 @@ export { useListboxPattern, listboxAxis, type ListboxOptions } from './listbox'
 export { useTabsPattern, tabsAxis, type TabsOptions } from './tabs'
 export { useTreePattern, treeAxis, type TreeOptions } from './tree'
 export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'
-export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
+export { useToolbarPattern, toolbarAxis, type ToolbarEvent, type ToolbarOptions } from './toolbar'
 
 export { useMenuPattern, menuAxis, type MenuOptions } from './menu'
 export { useMenubarPattern, menubarAxis, type MenubarOptions } from './menubar'
@@ -35,7 +35,10 @@ export {
 export { useDialogPattern, dialogKeys, type DialogOptions } from './dialog'
 export { useTooltipPattern, tooltipKeys, type TooltipOptions } from './tooltip'
 
-export { useFeedPattern, feedAxis, type FeedOptions } from './feed'
+export {
+  useFeedPattern, feedAxis,
+  type FeedItem, type FeedEvent, type FeedOptions,
+} from './feed'
 export { useGridPattern, gridAxis, type GridOptions, type GridCell } from './grid'
 export { useCarouselPattern, type CarouselOptions, type CarouselSlide } from './carousel'
 export { spinbuttonPattern, spinbuttonAxis, type SpinbuttonOptions } from './spinbutton'
@@ -44,7 +47,10 @@ export { disclosurePattern, disclosureAxis, type DisclosureOptions } from './dis
 export { sliderPattern, sliderAxis, type SliderOptions } from './slider'
 export { splitterPattern, splitterAxis, type SplitterOptions } from './splitter'
 export { toggleSwitchPattern, switchAxis, type SwitchOptions } from './switch'
-export { navigationListPattern, type NavigationListOptions } from './navigationList'
+export {
+  navigationListPattern,
+  type NavLink, type NavigationListEvent, type NavigationListOptions,
+} from './navigationList'
 export { alertPattern, alertdialogPattern, type AlertdialogOptions } from './alert'
 
 export type { BaseItem, TreeItem, ToolbarItem, RootProps, ItemProps } from './types'

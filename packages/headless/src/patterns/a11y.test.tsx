@@ -110,9 +110,9 @@ describe('axe-core ARIA compliance', () => {
   })
 
   it('toolbar', async () => {
-    const data = flat(['save', 'open'])
+    const items = [{ id: 'save', label: 'save' }, { id: 'open', label: 'open' }]
     function C() {
-      const { rootProps, itemProps, items } = useToolbarPattern(data, undefined, { label: 'Editor' })
+      const { rootProps, itemProps } = useToolbarPattern(items, undefined, { label: 'Editor' })
       return (
         <div {...rootProps}>
           {items.map((it) => (
@@ -156,12 +156,13 @@ describe('axe-core ARIA compliance', () => {
   })
 
   it('feed', async () => {
-    const data = flat(['a1', 'a2'])
+    const items = [{ id: 'a1', label: 'a1' }, { id: 'a2', label: 'a2' }]
     function C() {
-      const { rootProps, articleProps, labelProps, items } = useFeedPattern(data, undefined, { label: 'Posts' })
+      const { rootProps, articleProps, labelProps, items: rendered } =
+        useFeedPattern(items, undefined, { label: 'Posts' })
       return (
         <div {...rootProps}>
-          {items.map((it) => (
+          {rendered.map((it) => (
             <article key={it.id} {...articleProps(it.id)}>
               <h3 {...labelProps(it.id)}>{it.label}</h3>
             </article>

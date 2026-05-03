@@ -21,7 +21,10 @@ export interface TreeItem extends BaseItem {
   hasChildren: boolean
 }
 
-export interface ToolbarItem extends Pick<BaseItem, 'id' | 'label' | 'disabled'> {
+export interface ToolbarItem {
+  id: string
+  label?: string
+  disabled?: boolean
   separator?: boolean
 }
 

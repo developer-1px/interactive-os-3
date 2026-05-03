@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react'
 import { useFeature, type NormalizedData, type UiEvent } from '@p/headless'
-import { useListboxPattern, useToolbarPattern } from '@p/headless/patterns'
+import { useListboxPattern, useToolbarPattern, type ToolbarEvent, type ToolbarItem } from '@p/headless/patterns'
 import { Link } from '@tanstack/react-router'
 import { finderFeature } from '../features/feature'
 import { PreviewPane } from './Preview'
@@ -131,7 +131,14 @@ function SidebarSection({
 }
 
 function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
-  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
+  // feature 가 NormalizedData 로 toolbar 를 표현 (pressed/label 포함). pattern 호출 직전 items 로 추출.
+  const items: ToolbarItem[] = (data.meta?.root ?? []).map((id) => ({
+    id,
+    label: String(data.entities[id]?.label ?? id),
+    disabled: Boolean(data.entities[id]?.disabled),
+  }))
+  const dispatch = (e: ToolbarEvent) => onEvent({ type: e.type, id: e.id })
+  const { rootProps, itemProps } = useToolbarPattern(items, dispatch)
   return (
     <div
       {...(rootProps as ComponentPropsWithoutRef<'div'>)}
@@ -139,8 +146,7 @@ function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiE
       className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
     >
       {items.map((it) => {
-        const d = data.entities[it.id] ?? {}
-        const pressed = Boolean(d.pressed)
+        const pressed = Boolean(data.entities[it.id]?.pressed)
         return (
           <button
             key={it.id}
@@ -153,7 +159,7 @@ function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiE
               (pressed ? 'rounded bg-white text-neutral-900 shadow-sm' : 'text-neutral-500')
             }
           >
-            {String(d.label ?? it.label)}
+            {it.label}
           </button>
         )
       })}

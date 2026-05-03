@@ -1,32 +1,30 @@
-import { fromList } from '@p/headless'
-import { toolbarAxis, useToolbarPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { useState } from 'react'
+import { toolbarAxis, useToolbarPattern, type ToolbarItem } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Toolbar',
   apg: 'toolbar',
-  kind: 'collection' as const,
+  kind: 'bundle' as const,
   blurb: 'role="toolbar" · single Tab stop · Arrow keys roam internal items · Enter/Space activate.',
   keys: () => dedupe(probe(toolbarAxis())),
 }
 
+const initialItems: ToolbarItem[] = [
+  { id: 'bold', label: 'Bold' },
+  { id: 'italic', label: 'Italic' },
+  { id: 'underline', label: 'Underline' },
+  { id: 'sep', separator: true },
+  { id: 'link', label: 'Link' },
+]
+
 export default function Demo() {
-  const [data, onEvent] = useLocalData(() =>
-    fromList([
-      { label: 'Bold' },
-      { label: 'Italic' },
-      { label: 'Underline' },
-      { label: '|', separator: true, disabled: true },
-      { label: 'Link' },
-    ]),
-  )
-  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
+  const [items] = useState(initialItems)
+  const { rootProps, itemProps } = useToolbarPattern(items, undefined, { label: 'Formatting' })
 
   return (
     <div
       {...rootProps}
-      aria-label="Formatting"
       className="inline-flex items-center gap-1 rounded-md border border-stone-200 bg-white p-1 text-sm"
     >
       {items.map((item) =>

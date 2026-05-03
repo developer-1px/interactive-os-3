@@ -1,4 +1,5 @@
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { useMemo } from 'react'
+import type { NormalizedData, UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, ToolbarItem } from './types'
@@ -6,6 +7,10 @@ import type { ItemProps, RootProps, ToolbarItem } from './types'
 /** Toolbar 가 등록하는 axis — SSOT. */
 export const toolbarAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
   composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
+
+export type ToolbarEvent =
+  | { type: 'activate'; id: string }
+  | { type: 'navigate'; id: string }
 
 export interface ToolbarOptions {
   orientation?: 'horizontal' | 'vertical'
@@ -17,17 +22,22 @@ export interface ToolbarOptions {
 }
 
 /**
- * toolbar — APG `/toolbar/` recipe (data-driven 변종).
+ * toolbar — APG `/toolbar/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
  *
- * native button 자유 children 묶음이라면 `useSpatialNavigation` 직접 사용 권장.
- * 이 recipe 는 entity.data 기반 toolbar 구성 시.
+ * N 개 독립 button 의 *bundle* — picker 가 아니므로 NormalizedData 가 아니라
+ * `ToolbarItem[]` 직접 받음. separator 항목은 roving skip.
  *
- * separator 항목은 itemProps role="separator" + tabIndex=-1, roving skip.
+ * @example
+ *   const items: ToolbarItem[] = [
+ *     { id: 'bold', label: 'Bold' }, { id: 'italic', label: 'Italic' },
+ *     { id: 'sep', separator: true }, { id: 'link', label: 'Link' },
+ *   ]
+ *   const { rootProps, itemProps } = useToolbarPattern(items, dispatch, { label: 'Formatting' })
  */
 export function useToolbarPattern(
-  data: NormalizedData,
-  onEvent?: (e: UiEvent) => void,
+  items: ToolbarItem[],
+  dispatch?: (e: ToolbarEvent) => void,
   opts: ToolbarOptions = {},
 ): {
   rootProps: RootProps
@@ -36,21 +46,24 @@ export function useToolbarPattern(
 } {
   const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
 
-  const axis = toolbarAxis({ orientation })
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    axis, data, onEvent ?? (() => {}), { autoFocus },
-  )
-  const ids = getChildren(data, ROOT)
+  // axis 인프라 재사용을 위해 items[] → 합성 NormalizedData (separator 는 disabled 로 lift, roving skip).
+  const synth: NormalizedData = useMemo(() => ({
+    entities: Object.fromEntries(items.map((it) => [it.id, {
+      label: it.label,
+      disabled: it.disabled || it.separator,
+    }])),
+    relationships: {},
+    meta: { root: items.map((it) => it.id) },
+  }), [items])
 
-  const items: ToolbarItem[] = ids.map((id) => {
-    const ent = data.entities[id] ?? {}
-    return {
-      id,
-      label: getLabel(data, id),
-      disabled: isDisabled(data, id),
-      separator: Boolean(ent.separator),
-    }
-  })
+  const intent = (e: UiEvent) => {
+    if (e.type === 'activate') dispatch?.({ type: 'activate', id: e.id })
+    else if (e.type === 'navigate') dispatch?.({ type: 'navigate', id: e.id })
+  }
+
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(
+    toolbarAxis({ orientation }), synth, intent, { autoFocus },
+  )
 
   const rootProps: RootProps = {
     role: 'toolbar',
