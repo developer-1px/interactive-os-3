@@ -18,7 +18,9 @@
 import { useState } from 'react'
 import type { Reducer } from '../state/compose'
 import { reduceWithDefaults } from '../state/defaults'
-import type { NormalizedData, UiEvent } from '../types'
+import type { NormalizedData, UiEvent, ValueEvent } from '../types'
+
+export type { ValueEvent }
 
 export function useLocalData(
   initial: NormalizedData | (() => NormalizedData),
@@ -28,9 +30,6 @@ export function useLocalData(
   const onEvent = (e: UiEvent) => setData((d) => reducer(d, e))
   return [data, onEvent] as const
 }
-
-/** 단일값 dispatch 의 이벤트 모양 — collection UiEvent 의 `value` 변종에서 id 가 빠짐. */
-export type ValueEvent<T> = { type: 'value'; value: T }
 
 /**
  * 단일값 컨트롤 (slider/switch/spinbutton/splitter) 의 quick-start state.

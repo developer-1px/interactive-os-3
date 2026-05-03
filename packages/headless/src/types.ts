@@ -43,6 +43,9 @@ export type UiEvent =
   /** zoom: cursor (cx, cy)를 고정점으로 scale을 k 배 — Figma/Miro 식 cursor-anchored zoom */
   | { type: 'zoom'; id: string; cx: number; cy: number; k: number }
 
+/** UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter. */
+export type ValueEvent<T> = { type: 'value'; value: T }
+
 export const getRoot = (d: NormalizedData): string[] =>
   d.meta?.root ?? []
 

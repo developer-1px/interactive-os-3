@@ -1,9 +1,7 @@
-import { type NormalizedData, type UiEvent } from '../types'
-import { ROOT } from '../types'
-import { bindAxis } from '../state/bind'
+import type { ValueEvent } from '../types'
+import { bindValueAxis, pickNumericValue } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps } from './types'
-import type { ValueEvent } from '../local'
 
 /** Spinbutton 이 등록하는 axis — SSOT. */
 export const spinbuttonAxis = () => numericStep('horizontal')
@@ -47,16 +45,12 @@ export function spinbuttonPattern(
 ): { spinbuttonProps: ItemProps } {
   const { min, max, step = 1, label, invalid, valueText, readOnly, disabled = false } = opts
 
-  const synth: NormalizedData = {
-    entities: { [ROOT]: { value, min, max, step } },
-    relationships: {},
-  }
-  const intent = (e: UiEvent) => {
-    if (e.type === 'value' && typeof e.value === 'number') {
-      dispatch?.({ type: 'value', value: e.value })
-    }
-  }
-  const { onKey } = bindAxis(spinbuttonAxis(), synth, intent)
+  const { onKey } = bindValueAxis(
+    spinbuttonAxis(),
+    { value, min, max, step },
+    dispatch,
+    pickNumericValue,
+  )
 
   const spinbuttonProps: ItemProps = {
     role: 'spinbutton',
@@ -69,7 +63,7 @@ export function spinbuttonPattern(
     'aria-invalid': invalid || undefined,
     'aria-readonly': readOnly || undefined,
     'aria-disabled': disabled || undefined,
-    onKeyDown: (e: React.KeyboardEvent) => onKey(e, ROOT),
+    onKeyDown: onKey,
   } as unknown as ItemProps
 
   return { spinbuttonProps }

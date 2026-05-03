@@ -1,9 +1,7 @@
-import { type NormalizedData, type UiEvent } from '../types'
-import { ROOT } from '../types'
-import { bindAxis } from '../state/bind'
+import type { ValueEvent } from '../types'
+import { bindValueAxis, pickNumericValue } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps, RootProps } from './types'
-import type { ValueEvent } from '../local'
 
 /** Splitter 가 등록하는 axis — SSOT. (vertical separator → horizontal arrow keys, vice versa) */
 export const splitterAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) => {
@@ -40,17 +38,12 @@ export function splitterPattern(
 } {
   const { orientation = 'vertical', min = 0, max = 100, step = 1, label, disabled = false } = opts
 
-  const synth: NormalizedData = {
-    entities: { [ROOT]: { value, min, max, step } },
-    relationships: {},
-  }
-  const axis = splitterAxis({ orientation })
-  const intent = (e: UiEvent) => {
-    if (e.type === 'value' && typeof e.value === 'number') {
-      dispatch?.({ type: 'value', value: e.value })
-    }
-  }
-  const { onKey } = bindAxis(axis, synth, intent)
+  const { onKey } = bindValueAxis(
+    splitterAxis({ orientation }),
+    { value, min, max, step },
+    dispatch,
+    pickNumericValue,
+  )
 
   const rootProps: RootProps = { role: 'group' } as RootProps
 
@@ -63,7 +56,7 @@ export function splitterPattern(
     'aria-valuemax': max,
     'aria-label': label,
     'aria-disabled': disabled || undefined,
-    onKeyDown: (e: React.KeyboardEvent) => onKey(e, ROOT),
+    onKeyDown: onKey,
   } as unknown as ItemProps
 
   return { rootProps, handleProps }

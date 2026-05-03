@@ -1,9 +1,7 @@
-import { type NormalizedData, type UiEvent } from '../types'
-import { ROOT } from '../types'
-import { bindAxis } from '../state/bind'
+import type { ValueEvent } from '../types'
+import { bindValueAxis, pickNumericValue } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps, RootProps } from './types'
-import type { ValueEvent } from '../local'
 
 /** Slider 가 등록하는 axis — SSOT. */
 export const sliderAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
@@ -11,7 +9,6 @@ export const sliderAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {
 
 export interface SliderOptions {
   orientation?: 'horizontal' | 'vertical'
-  /** numeric constraints — display + numericStep axis 모두 참조. */
   min?: number
   max?: number
   step?: number
@@ -43,18 +40,12 @@ export function sliderPattern(
   const { orientation = 'horizontal', min = 0, max = 100, step = 1, label, disabled = false } = opts
   const pct = ((value - min) / (max - min)) * 100
 
-  // axis (numericStep) 는 entity.data: {value, min, max, step} 를 읽음. 합성 ROOT 1개로 통과.
-  const synth: NormalizedData = {
-    entities: { [ROOT]: { value, min, max, step } },
-    relationships: {},
-  }
-  const axis = sliderAxis({ orientation })
-  const intent = (e: UiEvent) => {
-    if (e.type === 'value' && typeof e.value === 'number') {
-      dispatch?.({ type: 'value', value: e.value })
-    }
-  }
-  const { onKey } = bindAxis(axis, synth, intent)
+  const { onKey } = bindValueAxis(
+    sliderAxis({ orientation }),
+    { value, min, max, step },
+    dispatch,
+    pickNumericValue,
+  )
 
   const rootProps: RootProps = {
     role: 'group',
@@ -81,7 +72,7 @@ export function sliderPattern(
     'aria-valuemax': max,
     'aria-label': label,
     'aria-disabled': disabled || undefined,
-    onKeyDown: (e: React.KeyboardEvent) => onKey(e, ROOT),
+    onKeyDown: onKey,
     style: orientation === 'horizontal'
       ? { left: `${pct}%` }
       : { bottom: `${pct}%` },
