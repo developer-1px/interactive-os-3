@@ -54,10 +54,9 @@ const initialData = fromTree(files, { expanded: ['src', 'demos'] })
 const reducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
 const slots: TreeSlots<FileItem> = {
-  icon: ({ data }: TreeSlotProps<FileItem>) =>
-    data.kind === 'folder' ? 'dir' : 'file',
-  label: ({ item }: TreeSlotProps<FileItem>) =>
-    <strong className="font-medium">{item.label}</strong>,
+  icon: ({ item, data }: TreeSlotProps<FileItem>) =>
+    data.kind === 'folder' ? (item.expanded ? '📂' : '📁') : '📄',
+  label: ({ item }: TreeSlotProps<FileItem>) => item.label,
   trailing: ({ data }: TreeSlotProps<FileItem>) =>
     typeof data.ext === 'string' ? data.ext : null,
 }

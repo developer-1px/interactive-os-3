@@ -1,7 +1,6 @@
 import type { NormalizedData, UiEvent } from '@p/headless'
 import { useTreePattern } from '@p/headless/patterns'
 import {
-  branchIndicator,
   defaultLabel,
   emptySlot,
   renderSlot,
@@ -22,13 +21,12 @@ export function Tree<TItem extends object = Record<string, unknown>>({
   'aria-label': ariaLabel,
 }: TreeProps<TItem>) {
   const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
-  const hasSlots = Object.keys(slots).length > 0
 
   return (
     <ul
       {...rootProps}
       aria-label={ariaLabel}
-      className="w-72 rounded-md border border-stone-200 bg-white p-1 text-sm text-stone-900"
+      className="w-72 select-none rounded-md border border-stone-200 bg-white py-1 text-sm text-stone-900"
     >
       {items.map((item) => {
         const itemData = (data.entities[item.id] ?? {}) as TItem
@@ -36,32 +34,34 @@ export function Tree<TItem extends object = Record<string, unknown>>({
           <li
             key={item.id}
             {...itemProps(item.id)}
-            style={{ paddingLeft: 8 + item.level * 16 }}
-            className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white"
+            className="relative cursor-pointer leading-7 hover:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
           >
-            {hasSlots ? (
-              <span className="grid grid-cols-[1rem_2rem_1fr_auto] items-center gap-1">
-                <span data-slot="indicator" className="text-center text-stone-400">
-                  {renderSlot(slots.indicator, branchIndicator, item, itemData)}
-                </span>
-                <span data-slot="icon" className="font-mono text-[10px] uppercase text-stone-500">
-                  {renderSlot(slots.icon, emptySlot, item, itemData)}
-                </span>
-                <span data-slot="label" className="truncate">
-                  {renderSlot(slots.label, defaultLabel, item, itemData)}
-                </span>
-                <span data-slot="trailing" className="font-mono text-[10px] uppercase text-stone-400">
-                  {renderSlot(slots.trailing, emptySlot, item, itemData)}
-                </span>
+            {/* indent guides — 부모 깊이만큼 vertical line. 마지막 줄만 그어 진짜 tree 답게. */}
+            {Array.from({ length: item.level }, (_, i) => (
+              <span
+                key={i}
+                aria-hidden
+                className="absolute top-0 bottom-0 w-px bg-stone-200 group-aria-selected:bg-blue-300"
+                style={{ left: 8 + i * 16 + 7 }}
+              />
+            ))}
+            <span
+              className="relative flex items-center gap-1.5"
+              style={{ paddingLeft: 8 + item.level * 16 }}
+            >
+              <span aria-hidden className="inline-flex w-4 shrink-0 justify-center text-stone-400 aria-selected:text-white">
+                {item.hasChildren ? (item.expanded ? '▾' : '▸') : ''}
               </span>
-            ) : (
-              <span className="inline-flex items-center gap-1">
-                <span data-slot="indicator" className="inline-block w-4 text-center text-stone-400">
-                  {branchIndicator({ item, data: itemData })}
-                </span>
-                <span>{item.label}</span>
+              <span aria-hidden className="inline-flex w-4 shrink-0 justify-center text-base leading-none">
+                {renderSlot(slots.icon, emptySlot, item, itemData)}
               </span>
-            )}
+              <span className="truncate flex-1">
+                {renderSlot(slots.label, defaultLabel, item, itemData)}
+              </span>
+              <span className="px-1 font-mono text-[10px] uppercase text-stone-400 group-aria-selected:text-blue-100">
+                {renderSlot(slots.trailing, emptySlot, item, itemData)}
+              </span>
+            </span>
           </li>
         )
       })}

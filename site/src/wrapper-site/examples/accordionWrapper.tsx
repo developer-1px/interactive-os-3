@@ -1,0 +1,38 @@
+/* eslint-disable react-refresh/only-export-components */
+import { fromList } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
+import {
+  Accordion,
+  type AccordionSlotProps,
+  type AccordionSlots,
+  accordionWrapperKeys,
+} from './_accordionWrapper'
+
+interface FaqItem extends Record<string, unknown> {
+  label: string
+  body: string
+}
+
+const initialBase = fromList([
+  { id: 'what',   label: 'What is @p/headless?',  body: 'ARIA behavior infrastructure — axes, roving, gesture, patterns.' },
+  { id: 'why',    label: 'Why ARIA-first?',       body: 'W3C/WHATWG specs are the canonical naming source.' },
+  { id: 'styles', label: 'Bring my own styles?',  body: 'Yes — Tailwind utilities directly. No design tokens, no CSS-in-JS.' },
+])
+const initialData = { ...initialBase, meta: { ...initialBase.meta, expanded: ['what'] } }
+
+const slots: AccordionSlots<FaqItem> = {
+  panel: ({ data }: AccordionSlotProps<FaqItem>) => <p>{data.body}</p>,
+}
+
+export const meta = {
+  title: 'Accordion Wrapper',
+  apg: 'accordion',
+  kind: 'collection' as const,
+  blurb: 'Wrapper surface: data · onEvent · slots — same shape as Tree/Menu wrappers.',
+  keys: accordionWrapperKeys,
+}
+
+export default function Demo() {
+  const [data, onEvent] = useLocalData(() => initialData)
+  return <Accordion data={data} onEvent={onEvent} slots={slots as AccordionSlots} />
+}
