@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ROOT, reduce, type NormalizedData } from '@p/headless'
+import { reduce, type NormalizedData } from '@p/headless'
 import { toggleSwitchPattern } from '@p/headless/patterns'
 
 export const meta = {
@@ -13,10 +13,10 @@ export const meta = {
 const SWITCH_ID = 'notif'
 const initial: NormalizedData = {
   entities: {
-    [ROOT]: { id: ROOT },
-    [SWITCH_ID]: { id: SWITCH_ID, data: { checked: false, label: 'Notifications' } },
+    [SWITCH_ID]: { checked: false, label: 'Notifications' },
   },
-  relationships: { [ROOT]: [SWITCH_ID] },
+  relationships: {},
+  meta: { root: [SWITCH_ID] },
 }
 
 export default function Demo() {
@@ -28,10 +28,7 @@ export default function Demo() {
         ...d,
         entities: {
           ...d.entities,
-          [SWITCH_ID]: {
-            ...d.entities[SWITCH_ID]!,
-            data: { ...(d.entities[SWITCH_ID]!.data ?? {}), checked: e.value },
-          },
+          [SWITCH_ID]: { ...(d.entities[SWITCH_ID] ?? {}), checked: e.value },
         },
       }))
     } else {

@@ -6,7 +6,6 @@ import {
   expandOnActivate,
   navigate,
   reduce,
-  ROOT,
   setValue,
   singleExpand,
   type NormalizedData,
@@ -25,12 +24,12 @@ export const meta = {
 
 const initial: NormalizedData = {
   entities: {
-    [ROOT]: { id: ROOT },
-    a: { id: 'a', data: { label: 'What is @p/headless?' } },
-    b: { id: 'b', data: { label: 'Why ARIA-first?' } },
-    c: { id: 'c', data: { label: 'Bring my own styles?' } },
+    a: { label: 'What is @p/headless?' },
+    b: { label: 'Why ARIA-first?' },
+    c: { label: 'Bring my own styles?' },
   },
-  relationships: { [ROOT]: ['a', 'b', 'c'] },
+  relationships: {},
+  meta: { root: ['a', 'b', 'c'] },
 }
 
 const accordionReducer = applyGesture(

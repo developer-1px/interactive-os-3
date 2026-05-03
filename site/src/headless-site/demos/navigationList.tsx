@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ROOT, type NormalizedData } from '@p/headless'
+import type { NormalizedData } from '@p/headless'
 import { navigationListPattern } from '@p/headless/patterns'
 
 export const meta = {
@@ -13,16 +13,14 @@ export const meta = {
 function build(currentId: string): NormalizedData {
   const ids = ['home', 'docs', 'api', 'guides']
   return {
-    entities: {
-      [ROOT]: { id: ROOT },
-      ...Object.fromEntries(
-        ids.map((id) => [
-          id,
-          { id, data: { label: id[0].toUpperCase() + id.slice(1), href: `#${id}`, current: id === currentId } },
-        ]),
-      ),
-    },
-    relationships: { [ROOT]: ids },
+    entities: Object.fromEntries(
+      ids.map((id) => [
+        id,
+        { label: id[0].toUpperCase() + id.slice(1), href: `#${id}`, current: id === currentId },
+      ]),
+    ),
+    relationships: {},
+    meta: { root: ids },
   }
 }
 

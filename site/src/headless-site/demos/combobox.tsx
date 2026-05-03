@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { activate, fromList, navigate, reduce, ROOT, type UiEvent } from '@p/headless'
+import { activate, fromList, getRoot, navigate, reduce, type UiEvent } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
@@ -23,7 +23,7 @@ export default function Demo() {
   const data = useMemo(() => {
     const filtered = ALL.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
     const list = fromList(filtered.map((label) => ({ label })))
-    const validFocus = focusId && list.entities[focusId] ? focusId : list.relationships[ROOT]?.[0]
+    const validFocus = focusId && list.entities[focusId] ? focusId : getRoot(list)[0]
     return validFocus ? reduce(list, { type: 'navigate', id: validFocus }) : list
   }, [query, focusId])
 
