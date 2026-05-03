@@ -22,7 +22,7 @@ export const meta = {
   title: 'Tabs Wrapper',
   apg: 'tabs',
   kind: 'collection' as const,
-  blurb: 'Wrapper surface: data · onEvent · slots — same shape as Tree/Menu wrappers.',
+  blurb: 'Wrapper surface: data · onEvent · slots — Tree/Menu 와 동일 모양.',
   keys: tabsWrapperKeys,
 }
 

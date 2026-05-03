@@ -6,9 +6,8 @@ import { defaultLabel, emptySlot, renderSlot, type MenuSlots } from './slots'
 export interface MenuProps<TItem extends object = Record<string, unknown>> {
   data: NormalizedData
   onEvent: (event: UiEvent) => void
+  'aria-label': string
   slots?: MenuSlots<TItem>
-  /** Trigger button label — defaults to 'Menu'. Visual prop, not data. */
-  label?: string
 }
 
 /**
@@ -32,7 +31,7 @@ export function Menu<TItem extends object = Record<string, unknown>>({
   data,
   onEvent,
   slots = {},
-  label = 'Menu',
+  'aria-label': ariaLabel,
 }: MenuProps<TItem>) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -50,10 +49,11 @@ export function Menu<TItem extends object = Record<string, unknown>>({
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-label={ariaLabel}
         onClick={() => setOpen((value) => !value)}
         className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-stone-50"
       >
-        {label}
+        {ariaLabel}
       </button>
       {open && (
         <div className="absolute left-0 top-full z-10 mt-1">

@@ -10,6 +10,7 @@ import {
 export interface AccordionProps<TItem extends object = Record<string, unknown>> {
   data: NormalizedData
   onEvent: (event: UiEvent) => void
+  'aria-label': string
   slots?: AccordionSlots<TItem>
   mode?: 'multiple' | 'single'
 }
@@ -18,13 +19,18 @@ export function Accordion<TItem extends object = Record<string, unknown>>({
   data,
   onEvent,
   slots = {},
+  'aria-label': ariaLabel,
   mode = 'multiple',
 }: AccordionProps<TItem>) {
   const { rootProps, headerProps, triggerProps, panelProps, items } =
     useAccordionPattern(data, onEvent, { mode })
 
   return (
-    <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
+    <div
+      {...rootProps}
+      aria-label={ariaLabel}
+      className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white"
+    >
       {items.map((item) => {
         const itemData = (data.entities[item.id] ?? {}) as TItem
         return (

@@ -36,12 +36,11 @@ export function Tree<TItem extends object = Record<string, unknown>>({
             {...itemProps(item.id)}
             className="relative cursor-pointer leading-7 hover:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
           >
-            {/* indent guides — 부모 깊이만큼 vertical line. 마지막 줄만 그어 진짜 tree 답게. */}
             {Array.from({ length: item.level }, (_, i) => (
               <span
                 key={i}
                 aria-hidden
-                className="absolute top-0 bottom-0 w-px bg-stone-200 group-aria-selected:bg-blue-300"
+                className="absolute top-0 bottom-0 w-px bg-stone-200"
                 style={{ left: 8 + i * 16 + 7 }}
               />
             ))}
@@ -49,7 +48,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
               className="relative flex items-center gap-1.5"
               style={{ paddingLeft: 8 + item.level * 16 }}
             >
-              <span aria-hidden className="inline-flex w-4 shrink-0 justify-center text-stone-400 aria-selected:text-white">
+              <span aria-hidden className="inline-flex w-4 shrink-0 justify-center text-stone-400">
                 {item.hasChildren ? (item.expanded ? '▾' : '▸') : ''}
               </span>
               <span aria-hidden className="inline-flex w-4 shrink-0 justify-center text-base leading-none">
@@ -58,7 +57,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
               <span className="truncate flex-1">
                 {renderSlot(slots.label, defaultLabel, item, itemData)}
               </span>
-              <span className="px-1 font-mono text-[10px] uppercase text-stone-400 group-aria-selected:text-blue-100">
+              <span className="px-1 font-mono text-[10px] uppercase text-stone-400">
                 {renderSlot(slots.trailing, emptySlot, item, itemData)}
               </span>
             </span>

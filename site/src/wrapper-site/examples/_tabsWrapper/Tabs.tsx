@@ -20,11 +20,11 @@ export function Tabs<TItem extends object = Record<string, unknown>>({
   slots = {},
   'aria-label': ariaLabel,
 }: TabsProps<TItem>) {
-  const { rootProps, tabProps, panelProps, items } = useTabsPattern(data, onEvent)
+  const { rootProps, tabProps, panelProps, items } = useTabsPattern(data, onEvent, { label: ariaLabel })
 
   return (
     <div className="space-y-3">
-      <div {...rootProps} aria-label={ariaLabel} className="flex gap-1 border-b border-stone-200">
+      <div {...rootProps} className="flex gap-1 border-b border-stone-200">
         {items.map((item) => {
           const itemData = (data.entities[item.id] ?? {}) as TItem
           return (

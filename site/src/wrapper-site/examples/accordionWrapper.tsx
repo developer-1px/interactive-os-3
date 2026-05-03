@@ -16,7 +16,7 @@ interface FaqItem extends Record<string, unknown> {
 const initialBase = fromList([
   { id: 'what',   label: 'What is @p/headless?',  body: 'ARIA behavior infrastructure — axes, roving, gesture, patterns.' },
   { id: 'why',    label: 'Why ARIA-first?',       body: 'W3C/WHATWG specs are the canonical naming source.' },
-  { id: 'styles', label: 'Bring my own styles?',  body: 'Yes — Tailwind utilities directly. No design tokens, no CSS-in-JS.' },
+  { id: 'styles', label: 'Bring my own styles?',  body: 'Tailwind utilities directly. No design tokens, no CSS-in-JS.' },
 ])
 const initialData = { ...initialBase, meta: { ...initialBase.meta, expanded: ['what'] } }
 
@@ -28,11 +28,11 @@ export const meta = {
   title: 'Accordion Wrapper',
   apg: 'accordion',
   kind: 'collection' as const,
-  blurb: 'Wrapper surface: data · onEvent · slots — same shape as Tree/Menu wrappers.',
+  blurb: 'Wrapper surface: data · onEvent · slots — Tree/Menu 와 동일 모양.',
   keys: accordionWrapperKeys,
 }
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() => initialData)
-  return <Accordion data={data} onEvent={onEvent} slots={slots as AccordionSlots} />
+  return <Accordion aria-label="FAQ" data={data} onEvent={onEvent} slots={slots as AccordionSlots} />
 }

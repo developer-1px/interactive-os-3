@@ -27,7 +27,7 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
 }: ComboboxProps<TItem>) {
   const [query, setQuery] = useState('')
 
-  // 외부 data 를 query 로 필터링한 view 를 만든다 — wrapper 가 시각/필터 책임.
+  // 외부 data 의 사본을 query 로 필터링한 view 를 만든다 — wrapper 가 시각/필터 책임.
   const filtered = useMemo(() => {
     const ids = getRoot(data)
     const matches = ids.filter((id) => {
