@@ -4,8 +4,9 @@
 export const KINDS = {
   pure:       { order: 0, label: 'Pure recipe',       badge: 'bg-emerald-100 text-emerald-900 ring-emerald-200' },
   ref:        { order: 1, label: 'Ref-based',         badge: 'bg-amber-100 text-amber-900 ring-amber-200' },
-  collection: { order: 2, label: 'Collection',        badge: 'bg-sky-100 text-sky-900 ring-sky-200' },
-  custom:     { order: 3, label: 'Custom (composed)', badge: 'bg-violet-100 text-violet-900 ring-violet-200' },
+  collection: { order: 2, label: 'Collection (picker)', badge: 'bg-sky-100 text-sky-900 ring-sky-200' },
+  bundle:     { order: 3, label: 'Bundle',            badge: 'bg-teal-100 text-teal-900 ring-teal-200' },
+  custom:     { order: 4, label: 'Custom (composed)', badge: 'bg-violet-100 text-violet-900 ring-violet-200' },
 } as const
 
 export type Kind = keyof typeof KINDS
