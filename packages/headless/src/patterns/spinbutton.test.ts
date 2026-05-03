@@ -4,10 +4,7 @@ import { fromTree } from '../state/fromTree'
 import type { NormalizedData } from '../types'
 
 const make = (overrides: Record<string, unknown> = {}): NormalizedData =>
-  fromTree(
-    [{ id: 'n', value: 5, min: 0, max: 10, step: 1, label: 'Quantity', ...overrides }],
-    { getId: (n) => n.id as string, toData: (n) => n },
-  )
+  fromTree([{ id: 'n', value: 5, min: 0, max: 10, step: 1, label: 'Quantity', ...overrides }])
 
 describe('spinbuttonPattern', () => {
   it('exposes role=spinbutton + aria-value* + aria-label', () => {
@@ -21,10 +18,7 @@ describe('spinbuttonPattern', () => {
   })
 
   it('omits aria-valuemin/max when not in entity', () => {
-    const data = fromTree([{ id: 'n', value: 5 }], {
-      getId: (n) => n.id as string,
-      toData: (n) => n,
-    })
+    const data = fromTree([{ id: 'n', value: 5 }])
     const { spinbuttonProps } = spinbuttonPattern(data, 'n')
     expect(spinbuttonProps['aria-valuemin' as keyof typeof spinbuttonProps]).toBeUndefined()
     expect(spinbuttonProps['aria-valuemax' as keyof typeof spinbuttonProps]).toBeUndefined()

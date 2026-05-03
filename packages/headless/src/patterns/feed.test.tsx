@@ -4,14 +4,11 @@ import { useFeedPattern } from './feed'
 import { fromTree } from '../state/fromTree'
 
 const data = () =>
-  fromTree(
-    [
-      { id: 'a1', label: 'Article 1' },
-      { id: 'a2', label: 'Article 2' },
-      { id: 'a3', label: 'Article 3' },
-    ],
-    { getId: (n) => n.id, toData: (n) => ({ label: n.label }) },
-  )
+  fromTree([
+    { id: 'a1', label: 'Article 1' },
+    { id: 'a2', label: 'Article 2' },
+    { id: 'a3', label: 'Article 3' },
+  ])
 
 describe('useFeedPattern', () => {
   it('rootProps: role=feed, aria-busy from opts', () => {

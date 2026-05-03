@@ -2,27 +2,23 @@ import { describe, expect, it } from 'vitest'
 import { singleExpand } from './expansion'
 import { reduce } from './reduce'
 import { fromTree } from './fromTree'
-import { EXPANDED, getExpanded, getOpen, type NormalizedData } from '../types'
+import { getExpanded, getOpen, type NormalizedData } from '../types'
 
-const accordion = (expandedIds: string[] = []): NormalizedData =>
+const accordion = (expanded: string[] = []): NormalizedData =>
   fromTree(
     [
       { id: 'a', label: 'A' },
       { id: 'b', label: 'B' },
       { id: 'c', label: 'C' },
     ],
-    {
-      getId: (n) => n.id,
-      toData: (n) => ({ label: n.label }),
-      expandedIds,
-    },
+    { expanded },
   )
 
 describe('singleExpand reducer', () => {
   it('collapses sibling entries when one opens', () => {
     const data = accordion(['a'])
     const next = singleExpand(data, { type: 'expand', id: 'b', open: true })
-    expect(next.entities[EXPANDED]?.ids).toEqual([])
+    expect(next.meta?.expanded).toEqual([])
   })
 
   it('does not touch state on close (open=false)', () => {
@@ -43,7 +39,7 @@ describe('singleExpand reducer', () => {
   it('does not collapse the item that is being opened', () => {
     const data = accordion(['a', 'b'])
     const next = singleExpand(data, { type: 'expand', id: 'b', open: true })
-    expect(next.entities[EXPANDED]?.ids).toEqual(['b'])
+    expect(next.meta?.expanded).toEqual(['b'])
   })
 
   it('ignores non-expand events', () => {
@@ -54,7 +50,7 @@ describe('singleExpand reducer', () => {
 })
 
 describe('expand vs open meta separation', () => {
-  it('expand event tracks EXPANDED set, open event tracks OPEN set', () => {
+  it('expand event tracks expanded set, open event tracks open set', () => {
     const data = accordion()
     const afterExpand = reduce(data, { type: 'expand', id: 'a', open: true })
     expect(getExpanded(afterExpand).has('a')).toBe(true)
@@ -65,7 +61,7 @@ describe('expand vs open meta separation', () => {
     expect(getExpanded(afterOpen).has('dialog1')).toBe(false)
   })
 
-  it('OPEN and EXPANDED are independent — no leak between domains', () => {
+  it('open and expanded are independent — no leak between domains', () => {
     let d = accordion()
     d = reduce(d, { type: 'expand', id: 'panel', open: true })
     d = reduce(d, { type: 'open', id: 'modal', open: true })

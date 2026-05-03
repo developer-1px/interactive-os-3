@@ -8,7 +8,7 @@ import { axe, toHaveNoViolations } from 'jest-axe'
 
 expect.extend(toHaveNoViolations)
 import { fromTree } from '../state/fromTree'
-import { ROOT, type NormalizedData } from '../types'
+import type { NormalizedData } from '../types'
 
 import { useListboxPattern } from './listbox'
 import { useTabsPattern } from './tabs'
@@ -23,22 +23,19 @@ import { useCarouselPattern } from './carousel'
 import { spinbuttonPattern } from './spinbutton'
 
 const flat = (ids: string[]): NormalizedData =>
-  fromTree(
-    ids.map((id) => ({ id, label: id.toUpperCase() })),
-    { getId: (n) => n.id, toData: (n) => ({ label: n.label }) },
-  )
+  fromTree(ids.map((id) => ({ id, label: id.toUpperCase() })))
 
 const grid3x2 = (): NormalizedData => ({
   entities: {
-    r1: { id: 'r1' }, r2: { id: 'r2' }, r3: { id: 'r3' },
-    a: { id: 'a', data: { label: 'A' } }, b: { id: 'b', data: { label: 'B' } },
-    c: { id: 'c', data: { label: 'C' } }, d: { id: 'd', data: { label: 'D' } },
-    e: { id: 'e', data: { label: 'E' } }, f: { id: 'f', data: { label: 'F' } },
+    r1: {}, r2: {}, r3: {},
+    a: { label: 'A' }, b: { label: 'B' },
+    c: { label: 'C' }, d: { label: 'D' },
+    e: { label: 'E' }, f: { label: 'F' },
   },
   relationships: {
-    [ROOT]: ['r1', 'r2', 'r3'],
     r1: ['a', 'b'], r2: ['c', 'd'], r3: ['e', 'f'],
   },
+  meta: { root: ['r1', 'r2', 'r3'] },
 })
 
 describe('axe-core ARIA compliance', () => {
@@ -214,9 +211,7 @@ describe('axe-core ARIA compliance', () => {
   })
 
   it('spinbutton', async () => {
-    const data = fromTree([{ id: 'n', value: 5, min: 0, max: 10, step: 1, label: 'Quantity' }], {
-      getId: (n) => n.id as string, toData: (n) => n,
-    })
+    const data = fromTree([{ id: 'n', value: 5, min: 0, max: 10, step: 1, label: 'Quantity' }])
     function C() {
       const { spinbuttonProps } = spinbuttonPattern(data, 'n')
       return <div {...spinbuttonProps}>5</div>
