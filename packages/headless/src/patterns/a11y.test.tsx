@@ -211,9 +211,9 @@ describe('axe-core ARIA compliance', () => {
   })
 
   it('spinbutton', async () => {
-    const data = fromTree([{ id: 'n', value: 5, min: 0, max: 10, step: 1, label: 'Quantity' }])
     function C() {
-      const { spinbuttonProps } = spinbuttonPattern(data, 'n')
+      const { spinbuttonProps } = spinbuttonPattern(5, undefined,
+        { min: 0, max: 10, step: 1, label: 'Quantity' })
       return <div {...spinbuttonProps}>5</div>
     }
     expect(await axe((render(<C />)).container)).toHaveNoViolations()

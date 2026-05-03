@@ -1,28 +1,23 @@
-import type { NormalizedData } from '@p/headless'
+import { useLocalValue } from '@p/headless/local'
 import { splitterAxis, splitterPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Splitter',
   apg: 'windowsplitter',
-  kind: 'collection' as const,
-  blurb: 'role="separator" + aria-valuenow · numeric step axis shared with slider.',
+  kind: 'pure' as const,
+  blurb: 'role="separator" + aria-valuenow · numeric step axis shared with slider. 단일 number — useLocalValue.',
   keys: () => dedupe(probe(splitterAxis())),
 }
 
-const initial: NormalizedData = {
-  entities: {
-    handle: { value: 40, min: 10, max: 90, step: 5 },
-  },
-  relationships: {},
-  meta: { root: ['handle'] },
-}
-
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial)
-  const value = Number(data.entities.handle?.value ?? 50)
-  const { rootProps, handleProps } = splitterPattern(data, 'handle', onEvent, { orientation: 'horizontal' })
+  const [value, dispatch] = useLocalValue(40)
+  const { rootProps, handleProps } = splitterPattern(value, dispatch, {
+    orientation: 'horizontal',
+    min: 10,
+    max: 90,
+    step: 5,
+  })
 
   return (
     <div

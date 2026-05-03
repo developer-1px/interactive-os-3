@@ -1,28 +1,23 @@
-import type { NormalizedData } from '@p/headless'
+import { useLocalValue } from '@p/headless/local'
 import { sliderAxis, sliderPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Slider',
   apg: 'slider',
-  kind: 'collection' as const,
-  blurb: 'numericStep axis · Arrow ±step · Home/End · aria-valuemin/max/now on thumb.',
+  kind: 'pure' as const,
+  blurb: 'numericStep axis · Arrow ±step · Home/End · aria-valuemin/max/now on thumb. 단일 number — useLocalValue.',
   keys: () => dedupe(probe(sliderAxis())),
 }
 
-const initial: NormalizedData = {
-  entities: {
-    thumb: { value: 40, min: 0, max: 100, step: 5, label: 'Volume' },
-  },
-  relationships: {},
-  meta: { root: ['thumb'] },
-}
-
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial)
-  const value = Number(data.entities.thumb?.value ?? 0)
-  const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(data, 'thumb', onEvent)
+  const [value, dispatch] = useLocalValue(40)
+  const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(value, dispatch, {
+    min: 0,
+    max: 100,
+    step: 5,
+    label: 'Volume',
+  })
 
   return (
     <div className="space-y-2">

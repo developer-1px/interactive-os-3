@@ -1,5 +1,4 @@
-import type { NormalizedData } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
+import { useLocalValue } from '@p/headless/local'
 import { switchAxis, toggleSwitchPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
@@ -7,23 +6,13 @@ export const meta = {
   title: 'Switch',
   apg: 'switch',
   kind: 'pure' as const,
-  blurb: 'role="switch" · Space/Enter activate. data 차원 — entity.checked SSoT, activate→{value} 직렬 emit.',
+  blurb: 'role="switch" · Space/Enter activate. 단일 boolean — useLocalValue 한 줄.',
   keys: () => dedupe(probe(switchAxis())),
 }
 
-const SWITCH_ID = 'notif'
-const initial: NormalizedData = {
-  entities: {
-    [SWITCH_ID]: { value: false, label: 'Notifications' },
-  },
-  relationships: {},
-  meta: { root: [SWITCH_ID] },
-}
-
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial)
-  const on = Boolean(data.entities[SWITCH_ID]?.value)
-  const { switchProps } = toggleSwitchPattern(data, SWITCH_ID, onEvent, { label: 'Notifications' })
+  const [on, dispatch] = useLocalValue(false)
+  const { switchProps } = toggleSwitchPattern(on, dispatch, { label: 'Notifications' })
 
   return (
     <div className="flex items-center gap-3">
