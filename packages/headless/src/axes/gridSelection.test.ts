@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest'
 import { gridSelection } from './gridSelection'
 import { keyTrigger, clickTrigger } from '../trigger'
-import { ROOT, type NormalizedData } from '../types'
+import type { NormalizedData } from '../types'
 
 const grid3x3 = (): NormalizedData => ({
   entities: {
-    r1: { id: 'r1' }, r2: { id: 'r2' }, r3: { id: 'r3' },
-    c11: { id: 'c11' }, c12: { id: 'c12' }, c13: { id: 'c13' },
-    c21: { id: 'c21' }, c22: { id: 'c22' }, c23: { id: 'c23' },
-    c31: { id: 'c31' }, c32: { id: 'c32' }, c33: { id: 'c33' },
+    r1: {}, r2: {}, r3: {},
+    c11: {}, c12: {}, c13: {},
+    c21: {}, c22: {}, c23: {},
+    c31: {}, c32: {}, c33: {},
   },
   relationships: {
-    [ROOT]: ['r1', 'r2', 'r3'],
     r1: ['c11', 'c12', 'c13'],
     r2: ['c21', 'c22', 'c23'],
     r3: ['c31', 'c32', 'c33'],
   },
+  meta: { root: ['r1', 'r2', 'r3'] },
 })
 
 const key = (k: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
@@ -90,7 +90,7 @@ describe('gridSelection axis', () => {
     it('with anchor at c11 — Shift+ArrowDown from c12 selects rectangle [r1..r2 × c11..c12]', () => {
       const dWithAnchor: NormalizedData = {
         ...d,
-        entities: { ...d.entities, __selectAnchor__: { id: '__selectAnchor__', data: { id: 'c11' } } },
+        meta: { ...d.meta, selectAnchor: 'c11' },
       }
       const result = gridSelection(dWithAnchor, 'c12', key('ArrowDown', { shift: true }))
       expect(result?.[0]).toEqual({ type: 'navigate', id: 'c22' })

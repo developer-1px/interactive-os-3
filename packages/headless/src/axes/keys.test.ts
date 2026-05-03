@@ -4,7 +4,6 @@ import { activate } from './activate'
 import { escape } from './escape'
 import { navigate } from './navigate'
 import { keyTrigger, clickTrigger } from '../trigger'
-import { ROOT } from '../types'
 
 const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
   keyTrigger({ key, ctrl: false, shift: false, meta: false, alt: false, ...mods })
@@ -40,8 +39,9 @@ describe('keys.ts SSOT', () => {
 
 describe('axes pull from SSOT (regression guard)', () => {
   const data = {
-    entities: { a: { id: 'a' }, b: { id: 'b' } },
-    relationships: { [ROOT]: ['a', 'b'] },
+    entities: { a: {}, b: {} },
+    relationships: {},
+    meta: { root: ['a', 'b'] },
   }
 
   it('activate fires for INTENTS.activate.trigger keys', () => {

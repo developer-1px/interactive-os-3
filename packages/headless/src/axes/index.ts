@@ -1,13 +1,21 @@
-import type { NormalizedData } from '../types'
+import { ROOT, type NormalizedData } from '../types'
 
 export { composeAxes, type Axis } from './axis'
 
-export const parentOf = (d: NormalizedData, id: string): string | undefined =>
-  Object.entries(d.relationships).find(([, kids]) => kids.includes(id))?.[0]
+/**
+ * parentOf — returns parent id, or ROOT sentinel if id is top-level.
+ * Returns undefined only if id isn't found anywhere.
+ */
+export const parentOf = (d: NormalizedData, id: string): string | undefined => {
+  if (d.meta?.root?.includes(id)) return ROOT
+  return Object.entries(d.relationships).find(([, kids]) => kids.includes(id))?.[0]
+}
 
 export const siblingsOf = (d: NormalizedData, id: string): string[] => {
   const p = parentOf(d, id)
-  return p ? d.relationships[p] ?? [] : []
+  if (!p) return []
+  if (p === ROOT) return d.meta?.root ?? []
+  return d.relationships[p] ?? []
 }
 
 export const enabledSiblings = (d: NormalizedData, id: string): string[] =>

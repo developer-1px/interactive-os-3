@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { gridNavigate } from './gridNavigate'
 import { keyTrigger } from '../trigger'
-import { ROOT, type NormalizedData } from '../types'
+import type { NormalizedData } from '../types'
 
 /**
  * 3×3 grid:
@@ -11,17 +11,17 @@ import { ROOT, type NormalizedData } from '../types'
  */
 const grid3x3 = (): NormalizedData => ({
   entities: {
-    r1: { id: 'r1' }, r2: { id: 'r2' }, r3: { id: 'r3' },
-    c11: { id: 'c11' }, c12: { id: 'c12' }, c13: { id: 'c13' },
-    c21: { id: 'c21' }, c22: { id: 'c22' }, c23: { id: 'c23' },
-    c31: { id: 'c31' }, c32: { id: 'c32' }, c33: { id: 'c33' },
+    r1: {}, r2: {}, r3: {},
+    c11: {}, c12: {}, c13: {},
+    c21: {}, c22: {}, c23: {},
+    c31: {}, c32: {}, c33: {},
   },
   relationships: {
-    [ROOT]: ['r1', 'r2', 'r3'],
     r1: ['c11', 'c12', 'c13'],
     r2: ['c21', 'c22', 'c23'],
     r3: ['c31', 'c32', 'c33'],
   },
+  meta: { root: ['r1', 'r2', 'r3'] },
 })
 
 const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
@@ -80,12 +80,12 @@ describe('gridNavigate axis', () => {
 
   it('clamps column when target row is shorter (sparse)', () => {
     const sparse: NormalizedData = {
-      entities: { r1: { id: 'r1' }, r2: { id: 'r2' }, a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' }, d: { id: 'd' } },
+      entities: { r1: {}, r2: {}, a: {}, b: {}, c: {}, d: {} },
       relationships: {
-        [ROOT]: ['r1', 'r2'],
         r1: ['a', 'b', 'c'],   // 3 cells
         r2: ['d'],              // 1 cell
       },
+      meta: { root: ['r1', 'r2'] },
     }
     // From c (col 2) ArrowDown into r2 → r2 only has 1 cell, clamp to col 0
     expect(gridNavigate(sparse, 'c', k('ArrowDown'))).toEqual([{ type: 'navigate', id: 'd' }])

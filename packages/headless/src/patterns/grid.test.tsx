@@ -1,22 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useGridPattern } from './grid'
-import { ROOT, type NormalizedData } from '../types'
+import type { NormalizedData } from '../types'
 
 const grid3x2 = (): NormalizedData => ({
   entities: {
-    r1: { id: 'r1' }, r2: { id: 'r2' }, r3: { id: 'r3' },
-    a: { id: 'a', data: { label: 'A' } },
-    b: { id: 'b', data: { label: 'B' } },
-    c: { id: 'c', data: { label: 'C' } },
-    d: { id: 'd', data: { label: 'D' } },
-    e: { id: 'e', data: { label: 'E' } },
-    f: { id: 'f', data: { label: 'F' } },
+    r1: {}, r2: {}, r3: {},
+    a: { label: 'A' },
+    b: { label: 'B' },
+    c: { label: 'C' },
+    d: { label: 'D' },
+    e: { label: 'E' },
+    f: { label: 'F' },
   },
   relationships: {
-    [ROOT]: ['r1', 'r2', 'r3'],
     r1: ['a', 'b'], r2: ['c', 'd'], r3: ['e', 'f'],
   },
+  meta: { root: ['r1', 'r2', 'r3'] },
 })
 
 describe('useGridPattern', () => {
@@ -77,7 +77,7 @@ describe('useGridPattern', () => {
 
   it('selected cell sets aria-selected + data-selected', () => {
     const data = grid3x2()
-    data.entities.b!.data = { ...(data.entities.b!.data ?? {}), selected: true }
+    data.entities.b = { ...(data.entities.b ?? {}), selected: true }
     const { result } = renderHook(() => useGridPattern(data))
     const b = result.current.cellProps('b') as unknown as Record<string, unknown>
     expect(b['aria-selected']).toBe(true)
@@ -86,7 +86,7 @@ describe('useGridPattern', () => {
 
   it('disabled cell sets aria-disabled + data-disabled', () => {
     const data = grid3x2()
-    data.entities.b!.data = { ...(data.entities.b!.data ?? {}), disabled: true }
+    data.entities.b = { ...(data.entities.b ?? {}), disabled: true }
     const { result } = renderHook(() => useGridPattern(data))
     const b = result.current.cellProps('b') as unknown as Record<string, unknown>
     expect(b['aria-disabled']).toBe(true)
@@ -102,8 +102,8 @@ describe('useGridPattern', () => {
 
   it('columnHeader aria-sort emitted only when entity.sort is ascending/descending/other', () => {
     const data = grid3x2()
-    data.entities.a!.data = { ...(data.entities.a!.data ?? {}), sort: 'ascending' }
-    data.entities.b!.data = { ...(data.entities.b!.data ?? {}), sort: 'none' }
+    data.entities.a = { ...(data.entities.a ?? {}), sort: 'ascending' }
+    data.entities.b = { ...(data.entities.b ?? {}), sort: 'none' }
     const { result } = renderHook(() => useGridPattern(data))
     const aHeader = result.current.columnHeaderProps('a') as unknown as Record<string, unknown>
     const bHeader = result.current.columnHeaderProps('b') as unknown as Record<string, unknown>
