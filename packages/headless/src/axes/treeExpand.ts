@@ -2,6 +2,7 @@ import type { Axis } from './axis'
 import type { UiEvent, NormalizedData } from '../types'
 import { ROOT, getChildren, getExpanded, isDisabled, isMetaId } from '../types'
 import { parentOf } from './index'
+import { INTENTS } from './keys'
 
 const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
   for (const id of getChildren(d, parent)) {
@@ -35,8 +36,9 @@ const TOGGLE: Record<Branch, Action> = {
   leaf: () => null,
 }
 
+// 키 매핑은 `INTENTS.treeExpand` (open/close) + `INTENTS.activate.trigger` 에서 import (SSOT).
 const TABLE: Record<string, Record<Branch, Action>> = {
-  ArrowRight: {
+  [INTENTS.treeExpand.open.key]: {
     branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
     branchOpen: ({ d, kids }) => {
       const first = firstEnabled(d, kids)
@@ -45,13 +47,12 @@ const TABLE: Record<string, Record<Branch, Action>> = {
     // leaf: APG 는 do nothing 이나 de facto (VS Code/Finder) 는 다음 visible 로 흐름.
     leaf: ({ d, id }) => nextVisibleLeaf(d, id),
   },
-  ArrowLeft: {
+  [INTENTS.treeExpand.close.key]: {
     branchClosed: ({ d, id }) => toParentOrNull(d, id),
     branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
     leaf: ({ d, id }) => toParentOrNull(d, id),
   },
-  Enter: TOGGLE,
-  ' ': TOGGLE,
+  ...Object.fromEntries(INTENTS.activate.trigger.map((c) => [c.key, TOGGLE])),
 }
 
 const classify = (kids: string[], open: boolean): Branch =>

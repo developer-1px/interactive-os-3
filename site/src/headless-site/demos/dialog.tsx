@@ -17,7 +17,7 @@ export default function Demo() {
     open,
     onOpenChange: setOpen,
     returnFocusRef: triggerRef,
-    ariaLabel: 'Confirm action',
+    label: 'Confirm action',
   })
 
   return (

@@ -1,6 +1,7 @@
 import type { Axis } from './axis'
 import { getSelectAnchor, type NormalizedData, type UiEvent } from '../types'
 import { enabledSiblings } from './index'
+import { INTENTS, matchChord } from './keys'
 
 /**
  * multiSelect — `aria-multiselectable` axis. Click/Space toggle, Shift+Arrow /
@@ -14,26 +15,26 @@ import { enabledSiblings } from './index'
  *
  * APG: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/  (Selection)
  */
+// 키 매핑은 `INTENTS.multiSelect` 에서 import (SSOT).
 export const multiSelect: Axis = (d, id, t) => {
+  const I = INTENTS.multiSelect
   if (t.kind === 'click') {
     if (t.shift) return rangeFrom(d, id, id)
     return [{ type: 'navigate', id }, { type: 'select', id }]
   }
   if (t.kind !== 'key') return null
 
-  if (t.key === ' ' || t.key === 'Spacebar') {
-    return [{ type: 'select', id }]
-  }
+  if (matchChord(t, I.toggle)) return [{ type: 'select', id }]
 
-  if ((t.ctrl || t.meta) && (t.key === 'a' || t.key === 'A')) {
+  if (matchChord(t, I.selectAll)) {
     return [{ type: 'selectMany', ids: enabledSiblings(d, id), to: true }]
   }
 
-  if (t.shift && (t.key === 'ArrowDown' || t.key === 'ArrowUp')) {
+  if (matchChord(t, I.rangeDown) || matchChord(t, I.rangeUp)) {
     const ids = enabledSiblings(d, id)
     const idx = ids.indexOf(id)
     if (idx < 0) return null
-    const nextIdx = t.key === 'ArrowDown' ? idx + 1 : idx - 1
+    const nextIdx = matchChord(t, I.rangeDown) ? idx + 1 : idx - 1
     if (nextIdx < 0 || nextIdx >= ids.length) return null
     return rangeFrom(d, id, ids[nextIdx])
   }

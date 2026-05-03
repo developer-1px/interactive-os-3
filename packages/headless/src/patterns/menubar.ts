@@ -1,5 +1,15 @@
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, navigate } from '../axes'
+import { useCallback, useState } from 'react'
+import {
+  ROOT, getChildren, getLabel, isDisabled,
+  type NormalizedData, type UiEvent,
+} from '../types'
+import {
+  activate as activateAxis, composeAxes, escape as escapeAxis,
+  expandKeys, KEYS, navigate as navigateAxis,
+} from '../axes'
+import type { Axis } from '../axes/axis'
+import { parentOf } from '../axes/index'
+import { bindAxis } from '../state/bind'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -9,14 +19,72 @@ export interface MenubarOptions {
   /** aria-label — ARIA: menubar requires accessible name. */
   label?: string
   labelledBy?: string
+  /** id prefix for sub-menu DOM ids. */
+  idPrefix?: string
 }
 
 /**
- * menubar — APG `/menubar/` recipe.
+ * crossTop — sub item 에서 ArrowLeft/Right 누를 때 인접 top 으로 점프하는 axis.
+ *
+ * 데이터 가정: id = sub item, parentOf(id) = top, parentOf(top) = ROOT.
+ * 출력: 현재 top 을 collapse + 다음 top 으로 navigate + 다음 top 을 expand + 첫 sub navigate.
+ */
+const crossTop: Axis = (d, id, t) => {
+  if (t.kind !== 'key') return null
+  if (t.key !== 'ArrowLeft' && t.key !== 'ArrowRight') return null
+  const top = parentOf(d, id)
+  if (!top) return null
+  const grand = parentOf(d, top)
+  if (!grand) return null
+  const tops = getChildren(d, grand).filter((tid) => !isDisabled(d, tid))
+  const idx = tops.indexOf(top)
+  if (idx < 0) return null
+  const nextIdx = t.key === 'ArrowRight'
+    ? (idx + 1) % tops.length
+    : (idx - 1 + tops.length) % tops.length
+  const nextTop = tops[nextIdx]
+  const nextSubs = getChildren(d, nextTop).filter((s) => !isDisabled(d, s))
+  const events: UiEvent[] = [
+    { type: 'expand', id: top, open: false },
+    { type: 'navigate', id: nextTop },
+    { type: 'expand', id: nextTop, open: true },
+  ]
+  if (nextSubs[0]) events.push({ type: 'navigate', id: nextSubs[0] })
+  return events
+}
+
+// top axis: ArrowDown/Enter/Space → expand+focus first, ArrowUp → expand+focus last,
+// ArrowLeft/Right → horizontal navigate, Escape → close. 키는 KEYS SSOT 에서 import.
+const topAxis = composeAxes(
+  expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first'),
+  expandKeys([KEYS.ArrowUp], 'last'),
+  navigateAxis('horizontal'),
+  escapeAxis,
+)
+
+// sub axis: ArrowLeft/Right → crossTop, vertical Arrow/Home/End → navigate, Enter/Space → activate, Escape → close.
+const subAxis = composeAxes(
+  crossTop,
+  navigateAxis('vertical'),
+  activateAxis,
+  escapeAxis,
+)
+
+/**
+ * menubar — APG `/menubar/` recipe (top bar + nested sub-menus).
  * https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
  *
- * 상위 menubar 는 horizontal navigate, 하위 menu open 시 cross-axis vertical.
- * 본 recipe 는 상위 layer 만. 하위 menu 는 `useMenuPattern()` recipe 를 별도 호출.
+ * data 모델:
+ *   ROOT
+ *     ├─ top-1 ── (children: sub-1, sub-2, ...)
+ *     ├─ top-2 ── (children: sub-3, sub-4, ...)
+ *     ⋮
+ *
+ * 키 매핑은 모두 axis 합성으로 박제. 인라인 onKeyDown 0.
+ *   top — `expandKeys` (Down/Enter/Space, Up) + `navigate('horizontal')` + `escape`
+ *   sub — `crossTop` (Left/Right) + `navigate('vertical')` + `activate` + `escape`
+ *
+ * intent relay 가 expand/open UiEvent 를 openId state 로 흡수 (gesture/intent split).
  */
 export function useMenubarPattern(
   data: NormalizedData,
@@ -25,16 +93,60 @@ export function useMenubarPattern(
 ): {
   rootProps: RootProps
   itemProps: (id: string) => ItemProps
+  subMenuProps: (topId: string) => RootProps
+  subItemProps: (id: string) => ItemProps
   items: BaseItem[]
+  openId: string | null
 } {
-  const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
-  const axis = composeAxes(navigate(orientation), activate)
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    axis, data, onEvent ?? (() => {}), { autoFocus },
-  )
-  const ids = getChildren(data, ROOT)
+  const { orientation = 'horizontal', autoFocus, label, labelledBy, idPrefix = 'mbar' } = opts
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [subFocusId, setSubFocusId] = useState<string | null>(null)
+  const topIds = getChildren(data, ROOT)
 
-  const items: BaseItem[] = ids.map((id, i) => {
+  // intent relay: axis 가 emit 한 expand/open/navigate 를 local state 로 흡수.
+  const intent = useCallback((e: UiEvent) => {
+    if (e.type === 'expand') {
+      if (e.open) {
+        setOpenId(e.id)
+        // expand 로 함께 들어온 navigate 는 sub 첫/끝 항목 — subFocusId 로 흡수
+      } else if (openId === e.id) {
+        setOpenId(null)
+        setSubFocusId(null)
+      }
+      onEvent?.(e)
+      return
+    }
+    if (e.type === 'open' && e.open === false) {
+      setOpenId(null)
+      setSubFocusId(null)
+      onEvent?.(e)
+      return
+    }
+    if (e.type === 'navigate') {
+      // navigate target 이 sub item 이면 subFocusId, top item 이면 top 의 roving 으로
+      if (topIds.includes(e.id)) {
+        // top 으로 이동 — 열려있던 sub 는 닫음 (전제: top 간 이동은 항상 close)
+        if (openId && openId !== e.id) {
+          setOpenId(null)
+          setSubFocusId(null)
+        }
+      } else {
+        setSubFocusId(e.id)
+      }
+      onEvent?.(e)
+      return
+    }
+    onEvent?.(e)
+  }, [onEvent, openId, topIds])
+
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(
+    topAxis, data, intent, { autoFocus },
+  )
+
+  // sub 키 dispatch — sub item 에 직접 onKeyDown 으로 attach.
+  const { onKey: subDispatch } = bindAxis(subAxis, data, intent)
+
+  const items: BaseItem[] = topIds.map((id, i) => {
     const ent = data.entities[id]?.data ?? {}
     return {
       id,
@@ -42,9 +154,11 @@ export function useMenubarPattern(
       selected: Boolean(ent.selected),
       disabled: isDisabled(data, id),
       posinset: i + 1,
-      setsize: ids.length,
+      setsize: topIds.length,
     }
   })
+
+  const subMenuId = (topId: string) => `${idPrefix}-${topId}-menu`
 
   const rootProps: RootProps = {
     role: 'menubar',
@@ -57,16 +171,54 @@ export function useMenubarPattern(
   const itemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
+    const hasSub = getChildren(data, id).length > 0
+    const isOpen = openId === id
     return {
       role: 'menuitem',
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
       'aria-disabled': it?.disabled || undefined,
-      'aria-haspopup': it?.selected ? 'menu' : undefined,
+      'aria-haspopup': hasSub ? 'menu' : undefined,
+      'aria-expanded': hasSub ? isOpen : undefined,
+      'aria-controls': hasSub ? subMenuId(id) : undefined,
       'data-disabled': it?.disabled ? '' : undefined,
+      'data-state': isOpen ? 'open' : 'closed',
     } as unknown as ItemProps
   }
 
-  return { rootProps, itemProps, items }
+  const subMenuProps = (topId: string): RootProps => {
+    const isOpen = openId === topId
+    return {
+      role: 'menu',
+      id: subMenuId(topId),
+      'aria-orientation': 'vertical',
+      hidden: !isOpen,
+      'data-state': isOpen ? 'open' : 'closed',
+    } as unknown as RootProps
+  }
+
+  const subItemProps = (id: string): ItemProps => {
+    const ent = data.entities[id]?.data ?? {}
+    const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
+    const rawChecked = ent.checked ?? ent.selected
+    const checked: boolean | 'mixed' | undefined =
+      kind === 'menuitem' ? undefined
+        : rawChecked === 'mixed' ? 'mixed'
+        : Boolean(rawChecked)
+    const disabledItem = isDisabled(data, id)
+    const isFocus = subFocusId === id
+    return {
+      role: kind,
+      'data-id': id,
+      tabIndex: isFocus ? 0 : -1,
+      'aria-disabled': disabledItem || undefined,
+      'aria-checked': checked,
+      'data-disabled': disabledItem ? '' : undefined,
+      'data-checked': checked === true ? '' : checked === 'mixed' ? 'mixed' : undefined,
+      onKeyDown: (e: React.KeyboardEvent) => subDispatch(e, id),
+    } as unknown as ItemProps
+  }
+
+  return { rootProps, itemProps, subMenuProps, subItemProps, items, openId }
 }

@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getFocus, type NormalizedData, type UiEvent } from '../types'
+import { activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, navigate as navigateAxis } from '../axes'
+import { bindAxis } from '../state/bind'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -85,36 +87,37 @@ export function useComboboxPattern(
     onEvent?.({ type: 'open', id: ROOT, open })
   }
 
-  const navigateTo = (e: React.KeyboardEvent, id: string | undefined) => {
-    if (!id || !onEvent) return
-    e.preventDefault()
-    if (!expanded) requestExpanded(true)
-    onEvent({ type: 'navigate', id })
+  // 키 매핑은 axis 합성으로 박제: Escape → open false, Arrow/Home/End → navigate, Enter → activate.
+  const axis = composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
+  // gesture/intent: axis 가 emit 한 UiEvent 를 expand/close 의 의도로 흡수.
+  const intent = (e: UiEvent) => {
+    if (e.type === 'open' && e.open === false) { requestExpanded(false); return }
+    if (e.type === 'activate') { onEvent?.(e); requestExpanded(false); return }
+    if (e.type === 'navigate' && !expanded) requestExpanded(true)
+    onEvent?.(e)
   }
+  const { onKey: dispatchKey } = bindAxis(axis, data, intent)
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
-      const next = activeId
-        ? ids[Math.min(ids.length - 1, ids.indexOf(activeId) + 1)]
-        : ids[0]
-      navigateTo(e, next)
-    } else if (e.key === 'ArrowUp') {
-      const prev = activeId
-        ? ids[Math.max(0, ids.indexOf(activeId) - 1)]
-        : ids[ids.length - 1]
-      navigateTo(e, prev)
-    } else if (e.key === 'Home' && expanded) {
-      navigateTo(e, ids[0])
-    } else if (e.key === 'End' && expanded) {
-      navigateTo(e, ids[ids.length - 1])
-    } else if (e.key === 'Enter' && activeId && onEvent) {
-      e.preventDefault()
-      onEvent({ type: 'activate', id: activeId })
-      requestExpanded(false)
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      requestExpanded(false)
+    // gesture: activeId 가 null 인 첫 ArrowDown/Up/Home/End 는 axis 가 sibling-relative
+    // 라 first/last 도출 불가 — 명시적 seed 로 흡수 (intent 단계). 키는 KEYS SSOT 참조.
+    if (!activeId) {
+      if (e.key === KEYS.ArrowDown || e.key === KEYS.Home) {
+        e.preventDefault()
+        const target = ids[0]
+        if (target) intent({ type: 'navigate', id: target })
+        return
+      }
+      if (e.key === KEYS.ArrowUp || e.key === KEYS.End) {
+        e.preventDefault()
+        const target = ids[ids.length - 1]
+        if (target) intent({ type: 'navigate', id: target })
+        return
+      }
     }
+    // Home/End 는 expanded 일 때만 (APG)
+    if ((e.key === KEYS.Home || e.key === KEYS.End) && !expanded) return
+    dispatchKey(e, activeId ?? ROOT)
   }
 
   const inputProps: ItemProps = {

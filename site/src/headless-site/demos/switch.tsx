@@ -1,21 +1,43 @@
 import { useState } from 'react'
+import { ROOT, reduce, type NormalizedData } from '@p/headless'
 import { toggleSwitchPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Switch',
   apg: 'switch',
   kind: 'pure' as const,
-  blurb: 'role="switch" · Space/Enter activate · semantically distinct from checkbox.',
+  blurb: 'role="switch" · Space/Enter activate. data 차원 — entity.checked SSoT, activate→{value} 직렬 emit.',
   keys: () => ['Enter', ' '],
 }
 
+const SWITCH_ID = 'notif'
+const initial: NormalizedData = {
+  entities: {
+    [ROOT]: { id: ROOT },
+    [SWITCH_ID]: { id: SWITCH_ID, data: { checked: false, label: 'Notifications' } },
+  },
+  relationships: { [ROOT]: [SWITCH_ID] },
+}
+
 export default function Demo() {
-  const [on, setOn] = useState(false)
-  const { switchProps } = toggleSwitchPattern({
-    checked: on,
-    onCheckedChange: setOn,
-    label: 'Notifications',
-  })
+  const [data, setData] = useState(initial)
+  const on = Boolean(data.entities[SWITCH_ID]?.data?.checked)
+  const { switchProps } = toggleSwitchPattern(data, SWITCH_ID, (e) => {
+    if (e.type === 'value') {
+      setData((d) => ({
+        ...d,
+        entities: {
+          ...d.entities,
+          [SWITCH_ID]: {
+            ...d.entities[SWITCH_ID]!,
+            data: { ...(d.entities[SWITCH_ID]!.data ?? {}), checked: e.value },
+          },
+        },
+      }))
+    } else {
+      setData((d) => reduce(d, e))
+    }
+  }, { label: 'Notifications' })
 
   return (
     <div className="flex items-center gap-3">

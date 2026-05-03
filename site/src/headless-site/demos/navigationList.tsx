@@ -29,7 +29,7 @@ function build(currentId: string): NormalizedData {
 export default function Demo() {
   const [current, setCurrent] = useState('docs')
   const data = build(current)
-  const { rootProps, linkProps, items } = navigationListPattern(data, undefined, { ariaLabel: 'Primary' })
+  const { rootProps, linkProps, items } = navigationListPattern(data, undefined, { label: 'Primary' })
 
   return (
     <nav {...rootProps} className="rounded-md border border-stone-200 bg-white p-2">

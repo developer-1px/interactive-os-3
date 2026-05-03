@@ -1,17 +1,28 @@
 import { useState } from 'react'
+import { EXPANDED, ROOT, getExpanded, reduce, type NormalizedData } from '@p/headless'
 import { disclosurePattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Disclosure',
   apg: 'disclosure',
   kind: 'pure' as const,
-  blurb: 'Controlled boolean. aria-expanded · aria-controls · role="region" auto-wired.',
+  blurb: 'data 차원 — EXPANDED meta set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
   keys: () => ['Enter', ' '],
 }
 
+const PANEL_ID = 'details'
+const initial: NormalizedData = {
+  entities: { [ROOT]: { id: ROOT }, [PANEL_ID]: { id: PANEL_ID } },
+  relationships: { [ROOT]: [PANEL_ID] },
+}
+void EXPANDED
+
 export default function Demo() {
-  const [open, setOpen] = useState(false)
-  const { triggerProps, panelProps } = disclosurePattern({ open, onOpenChange: setOpen })
+  const [data, setData] = useState(initial)
+  const open = getExpanded(data).has(PANEL_ID)
+  const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, (e) =>
+    setData((d) => reduce(d, e)),
+  )
 
   return (
     <div className="space-y-3">

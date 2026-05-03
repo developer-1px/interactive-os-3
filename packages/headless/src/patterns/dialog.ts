@@ -1,4 +1,5 @@
 import { useEffect, useRef, type RefObject } from 'react'
+import { KEYS } from '../axes/keys'
 import type { ItemProps, RootProps } from './types'
 
 export interface DialogOptions {
@@ -71,13 +72,13 @@ export function useDialogPattern(
     const first = initialFocusRef?.current ?? root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? root
     first.focus({ preventScroll: true })
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === KEYS.Escape) {
         e.preventDefault()
         onOpenChange?.(false)
         return
       }
       // Tab focus trap (modal only)
-      if (modal && e.key === 'Tab') {
+      if (modal && e.key === KEYS.Tab) {
         const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
         if (!focusables.length) {
           e.preventDefault()

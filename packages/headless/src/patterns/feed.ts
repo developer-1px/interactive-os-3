@@ -1,5 +1,6 @@
-import { useCallback, type KeyboardEvent } from 'react'
-import { ROOT, getChildren, getLabel, type NormalizedData } from '../types'
+import { ROOT, getChildren, getLabel, type NormalizedData, type UiEvent } from '../types'
+import { pageNavigate } from '../axes'
+import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface FeedOptions {
@@ -11,6 +12,7 @@ export interface FeedOptions {
   /** aria-label — ARIA: feed requires accessible name. */
   label?: string
   labelledBy?: string
+  autoFocus?: boolean
 }
 
 const ARTICLE_ATTR = 'data-feed-article'
@@ -19,24 +21,27 @@ const ARTICLE_ATTR = 'data-feed-article'
  * feed — APG `/feed/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/feed/
  *
- * 구조 패턴 (위젯 아님). 각 article 은 focusable (tabIndex=-1) 이며
- * Page Up/Down 으로 article 단위 이동. focus 가 article 내부 상호작용 요소에 있어도
- * Page Up/Down 은 root keydown 에서 가로채 다음/이전 article 로 이동.
+ * 키 매핑은 `pageNavigate` axis 로 박제 — PageUp/PageDown → 인접 article 로 navigate.
+ * focus 는 article element(tabIndex=-1, 프로그램 focus only) 로 이동. article 내부의
+ * focusable 자식이 native Tab 흐름. delegate.onKeyDown 의 `e.target.closest('[data-id]')`
+ * 위임이 깊은 자식에서도 article id 추적.
  *
- * Ctrl+Home/End (feed 바깥 first/last focusable 로 이동) 은 host 가
- * 자유롭게 구현. 본 recipe 는 feed 안 nav 만 책임.
+ * Ctrl+Home/End (feed 바깥 first/last focusable) 은 host 책임.
  */
 export function useFeedPattern(
   data: NormalizedData,
+  onEvent?: (e: UiEvent) => void,
   opts: FeedOptions = {},
 ): {
   rootProps: RootProps
   articleProps: (id: string) => ItemProps
-  /** label element id 헬퍼 — `<h2 {...labelProps(id)}>…</h2>` 로 article 의 aria-labelledby 와 자동 연결. */
   labelProps: (id: string) => { id: string }
   items: BaseItem[]
 } {
-  const { busy, containerId = ROOT, idPrefix = 'feed', label, labelledBy } = opts
+  const { busy, containerId = ROOT, idPrefix = 'feed', label, labelledBy, autoFocus } = opts
+  const { bindFocus, delegate } = useRovingTabIndex(
+    pageNavigate('vertical', 1), data, onEvent ?? (() => {}), { autoFocus, containerId },
+  )
   const ids = getChildren(data, containerId)
 
   const items: BaseItem[] = ids.map((id, i) => ({
@@ -48,23 +53,6 @@ export function useFeedPattern(
     setsize: ids.length,
   }))
 
-  const onKeyDown = useCallback((e: KeyboardEvent<HTMLElement>) => {
-    if (e.key !== 'PageUp' && e.key !== 'PageDown') return
-    const articles = Array.from(
-      e.currentTarget.querySelectorAll<HTMLElement>(`[${ARTICLE_ATTR}]`),
-    )
-    if (articles.length === 0) return
-    const active = document.activeElement as HTMLElement | null
-    const currentIdx = articles.findIndex((a) => a === active || a.contains(active))
-    if (currentIdx === -1) return
-    const nextIdx = e.key === 'PageDown'
-      ? Math.min(currentIdx + 1, articles.length - 1)
-      : Math.max(currentIdx - 1, 0)
-    if (nextIdx === currentIdx) return
-    e.preventDefault()
-    articles[nextIdx].focus()
-  }, [])
-
   const articleId = (id: string) => `${idPrefix}-article-${id}`
   const labelId = (id: string) => `${idPrefix}-article-${id}-label`
 
@@ -73,7 +61,7 @@ export function useFeedPattern(
     'aria-busy': busy || undefined,
     'aria-label': label,
     'aria-labelledby': labelledBy,
-    onKeyDown,
+    ...delegate,
   } as unknown as RootProps
 
   const articleProps = (id: string): ItemProps => {
@@ -81,6 +69,7 @@ export function useFeedPattern(
     return {
       role: 'article',
       id: articleId(id),
+      ref: bindFocus(id) as React.Ref<HTMLElement>,
       tabIndex: -1,
       [ARTICLE_ATTR]: '',
       'data-id': id,

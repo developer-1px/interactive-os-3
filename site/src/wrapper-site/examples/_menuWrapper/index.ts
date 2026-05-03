@@ -1,3 +1,3 @@
 export { Menu } from './Menu'
-export { menuData, menuReducer, menuSlots, menuWrapperKeys } from './example'
-export type { MenuSlotProps, MenuSlots } from './slots'
+export { menuWrapperKeys } from './example'
+export type { MenuSlot, MenuSlotProps, MenuSlots } from './slots'

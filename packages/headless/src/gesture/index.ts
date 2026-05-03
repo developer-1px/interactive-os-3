@@ -1,4 +1,5 @@
 import { getChildren, getExpanded, type UiEvent, type NormalizedData } from '../types'
+import { INTENTS, matchKey } from '../axes/keys'
 
 // 제스처(activate) → 의도(expand/navigate) 변환 헬퍼.
 // ui/ role은 activate 단발만 emit. 소비자가 자기 reducer 직전에 골라 통과시킨다.
@@ -50,10 +51,11 @@ export const composeGestures = (...fns: GestureHelper[]): GestureHelper =>
 // gesture/intent 분리 원칙의 DOM 측 entry — 소비자는 onActivate 1개만 다룬다.
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react'
 
+// 키 매핑은 INTENTS.activate.trigger 에서 import (SSOT).
 export const activateProps = (onActivate: () => void) => ({
   onClick: (_e: ReactMouseEvent) => onActivate(),
   onKeyDown: (e: ReactKeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (matchKey(e, INTENTS.activate.trigger)) {
       e.preventDefault()
       onActivate()
     }

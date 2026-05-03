@@ -1,6 +1,7 @@
 import type { Axis } from './axis'
 import { parentOf } from './index'
 import { getChildren, getSelectAnchor, type UiEvent } from '../types'
+import { INTENTS, matchChord } from './keys'
 
 /**
  * gridSelection — APG `/grid/` Selection 키 매핑.
@@ -23,15 +24,14 @@ export const gridSelection: Axis = (d, id, t) => {
   if (!gridId) return null
   const rows = getChildren(d, gridId)
 
+  const I = INTENTS.gridSelection
   if (t.kind === 'click') {
     if (t.ctrl || t.meta) return [{ type: 'select', id }]
     return null
   }
   if (t.kind !== 'key') return null
 
-  const space = t.key === ' ' || t.key === 'Spacebar'
-
-  if (t.ctrl && space) {
+  if (matchChord(t, I.selectColumn)) {
     const cellsInRow = getChildren(d, rowId)
     const colIdx = cellsInRow.indexOf(id)
     if (colIdx < 0) return null
@@ -43,12 +43,11 @@ export const gridSelection: Axis = (d, id, t) => {
     return [{ type: 'selectMany', ids, to: true }]
   }
 
-  if (t.shift && space) {
-    const cellsInRow = getChildren(d, rowId)
-    return [{ type: 'selectMany', ids: cellsInRow, to: true }]
+  if (matchChord(t, I.selectRow)) {
+    return [{ type: 'selectMany', ids: getChildren(d, rowId), to: true }]
   }
 
-  if ((t.ctrl || t.meta) && (t.key === 'a' || t.key === 'A')) {
+  if (matchChord(t, I.selectAll)) {
     const all: string[] = []
     rows.forEach((rid) => {
       getChildren(d, rid).forEach((cid) => all.push(cid))
@@ -56,12 +55,19 @@ export const gridSelection: Axis = (d, id, t) => {
     return [{ type: 'selectMany', ids: all, to: true }]
   }
 
-  if (t.shift && (t.key === 'ArrowLeft' || t.key === 'ArrowRight' || t.key === 'ArrowUp' || t.key === 'ArrowDown')) {
-    return shiftArrowRange(d, id, t.key, rowId, rows)
+  if (
+    t.shift &&
+    (t.key === INTENTS.gridNavigate.left.key
+      || t.key === INTENTS.gridNavigate.right.key
+      || t.key === INTENTS.gridNavigate.up.key
+      || t.key === INTENTS.gridNavigate.down.key)
+  ) {
+    const arrowKey = t.key as 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'ArrowDown'
+    return shiftArrowRange(d, id, arrowKey, rowId, rows)
   }
 
   // 단일 Space (no modifier) = 현재 cell toggle
-  if (space) return [{ type: 'select', id }] satisfies UiEvent[]
+  if (matchChord(t, I.toggle)) return [{ type: 'select', id }] satisfies UiEvent[]
 
   return null
 }

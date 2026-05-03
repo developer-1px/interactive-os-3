@@ -1,6 +1,7 @@
 
 import type { Axis } from './axis'
 import { ROOT, getChildren, getExpanded, isDisabled, type NormalizedData } from '../types'
+import { INTENTS } from './keys'
 
 const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
   for (const id of getChildren(d, parent)) {
@@ -10,12 +11,13 @@ const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: s
   return out
 }
 
+// 키 매핑은 `INTENTS.treeNavigate` + `INTENTS.navigate.start/end` 에서 import (SSOT).
 type IndexFn = (len: number, i: number) => number
 const TABLE: Partial<Record<string, IndexFn>> = {
-  ArrowDown: (len, i) => Math.min(len - 1, i + 1),
-  ArrowUp: (_, i) => Math.max(0, i - 1),
-  Home: () => 0,
-  End: (len) => len - 1,
+  [INTENTS.treeNavigate.next.key]: (len, i) => Math.min(len - 1, i + 1),
+  [INTENTS.treeNavigate.prev.key]: (_, i) => Math.max(0, i - 1),
+  [INTENTS.navigate.start.key]: () => 0,
+  [INTENTS.navigate.end.key]: (len) => len - 1,
 }
 
 export const treeNavigate: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;

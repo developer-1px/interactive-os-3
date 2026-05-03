@@ -1,25 +1,25 @@
 import type { Axis } from './axis'
 import { enabledSiblings } from './index'
+import { INTENTS, matchChord } from './keys'
 
 const mod = (n: number, m: number) => ((n % m) + m) % m
 
-const AXIS_KEYS = {
-  vertical: { prev: 'ArrowUp', next: 'ArrowDown' },
-  horizontal: { prev: 'ArrowLeft', next: 'ArrowRight' },
-}
-
+/**
+ * navigate — orientation 별 prev/next/start/end 키는 `INTENTS.navigate` 에서 import (SSOT).
+ */
 export const navigate =
   (orientation: 'vertical' | 'horizontal' = 'vertical'): Axis =>
-  (d, id, t) => { if (t.kind !== "key") return null; const k = t;
-    const { prev, next } = AXIS_KEYS[orientation]
+  (d, id, t) => {
+    if (t.kind !== 'key') return null
+    const o = INTENTS.navigate[orientation]
     const sibs = enabledSiblings(d, id)
     if (!sibs.length) return null
     const i = Math.max(0, sibs.indexOf(id))
     const targetIdx =
-      k.key === prev ? mod(i - 1, sibs.length) :
-      k.key === next ? mod(i + 1, sibs.length) :
-      k.key === 'Home' ? 0 :
-      k.key === 'End' ? sibs.length - 1 :
+      matchChord(t, o.prev) ? mod(i - 1, sibs.length) :
+      matchChord(t, o.next) ? mod(i + 1, sibs.length) :
+      matchChord(t, INTENTS.navigate.start) ? 0 :
+      matchChord(t, INTENTS.navigate.end) ? sibs.length - 1 :
       -1
     return targetIdx < 0 ? null : [{ type: 'navigate', id: sibs[targetIdx] }]
   }

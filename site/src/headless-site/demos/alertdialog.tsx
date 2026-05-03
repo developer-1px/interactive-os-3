@@ -18,7 +18,7 @@ export default function Demo() {
     onOpenChange: setOpen,
     alert: true,
     returnFocusRef: triggerRef,
-    ariaLabel: 'Delete confirmation',
+    label: 'Delete confirmation',
   })
 
   return (

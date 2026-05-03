@@ -1,6 +1,7 @@
 import type { Axis } from './axis'
 import { parentOf } from './index'
 import { getChildren } from '../types'
+import { INTENTS, matchChord } from './keys'
 
 /**
  * gridNavigate — APG `/grid/` 2D 셀 단위 navigation.
@@ -41,45 +42,43 @@ export const gridNavigate: Axis = (d, id, t) => {
   const rowIdx = rows.indexOf(rowId)
   if (rowIdx === -1) return null
 
-  const ctrl = k.ctrl ?? false
+  const I = INTENTS.gridNavigate
 
-  if (k.key === 'ArrowLeft') {
+  if (matchChord(k, I.left)) {
     if (colIdx === 0) return null
     return [{ type: 'navigate', id: cellsInRow[colIdx - 1] }]
   }
-  if (k.key === 'ArrowRight') {
+  if (matchChord(k, I.right)) {
     if (colIdx >= cellsInRow.length - 1) return null
     return [{ type: 'navigate', id: cellsInRow[colIdx + 1] }]
   }
-  if (k.key === 'ArrowUp') {
+  if (matchChord(k, I.up)) {
     if (rowIdx === 0) return null
     const prevCells = getChildren(d, rows[rowIdx - 1])
     if (!prevCells.length) return null
-    const target = prevCells[Math.min(colIdx, prevCells.length - 1)]
-    return [{ type: 'navigate', id: target }]
+    return [{ type: 'navigate', id: prevCells[Math.min(colIdx, prevCells.length - 1)] }]
   }
-  if (k.key === 'ArrowDown') {
+  if (matchChord(k, I.down)) {
     if (rowIdx >= rows.length - 1) return null
     const nextCells = getChildren(d, rows[rowIdx + 1])
     if (!nextCells.length) return null
-    const target = nextCells[Math.min(colIdx, nextCells.length - 1)]
-    return [{ type: 'navigate', id: target }]
+    return [{ type: 'navigate', id: nextCells[Math.min(colIdx, nextCells.length - 1)] }]
   }
-  if (k.key === 'Home' && !ctrl) {
-    return [{ type: 'navigate', id: cellsInRow[0] }]
-  }
-  if (k.key === 'End' && !ctrl) {
-    return [{ type: 'navigate', id: cellsInRow[cellsInRow.length - 1] }]
-  }
-  if (k.key === 'Home' && ctrl) {
+  if (matchChord(k, I.gridStart)) {
     const firstCells = getChildren(d, rows[0])
     return firstCells[0] ? [{ type: 'navigate', id: firstCells[0] }] : null
   }
-  if (k.key === 'End' && ctrl) {
+  if (matchChord(k, I.gridEnd)) {
     const lastCells = getChildren(d, rows[rows.length - 1])
     return lastCells.length
       ? [{ type: 'navigate', id: lastCells[lastCells.length - 1] }]
       : null
+  }
+  if (matchChord(k, I.rowStart)) {
+    return [{ type: 'navigate', id: cellsInRow[0] }]
+  }
+  if (matchChord(k, I.rowEnd)) {
+    return [{ type: 'navigate', id: cellsInRow[cellsInRow.length - 1] }]
   }
   return null
 }

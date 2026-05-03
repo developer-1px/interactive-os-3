@@ -15,7 +15,7 @@ const data = () =>
 
 describe('useFeedPattern', () => {
   it('rootProps: role=feed, aria-busy from opts', () => {
-    const { result } = renderHook(() => useFeedPattern(data(), { busy: true }))
+    const { result } = renderHook(() => useFeedPattern(data(), undefined, { busy: true }))
     expect(result.current.rootProps.role).toBe('feed')
     expect((result.current.rootProps as unknown as Record<string, unknown>)['aria-busy']).toBe(true)
     expect(result.current.rootProps.onKeyDown).toBeTypeOf('function')
@@ -55,16 +55,16 @@ describe('useFeedPattern', () => {
   })
 
   it('idPrefix custom override propagates to article + label ids', () => {
-    const { result } = renderHook(() => useFeedPattern(data(), { idPrefix: 'news' }))
+    const { result } = renderHook(() => useFeedPattern(data(), undefined, { idPrefix: 'news' }))
     const a1 = result.current.articleProps('a1') as unknown as Record<string, unknown>
     expect(a1.id).toBe('news-article-a1')
     expect(a1['aria-labelledby']).toBe('news-article-a1-label')
   })
 
   it('label / labelledBy opts → aria-label / aria-labelledby on root', () => {
-    const { result: r1 } = renderHook(() => useFeedPattern(data(), { label: 'News feed' }))
+    const { result: r1 } = renderHook(() => useFeedPattern(data(), undefined, { label: 'News feed' }))
     expect((r1.current.rootProps as unknown as Record<string, unknown>)['aria-label']).toBe('News feed')
-    const { result: r2 } = renderHook(() => useFeedPattern(data(), { labelledBy: 'feed-h' }))
+    const { result: r2 } = renderHook(() => useFeedPattern(data(), undefined, { labelledBy: 'feed-h' }))
     expect((r2.current.rootProps as unknown as Record<string, unknown>)['aria-labelledby']).toBe('feed-h')
   })
 })

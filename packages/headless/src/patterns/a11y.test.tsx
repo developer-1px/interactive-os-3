@@ -161,7 +161,7 @@ describe('axe-core ARIA compliance', () => {
   it('feed', async () => {
     const data = flat(['a1', 'a2'])
     function C() {
-      const { rootProps, articleProps, labelProps, items } = useFeedPattern(data, { label: 'Posts' })
+      const { rootProps, articleProps, labelProps, items } = useFeedPattern(data, undefined, { label: 'Posts' })
       return (
         <div {...rootProps}>
           {items.map((it) => (
