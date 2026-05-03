@@ -1,46 +1,39 @@
+import { useState } from 'react'
 import {
-  applyGesture,
-  composeReducers,
-  expandOnActivate,
-  reduce,
-  setValue,
-  singleExpand,
-  type NormalizedData,
-} from '@p/headless'
-import { accordionAxis, useAccordionPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+  accordionAxis,
+  useAccordionPattern,
+  type AccordionEvent,
+  type AccordionItem,
+} from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Accordion · Single',
   apg: 'accordion',
-  kind: 'collection' as const,
-  blurb: '한 항목만 열림 — singleExpand reducer 가 형제 자동 collapse 보장.',
+  kind: 'bundle' as const,
+  blurb: '한 항목만 열림 — opts.mode="single" 로 패턴이 형제 자동 collapse 처리.',
   keys: () => dedupe(probe(accordionAxis())),
 }
 
-const initial: NormalizedData = {
-  entities: {
-    a: { label: 'What is @p/headless?' },
-    b: { label: 'Why ARIA-first?' },
-    c: { label: 'Bring my own styles?' },
-  },
-  relationships: {},
-  meta: { root: ['a', 'b', 'c'] },
-}
-
-const accordionReducer = applyGesture(
-  expandOnActivate,
-  composeReducers(reduce, singleExpand, setValue),
-)
+const initialItems: AccordionItem[] = [
+  { id: 'a', label: 'What is @p/headless?' },
+  { id: 'b', label: 'Why ARIA-first?' },
+  { id: 'c', label: 'Bring my own styles?' },
+]
 
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial, accordionReducer)
-  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onEvent)
+  const [items, setItems] = useState(initialItems)
+  const dispatch = (e: AccordionEvent) => {
+    if (e.type === 'expand') {
+      setItems((xs) => xs.map((it) => (it.id === e.id ? { ...it, expanded: e.open } : it)))
+    }
+  }
+  const { rootProps, headerProps, triggerProps, panelProps, items: rendered } =
+    useAccordionPattern(items, dispatch, { mode: 'single' })
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
-      {items.map((item) => (
+      {rendered.map((item) => (
         <div key={item.id}>
           <h3 {...headerProps(item.id)} className="m-0">
             <button

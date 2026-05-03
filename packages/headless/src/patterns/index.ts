@@ -28,7 +28,10 @@ export { useMenuPattern, menuAxis, type MenuOptions } from './menu'
 export { useMenubarPattern, menubarAxis, type MenubarOptions } from './menubar'
 export { useComboboxPattern, comboboxAxis, type ComboboxOptions } from './combobox'
 export { useTreeGridPattern, treeGridAxis, type TreeGridOptions } from './treeGrid'
-export { useAccordionPattern, accordionAxis, type AccordionOptions } from './accordion'
+export {
+  useAccordionPattern, accordionAxis,
+  type AccordionItem, type AccordionEvent, type AccordionOptions,
+} from './accordion'
 export { useDialogPattern, dialogKeys, type DialogOptions } from './dialog'
 export { useTooltipPattern, tooltipKeys, type TooltipOptions } from './tooltip'
 

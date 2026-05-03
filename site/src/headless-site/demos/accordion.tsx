@@ -1,42 +1,39 @@
+import { useState } from 'react'
 import {
-  applyGesture,
-  composeReducers,
-  expandOnActivate,
-  reduce,
-  setValue,
-  type NormalizedData,
-} from '@p/headless'
-import { accordionAxis, useAccordionPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+  accordionAxis,
+  useAccordionPattern,
+  type AccordionEvent,
+  type AccordionItem,
+} from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Accordion',
   apg: 'accordion',
-  kind: 'collection' as const,
-  blurb: 'Roving + expand axis · click toggles via expandOnActivate gesture · proper header/button nesting.',
+  kind: 'bundle' as const,
+  blurb: 'N independent disclosures + header roving · click toggles · proper header/button nesting.',
   keys: () => dedupe(probe(accordionAxis())),
 }
 
-const initial: NormalizedData = {
-  entities: {
-    a: { label: 'What is @p/headless?' },
-    b: { label: 'Why ARIA-first?' },
-    c: { label: 'Bring my own styles?' },
-  },
-  relationships: {},
-  meta: { root: ['a', 'b', 'c'] },
-}
-
-const accordionReducer = applyGesture(expandOnActivate, composeReducers(reduce, setValue))
+const initialItems: AccordionItem[] = [
+  { id: 'a', label: 'What is @p/headless?' },
+  { id: 'b', label: 'Why ARIA-first?' },
+  { id: 'c', label: 'Bring my own styles?' },
+]
 
 export default function Demo() {
-  const [data, onEvent] = useLocalData(initial, accordionReducer)
-  const { rootProps, headerProps, triggerProps, panelProps, items } = useAccordionPattern(data, onEvent)
+  const [items, setItems] = useState(initialItems)
+  const dispatch = (e: AccordionEvent) => {
+    if (e.type === 'expand') {
+      setItems((xs) => xs.map((it) => (it.id === e.id ? { ...it, expanded: e.open } : it)))
+    }
+  }
+  const { rootProps, headerProps, triggerProps, panelProps, items: rendered } =
+    useAccordionPattern(items, dispatch)
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
-      {items.map((item) => (
+      {rendered.map((item) => (
         <div key={item.id}>
           <h3 {...headerProps(item.id)} className="m-0">
             <button
