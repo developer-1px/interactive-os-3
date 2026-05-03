@@ -33,6 +33,28 @@ export const singleSelect: Reducer = (d, e) => {
 }
 
 /**
+ * singleCurrent — navigation single-current reducer fragment.
+ *
+ * `singleSelect` 의 nav 변종 — `selected` 대신 `current` 를 쓴다 (ARIA `aria-current="page"`).
+ * Listbox 가 아니라 navigation list 에서 사용. 어휘 분리: select(컬렉션) ≠ current(landmark).
+ */
+export const singleCurrent: Reducer = (d, e) => {
+  if (e.type !== 'activate') return d
+  const entities = { ...d.entities }
+  let mutated = false
+  for (const id of Object.keys(entities)) {
+    const ent = entities[id]
+    if (!ent) continue
+    const wasCurrent = Boolean(ent.current)
+    const willBe = id === e.id
+    if (wasCurrent === willBe) continue
+    entities[id] = { ...ent, current: willBe }
+    mutated = true
+  }
+  return mutated ? { ...d, entities } : d
+}
+
+/**
  * multiSelectToggle — toggles `selected` on `select` (per-id) and `selectMany`
  * (batch). Batch path is O(N) with a single entities spread regardless of N.
  * APG-aligned: listbox(multi), tree(multi), checkbox group.

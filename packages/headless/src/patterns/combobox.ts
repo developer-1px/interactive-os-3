@@ -1,6 +1,10 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getFocus, type NormalizedData, type UiEvent } from '../types'
 import { activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, navigate as navigateAxis } from '../axes'
+
+/** Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter) */
+export const comboboxAxis = () =>
+  composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
 import { bindAxis } from '../state/bind'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -12,8 +16,9 @@ export interface ComboboxOptions {
   haspopup?: 'listbox' | 'tree' | 'grid' | 'dialog'
   /** APG combobox 기본은 input 에 focus 유지 + aria-activedescendant. */
   activeDescendant?: boolean
-  /** aria-expanded — controlled. */
+  /** aria-expanded — controlled. 생략 시 패턴이 useState 로 자체 소유. */
   expanded?: boolean
+  defaultExpanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
   idPrefix?: string
   /** aria-required (form context). */
@@ -55,12 +60,21 @@ export function useComboboxPattern(
   listProps: RootProps
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
+  expanded: boolean
+  setExpanded: (expanded: boolean) => void
 } {
   const {
     autocomplete = 'list', haspopup = 'listbox',
-    expanded = false, onExpandedChange, idPrefix = 'cmbx',
+    expanded: expandedProp, defaultExpanded = false, onExpandedChange, idPrefix = 'cmbx',
     required, readOnly, invalid, disabled, label, labelledBy, popupLabel, popupLabelledBy,
   } = opts
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+  const isControlled = expandedProp !== undefined
+  const expanded = isControlled ? expandedProp : internalExpanded
+  const setExpanded = (next: boolean) => {
+    if (!isControlled) setInternalExpanded(next)
+    onExpandedChange?.(next)
+  }
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const activeId = getFocus(data) ?? null
@@ -83,12 +97,12 @@ export function useComboboxPattern(
   })
 
   const requestExpanded = (open: boolean) => {
-    onExpandedChange?.(open)
+    setExpanded(open)
     onEvent?.({ type: 'open', id: ROOT, open })
   }
 
   // 키 매핑은 axis 합성으로 박제: Escape → open false, Arrow/Home/End → navigate, Enter → activate.
-  const axis = composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
+  const axis = comboboxAxis()
   // gesture/intent: axis 가 emit 한 UiEvent 를 expand/close 의 의도로 흡수.
   const intent = (e: UiEvent) => {
     if (e.type === 'open' && e.open === false) { requestExpanded(false); return }
@@ -162,5 +176,5 @@ export function useComboboxPattern(
     } as unknown as ItemProps
   }
 
-  return { inputProps, popoverProps, listProps, optionProps, items }
+  return { inputProps, popoverProps, listProps, optionProps, items, expanded, setExpanded }
 }

@@ -29,10 +29,16 @@ export interface ListboxOptions {
 }
 
 // multiSelect must precede navigate — otherwise navigate matches Shift+Arrow first and the range branch never runs.
-const axisFor = (orientation: 'horizontal' | 'vertical', multi: boolean) =>
-  multi
+/**
+ * Listbox 가 등록하는 axis — SSOT. 데모/문서는 이걸 probe 해서 키 목록 도출.
+ * 옵션을 그대로 받아 동일한 합성을 노출.
+ */
+export const listboxAxis = (opts: ListboxOptions = {}) => {
+  const orientation = opts.orientation ?? 'vertical'
+  return opts.multiSelectable
     ? composeAxes(multiSelect, navigate(orientation), activate, typeahead)
     : composeAxes(navigate(orientation), activate, typeahead)
+}
 
 /**
  * listbox — APG `/listbox/` recipe.
@@ -62,7 +68,7 @@ export function useListboxPattern(
     [data, onEvent, sff],
   )
 
-  const axis = axisFor(orientation, !!multiSelectable)
+  const axis = listboxAxis(opts)
   const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
     autoFocus,
     containerId,

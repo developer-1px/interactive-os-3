@@ -55,6 +55,15 @@ const crossTop: Axis = (d, id, t) => {
 
 // top axis: ArrowDown/Enter/Space → expand+focus first, ArrowUp → expand+focus last,
 // ArrowLeft/Right → horizontal navigate, Escape → close. 키는 KEYS SSOT 에서 import.
+/** Menubar 가 등록하는 axis — SSOT. top + sub 합집합 (probe 용 단일 surface). */
+export const menubarAxis = () => composeAxes(
+  expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first'),
+  expandKeys([KEYS.ArrowUp], 'last'),
+  navigateAxis('horizontal'),
+  navigateAxis('vertical'),
+  activateAxis,
+  escapeAxis,
+)
 const topAxis = composeAxes(
   expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first'),
   expandKeys([KEYS.ArrowUp], 'last'),

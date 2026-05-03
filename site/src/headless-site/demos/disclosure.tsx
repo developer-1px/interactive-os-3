@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { getExpanded, reduce, type NormalizedData } from '@p/headless'
-import { disclosurePattern } from '@p/headless/patterns'
+import { getExpanded, type NormalizedData } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
+import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Disclosure',
   apg: 'disclosure',
   kind: 'pure' as const,
   blurb: 'data 차원 — meta.expanded set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
-  keys: () => ['Enter', ' '],
+  keys: () => dedupe(probe(disclosureAxis())),
 }
 
 const PANEL_ID = 'details'
@@ -18,11 +19,9 @@ const initial: NormalizedData = {
 }
 
 export default function Demo() {
-  const [data, setData] = useState(initial)
+  const [data, onEvent] = useLocalData(initial)
   const open = getExpanded(data).has(PANEL_ID)
-  const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, (e) =>
-    setData((d) => reduce(d, e)),
-  )
+  const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, onEvent)
 
   return (
     <div className="space-y-3">

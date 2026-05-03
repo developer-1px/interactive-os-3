@@ -1,12 +1,10 @@
 import {
-  activate,
   applyGesture,
   expandBranchOnActivate,
   fromTree,
   reduceWithDefaults,
-  treeNavigate,
 } from '@p/headless'
-import { useTreeGridPattern } from '@p/headless/patterns'
+import { treeGridAxis, useTreeGridPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -15,7 +13,7 @@ export const meta = {
   apg: 'treegrid',
   kind: 'collection' as const,
   blurb: 'Tree visible-order navigation · expandable rows · rowheader/gridcell grid semantics.',
-  keys: () => dedupe([...probe(treeNavigate), 'ArrowLeft', 'ArrowRight', ...probe(activate)]),
+  keys: () => dedupe(probe(treeGridAxis())),
 }
 
 interface Row {

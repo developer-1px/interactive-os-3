@@ -1,13 +1,10 @@
 import {
-  activate,
   applyGesture,
   expandBranchOnActivate,
   fromTree,
   reduceWithDefaults,
-  treeExpand,
-  treeNavigate,
 } from '@p/headless'
-import { useTreePattern } from '@p/headless/patterns'
+import { treeAxis, useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -16,8 +13,7 @@ export const meta = {
   apg: 'treeview',
   kind: 'collection' as const,
   blurb: 'Hierarchical roving · click on a branch toggles expand (expandBranchOnActivate gesture) · level/posinset auto.',
-  keys: () =>
-    dedupe([...probe(treeNavigate), ...probe(treeExpand), ...probe(activate), 'A–Z']),
+  keys: () => dedupe(probe(treeAxis())),
 }
 
 interface Node {

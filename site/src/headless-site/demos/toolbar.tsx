@@ -1,5 +1,5 @@
-import { activate, fromList, navigate } from '@p/headless'
-import { useToolbarPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { toolbarAxis, useToolbarPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,7 +8,7 @@ export const meta = {
   apg: 'toolbar',
   kind: 'collection' as const,
   blurb: 'role="toolbar" · single Tab stop · Arrow keys roam internal items · Enter/Space activate.',
-  keys: () => dedupe([...probe(navigate('horizontal')), ...probe(activate)]),
+  keys: () => dedupe(probe(toolbarAxis())),
 }
 
 export default function Demo() {

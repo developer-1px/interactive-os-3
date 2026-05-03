@@ -2,6 +2,9 @@ import { useEffect, useState, useRef, type RefObject } from 'react'
 import { KEYS } from '../axes/keys'
 import type { ItemProps, RootProps } from './types'
 
+/** Tooltip 이 실제 등록하는 키 — SSOT. Escape 로 닫기. */
+export const tooltipKeys = () => [KEYS.Escape]
+
 export interface TooltipOptions {
   /** 보이기 delay (ms). APG 권장 ~400ms. */
   delayShow?: number

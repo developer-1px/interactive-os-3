@@ -1,21 +1,18 @@
-import { useRef, useState } from 'react'
-import { useDialogPattern } from '@p/headless/patterns'
+import { useRef } from 'react'
+import { dialogKeys, useDialogPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Dialog',
   apg: 'dialog-modal',
   kind: 'ref' as const,
   blurb: 'First-focusable on open · Escape closes · returnFocus to trigger on close · Tab cycles within.',
-  keys: () => ['Escape', 'Tab'],
+  keys: () => dialogKeys(),
 }
 
 export default function Demo() {
-  const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const { rootProps, closeProps } = useDialogPattern(ref, {
-    open,
-    onOpenChange: setOpen,
+  const { rootProps, closeProps, open, setOpen } = useDialogPattern(ref, {
     returnFocusRef: triggerRef,
     label: 'Confirm action',
   })

@@ -1,5 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { KEYS } from '../axes/keys'
 import { activate, composeAxes, escape, expand, navigate, typeahead } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -15,16 +16,22 @@ export interface MenuOptions {
   labelledBy?: string
   /** Container entity for nested sub-menus; defaults to ROOT. 자식들이 children 으로 사용된다. */
   containerId?: string
+  /** controlled. 생략 시 패턴이 useState 자체 소유 — menu-button trigger 케이스. */
+  open?: boolean
+  defaultOpen?: boolean
+  onOpenChange?: (open: boolean) => void
+  /** activate 시 자동 닫힘 (closeOnSelect 와 조합되어 menu-button 표준 동작). */
 }
 
 // escape 가 navigate 보다 먼저 — Escape 키가 일반 nav 매핑보다 우선.
 // expand 가 activate 보다 먼저 — children 있는 menuitem 의 Enter/Space/ArrowRight 는
 // submenu open(+ first child focus)로 흐름. children 없는 leaf 는 expand 가 null →
 // activate 로 떨어져 Enter/Space 가 activate 로 emit.
-const axisFor = (orientation: 'horizontal' | 'vertical') =>
-  composeAxes(escape, expand, navigate(orientation), activate, typeahead)
-const verticalAxis = axisFor('vertical')
-const horizontalAxis = axisFor('horizontal')
+/** Menu 가 등록하는 axis — SSOT. */
+export const menuAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
+  composeAxes(escape, expand, navigate(opts.orientation ?? 'vertical'), activate, typeahead)
+const verticalAxis = menuAxis({ orientation: 'vertical' })
+const horizontalAxis = menuAxis({ orientation: 'horizontal' })
 
 /**
  * menu — APG `/menu/` recipe.
@@ -39,17 +46,37 @@ export function useMenuPattern(
 ): {
   rootProps: RootProps
   itemProps: (id: string) => ItemProps
+  triggerProps: ItemProps
   items: BaseItem[]
+  open: boolean
+  setOpen: (open: boolean) => void
 } {
-  const { autoFocus, onEscape, orientation = 'vertical', label, labelledBy, containerId = ROOT } = opts
+  const {
+    autoFocus, onEscape, orientation = 'vertical', label, labelledBy, containerId = ROOT,
+    open: openProp, defaultOpen = false, onOpenChange, closeOnSelect = true,
+  } = opts
+  const [internalOpen, setInternalOpen] = useState(defaultOpen)
+  const isControlled = openProp !== undefined
+  const open = isControlled ? openProp : internalOpen
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const setOpen = useCallback((next: boolean) => {
+    if (!isControlled) setInternalOpen(next)
+    onOpenChange?.(next)
+    if (!next) requestAnimationFrame(() => triggerRef.current?.focus())
+  }, [isControlled, onOpenChange])
   const axis = orientation === 'horizontal' ? horizontalAxis : verticalAxis
-  // gesture/intent split: escape axis 가 emit 한 'open false' 를 onEscape 콜백으로 변환.
+  // gesture/intent split: escape axis 가 emit 한 'open false' 를 close + onEscape 로 변환.
   const relay = useCallback((e: UiEvent) => {
-    if (e.type === 'open' && e.open === false) { onEscape?.(); return }
+    if (e.type === 'open' && e.open === false) { setOpen(false); onEscape?.(); return }
+    if (e.type === 'activate' && closeOnSelect) {
+      onEvent?.(e)
+      setOpen(false)
+      return
+    }
     onEvent?.(e)
-  }, [onEvent, onEscape])
+  }, [onEvent, onEscape, setOpen, closeOnSelect])
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    axis, data, relay, { autoFocus, containerId },
+    axis, data, relay, { autoFocus: autoFocus ?? open, containerId },
   )
   const ids = getChildren(data, containerId)
 
@@ -98,5 +125,19 @@ export function useMenuPattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, itemProps, items }
+  const triggerProps: ItemProps = {
+    type: 'button',
+    ref: ((el: HTMLElement | null) => { triggerRef.current = el }) as React.Ref<HTMLElement>,
+    'aria-haspopup': 'menu',
+    'aria-expanded': open,
+    onClick: () => setOpen(!open),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === KEYS.ArrowDown && !open) {
+        e.preventDefault()
+        setOpen(true)
+      }
+    },
+  } as unknown as ItemProps
+
+  return { rootProps, itemProps, triggerProps, items, open, setOpen }
 }

@@ -3,6 +3,9 @@ import { pageNavigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Feed 가 등록하는 axis — SSOT. PageUp/PageDown → 인접 article navigate. */
+export const feedAxis = () => pageNavigate('vertical', 1)
+
 export interface FeedOptions {
   /** aria-busy — DOM 갱신 중 true. */
   busy?: boolean
@@ -40,7 +43,7 @@ export function useFeedPattern(
 } {
   const { busy, containerId = ROOT, idPrefix = 'feed', label, labelledBy, autoFocus } = opts
   const { bindFocus, delegate } = useRovingTabIndex(
-    pageNavigate('vertical', 1), data, onEvent ?? (() => {}), { autoFocus, containerId },
+    feedAxis(), data, onEvent ?? (() => {}), { autoFocus, containerId },
   )
   const ids = getChildren(data, containerId)
 

@@ -1,5 +1,5 @@
-import { activate, fromList, navigate } from '@p/headless'
-import { useTabsPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { tabsAxis, useTabsPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,7 +8,7 @@ export const meta = {
   apg: 'tabs',
   kind: 'collection' as const,
   blurb: 'Roving tabindex · automatic activation · Arrow / Home / End. tabProps(id) ↔ panelProps(id) auto-linked.',
-  keys: () => dedupe([...probe(navigate('horizontal')), ...probe(activate), 'A–Z']),
+  keys: () => dedupe(probe(tabsAxis())),
 }
 
 export default function Demo() {

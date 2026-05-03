@@ -3,6 +3,12 @@ import { bindAxis } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps, RootProps } from './types'
 
+/** Splitter 가 등록하는 axis — SSOT. (vertical separator → horizontal arrow keys, vice versa) */
+export const splitterAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) => {
+  const o = opts.orientation ?? 'vertical'
+  return numericStep(o === 'vertical' ? 'horizontal' : 'vertical')
+}
+
 export interface SplitterOptions {
   orientation?: 'horizontal' | 'vertical'
 }
@@ -29,7 +35,7 @@ export function splitterPattern(
   const min = Number(ent.min ?? 0)
   const max = Number(ent.max ?? 100)
 
-  const axis = numericStep(orientation === 'vertical' ? 'horizontal' : 'vertical')
+  const axis = splitterAxis({ orientation })
   const { onKey } = bindAxis(axis, data, onEvent ?? (() => {}))
 
   const rootProps: RootProps = { role: 'group' } as RootProps

@@ -3,6 +3,9 @@ import { bindAxis } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps } from './types'
 
+/** Spinbutton 이 등록하는 axis — SSOT. */
+export const spinbuttonAxis = () => numericStep('horizontal')
+
 export interface SpinbuttonOptions {
   /** invalid 표시 — 보통 value < min 또는 > max. host 가 검증해서 넘긴다. */
   invalid?: boolean
@@ -38,7 +41,7 @@ export function spinbuttonPattern(
   const hasMin = ent.min !== undefined
   const hasMax = ent.max !== undefined
 
-  const axis = numericStep('horizontal')
+  const axis = spinbuttonAxis()
   const { onKey } = bindAxis(axis, data, onEvent ?? (() => {}))
 
   const spinbuttonProps: ItemProps = {

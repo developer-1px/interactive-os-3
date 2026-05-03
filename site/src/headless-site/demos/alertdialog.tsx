@@ -1,21 +1,18 @@
-import { useRef, useState } from 'react'
-import { useDialogPattern } from '@p/headless/patterns'
+import { useRef } from 'react'
+import { dialogKeys, useDialogPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Alert Dialog',
   apg: 'alertdialog',
   kind: 'pure' as const,
   blurb: 'role="alertdialog" — useDialogPattern({ alert: true }) 한 줄. dialog와 동작 동일, role만 다름.',
-  keys: () => ['Escape'],
+  keys: () => dialogKeys(),
 }
 
 export default function Demo() {
-  const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const { rootProps, closeProps } = useDialogPattern(ref, {
-    open,
-    onOpenChange: setOpen,
+  const { rootProps, closeProps, open, setOpen } = useDialogPattern(ref, {
     alert: true,
     returnFocusRef: triggerRef,
     label: 'Delete confirmation',

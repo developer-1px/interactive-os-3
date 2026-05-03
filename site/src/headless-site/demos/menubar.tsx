@@ -1,5 +1,5 @@
-import { fromList, navigate } from '@p/headless'
-import { useMenubarPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { menubarAxis, useMenubarPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,7 +8,7 @@ export const meta = {
   apg: 'menubar',
   kind: 'collection' as const,
   blurb: 'role="menubar" · horizontal navigate at top level · sub-menus open vertical (cross-axis).',
-  keys: () => dedupe(probe(navigate('horizontal'))),
+  keys: () => dedupe(probe(menubarAxis())),
 }
 
 export default function Demo() {

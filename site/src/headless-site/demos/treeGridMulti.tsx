@@ -1,13 +1,10 @@
 import {
-  activate,
   applyGesture,
   expandBranchOnActivate,
   fromTree,
-  multiSelect,
   reduceWithMultiSelect,
-  treeNavigate,
 } from '@p/headless'
-import { useTreeGridPattern } from '@p/headless/patterns'
+import { treeGridAxis, useTreeGridPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -16,16 +13,7 @@ export const meta = {
   apg: 'treegrid',
   kind: 'collection' as const,
   blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
-  keys: () =>
-    dedupe([
-      ...probe(treeNavigate),
-      'ArrowLeft',
-      'ArrowRight',
-      ...probe(activate),
-      ...probe(multiSelect),
-      'Shift+↑↓',
-      'Ctrl/Meta+A',
-    ]),
+  keys: () => dedupe(probe(treeGridAxis({ multiSelectable: true }))),
 }
 
 interface Row {

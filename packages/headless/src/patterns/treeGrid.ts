@@ -20,8 +20,13 @@ export interface TreeGridOptions {
   labelledBy?: string
 }
 
-const singleAxis = composeAxes(treeNavigate, treeExpand, activate)
-const multiAxis = composeAxes(multiSelect, treeNavigate, treeExpand, activate)
+/** TreeGrid 가 등록하는 axis — SSOT. */
+export const treeGridAxis = (opts: { multiSelectable?: boolean } = {}) =>
+  opts.multiSelectable
+    ? composeAxes(multiSelect, treeNavigate, treeExpand, activate)
+    : composeAxes(treeNavigate, treeExpand, activate)
+const singleAxis = treeGridAxis()
+const multiAxis = treeGridAxis({ multiSelectable: true })
 
 /**
  * treeGrid — APG `/treegrid/` recipe.

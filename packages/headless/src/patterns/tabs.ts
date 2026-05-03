@@ -1,6 +1,10 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
+
+/** Tabs 가 등록하는 axis — SSOT. */
+export const tabsAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
+  composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -42,7 +46,7 @@ export function useTabsPattern(
     labelledBy,
   } = opts
 
-  const axis = composeAxes(navigate(orientation), activate)
+  const axis = tabsAxis({ orientation })
   const relay = useCallback(
     (e: UiEvent) => {
       if (!onEvent) return

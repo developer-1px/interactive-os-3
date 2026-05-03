@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { NormalizedData } from '@p/headless'
+import { composeReducers, reduce, singleCurrent, type NormalizedData } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
 import { navigationListPattern } from '@p/headless/patterns'
 
 export const meta = {
@@ -10,24 +10,23 @@ export const meta = {
   keys: () => [],
 }
 
-function build(currentId: string): NormalizedData {
-  const ids = ['home', 'docs', 'api', 'guides']
-  return {
-    entities: Object.fromEntries(
-      ids.map((id) => [
-        id,
-        { label: id[0].toUpperCase() + id.slice(1), href: `#${id}`, current: id === currentId },
-      ]),
-    ),
-    relationships: {},
-    meta: { root: ids },
-  }
+const ITEMS = ['home', 'docs', 'api', 'guides']
+const initial: NormalizedData = {
+  entities: Object.fromEntries(
+    ITEMS.map((id) => [
+      id,
+      { label: id[0].toUpperCase() + id.slice(1), href: `#${id}`, current: id === 'docs' },
+    ]),
+  ),
+  relationships: {},
+  meta: { root: ITEMS },
 }
 
+const reducer = composeReducers(reduce, singleCurrent)
+
 export default function Demo() {
-  const [current, setCurrent] = useState('docs')
-  const data = build(current)
-  const { rootProps, linkProps, items } = navigationListPattern(data, undefined, { label: 'Primary' })
+  const [data, onEvent] = useLocalData(initial, reducer)
+  const { rootProps, linkProps, items } = navigationListPattern(data, onEvent, { label: 'Primary' })
 
   return (
     <nav {...rootProps} className="rounded-md border border-stone-200 bg-white p-2">
@@ -36,11 +35,6 @@ export default function Demo() {
           <li key={item.id}>
             <a
               {...linkProps(item.id)}
-              href={`#${item.id}`}
-              onClick={(e) => {
-                e.preventDefault()
-                setCurrent(item.id)
-              }}
               className="block rounded px-3 py-1 hover:bg-stone-100 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
             >
               {item.label}

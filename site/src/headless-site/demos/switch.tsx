@@ -1,40 +1,29 @@
-import { useState } from 'react'
-import { reduce, type NormalizedData } from '@p/headless'
-import { toggleSwitchPattern } from '@p/headless/patterns'
+import type { NormalizedData } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
+import { switchAxis, toggleSwitchPattern } from '@p/headless/patterns'
+import { dedupe, probe } from '../keys'
 
 export const meta = {
   title: 'Switch',
   apg: 'switch',
   kind: 'pure' as const,
   blurb: 'role="switch" · Space/Enter activate. data 차원 — entity.checked SSoT, activate→{value} 직렬 emit.',
-  keys: () => ['Enter', ' '],
+  keys: () => dedupe(probe(switchAxis())),
 }
 
 const SWITCH_ID = 'notif'
 const initial: NormalizedData = {
   entities: {
-    [SWITCH_ID]: { checked: false, label: 'Notifications' },
+    [SWITCH_ID]: { value: false, label: 'Notifications' },
   },
   relationships: {},
   meta: { root: [SWITCH_ID] },
 }
 
 export default function Demo() {
-  const [data, setData] = useState(initial)
-  const on = Boolean(data.entities[SWITCH_ID]?.checked)
-  const { switchProps } = toggleSwitchPattern(data, SWITCH_ID, (e) => {
-    if (e.type === 'value') {
-      setData((d) => ({
-        ...d,
-        entities: {
-          ...d.entities,
-          [SWITCH_ID]: { ...(d.entities[SWITCH_ID] ?? {}), checked: e.value },
-        },
-      }))
-    } else {
-      setData((d) => reduce(d, e))
-    }
-  }, { label: 'Notifications' })
+  const [data, onEvent] = useLocalData(initial)
+  const on = Boolean(data.entities[SWITCH_ID]?.value)
+  const { switchProps } = toggleSwitchPattern(data, SWITCH_ID, onEvent, { label: 'Notifications' })
 
   return (
     <div className="flex items-center gap-3">

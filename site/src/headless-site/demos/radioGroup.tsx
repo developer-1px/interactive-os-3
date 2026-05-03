@@ -1,5 +1,5 @@
-import { activate, fromList, navigate } from '@p/headless'
-import { useRadioGroupPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { radioGroupAxis, useRadioGroupPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,8 +8,7 @@ export const meta = {
   apg: 'radio',
   kind: 'collection' as const,
   blurb: 'Two-axis Arrow nav · selection-follows-focus enforced (APG mandate).',
-  keys: () =>
-    dedupe([...probe(navigate('vertical')), ...probe(navigate('horizontal')), ...probe(activate)]),
+  keys: () => dedupe(probe(radioGroupAxis())),
 }
 
 export default function Demo() {

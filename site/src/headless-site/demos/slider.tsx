@@ -1,5 +1,5 @@
-import { numericStep, type NormalizedData } from '@p/headless'
-import { sliderPattern } from '@p/headless/patterns'
+import type { NormalizedData } from '@p/headless'
+import { sliderAxis, sliderPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,7 +8,7 @@ export const meta = {
   apg: 'slider',
   kind: 'collection' as const,
   blurb: 'numericStep axis · Arrow ±step · Home/End · aria-valuemin/max/now on thumb.',
-  keys: () => dedupe(probe(numericStep('horizontal'))),
+  keys: () => dedupe(probe(sliderAxis())),
 }
 
 const initial: NormalizedData = {

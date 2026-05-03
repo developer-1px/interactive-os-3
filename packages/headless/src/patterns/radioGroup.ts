@@ -24,7 +24,10 @@ export interface RadioGroupOptions {
 }
 
 // APG radiogroup: 양 축 Arrow 모두 navigate.
-const axis = composeAxes(navigate('vertical'), navigate('horizontal'), activate)
+/** RadioGroup 이 등록하는 axis — SSOT. */
+export const radioGroupAxis = () =>
+  composeAxes(navigate('vertical'), navigate('horizontal'), activate)
+const axis = radioGroupAxis()
 
 /**
  * radioGroup — APG `/radio/` recipe.

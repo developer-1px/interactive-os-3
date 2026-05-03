@@ -16,7 +16,7 @@ export * from './data'
 
 export { reduce } from './state/reduce'
 export { composeReducers, applyGesture, type Reducer } from './state/compose'
-export { singleSelect, multiSelectToggle } from './state/selection'
+export { singleSelect, singleCurrent, multiSelectToggle } from './state/selection'
 export { singleExpand } from './state/expansion'
 export { setValue } from './state/value'
 export { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
@@ -39,7 +39,7 @@ export { useActiveDescendant } from './roving/useActiveDescendant'
 
 export {
   composeAxes, parentOf, siblingsOf, enabledSiblings,
-  navigate, activate, expand, typeahead, treeNavigate, treeExpand,
+  navigate, activate, expand, escape, typeahead, treeNavigate, treeExpand,
   multiSelect, numericStep,
   type Axis,
 } from './axes'

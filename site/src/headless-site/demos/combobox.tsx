@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { activate, fromList, getRoot, navigate, reduce, type UiEvent } from '@p/headless'
-import { useComboboxPattern } from '@p/headless/patterns'
+import { fromList, getRoot, reduce, useControlState, type UiEvent } from '@p/headless'
+import { comboboxAxis, useComboboxPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
@@ -8,43 +8,32 @@ export const meta = {
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'role="combobox" · aria-activedescendant on input · APG single exception to roving (B11).',
-  keys: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'Escape']),
+  keys: () => dedupe(probe(comboboxAxis())),
 }
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']
 
 export default function Demo() {
   const [query, setQuery] = useState('')
-  const [expanded, setExpanded] = useState(false)
-  const [focusId, setFocusId] = useState<string | null>(null)
-
-  // data is derived from query (not local state) — filter must re-flow when typing.
-  // narrow한 결과의 첫 매치를 auto-highlight: 1개로 좁아지면 Enter로 즉시 선택.
-  const data = useMemo(() => {
+  // base 는 query 에서 파생, focus 는 useControlState 의 local meta 가 보존.
+  const base = useMemo(() => {
     const filtered = ALL.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
     const list = fromList(filtered.map((label) => ({ label })))
-    const validFocus = focusId && list.entities[focusId] ? focusId : getRoot(list)[0]
-    return validFocus ? reduce(list, { type: 'navigate', id: validFocus }) : list
-  }, [query, focusId])
+    const seed = getRoot(list)[0]
+    return seed ? reduce(list, { type: 'navigate', id: seed }) : list
+  }, [query])
+  const [data, dispatch] = useControlState(base)
 
   const onEvent = (e: UiEvent) => {
-    if (e.type === 'navigate') setFocusId(e.id)
-    if (e.type === 'expand') setExpanded(e.open)
+    dispatch(e)
     if (e.type === 'activate') {
-      const ent = data.entities[e.id]
-      const label = ent?.label
-      if (typeof label === 'string') {
-        setQuery(label)
-        setExpanded(false)
-      }
+      const label = data.entities[e.id]?.label
+      if (typeof label === 'string') setQuery(label)
     }
   }
 
-  const { inputProps, popoverProps, listProps, optionProps, items } = useComboboxPattern(
-    data,
-    onEvent,
-    { expanded, onExpandedChange: setExpanded },
-  )
+  const { inputProps, popoverProps, listProps, optionProps, items, setExpanded } =
+    useComboboxPattern(data, onEvent)
 
   return (
     <div className="relative w-64">
@@ -54,7 +43,6 @@ export default function Demo() {
         onChange={(e) => {
           setQuery(e.target.value)
           setExpanded(true)
-          setFocusId(null) // useMemo가 첫 매치로 재설정
         }}
         onFocus={() => setExpanded(true)}
         onBlur={() => setTimeout(() => setExpanded(false), 100)}

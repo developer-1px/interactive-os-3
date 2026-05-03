@@ -3,6 +3,9 @@ import type { NormalizedData, UiEvent } from '../types'
 import { activate } from '../axes'
 import { bindAxis } from '../state/bind'
 
+/** Switch 가 등록하는 axis — SSOT. */
+export const switchAxis = () => activate
+
 export interface SwitchOptions {
   label?: string
   /** controlled fallback — host 가 onEvent reducer 로 흡수 안 할 때 직접 받음. */
@@ -32,7 +35,7 @@ export function toggleSwitchPattern(
   opts: SwitchOptions = {},
 ): { switchProps: ItemProps } {
   const ent = data.entities[id] ?? {}
-  const checked = Boolean(ent.checked ?? ent.selected)
+  const checked = Boolean(ent.value ?? ent.checked ?? ent.selected)
   const disabled = Boolean(ent.disabled)
   const { label, onCheckedChange } = opts
 

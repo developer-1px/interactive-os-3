@@ -1,5 +1,5 @@
-import { activate, fromList, multiSelect, navigate, reduceWithMultiSelect } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
+import { fromList, reduceWithMultiSelect } from '@p/headless'
+import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,14 +8,7 @@ export const meta = {
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
-  keys: () => dedupe([
-    ...probe(navigate('vertical')),
-    ...probe(activate),
-    ...probe(multiSelect),
-    'Shift+↑↓',
-    'Ctrl/Meta+A',
-    'A–Z',
-  ]),
+  keys: () => dedupe(probe(listboxAxis({ multiSelectable: true }))),
 }
 
 export default function Demo() {

@@ -1,6 +1,6 @@
 import { Fragment, type KeyboardEvent } from 'react'
-import { activate, fromList, navigate } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -10,8 +10,8 @@ export const meta = {
   kind: 'custom' as const,
   blurb:
     'Label-grouped listbox · ↑/↓ roving, A–Z typeahead · Cmd+1/2/3 direct jump. patterns + 한 줄 keydown wrap 으로 조립.',
-  keys: () =>
-    dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z', 'Cmd+1…9']),
+  // listbox pattern axis + demo 가 직접 추가하는 Cmd+1…9 (custom kind 의 정직한 표기).
+  keys: () => dedupe([...probe(listboxAxis()), 'Cmd+1…9']),
 }
 
 const ITEMS = [

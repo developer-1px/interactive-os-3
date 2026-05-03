@@ -12,7 +12,9 @@ import { ROOT, type Axis, type NormalizedData } from '@p/headless'
 const PROBE_KEYS = [
   'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
   'Home', 'End', 'PageUp', 'PageDown',
-  'Enter', ' ', 'Escape',
+  'Enter', ' ', 'Escape', 'Tab',
+  // single printable char — typeahead axis 가 응답하면 'A–Z' 로 glyph.
+  'a',
 ]
 
 const dummy: NormalizedData = {
@@ -46,6 +48,7 @@ const KEY_GLYPH: Record<string, string> = {
   ArrowLeft: '←',
   ArrowRight: '→',
   Escape: 'Esc',
+  a: 'A–Z',
 }
 
 export const fmtKey = (k: string) => KEY_GLYPH[k] ?? k

@@ -1,5 +1,5 @@
-import { activate, fromList, navigate } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
+import { fromList } from '@p/headless'
+import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -8,7 +8,7 @@ export const meta = {
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'Single-select · typeahead · APG selection-follows-focus.',
-  keys: () => dedupe([...probe(navigate('vertical')), ...probe(activate), 'A–Z']),
+  keys: () => dedupe(probe(listboxAxis())),
 }
 
 export default function Demo() {

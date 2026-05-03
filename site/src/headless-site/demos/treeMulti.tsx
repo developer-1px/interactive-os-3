@@ -1,14 +1,10 @@
 import {
-  activate,
   applyGesture,
   expandBranchOnActivate,
   fromTree,
-  multiSelect,
   reduceWithMultiSelect,
-  treeExpand,
-  treeNavigate,
 } from '@p/headless'
-import { useTreePattern } from '@p/headless/patterns'
+import { treeAxis, useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
 
@@ -17,16 +13,7 @@ export const meta = {
   apg: 'treeview',
   kind: 'collection' as const,
   blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
-  keys: () =>
-    dedupe([
-      ...probe(treeNavigate),
-      ...probe(treeExpand),
-      ...probe(activate),
-      ...probe(multiSelect),
-      'Shift+↑↓',
-      'Ctrl/Meta+A',
-      'A–Z',
-    ]),
+  keys: () => dedupe(probe(treeAxis({ multiSelectable: true }))),
 }
 
 interface Node {

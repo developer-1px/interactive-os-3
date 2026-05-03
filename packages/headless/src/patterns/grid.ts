@@ -39,8 +39,13 @@ export interface GridCell {
   disabled: boolean
 }
 
-const baseAxis = composeAxes(gridNavigate, activate)
-const multiAxis = composeAxes(gridSelection, gridNavigate, activate)
+/** Grid 가 등록하는 axis — SSOT. */
+export const gridAxis = (opts: { multiSelectable?: boolean } = {}) =>
+  opts.multiSelectable
+    ? composeAxes(gridSelection, gridNavigate, activate)
+    : composeAxes(gridNavigate, activate)
+const baseAxis = gridAxis()
+const multiAxis = gridAxis({ multiSelectable: true })
 
 /**
  * grid — APG `/grid/` recipe (data grid keyboard model, cell-focus).

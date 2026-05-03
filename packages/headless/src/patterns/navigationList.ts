@@ -25,7 +25,7 @@ export interface NavigationListOptions {
  */
 export function navigationListPattern(
   data: NormalizedData,
-  _onEvent?: (e: UiEvent) => void,
+  onEvent?: (e: UiEvent) => void,
   opts: NavigationListOptions = {},
 ): {
   rootProps: RootProps
@@ -57,6 +57,10 @@ export function navigationListPattern(
       href: it?.href,
       'aria-current': it?.current ? 'page' : undefined,
       'data-current': it?.current ? '' : undefined,
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault()
+        onEvent?.({ type: 'activate', id })
+      },
     } as unknown as ItemProps
   }
 

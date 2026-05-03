@@ -1,12 +1,12 @@
 import { useRef } from 'react'
-import { useTooltipPattern } from '@p/headless/patterns'
+import { tooltipKeys, useTooltipPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Tooltip',
   apg: 'tooltip',
   kind: 'ref' as const,
   blurb: 'Hover/focus delays · Escape closes · trigger ↔ tip linked via aria-describedby.',
-  keys: () => ['Escape'],
+  keys: () => tooltipKeys(),
 }
 
 export default function Demo() {

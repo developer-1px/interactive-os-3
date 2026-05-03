@@ -3,6 +3,10 @@ import { bindAxis } from '../state/bind'
 import { numericStep } from '../axes/numericStep'
 import type { ItemProps, RootProps } from './types'
 
+/** Slider 가 등록하는 axis — SSOT. */
+export const sliderAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
+  numericStep(opts.orientation ?? 'horizontal')
+
 export interface SliderOptions {
   orientation?: 'horizontal' | 'vertical'
 }
@@ -34,7 +38,7 @@ export function sliderPattern(
   const max = Number(ent.max ?? 100)
   const pct = ((value - min) / (max - min)) * 100
 
-  const axis = numericStep(orientation)
+  const axis = sliderAxis({ orientation })
   const { onKey } = bindAxis(axis, data, onEvent ?? (() => {}))
 
   const rootProps: RootProps = {

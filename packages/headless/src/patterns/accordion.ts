@@ -8,7 +8,9 @@ export interface AccordionOptions {
   idPrefix?: string
 }
 
-const axis = composeAxes(navigate('vertical'), expand, activate)
+/** Accordion 이 등록하는 axis — SSOT. */
+export const accordionAxis = () => composeAxes(navigate('vertical'), expand, activate)
+const axis = accordionAxis()
 
 /**
  * accordion — APG `/accordion/` recipe.

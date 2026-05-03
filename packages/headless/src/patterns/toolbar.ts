@@ -3,6 +3,10 @@ import { activate, composeAxes, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, ToolbarItem } from './types'
 
+/** Toolbar 가 등록하는 axis — SSOT. */
+export const toolbarAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
+  composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
+
 export interface ToolbarOptions {
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean
@@ -32,7 +36,7 @@ export function useToolbarPattern(
 } {
   const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
 
-  const axis = composeAxes(navigate(orientation), activate)
+  const axis = toolbarAxis({ orientation })
   const { focusId, bindFocus, delegate } = useRovingTabIndex(
     axis, data, onEvent ?? (() => {}), { autoFocus },
   )

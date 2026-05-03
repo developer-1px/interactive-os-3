@@ -1,9 +1,20 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { KEYS } from '../axes/keys'
 import type { ItemProps, RootProps } from './types'
 
+/**
+ * Dialog 가 실제 등록하는 키 — SSOT.
+ * Escape: 닫기. Tab: focus-trap (modal=true 에서만, axis 아님 → 직접 표기).
+ */
+export const dialogKeys = (opts: { modal?: boolean } = {}) =>
+  (opts.modal ?? true) ? [KEYS.Escape, KEYS.Tab] : [KEYS.Escape]
+
 export interface DialogOptions {
-  open: boolean
+  /** controlled. 생략 시 패턴이 useState 로 자체 소유 (uncontrolled). */
+  open?: boolean
+  /** uncontrolled 초기값. */
+  defaultOpen?: boolean
+  /** controlled 통지 + uncontrolled 에서도 호출 (양 모드 공통 콜백). */
   onOpenChange?: (open: boolean) => void
   modal?: boolean
   /** APG `alertdialog` 변종 — role 만 다르고 동작 동일. */
@@ -44,13 +55,16 @@ const FOCUSABLE_SELECTOR =
  */
 export function useDialogPattern(
   rootRef: RefObject<HTMLElement | null>,
-  opts: DialogOptions,
+  opts: DialogOptions = {},
 ): {
   rootProps: RootProps
   closeProps: ItemProps
+  open: boolean
+  setOpen: (open: boolean) => void
 } {
   const {
-    open,
+    open: openProp,
+    defaultOpen = false,
     onOpenChange,
     modal = true,
     alert = false,
@@ -61,6 +75,13 @@ export function useDialogPattern(
     labelledBy,
     describedBy,
   } = opts
+  const [internalOpen, setInternalOpen] = useState(defaultOpen)
+  const isControlled = openProp !== undefined
+  const open = isControlled ? openProp : internalOpen
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
@@ -74,7 +95,7 @@ export function useDialogPattern(
     const onKey = (e: KeyboardEvent) => {
       if (e.key === KEYS.Escape) {
         e.preventDefault()
-        onOpenChange?.(false)
+        setOpen(false)
         return
       }
       // Tab focus trap (modal only)
@@ -119,8 +140,8 @@ export function useDialogPattern(
 
   const closeProps: ItemProps = {
     type: 'button',
-    onClick: () => onOpenChange?.(false),
+    onClick: () => setOpen(false),
   } as unknown as ItemProps
 
-  return { rootProps, closeProps }
+  return { rootProps, closeProps, open, setOpen }
 }

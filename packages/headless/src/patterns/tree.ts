@@ -23,8 +23,13 @@ export interface TreeOptions {
   labelledBy?: string
 }
 
-const singleAxis = composeAxes(treeNavigate, treeExpand, activate, typeahead)
-const multiAxis = composeAxes(multiSelect, treeNavigate, treeExpand, activate, typeahead)
+/** Tree 가 등록하는 axis — SSOT. */
+export const treeAxis = (opts: { multiSelectable?: boolean } = {}) =>
+  opts.multiSelectable
+    ? composeAxes(multiSelect, treeNavigate, treeExpand, activate, typeahead)
+    : composeAxes(treeNavigate, treeExpand, activate, typeahead)
+const singleAxis = treeAxis()
+const multiAxis = treeAxis({ multiSelectable: true })
 
 /**
  * tree — APG `/treeview/` recipe.
