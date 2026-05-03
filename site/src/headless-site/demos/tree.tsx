@@ -50,12 +50,7 @@ const treeReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 export default function Demo() {
   const [data, onEvent] = useLocalData(
     () =>
-      fromTree(tree, {
-        getId: (n) => n.id,
-        getKids: (n) => n.children,
-        toData: (n) => ({ label: n.label }),
-        expandedIds: ['src', 'demos'],
-      }),
+      fromTree(tree, { expanded: ['src', 'demos'] }),
     treeReducer,
   )
   const { rootProps, itemProps, items } = useTreePattern(data, onEvent)

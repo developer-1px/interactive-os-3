@@ -4,7 +4,6 @@ import {
 } from '@p/headless'
 import { sidebar, smartGroups, isSmartPath } from '../features/data'
 import { pathResource, pinnedRootResource } from '../features/resources'
-import type { SidebarItem, SmartGroupItem } from '../entities/types'
 
 /** L2 — sidebar 두 listbox 의 flow.
  *  recent: smart group 항목. activate → path 변경.
@@ -20,11 +19,10 @@ import type { SidebarItem, SmartGroupItem } from '../entities/types'
 // TDZ 발생. lazy getter 로 회피.
 const recentFlow = defineFlow<string>({
   get source() { return pathResource },
-  base: (path = '/') => fromTree(smartGroups, {
-    getId: (g: SmartGroupItem) => g.path,
-    toData: (g: SmartGroupItem) => ({ label: g.label, icon: g.icon, selected: g.path === path }),
-    focusId: path,
-  }),
+  base: (path = '/') => fromTree(
+    smartGroups.map((g) => ({ id: g.path, label: g.label, icon: g.icon, selected: g.path === path })),
+    { focusId: path },
+  ),
   gestures: navigateOnActivate,
   metaScope: ['navigate', 'typeahead'],
 })
@@ -33,11 +31,10 @@ const recentFlow = defineFlow<string>({
 // 사용자가 fav 항목을 클릭한 결과만 selected 로 표시.
 const favFlow = defineFlow<string>({
   get source() { return pinnedRootResource },
-  base: (pinned = '/') => fromTree(sidebar, {
-    getId: (s: SidebarItem) => s.path,
-    toData: (s: SidebarItem) => ({ label: s.label, icon: s.icon, selected: s.path === pinned }),
-    focusId: pinned,
-  }),
+  base: (pinned = '/') => fromTree(
+    sidebar.map((s) => ({ id: s.path, label: s.label, icon: s.icon, selected: s.path === pinned })),
+    { focusId: pinned },
+  ),
   gestures: navigateOnActivate,
   metaScope: ['navigate', 'typeahead'],
 })

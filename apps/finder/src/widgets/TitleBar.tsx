@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react'
 import {
-  ROOT, FOCUS, useControlState,
+  useControlState,
   type NormalizedData, type UiEvent,
 } from '@p/headless'
 import { useToolbarPattern } from '@p/headless/patterns'
@@ -15,14 +15,11 @@ const VIEW_ITEMS: { id: ViewMode; label: string }[] = [
 ]
 
 const buildViewToolbar = (view: ViewMode): NormalizedData => ({
-  entities: {
-    [ROOT]: { id: ROOT, data: {} },
-    ...Object.fromEntries(VIEW_ITEMS.map((v) => [
-      v.id, { id: v.id, data: { label: v.label, pressed: view === v.id } },
-    ])),
-    [FOCUS]: { id: FOCUS, data: { id: view } },
-  },
-  relationships: { [ROOT]: VIEW_ITEMS.map((v) => v.id) },
+  entities: Object.fromEntries(
+    VIEW_ITEMS.map((v) => [v.id, { label: v.label, pressed: view === v.id }]),
+  ),
+  relationships: {},
+  meta: { root: VIEW_ITEMS.map((v) => v.id), focus: view },
 })
 
 const titleOf = (path: string) => {
@@ -69,7 +66,7 @@ export function TitleBar({
         className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
       >
         {items.map((it) => {
-          const d = data.entities[it.id]?.data ?? {}
+          const d = data.entities[it.id] ?? {}
           const pressed = Boolean(d.pressed)
           return (
             <button

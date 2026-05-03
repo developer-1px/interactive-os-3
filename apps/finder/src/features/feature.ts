@@ -12,7 +12,6 @@ import {
   defineFeature,
   fromTree,
   pathAncestors,
-  ROOT,
   type NormalizedData,
   type QuerySpec,
 } from '@p/headless'
@@ -21,7 +20,7 @@ import {
   tagGroups, tagItems, isTagPath,
 } from './data'
 import { tagFromPath } from '@p/fs'
-import type { FsNode, SmartGroupItem, SidebarItem, TagGroupItem, ViewMode } from '../entities/types'
+import type { FsNode, ViewMode } from '../entities/types'
 import { extToIcon } from '../entities/types'
 
 import type { FinderState, FinderCmd, PreviewVM } from '../entities/schema'
@@ -47,47 +46,44 @@ const isImagePath = (p: string): boolean =>
 
 const isFilePath = (p: string): boolean => p !== '/' && !p.endsWith('/')
 
+type FlatNode = { id: string; label: string; icon: string; selected: boolean; children?: FlatNode[] }
+const fsToFlat = (n: FsNode, url: string): FlatNode => ({
+  id: n.path,
+  label: n.name,
+  icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
+  selected: n.path === url,
+  children: n.children?.map((c) => fsToFlat(c, url)),
+})
+
 const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => {
   // Tag 가상 폴더 — pinned가 tag path면 frontmatter 인덱스 기반 flat file list.
   if (isTagPath(pinned)) {
     const tag = tagFromPath(pinned)
     const files = tag ? tagItems(tag) : []
-    return fromTree(files, {
-      getId: (n: FsNode) => n.path,
-      toData: (n: FsNode) => ({
-        label: n.name,
-        icon: extToIcon(n.ext),
-        selected: n.path === url,
-      }),
-      focusId: url === pinned ? (files[0]?.path ?? url) : url,
-    })
+    return fromTree(
+      files.map((n) => ({ id: n.path, label: n.name, icon: extToIcon(n.ext), selected: n.path === url })),
+      { focusId: url === pinned ? (files[0]?.path ?? url) : url },
+    )
   }
   if (!tree) return { entities: {}, relationships: {} }
   const rootNode = pinned === '/' ? tree : (walk(pinned).at(-1) ?? tree)
-  return fromTree(rootNode.children ?? [], {
-    getId: (n: FsNode) => n.path,
-    getKids: (n: FsNode) => n.children,
-    toData: (n: FsNode) => ({
-      label: n.name,
-      icon: n.type === 'dir' ? 'dir' : extToIcon(n.ext),
-      selected: n.path === url,
-    }),
-    focusId: url,
-    expandedIds: pathAncestors(url),
-  })
+  return fromTree(
+    (rootNode.children ?? []).map((n) => fsToFlat(n, url)),
+    { focusId: url, expanded: pathAncestors(url) },
+  )
 }
 
 const buildTags = (pinned: string) => {
   const tags = tagGroups()
-  return fromTree(tags, {
-    getId: (g: TagGroupItem) => g.path,
-    toData: (g: TagGroupItem) => ({
+  return fromTree(
+    tags.map((g) => ({
+      id: g.path,
       label: `${g.label} (${g.count})`,
       icon: g.icon,
       selected: g.path === pinned,
-    }),
-    focusId: matchOrFirst(tags, pinned, (g) => g.path),
-  })
+    })),
+    { focusId: matchOrFirst(tags, pinned, (g) => g.path) },
+  )
 }
 
 // Listbox tabIndex={focusId===id?0:-1} — focusId가 어떤 항목과도 매칭 안 되면
@@ -98,18 +94,16 @@ const matchOrFirst = <T,>(items: T[], pinned: string, getId: (x: T) => string): 
 }
 
 const buildRecent = (pinned: string) =>
-  fromTree(smartGroups, {
-    getId: (g: SmartGroupItem) => g.path,
-    toData: (g: SmartGroupItem) => ({ label: g.label, icon: g.icon, selected: g.path === pinned }),
-    focusId: matchOrFirst(smartGroups, pinned, (g) => g.path),
-  })
+  fromTree(
+    smartGroups.map((g) => ({ id: g.path, label: g.label, icon: g.icon, selected: g.path === pinned })),
+    { focusId: matchOrFirst(smartGroups, pinned, (g) => g.path) },
+  )
 
 const buildFav = (pinned: string) =>
-  fromTree(favItems, {
-    getId: (s: SidebarItem) => s.path,
-    toData: (s: SidebarItem) => ({ label: s.label, icon: s.icon, selected: s.path === pinned }),
-    focusId: matchOrFirst(favItems, pinned, (s) => s.path),
-  })
+  fromTree(
+    favItems.map((s) => ({ id: s.path, label: s.label, icon: s.icon, selected: s.path === pinned })),
+    { focusId: matchOrFirst(favItems, pinned, (s) => s.path) },
+  )
 
 const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
   { id: 'icons',   label: '아이콘',  icon: 'layout-grid' },
@@ -119,14 +113,11 @@ const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
 ]
 
 const buildToolbar = (mode: ViewMode): NormalizedData => ({
-  entities: {
-    [ROOT]: { id: ROOT, data: {} },
-    ...Object.fromEntries(VIEW_MODES.map((m) => [m.id, {
-      id: m.id,
-      data: { label: m.label, icon: m.icon, pressed: mode === m.id },
-    }])),
-  },
-  relationships: { [ROOT]: VIEW_MODES.map((m) => m.id) },
+  entities: Object.fromEntries(
+    VIEW_MODES.map((m) => [m.id, { label: m.label, icon: m.icon, pressed: mode === m.id }]),
+  ),
+  relationships: {},
+  meta: { root: VIEW_MODES.map((m) => m.id) },
 })
 
 const buildPreview = (

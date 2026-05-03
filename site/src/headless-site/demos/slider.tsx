@@ -1,4 +1,4 @@
-import { numericStep, ROOT, type NormalizedData } from '@p/headless'
+import { numericStep, type NormalizedData } from '@p/headless'
 import { sliderPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
@@ -13,15 +13,15 @@ export const meta = {
 
 const initial: NormalizedData = {
   entities: {
-    [ROOT]: { id: ROOT },
-    thumb: { id: 'thumb', data: { value: 40, min: 0, max: 100, step: 5, label: 'Volume' } },
+    thumb: { value: 40, min: 0, max: 100, step: 5, label: 'Volume' },
   },
-  relationships: { [ROOT]: ['thumb'] },
+  relationships: {},
+  meta: { root: ['thumb'] },
 }
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(initial)
-  const value = Number(data.entities.thumb?.data?.value ?? 0)
+  const value = Number(data.entities.thumb?.value ?? 0)
   const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(data, 'thumb', onEvent)
 
   return (

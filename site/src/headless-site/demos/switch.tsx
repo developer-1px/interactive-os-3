@@ -21,7 +21,7 @@ const initial: NormalizedData = {
 
 export default function Demo() {
   const [data, setData] = useState(initial)
-  const on = Boolean(data.entities[SWITCH_ID]?.data?.checked)
+  const on = Boolean(data.entities[SWITCH_ID]?.checked)
   const { switchProps } = toggleSwitchPattern(data, SWITCH_ID, (e) => {
     if (e.type === 'value') {
       setData((d) => ({

@@ -1,4 +1,4 @@
-import { numericStep, ROOT, type NormalizedData } from '@p/headless'
+import { numericStep, type NormalizedData } from '@p/headless'
 import { splitterPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
 import { dedupe, probe } from '../keys'
@@ -13,15 +13,15 @@ export const meta = {
 
 const initial: NormalizedData = {
   entities: {
-    [ROOT]: { id: ROOT },
-    handle: { id: 'handle', data: { value: 40, min: 10, max: 90, step: 5 } },
+    handle: { value: 40, min: 10, max: 90, step: 5 },
   },
-  relationships: { [ROOT]: ['handle'] },
+  relationships: {},
+  meta: { root: ['handle'] },
 }
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(initial)
-  const value = Number(data.entities.handle?.data?.value ?? 50)
+  const value = Number(data.entities.handle?.value ?? 50)
   const { rootProps, handleProps } = splitterPattern(data, 'handle', onEvent, { orientation: 'horizontal' })
 
   return (

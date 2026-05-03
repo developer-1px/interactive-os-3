@@ -32,7 +32,7 @@ export default function Demo() {
     if (e.type === 'expand') setExpanded(e.open)
     if (e.type === 'activate') {
       const ent = data.entities[e.id]
-      const label = ent?.data?.label
+      const label = ent?.label
       if (typeof label === 'string') {
         setQuery(label)
         setExpanded(false)

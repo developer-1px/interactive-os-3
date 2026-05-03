@@ -31,7 +31,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
       className="w-72 rounded-md border border-stone-200 bg-white p-1 text-sm text-stone-900"
     >
       {items.map((item) => {
-        const itemData = (data.entities[item.id]?.data ?? {}) as TItem
+        const itemData = (data.entities[item.id] ?? {}) as TItem
         return (
           <li
             key={item.id}

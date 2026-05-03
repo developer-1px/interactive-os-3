@@ -31,14 +31,20 @@ export function fromTree<T extends { id: string; children?: T[] }>(
 
 /**
  * fromList — flat array to NormalizedData.
- * Each item must have `id`; remaining keys become user data.
+ * Items may omit `id`; in that case a synthetic id `__0`, `__1`, ... is assigned.
+ * All non-id keys become entity data.
  */
-export function fromList(items: Array<{ id: string } & Record<string, unknown>>): NormalizedData {
+export function fromList(items: Array<Record<string, unknown>>): NormalizedData {
   const entities: NormalizedData['entities'] = {}
-  items.forEach(({ id, ...rest }) => {
+  const root: string[] = []
+  items.forEach((item, i) => {
+    const id = (item.id as string | undefined) ?? `__${i}`
+    const { id: _ignore, ...rest } = item as Record<string, unknown>
+    void _ignore
     entities[id] = rest
+    root.push(id)
   })
-  return { entities, relationships: {}, meta: { root: items.map((i) => i.id) } }
+  return { entities, relationships: {}, meta: { root } }
 }
 
 export const pathAncestors = (path: string, sep: string = '/'): string[] => {

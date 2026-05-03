@@ -1,21 +1,21 @@
 import { useState } from 'react'
-import { EXPANDED, ROOT, getExpanded, reduce, type NormalizedData } from '@p/headless'
+import { getExpanded, reduce, type NormalizedData } from '@p/headless'
 import { disclosurePattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Disclosure',
   apg: 'disclosure',
   kind: 'pure' as const,
-  blurb: 'data 차원 — EXPANDED meta set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
+  blurb: 'data 차원 — meta.expanded set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
   keys: () => ['Enter', ' '],
 }
 
 const PANEL_ID = 'details'
 const initial: NormalizedData = {
-  entities: { [ROOT]: { id: ROOT }, [PANEL_ID]: { id: PANEL_ID } },
-  relationships: { [ROOT]: [PANEL_ID] },
+  entities: { [PANEL_ID]: {} },
+  relationships: {},
+  meta: { root: [PANEL_ID] },
 }
-void EXPANDED
 
 export default function Demo() {
   const [data, setData] = useState(initial)

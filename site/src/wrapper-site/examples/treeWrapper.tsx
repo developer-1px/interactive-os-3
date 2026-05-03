@@ -48,12 +48,7 @@ const files: Node[] = [
   { id: 'pkg', label: 'package.json', kind: 'file', ext: 'json' },
 ]
 
-const initialData = fromTree(files, {
-  getId: (node) => node.id,
-  getKids: (node) => node.children,
-  toData: (node) => ({ label: node.label, kind: node.kind, ext: node.ext }),
-  expandedIds: ['src', 'demos'],
-})
+const initialData = fromTree(files, { expanded: ['src', 'demos'] })
 
 // gesture: branch activate → expand toggle (leaf activate → activate emit 그대로).
 const reducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)

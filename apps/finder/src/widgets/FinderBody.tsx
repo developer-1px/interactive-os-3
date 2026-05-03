@@ -104,7 +104,7 @@ function SidebarSection({
         className="m-0 list-none p-0"
       >
         {items.map((it) => {
-          const d = data.entities[it.id]?.data ?? {}
+          const d = data.entities[it.id] ?? {}
           return (
             <li
               key={it.id}
@@ -139,7 +139,7 @@ function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiE
       className="inline-flex items-center rounded border border-neutral-200 bg-neutral-50 p-0.5"
     >
       {items.map((it) => {
-        const d = data.entities[it.id]?.data ?? {}
+        const d = data.entities[it.id] ?? {}
         const pressed = Boolean(d.pressed)
         return (
           <button

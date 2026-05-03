@@ -47,7 +47,7 @@ export function Columns({ data, onEvent }: { data: NormalizedData; onEvent: (e: 
                 const hasKids = getChildren(data, id).length > 0
                 const isOpen = expanded.has(id)
                 const disabled = isDisabled(data, id)
-                const d = data.entities[id]?.data ?? {}
+                const d = data.entities[id] ?? {}
                 const selected = Boolean(d.selected)
                 return (
                   <li

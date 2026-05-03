@@ -20,7 +20,7 @@ export const meta = {
 
 interface Row {
   id: string
-  name: string
+  label: string
   size: string
   modified: string
   children?: Row[]
@@ -29,15 +29,15 @@ interface Row {
 const rows: Row[] = [
   {
     id: 'src',
-    name: 'src',
+    label: 'src',
     size: '—',
     modified: '2026-05-01',
     children: [
-      { id: 'app', name: 'App.tsx', size: '4 KB', modified: '2026-05-02' },
-      { id: 'main', name: 'main.tsx', size: '0.5 KB', modified: '2026-05-02' },
+      { id: 'app', label: 'App.tsx', size: '4 KB', modified: '2026-05-02' },
+      { id: 'main', label: 'main.tsx', size: '0.5 KB', modified: '2026-05-02' },
     ],
   },
-  { id: 'pkg', name: 'package.json', size: '1 KB', modified: '2026-05-02' },
+  { id: 'pkg', label: 'package.json', size: '1 KB', modified: '2026-05-02' },
 ]
 
 const COLS = ['Name', 'Size', 'Modified']
@@ -45,12 +45,7 @@ const treeGridReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() =>
-    fromTree(rows, {
-      getId: (n) => n.id,
-      getKids: (n) => n.children,
-      toData: (n) => ({ label: n.name, size: n.size, modified: n.modified }),
-      expandedIds: ['src'],
-    }),
+    fromTree(rows, { expanded: ['src'] }),
     treeGridReducer,
   )
   const { rootProps, rowProps, cellProps, items } = useTreeGridPattern(data, onEvent)
@@ -75,7 +70,7 @@ export default function Demo() {
         ))}
       </div>
       {items.map((item, rowIndex) => {
-        const ent = data.entities[item.id]?.data ?? {}
+        const ent = data.entities[item.id] ?? {}
         return (
           <div
             key={item.id}

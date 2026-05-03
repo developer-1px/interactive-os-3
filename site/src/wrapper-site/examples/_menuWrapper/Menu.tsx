@@ -33,7 +33,7 @@ export function Menu<TItem extends object = Record<string, unknown>>({
 }: MenuProps<TItem>) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const label = (data.entities[ROOT]?.data?.label as string | undefined) ?? 'Menu'
+  const label = (data.meta as { triggerLabel?: string } | undefined)?.triggerLabel ?? 'Menu'
 
   const closeMenu = () => {
     setOpen(false)
@@ -96,7 +96,7 @@ function MenuList<TItem extends object>({
         if (kids.length > 0) {
           // parent 클릭 → submenu open + 첫 자식 focus (ArrowRight/Enter 와 동일 의도)
           onEvent({ type: 'expand', id: event.id, open: true })
-          const first = kids.find((c) => !data.entities[c]?.data?.disabled)
+          const first = kids.find((c) => !data.entities[c]?.disabled)
           if (first) onEvent({ type: 'navigate', id: first })
           return
         }
@@ -118,7 +118,7 @@ function MenuList<TItem extends object>({
       className="w-56 rounded-md border border-stone-200 bg-white p-1 text-sm shadow-lg"
     >
       {items.map((item) => {
-        const itemData = (data.entities[item.id]?.data ?? {}) as TItem & { kind?: string }
+        const itemData = (data.entities[item.id] ?? {}) as TItem & { kind?: string }
 
         if (itemData.kind === 'separator') {
           return (

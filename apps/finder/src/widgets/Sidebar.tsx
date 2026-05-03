@@ -29,7 +29,7 @@ export function SidebarSection({
         className="m-0 list-none p-0"
       >
         {items.map((it) => {
-          const d = data.entities[it.id]?.data ?? {}
+          const d = data.entities[it.id] ?? {}
           return (
             <li
               key={it.id}
