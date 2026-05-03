@@ -39,7 +39,7 @@ export function useToolbarPattern(
   const ids = getChildren(data, ROOT)
 
   const items: ToolbarItem[] = ids.map((id) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),

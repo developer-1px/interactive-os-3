@@ -1,13 +1,13 @@
-import { EXPANDED, FOCUS, OPEN, SELECT_ANCHOR, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
+import type { Meta, NormalizedData, UiEvent } from '../types'
 
 type Handler<T extends UiEvent['type']> = (
   d: NormalizedData,
   e: Extract<UiEvent, { type: T }>,
 ) => NormalizedData
 
-const setMeta = (d: NormalizedData, id: string, data: Record<string, unknown>): NormalizedData => ({
+const setMeta = (d: NormalizedData, patch: Partial<Meta>): NormalizedData => ({
   ...d,
-  entities: { ...d.entities, [id]: { id, data } },
+  meta: { ...d.meta, ...patch },
 })
 
 const mergeData = (d: NormalizedData, id: string, patch: Record<string, unknown>): NormalizedData => {
@@ -15,39 +15,39 @@ const mergeData = (d: NormalizedData, id: string, patch: Record<string, unknown>
   if (!prev) return d
   return {
     ...d,
-    entities: { ...d.entities, [id]: { ...prev, data: { ...prev.data, ...patch } } },
+    entities: { ...d.entities, [id]: { ...prev, ...patch } },
   }
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
 
-const toggleSetMeta = (d: NormalizedData, metaKey: string, id: string, on: boolean): NormalizedData => {
-  const prev = (d.entities[metaKey]?.data?.ids as string[]) ?? []
+const toggleSet = (d: NormalizedData, key: 'expanded' | 'open', id: string, on: boolean): NormalizedData => {
+  const prev = d.meta?.[key] ?? []
   const has = prev.includes(id)
   if (on === has) return d
   const next = on ? [...prev, id] : prev.filter((x) => x !== id)
-  return setMeta(d, metaKey, { ids: next })
+  return setMeta(d, { [key]: next } as Partial<Meta>)
 }
 
 const identity = (d: NormalizedData) => d
 
 const handlers: { [K in UiEvent['type']]: Handler<K> } = {
-  navigate: (d, e) => setMeta(d, FOCUS, { id: e.id }),
-  expand: (d, e) => toggleSetMeta(d, EXPANDED, e.id, e.open),
-  open: (d, e) => toggleSetMeta(d, OPEN, e.id, e.open),
-  typeahead: (d, e) => setMeta(d, TYPEAHEAD, { buf: e.buf, deadline: e.deadline }),
+  navigate: (d, e) => setMeta(d, { focus: e.id }),
+  expand: (d, e) => toggleSet(d, 'expanded', e.id, e.open),
+  open: (d, e) => toggleSet(d, 'open', e.id, e.open),
+  typeahead: (d, e) => setMeta(d, { typeahead: { buf: e.buf, deadline: e.deadline } }),
   activate: identity,
-  select: (d, e) => setMeta(d, SELECT_ANCHOR, { id: e.id }),
+  select: (d, e) => setMeta(d, { selectAnchor: e.id }),
   selectMany: identity,
   value: identity,
   pan: (d, e) => {
-    const cur = d.entities[e.id]?.data ?? {}
+    const cur = d.entities[e.id] ?? {}
     const x = ((cur.x as number) ?? 0) + e.dx
     const y = ((cur.y as number) ?? 0) + e.dy
     return mergeData(d, e.id, { x, y })
   },
   zoom: (d, e) => {
-    const cur = d.entities[e.id]?.data ?? {}
+    const cur = d.entities[e.id] ?? {}
     const s0 = (cur.s as number) ?? 1
     const x0 = (cur.x as number) ?? 0
     const y0 = (cur.y as number) ?? 0

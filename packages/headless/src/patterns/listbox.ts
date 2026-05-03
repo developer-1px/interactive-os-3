@@ -70,7 +70,7 @@ export function useListboxPattern(
   const ids = getChildren(data, containerId)
 
   const items: BaseItem[] = ids.map((id, i) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),

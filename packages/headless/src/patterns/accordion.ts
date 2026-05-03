@@ -14,7 +14,7 @@ const axis = composeAxes(navigate('vertical'), expand, activate)
  * accordion — APG `/accordion/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
  *
- * 각 item 의 trigger 는 button. expand 상태는 entities[id].data.expanded SSoT.
+ * 각 item 의 trigger 는 button. expand 상태는 entities[id].expanded SSoT.
  * 'single' (한 항목만 열림) 모드는 소비자가 reducer 에 `singleExpand` 합성으로 표현.
  */
 export function useAccordionPattern(
@@ -36,7 +36,7 @@ export function useAccordionPattern(
   const ids = getChildren(data, ROOT)
 
   const items = ids.map((id, i) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),

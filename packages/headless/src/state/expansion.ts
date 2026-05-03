@@ -1,4 +1,4 @@
-import { EXPANDED, getExpanded, isMetaId } from '../types'
+import { getExpanded } from '../types'
 import { siblingsOf } from '../axes'
 import type { Reducer } from './compose'
 
@@ -8,7 +8,7 @@ import type { Reducer } from './compose'
  *   composeReducers(reduce, singleExpand)
  */
 export const singleExpand: Reducer = (d, e) => {
-  if (e.type !== 'expand' || !e.open || isMetaId(e.id)) return d
+  if (e.type !== 'expand' || !e.open) return d
   const sibs = siblingsOf(d, e.id).filter((s) => s !== e.id)
   if (sibs.length === 0) return d
   const cur = getExpanded(d)
@@ -16,6 +16,6 @@ export const singleExpand: Reducer = (d, e) => {
   if (next.length === cur.size) return d
   return {
     ...d,
-    entities: { ...d.entities, [EXPANDED]: { id: EXPANDED, data: { ids: next } } },
+    meta: { ...d.meta, expanded: next },
   }
 }

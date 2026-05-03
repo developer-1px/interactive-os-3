@@ -24,7 +24,7 @@ export function splitterPattern(
   handleProps: ItemProps
 } {
   const { orientation = 'vertical' } = opts
-  const ent = data.entities[handleId]?.data ?? {}
+  const ent = data.entities[handleId] ?? {}
   const value = Number(ent.value ?? 0)
   const min = Number(ent.min ?? 0)
   const max = Number(ent.max ?? 100)

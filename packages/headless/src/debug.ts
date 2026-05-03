@@ -47,13 +47,13 @@ const findHints = (d: NormalizedData): Map<string, string[]> => {
     if (!kids || kids.length < 2) continue
     const uiAriaLabels = new Set<string>()
     for (const k of kids) {
-      const data = d.entities[k]?.data
+      const data = d.entities[k]
       const props = data?.props as Record<string, unknown> | undefined
       const aria = props?.['aria-label']
       if (typeof aria === 'string') uiAriaLabels.add(aria)
     }
     for (const k of kids) {
-      const data = d.entities[k]?.data
+      const data = d.entities[k]
       if (!data) continue
       if (data.type === 'Text' && typeof data.content === 'string' && uiAriaLabels.has(data.content)) {
         add(k, 'duplicates sibling aria-label')
@@ -63,7 +63,7 @@ const findHints = (d: NormalizedData): Map<string, string[]> => {
   // (2) 단일 자식 컨테이너 — 그룹의 의미가 없음
   for (const [parentId, kids] of Object.entries(d.relationships)) {
     if (!kids || kids.length !== 1) continue
-    const data = d.entities[parentId]?.data
+    const data = d.entities[parentId]
     const t = data?.type
     if (t === 'Row' || t === 'Column' || t === 'Grid' || t === 'Section') {
       add(parentId, 'single-child container — flatten?')
@@ -71,7 +71,7 @@ const findHints = (d: NormalizedData): Map<string, string[]> => {
   }
   // (3) 빈 컨테이너 — 자식 0개
   for (const [id, ent] of Object.entries(d.entities)) {
-    const t = ent.data?.type
+    const t = ent?.type
     if (t === 'Row' || t === 'Column' || t === 'Grid' || t === 'Section' || t === 'Header' || t === 'Footer') {
       const kids = d.relationships[id]
       if (!kids || kids.length === 0) add(id, 'empty container')
@@ -82,8 +82,8 @@ const findHints = (d: NormalizedData): Map<string, string[]> => {
   for (const [, kids] of Object.entries(d.relationships)) {
     if (!kids) continue
     for (let i = 0; i < kids.length - 1; i++) {
-      const a = d.entities[kids[i]]?.data
-      const b = d.entities[kids[i + 1]]?.data
+      const a = d.entities[kids[i]]
+      const b = d.entities[kids[i + 1]]
       if (a?.type === 'Text' && a.variant === 'strong'
           && (b?.type === 'Ui' || b?.type === 'Column' || b?.type === 'Row')) {
         add(kids[i], 'strong used as section header — should be h3?')
@@ -106,7 +106,7 @@ export function printTree(d: NormalizedData, opts: PrintOptions = {}): string {
     }
     seen.add(id)
     const ent = d.entities[id]
-    const summary = summarize(id, ent?.data)
+    const summary = summarize(id, ent)
     const reasons = flagged.get(id)
     const flag = reasons ? `  ⚠ ${reasons.join('; ')}` : ''
     const branch = isRoot ? '' : isLast ? '└── ' : '├── '
@@ -141,7 +141,7 @@ export function printHeadingOutline(d: NormalizedData): string {
     if (seen.has(id)) return
     seen.add(id)
     const ent = d.entities[id]
-    const data = ent?.data
+    const data = ent
     if (data?.type === 'Text') {
       const r = rank(data.variant as string | undefined)
       const content = data.content

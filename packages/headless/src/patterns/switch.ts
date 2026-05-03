@@ -14,7 +14,7 @@ export interface SwitchOptions {
  * https://www.w3.org/TR/wai-aria-1.2/#switch
  *
  * 데이터 차원 — 다른 recipe(slider/spinbutton 등)와 동일 시그니처: `(data, id, onEvent?, opts?)`.
- * `data.entities[id].data.{checked|selected, disabled}` 에서 상태 읽음. activate 시
+ * `data.entities[id].{checked|selected, disabled}` 에서 상태 읽음. activate 시
  * `{type:'value', id, value:!checked}` 직렬 emit. host reducer 가 흡수하거나
  * `onCheckedChange` 로 옆구리 수신.
  *
@@ -31,7 +31,7 @@ export function toggleSwitchPattern(
   onEvent?: (e: UiEvent) => void,
   opts: SwitchOptions = {},
 ): { switchProps: ItemProps } {
-  const ent = data.entities[id]?.data ?? {}
+  const ent = data.entities[id] ?? {}
   const checked = Boolean(ent.checked ?? ent.selected)
   const disabled = Boolean(ent.disabled)
   const { label, onCheckedChange } = opts

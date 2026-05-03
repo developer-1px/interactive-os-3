@@ -20,7 +20,7 @@ const idFrom = (e: { target: EventTarget }): string | null =>
 
 const defaultFocusId = (data: NormalizedData, containerId: string): string | null => {
   const ids = getChildren(data, containerId).filter((id) => !isDisabled(data, id))
-  return ids.find((id) => Boolean(data.entities[id]?.data?.selected)) ?? ids[0] ?? null
+  return ids.find((id) => Boolean(data.entities[id]?.selected)) ?? ids[0] ?? null
 }
 
 export function useRovingTabIndex(

@@ -1,6 +1,6 @@
 import type { Axis } from './axis'
 import type { UiEvent, NormalizedData } from '../types'
-import { ROOT, getChildren, getExpanded, isDisabled, isMetaId } from '../types'
+import { ROOT, getChildren, getExpanded, isDisabled } from '../types'
 import { parentOf } from './index'
 import { INTENTS } from './keys'
 
@@ -26,7 +26,7 @@ type Action = (c: Ctx) => UiEvent[] | null
 
 const toParentOrNull = (d: NormalizedData, id: string): UiEvent[] | null => {
   const p = parentOf(d, id)
-  return p && !isMetaId(p) ? [{ type: 'navigate', id: p }] : null
+  return p && p !== ROOT ? [{ type: 'navigate', id: p }] : null
 }
 const firstEnabled = (d: NormalizedData, kids: string[]) => kids.find((c) => !isDisabled(d, c))
 

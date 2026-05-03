@@ -65,7 +65,7 @@ export function useTreeGridPattern(
   const walk = (parent: string, level: number) => {
     const children = getChildren(data, parent)
     children.forEach((id, i) => {
-      const ent = data.entities[id]?.data ?? {}
+      const ent = data.entities[id] ?? {}
       const kids = getChildren(data, id)
       const isExpanded = expanded.has(id)
       flat.push({

@@ -55,7 +55,7 @@ export function useRadioGroupPattern(
   const ids = getChildren(data, ROOT)
 
   const items: BaseItem[] = ids.map((id, i) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),

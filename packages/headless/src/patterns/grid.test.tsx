@@ -100,7 +100,7 @@ describe('useGridPattern', () => {
     expect((r2.current.rootProps as unknown as Record<string, unknown>)['aria-labelledby']).toBe('h-id')
   })
 
-  it('columnHeader aria-sort emitted only when entity.data.sort is ascending/descending/other', () => {
+  it('columnHeader aria-sort emitted only when entity.sort is ascending/descending/other', () => {
     const data = grid3x2()
     data.entities.a!.data = { ...(data.entities.a!.data ?? {}), sort: 'ascending' }
     data.entities.b!.data = { ...(data.entities.b!.data ?? {}), sort: 'none' }

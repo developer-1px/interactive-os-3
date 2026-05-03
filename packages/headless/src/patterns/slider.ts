@@ -28,7 +28,7 @@ export function sliderPattern(
   thumbProps: ItemProps
 } {
   const { orientation = 'horizontal' } = opts
-  const ent = data.entities[thumbId]?.data ?? {}
+  const ent = data.entities[thumbId] ?? {}
   const value = Number(ent.value ?? 0)
   const min = Number(ent.min ?? 0)
   const max = Number(ent.max ?? 100)

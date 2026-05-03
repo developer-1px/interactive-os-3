@@ -1,45 +1,44 @@
-import { ROOT, FOCUS, EXPANDED, type NormalizedData } from '../types'
+import type { NormalizedData } from '../types'
 
-type FromTreeOpts<T> = {
-  getId: (n: T) => string
-  getKids?: (n: T) => T[] | undefined
-  toData?: (n: T) => Record<string, unknown>
-  focusId?: string | null
-  expandedIds?: string[]
-}
-
-export function fromTree<T>(
+/**
+ * fromTree — convention-based tree builder. Input is `{id, children?, ...rest}` —
+ * id and children are reserved keys; rest becomes the entity's user data.
+ * No callbacks. No options for shape transformation.
+ */
+export function fromTree<T extends { id: string; children?: T[] }>(
   roots: T[],
-  { getId, getKids, toData, focusId, expandedIds }: FromTreeOpts<T>,
+  opts?: { focusId?: string | null; expanded?: string[] },
 ): NormalizedData {
-  const entities: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
+  const entities: NormalizedData['entities'] = {}
   const relationships: NormalizedData['relationships'] = {}
 
-  const walk = (node: T, parentId: string) => {
-    const id = getId(node)
-    entities[id] = { id, data: toData?.(node) ?? {} }
-    relationships[parentId] = [...(relationships[parentId] ?? []), id]
-    for (const c of getKids?.(node) ?? []) walk(c, id)
+  const walk = (node: T) => {
+    const { id, children, ...rest } = node as T & Record<string, unknown>
+    entities[id] = rest as Record<string, unknown>
+    if (children?.length) {
+      relationships[id] = children.map((c) => c.id)
+      for (const c of children) walk(c)
+    }
   }
-  for (const r of roots) walk(r, ROOT)
+  for (const r of roots) walk(r)
 
-  if (expandedIds) entities[EXPANDED] = { id: EXPANDED, data: { ids: expandedIds } }
-  if (focusId !== undefined) entities[FOCUS] = { id: FOCUS, data: { id: focusId } }
+  const meta: NormalizedData['meta'] = { root: roots.map((r) => r.id) }
+  if (opts?.focusId !== undefined) meta.focus = opts.focusId
+  if (opts?.expanded) meta.expanded = opts.expanded
 
-  return { entities, relationships }
+  return { entities, relationships, meta }
 }
 
 /**
- * fromList — 평탄한 배열을 NormalizedData 로 변환. Display-only Collection
- * (Top10List/BarChart 류)에서 entries/bars 대신 쓰는 adapter.
+ * fromList — flat array to NormalizedData.
+ * Each item must have `id`; remaining keys become user data.
  */
-export function fromList(items: Array<Record<string, unknown>>): NormalizedData {
-  const ids = items.map((_, i) => `__${i}`)
-  const entities: NormalizedData['entities'] = { [ROOT]: { id: ROOT } }
-  items.forEach((item, i) => {
-    entities[ids[i]] = { id: ids[i], data: item }
+export function fromList(items: Array<{ id: string } & Record<string, unknown>>): NormalizedData {
+  const entities: NormalizedData['entities'] = {}
+  items.forEach(({ id, ...rest }) => {
+    entities[id] = rest
   })
-  return { entities, relationships: { [ROOT]: ids } }
+  return { entities, relationships: {}, meta: { root: items.map((i) => i.id) } }
 }
 
 export const pathAncestors = (path: string, sep: string = '/'): string[] => {

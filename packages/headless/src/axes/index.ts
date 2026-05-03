@@ -11,7 +11,7 @@ export const siblingsOf = (d: NormalizedData, id: string): string[] => {
 }
 
 export const enabledSiblings = (d: NormalizedData, id: string): string[] =>
-  siblingsOf(d, id).filter((sid) => !d.entities[sid]?.data?.disabled)
+  siblingsOf(d, id).filter((sid) => !d.entities[sid]?.disabled)
 
 export { navigate } from './navigate'
 export { expand, expandKeys } from './expand'

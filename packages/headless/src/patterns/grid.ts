@@ -87,7 +87,7 @@ export function useGridPattern(
       rowIndex,
       colIndex,
       label: getLabel(data, cellId),
-      selected: Boolean(data.entities[cellId]?.data?.selected),
+      selected: Boolean(data.entities[cellId]?.selected),
       disabled: isDisabled(data, cellId),
     }))
     return { id: rowId, cells }
@@ -127,8 +127,8 @@ export function useGridPattern(
   const headerCellProps = (role: 'columnheader' | 'rowheader') => (id: string): ItemProps => {
     const idx = cellIndex(id)
     const isFocus = focusId === id
-    // aria-sort 은 sort 가 활성된 헤더에만. entity.data.sort 에 'ascending'|'descending'|'other' 일 때만 emit.
-    const sort = data.entities[id]?.data?.sort as 'ascending' | 'descending' | 'other' | 'none' | undefined
+    // aria-sort 은 sort 가 활성된 헤더에만. entity.sort 에 'ascending'|'descending'|'other' 일 때만 emit.
+    const sort = data.entities[id]?.sort as 'ascending' | 'descending' | 'other' | 'none' | undefined
     const ariaSort = sort && sort !== 'none' ? sort : undefined
     return {
       role,

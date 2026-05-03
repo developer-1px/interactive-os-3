@@ -22,7 +22,7 @@ describe('singleExpand reducer', () => {
   it('collapses sibling entries when one opens', () => {
     const data = accordion(['a'])
     const next = singleExpand(data, { type: 'expand', id: 'b', open: true })
-    expect(next.entities[EXPANDED]?.data?.ids).toEqual([])
+    expect(next.entities[EXPANDED]?.ids).toEqual([])
   })
 
   it('does not touch state on close (open=false)', () => {
@@ -43,7 +43,7 @@ describe('singleExpand reducer', () => {
   it('does not collapse the item that is being opened', () => {
     const data = accordion(['a', 'b'])
     const next = singleExpand(data, { type: 'expand', id: 'b', open: true })
-    expect(next.entities[EXPANDED]?.data?.ids).toEqual(['b'])
+    expect(next.entities[EXPANDED]?.ids).toEqual(['b'])
   })
 
   it('ignores non-expand events', () => {

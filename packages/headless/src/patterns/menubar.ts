@@ -147,7 +147,7 @@ export function useMenubarPattern(
   const { onKey: subDispatch } = bindAxis(subAxis, data, intent)
 
   const items: BaseItem[] = topIds.map((id, i) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),
@@ -199,7 +199,7 @@ export function useMenubarPattern(
   }
 
   const subItemProps = (id: string): ItemProps => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
     const rawChecked = ent.checked ?? ent.selected
     const checked: boolean | 'mixed' | undefined =

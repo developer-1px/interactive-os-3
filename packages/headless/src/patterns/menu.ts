@@ -54,7 +54,7 @@ export function useMenuPattern(
   const ids = getChildren(data, containerId)
 
   const items: BaseItem[] = ids.map((id, i) => {
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),
@@ -76,7 +76,7 @@ export function useMenuPattern(
   const itemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
-    const ent = data.entities[id]?.data ?? {}
+    const ent = data.entities[id] ?? {}
     const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
     const rawChecked = ent.checked ?? ent.selected
     const checked: boolean | 'mixed' | undefined =

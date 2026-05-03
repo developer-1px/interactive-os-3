@@ -14,7 +14,7 @@ import { INTENTS, matchChord } from './keys'
 export const numericStep = (orientation: 'horizontal' | 'vertical' = 'horizontal'): Axis =>
   (d, id, t) => {
     if (t.kind !== 'key') return null
-    const ent = d.entities[id]?.data ?? {}
+    const ent: Record<string, unknown> = d.entities[id] ?? {}
     const value = Number(ent.value ?? 0)
     const min = Number(ent.min ?? 0)
     const max = Number(ent.max ?? 100)

@@ -1,45 +1,52 @@
 import { useMemo, useReducer, useRef } from 'react'
 import { reduce } from '../state/reduce'
-import { EXPANDED, FOCUS, TYPEAHEAD, type UiEvent, type NormalizedData } from '../types'
+import type { Meta, NormalizedData, UiEvent } from '../types'
 
 const EMPTY: NormalizedData = { entities: {}, relationships: {} }
-const SEED_KEYS = [FOCUS, EXPANDED, TYPEAHEAD] as const
+type MetaKey = 'focus' | 'expanded' | 'typeahead'
+const SEED_KEYS: MetaKey[] = ['focus', 'expanded', 'typeahead']
 
 /**
- * meta 키들(FOCUS/EXPANDED/TYPEAHEAD)이 base에 시드되어 있으면 reducer 초기 state에
- * 동일 키로 hydrate한다. 그래야 첫 expand/navigate 액션이 base 시드를 무시하고
- * 빈 배열 위에 덮어쓰는 버그가 발생하지 않는다.
+ * Meta 시드(focus/expanded/typeahead)가 base에 있으면 reducer 초기 state에 hydrate한다.
+ * 그래야 첫 dispatch가 base 시드를 무시하고 빈 값 위에 덮어쓰는 버그가 없다.
  *
- * base의 seed 값이 외부에서 갱신되면(URL→base bridge 등) data 머지에서 base가
- * 이긴다. user dispatch 이후엔 meta가 이긴다 — touchedRef로 키 단위 추적.
+ * base 가 외부에서 갱신되면(URL→base bridge 등) 머지에서 base가 이긴다.
+ * user dispatch 이후엔 local meta가 이긴다 — touched ref로 키 단위 추적.
  */
 const hydrate = (base: NormalizedData): NormalizedData => {
-  const entities: NormalizedData['entities'] = {}
+  const meta: Meta = {}
+  let any = false
   for (const k of SEED_KEYS) {
-    if (base.entities[k]) entities[k] = base.entities[k]
+    if (base.meta?.[k] !== undefined) {
+      ;(meta as Record<string, unknown>)[k] = base.meta[k]
+      any = true
+    }
   }
-  return Object.keys(entities).length > 0 ? { entities, relationships: {} } : EMPTY
+  return any ? { ...EMPTY, meta } : EMPTY
 }
 
 export function useControlState(base: NormalizedData): [NormalizedData, (e: UiEvent) => void] {
-  const [meta, rawDispatch] = useReducer(reduce, base, hydrate)
-  const touched = useRef<Set<string>>(new Set())
+  const [local, rawDispatch] = useReducer(reduce, base, hydrate)
+  const touched = useRef<Set<MetaKey>>(new Set())
   const dispatch = (e: UiEvent) => {
-    if (e.type === 'navigate') touched.current.add(FOCUS)
-    else if (e.type === 'expand' || e.type === 'open') touched.current.add(EXPANDED)
-    else if (e.type === 'typeahead') touched.current.add(TYPEAHEAD)
+    if (e.type === 'navigate') touched.current.add('focus')
+    else if (e.type === 'expand' || e.type === 'open') touched.current.add('expanded')
+    else if (e.type === 'typeahead') touched.current.add('typeahead')
     rawDispatch(e)
   }
   const data = useMemo<NormalizedData>(() => {
-    const entities = { ...base.entities, ...meta.entities }
+    const meta: Meta = { ...base.meta, ...local.meta }
     for (const k of SEED_KEYS) {
-      // eslint-disable-next-line react-hooks/refs -- touched는 dispatch에서만 추가되는 idempotent set
-      if (!touched.current.has(k) && base.entities[k]) entities[k] = base.entities[k]
+      // eslint-disable-next-line react-hooks/refs
+      if (!touched.current.has(k) && base.meta?.[k] !== undefined) {
+        ;(meta as Record<string, unknown>)[k] = base.meta[k]
+      }
     }
     return {
-      entities,
-      relationships: { ...base.relationships, ...meta.relationships },
+      entities: { ...base.entities, ...local.entities },
+      relationships: { ...base.relationships, ...local.relationships },
+      meta,
     }
-  }, [base, meta])
+  }, [base, local])
   return [data, dispatch]
 }

@@ -33,7 +33,7 @@ export function spinbuttonPattern(
   opts: SpinbuttonOptions = {},
 ): { spinbuttonProps: ItemProps } {
   const { invalid, valueText, readOnly } = opts
-  const ent = data.entities[id]?.data ?? {}
+  const ent = data.entities[id] ?? {}
   const value = Number(ent.value ?? 0)
   const hasMin = ent.min !== undefined
   const hasMax = ent.max !== undefined

@@ -19,7 +19,7 @@ export const navigateOnActivate: GestureHelper = (_d, e) =>
 export const selectionFollowsFocus: GestureHelper = (d, e) => {
   if (e.type !== 'navigate') return [e]
   const ent = d.entities[e.id]
-  if (ent?.data?.disabled) return [e]
+  if (ent?.disabled) return [e]
   return [e, { type: 'activate', id: e.id }]
 }
 
