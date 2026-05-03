@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { activate, composeAxes, multiSelect, navigate, numericStep, treeExpand, treeNavigate, typeahead } from './axes'
+import { activate, composeAxes, multiSelect, navigate, numericStep, treeExpand, treeNavigate } from './axes'
 import { fromTree } from './state/fromTree'
 import { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
 import { keyTrigger } from './trigger'
@@ -174,5 +174,3 @@ describe('keyboard input to state contract', () => {
     expect(data.entities.slider?.value).toBe(50)
   })
 })
-// keep typeahead reachable
-void typeahead

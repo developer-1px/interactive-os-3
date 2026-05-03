@@ -79,6 +79,12 @@ export const getLabel = (d: NormalizedData, id: string): string =>
 export const isDisabled = (d: NormalizedData, id: string): boolean =>
   Boolean(d.entities[id]?.disabled)
 
+export const isSelected = (d: NormalizedData, id: string): boolean =>
+  Boolean(d.entities[id]?.selected)
+
+export const isFocused = (d: NormalizedData, id: string): boolean =>
+  d.meta?.focus === id
+
 export interface ControlProps {
   data: NormalizedData
   /** 상호작용 컴포넌트는 필수. Display-only Collection은 생략 가능. */

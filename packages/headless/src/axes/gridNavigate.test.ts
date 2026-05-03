@@ -2,27 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { gridNavigate } from './gridNavigate'
 import { keyTrigger } from '../trigger'
 import type { NormalizedData } from '../types'
-
-/**
- * 3×3 grid:
- *   r1 → c11 c12 c13
- *   r2 → c21 c22 c23
- *   r3 → c31 c32 c33
- */
-const grid3x3 = (): NormalizedData => ({
-  entities: {
-    r1: {}, r2: {}, r3: {},
-    c11: {}, c12: {}, c13: {},
-    c21: {}, c22: {}, c23: {},
-    c31: {}, c32: {}, c33: {},
-  },
-  relationships: {
-    r1: ['c11', 'c12', 'c13'],
-    r2: ['c21', 'c22', 'c23'],
-    r3: ['c31', 'c32', 'c33'],
-  },
-  meta: { root: ['r1', 'r2', 'r3'] },
-})
+import { grid3x3 } from './_fixtures'
 
 const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
   keyTrigger({ key, ctrl: false, shift: false, meta: false, alt: false, ...mods })

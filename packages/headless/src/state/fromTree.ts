@@ -38,9 +38,8 @@ export function fromList(items: Array<Record<string, unknown>>): NormalizedData 
   const entities: NormalizedData['entities'] = {}
   const root: string[] = []
   items.forEach((item, i) => {
-    const id = (item.id as string | undefined) ?? `__${i}`
-    const { id: _ignore, ...rest } = item as Record<string, unknown>
-    void _ignore
+    const { id: rawId, ...rest } = item as Record<string, unknown>
+    const id = (rawId as string | undefined) ?? `__${i}`
     entities[id] = rest
     root.push(id)
   })

@@ -7,6 +7,8 @@ export interface MenuProps<TItem extends object = Record<string, unknown>> {
   data: NormalizedData
   onEvent: (event: UiEvent) => void
   slots?: MenuSlots<TItem>
+  /** Trigger button label — defaults to 'Menu'. Visual prop, not data. */
+  label?: string
 }
 
 /**
@@ -30,10 +32,10 @@ export function Menu<TItem extends object = Record<string, unknown>>({
   data,
   onEvent,
   slots = {},
+  label = 'Menu',
 }: MenuProps<TItem>) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const label = (data.meta as { triggerLabel?: string } | undefined)?.triggerLabel ?? 'Menu'
 
   const closeMenu = () => {
     setOpen(false)

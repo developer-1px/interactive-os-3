@@ -3,8 +3,8 @@ import { reduce } from '../state/reduce'
 import type { Meta, NormalizedData, UiEvent } from '../types'
 
 const EMPTY: NormalizedData = { entities: {}, relationships: {} }
-type MetaKey = 'focus' | 'expanded' | 'typeahead'
-const SEED_KEYS: MetaKey[] = ['focus', 'expanded', 'typeahead']
+const SEED_KEYS = ['focus', 'expanded', 'typeahead'] as const satisfies readonly (keyof Meta)[]
+type MetaKey = (typeof SEED_KEYS)[number]
 
 /**
  * Meta 시드(focus/expanded/typeahead)가 base에 있으면 reducer 초기 state에 hydrate한다.

@@ -10,6 +10,7 @@
 
 import {
   defineFeature,
+  fromList,
   fromTree,
   pathAncestors,
   type NormalizedData,
@@ -73,37 +74,28 @@ const buildColumns = (tree: FsNode | undefined, url: string, pinned: string) => 
   )
 }
 
-const buildTags = (pinned: string) => {
-  const tags = tagGroups()
-  return fromTree(
-    tags.map((g) => ({
-      id: g.path,
-      label: `${g.label} (${g.count})`,
-      icon: g.icon,
-      selected: g.path === pinned,
-    })),
-    { focusId: matchOrFirst(tags, pinned, (g) => g.path) },
-  )
-}
-
 // Listbox tabIndex={focusId===id?0:-1} — focusId가 어떤 항목과도 매칭 안 되면
 // Tab 진입 자체가 막혀 키보드 nav 가 죽는다. 매칭되지 않을 땐 첫 항목으로 fallback.
-const matchOrFirst = <T,>(items: T[], pinned: string, getId: (x: T) => string): string | undefined => {
-  const hit = items.find((x) => getId(x) === pinned)
-  return hit ? getId(hit) : (items[0] ? getId(items[0]) : undefined)
+const matchOrFirst = <T extends { path: string }>(items: T[], pinned: string): string | undefined => {
+  const hit = items.find((x) => x.path === pinned)
+  return hit?.path ?? items[0]?.path
 }
 
-const buildRecent = (pinned: string) =>
+/** sidebar listbox 섹션 공통 빌더 — items.path 가 selected/focus 결정. */
+const buildSidebarSection = <T extends { path: string; label: string; icon: string }>(
+  items: T[],
+  pinned: string,
+  labelFor: (x: T) => string = (x) => x.label,
+) =>
   fromTree(
-    smartGroups.map((g) => ({ id: g.path, label: g.label, icon: g.icon, selected: g.path === pinned })),
-    { focusId: matchOrFirst(smartGroups, pinned, (g) => g.path) },
+    items.map((x) => ({ id: x.path, label: labelFor(x), icon: x.icon, selected: x.path === pinned })),
+    { focusId: matchOrFirst(items, pinned) },
   )
 
-const buildFav = (pinned: string) =>
-  fromTree(
-    favItems.map((s) => ({ id: s.path, label: s.label, icon: s.icon, selected: s.path === pinned })),
-    { focusId: matchOrFirst(favItems, pinned, (s) => s.path) },
-  )
+const buildRecent = (pinned: string) => buildSidebarSection(smartGroups, pinned)
+const buildFav = (pinned: string) => buildSidebarSection(favItems, pinned)
+const buildTags = (pinned: string) =>
+  buildSidebarSection(tagGroups(), pinned, (g) => `${g.label} (${g.count})`)
 
 const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
   { id: 'icons',   label: '아이콘',  icon: 'layout-grid' },
@@ -112,13 +104,8 @@ const VIEW_MODES: { id: ViewMode; label: string; icon: string }[] = [
   { id: 'gallery', label: '갤러리',  icon: 'gallery-vertical' },
 ]
 
-const buildToolbar = (mode: ViewMode): NormalizedData => ({
-  entities: Object.fromEntries(
-    VIEW_MODES.map((m) => [m.id, { label: m.label, icon: m.icon, pressed: mode === m.id }]),
-  ),
-  relationships: {},
-  meta: { root: VIEW_MODES.map((m) => m.id) },
-})
+const buildToolbar = (mode: ViewMode): NormalizedData =>
+  fromList(VIEW_MODES.map((m) => ({ id: m.id, label: m.label, icon: m.icon, pressed: mode === m.id })))
 
 const buildPreview = (
   url: string,
