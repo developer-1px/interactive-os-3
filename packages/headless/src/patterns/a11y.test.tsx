@@ -93,14 +93,18 @@ describe('axe-core ARIA compliance', () => {
   it('treegrid', async () => {
     const data = grid3x2()
     function C() {
-      const { rootProps, rowProps, cellProps, items } = useTreeGridPattern(data, undefined, { label: 'Items' })
-      const byRow = new Map<string, typeof items>()
-      items.forEach((it) => { byRow.set(it.id, []) })
+      const { treegridProps, rowProps, columnheaderProps, rowheaderProps, gridcellProps, items } =
+        useTreeGridPattern(data, undefined, { label: 'Items' })
       return (
-        <div {...rootProps}>
-          {items.map((it) => (
-            <div key={it.id} {...rowProps(it.id)}>
-              <div {...cellProps(it.id, 0)}>{it.label}</div>
+        <div {...treegridProps}>
+          <div role="row" aria-rowindex={1}>
+            <div {...columnheaderProps(0)}>Name</div>
+            <div {...columnheaderProps(1)}>Value</div>
+          </div>
+          {items.map((it, i) => (
+            <div key={it.id} {...rowProps(it.id)} aria-rowindex={i + 2}>
+              <div {...rowheaderProps(it.id)}>{it.label}</div>
+              <div {...gridcellProps(it.id, 1)}>Value</div>
             </div>
           ))}
         </div>

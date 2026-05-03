@@ -46,11 +46,18 @@ export default function Demo() {
     fromTree(rows, { expanded: ['src'] }),
     treeGridReducer,
   )
-  const { rootProps, rowProps, cellProps, items } = useTreeGridPattern(data, onEvent)
+  const {
+    treegridProps,
+    rowProps,
+    columnheaderProps,
+    rowheaderProps,
+    gridcellProps,
+    items,
+  } = useTreeGridPattern(data, onEvent)
 
   return (
     <div
-      {...rootProps}
+      {...treegridProps}
       aria-label="Files"
       aria-colcount={COLS.length}
       aria-rowcount={items.length + 1}
@@ -62,7 +69,7 @@ export default function Demo() {
         className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-200 bg-stone-50 text-xs font-medium text-stone-600"
       >
         {COLS.map((c, i) => (
-          <span key={c} role="columnheader" aria-colindex={i + 1} className="px-3 py-2">
+          <span key={c} {...columnheaderProps(i)} className="px-3 py-2">
             {c}
           </span>
         ))}
@@ -77,7 +84,7 @@ export default function Demo() {
             className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-100 last:border-b-0 hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stone-900 aria-selected:bg-stone-900 aria-selected:text-white"
           >
             <span
-              {...cellProps(item.id, 0)}
+              {...rowheaderProps(item.id)}
               style={{ paddingLeft: `${12 + (item.level - 1) * 18}px` }}
               className="flex min-w-0 items-center gap-1 py-2 pr-3"
             >
@@ -86,10 +93,10 @@ export default function Demo() {
               </span>
               <span className="truncate">{item.label}</span>
             </span>
-            <span {...cellProps(item.id, 1)} className="px-3 py-2 text-stone-600">
+            <span {...gridcellProps(item.id, 1)} className="px-3 py-2 text-stone-600">
               {String(ent.size ?? '')}
             </span>
-            <span {...cellProps(item.id, 2)} className="px-3 py-2 text-stone-600">
+            <span {...gridcellProps(item.id, 2)} className="px-3 py-2 text-stone-600">
               {String(ent.modified ?? '')}
             </span>
           </div>

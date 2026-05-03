@@ -39,8 +39,12 @@ export function useTreeGridPattern(
   onEvent?: (e: UiEvent) => void,
   opts: TreeGridOptions = {},
 ): {
+  treegridProps: RootProps
   rootProps: RootProps
   rowProps: (id: string) => ItemProps
+  columnheaderProps: (colIndex: number) => ItemProps
+  rowheaderProps: (rowId: string) => ItemProps
+  gridcellProps: (rowId: string, colIndex: number) => ItemProps
   cellProps: (rowId: string, colIndex: number) => ItemProps
   items: TreeItem[]
 } {
@@ -85,7 +89,7 @@ export function useTreeGridPattern(
   walk(containerId, 1)
   const rowMap = new Map(flat.map((it) => [it.id, it]))
 
-  const rootProps: RootProps = {
+  const treegridProps: RootProps = {
     role: 'treegrid',
     'aria-multiselectable': multiSelectable || undefined,
     'aria-orientation': orientation,
@@ -93,6 +97,7 @@ export function useTreeGridPattern(
     'aria-labelledby': labelledBy,
     ...delegate,
   } as RootProps
+  const rootProps = treegridProps
 
   const rowProps = (id: string): ItemProps => {
     const it = rowMap.get(id)
@@ -110,12 +115,37 @@ export function useTreeGridPattern(
     } as unknown as ItemProps
   }
 
-  const cellProps = (rowId: string, colIndex: number): ItemProps => ({
-    role: colIndex === 0 ? 'rowheader' : 'gridcell',
+  const columnheaderProps = (colIndex: number): ItemProps => ({
+    role: 'columnheader',
+    'data-col': colIndex,
+    'aria-colindex': colIndex + 1,
+  } as unknown as ItemProps)
+
+  const rowheaderProps = (rowId: string): ItemProps => ({
+    role: 'rowheader',
+    'data-row': rowId,
+    'data-col': 0,
+    'aria-colindex': 1,
+  } as unknown as ItemProps)
+
+  const gridcellProps = (rowId: string, colIndex: number): ItemProps => ({
+    role: 'gridcell',
     'data-row': rowId,
     'data-col': colIndex,
     'aria-colindex': colIndex + 1,
   } as unknown as ItemProps)
 
-  return { rootProps, rowProps, cellProps, items: flat }
+  const cellProps = (rowId: string, colIndex: number): ItemProps =>
+    colIndex === 0 ? rowheaderProps(rowId) : gridcellProps(rowId, colIndex)
+
+  return {
+    treegridProps,
+    rootProps,
+    rowProps,
+    columnheaderProps,
+    rowheaderProps,
+    gridcellProps,
+    cellProps,
+    items: flat,
+  }
 }
