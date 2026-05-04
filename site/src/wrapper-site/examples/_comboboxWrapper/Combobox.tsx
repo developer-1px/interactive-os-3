@@ -1,10 +1,10 @@
 import { ROOT, useControlState, type UiEvent } from '@p/headless'
 import { useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
-import {
-  defaultLabel,
-  renderSlot,
-  type ComboboxSlots,
-} from './slots'
+import { defaultLabel, renderSlot, type Slot } from '../../slots'
+
+export interface ComboboxSlots<TItem extends object = Record<string, unknown>> {
+  label?: Slot<TItem>
+}
 
 export interface ComboboxProps<TItem extends object = Record<string, unknown>>
   extends ValuedPatternProps<string> {

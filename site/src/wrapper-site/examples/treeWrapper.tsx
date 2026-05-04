@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { applyGesture, expandBranchOnActivate, fromTree, reduceWithDefaults } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
-import { Tree, type TreeSlotProps, type TreeSlots, treeWrapperKeys } from './_treeWrapper'
+import type { TreeItem } from '@p/headless/patterns'
+import { Tree, type TreeSlots, treeWrapperKeys } from './_treeWrapper'
+import type { SlotProps } from '../slots'
 
 // 데이터는 예제에서 직접 보이도록 inline. wrapper(Tree) 는 _treeWrapper 안.
 //
@@ -54,10 +56,10 @@ const initialData = fromTree(files, { expanded: ['src', 'demos'] })
 const reducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
 const slots: TreeSlots<FileItem> = {
-  icon: ({ item, data }: TreeSlotProps<FileItem>) =>
+  icon: ({ item, data }: SlotProps<FileItem, TreeItem>) =>
     data.kind === 'folder' ? (item.expanded ? '📂' : '📁') : '📄',
-  label: ({ item }: TreeSlotProps<FileItem>) => item.label,
-  trailing: ({ data }: TreeSlotProps<FileItem>) =>
+  label: ({ item }: SlotProps<FileItem, TreeItem>) => item.label,
+  trailing: ({ data }: SlotProps<FileItem, TreeItem>) =>
     typeof data.ext === 'string' ? data.ext : null,
 }
 

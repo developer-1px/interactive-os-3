@@ -1,16 +1,15 @@
-import type { NormalizedData, UiEvent } from '@p/headless'
-import { useAccordionPattern } from '@p/headless/patterns'
-import {
-  defaultLabel,
-  emptySlot,
-  renderSlot,
-  type AccordionSlots,
-} from './slots'
+import { useAccordionPattern, type BaseItem, type PatternProps } from '@p/headless/patterns'
+import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../slots'
 
-export interface AccordionProps<TItem extends object = Record<string, unknown>> {
-  data: NormalizedData
-  onEvent: (event: UiEvent) => void
-  'aria-label': string
+type AccordionItem = BaseItem & { expanded: boolean }
+
+export interface AccordionSlots<TItem extends object = Record<string, unknown>> {
+  label?: Slot<TItem, AccordionItem>
+  panel?: Slot<TItem, AccordionItem>
+}
+
+export interface AccordionProps<TItem extends object = Record<string, unknown>>
+  extends PatternProps {
   slots?: AccordionSlots<TItem>
   mode?: 'multiple' | 'single'
 }
@@ -20,6 +19,7 @@ export function Accordion<TItem extends object = Record<string, unknown>>({
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   mode = 'multiple',
 }: AccordionProps<TItem>) {
   const { rootProps, headingProps, buttonProps, regionProps, items } =
@@ -29,6 +29,7 @@ export function Accordion<TItem extends object = Record<string, unknown>>({
     <div
       {...rootProps}
       aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white"
     >
       {items.map((item) => {

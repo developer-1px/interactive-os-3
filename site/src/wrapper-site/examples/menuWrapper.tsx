@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { reduceWithDefaults, type NormalizedData } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
-import { Menu, type MenuSlotProps, type MenuSlots, menuWrapperKeys } from './_menuWrapper'
+import { Menu, type MenuSlots, menuWrapperKeys } from './_menuWrapper'
+import type { SlotProps } from '../slots'
 
 interface MenuItem extends Record<string, unknown> {
   label: string
@@ -39,9 +40,9 @@ const initialData: NormalizedData = {
 }
 
 const slots: MenuSlots<MenuItem> = {
-  icon: ({ data }: MenuSlotProps<MenuItem>) =>
+  icon: ({ data }: SlotProps<MenuItem>) =>
     typeof data.icon === 'string' ? data.icon : null,
-  shortcut: ({ data }: MenuSlotProps<MenuItem>) =>
+  shortcut: ({ data }: SlotProps<MenuItem>) =>
     typeof data.shortcut === 'string' ? data.shortcut : null,
 }
 

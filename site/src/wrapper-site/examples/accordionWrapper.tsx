@@ -1,12 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
-import {
-  Accordion,
-  type AccordionSlotProps,
-  type AccordionSlots,
-  accordionWrapperKeys,
-} from './_accordionWrapper'
+import type { BaseItem } from '@p/headless/patterns'
+import { Accordion, type AccordionSlots, accordionWrapperKeys } from './_accordionWrapper'
+import type { SlotProps } from '../slots'
+
+type AccordionItem = BaseItem & { expanded: boolean }
 
 interface FaqItem extends Record<string, unknown> {
   label: string
@@ -21,7 +20,7 @@ const initialBase = fromList([
 const initialData = { ...initialBase, meta: { ...initialBase.meta, expanded: ['what'] } }
 
 const slots: AccordionSlots<FaqItem> = {
-  panel: ({ data }: AccordionSlotProps<FaqItem>) => <p>{data.body}</p>,
+  panel: ({ data }: SlotProps<FaqItem, AccordionItem>) => <p>{data.body}</p>,
 }
 
 export const meta = {

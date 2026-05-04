@@ -1,3 +1,2 @@
-export { Menu } from './Menu'
+export { Menu, type MenuProps, type MenuSlots } from './Menu'
 export { menuWrapperKeys } from './example'
-export type { MenuSlot, MenuSlotProps, MenuSlots } from './slots'

@@ -1,3 +1,2 @@
-export { Accordion, type AccordionProps } from './Accordion'
+export { Accordion, type AccordionProps, type AccordionSlots } from './Accordion'
 export { accordionWrapperKeys } from './example'
-export type { AccordionSlot, AccordionSlotProps, AccordionSlots } from './slots'

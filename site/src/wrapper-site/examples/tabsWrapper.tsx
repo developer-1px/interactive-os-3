@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
-import { Tabs, type TabsSlotProps, type TabsSlots, tabsWrapperKeys } from './_tabsWrapper'
+import { Tabs, type TabsSlots, tabsWrapperKeys } from './_tabsWrapper'
+import type { SlotProps } from '../slots'
 
 interface TabItem extends Record<string, unknown> {
   label: string
@@ -15,7 +16,7 @@ const initialData = fromList([
 ])
 
 const slots: TabsSlots<TabItem> = {
-  panel: ({ data }: TabsSlotProps<TabItem>) => <p>{data.body}</p>,
+  panel: ({ data }: SlotProps<TabItem>) => <p>{data.body}</p>,
 }
 
 export const meta = {

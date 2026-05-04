@@ -1,16 +1,13 @@
-import type { NormalizedData, UiEvent } from '@p/headless'
-import { useTreePattern } from '@p/headless/patterns'
-import {
-  defaultLabel,
-  emptySlot,
-  renderSlot,
-  type TreeSlots,
-} from './slots'
+import { useTreePattern, type PatternProps, type TreeItem } from '@p/headless/patterns'
+import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../slots'
 
-export interface TreeProps<TItem extends object = Record<string, unknown>> {
-  data: NormalizedData
-  onEvent: (event: UiEvent) => void
-  'aria-label': string
+export interface TreeSlots<TItem extends object = Record<string, unknown>> {
+  icon?: Slot<TItem, TreeItem>
+  label?: Slot<TItem, TreeItem>
+  trailing?: Slot<TItem, TreeItem>
+}
+
+export interface TreeProps<TItem extends object = Record<string, unknown>> extends PatternProps {
   slots?: TreeSlots<TItem>
 }
 
@@ -19,6 +16,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }: TreeProps<TItem>) {
   const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
 
@@ -26,6 +24,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
     <ul
       {...rootProps}
       aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       className="w-72 select-none rounded-md border border-stone-200 bg-white py-1 text-sm text-stone-900"
     >
       {items.map((item) => {

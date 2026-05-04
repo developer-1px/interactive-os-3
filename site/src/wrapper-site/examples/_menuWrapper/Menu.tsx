@@ -1,12 +1,15 @@
 import { ROOT, getChildren, getExpanded, type NormalizedData, type UiEvent } from '@p/headless'
-import { useMenuPattern } from '@p/headless/patterns'
+import { useMenuPattern, type PatternProps } from '@p/headless/patterns'
 import { useRef, useState } from 'react'
-import { defaultLabel, emptySlot, renderSlot, type MenuSlots } from './slots'
+import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../slots'
 
-export interface MenuProps<TItem extends object = Record<string, unknown>> {
-  data: NormalizedData
-  onEvent: (event: UiEvent) => void
-  'aria-label': string
+export interface MenuSlots<TItem extends object = Record<string, unknown>> {
+  icon?: Slot<TItem>
+  label?: Slot<TItem>
+  shortcut?: Slot<TItem>
+}
+
+export interface MenuProps<TItem extends object = Record<string, unknown>> extends PatternProps {
   slots?: MenuSlots<TItem>
 }
 

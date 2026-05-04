@@ -1,16 +1,12 @@
-import type { NormalizedData, UiEvent } from '@p/headless'
-import { useTabsPattern } from '@p/headless/patterns'
-import {
-  defaultLabel,
-  emptySlot,
-  renderSlot,
-  type TabsSlots,
-} from './slots'
+import { useTabsPattern, type PatternProps } from '@p/headless/patterns'
+import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../slots'
 
-export interface TabsProps<TItem extends object = Record<string, unknown>> {
-  data: NormalizedData
-  onEvent: (event: UiEvent) => void
-  'aria-label': string
+export interface TabsSlots<TItem extends object = Record<string, unknown>> {
+  label?: Slot<TItem>
+  panel?: Slot<TItem>
+}
+
+export interface TabsProps<TItem extends object = Record<string, unknown>> extends PatternProps {
   slots?: TabsSlots<TItem>
 }
 
@@ -19,12 +15,17 @@ export function Tabs<TItem extends object = Record<string, unknown>>({
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }: TabsProps<TItem>) {
   const { rootProps, tabProps, panelProps, items } = useTabsPattern(data, onEvent, { label: ariaLabel })
 
   return (
     <div className="space-y-3">
-      <div {...rootProps} className="flex gap-1 border-b border-stone-200">
+      <div
+        {...rootProps}
+        aria-labelledby={ariaLabelledBy}
+        className="flex gap-1 border-b border-stone-200"
+      >
         {items.map((item) => {
           const itemData = (data.entities[item.id] ?? {}) as TItem
           return (

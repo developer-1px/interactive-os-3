@@ -1,3 +1,2 @@
-export { Tree } from './Tree'
+export { Tree, type TreeProps, type TreeSlots } from './Tree'
 export { treeWrapperKeys } from './example'
-export type { TreeSlot, TreeSlotProps, TreeSlots } from './slots'

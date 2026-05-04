@@ -1,3 +1,2 @@
-export { Combobox, type ComboboxProps } from './Combobox'
+export { Combobox, type ComboboxProps, type ComboboxSlots } from './Combobox'
 export { comboboxWrapperKeys } from './example'
-export type { ComboboxSlot, ComboboxSlotProps, ComboboxSlots } from './slots'
