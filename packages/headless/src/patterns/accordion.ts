@@ -8,6 +8,8 @@ export interface AccordionOptions {
   mode?: 'multiple' | 'single'
   autoFocus?: boolean
   idPrefix?: string
+  /** heading 의 aria-level. 문서 위계에 맞춰 host 가 결정. 기본 3. */
+  level?: number
 }
 
 /** Accordion 이 등록하는 axis — SSOT. */
@@ -27,12 +29,12 @@ export function useAccordionPattern(
   opts: AccordionOptions = {},
 ): {
   rootProps: RootProps
-  headerProps: (id: string) => ItemProps
-  triggerProps: (id: string) => ItemProps
-  panelProps: (id: string) => ItemProps
+  headingProps: (id: string) => ItemProps
+  buttonProps: (id: string) => ItemProps
+  regionProps: (id: string) => ItemProps
   items: (BaseItem & { expanded: boolean })[]
 } {
-  const { mode = 'multiple', autoFocus, idPrefix = 'acc' } = opts
+  const { mode = 'multiple', autoFocus, idPrefix = 'acc', level = 3 } = opts
 
   const ids = getChildren(data, ROOT)
   const expandedSet = getExpanded(data)
@@ -77,10 +79,10 @@ export function useAccordionPattern(
 
   const rootProps: RootProps = { role: 'presentation', ...delegate } as unknown as RootProps
 
-  const headerProps = (_id: string): ItemProps =>
-    ({ role: 'heading', 'aria-level': 3 } as unknown as ItemProps)
+  const headingProps = (_id: string): ItemProps =>
+    ({ role: 'heading', 'aria-level': level } as unknown as ItemProps)
 
-  const triggerProps = (id: string): ItemProps => {
+  const buttonProps = (id: string): ItemProps => {
     const open = expandedSet.has(id)
     return {
       id: triggerId(id),
@@ -94,7 +96,7 @@ export function useAccordionPattern(
     } as unknown as ItemProps
   }
 
-  const panelProps = (id: string): ItemProps => {
+  const regionProps = (id: string): ItemProps => {
     const open = expandedSet.has(id)
     return {
       role: 'region',
@@ -105,5 +107,5 @@ export function useAccordionPattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, headerProps, triggerProps, panelProps, items }
+  return { rootProps, headingProps, buttonProps, regionProps, items }
 }

@@ -29,7 +29,7 @@ export function useToolbarPattern(
   opts: ToolbarOptions = {},
 ): {
   rootProps: RootProps
-  itemProps: (id: string) => ItemProps
+  toolbarItemProps: (id: string) => ItemProps
   items: (BaseItem & { separator: boolean })[]
 } {
   const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
@@ -58,7 +58,7 @@ export function useToolbarPattern(
     ...delegate,
   } as RootProps
 
-  const itemProps = (id: string): ItemProps => {
+  const toolbarItemProps = (id: string): ItemProps => {
     const ent = data.entities[id]
     if (ent?.separator) {
       return { role: 'separator', tabIndex: -1, 'data-id': id } as unknown as ItemProps
@@ -75,5 +75,5 @@ export function useToolbarPattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, itemProps, items }
+  return { rootProps, toolbarItemProps, items }
 }

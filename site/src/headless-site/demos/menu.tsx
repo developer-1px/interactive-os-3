@@ -15,12 +15,12 @@ export default function Demo() {
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'New file' }, { label: 'Open…' }, { label: 'Save' }, { label: 'Close' }]),
   )
-  const { rootProps, itemProps, triggerProps, items, open } = useMenuPattern(data, onEvent)
+  const { rootProps, menuitemProps, buttonProps, items, open } = useMenuPattern(data, onEvent)
 
   return (
     <div className="relative inline-block">
       <button
-        {...triggerProps}
+        {...buttonProps}
         className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-stone-50"
       >
         File ▾
@@ -33,7 +33,7 @@ export default function Demo() {
           {items.map((item) => (
             <li
               key={item.id}
-              {...itemProps(item.id)}
+              {...menuitemProps(item.id)}
               className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 aria-disabled:opacity-50"
             >
               {item.label}

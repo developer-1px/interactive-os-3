@@ -22,7 +22,7 @@ export function Accordion<TItem extends object = Record<string, unknown>>({
   'aria-label': ariaLabel,
   mode = 'multiple',
 }: AccordionProps<TItem>) {
-  const { rootProps, headerProps, triggerProps, panelProps, items } =
+  const { rootProps, headingProps, buttonProps, regionProps, items } =
     useAccordionPattern(data, onEvent, { mode })
 
   return (
@@ -35,16 +35,16 @@ export function Accordion<TItem extends object = Record<string, unknown>>({
         const itemData = (data.entities[item.id] ?? {}) as TItem
         return (
           <div key={item.id}>
-            <h3 {...headerProps(item.id)} className="m-0">
+            <h3 {...headingProps(item.id)} className="m-0">
               <button
-                {...triggerProps(item.id)}
+                {...buttonProps(item.id)}
                 className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium hover:bg-stone-50"
               >
                 {renderSlot(slots.label, defaultLabel, item, itemData)}
                 <span aria-hidden className="text-stone-400">{item.expanded ? '▾' : '▸'}</span>
               </button>
             </h3>
-            <div {...panelProps(item.id)} className="px-3 py-2 text-sm text-stone-600 bg-stone-50">
+            <div {...regionProps(item.id)} className="px-3 py-2 text-sm text-stone-600 bg-stone-50">
               {renderSlot(slots.panel, emptySlot, item, itemData)}
             </div>
           </div>

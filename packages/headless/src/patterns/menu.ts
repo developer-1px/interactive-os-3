@@ -45,10 +45,11 @@ export function useMenuPattern(
   opts: MenuOptions = {},
 ): {
   rootProps: RootProps
-  itemProps: (id: string) => ItemProps
-  triggerProps: ItemProps
+  menuitemProps: (id: string) => ItemProps
+  buttonProps: ItemProps
   items: BaseItem[]
   open: boolean
+  /** 면제 사유: host-level menu-button 제어 (Escape 외부 닫기·외부 click 닫기 등). UI=activate 단발 (INVARIANTS #16) 의 host-control 예외. */
   setOpen: (open: boolean) => void
 } {
   const {
@@ -100,7 +101,7 @@ export function useMenuPattern(
     ...delegate,
   } as RootProps
 
-  const itemProps = (id: string): ItemProps => {
+  const menuitemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
     const ent = data.entities[id] ?? {}
@@ -125,7 +126,7 @@ export function useMenuPattern(
     } as unknown as ItemProps
   }
 
-  const triggerProps: ItemProps = {
+  const buttonProps: ItemProps = {
     type: 'button',
     ref: ((el: HTMLElement | null) => { triggerRef.current = el }) as React.Ref<HTMLElement>,
     'aria-haspopup': 'menu',
@@ -139,5 +140,5 @@ export function useMenuPattern(
     },
   } as unknown as ItemProps
 
-  return { rootProps, itemProps, triggerProps, items, open, setOpen }
+  return { rootProps, menuitemProps, buttonProps, items, open, setOpen }
 }

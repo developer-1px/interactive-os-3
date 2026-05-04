@@ -88,7 +88,7 @@ function MenuList<TItem extends object>({
   onClose,
   autoFocus,
 }: MenuListProps<TItem>) {
-  const { rootProps, itemProps, items } = useMenuPattern(
+  const { rootProps, menuitemProps, items } = useMenuPattern(
     data,
     (event) => {
       // gesture/intent split — activate 의 의미를 leaf/parent 별로 분해.
@@ -140,7 +140,7 @@ function MenuList<TItem extends object>({
         return (
           <li key={item.id} className="relative">
             <span
-              {...itemProps(item.id)}
+              {...menuitemProps(item.id)}
               className="flex cursor-pointer items-center rounded px-2 py-1 hover:bg-stone-100 aria-disabled:opacity-50 data-[has-sub]:pr-2"
             >
               {hasSlots ? (

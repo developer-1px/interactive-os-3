@@ -17,23 +17,23 @@ export default function Demo() {
     { id: 'b', label: 'Why ARIA-first?' },
     { id: 'c', label: 'Bring my own styles?' },
   ]))
-  const { rootProps, headerProps, triggerProps, panelProps, items } =
+  const { rootProps, headingProps, buttonProps, regionProps, items } =
     useAccordionPattern(data, onEvent, { mode: 'single' })
 
   return (
     <div {...rootProps} className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white">
       {items.map((item) => (
         <div key={item.id}>
-          <h3 {...headerProps(item.id)} className="m-0">
+          <h3 {...headingProps(item.id)} className="m-0">
             <button
-              {...triggerProps(item.id)}
+              {...buttonProps(item.id)}
               className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium hover:bg-stone-50"
             >
               {item.label}
               <span className="text-stone-400">{item.expanded ? '−' : '+'}</span>
             </button>
           </h3>
-          <div {...panelProps(item.id)} className="px-3 py-2 text-sm text-stone-600 bg-stone-50">
+          <div {...regionProps(item.id)} className="px-3 py-2 text-sm text-stone-600 bg-stone-50">
             Body for <strong>{item.label}</strong>.
           </div>
         </div>

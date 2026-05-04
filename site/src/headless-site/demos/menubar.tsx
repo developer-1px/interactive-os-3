@@ -15,7 +15,7 @@ export default function Demo() {
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'File' }, { label: 'Edit' }, { label: 'View' }, { label: 'Help' }]),
   )
-  const { rootProps, itemProps, items } = useMenubarPattern(data, onEvent)
+  const { rootProps, menubarItemProps, items } = useMenubarPattern(data, onEvent)
 
   return (
     <div
@@ -26,7 +26,7 @@ export default function Demo() {
       {items.map((item) => (
         <button
           key={item.id}
-          {...itemProps(item.id)}
+          {...menubarItemProps(item.id)}
           className="px-3 py-1.5 hover:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white first:rounded-l-md last:rounded-r-md"
         >
           {item.label}

@@ -116,11 +116,11 @@ describe('axe-core ARIA compliance', () => {
   it('toolbar', async () => {
     const data = flat(['save', 'open'])
     function C() {
-      const { rootProps, itemProps, items } = useToolbarPattern(data, undefined, { label: 'Editor' })
+      const { rootProps, toolbarItemProps, items } = useToolbarPattern(data, undefined, { label: 'Editor' })
       return (
         <div {...rootProps}>
           {items.map((it) => (
-            <button type="button" key={it.id} {...itemProps(it.id)}>{it.label}</button>
+            <button type="button" key={it.id} {...toolbarItemProps(it.id)}>{it.label}</button>
           ))}
         </div>
       )
@@ -147,11 +147,11 @@ describe('axe-core ARIA compliance', () => {
   it('menu', async () => {
     const data = flat(['cut', 'copy', 'paste'])
     function C() {
-      const { rootProps, itemProps, items } = useMenuPattern(data, undefined, { label: 'Actions' })
+      const { rootProps, menuitemProps, items } = useMenuPattern(data, undefined, { label: 'Actions' })
       return (
         <div {...rootProps}>
           {items.map((it) => (
-            <div key={it.id} {...itemProps(it.id)}>{it.label}</div>
+            <div key={it.id} {...menuitemProps(it.id)}>{it.label}</div>
           ))}
         </div>
       )

@@ -19,7 +19,7 @@ export default function Demo() {
     { id: 'sep', separator: true },
     { id: 'link', label: 'Link' },
   ]))
-  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent, { label: 'Formatting' })
+  const { rootProps, toolbarItemProps, items } = useToolbarPattern(data, onEvent, { label: 'Formatting' })
 
   return (
     <div
@@ -31,7 +31,7 @@ export default function Demo() {
       ) : (
         <button
           key={item.id}
-          {...itemProps(item.id)}
+          {...toolbarItemProps(item.id)}
           className="rounded px-2 py-1 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-stone-900"
         >
           {item.label}

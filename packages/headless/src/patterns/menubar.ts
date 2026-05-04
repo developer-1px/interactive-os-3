@@ -101,9 +101,9 @@ export function useMenubarPattern(
   opts: MenubarOptions = {},
 ): {
   rootProps: RootProps
-  itemProps: (id: string) => ItemProps
-  subMenuProps: (topId: string) => RootProps
-  subItemProps: (id: string) => ItemProps
+  menubarItemProps: (id: string) => ItemProps
+  menuProps: (topId: string) => RootProps
+  menuitemProps: (id: string) => ItemProps
   items: BaseItem[]
   openId: string | null
 } {
@@ -177,7 +177,7 @@ export function useMenubarPattern(
     ...delegate,
   } as RootProps
 
-  const itemProps = (id: string): ItemProps => {
+  const menubarItemProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
     const hasSub = getChildren(data, id).length > 0
@@ -196,7 +196,7 @@ export function useMenubarPattern(
     } as unknown as ItemProps
   }
 
-  const subMenuProps = (topId: string): RootProps => {
+  const menuProps = (topId: string): RootProps => {
     const isOpen = openId === topId
     return {
       role: 'menu',
@@ -207,7 +207,7 @@ export function useMenubarPattern(
     } as unknown as RootProps
   }
 
-  const subItemProps = (id: string): ItemProps => {
+  const menuitemProps = (id: string): ItemProps => {
     const ent = data.entities[id] ?? {}
     const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
     const rawChecked = ent.checked ?? ent.selected
@@ -229,5 +229,5 @@ export function useMenubarPattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, itemProps, subMenuProps, subItemProps, items, openId }
+  return { rootProps, menubarItemProps, menuProps, menuitemProps, items, openId }
 }

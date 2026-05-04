@@ -132,7 +132,7 @@ function SidebarSection({
 }
 
 function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiEvent) => void }) {
-  const { rootProps, itemProps, items } = useToolbarPattern(data, onEvent)
+  const { rootProps, toolbarItemProps, items } = useToolbarPattern(data, onEvent)
   return (
     <div
       {...(rootProps as ComponentPropsWithoutRef<'div'>)}
@@ -143,7 +143,7 @@ function ViewToolbar({ data, onEvent }: { data: NormalizedData; onEvent: (e: UiE
         <button
           key={it.id}
           type="button"
-          {...(itemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
+          {...(toolbarItemProps(it.id) as ComponentPropsWithoutRef<'button'>)}
           className={
             'px-2 py-1 text-xs ' +
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
