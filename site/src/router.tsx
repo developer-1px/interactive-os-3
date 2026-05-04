@@ -14,6 +14,7 @@ declare module '@tanstack/react-router' {
       to: string
       params?: Record<string, string>
       category?: string
+      sub?: string
     }
   }
 }

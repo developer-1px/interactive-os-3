@@ -1,38 +1,38 @@
 import { useRef, useState } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, getFocus, type NormalizedData, type UiEvent } from '../types'
-import { activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, navigate as navigateAxis } from '../axes'
+import {
+  ROOT, getChildren, getLabel, isDisabled, getFocus,
+  type NormalizedData, type UiEvent,
+} from '../types'
+import {
+  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS,
+  navigate as navigateAxis,
+} from '../axes'
+import { bindAxis } from '../state/bind'
+import { useActiveDescendant } from '../roving/useActiveDescendant'
+import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter) */
 export const comboboxAxis = () =>
   composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
-import { bindAxis } from '../state/bind'
-import { useActiveDescendant } from '../roving/useActiveDescendant'
-import type { BaseItem, ItemProps, RootProps } from './types'
 
 export interface ComboboxOptions {
   /** aria-autocomplete. APG: 'none' | 'list' | 'both'. */
   autocomplete?: 'none' | 'list' | 'both'
   /** aria-haspopup. Spec implicit: 'listbox'. */
   haspopup?: 'listbox' | 'tree' | 'grid' | 'dialog'
-  /** APG combobox 기본은 input 에 focus 유지 + aria-activedescendant. */
-  activeDescendant?: boolean
-  /** aria-expanded — controlled. 생략 시 패턴이 useState 로 자체 소유. */
+  /** aria-expanded — controlled. 생략 시 패턴이 useState 로 자체 보유. */
   expanded?: boolean
   defaultExpanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
   idPrefix?: string
-  /** aria-required (form context). */
   required?: boolean
-  /** aria-readonly. */
   readOnly?: boolean
-  /** aria-invalid. */
   invalid?: boolean
-  /** aria-disabled — combobox 전체 비활성. */
   disabled?: boolean
-  /** aria-label — combobox 입력 자체의 접근 가능 이름 (ARIA 필수). */
+  /** aria-label — combobox 입력의 accessible name (label 또는 labelledBy 필수). */
   label?: string
   labelledBy?: string
-  /** popup listbox 의 aria-label 또는 aria-labelledby. */
+  /** popup listbox 의 aria-label / aria-labelledby. */
   popupLabel?: string
   popupLabelledBy?: string
 }
@@ -41,8 +41,15 @@ export interface ComboboxOptions {
  * combobox — APG `/combobox/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
  *
+ * 시그니처: 다른 컬렉션 패턴과 동일한 `(data, onEvent, opts)` —
+ * memory `feedback_single_data_interface` · `feedback_data_driven_rendering` 정합.
+ * query/filter 는 host 가 base data 변환으로 처리 (useMemo + fromList + useControlState).
+ *
  * INVARIANT B11 ("포커스는 실제 DOM element 에 있다 — `aria-activedescendant` 는
  * Combobox 1곳 예외") 의 코드화. input 에 focus 유지, popup option 활성은 id 참조.
+ *
+ * INVARIANT B-16 면제: input editable context 의 onFocus/onBlur/onChange 는 axis
+ * Trigger 모델(key|click) 밖이므로 host 가 직접 핸들링.
  *
  * 키보드 (input 위에서):
  *   ArrowDown — popup 열고 첫 active descendant
@@ -55,9 +62,8 @@ export function useComboboxPattern(
   onEvent?: (e: UiEvent) => void,
   opts: ComboboxOptions = {},
 ): {
-  inputProps: ItemProps
-  popoverProps: RootProps
-  listProps: RootProps
+  comboboxProps: ItemProps
+  listboxProps: RootProps
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
   expanded: boolean
@@ -103,7 +109,6 @@ export function useComboboxPattern(
 
   // 키 매핑은 axis 합성으로 박제: Escape → open false, Arrow/Home/End → navigate, Enter → activate.
   const axis = comboboxAxis()
-  // gesture/intent: axis 가 emit 한 UiEvent 를 expand/close 의 의도로 흡수.
   const intent = (e: UiEvent) => {
     if (e.type === 'open' && e.open === false) { requestExpanded(false); return }
     if (e.type === 'activate') { onEvent?.(e); requestExpanded(false); return }
@@ -113,8 +118,8 @@ export function useComboboxPattern(
   const { onKey: dispatchKey } = bindAxis(axis, data, intent)
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    // gesture: activeId 가 null 인 첫 ArrowDown/Up/Home/End 는 axis 가 sibling-relative
-    // 라 first/last 도출 불가 — 명시적 seed 로 흡수 (intent 단계). 키는 KEYS SSOT 참조.
+    // gesture: activeId null 인 첫 ArrowDown/Up/Home/End → axis 가 sibling-relative 라
+    // first/last 도출 불가 — 명시적 seed 로 흡수.
     if (!activeId) {
       if (e.key === KEYS.ArrowDown || e.key === KEYS.Home) {
         e.preventDefault()
@@ -134,7 +139,7 @@ export function useComboboxPattern(
     dispatchKey(e, activeId ?? ROOT)
   }
 
-  const inputProps: ItemProps = {
+  const comboboxProps: ItemProps = {
     role: 'combobox',
     ref: inputRef as React.Ref<HTMLElement>,
     'aria-autocomplete': autocomplete,
@@ -150,14 +155,10 @@ export function useComboboxPattern(
     onKeyDown,
   } as unknown as ItemProps
 
-  const popoverProps: RootProps = {
-    role: 'presentation',
-    hidden: !expanded,
-  } as unknown as RootProps
-
-  const listProps: RootProps = {
+  const listboxProps: RootProps = {
     role: 'listbox',
     id: listId,
+    hidden: !expanded || undefined,
     'aria-label': popupLabel,
     'aria-labelledby': popupLabelledBy,
   } as unknown as RootProps
@@ -176,5 +177,5 @@ export function useComboboxPattern(
     } as unknown as ItemProps
   }
 
-  return { inputProps, popoverProps, listProps, optionProps, items, expanded, setExpanded }
+  return { comboboxProps, listboxProps, optionProps, items, expanded, setExpanded }
 }

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WrappersRouteImport } from './routes/wrappers'
 import { Route as PatternsRouteImport } from './routes/patterns'
+import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppsAdminRouteImport } from './routes/apps.admin'
 import { Route as AppsAdminIndexRouteImport } from './routes/apps.admin.index'
@@ -34,6 +35,11 @@ const WrappersRoute = WrappersRouteImport.update({
 const PatternsRoute = PatternsRouteImport.update({
   id: '/patterns',
   path: '/patterns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AxesRoute = AxesRouteImport.update({
+  id: '/axes',
+  path: '/axes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -110,6 +116,7 @@ const AppsAdminVideosIdEditRoute = AppsAdminVideosIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/admin': typeof AppsAdminRouteWithChildren
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
@@ -145,6 +153,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/admin': typeof AppsAdminRouteWithChildren
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/axes'
     | '/patterns'
     | '/wrappers'
     | '/apps/admin'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/axes'
     | '/patterns'
     | '/wrappers'
     | '/apps/admin/course-categories'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/axes'
     | '/patterns'
     | '/wrappers'
     | '/apps/admin'
@@ -218,6 +230,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AxesRoute: typeof AxesRoute
   PatternsRoute: typeof PatternsRoute
   WrappersRoute: typeof WrappersRoute
   AppsAdminRoute: typeof AppsAdminRouteWithChildren
@@ -240,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/patterns'
       fullPath: '/patterns'
       preLoaderRoute: typeof PatternsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/axes': {
+      id: '/axes'
+      path: '/axes'
+      fullPath: '/axes'
+      preLoaderRoute: typeof AxesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -383,6 +403,7 @@ const AppsAdminRouteWithChildren = AppsAdminRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AxesRoute: AxesRoute,
   PatternsRoute: PatternsRoute,
   WrappersRoute: WrappersRoute,
   AppsAdminRoute: AppsAdminRouteWithChildren,

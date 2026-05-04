@@ -1,8 +1,5 @@
-import { useMemo, useState } from 'react'
-import {
-  fromList, getRoot, reduce, useControlState,
-  type NormalizedData, type UiEvent,
-} from '@p/headless'
+import { useMemo } from 'react'
+import { getRoot, type NormalizedData, type UiEvent } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
 import {
   defaultLabel,
@@ -10,7 +7,7 @@ import {
   type ComboboxSlots,
 } from './slots'
 
-export interface ComboboxProps<TItem extends object = Record<string, unknown>> {
+export interface ComboboxProps<TItem extends { label: string } = { label: string }> {
   data: NormalizedData
   onEvent: (event: UiEvent) => void
   'aria-label': string
@@ -18,76 +15,51 @@ export interface ComboboxProps<TItem extends object = Record<string, unknown>> {
   placeholder?: string
 }
 
-export function Combobox<TItem extends object = Record<string, unknown>>({
+export function Combobox<TItem extends { label: string } = { label: string }>({
   data,
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
   placeholder = 'Search…',
 }: ComboboxProps<TItem>) {
-  const [query, setQuery] = useState('')
-
-  // 외부 data 의 사본을 query 로 필터링한 view 를 만든다 — wrapper 가 시각/필터 책임.
-  const filtered = useMemo(() => {
+  // wrapper 가 NormalizedData 를 받는 외부 API — 패턴은 raw items 시그니처라 변환.
+  const items = useMemo(() => {
     const ids = getRoot(data)
-    const matches = ids.filter((id) => {
-      const label = data.entities[id]?.label
-      return typeof label === 'string' && label.toLowerCase().includes(query.toLowerCase())
+    return ids.map((id) => ({ id, ...(data.entities[id] ?? {}) })) as unknown as TItem[]
+  }, [data])
+
+  const { comboboxProps, listboxProps, optionProps, items: viewItems } =
+    useComboboxPattern<TItem>({
+      items,
+      label: ariaLabel,
+      onEvent,
     })
-    const list = fromList(matches.map((id) => ({ id, ...(data.entities[id] ?? {}) })))
-    const seed = getRoot(list)[0]
-    return seed ? reduce(list, { type: 'navigate', id: seed }) : list
-  }, [data, query])
-
-  const [view, dispatch] = useControlState(filtered)
-
-  const relay = (e: UiEvent) => {
-    dispatch(e)
-    if (e.type === 'activate') {
-      const label = view.entities[e.id]?.label
-      if (typeof label === 'string') setQuery(label)
-    }
-    onEvent(e)
-  }
-
-  const { inputProps, popoverProps, listProps, optionProps, items, setExpanded } =
-    useComboboxPattern(view, relay)
 
   return (
     <div className="relative w-64">
       <input
-        {...inputProps}
-        aria-label={ariaLabel}
-        value={query}
-        onChange={(e) => { setQuery(e.target.value); setExpanded(true) }}
-        onFocus={() => setExpanded(true)}
-        onBlur={() => setTimeout(() => setExpanded(false), 100)}
+        {...comboboxProps}
         placeholder={placeholder}
         className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
       />
-      <div
-        {...popoverProps}
-        className="absolute left-0 right-0 top-full z-10 mt-1 rounded-md border border-stone-200 bg-white shadow-lg"
+      <ul
+        {...listboxProps}
+        className="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-auto rounded-md border border-stone-200 bg-white p-1 text-sm shadow-lg"
       >
-        {items.length === 0 ? (
-          <p className="px-3 py-2 text-xs text-stone-500">No matches</p>
+        {viewItems.length === 0 ? (
+          <li className="px-3 py-2 text-xs text-stone-500">No matches</li>
         ) : (
-          <ul {...listProps} className="max-h-48 overflow-auto p-1 text-sm">
-            {items.map((item) => {
-              const itemData = (view.entities[item.id] ?? {}) as TItem
-              return (
-                <li
-                  key={item.id}
-                  {...optionProps(item.id)}
-                  className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 data-[active]:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
-                >
-                  {renderSlot(slots.label, defaultLabel, item, itemData)}
-                </li>
-              )
-            })}
-          </ul>
+          viewItems.map((item) => (
+            <li
+              key={item.id}
+              {...optionProps(item.id)}
+              className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 data-[active]:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
+            >
+              {renderSlot(slots.label, defaultLabel, item, item.raw)}
+            </li>
+          ))
         )}
-      </div>
+      </ul>
     </div>
   )
 }
