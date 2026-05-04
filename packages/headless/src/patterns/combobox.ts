@@ -24,6 +24,8 @@ export interface ComboboxOptions {
   haspopup?: 'listbox' | 'tree' | 'grid' | 'dialog'
   /** outside click 흡수 — option click 과 race 방지. de facto 100ms. */
   closeOnBlurDelay?: number
+  /** activate 시 input value 를 선택된 label 로 갱신 (APG default). */
+  commitOnActivate?: boolean
   idPrefix?: string
   required?: boolean
   readOnly?: boolean
@@ -76,7 +78,7 @@ export function useComboboxPattern(
   const {
     value,
     autocomplete = 'list', haspopup = 'listbox',
-    closeOnBlurDelay = 100,
+    closeOnBlurDelay = 100, commitOnActivate = true,
     idPrefix = 'cmbx',
     required, readOnly, invalid, disabled,
     label, labelledBy, popupLabel, popupLabelledBy,
@@ -114,6 +116,15 @@ export function useComboboxPattern(
   // intent — axis emit + 우리 lifecycle emit 모두 onEvent 로 통일.
   const intent = (e: UiEvent) => {
     if (e.type === 'navigate' && !expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
+    if (e.type === 'activate') {
+      onEvent?.(e)
+      onEvent?.({ type: 'open', id: ROOT, open: false })
+      if (commitOnActivate) {
+        const lbl = data.entities[e.id]?.label
+        if (typeof lbl === 'string') onEvent?.({ type: 'value', id: ROOT, value: lbl })
+      }
+      return
+    }
     onEvent?.(e)
   }
 

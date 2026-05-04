@@ -43,11 +43,6 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
   const relay = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'value') setQuery(String(e.value))
-    if (e.type === 'activate') {
-      const label = view.entities[e.id]?.label
-      if (typeof label === 'string') setQuery(label)
-      dispatch({ type: 'open', id: ROOT, open: false })
-    }
     onEvent(e)
   }
 

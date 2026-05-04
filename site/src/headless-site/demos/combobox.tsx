@@ -25,15 +25,11 @@ export default function Demo() {
   }, [query])
   const [data, dispatch] = useControlState(base)
 
-  // 모든 변화는 onEvent 로 — dispatch 통과 + host 사이드이펙트.
+  // 모든 변화는 onEvent 로 — dispatch 통과 + value mirror 만.
+  // activate 후속 (close + commit) 은 패턴 내부에서 자동 emit.
   const onEvent = (e: UiEvent) => {
     dispatch(e)
     if (e.type === 'value') setQuery(String(e.value))
-    if (e.type === 'activate') {
-      const label = data.entities[e.id]?.label
-      if (typeof label === 'string') setQuery(label)
-      dispatch({ type: 'open', id: ROOT, open: false })
-    }
   }
 
   const { comboboxProps, listboxProps, optionProps, items } =
