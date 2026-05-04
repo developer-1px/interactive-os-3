@@ -24,13 +24,20 @@ export function ListView({
   const onEvent = (e: { type: string; id?: string }) => {
     if (e.type === 'activate' && e.id) onNavigate(e.id)
   }
-  const { rootProps, rowProps, cellProps, items: rows } = useTreeGridPattern(data, onEvent)
+  const {
+    treegridProps,
+    headerRowProps,
+    rowProps,
+    rowheaderProps,
+    gridcellProps,
+    columnheaderProps,
+    items: rows,
+  } = useTreeGridPattern(data, onEvent, { label: '목록뷰', colCount: 4 })
 
   return (
-    <section aria-label="목록뷰" className="overflow-auto">
+    <section className="overflow-auto">
       <table
-        {...(rootProps as ComponentPropsWithoutRef<'table'>)}
-        aria-rowcount={kids.length}
+        {...(treegridProps as ComponentPropsWithoutRef<'table'>)}
         className="w-full table-fixed border-collapse text-sm"
       >
         <colgroup>
@@ -40,11 +47,11 @@ export function ListView({
           <col style={{ width: '25%' }} />
         </colgroup>
         <thead>
-          <tr className="border-b border-neutral-200 text-xs text-neutral-500">
-            <th className="px-2 py-1 text-left font-medium">이름</th>
-            <th className="px-2 py-1 text-left font-medium">수정일</th>
-            <th className="px-2 py-1 text-left font-medium">크기</th>
-            <th className="px-2 py-1 text-left font-medium">종류</th>
+          <tr {...(headerRowProps as ComponentPropsWithoutRef<'tr'>)} className="border-b border-neutral-200 text-xs text-neutral-500">
+            <th {...(columnheaderProps(0) as ComponentPropsWithoutRef<'th'>)} className="px-2 py-1 text-left font-medium">이름</th>
+            <th {...(columnheaderProps(1) as ComponentPropsWithoutRef<'th'>)} className="px-2 py-1 text-left font-medium">수정일</th>
+            <th {...(columnheaderProps(2) as ComponentPropsWithoutRef<'th'>)} className="px-2 py-1 text-left font-medium">크기</th>
+            <th {...(columnheaderProps(3) as ComponentPropsWithoutRef<'th'>)} className="px-2 py-1 text-left font-medium">종류</th>
           </tr>
         </thead>
         <tbody>
@@ -63,13 +70,13 @@ export function ListView({
                   (selected ? 'bg-neutral-900 text-white' : 'hover:bg-neutral-50')
                 }
               >
-                <td {...(cellProps(it.id, 0) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">
+                <td {...(rowheaderProps(it.id) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">
                   <span className="mr-1" aria-hidden>{n?.type === 'dir' ? '📁' : '📄'}</span>
                   {n?.name}
                 </td>
-                <td {...(cellProps(it.id, 1) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{formatDate(n?.mtime)}</td>
-                <td {...(cellProps(it.id, 2) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{n?.type === 'dir' ? '—' : formatSize(n?.size)}</td>
-                <td {...(cellProps(it.id, 3) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{kind}</td>
+                <td {...(gridcellProps(it.id, 1) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{formatDate(n?.mtime)}</td>
+                <td {...(gridcellProps(it.id, 2) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{n?.type === 'dir' ? '—' : formatSize(n?.size)}</td>
+                <td {...(gridcellProps(it.id, 3) as ComponentPropsWithoutRef<'td'>)} className="truncate px-2 py-1">{kind}</td>
               </tr>
             )
           })}

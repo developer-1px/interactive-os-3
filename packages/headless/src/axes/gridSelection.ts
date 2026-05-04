@@ -4,7 +4,7 @@ import { getChildren, getSelectAnchor, type UiEvent } from '../types'
 import { INTENTS, matchChord } from './keys'
 
 /**
- * gridSelection — APG `/grid/` Selection 키 매핑.
+ * gridSelection — APG `/grid/` Selection 키 매핑. focus 이동은 gridNavigate.
  * https://www.w3.org/WAI/ARIA/apg/patterns/grid/
  *
  * 입력 단위 = 현재 focus 된 cell. data 모델은 gridNavigate 와 동일 (container → row → cell).

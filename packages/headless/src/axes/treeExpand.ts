@@ -36,6 +36,10 @@ const TOGGLE: Record<Branch, Action> = {
   leaf: () => null,
 }
 
+/**
+ * treeExpand — APG /treeview/ "Right/Left Arrow". branchClosed/branchOpen/leaf 3분기 +
+ * nextVisibleLeaf 도출. 일반 open/close 는 expand.
+ */
 // 키 매핑은 `INTENTS.treeExpand` (open/close) + `INTENTS.activate.trigger` 에서 import (SSOT).
 const TABLE: Record<string, Record<Branch, Action>> = {
   [INTENTS.treeExpand.open.key]: {

@@ -105,6 +105,9 @@ export const INTENTS = {
     rangeUp: k(KEYS.ArrowUp, { shift: true }),
     rangeDown: k(KEYS.ArrowDown, { shift: true }),
   },
+  select: {
+    toggle: [k(KEYS.Space)],
+  },
   treeNavigate: {
     parent: k(KEYS.ArrowLeft),
     firstChild: k(KEYS.ArrowRight),

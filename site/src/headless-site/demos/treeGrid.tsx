@@ -48,24 +48,21 @@ export default function Demo() {
   )
   const {
     treegridProps,
+    headerRowProps,
     rowProps,
     columnheaderProps,
     rowheaderProps,
     gridcellProps,
     items,
-  } = useTreeGridPattern(data, onEvent)
+  } = useTreeGridPattern(data, onEvent, { label: 'Files', colCount: COLS.length })
 
   return (
     <div
       {...treegridProps}
-      aria-label="Files"
-      aria-colcount={COLS.length}
-      aria-rowcount={items.length + 1}
       className="w-full overflow-hidden rounded-lg border border-stone-200 bg-white text-sm shadow-sm"
     >
       <div
-        role="row"
-        aria-rowindex={1}
+        {...headerRowProps}
         className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-200 bg-stone-50 text-xs font-medium text-stone-600"
       >
         {COLS.map((c, i) => (
@@ -74,13 +71,12 @@ export default function Demo() {
           </span>
         ))}
       </div>
-      {items.map((item, rowIndex) => {
+      {items.map((item) => {
         const ent = data.entities[item.id] ?? {}
         return (
           <div
             key={item.id}
             {...rowProps(item.id)}
-            aria-rowindex={rowIndex + 2}
             className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-100 last:border-b-0 hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stone-900 aria-selected:bg-stone-900 aria-selected:text-white"
           >
             <span

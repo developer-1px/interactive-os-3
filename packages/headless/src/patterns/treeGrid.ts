@@ -18,6 +18,8 @@ export interface TreeGridOptions {
   /** aria-label — ARIA: treegrid requires accessible name. */
   label?: string
   labelledBy?: string
+  /** aria-colcount — total columns (header column count). */
+  colCount?: number
 }
 
 /** TreeGrid 가 등록하는 axis — SSOT. */
@@ -40,17 +42,16 @@ export function useTreeGridPattern(
   opts: TreeGridOptions = {},
 ): {
   treegridProps: RootProps
-  rootProps: RootProps
+  headerRowProps: ItemProps
   rowProps: (id: string) => ItemProps
   columnheaderProps: (colIndex: number) => ItemProps
   rowheaderProps: (rowId: string) => ItemProps
   gridcellProps: (rowId: string, colIndex: number) => ItemProps
-  cellProps: (rowId: string, colIndex: number) => ItemProps
   items: TreeItem[]
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'horizontal',
-    label, labelledBy,
+    label, labelledBy, colCount,
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -87,7 +88,8 @@ export function useTreeGridPattern(
     })
   }
   walk(containerId, 1)
-  const rowMap = new Map(flat.map((it) => [it.id, it]))
+  const HEADER_ROWS = 1
+  const rowMap = new Map(flat.map((it, idx) => [it.id, { it, idx }]))
 
   const treegridProps: RootProps = {
     role: 'treegrid',
@@ -95,18 +97,26 @@ export function useTreeGridPattern(
     'aria-orientation': orientation,
     'aria-label': label,
     'aria-labelledby': labelledBy,
+    'aria-rowcount': flat.length + HEADER_ROWS,
+    'aria-colcount': colCount,
     ...delegate,
   } as RootProps
-  const rootProps = treegridProps
+
+  const headerRowProps: ItemProps = {
+    role: 'row',
+    'aria-rowindex': 1,
+  } as unknown as ItemProps
 
   const rowProps = (id: string): ItemProps => {
-    const it = rowMap.get(id)
+    const entry = rowMap.get(id)
+    const it = entry?.it
     const isFocus = focusId === id
     return {
       role: 'row',
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
+      'aria-rowindex': entry ? entry.idx + 1 + HEADER_ROWS : undefined,
       'aria-selected': it?.selected ?? false,
       'aria-expanded': it?.hasChildren ? it.expanded : undefined,
       'aria-level': it?.level,
@@ -135,17 +145,13 @@ export function useTreeGridPattern(
     'aria-colindex': colIndex + 1,
   } as unknown as ItemProps)
 
-  const cellProps = (rowId: string, colIndex: number): ItemProps =>
-    colIndex === 0 ? rowheaderProps(rowId) : gridcellProps(rowId, colIndex)
-
   return {
     treegridProps,
-    rootProps,
+    headerRowProps,
     rowProps,
     columnheaderProps,
     rowheaderProps,
     gridcellProps,
-    cellProps,
     items: flat,
   }
 }

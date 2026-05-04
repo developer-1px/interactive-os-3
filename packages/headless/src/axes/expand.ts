@@ -5,7 +5,8 @@ import { parentOf } from './index'
 import { INTENTS, matchChord } from './keys'
 
 /**
- * expand — open/close 키 매핑은 `INTENTS.expand` 에서 import (SSOT).
+ * expand — accordion·menu 의 단순 open/close (aria-expanded). branch leaf 통과 +
+ * nextVisibleLeaf 도출은 treeExpand. 키 매핑은 `INTENTS.expand` SSOT.
  */
 export const expand: Axis = (d, id, t) => {
   if (t.kind !== 'key') return null

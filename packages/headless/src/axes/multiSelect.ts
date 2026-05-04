@@ -4,10 +4,10 @@ import { enabledSiblings } from './index'
 import { INTENTS, matchChord } from './keys'
 
 /**
- * multiSelect — `aria-multiselectable` axis. Click/Space toggle, Shift+Arrow /
- * Shift+Click anchor-range, Ctrl/Meta+A all. Emits `select` (per-id toggle) and
- * `selectMany` (batch). Single-select's `activate` is a separate vocabulary so
- * both reducers can coexist.
+ * multiSelect — `aria-multiselectable` axis. anchor-range, Ctrl+A, Shift+Click.
+ * single-select 단일 토글은 별도 `select` axis. activate (default action) 와도 분리.
+ * Click/Space toggle, Shift+Arrow / Shift+Click anchor-range, Ctrl/Meta+A all.
+ * Emits `select` (per-id toggle) and `selectMany` (batch).
  *
  * Range semantics — de facto (Mac Finder · Shopify · Radix · React Aria):
  *   anchor..current = selected · everything outside that range = deselected.

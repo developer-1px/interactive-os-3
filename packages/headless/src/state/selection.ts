@@ -3,9 +3,13 @@ import type { Reducer } from './compose'
 /**
  * singleSelect — single-selection reducer fragment.
  *
- * On `activate`:
+ * On `select` (axis: select) or `activate` (axis: activate, default action):
  *  - marks `e.id` as selected, clears others (`selected: false`)
  *  - moves focus to `e.id` ("selected = focused" — APG single-select semantics)
+ *
+ * Both events are accepted so single-select hosts can compose `select` axis
+ * (ARIA-correct vocabulary: aria-selected) or rely on `activate` (default
+ * action that also selects, e.g. tabs/menu) without diverging reducers.
  *
  * APG-aligned: tabs / listbox(single) / radio / menu / menubar follow this.
  *
@@ -13,7 +17,7 @@ import type { Reducer } from './compose'
  *   const myReduce = composeReducers(reduce, singleSelect)
  */
 export const singleSelect: Reducer = (d, e) => {
-  if (e.type !== 'activate') return d
+  if (e.type !== 'activate' && e.type !== 'select') return d
   const entities = { ...d.entities }
   let mutated = false
   for (const id of Object.keys(entities)) {

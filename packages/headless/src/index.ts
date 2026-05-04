@@ -30,7 +30,7 @@ export { useActiveDescendant } from './roving/useActiveDescendant'
 export {
   composeAxes, parentOf, siblingsOf, enabledSiblings,
   navigate, activate, expand, escape, typeahead, treeNavigate, treeExpand,
-  multiSelect, numericStep,
+  multiSelect, select, numericStep,
   type Axis,
 } from './axes'
 export {

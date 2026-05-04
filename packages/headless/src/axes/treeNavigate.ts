@@ -11,6 +11,9 @@ const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: s
   return out
 }
 
+/**
+ * treeNavigate — DFS visible 순회 (collapse 반영). 단일 부모 prev/next 는 navigate.
+ */
 // 키 매핑은 `INTENTS.treeNavigate` + `INTENTS.navigate.start/end` 에서 import (SSOT).
 type IndexFn = (len: number, i: number) => number
 const TABLE: Partial<Record<string, IndexFn>> = {

@@ -5,7 +5,8 @@ import { INTENTS, matchChord } from './keys'
 const mod = (n: number, m: number) => ((n % m) + m) % m
 
 /**
- * navigate — orientation 별 prev/next/start/end 키는 `INTENTS.navigate` 에서 import (SSOT).
+ * navigate — siblings prev/next (단일 부모). visible-flat (collapse 반영) 은 treeNavigate.
+ * orientation 별 prev/next/start/end 키는 `INTENTS.navigate` 에서 import (SSOT).
  */
 export const navigate =
   (orientation: 'vertical' | 'horizontal' = 'vertical'): Axis =>
