@@ -1,5 +1,5 @@
 import { useLocalValue } from '@p/headless/local'
-import { switchAxis, toggleSwitchPattern } from '@p/headless/patterns'
+import { switchAxis, switchPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
@@ -12,7 +12,7 @@ export const meta = {
 
 export default function Demo() {
   const [on, dispatch] = useLocalValue(false)
-  const { switchProps } = toggleSwitchPattern(on, dispatch, { label: 'Notifications' })
+  const { switchProps } = switchPattern(on, dispatch, { label: 'Notifications' })
 
   return (
     <div className="flex items-center gap-3">

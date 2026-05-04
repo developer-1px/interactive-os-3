@@ -60,7 +60,7 @@ export function useAccordionPattern(
     }
   }
 
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, intent, { autoFocus })
+  const { bindFocus, delegate } = useRovingTabIndex(axis, data, intent, { autoFocus })
 
   const triggerId = (id: string) => `${idPrefix}-trigger-${id}`
   const panelId = (id: string) => `${idPrefix}-panel-${id}`
@@ -81,13 +81,12 @@ export function useAccordionPattern(
     ({ role: 'heading', 'aria-level': 3 } as unknown as ItemProps)
 
   const triggerProps = (id: string): ItemProps => {
-    const isFocus = focusId === id
     const open = expandedSet.has(id)
     return {
       id: triggerId(id),
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
-      tabIndex: isFocus ? 0 : -1,
+      tabIndex: 0,
       'aria-expanded': open,
       'aria-controls': panelId(id),
       'aria-disabled': isDisabled(data, id) || undefined,

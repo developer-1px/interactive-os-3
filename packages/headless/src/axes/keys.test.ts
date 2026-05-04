@@ -21,7 +21,7 @@ describe('keys.ts SSOT', () => {
     const json = JSON.stringify(INTENTS)
     expect(json).toContain('"key":"Enter"')
     expect(json).toContain('"key":"Escape"')
-    expect(json).toContain('"shift":true') // gridSelection rangeRight 등
+    expect(json).toContain('"shift":true') // gridMultiSelect rangeRight 등
     expect(json).toContain('"ctrl":true')
   })
 

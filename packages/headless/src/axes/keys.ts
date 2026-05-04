@@ -89,7 +89,7 @@ export const INTENTS = {
     gridStart: k(KEYS.Home, { ctrl: true }),
     gridEnd: k(KEYS.End, { ctrl: true }),
   },
-  gridSelection: {
+  gridMultiSelect: {
     selectColumn: k(KEYS.Space, { ctrl: true }),
     selectRow: k(KEYS.Space, { shift: true }),
     selectAll: [k('a', { ctrl: true }), k('A', { ctrl: true }), k('a', { meta: true }), k('A', { meta: true })],

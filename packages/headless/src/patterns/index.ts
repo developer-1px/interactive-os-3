@@ -43,8 +43,11 @@ export { spinbuttonPattern, spinbuttonAxis, type SpinbuttonOptions } from './spi
 export { disclosurePattern, disclosureAxis, type DisclosureOptions } from './disclosure'
 export { sliderPattern, sliderAxis, type SliderOptions } from './slider'
 export { splitterPattern, splitterAxis, type SplitterOptions } from './splitter'
-export { toggleSwitchPattern, switchAxis, type SwitchOptions } from './switch'
+export { switchPattern, switchAxis, type SwitchOptions } from './switch'
 export { navigationListPattern, type NavigationListOptions } from './navigationList'
 export { alertPattern, alertdialogPattern, type AlertdialogOptions } from './alert'
 
-export type { BaseItem, TreeItem, RootProps, ItemProps } from './types'
+export type {
+  BaseItem, TreeItem, RootProps, ItemProps,
+  PatternProps, ValuedPatternProps,
+} from './types'

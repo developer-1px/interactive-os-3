@@ -4,7 +4,7 @@ import { getChildren, getSelectAnchor, type UiEvent } from '../types'
 import { INTENTS, matchChord } from './keys'
 
 /**
- * gridSelection — APG `/grid/` Selection 키 매핑. focus 이동은 gridNavigate.
+ * gridMultiSelect — APG `/grid/` Selection 키 매핑. focus 이동은 gridNavigate.
  * https://www.w3.org/WAI/ARIA/apg/patterns/grid/
  *
  * 입력 단위 = 현재 focus 된 cell. data 모델은 gridNavigate 와 동일 (container → row → cell).
@@ -17,14 +17,14 @@ import { INTENTS, matchChord } from './keys'
  *   Shift+Arrow  : SELECT_ANCHOR(없으면 현재 cell)→ 다음 cell 을 두 모서리로 하는 사각형 영역 selectMany.
  *                  multiSelect 의 1D anchor-range 와 의미 일관 — 범위 밖은 deselect.
  */
-export const gridSelection: Axis = (d, id, t) => {
+export const gridMultiSelect: Axis = (d, id, t) => {
   const rowId = parentOf(d, id)
   if (!rowId) return null
   const gridId = parentOf(d, rowId)
   if (!gridId) return null
   const rows = getChildren(d, gridId)
 
-  const I = INTENTS.gridSelection
+  const I = INTENTS.gridMultiSelect
   if (t.kind === 'click') {
     if (t.ctrl || t.meta) return [{ type: 'select', id }]
     return null

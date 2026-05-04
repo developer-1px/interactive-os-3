@@ -7,7 +7,7 @@ import {
   type NormalizedData,
   type UiEvent,
 } from '../types'
-import { activate, composeAxes, gridNavigate, gridSelection } from '../axes'
+import { activate, composeAxes, gridNavigate, gridMultiSelect } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps } from './types'
 
@@ -42,7 +42,7 @@ export interface GridCell {
 /** Grid 가 등록하는 axis — SSOT. */
 export const gridAxis = (opts: { multiSelectable?: boolean } = {}) =>
   opts.multiSelectable
-    ? composeAxes(gridSelection, gridNavigate, activate)
+    ? composeAxes(gridMultiSelect, gridNavigate, activate)
     : composeAxes(gridNavigate, activate)
 const baseAxis = gridAxis()
 const multiAxis = gridAxis({ multiSelectable: true })

@@ -1,7 +1,7 @@
 import type { NormalizedData } from '../types'
 
 /**
- * 3×3 grid fixture used by gridNavigate / gridSelection tests.
+ * 3×3 grid fixture used by gridNavigate / gridMultiSelect tests.
  *   r1 → c11 c12 c13
  *   r2 → c21 c22 c23
  *   r3 → c31 c32 c33

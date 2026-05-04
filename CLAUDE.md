@@ -75,7 +75,7 @@ import {
   useRadioGroupPattern, useDialogPattern, useComboboxPattern,
   useTooltipPattern,
   // *Pattern — 순수 함수. (value, dispatch) 외부 주입.
-  toggleSwitchPattern, sliderPattern, splitterPattern,
+  switchPattern, sliderPattern, splitterPattern,
   spinbuttonPattern, navigationListPattern, disclosurePattern,
 } from '@p/headless/patterns'
 

@@ -42,7 +42,7 @@ function extractDirectAxisCalls(src: string): string[] {
   const KNOWN = [
     'navigate', 'activate', 'typeahead', 'multiSelect', 'select',
     'treeNavigate', 'treeExpand', 'expand', 'numericStep',
-    'gridNavigate', 'gridSelection', 'pageNavigate', 'escape',
+    'gridNavigate', 'gridMultiSelect', 'pageNavigate', 'escape',
   ]
   const out = new Set<string>()
   for (const ax of KNOWN) {

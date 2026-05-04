@@ -48,7 +48,7 @@ type Recipe<P extends string> = (
 | `useAccordionPattern` | [`/accordion/`](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) | `(data, onEvent, opts?) → { rootProps, headerProps, triggerProps, panelProps, items }` | `type?: 'single'\|'multiple'`, `collapsible?: boolean` | `expand + activate + navigate('vertical')` | 다중 expand 데이터 모델 |
 | `sliderPattern` | [`/slider/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider/) · [`/slider-multithumb/`](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/) | `(data, onEvent, opts?) → { rootProps, trackProps, rangeProps, thumbProps }` | `min`, `max`, `step`, `orientation?` | `navigate(orientation) + numeric step axis` | **`numericStep` axis 신규** + pointer capture |
 | `splitterPattern` | [`Window Splitter`](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) | `(data, onEvent, opts?) → { rootProps, paneProps, handleProps }` | `orientation?`, `min`, `max` | `navigate(orientation) + numeric step axis` | slider와 axis 공유 |
-| `toggleSwitchPattern` | [WAI-ARIA `toggleSwitchPattern` role](https://www.w3.org/TR/wai-aria-1.2/#switch) | `(opts) → { switchProps }` (단일 boolean) | `defaultChecked?`, `checked?`, `onCheckedChange?` | `activate` | role=switch + aria-checked |
+| `switchPattern` | [WAI-ARIA `switchPattern` role](https://www.w3.org/TR/wai-aria-1.2/#switch) | `(opts) → { switchProps }` (단일 boolean) | `defaultChecked?`, `checked?`, `onCheckedChange?` | `activate` | role=switch + aria-checked |
 
 ### P3 — 보조 패턴
 
@@ -85,7 +85,7 @@ type Recipe<P extends string> = (
 | `multiSelect` axis | `aria-multiselectable` 패턴, Shift+Arrow 범위, Ctrl+Click 토글 | ✅ 구현됨 |
 | `numericStep` axis | Slider/Splitter Arrow → value step. `aria-valuenow/min/max` 동기 | ✅ 구현됨 |
 | `gridNavigate` axis | Grid 2D 셀 단위 (row, col) navigation. ArrowLeft/Right/Up/Down + Home/End + Ctrl+Home/End | ✅ 구현됨 |
-| `gridSelection` axis | Grid Ctrl+Space(col) / Shift+Space(row) / Ctrl+A / Ctrl+Click toggle / Shift+Arrow 2D rect range | ✅ 구현됨 |
+| `gridMultiSelect` axis | Grid Ctrl+Space(col) / Shift+Space(row) / Ctrl+A / Ctrl+Click toggle / Shift+Arrow 2D rect range | ✅ 구현됨 |
 | `selectionFollowsFocus` symmetric 옵션 | Listbox/Tabs/RadioGroup 셋이 같은 옵션을 같은 이름·같은 디폴트로 받도록 통일 (현재 비대칭) | P1 |
 
 ## 횡단 DX (모든 recipe가 자동 부여)
@@ -117,11 +117,11 @@ type Recipe<P extends string> = (
 | #12 Splitter | `splitterPattern` + `numericStep` axis | P2 |
 | #13 Slider | `sliderPattern` + `numericStep` axis | P2 |
 | #14 Disclosure / Accordion | `disclosurePattern` / `useAccordionPattern` | P2 |
-| #15 Switch / RadioGroup | `toggleSwitchPattern` / `useRadioGroupPattern` | P1 (radio) / P2 (switch) |
+| #15 Switch / RadioGroup | `switchPattern` / `useRadioGroupPattern` | P1 (radio) / P2 (switch) |
 | #16-19 만족 | — | — |
 | #20 DS authoring 가이드 | docs (이 문서가 시작점) | docs |
 | #21 Feed (article 스트림) | `useFeedPattern` | P4 ✅ |
-| #22 Data Grid (스프레드시트류) | `useGridPattern` + `gridSelection` axis | P4 ✅ |
+| #22 Data Grid (스프레드시트류) | `useGridPattern` + `gridMultiSelect` axis | P4 ✅ |
 | #23 Carousel (슬라이드 쇼) | `useCarouselPattern` | P4 ✅ |
 | #24 Spinbutton (custom 시·분·통화 picker) | `spinbuttonPattern` | P4 ✅ |
 
@@ -129,7 +129,7 @@ type Recipe<P extends string> = (
 
 1. **L0 코어 갭 보강** — `useActiveDescendant`, `multiSelect`, `numericStep`, `selectionFollowsFocus` symmetric. recipe 없이도 정체성 부합
 2. **P1 5개 recipe** — `useListboxPattern` `useTabsPattern` `useTreePattern` `useRadioGroupPattern` `useToolbarPattern`. 우리 composite 5개 마이그레이션으로 dogfood
-3. **P2 9개 recipe** — `useMenuPattern` `useMenubarPattern` `useComboboxPattern` `useTreeGridPattern` `disclosurePattern` `useAccordionPattern` `sliderPattern` `splitterPattern` `toggleSwitchPattern`
+3. **P2 9개 recipe** — `useMenuPattern` `useMenubarPattern` `useComboboxPattern` `useTreeGridPattern` `disclosurePattern` `useAccordionPattern` `sliderPattern` `splitterPattern` `switchPattern`
 4. **P3 5개 recipe** — `navigationListPattern` `useDialogPattern` `useTooltipPattern` `alertPattern` `alertdialogPattern`
 5. **외부 답변** — 거절 케이스(컴파운드 컴포넌트 요구) 정중 거절 + 로드맵 공지
 

@@ -5,7 +5,7 @@ import { INTENTS, matchChord } from './keys'
 
 /**
  * gridNavigate — APG `/grid/` 2D 셀 단위 navigation. focus 는 cell 에 있다.
- * Selection rect (Shift+Arrow / Ctrl+Space col / Shift+Space row) 은 gridSelection.
+ * Selection rect (Shift+Arrow / Ctrl+Space col / Shift+Space row) 은 gridMultiSelect.
  * https://www.w3.org/WAI/ARIA/apg/patterns/grid/
  *
  * data 모델:

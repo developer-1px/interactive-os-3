@@ -36,7 +36,7 @@ export function useLocalData(
  *
  * @example
  *   const [on, dispatch] = useLocalValue(false)
- *   const { switchProps } = toggleSwitchPattern(on, dispatch, { label: 'Mute' })
+ *   const { switchProps } = switchPattern(on, dispatch, { label: 'Mute' })
  */
 export function useLocalValue<T>(
   initial: T | (() => T),

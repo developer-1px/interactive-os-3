@@ -19,9 +19,9 @@ export interface SwitchOptions {
  *
  * @example
  *   const [on, dispatch] = useLocalValue(false)
- *   const { switchProps } = toggleSwitchPattern(on, dispatch, { label: 'Mute' })
+ *   const { switchProps } = switchPattern(on, dispatch, { label: 'Mute' })
  */
-export function toggleSwitchPattern(
+export function switchPattern(
   checked: boolean,
   dispatch?: (e: ValueEvent<boolean>) => void,
   opts: SwitchOptions = {},
