@@ -22,6 +22,16 @@ import type { NormalizedData, UiEvent, ValueEvent } from '../types'
 
 export type { ValueEvent }
 
+/**
+ * 컬렉션(NormalizedData) quick-start state — `[data, onEvent]` 한 줄.
+ *
+ * @param initial - 초기 NormalizedData (값 또는 lazy 초기자)
+ * @param reducer - reducer (기본 reduceWithDefaults). multi-select 등 변형은 명시 주입
+ *
+ * @example
+ *   const [data, onEvent] = useLocalData(() => fromList(items))
+ *   const { rootProps } = useListboxPattern(data, onEvent, { label: 'Mute' })
+ */
 export function useLocalData(
   initial: NormalizedData | (() => NormalizedData),
   reducer: Reducer = reduceWithDefaults,

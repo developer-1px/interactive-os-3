@@ -19,11 +19,27 @@ import type { UiEvent } from '../types'
  *
  * Safari edge-swipe / gesturestart 차단 포함.
  */
+/** ZoomPanOptions — zoom 1step 비율 등 useZoomPanGesture 옵션. */
 export interface ZoomPanOptions {
   /** zoom 1step 비율. 기본 1.0035 — Figma 식. */
   zoomFactor?: number
 }
 
+/**
+ * useZoomPanGesture — wheel/pointer/Space-drag/middle-click/Safari gesture 를
+ * pan/zoom UiEvent 로 번역해 onEvent 로 emit. 입력 어댑터 — 상태는 entity.data 에 산다.
+ *
+ * @param ref - 제스처를 감지할 viewport ref
+ * @param id - pan/zoom UiEvent 의 target entity id
+ * @param onEvent - UiEvent 디스패치 ('pan' | 'zoom')
+ * @param opts.zoomFactor - 1.0035 기본
+ * @param opts.stageRef - 드래그 중 pointer-events: none 으로 hit-test 차단할 stage
+ *
+ * @example
+ * const vp = useRef<HTMLDivElement>(null)
+ * useZoomPanGesture(vp, 'canvas', onEvent, { stageRef })
+ * return <div ref={vp} />
+ */
 export function useZoomPanGesture(
   ref: RefObject<HTMLElement | null>,
   id: string,

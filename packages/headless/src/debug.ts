@@ -1,3 +1,7 @@
+/**
+ * debug — NormalizedData 트리를 사람이 읽을 수 있는 ASCII 트리로 직렬화.
+ * 잉여 컨테이너/heading skip 등 위계 hint 도 함께 표시.
+ */
 import { ROOT, type NormalizedData } from './types'
 
 interface PrintOptions {
@@ -93,6 +97,7 @@ const findHints = (d: NormalizedData): Map<string, string[]> => {
   return hints
 }
 
+/** NormalizedData → ASCII 트리 문자열. hints=true 면 잉여 컨테이너/heading skip 등을 ⚠ 로 표시. */
 export function printTree(d: NormalizedData, opts: PrintOptions = {}): string {
   const { hints = true, maxLineLength = 140 } = opts
   const flagged = hints ? findHints(d) : new Map<string, string[]>()

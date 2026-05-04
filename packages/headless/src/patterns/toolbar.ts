@@ -7,6 +7,7 @@ import type { BaseItem, ItemProps, RootProps } from './types'
 export const toolbarAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
   composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
 
+/** Options for {@link useToolbarPattern}. */
 export interface ToolbarOptions {
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean

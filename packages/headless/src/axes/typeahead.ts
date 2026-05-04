@@ -6,6 +6,10 @@ import { enabledSiblings } from './index'
 
 const WINDOW_MS = 500
 
+/**
+ * typeahead — printable key → 누적 buffer (500ms window) 로 sibling label prefix 매치.
+ * `{type:'typeahead', buf, deadline}` 와 매치 시 `{type:'navigate', id}` emit. APG /listbox/ /menu/ /tree/ 의 type-to-search.
+ */
 export const typeahead: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
   if (!isPrintable(k)) return null
   const now = Date.now()

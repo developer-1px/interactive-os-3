@@ -5,6 +5,7 @@ import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
+/** Options for {@link useTreeGridPattern}. */
 export interface TreeGridOptions {
   /** aria-orientation. Spec implicit value: 'horizontal' for grid family. */
   orientation?: 'horizontal' | 'vertical'

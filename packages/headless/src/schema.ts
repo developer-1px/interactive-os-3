@@ -6,16 +6,19 @@ import { z } from 'zod'
  * The public TypeScript types stay intentionally small, but production
  * consumers need a real gate before declarations reach reducers/renderers.
  */
+/** Entity zod schema — `{id, data?}` 런타임 gate. */
 export const EntitySchema = z.object({
   id: z.string().min(1),
   data: z.record(z.string(), z.unknown()).optional(),
 })
 
+/** NormalizedData zod schema — entities + relationships 런타임 gate. */
 export const NormalizedDataSchema = z.object({
   entities: z.record(z.string(), EntitySchema),
   relationships: z.record(z.string(), z.array(z.string())),
 })
 
+/** UiEvent zod schema — ui ↔ headless 어휘 런타임 gate (discriminated union on `type`). */
 export const UiEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('navigate'), id: z.string().min(1) }),
   z.object({ type: z.literal('activate'), id: z.string().min(1) }),
@@ -39,12 +42,17 @@ export const UiEventSchema = z.discriminatedUnion('type', [
   }),
 ])
 
+/** EntitySchema 추론 타입. */
 export type EntityInput = z.infer<typeof EntitySchema>
+/** NormalizedDataSchema 추론 타입. */
 export type NormalizedDataInput = z.infer<typeof NormalizedDataSchema>
+/** UiEventSchema 추론 타입. */
 export type UiEventInput = z.infer<typeof UiEventSchema>
 
+/** unknown → NormalizedData 검증. 실패 시 ZodError throw. */
 export const parseNormalizedData = (value: unknown): NormalizedDataInput =>
   NormalizedDataSchema.parse(value)
 
+/** unknown → UiEvent 검증. 실패 시 ZodError throw. */
 export const parseUiEvent = (value: unknown): UiEventInput =>
   UiEventSchema.parse(value)

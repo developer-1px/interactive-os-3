@@ -10,6 +10,7 @@ export function alertPattern(): { rootProps: RootProps } {
   return { rootProps: { role: 'alert' } as RootProps }
 }
 
+/** Options for {@link alertdialogPattern}. */
 export interface AlertdialogOptions {
   /** aria-label — ARIA: alertdialog requires accessible name. */
   label?: string

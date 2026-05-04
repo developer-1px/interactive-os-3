@@ -6,6 +6,7 @@ import { bindAxis } from '../state/bind'
 /** Disclosure 가 등록하는 axis — SSOT. 데모/문서는 이걸 probe. */
 export const disclosureAxis = () => activate
 
+/** Options for {@link disclosurePattern}. */
 export interface DisclosureOptions {
   /** controlled fallback — host 가 onEvent reducer 로 EXPANDED 흡수 안 할 때 직접 받음. */
   onOpenChange?: (open: boolean) => void

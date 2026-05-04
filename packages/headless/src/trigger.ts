@@ -20,5 +20,7 @@ export type Trigger =
   | ({ kind: 'key' } & KeySpec)
   | ({ kind: 'click' } & Modifiers)
 
+/** KeySpec → key Trigger 빌더. */
 export const keyTrigger = (k: KeySpec): Trigger => ({ kind: 'key', ...k })
+/** Modifiers → click Trigger 빌더. (Shift+Click range, Meta+Click toggle 등) */
 export const clickTrigger = (mods: Modifiers = {}): Trigger => ({ kind: 'click', ...mods })

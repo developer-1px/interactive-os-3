@@ -7,13 +7,16 @@ import type { ItemProps, RootProps } from './types'
 /** Feed 가 등록하는 axis — SSOT. PageUp/PageDown → 인접 article navigate. */
 export const feedAxis = () => pageNavigate('vertical', 1)
 
+/** Feed article descriptor — id + optional label. */
 export interface FeedItem {
   id: string
   label?: string
 }
 
+/** Single dispatch event emitted by feed pattern. */
 export type FeedEvent = { type: 'navigate'; id: string }
 
+/** Options for {@link useFeedPattern}. */
 export interface FeedOptions {
   /** aria-busy — DOM 갱신 중 true. */
   busy?: boolean

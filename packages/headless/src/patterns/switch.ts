@@ -6,6 +6,7 @@ import { bindValueAxis } from '../state/bind'
 /** Switch 가 등록하는 axis — SSOT. */
 export const switchAxis = () => activate
 
+/** Options for {@link switchPattern}. */
 export interface SwitchOptions {
   label?: string
   disabled?: boolean

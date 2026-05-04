@@ -44,6 +44,14 @@ const isEditable = (t: EventTarget | null): boolean => {
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable
 }
 
+/**
+ * onShortcut — window 'keydown' 에 단축키 spec 을 등록. 해제 함수 반환.
+ * React 외부(vanilla/effect) 에서 사용. React 컴포넌트는 {@link useShortcut} 를 쓴다.
+ *
+ * @param spec - "mod+k" 같은 표기. mod = mac:Meta / 그 외:Ctrl
+ * @param handler - 매치 시 호출 (preventDefault 자동)
+ * @returns 해제 함수
+ */
 export function onShortcut(spec: string, handler: (e: KeyboardEvent) => void): () => void {
   const parsed = parse(spec)
   const onKey = (e: KeyboardEvent) => {
@@ -57,6 +65,18 @@ export function onShortcut(spec: string, handler: (e: KeyboardEvent) => void): (
   return () => window.removeEventListener('keydown', onKey)
 }
 
+/**
+ * useShortcut — `mod+k` 같은 표기를 받아 글로벌 단축키 등록. 단발 keydown 처리.
+ *
+ * 우선순위: 포커스된 컴포넌트 onKeyDown 이 먼저 (e.preventDefault 로 override 가능),
+ * editable 안에선 modifier 없는 단일 키 탈취 X.
+ *
+ * @param spec - "mod+k" / "shift+/" / "Escape" 등 (mod = mac:Meta / 그 외:Ctrl)
+ * @param handler - 매치 시 호출
+ *
+ * @example
+ * useShortcut('mod+k', () => openCommandPalette())
+ */
 export function useShortcut(spec: string, handler: (e: KeyboardEvent) => void) {
   useEffect(() => onShortcut(spec, handler), [spec, handler])
 }

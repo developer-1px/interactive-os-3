@@ -13,6 +13,7 @@ import { bindAxis } from '../state/bind'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link useMenubarPattern}. */
 export interface MenubarOptions {
   orientation?: 'horizontal' | 'vertical'
   autoFocus?: boolean

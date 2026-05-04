@@ -16,6 +16,7 @@ import type { BaseItem, ItemProps, RootProps } from './types'
 export const comboboxAxis = () =>
   composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
 
+/** Options for {@link useComboboxPattern}. */
 export interface ComboboxOptions {
   /** controlled input value. 생략 시 패턴이 useState 로 자체 보유. */
   value?: string

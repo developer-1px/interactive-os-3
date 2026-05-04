@@ -13,6 +13,15 @@ import type { Trigger } from '../trigger'
  */
 export type Axis = (d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null
 
+/**
+ * composeAxes — 여러 Axis 를 우선순위 순으로 합성. 첫 non-null 반환을 채택, 나머지 axis 는 단락(short-circuit).
+ *
+ * 같은 키를 두 axis 가 다루면 앞쪽이 이긴다 (예: treeExpand 가 Space 를 흡수해야 activate 가 leaf 에서만 발화).
+ *
+ * @example
+ *   const onKey = composeAxes(treeExpand, treeNavigate, typeahead, activate)
+ *   const events = onKey(data, focusId, { kind: 'key', key: 'ArrowRight' })
+ */
 export const composeAxes = (...axes: Axis[]): Axis => (d, id, t) => {
   for (const a of axes) {
     const r = a(d, id, t)

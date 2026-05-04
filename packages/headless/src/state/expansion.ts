@@ -3,9 +3,11 @@ import { siblingsOf } from '../axes'
 import type { Reducer } from './compose'
 
 /**
- * singleExpand — collapses siblings when an entry expands. APG accordion
- * single-open invariant. Compose with `reduce`:
- *   composeReducers(reduce, singleExpand)
+ * singleExpand — 한 항목이 열리면 같은 부모의 형제는 모두 닫는 reducer fragment.
+ * APG accordion 의 single-open invariant.
+ *
+ * @example
+ * composeReducers(reduce, singleExpand)
  */
 export const singleExpand: Reducer = (d, e) => {
   if (e.type !== 'expand' || !e.open) return d

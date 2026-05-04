@@ -8,6 +8,7 @@ import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
 
+/** Options for {@link useTreePattern}. */
 export interface TreeOptions {
   /** aria-orientation. Spec implicit value: 'vertical'. */
   orientation?: 'horizontal' | 'vertical'

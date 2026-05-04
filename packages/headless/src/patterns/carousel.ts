@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ItemProps, RootProps } from './types'
 
+/** Carousel slide descriptor — id + label fragment. */
 export interface CarouselSlide {
   id: string
   /** aria-label fragment ("Article title"), recipe 가 "Slide N of M: …" 로 합성. */
   label: string
 }
 
+/** Options for {@link useCarouselPattern}. */
 export interface CarouselOptions {
   slides: CarouselSlide[]
   /** Controlled current slide index. */

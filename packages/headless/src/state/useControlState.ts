@@ -25,6 +25,15 @@ const hydrate = (base: NormalizedData): NormalizedData => {
   return any ? { ...EMPTY, meta } : EMPTY
 }
 
+/**
+ * `useControlState` — 외부 base 데이터 위에 로컬 control meta(focus/expanded/typeahead)를 얹는 SSOT hook.
+ * base 가 갱신되면 사용자가 아직 건드리지 않은 키만 base 시드로 갱신, 사용자가 dispatch 한 키는 local 우선.
+ * 반환은 `[merged data, dispatch]` — ui/ 의 (data, onEvent) 인터페이스에 그대로 꽂힌다.
+ *
+ * @example
+ * const [data, dispatch] = useControlState(fromTree(roots, { focusId: ROOT }))
+ * <ListView data={data} onEvent={dispatch} />
+ */
 export function useControlState(base: NormalizedData): [NormalizedData, (e: UiEvent) => void] {
   const [local, rawDispatch] = useReducer(reduce, base, hydrate)
   const touched = useRef<Set<MetaKey>>(new Set())

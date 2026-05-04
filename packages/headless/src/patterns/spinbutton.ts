@@ -6,6 +6,7 @@ import type { ItemProps } from './types'
 /** Spinbutton 이 등록하는 axis — SSOT. */
 export const spinbuttonAxis = () => numericStep('horizontal')
 
+/** Options for {@link spinbuttonPattern}. */
 export interface SpinbuttonOptions {
   min?: number
   max?: number

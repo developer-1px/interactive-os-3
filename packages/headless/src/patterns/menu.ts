@@ -5,6 +5,7 @@ import { activate, composeAxes, escape, expand, navigate, typeahead } from '../a
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link useMenuPattern}. */
 export interface MenuOptions {
   /** aria-orientation. Spec implicit value: 'vertical'. */
   orientation?: 'horizontal' | 'vertical'

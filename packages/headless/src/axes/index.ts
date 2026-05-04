@@ -11,6 +11,7 @@ export const parentOf = (d: NormalizedData, id: string): string | undefined => {
   return Object.entries(d.relationships).find(([, kids]) => kids.includes(id))?.[0]
 }
 
+/** siblingsOf — id 와 같은 부모를 공유하는 형제 id 배열 (자기 자신 포함). top-level 이면 root 배열. */
 export const siblingsOf = (d: NormalizedData, id: string): string[] => {
   const p = parentOf(d, id)
   if (!p) return []
@@ -18,6 +19,7 @@ export const siblingsOf = (d: NormalizedData, id: string): string[] => {
   return d.relationships[p] ?? []
 }
 
+/** enabledSiblings — `siblingsOf` 결과에서 disabled entity 를 제거. navigate/multiSelect 의 활성 후보. */
 export const enabledSiblings = (d: NormalizedData, id: string): string[] =>
   siblingsOf(d, id).filter((sid) => !d.entities[sid]?.disabled)
 

@@ -23,6 +23,28 @@ const defaultFocusId = (data: NormalizedData, containerId: string): string | nul
   return ids.find((id) => Boolean(data.entities[id]?.selected)) ?? ids[0] ?? null
 }
 
+/**
+ * useRovingTabIndex — APG canonical roving tabindex. **데이터(관계 그래프) 기반** 이동.
+ *
+ * NormalizedData 의 `relationships` 그래프와 axis (composeAxes 결과) 를 따라 다음 focus id 를
+ * 결정한다. DOM 시각 위치와 무관 — 논리적 부모/형제/자식 관계가 곧 이동 축.
+ *
+ * 시각 좌표 기반(JSX-children 자유 배치, row-reverse, transform 등)이 필요한 곳은
+ * {@link useSpatialNavigation} (W3C CSS spatnav) 을 쓴다. 둘은 1 tab stop roving 메커니즘만 공유.
+ *
+ * 내부에 `data-id` 위임을 소유하므로 소비자는 `{...delegate}` 만 container 에 꽂는다.
+ *
+ * @param axis - composeAxes 로 합성된 축 (navigate/activate/expand/typeahead/...)
+ * @param data - NormalizedData (focus 는 `meta.focus`)
+ * @param onEvent - UiEvent 디스패치
+ * @param options.autoFocus - 마운트 시 첫 focusId 에 .focus() 발동 (다이얼로그용)
+ * @param options.containerId - 기본 focus 산출 시 기준 컨테이너. 기본 ROOT
+ *
+ * @example
+ * const axis = composeAxes(navigate('vertical'), activate(), typeahead())
+ * const { delegate, bindFocus, focusId } = useRovingTabIndex(axis, data, onEvent)
+ * return <ul {...delegate}>{ids.map(id => <li key={id} data-id={id} ref={bindFocus(id)} tabIndex={focusId === id ? 0 : -1}/>)}</ul>
+ */
 export function useRovingTabIndex(
   axis: Axis,
   data: NormalizedData,

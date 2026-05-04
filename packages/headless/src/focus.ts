@@ -1,3 +1,8 @@
+/**
+ * focus — focusId(논리) → DOM .focus() 위임 bridge.
+ *
+ * roving tabindex 패턴은 focusId 만 관리하고, 실제 DOM 포커스 이동은 이 bridge 가 담당.
+ */
 import { useEffect, useRef } from 'react'
 
 /**

@@ -23,6 +23,14 @@ const INTENT_TYPES = new Set<UiEvent['type']>([
 
 const noopGesture: GestureHelper = (_d, e) => [e]
 
+/**
+ * UiEvent 라우팅 hook — gesture 통과 후 meta 이벤트는 control dispatch 로, intent 이벤트는 도메인 onIntent 로.
+ * 컴포넌트 소비자는 분기 없이 반환된 onEvent 한 개만 ui 에 꽂는다.
+ *
+ * @example
+ * const onEvent = useEventBridge({ data, gestures: expandBranchOnActivate, dispatchMeta, onIntent })
+ * <TreeView data={data} onEvent={onEvent} />
+ */
 export function useEventBridge({
   data,
   gestures = noopGesture,

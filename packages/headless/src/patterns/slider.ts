@@ -7,6 +7,7 @@ import type { ItemProps, RootProps } from './types'
 export const sliderAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
   numericStep(opts.orientation ?? 'horizontal')
 
+/** Options for {@link sliderPattern}. */
 export interface SliderOptions {
   orientation?: 'horizontal' | 'vertical'
   min?: number

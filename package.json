@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:api": "cd packages/headless && npx typedoc --json ../../docs/api.json --out ../../docs/api",
+    "docs:llms": "pnpm docs:api && node scripts/gen-llms-txt.mjs > llms.txt"
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
@@ -41,6 +43,7 @@
     "ts-prune": "^0.10.3",
     "tsx": "^4.21.0",
     "typedoc": "^0.28.19",
+    "typedoc-plugin-markdown": "^4.11.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.9"

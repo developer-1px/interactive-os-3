@@ -11,6 +11,7 @@ import { activate, composeAxes, gridNavigate, gridMultiSelect } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps } from './types'
 
+/** Options for {@link useGridPattern}. */
 export interface GridOptions {
   /** Container entity for nested grids; defaults to ROOT. */
   containerId?: string

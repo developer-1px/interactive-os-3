@@ -49,6 +49,7 @@ export interface BaseItem {
   setsize: number
 }
 
+/** Tree/treegrid item view — BaseItem + level/expanded/hasChildren. */
 export interface TreeItem extends BaseItem {
   level: number
   expanded: boolean

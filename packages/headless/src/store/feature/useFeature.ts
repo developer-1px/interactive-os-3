@@ -6,8 +6,18 @@ import type { CommandBase, FeatureSpec } from './defineFeature'
 import type { QuerySpec } from './query'
 import { queryVersion, resolveQueries, subscribeQueries } from './query'
 
+/** subscribeQueries 를 useSyncExternalStore subscribe 시그니처로 어댑트. */
 const subscribeToQueries = (cb: () => void) => subscribeQueries(cb)
 
+/**
+ * Feature spec → React 연결. 라이프사이클: useReducer 로 spec.state 시드 → cmd dispatch 시
+ * spec.on[type] 적용 → state 변화마다 spec.query 재해석 → resolveQueries → spec.view 재계산.
+ * 직렬화 가능성: state/cmd 모두 plain JSON — replay/HMR 가능.
+ *
+ * @example
+ * const [view, send] = useFeature(counter)
+ * <button onClick={() => send({ type: 'inc' })}>{view.label}</button>
+ */
 export function useFeature<S, Cmd extends CommandBase, Q extends Record<string, QuerySpec<unknown>>, V>(
   spec: FeatureSpec<S, Cmd, Q, V>,
 ): [V, (cmd: Cmd) => void] {

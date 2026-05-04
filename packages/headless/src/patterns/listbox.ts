@@ -5,6 +5,7 @@ import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link useListboxPattern}. */
 export interface ListboxOptions {
   /** aria-orientation. Spec implicit value: 'vertical'. */
   orientation?: 'horizontal' | 'vertical'

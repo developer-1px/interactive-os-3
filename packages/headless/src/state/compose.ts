@@ -1,6 +1,7 @@
 import type { GestureHelper } from '../gesture'
 import type { NormalizedData, UiEvent } from '../types'
 
+/** `(data, event) → next data` — NormalizedData 위에 UiEvent 를 적용하는 pure 함수. */
 export type Reducer = (d: NormalizedData, e: UiEvent) => NormalizedData
 
 /**

@@ -3,6 +3,7 @@ import { activate, composeAxes, expand, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link useAccordionPattern}. */
 export interface AccordionOptions {
   /** 'multiple' (default): 여러 패널 동시 열림. 'single': APG single-mode — 한 항목만 열림 (형제 자동 collapse). */
   mode?: 'multiple' | 'single'

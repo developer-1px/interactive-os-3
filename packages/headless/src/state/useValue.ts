@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { ROOT, type UiEvent } from '../types'
 
 /**
- * useValue<T> — controlled/uncontrolled hybrid value 표준 hook.
+ * useValue<T> — controlled/uncontrolled hybrid value 표준 hook. SSOT 역할: switch/checkbox/radio/slider 등
+ * 값 한 개를 들고 있는 패턴의 공통 어댑터.
  *
  *  controlled 주입(value !== undefined)  → 외부 state 그대로 사용, setValue 는 onEvent 만 emit.
  *  controlled 미주입                     → 내부 useState 로 자체 보유, setValue 는 둘 다.
@@ -14,6 +15,10 @@ import { ROOT, type UiEvent } from '../types'
  *  @param defaultValue  uncontrolled 시작값
  *  @param onEvent  dispatch 통로 ('value' event emit 대상)
  *  @param id  emit event 의 id (default: ROOT)
+ *
+ *  @example
+ *  const [checked, setChecked] = useValue(props.checked, false, props.onEvent)
+ *  <button aria-pressed={checked} onClick={() => setChecked(!checked)} />
  */
 export function useValue<T>(
   controlled: T | undefined,

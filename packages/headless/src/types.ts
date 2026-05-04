@@ -15,6 +15,7 @@ export interface NormalizedData {
   meta?: Meta
 }
 
+/** Meta — library 가 소유하는 보조 상태 (focus/expanded/open/typeahead/...). */
 export interface Meta {
   root?: string[]
   focus?: string | null
@@ -46,21 +47,27 @@ export type UiEvent =
 /** UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter. */
 export type ValueEvent<T> = { type: 'value'; value: T }
 
+/** meta.root (top-level id 배열) read. */
 export const getRoot = (d: NormalizedData): string[] =>
   d.meta?.root ?? []
 
+/** 현재 focus id read (없으면 null). */
 export const getFocus = (d: NormalizedData): string | null =>
   d.meta?.focus ?? null
 
+/** expanded id 집합 read. */
 export const getExpanded = (d: NormalizedData): Set<string> =>
   new Set(d.meta?.expanded ?? [])
 
+/** open id 집합 read (popover/menu/dialog). */
 export const getOpen = (d: NormalizedData): Set<string> =>
   new Set(d.meta?.open ?? [])
 
+/** typeahead 버퍼 read (`{buf, deadline}`). */
 export const getTypeahead = (d: NormalizedData): { buf: string; deadline: number } =>
   d.meta?.typeahead ?? { buf: '', deadline: 0 }
 
+/** range-select 의 anchor id read. */
 export const getSelectAnchor = (d: NormalizedData): string | null =>
   d.meta?.selectAnchor ?? null
 
@@ -71,23 +78,29 @@ export const getSelectAnchor = (d: NormalizedData): string | null =>
  */
 export const ROOT = '__root__'
 
+/** id 의 자식 id 배열. id===ROOT 면 meta.root 반환. */
 export const getChildren = (d: NormalizedData, id: string): string[] => {
   if (id === ROOT) return d.meta?.root ?? []
   return d.relationships[id] ?? []
 }
 
+/** entity.label read (없으면 id). typeahead 매칭용. */
 export const getLabel = (d: NormalizedData, id: string): string =>
   (d.entities[id]?.label as string) ?? id
 
+/** entity.disabled flag read. */
 export const isDisabled = (d: NormalizedData, id: string): boolean =>
   Boolean(d.entities[id]?.disabled)
 
+/** entity.selected flag read. */
 export const isSelected = (d: NormalizedData, id: string): boolean =>
   Boolean(d.entities[id]?.selected)
 
+/** id 가 현재 focus 와 일치하는지. */
 export const isFocused = (d: NormalizedData, id: string): boolean =>
   d.meta?.focus === id
 
+/** ControlProps — data + onEvent. 상호작용 컴포넌트의 공용 prop shape. */
 export interface ControlProps {
   data: NormalizedData
   /** 상호작용 컴포넌트는 필수. Display-only Collection은 생략 가능. */
@@ -100,5 +113,5 @@ export interface ControlProps {
  */
 export type CollectionProps<Extra = unknown> = ControlProps & Extra
 
-// 의미 색 토큰
+/** Tone — 의미 색 토큰 (default/info/success/warning/danger/primary). */
 export type Tone = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'primary'

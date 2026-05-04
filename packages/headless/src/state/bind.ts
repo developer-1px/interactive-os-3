@@ -4,11 +4,21 @@ import { ROOT, type NormalizedData, type UiEvent, type ValueEvent } from '../typ
 import { fromKeyboardEvent } from '../key'
 import { clickTrigger, keyTrigger } from '../trigger'
 
+/** axis 가 emit 한 UiEvent 를 React 의 onKeyDown/onClick 에 잇는 핸들러 페어. */
 export interface AxisBindings {
   onKey: (ke: KeyboardEvent, id: string) => boolean
   onClick: (me: MouseEvent, id: string) => boolean
 }
 
+/**
+ * axis(논리 네비게이션 함수) 를 React DOM 이벤트에 연결하는 어댑터.
+ * keyboard/mouse → axis trigger → UiEvent[] → onEvent 로 흘린다. axis 가 이벤트를 소비했으면
+ * `preventDefault` + `true` 반환 (브라우저 기본 동작 차단).
+ *
+ * @example
+ * const { onKey, onClick } = bindAxis(rovingAxis, data, dispatch)
+ * <li onKeyDown={(e) => onKey(e, item.id)} onClick={(e) => onClick(e, item.id)} />
+ */
 export const bindAxis = (
   axis: Axis,
   d: NormalizedData,

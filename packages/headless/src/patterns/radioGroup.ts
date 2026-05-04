@@ -5,6 +5,7 @@ import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link useRadioGroupPattern}. */
 export interface RadioGroupOptions {
   /** 시각·aria-orientation 만. 키보드는 양 축 모두 항상 활성. */
   orientation?: 'horizontal' | 'vertical'

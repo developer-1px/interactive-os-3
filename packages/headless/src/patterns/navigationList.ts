@@ -1,6 +1,7 @@
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
+/** Options for {@link navigationListPattern}. */
 export interface NavigationListOptions {
   /** aria-label — ARIA: navigation landmark requires accessible name. */
   label?: string

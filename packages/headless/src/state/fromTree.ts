@@ -46,6 +46,10 @@ export function fromList(items: Array<Record<string, unknown>>): NormalizedData 
   return { entities, relationships: {}, meta: { root } }
 }
 
+/**
+ * path 문자열을 누적 prefix 배열로 — `/a/b/c` → `['/a', '/a/b', '/a/b/c']`.
+ * tree 의 조상 id 가 path prefix 와 1:1 일 때 expanded 시드 계산에 사용.
+ */
 export const pathAncestors = (path: string, sep: string = '/'): string[] => {
   const segs = path.split(sep).filter(Boolean)
   return segs.reduce<string[]>(

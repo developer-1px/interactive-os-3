@@ -66,6 +66,22 @@ const ALLOWED_DIRS: Record<NonNullable<UseSpatialNavigationOptions['orientation'
   both:       new Set(['left', 'right', 'up', 'down']),
 }
 
+/**
+ * useSpatialNavigation — W3C CSS Spatial Navigation 기반 roving tabindex.
+ * **시각 좌표 기반** 이동 — `getBoundingClientRect()` 로 다음 element 결정.
+ *
+ * 데이터 그래프가 없는 자유 JSX 배치(Toolbar/Menubar/DataGrid/TreeGrid 등) 에서 사용.
+ * 관계 그래프가 있는 컬렉션은 {@link useRovingTabIndex} (APG canonical) 을 쓴다.
+ *
+ * @param externalRef - container ref. 생략 시 내부 ref 반환
+ * @param options.orientation - 'horizontal'(기본) | 'vertical' | 'both'
+ * @param options.homeEnd - Home/End 키 처리 (기본 true)
+ * @param options.itemSelector - 명시적 item selector. 기본은 tabbable element 전체
+ *
+ * @example
+ * const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, { orientation: 'horizontal' })
+ * return <div ref={ref} role="toolbar" onKeyDown={onKeyDown}>...</div>
+ */
 export function useSpatialNavigation<T extends HTMLElement = HTMLDivElement>(
   externalRef?: RefObject<T | null> | null,
   { orientation = 'horizontal', homeEnd = true, itemSelector }: UseSpatialNavigationOptions = {},

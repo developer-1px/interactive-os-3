@@ -1,15 +1,18 @@
 import type { Meta, NormalizedData, UiEvent } from '../types'
 
+/** UiEvent type 별로 narrow 된 reducer 핸들러 시그니처. */
 type Handler<T extends UiEvent['type']> = (
   d: NormalizedData,
   e: Extract<UiEvent, { type: T }>,
 ) => NormalizedData
 
+/** meta 부분 패치 — focus/expanded/typeahead 등 메타 갱신용. */
 const setMeta = (d: NormalizedData, patch: Partial<Meta>): NormalizedData => ({
   ...d,
   meta: { ...d.meta, ...patch },
 })
 
+/** entity 부분 패치 — 존재하지 않으면 no-op. */
 const mergeData = (d: NormalizedData, id: string, patch: Record<string, unknown>): NormalizedData => {
   const prev = d.entities[id]
   if (!prev) return d
@@ -19,8 +22,10 @@ const mergeData = (d: NormalizedData, id: string, patch: Record<string, unknown>
   }
 }
 
+/** [lo, hi] 구간으로 자르기. */
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
 
+/** meta 의 id-set('expanded' | 'open') 에서 id 의 toggle 상태를 강제. */
 const toggleSet = (d: NormalizedData, key: 'expanded' | 'open', id: string, on: boolean): NormalizedData => {
   const prev = d.meta?.[key] ?? []
   const has = prev.includes(id)
@@ -29,6 +34,7 @@ const toggleSet = (d: NormalizedData, key: 'expanded' | 'open', id: string, on: 
   return setMeta(d, { [key]: next } as Partial<Meta>)
 }
 
+/** identity reducer — 데이터 패스스루. activate/selectMany/value 처럼 host reducer 가 처리할 의도 이벤트. */
 const identity = (d: NormalizedData) => d
 
 const handlers: { [K in UiEvent['type']]: Handler<K> } = {
@@ -60,5 +66,12 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   },
 }
 
+/**
+ * 코어 reducer — UiEvent 의 기본 의미(focus/expand/open/typeahead/pan/zoom)를 NormalizedData 에 적용.
+ * activate/select/selectMany/value 는 identity 로 패스 — host reducer 가 도메인 의미(selection/value)를 합성한다.
+ *
+ * @example
+ * const myReduce = composeReducers(reduce, singleSelect, setValue)
+ */
 export const reduce = (d: NormalizedData, e: UiEvent): NormalizedData =>
   (handlers[e.type] as Handler<UiEvent['type']>)(d, e)

@@ -9,6 +9,7 @@ import type { ItemProps, RootProps } from './types'
 export const dialogKeys = (opts: { modal?: boolean } = {}) =>
   (opts.modal ?? true) ? [KEYS.Escape, KEYS.Tab] : [KEYS.Escape]
 
+/** Options for {@link useDialogPattern}. */
 export interface DialogOptions {
   /** controlled. 생략 시 패턴이 useState 로 자체 소유 (uncontrolled). */
   open?: boolean

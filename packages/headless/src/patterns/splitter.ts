@@ -9,6 +9,7 @@ export const splitterAxis = (opts: { orientation?: 'horizontal' | 'vertical' } =
   return numericStep(o === 'vertical' ? 'horizontal' : 'vertical')
 }
 
+/** Options for {@link splitterPattern}. */
 export interface SplitterOptions {
   orientation?: 'horizontal' | 'vertical'
   min?: number

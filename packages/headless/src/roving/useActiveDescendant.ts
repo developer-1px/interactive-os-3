@@ -8,6 +8,13 @@ import { useEffect, type RefObject } from 'react'
  * id 참조(`aria-activedescendant`)로만 표현. roving tabindex 와 다른 모드.
  *
  * W3C ARIA: https://www.w3.org/TR/wai-aria-1.2/#aria-activedescendant
+ *
+ * @param ref - `aria-activedescendant` 를 부착할 element ref (보통 combobox input)
+ * @param activeId - 현재 활성 option 의 DOM id. null/undefined 면 속성 제거
+ *
+ * @example
+ * const inputRef = useRef<HTMLInputElement>(null)
+ * useActiveDescendant(inputRef, focusId)
  */
 export function useActiveDescendant<T extends HTMLElement>(
   ref: RefObject<T | null>,
