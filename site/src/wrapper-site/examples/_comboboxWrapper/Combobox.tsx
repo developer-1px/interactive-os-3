@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
-  fromList, getRoot, reduce, useControlState,
+  ROOT, fromList, getRoot, reduce, useControlState,
   type NormalizedData, type UiEvent,
 } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
@@ -27,7 +27,6 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
 }: ComboboxProps<TItem>) {
   const [query, setQuery] = useState('')
 
-  // 외부 data 의 사본을 query 로 필터링한 view — wrapper 가 시각/필터 책임.
   const filtered = useMemo(() => {
     const ids = getRoot(data)
     const matches = ids.filter((id) => {
@@ -43,24 +42,24 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
 
   const relay = (e: UiEvent) => {
     dispatch(e)
+    if (e.type === 'value') setQuery(String(e.value))
     if (e.type === 'activate') {
       const label = view.entities[e.id]?.label
       if (typeof label === 'string') setQuery(label)
+      dispatch({ type: 'open', id: ROOT, open: false })
     }
     onEvent(e)
   }
 
-  const { comboboxProps, listboxProps, optionProps, items, expanded, setExpanded } =
-    useComboboxPattern(view, relay, { label: ariaLabel })
+  const { comboboxProps, listboxProps, optionProps, items } =
+    useComboboxPattern(view, relay, { label: ariaLabel, value: query })
+
+  const expanded = Boolean(view.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">
       <input
         {...comboboxProps}
-        value={query}
-        onChange={(e) => { setQuery(e.target.value); setExpanded(true) }}
-        onFocus={() => setExpanded(true)}
-        onBlur={() => setTimeout(() => setExpanded(false), 100)}
         placeholder={placeholder}
         className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
       />

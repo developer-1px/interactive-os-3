@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { fromList, getRoot, reduce, useControlState, type UiEvent } from '@p/headless'
+import { ROOT, fromList, getRoot, reduce, useControlState, type UiEvent } from '@p/headless'
 import { comboboxAxis, useComboboxPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
@@ -15,7 +15,8 @@ const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 
 
 export default function Demo() {
   const [query, setQuery] = useState('')
-  // base 는 query 에서 파생, focus 는 useControlState 의 local meta 가 보존.
+
+  // base 는 query 에서 파생, focus/open 등 meta 는 useControlState 가 보존.
   const base = useMemo(() => {
     const filtered = ALL.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
     const list = fromList(filtered.map((label) => ({ label })))
@@ -24,28 +25,26 @@ export default function Demo() {
   }, [query])
   const [data, dispatch] = useControlState(base)
 
+  // 모든 변화는 onEvent 로 — dispatch 통과 + host 사이드이펙트.
   const onEvent = (e: UiEvent) => {
     dispatch(e)
+    if (e.type === 'value') setQuery(String(e.value))
     if (e.type === 'activate') {
       const label = data.entities[e.id]?.label
       if (typeof label === 'string') setQuery(label)
+      dispatch({ type: 'open', id: ROOT, open: false })
     }
   }
 
-  const { comboboxProps, listboxProps, optionProps, items, expanded, setExpanded } =
-    useComboboxPattern(data, onEvent, { label: 'Country' })
+  const { comboboxProps, listboxProps, optionProps, items } =
+    useComboboxPattern(data, onEvent, { label: 'Country', value: query })
+
+  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">
       <input
         {...comboboxProps}
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value)
-          setExpanded(true)
-        }}
-        onFocus={() => setExpanded(true)}
-        onBlur={() => setTimeout(() => setExpanded(false), 100)}
         placeholder="Search country…"
         className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm"
       />
