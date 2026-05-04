@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getFocus,
   type NormalizedData, type UiEvent,
@@ -16,8 +16,11 @@ export const comboboxAxis = () =>
   composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
 
 export interface ComboboxOptions {
-  /** controlled input value. host 가 onEvent 의 'value' 로 갱신. */
+  /** controlled input value. 생략 시 패턴이 useState 로 자체 보유. */
   value?: string
+  defaultValue?: string
+  /** filter — query 로 visible 좁힘. default: label.toLowerCase().includes(q.toLowerCase()). */
+  filter?: (query: string, label: string, id: string) => boolean
   /** aria-autocomplete. APG: 'none' | 'list' | 'both'. */
   autocomplete?: 'none' | 'list' | 'both'
   /** aria-haspopup. Spec implicit: 'listbox'. */
@@ -39,31 +42,32 @@ export interface ComboboxOptions {
   popupLabelledBy?: string
 }
 
+const defaultFilter = (q: string, label: string): boolean =>
+  label.toLowerCase().includes(q.toLowerCase())
+
 /**
  * combobox — APG `/combobox/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
  *
- * 시그니처: 다른 컬렉션 패턴과 동일한 `(data, onEvent, opts)` —
- * memory `feedback_single_data_interface` · `feedback_data_driven_rendering` 정합.
+ * 시그니처: 다른 컬렉션 패턴과 동일한 `(data, onEvent, opts)`.
+ *   data — host 가 NormalizedData 한 번 만들어 useControlState 통과
+ *   onEvent — 모든 변화 단일 dispatch interface
  *
- * **모든 이벤트가 onEvent 를 통해 dispatch** (이전 버전의 setExpanded 명령형 호출 제거):
- *   - input typing      → `{type:'value', id: ROOT, value}`
- *   - focus / blur      → `{type:'open',  id: ROOT, open: true|false}`
- *   - Arrow/Home/End    → `{type:'navigate', id}`
- *   - Enter             → `{type:'activate', id}`
- *   - Escape            → `{type:'open',  id: ROOT, open: false}`
- *   - option click      → `{type:'activate', id}`
+ * **패턴 내부에서 흡수하는 책임** (host 가 안 다뤄도 됨):
+ *   - input value (query) state — uncontrolled default, value 옵션으로 controlled 도 가능
+ *   - filter visible ids — default label.includes, filter 옵션으로 override
+ *   - lifecycle 이벤트 (focus/blur/change) — 모두 onEvent 로 dispatch
+ *   - activate 후속 (popup close + commit) — APG 표준 동작 자동
  *
- * expanded 는 `data.meta.open` 에서 도출 (reduce 가 'open' event 자동 처리).
- * input value 는 host 가 controlled — `value` 옵션 주입 + onEvent 의 'value' 처리.
+ * 모든 emit:
+ *   typing  → {type:'value', id:ROOT, value}
+ *   focus   → {type:'open',  id:ROOT, open:true}
+ *   blur    → {type:'open',  id:ROOT, open:false}  (closeOnBlurDelay 후)
+ *   nav     → {type:'navigate', id}
+ *   activate→ {type:'activate', id} + {type:'open', open:false} + (commitOnActivate) {type:'value', value:label}
+ *   escape  → {type:'open', open:false}
  *
  * INVARIANT B11: input 에 focus 유지, popup option 활성은 aria-activedescendant.
- *
- * 키보드 (input 위에서):
- *   ArrowDown — popup 열고 첫 active descendant
- *   ArrowUp/Down — active descendant 이동
- *   Enter — 활성 option activate
- *   Escape — popup 닫기
  */
 export function useComboboxPattern(
   data: NormalizedData,
@@ -76,7 +80,8 @@ export function useComboboxPattern(
   items: BaseItem[]
 } {
   const {
-    value,
+    value: valueProp, defaultValue = '',
+    filter = defaultFilter,
     autocomplete = 'list', haspopup = 'listbox',
     closeOnBlurDelay = 100, commitOnActivate = true,
     idPrefix = 'cmbx',
@@ -84,17 +89,32 @@ export function useComboboxPattern(
     label, labelledBy, popupLabel, popupLabelledBy,
   } = opts
 
+  // query state — uncontrolled default, value 옵션으로 controlled.
+  const [internalValue, setInternalValue] = useState(defaultValue)
+  const isControlled = valueProp !== undefined
+  const query = isControlled ? valueProp : internalValue
+  const setValue = (next: string) => {
+    if (!isControlled) setInternalValue(next)
+    onEvent?.({ type: 'value', id: ROOT, value: next })
+  }
+
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
 
   const expanded = Boolean(data.meta?.open?.includes(ROOT))
   const activeId = getFocus(data) ?? null
-  const ids = getChildren(data, ROOT)
+  const allIds = getChildren(data, ROOT)
   const listId = `${idPrefix}-list`
   const optionDomId = (id: string) => `${idPrefix}-opt-${id}`
   useActiveDescendant(inputRef, expanded && activeId ? optionDomId(activeId) : null)
 
-  const items: BaseItem[] = ids.map((id, i) => {
+  // visible — query 로 좁힘.
+  const visibleIds = useMemo(
+    () => allIds.filter((id) => filter(query, getLabel(data, id), id)),
+    [allIds, query, filter, data],
+  )
+
+  const items: BaseItem[] = visibleIds.map((id, i) => {
     const ent = data.entities[id] ?? {}
     return {
       id,
@@ -102,7 +122,7 @@ export function useComboboxPattern(
       selected: Boolean(ent.selected),
       disabled: isDisabled(data, id),
       posinset: i + 1,
-      setsize: ids.length,
+      setsize: visibleIds.length,
     }
   })
 
@@ -113,7 +133,6 @@ export function useComboboxPattern(
     }
   }
 
-  // intent — axis emit + 우리 lifecycle emit 모두 onEvent 로 통일.
   const intent = (e: UiEvent) => {
     if (e.type === 'navigate' && !expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
     if (e.type === 'activate') {
@@ -121,7 +140,7 @@ export function useComboboxPattern(
       onEvent?.({ type: 'open', id: ROOT, open: false })
       if (commitOnActivate) {
         const lbl = data.entities[e.id]?.label
-        if (typeof lbl === 'string') onEvent?.({ type: 'value', id: ROOT, value: lbl })
+        if (typeof lbl === 'string') setValue(lbl)
       }
       return
     }
@@ -132,18 +151,16 @@ export function useComboboxPattern(
   const { onKey: dispatchKey } = bindAxis(axis, data, intent)
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    // gesture: activeId null 인 첫 ArrowDown/Up/Home/End → axis sibling-relative 라
-    // first/last 도출 불가. 명시적 seed 로 흡수.
     if (!activeId) {
       if (e.key === KEYS.ArrowDown || e.key === KEYS.Home) {
         e.preventDefault()
-        const target = ids[0]
+        const target = visibleIds[0]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
       if (e.key === KEYS.ArrowUp || e.key === KEYS.End) {
         e.preventDefault()
-        const target = ids[ids.length - 1]
+        const target = visibleIds[visibleIds.length - 1]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
@@ -153,7 +170,7 @@ export function useComboboxPattern(
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onEvent?.({ type: 'value', id: ROOT, value: e.target.value })
+    setValue(e.target.value)
     if (!expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
   }
   const onFocus = () => {
@@ -172,7 +189,7 @@ export function useComboboxPattern(
   const comboboxProps: ItemProps = {
     role: 'combobox',
     ref: inputRef as React.Ref<HTMLElement>,
-    value: value ?? '',
+    value: query,
     'aria-autocomplete': autocomplete,
     'aria-expanded': expanded,
     'aria-controls': listId,
@@ -196,7 +213,6 @@ export function useComboboxPattern(
     'aria-label': popupLabel,
     'aria-labelledby': popupLabelledBy,
     onMouseDown: (e: React.MouseEvent) => {
-      // option click 시 input blur → close 방지.
       e.preventDefault()
       cancelBlurClose()
     },

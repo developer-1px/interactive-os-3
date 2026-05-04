@@ -1,8 +1,4 @@
-import { useMemo, useState } from 'react'
-import {
-  ROOT, fromList, getRoot, reduce, useControlState,
-  type NormalizedData, type UiEvent,
-} from '@p/headless'
+import { ROOT, useControlState, type NormalizedData, type UiEvent } from '@p/headless'
 import { useComboboxPattern } from '@p/headless/patterns'
 import {
   defaultLabel,
@@ -19,37 +15,23 @@ export interface ComboboxProps<TItem extends object = Record<string, unknown>> {
 }
 
 export function Combobox<TItem extends object = Record<string, unknown>>({
-  data,
+  data: rawData,
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
   placeholder = 'Search…',
 }: ComboboxProps<TItem>) {
-  const [query, setQuery] = useState('')
-
-  const filtered = useMemo(() => {
-    const ids = getRoot(data)
-    const matches = ids.filter((id) => {
-      const label = data.entities[id]?.label
-      return typeof label === 'string' && label.toLowerCase().includes(query.toLowerCase())
-    })
-    const list = fromList(matches.map((id) => ({ id, ...(data.entities[id] ?? {}) })))
-    const seed = getRoot(list)[0]
-    return seed ? reduce(list, { type: 'navigate', id: seed }) : list
-  }, [data, query])
-
-  const [view, dispatch] = useControlState(filtered)
+  const [data, dispatch] = useControlState(rawData)
 
   const relay = (e: UiEvent) => {
     dispatch(e)
-    if (e.type === 'value') setQuery(String(e.value))
     onEvent(e)
   }
 
   const { comboboxProps, listboxProps, optionProps, items } =
-    useComboboxPattern(view, relay, { label: ariaLabel, value: query })
+    useComboboxPattern(data, relay, { label: ariaLabel })
 
-  const expanded = Boolean(view.meta?.open?.includes(ROOT))
+  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">
@@ -65,7 +47,7 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
           ) : (
             <ul {...listboxProps} className="max-h-48 overflow-auto p-1 text-sm">
               {items.map((item) => {
-                const itemData = (view.entities[item.id] ?? {}) as TItem
+                const itemData = (data.entities[item.id] ?? {}) as TItem
                 return (
                   <li
                     key={item.id}
