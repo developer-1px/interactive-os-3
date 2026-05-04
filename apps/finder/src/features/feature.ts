@@ -151,14 +151,21 @@ export const finderFeature = defineFeature<FinderState, FinderCmd, {
   view: viewFn,
 })
 
-/** view 반환 키는 FinderViewSpec 키와 1:1. 누락/잉여 시 타입 에러. */
-type ViewOut = Record<FinderViewKey, unknown>
+/** Finder view 모델 — FinderViewSpec 키와 1:1 매칭, 각 슬롯은 실제 shape. */
+export interface FinderView {
+  titlebar: { path: string; mode: ViewMode; query: string; busy: boolean }
+  toolbar: NormalizedData
+  sidebar: { recent: NormalizedData; fav: NormalizedData; tags: NormalizedData }
+  columns: NormalizedData
+  preview: PreviewVM
+}
 
 function viewFn(s: FinderState, q: {
   tree: { data: FsNode | undefined; isLoading: boolean; error: unknown }
   text: { data: string | null | undefined; isLoading: boolean; error: unknown }
   image: { data: string | null | undefined; isLoading: boolean; error: unknown }
-}): ViewOut {
+}): FinderView {
+  // satisfies → FinderViewSpec 키 완전성 컴파일타임 가드 (누락/잉여 시 에러)
   return {
     titlebar: { path: s.url, mode: s.mode, query: s.query, busy: q.text.isLoading || q.image.isLoading },
     toolbar: buildToolbar(s.mode),
@@ -169,5 +176,5 @@ function viewFn(s: FinderState, q: {
     },
     columns: buildColumns(q.tree.data, s.url, s.pinned),
     preview: buildPreview(s.url, q.tree.data, q.text.data, q.image.data),
-  }
+  } satisfies Record<FinderViewKey, unknown>
 }

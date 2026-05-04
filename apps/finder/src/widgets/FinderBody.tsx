@@ -8,17 +8,9 @@ import { PreviewPane } from './Preview'
 import { Columns } from './Columns'
 import { extToPreviewKind, type ViewMode } from '../entities/types'
 
-type FeatureView = {
-  titlebar: { path: string; mode: ViewMode; query: string; busy: boolean }
-  toolbar: NormalizedData
-  sidebar: { recent: NormalizedData; fav: NormalizedData; tags: NormalizedData }
-  columns: NormalizedData
-  preview: { kind: 'empty' } | { kind: 'dir' | 'image' | 'text'; node: { path: string; ext?: string }; [k: string]: unknown }
-}
-
 /** Finder 본문 — sidebar + columns + preview. ds 의존성 0건. */
 export function FinderBody() {
-  const [view, dispatch] = useFeature(finderFeature) as unknown as [FeatureView, (cmd: { type: string; [k: string]: unknown }) => void]
+  const [view, dispatch] = useFeature(finderFeature)
 
   const onColumns = (e: UiEvent) => {
     if (e.type === 'activate' || e.type === 'navigate') dispatch({ type: 'activateCol', id: e.id })
