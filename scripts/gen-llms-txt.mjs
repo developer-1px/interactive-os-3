@@ -223,10 +223,21 @@ const writeFull = () => {
 // Write
 // ────────────────────────────────────────────────
 
-fs.writeFileSync(path.join(ROOT, 'llms.txt'), writeIndex())
-fs.writeFileSync(path.join(ROOT, 'llms-full.txt'), writeFull())
+const indexBody = writeIndex()
+const fullBody = writeFull()
 
-const idx = fs.statSync(path.join(ROOT, 'llms.txt'))
-const full = fs.statSync(path.join(ROOT, 'llms-full.txt'))
-console.log(`✅ llms.txt       ${(idx.size / 1024).toFixed(1)} kB`)
-console.log(`✅ llms-full.txt  ${(full.size / 1024).toFixed(1)} kB`)
+// 1) 루트 — 저장소 가시성 (GitHub README 등)
+// 2) apps/site/public — vite serves at /llms.txt, /llms-full.txt
+const targets = [
+  { dir: ROOT, label: 'root' },
+  { dir: path.join(ROOT, 'apps/site/public'), label: 'site/public' },
+]
+
+for (const { dir, label } of targets) {
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, 'llms.txt'), indexBody)
+  fs.writeFileSync(path.join(dir, 'llms-full.txt'), fullBody)
+  const i = fs.statSync(path.join(dir, 'llms.txt')).size
+  const f = fs.statSync(path.join(dir, 'llms-full.txt')).size
+  console.log(`✅ ${label.padEnd(12)} llms.txt ${(i / 1024).toFixed(1)} kB · llms-full.txt ${(f / 1024).toFixed(1)} kB`)
+}

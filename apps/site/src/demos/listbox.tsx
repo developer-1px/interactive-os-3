@@ -7,7 +7,7 @@ export const meta = {
   title: 'Listbox',
   apg: 'listbox',
   kind: 'collection' as const,
-  blurb: 'Single-select · typeahead · APG selection-follows-focus.',
+  blurb: 'A selectable list where one option represents the current value.',
   keys: () => dedupe(probe(listboxAxis())),
 }
 

@@ -12,7 +12,7 @@ export const meta = {
   title: 'Tree · Multi',
   apg: 'treeview',
   kind: 'collection' as const,
-  blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
+  blurb: 'A nested file tree that supports selecting several visible items at once.',
   keys: () => dedupe(probe(treeAxis({ multiSelectable: true }))),
 }
 

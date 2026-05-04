@@ -6,7 +6,7 @@ export const meta = {
   title: 'Switch',
   apg: 'switch',
   kind: 'single-value' as const,
-  blurb: 'role="switch" · Space/Enter activate. 단일 boolean — useLocalValue 한 줄.',
+  blurb: 'A binary control for turning a setting on or off.',
   keys: () => dedupe(probe(switchAxis())),
 }
 

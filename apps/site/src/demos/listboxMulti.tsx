@@ -7,7 +7,7 @@ export const meta = {
   title: 'Listbox · Multi',
   apg: 'listbox',
   kind: 'collection' as const,
-  blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
+  blurb: 'A selectable list that can keep multiple options active at the same time.',
   keys: () => dedupe(probe(listboxAxis({ multiSelectable: true }))),
 }
 

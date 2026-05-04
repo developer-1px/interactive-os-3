@@ -7,7 +7,7 @@ export const meta = {
   title: 'Tabs',
   apg: 'tabs',
   kind: 'collection' as const,
-  blurb: 'Roving tabindex · automatic activation · Arrow / Home / End. tabProps(id) ↔ panelProps(id) auto-linked.',
+  blurb: 'A tabbed view that switches panels as the active tab changes.',
   keys: () => dedupe(probe(tabsAxis())),
 }
 

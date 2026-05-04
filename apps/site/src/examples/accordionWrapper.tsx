@@ -27,7 +27,7 @@ export const meta = {
   title: 'Accordion Wrapper',
   apg: 'accordion',
   kind: 'collection' as const,
-  blurb: 'Wrapper surface: data · onEvent · slots — Tree/Menu 와 동일 모양.',
+  blurb: 'A reusable FAQ accordion fed by the same item collection shape as the other examples.',
   keys: accordionWrapperKeys,
 }
 

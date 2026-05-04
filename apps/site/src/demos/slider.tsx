@@ -6,7 +6,7 @@ export const meta = {
   title: 'Slider',
   apg: 'slider',
   kind: 'single-value' as const,
-  blurb: 'numericStep axis · Arrow ±step · Home/End · aria-valuemin/max/now on thumb. 단일 number — useLocalValue.',
+  blurb: 'A bounded numeric control for adjusting a value in fixed steps.',
   keys: () => dedupe(probe(sliderAxis())),
 }
 

@@ -7,7 +7,7 @@ export const meta = {
   title: 'Radio Group',
   apg: 'radio',
   kind: 'collection' as const,
-  blurb: 'Two-axis Arrow nav · selection-follows-focus enforced (APG mandate).',
+  blurb: 'A compact choice set where moving between options updates the selected value.',
   keys: () => dedupe(probe(radioGroupAxis())),
 }
 

@@ -5,7 +5,7 @@ export const meta = {
   title: 'Dialog',
   apg: 'dialog-modal',
   kind: 'overlay' as const,
-  blurb: 'First-focusable on open · Escape closes · returnFocus to trigger on close · Tab cycles within.',
+  blurb: 'A modal dialog that opens from a trigger and returns the user to where they started.',
   keys: () => dialogKeys(),
 }
 

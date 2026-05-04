@@ -9,13 +9,20 @@
  *   - meta is library-owned; entities are user-owned (modulo reserved per-item flags
  *     `selected` / `disabled` / `value` that the library reads)
  */
-export interface NormalizedData {
-  entities: Record<string, Record<string, unknown>>
+export interface NormalizedData<
+  E extends Record<string, unknown> = Record<string, unknown>,
+  M extends Meta = Meta,
+> {
+  entities: Record<string, E>
   relationships: Record<string, string[]>
-  meta?: Meta
+  meta?: M
 }
 
-/** Meta — library 가 소유하는 보조 상태 (focus/expanded/open/typeahead/...). */
+/**
+ * Meta — 라이브러리 base 키(focus/expanded/open/typeahead/...)는 라이브러리가 읽고 쓴다.
+ * 사용자가 `interface MyMeta extends Meta { window?: ... }` 로 키를 추가하면
+ * 라이브러리는 추가 키를 읽지 않고 그대로 보존한다. invariant 안 깨짐.
+ */
 export interface Meta {
   root?: string[]
   focus?: string | null
@@ -85,8 +92,10 @@ export const getChildren = (d: NormalizedData, id: string): string[] => {
 }
 
 /** entity.label read (없으면 id). typeahead 매칭용. */
-export const getLabel = (d: NormalizedData, id: string): string =>
-  (d.entities[id]?.label as string) ?? id
+export const getLabel = (d: NormalizedData, id: string): string => {
+  const v = d.entities[id]?.label
+  return typeof v === 'string' ? v : id
+}
 
 /** entity.disabled flag read. */
 export const isDisabled = (d: NormalizedData, id: string): boolean =>
@@ -101,17 +110,24 @@ export const isFocused = (d: NormalizedData, id: string): boolean =>
   d.meta?.focus === id
 
 /** ControlProps — data + onEvent. 상호작용 컴포넌트의 공용 prop shape. */
-export interface ControlProps {
-  data: NormalizedData
+export interface ControlProps<
+  E extends Record<string, unknown> = Record<string, unknown>,
+  M extends Meta = Meta,
+> {
+  data: NormalizedData<E, M>
   /** 상호작용 컴포넌트는 필수. Display-only Collection은 생략 가능. */
   onEvent?: (e: UiEvent) => void
 }
 
 /**
- * CollectionProps<Extra> — 집합/계층 렌더 ui의 공용 루트 타입.
+ * CollectionProps<Extra, E, M> — 집합/계층 렌더 ui의 공용 루트 타입.
  * data 기반 컴포넌트는 반드시 이 타입을 props 시그니처로 써야 한다.
  */
-export type CollectionProps<Extra = unknown> = ControlProps & Extra
+export type CollectionProps<
+  Extra = {},
+  E extends Record<string, unknown> = Record<string, unknown>,
+  M extends Meta = Meta,
+> = ControlProps<E, M> & Extra
 
 /** Tone — 의미 색 토큰 (default/info/success/warning/danger/primary). */
 export type Tone = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'primary'

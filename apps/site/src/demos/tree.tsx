@@ -12,7 +12,7 @@ export const meta = {
   title: 'Tree',
   apg: 'treeview',
   kind: 'collection' as const,
-  blurb: 'Hierarchical roving · click on a branch toggles expand (expandBranchOnActivate gesture) · level/posinset auto.',
+  blurb: 'A collapsible hierarchy for browsing nested files and folders.',
   keys: () => dedupe(probe(treeAxis())),
 }
 

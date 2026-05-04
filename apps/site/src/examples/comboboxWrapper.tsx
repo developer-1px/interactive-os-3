@@ -15,7 +15,7 @@ export const meta = {
   title: 'Combobox Wrapper',
   apg: 'combobox',
   kind: 'collection' as const,
-  blurb: 'Wrapper surface: data · onEvent · slots — Tree/Menu 와 동일 모양. 입력/필터/팝오버는 wrapper 내부.',
+  blurb: 'A reusable searchable picker that owns its input, filtering, and popup behavior.',
   keys: comboboxWrapperKeys,
 }
 

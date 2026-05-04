@@ -23,10 +23,16 @@ export type SidebarItemView = {
   selected: boolean
 }
 
+export type SidebarGroup = {
+  key: '최근' | '즐겨찾기'
+  label: string
+  items: SidebarItemView[]
+}
+
 export type SidebarNav = {
   data: NormalizedData
   onEvent: (e: UiEvent) => void
-  items: SidebarItemView[]
+  groups: SidebarGroup[]
 }
 
 export function useSidebarNav(): SidebarNav {
@@ -92,5 +98,12 @@ export function useSidebarNav(): SidebarNav {
     },
   })
 
-  return { data, onEvent, items }
+  const groups: SidebarGroup[] = (
+    [
+      { key: '최근', label: '최근', items: items.filter((it) => it.group === '최근') },
+      { key: '즐겨찾기', label: '즐겨찾기', items: items.filter((it) => it.group === '즐겨찾기') },
+    ] satisfies SidebarGroup[]
+  ).filter((g) => g.items.length > 0)
+
+  return { data, onEvent, groups }
 }

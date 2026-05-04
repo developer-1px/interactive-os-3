@@ -50,7 +50,7 @@ export const meta = {
   title: 'Menu Wrapper',
   apg: 'menu',
   blurb:
-    'Wrapper owns trigger, popup, focus return, Escape, close-on-activate, nested submenus (ArrowRight/Enter to open, ArrowLeft to close), and separator items — all from one normalized data graph.',
+    'A reusable file menu with nested choices, separators, shortcuts, and close behavior built in.',
   keys: menuWrapperKeys,
 }
 

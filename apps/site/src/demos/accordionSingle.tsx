@@ -7,7 +7,7 @@ export const meta = {
   title: 'Accordion · Single',
   apg: 'accordion',
   kind: 'collection' as const,
-  blurb: '한 항목만 열림 — opts.mode="single" 로 패턴이 형제 자동 collapse 처리.',
+  blurb: 'An accordion where opening one section closes the others.',
   keys: () => dedupe(probe(accordionAxis())),
 }
 

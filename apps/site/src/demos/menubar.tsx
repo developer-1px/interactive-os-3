@@ -7,7 +7,7 @@ export const meta = {
   title: 'Menubar',
   apg: 'menubar',
   kind: 'collection' as const,
-  blurb: 'role="menubar" · horizontal navigate at top level · sub-menus open vertical (cross-axis).',
+  blurb: 'An application menu row for top-level commands and nested choices.',
   keys: () => dedupe(probe(menubarAxis())),
 }
 

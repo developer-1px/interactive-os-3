@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WrappersRouteImport } from './routes/wrappers'
 import { Route as PatternsRouteImport } from './routes/patterns'
+import { Route as DataRouteImport } from './routes/data'
 import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppsSlidesSplatRouteImport } from './routes/apps.slides.$'
@@ -25,6 +26,11 @@ const WrappersRoute = WrappersRouteImport.update({
 const PatternsRoute = PatternsRouteImport.update({
   id: '/patterns',
   path: '/patterns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataRoute = DataRouteImport.update({
+  id: '/data',
+  path: '/data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AxesRoute = AxesRouteImport.update({
@@ -56,6 +62,7 @@ const AppsFinderSplatRoute = AppsFinderSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/axes'
+    | '/data'
     | '/patterns'
     | '/wrappers'
     | '/apps/finder/$'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/axes'
+    | '/data'
     | '/patterns'
     | '/wrappers'
     | '/apps/finder/$'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/axes'
+    | '/data'
     | '/patterns'
     | '/wrappers'
     | '/apps/finder/$'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AxesRoute: typeof AxesRoute
+  DataRoute: typeof DataRoute
   PatternsRoute: typeof PatternsRoute
   WrappersRoute: typeof WrappersRoute
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/patterns'
       fullPath: '/patterns'
       preLoaderRoute: typeof PatternsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data': {
+      id: '/data'
+      path: '/data'
+      fullPath: '/data'
+      preLoaderRoute: typeof DataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/axes': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AxesRoute: AxesRoute,
+  DataRoute: DataRoute,
   PatternsRoute: PatternsRoute,
   WrappersRoute: WrappersRoute,
   AppsFinderSplatRoute: AppsFinderSplatRoute,

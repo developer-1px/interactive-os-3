@@ -7,7 +7,7 @@ export const meta = {
   title: 'Menu',
   apg: 'menu',
   kind: 'collection' as const,
-  blurb: 'role="menu" · vertical Arrow nav · typeahead · activate emits via onEvent.',
+  blurb: 'A command menu for choosing actions from a focused list.',
   keys: () => dedupe(probe(menuAxis())),
 }
 

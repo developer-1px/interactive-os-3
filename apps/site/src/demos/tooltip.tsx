@@ -4,7 +4,7 @@ export const meta = {
   title: 'Tooltip',
   apg: 'tooltip',
   kind: 'overlay' as const,
-  blurb: 'Hover/focus delays · Escape closes · trigger ↔ tip linked via aria-describedby.',
+  blurb: 'A short helper message that appears beside its trigger when needed.',
   keys: () => tooltipKeys(),
 }
 

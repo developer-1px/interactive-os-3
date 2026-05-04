@@ -7,7 +7,7 @@ export const meta = {
   title: 'Accordion',
   apg: 'accordion',
   kind: 'collection' as const,
-  blurb: 'N independent disclosures + header roving · click toggles · proper header/button nesting.',
+  blurb: 'A stack of expandable sections that can open independently.',
   keys: () => dedupe(probe(accordionAxis())),
 }
 

@@ -1,0 +1,265 @@
+# @p/headless
+
+ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.
+
+> 시각은 소비자가 Tailwind utility class 로 직접 구성. 이름·구조는 W3C ARIA/APG 어휘 그대로.
+
+## Docs
+- [llms-full.txt](llms-full.txt): 전체 시그니처·@example 포함 (LLM 컨텍스트용)
+- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant
+- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처
+- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처
+
+## patterns
+
+- **AccordionOptions** — Options for useAccordionPattern.
+- **AlertdialogOptions** — Options for alertdialogPattern.
+- **BaseItem** — 모든 recipe 의 item view 공통 필드. pattern 별로 추가 필드 확장.
+- **CarouselOptions** — Options for useCarouselPattern.
+- **CarouselSlide** — Carousel slide descriptor — id + label fragment.
+- **ComboboxOptions** — Options for useComboboxPattern.
+- **DialogOptions** — Options for useDialogPattern.
+- **DisclosureOptions** — Options for disclosurePattern.
+- **FeedItem** — Feed article descriptor — id + optional label.
+- **FeedOptions** — Options for useFeedPattern.
+- **GridCell** — Cell view fed to consumer for rendering.
+- **GridOptions** — Options for useGridPattern.
+- **ListboxOptions** — Options for useListboxPattern.
+- **MenubarOptions** — Options for useMenubarPattern.
+- **MenuOptions** — Options for useMenuPattern.
+- **NavigationListOptions** — Options for navigationListPattern.
+- **PatternProps** — Wrapper 의 표준 props base — 모든 컬렉션 wrapper 가 공유. data : single data interface (NormalizedData) onEvent : single dispatch interface (모든 변화 통과) aria-label / aria-labelledby : accessible name (둘 중 하나 ARIA 강제)
+- **RadioGroupOptions** — Options for useRadioGroupPattern.
+- **SliderOptions** — Options for sliderPattern.
+- **SpinbuttonOptions** — Options for spinbuttonPattern.
+- **SplitterOptions** — Options for splitterPattern.
+- **SwitchOptions** — Options for switchPattern.
+- **TabsOptions** — Options for useTabsPattern.
+- **ToolbarOptions** — Options for useToolbarPattern.
+- **TooltipOptions** — Options for useTooltipPattern.
+- **TreeGridOptions** — Options for useTreeGridPattern.
+- **TreeItem** — Tree/treegrid item view — BaseItem + level/expanded/hasChildren.
+- **TreeOptions** — Options for useTreePattern.
+- **ValuedPatternProps** — controlled value 를 가지는 패턴의 props base — 도메인 별 T 다름. Radix·React Aria de facto: value + defaultValue + (single dispatch via onEvent).
+- **FeedEvent** — Single dispatch event emitted by feed pattern.
+- **ItemProps** — itemProps(id) 형태의 part-getter 반환 타입.
+- **RootProps** — rootProps — pattern 컨테이너에 spread. role/aria-* 필수, ref/onKey 포함.
+- **accordionAxis** — Accordion 이 등록하는 axis — SSOT.
+- **alertdialogPattern** — alertdialog — APG `/alertdialog/`. https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
+- **alertPattern** — alert — ARIA `alert` role. https://www.w3.org/TR/wai-aria-1.2/#alert
+- **comboboxAxis** — Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter)
+- **dialogKeys** — Dialog 가 실제 등록하는 키 — SSOT. Escape: 닫기. Tab: focus-trap (modal=true 에서만, axis 아님 → 직접 표기).
+- **disclosureAxis** — Disclosure 가 등록하는 axis — SSOT. 데모/문서는 이걸 probe.
+- **disclosurePattern** — disclosure — APG `/disclosure/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+- **feedAxis** — Feed 가 등록하는 axis — SSOT. PageUp/PageDown → 인접 article navigate.
+- **gridAxis** — Grid 가 등록하는 axis — SSOT.
+- **listboxAxis** — Listbox 가 등록하는 axis — SSOT. 데모/문서는 이걸 probe 해서 키 목록 도출. 옵션을 그대로 받아 동일한 합성을 노출.
+- **menuAxis** — Menu 가 등록하는 axis — SSOT.
+- **menubarAxis** — Menubar 가 등록하는 axis — SSOT. top + sub 합집합 (probe 용 단일 surface).
+- **navigationListPattern** — navigationList — sidebar/route navigation recipe.
+- **radioGroupAxis** — RadioGroup 이 등록하는 axis — SSOT.
+- **sliderAxis** — Slider 가 등록하는 axis — SSOT.
+- **sliderPattern** — slider — APG `/slider/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+- **spinbuttonAxis** — Spinbutton 이 등록하는 axis — SSOT.
+- **spinbuttonPattern** — spinbutton — APG `/spinbutton/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/
+- **splitterAxis** — Splitter 가 등록하는 axis — SSOT. (vertical separator → horizontal arrow keys, vice versa)
+- **splitterPattern** — splitter — APG `Window Splitter`. https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
+- **switchAxis** — Switch 가 등록하는 axis — SSOT.
+- **switchPattern** — switch — WAI-ARIA `switch` role. https://www.w3.org/TR/wai-aria-1.2/#switch
+- **tabsAxis** — Tabs 가 등록하는 axis — SSOT.
+- **toolbarAxis** — Toolbar 가 등록하는 axis — SSOT.
+- **tooltipKeys** — Tooltip 이 실제 등록하는 키 — SSOT. Escape 로 닫기.
+- **treeAxis** — Tree 가 등록하는 axis — SSOT.
+- **treeGridAxis** — TreeGrid 가 등록하는 axis — SSOT.
+- **useAccordionPattern** — accordion — APG `/accordion/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
+- **useCarouselPattern** — carousel — APG `/carousel/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/carousel/
+- **useComboboxPattern** — combobox — APG `/combobox/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+- **useDialogPattern** — dialog — APG `/dialog-modal/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+- **useFeedPattern** — feed — APG `/feed/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/feed/
+- **useGridPattern** — grid — APG `/grid/` recipe (data grid keyboard model, cell-focus). https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+- **useListboxPattern** — listbox — APG `/listbox/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+- **useMenubarPattern** — menubar — APG `/menubar/` recipe (top bar + nested sub-menus). https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
+- **useMenuPattern** — menu — APG `/menu/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/menu/
+- **useRadioGroupPattern** — radioGroup — APG `/radio/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+- **useTabsPattern** — tabs — APG `/tabs/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+- **useToolbarPattern** — toolbar — APG `/toolbar/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+- **useTooltipPattern** — tooltip — APG `/tooltip/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
+- **useTreeGridPattern** — treeGrid — APG `/treegrid/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/
+- **useTreePattern** — tree — APG `/treeview/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+
+## axes
+
+- **KeyChord** — modifier 동반 spec — 단축키 표 렌더 시 그대로 표시.
+- **KeyName** — (undocumented)
+- **gridMultiSelect** — gridMultiSelect — APG `/grid/` Selection 키 매핑. focus 이동은 gridNavigate. https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+- **gridNavigate** — gridNavigate — APG `/grid/` 2D 셀 단위 navigation. focus 는 cell 에 있다. Selection rect (Shift+Arrow / Ctrl+Space col / Shift+Space row) 은 gridMultiSelect. https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+- **INTENTS** — INTENTS — axis 별 intent ↔ KeyChord 매핑.
+- **KEYS** — keys.ts — `@p/headless/axes` SSOT.
+- **enabledSiblings** — enabledSiblings — `siblingsOf` 결과에서 disabled entity 를 제거. navigate/multiSelect 의 활성 후보.
+- **expandKeys** — expandKeys — `expand` 의 일반화 factory. open 키와 seed(첫/끝 자식) 를 명시.
+- **matchChord** — match — KeyChord 배열에 t (KeyboardEvent → KeySpec 또는 Trigger) 가 들어맞는지 검사.
+- **matchKey** — matchKey — modifier 무시, 키 이름만 비교 (modifier 매핑 별도 처리하는 axis 용).
+- **pageNavigate** — pageNavigate — PageUp/PageDown 키로 sibling 단위 N 칸 이동.
+- **parentOf** — parentOf — returns parent id, or ROOT sentinel if id is top-level. Returns undefined only if id isn't found anywhere.
+- **siblingsOf** — siblingsOf — id 와 같은 부모를 공유하는 형제 id 배열 (자기 자신 포함). top-level 이면 root 배열.
+- **activate** — (undocumented)
+- **Axis** — (undocumented)
+- **composeAxes** — (undocumented)
+- **escape** — (undocumented)
+- **expand** — (undocumented)
+- **multiSelect** — (undocumented)
+- **navigate** — (undocumented)
+- **numericStep** — (undocumented)
+- **select** — (undocumented)
+- **treeExpand** — (undocumented)
+- **treeNavigate** — (undocumented)
+- **typeahead** — (undocumented)
+
+## state
+
+- **bindAxis** — axis(논리 네비게이션 함수) 를 React DOM 이벤트에 연결하는 어댑터. keyboard/mouse → axis trigger → UiEvent[] → onEvent 로 흘린다. axis 가 이벤트를 소비했으면 `preventDefault` + `true` 반환 (브라우저 기본 동작 차단).
+- **bindValueAxis** — 단일값 컨트롤(slider/switch/spinbutton/splitter)을 axis 인프라에 잇는 헬퍼.
+- **pickNumericValue** — 숫자 값 picker — slider/splitter/spinbutton 공통.
+- **applyGesture** — (undocumented)
+- **composeReducers** — (undocumented)
+- **fromList** — (undocumented)
+- **fromTree** — (undocumented)
+- **multiSelectToggle** — (undocumented)
+- **pathAncestors** — (undocumented)
+- **reduce** — @p/headless/state — UiEvent → NormalizedData 변환 레이어. reducer (`reduce` · `singleSelect` · `setValue` …) + 합성기(`composeReducers` · `applyGesture`) + tree/list 빌더 + React 브리지 hook(`useControlState` · `useEventBridge`).
+- **Reducer** — (undocumented)
+- **reduceWithDefaults** — (undocumented)
+- **reduceWithMultiSelect** — (undocumented)
+- **setValue** — (undocumented)
+- **singleExpand** — (undocumented)
+- **singleSelect** — (undocumented)
+- **useControlState** — (undocumented)
+- **useEventBridge** — (undocumented)
+
+## store
+
+- **CommandBase** — 모든 command 의 base — discriminated union 의 `type` 필드.
+- **FeatureSpec** — Feature spec — 한 화면의 SSOT. `state`(초기값) · `on`(reducer map) · `query`(외부 데이터 선언) · `view`(뷰모델). 직렬화 가능한 plain object — class/ref/closure 잔재 금지.
+- **QueryResult** — Query 의 현재 상태 — data + isLoading + error.
+- **QuerySpec** — 외부 데이터 fetch 선언 — TanStack Query 호환 시그니처.
+- **Resource** — Resource 정의 — keyed external store spec. key/load/initial/subscribe/serialize/onEvent 슬롯.
+- **QueryResults** — query spec map → 같은 키에 QueryResult 가 채워진 결과 map.
+- **ReducerMap** — command type → 그 type 의 reducer 함수. exhaustive map 강제.
+- **ResourceDispatch** — `(event) → void` — resource 쓰기 통로.
+- **ResourceEvent** — Resource dispatch 가 받는 4 종 이벤트 — set(전체)/patch(부분)/refetch(다시 load)/invalidate(캐시 비움).
+- **ResourceEventRouter** — ui/ UiEvent 를 받아 resource 의 다음 값으로 매핑하는 라우터 (undefined 면 무시).
+- **defineFeature** — Feature spec identity — 타입 추론 + 런타임 spec 통과 helper. 라이프사이클: useFeature 가 spec 을 받아 useReducer 로 state 생성 → state 변화마다 query → view 재계산. 직렬화 가능성: state 는 plain JSON 가능해야 한다 (HMR/replay 지원).
+- **defineResource** — Resource spec identity — 타입 추론 + 런타임 spec 통과 helper. 라이프사이클: 첫 useResource 호출 시 load/initial 로 hydrate → subscribe 로 외부 push 채널 attach (refCount=1 시) → dispatch 로 set/patch/refetch/invalidate → 마지막 구독자 unmount 시 unsub. 직렬화 가능성: value 는 plain object 권장 — serialize 가 호출되어 외부 저장소(URL/localStorage)와 왕복.
+- **invalidateQuery** — 명시적 invalidate — mutation 이후 호출.
+- **readQuery** — spec 을 캐시에서 읽거나 첫 read 시 fn 실행. enabled=false 면 idle 상태 반환.
+- **subscribeQueries** — query 변경 구독 — useFeature 가 view 재계산 트리거에 사용.
+- **useFeature** — Feature spec → React 연결. 라이프사이클: useReducer 로 spec.state 시드 → cmd dispatch 시 spec.on[type] 적용 → state 변화마다 spec.query 재해석 → resolveQueries → spec.view 재계산. 직렬화 가능성: state/cmd 모두 plain JSON — replay/HMR 가능.
+- **useResource** — Resource 를 React 에 연결 — 첫 read 시 load 트리거, 외부 채널 자동 attach/detach, useSyncExternalStore 로 tearing-free 구독. 반환은 `[value, dispatch]` 단일 인터페이스.
+- **writeResource** — 컴포넌트 외부(이벤트 핸들러·HMR 콜백 등)에서 자원에 직접 쓰기.
+
+## roving
+
+- **UseSpatialNavigationOptions** — (undocumented)
+- **useActiveDescendant** — (undocumented)
+- **useRovingTabIndex** — roving — APG roving tabindex 의 두 축 + activedescendant 모드.
+- **useSpatialNavigation** — (undocumented)
+
+## key
+
+- **KeySpec** — KeySpec — `key` 와 modifier flag 의 정규화된 키 shape.
+- **fromKeyboardEvent** — KeyboardEvent (DOM/React) → KeySpec 정규화 변환.
+- **isPrintable** — KeySpec → 인쇄 가능 단일 문자 여부. typeahead 트리거 판정용.
+
+## gesture
+
+- **GestureHelper** — GestureHelper — UiEvent 1개를 받아 0개 이상의 의도 이벤트로 분해/확장.
+- **expandBranchOnActivate** — activate → 자식 有: [navigate, expand] / 자식 無: [navigate, activate]. Tree/Columns/Menu 용.
+- **expandOnActivate** — activate → [navigate, expand] 무조건 분해. Accordion 처럼 항목 자체가 expandable 한 role 용.
+- **navigateOnActivate** — activate → [navigate, activate] 분해. 클릭/Enter 가 포커스도 같이 이동시킨다.
+- **selectionFollowsFocus** — navigate → [navigate, activate] 분해. APG single-select listbox/tabs 의 selection-follows-focus. disabled 는 skip.
+- **activateProps** — activateProps — 클릭과 Enter/Space 를 단일 onActivate 콜백으로 합류. (data, onEvent) 흐름 밖 JSX-children row/cell 등의 DOM 측 entry.
+- **composeGestures** — GestureHelper 합성. 왼쪽부터 차례로 통과 (각 단계의 출력이 다음 단계의 입력).
+
+## local
+
+- **useLocalData** — 컬렉션(NormalizedData) quick-start state — `[data, onEvent]` 한 줄.
+- **useLocalValue** — 단일값 컨트롤 (slider/switch/spinbutton/splitter) 의 quick-start state.
+- **ValueEvent** — (undocumented)
+
+## index
+
+- **ControlProps** — ControlProps — data + onEvent. 상호작용 컴포넌트의 공용 prop shape.
+- **Meta** — Meta — library 가 소유하는 보조 상태 (focus/expanded/open/typeahead/...).
+- **Middleware** — Middleware — name + phase + fn 의 manifest entry.
+- **NormalizedData** — NormalizedData — three separated stores: entities = id → user data (id is the key, value IS the data) relationships = id → child ids (entity-keyed only; top-level lives in meta.root) meta = library-owned auxiliary state (focus/expanded/open/typeahead/...)
+- **PostDispatchCtx** — post-dispatch ctx — reducer 직후 (undo stack push 등).
+- **PreDispatchCtx** — pre-dispatch ctx — reducer 직전. UiEvent[] 반환 시 이벤트 변환/확장.
+- **ResourceCtx** — resource ctx — useResource read/write 시점.
+- **Axis** — Axis — data 기반 APG 키/포인터 처리 primitive.
+- **CollectionProps** — CollectionProps<Extra> — 집합/계층 렌더 ui의 공용 루트 타입. data 기반 컴포넌트는 반드시 이 타입을 props 시그니처로 써야 한다.
+- **EntityInput** — EntitySchema 추론 타입.
+- **NormalizedDataInput** — NormalizedDataSchema 추론 타입.
+- **Phase** — Phase — middleware 가 끼어드는 4 시점.
+- **Reducer** — `(data, event) → next data` — NormalizedData 위에 UiEvent 를 적용하는 pure 함수.
+- **Tone** — Tone — 의미 색 토큰 (default/info/success/warning/danger/primary).
+- **UiEvent** — UiEvent — ui ↔ headless 통신의 단일 어휘. DOM `Event` global과 충돌 방지를 위해 `Ui` prefix 명시.
+- **UiEventInput** — UiEventSchema 추론 타입.
+- **ValueEvent** — UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter.
+- **activate** — activate — Enter/Space(key) 또는 click(pointer) 시 'activate' 이벤트 발행.
+- **EntitySchema** — Entity zod schema — `{id, data?}` 런타임 gate.
+- **escape** — escape — Escape 키 → `{type:'open', id, open:false}` 직렬 emit.
+- **expand** — expand — accordion·menu 의 단순 open/close (aria-expanded). branch leaf 통과 + nextVisibleLeaf 도출은 treeExpand. 키 매핑은 `INTENTS.expand` SSOT.
+- **multiSelect** — multiSelect — `aria-multiselectable` axis. anchor-range, Ctrl+A, Shift+Click. single-select 단일 토글은 별도 `select` axis. activate (default action) 와도 분리. Click/Space toggle, Shift+Arrow / Shift+Click anchor-range, Ctrl/Meta+A all. Emits `select` (per-id toggle) and `selectMany` (batch).
+- **multiSelectToggle** — multiSelectToggle — toggles `selected` on `select` (per-id) and `selectMany` (batch). Batch path is O(N) with a single entities spread regardless of N. APG-aligned: listbox(multi), tree(multi), checkbox group.
+- **NormalizedDataSchema** — NormalizedData zod schema — entities + relationships 런타임 gate.
+- **reduceWithDefaults** — reduceWithDefaults — drop-in single-select reducer. `reduce` (focus / expand / typeahead / pan / zoom) + `singleSelect` + `setValue`.
+- **reduceWithMultiSelect** — reduceWithMultiSelect — drop-in multi-select reducer. Same as `reduceWithDefaults` but with `multiSelectToggle` instead of `singleSelect`.
+- **ROOT** — ROOT — sentinel "container id" used by axes/patterns to mean "top-level". Not a real entity. `getChildren(d, ROOT)` returns `meta.root`. Users do NOT write this in literals; they set `meta.root` instead.
+- **select** — select — single-select chord (`Space` / click). Emits `{type:'select', id}`. APG `/listbox/` `/treeview/` single-select 의 manual 모드에 매핑.
+- **setValue** — setValue — numeric `value` reducer fragment for slider / splitter / spinner.
+- **singleCurrent** — singleCurrent — navigation single-current reducer fragment.
+- **singleExpand** — singleExpand — 한 항목이 열리면 같은 부모의 형제는 모두 닫는 reducer fragment. APG accordion 의 single-open invariant.
+- **singleSelect** — singleSelect — single-selection reducer fragment.
+- **treeExpand** — (undocumented)
+- **treeNavigate** — (undocumented)
+- **typeahead** — typeahead — printable key → 누적 buffer (500ms window) 로 sibling label prefix 매치. `{type:'typeahead', buf, deadline}` 와 매치 시 `{type:'navigate', id}` emit. APG /listbox/ /menu/ /tree/ 의 type-to-search.
+- **UiEventSchema** — UiEvent zod schema — ui ↔ headless 어휘 런타임 gate (discriminated union on `type`).
+- **applyGesture** — applyGesture — gesture + reducer 합성. gesture가 활성 이벤트를 의도 이벤트 스트림으로 변환한 뒤, reducer가 각 이벤트를 적용해 최종 state로 reduce.
+- **composeAxes** — composeAxes — 여러 Axis 를 우선순위 순으로 합성. 첫 non-null 반환을 채택, 나머지 axis 는 단락(short-circuit).
+- **composeReducers** — composeReducers — left-to-right reducer composition. Each reducer sees the output of the previous one. Identity reducers (e.g. `reduce` for activate) pass the data through unchanged so subsequent reducers (selection / value / domain) can layer their semantics.
+- **defineMiddleware** — Middleware 선언 헬퍼 — 타입 추론용 identity.
+- **fromList** — fromList — flat array to NormalizedData. Items may omit `id`; in that case a synthetic id `__0`, `__1`, ... is assigned. All non-id keys become entity data.
+- **fromTree** — fromTree — convention-based tree builder. Input is `{id, children?, ...rest}` — id and children are reserved keys; rest becomes the entity's user data. No callbacks. No options for shape transformation.
+- **getChildren** — id 의 자식 id 배열. id===ROOT 면 meta.root 반환.
+- **getExpanded** — expanded id 집합 read.
+- **getFocus** — 현재 focus id read (없으면 null).
+- **getLabel** — entity.label read (없으면 id). typeahead 매칭용.
+- **getOpen** — open id 집합 read (popover/menu/dialog).
+- **getRoot** — meta.root (top-level id 배열) read.
+- **getSelectAnchor** — range-select 의 anchor id read.
+- **getTypeahead** — typeahead 버퍼 read (`{buf, deadline}`).
+- **isDisabled** — entity.disabled flag read.
+- **isFocused** — id 가 현재 focus 와 일치하는지.
+- **isSelected** — entity.selected flag read.
+- **navigate** — navigate — siblings prev/next (단일 부모). visible-flat (collapse 반영) 은 treeNavigate. orientation 별 prev/next/start/end 키는 `INTENTS.navigate` 에서 import (SSOT).
+- **numericStep** — numericStep — Slider/Splitter/Spinbutton Arrow/Page/Home/End → value step.
+- **parseNormalizedData** — unknown → NormalizedData 검증. 실패 시 ZodError throw.
+- **parseUiEvent** — unknown → UiEvent 검증. 실패 시 ZodError throw.
+- **pathAncestors** — path 문자열을 누적 prefix 배열로 — `/a/b/c` → `['/a', '/a/b', '/a/b/c']`. tree 의 조상 id 가 path prefix 와 1:1 일 때 expanded 시드 계산에 사용.
+- **reduce** — 코어 reducer — UiEvent 의 기본 의미(focus/expand/open/typeahead/pan/zoom)를 NormalizedData 에 적용. activate/select/selectMany/value 는 identity 로 패스 — host reducer 가 도메인 의미(selection/value)를 합성한다.
+- **useActiveDescendant** — useActiveDescendant — Combobox / Grid 등 INVARIANT B11 ("포커스는 실제 DOM element 에 있다 — `aria-activedescendant` 는 Combobox 1곳 예외") 의 코드화.
+- **useControlState** — `useControlState` — 외부 base 데이터 위에 로컬 control meta(focus/expanded/typeahead)를 얹는 SSOT hook. base 가 갱신되면 사용자가 아직 건드리지 않은 키만 base 시드로 갱신, 사용자가 dispatch 한 키는 local 우선. 반환은 `[merged data, dispatch]` — ui/ 의 (data, onEvent) 인터페이스에 그대로 꽂힌다.
+- **useEventBridge** — UiEvent 라우팅 hook — gesture 통과 후 meta 이벤트는 control dispatch 로, intent 이벤트는 도메인 onIntent 로. 컴포넌트 소비자는 분기 없이 반환된 onEvent 한 개만 ui 에 꽂는다.
+- **useRovingTabIndex** — useRovingTabIndex — APG canonical roving tabindex. **데이터(관계 그래프) 기반** 이동.
+- **useSpatialNavigation** — useSpatialNavigation — W3C CSS Spatial Navigation 기반 roving tabindex. **시각 좌표 기반** 이동 — `getBoundingClientRect()` 로 다음 element 결정.
+- **useValue** — useValue<T> — controlled/uncontrolled hybrid value 표준 hook. SSOT 역할: switch/checkbox/radio/slider 등 값 한 개를 들고 있는 패턴의 공통 어댑터.
+- **activateProps** — (undocumented)
+- **composeGestures** — (undocumented)
+- **enabledSiblings** — (undocumented)
+- **expandBranchOnActivate** — (undocumented)
+- **expandOnActivate** — (undocumented)
+- **GestureHelper** — (undocumented)
+- **navigateOnActivate** — (undocumented)
+- **parentOf** — (undocumented)
+- **selectionFollowsFocus** — (undocumented)
+- **siblingsOf** — (undocumented)

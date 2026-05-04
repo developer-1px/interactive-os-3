@@ -6,7 +6,7 @@ export const meta = {
   title: 'Navigation List',
   apg: 'navigation-list',
   kind: 'collection' as const,
-  blurb: 'role="navigation" wrapping a list of links · aria-current="page" on the active one.',
+  blurb: 'A page navigation list with the current destination clearly highlighted.',
   keys: () => [],
 }
 

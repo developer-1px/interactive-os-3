@@ -5,7 +5,7 @@ export const meta = {
   title: 'Alert Dialog',
   apg: 'alertdialog',
   kind: 'overlay' as const,
-  blurb: 'role="alertdialog" — useDialogPattern({ alert: true }) 한 줄. dialog와 동작 동일, role만 다름.',
+  blurb: 'A blocking confirmation dialog for decisions that need immediate attention.',
   keys: () => dialogKeys(),
 }
 

@@ -7,7 +7,7 @@ export const meta = {
   title: 'Toolbar',
   apg: 'toolbar',
   kind: 'collection' as const,
-  blurb: 'role="toolbar" · single Tab stop · Arrow keys roam internal items · Enter/Space activate.',
+  blurb: 'A compact command row that keeps related actions reachable in one place.',
   keys: () => dedupe(probe(toolbarAxis())),
 }
 

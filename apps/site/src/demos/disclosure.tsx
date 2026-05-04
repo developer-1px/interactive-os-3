@@ -7,7 +7,7 @@ export const meta = {
   title: 'Disclosure',
   apg: 'disclosure',
   kind: 'single-value' as const,
-  blurb: 'data 차원 — meta.expanded set 에서 open 읽음. activate→{expand} 직렬 emit. aria-expanded · aria-controls · role="region" 자동.',
+  blurb: 'A simple show-and-hide section backed by shared expanded state.',
   keys: () => dedupe(probe(disclosureAxis())),
 }
 

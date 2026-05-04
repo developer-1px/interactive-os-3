@@ -7,7 +7,7 @@ export const meta = {
   title: 'Combobox',
   apg: 'combobox',
   kind: 'collection' as const,
-  blurb: 'role="combobox" · aria-activedescendant on input · APG single exception to roving (B11).',
+  blurb: 'A searchable picker that keeps typed input and matching options together.',
   keys: () => dedupe(probe(comboboxAxis())),
 }
 

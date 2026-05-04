@@ -5,7 +5,7 @@ export const meta = {
   title: 'Alert',
   apg: 'alert',
   kind: 'overlay' as const,
-  blurb: 'role="alert" — assistive tech announces inserted/changed content immediately.',
+  blurb: 'A live status message for urgent updates that appear during a workflow.',
   keys: () => [],
 }
 

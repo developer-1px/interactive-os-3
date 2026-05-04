@@ -67,7 +67,7 @@ export const meta = {
   title: 'Tree Wrapper',
   apg: 'treeview',
   kind: 'collection' as const,
-  blurb: 'Wrapper surface: normalized data · onEvent, with item data typed through slots.',
+  blurb: 'A reusable file tree that renders icons, labels, and trailing metadata from item data.',
   keys: treeWrapperKeys,
 }
 

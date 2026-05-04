@@ -12,7 +12,7 @@ export const meta = {
   title: 'Tree Grid · Multi',
   apg: 'treegrid',
   kind: 'collection' as const,
-  blurb: 'aria-multiselectable · Click/Space 토글 · Shift+Arrow 범위 · Ctrl/Meta+A 전체.',
+  blurb: 'A hierarchical table that supports selecting several visible rows at once.',
   keys: () => dedupe(probe(treeGridAxis({ multiSelectable: true }))),
 }
 

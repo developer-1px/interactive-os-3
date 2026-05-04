@@ -12,7 +12,7 @@ export const meta = {
   title: 'Tree Grid',
   apg: 'treegrid',
   kind: 'collection' as const,
-  blurb: 'Tree visible-order navigation · expandable rows · rowheader/gridcell grid semantics.',
+  blurb: 'A hierarchical table that combines expandable rows with column data.',
   keys: () => dedupe(probe(treeGridAxis())),
 }
 

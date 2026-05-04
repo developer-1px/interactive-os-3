@@ -6,7 +6,7 @@ export const meta = {
   title: 'Splitter',
   apg: 'windowsplitter',
   kind: 'single-value' as const,
-  blurb: 'role="separator" + aria-valuenow · numeric step axis shared with slider. 단일 number — useLocalValue.',
+  blurb: 'A resizable split panel controlled by a single percentage value.',
   keys: () => dedupe(probe(splitterAxis())),
 }
 
