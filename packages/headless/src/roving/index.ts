@@ -6,5 +6,5 @@
  * - {@link useActiveDescendant}: combobox 1곳 예외 (포커스 input, 활성은 id 참조)
  */
 export { useRovingTabIndex } from './useRovingTabIndex'
-export { useSpatialNavigation } from './useSpatialNavigation'
+export { useSpatialNavigation, type UseSpatialNavigationOptions } from './useSpatialNavigation'
 export { useActiveDescendant } from './useActiveDescendant'

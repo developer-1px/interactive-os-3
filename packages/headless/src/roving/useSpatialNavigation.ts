@@ -16,7 +16,9 @@ const TABBABLE =
   'button:not([disabled]):not([tabindex="-2"]),[tabindex]:not([tabindex="-1"]):not([tabindex="-2"]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])'
 
 export interface UseSpatialNavigationOptions {
+  /** Arrow 활성 축 — `'horizontal'`(기본) | `'vertical'` | `'both'`. */
   orientation?: 'horizontal' | 'vertical' | 'both'
+  /** Home/End 키 처리 (기본 `true`). */
   homeEnd?: boolean
   /** 명시적 item 셀렉터. tabindex=-1 도 포함해서 발견 가능 (TreeGrid/Listbox 류). */
   itemSelector?: string
@@ -74,9 +76,7 @@ const ALLOWED_DIRS: Record<NonNullable<UseSpatialNavigationOptions['orientation'
  * 관계 그래프가 있는 컬렉션은 {@link useRovingTabIndex} (APG canonical) 을 쓴다.
  *
  * @param externalRef - container ref. 생략 시 내부 ref 반환
- * @param options.orientation - 'horizontal'(기본) | 'vertical' | 'both'
- * @param options.homeEnd - Home/End 키 처리 (기본 true)
- * @param options.itemSelector - 명시적 item selector. 기본은 tabbable element 전체
+ * @param options - {@link UseSpatialNavigationOptions} — orientation/homeEnd/itemSelector
  *
  * @example
  * const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, { orientation: 'horizontal' })

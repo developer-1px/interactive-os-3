@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 /**
- * gen-llms-txt.mjs — typedoc JSON → llms.txt
+ * gen-llms-txt.mjs — typedoc JSON → llms.txt + llms-full.txt
  *
- * https://llmstxt.org/ 명세에 따라 한 줄 요약 인덱스를 생성한다.
+ * https://llmstxt.org/ 명세 — 두 파일 페어:
+ *   • llms.txt       — 인덱스 (export 이름 + 한 줄 + 시그니처 hint)
+ *   • llms-full.txt  — 전문 (TSDoc 본문 + 시그니처 + @example 보존)
  *
  * 사용:
- *   cd packages/headless && npx typedoc --json ../../docs/api.json
- *   node scripts/gen-llms-txt.mjs > llms.txt
- *
- * 또는 npm script:
- *   pnpm docs:llms
+ *   pnpm docs:llms          # api.json 재생성 후 자동 호출
+ *   node scripts/gen-llms-txt.mjs
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -18,86 +17,216 @@ const ROOT = path.resolve(new URL('..', import.meta.url).pathname)
 const JSON_PATH = path.join(ROOT, 'docs/api.json')
 
 if (!fs.existsSync(JSON_PATH)) {
-  console.error(`❌ ${JSON_PATH} not found. Run typedoc first:`)
-  console.error(`   cd packages/headless && npx typedoc --json ../../docs/api.json`)
+  console.error(`❌ ${JSON_PATH} not found. Run: pnpm docs:api`)
   process.exit(1)
 }
 
 const data = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'))
 
-const firstLine = (s = '') =>
-  s
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/@example[\s\S]*$/m, '')
-    .replace(/@see\s+\S+/g, '')
-    .replace(/\{@link\s+([^}]+)\}/g, '$1')
-    .split(/\n\s*\n/)[0]
-    .replace(/\s+/g, ' ')
-    .trim()
+// ────────────────────────────────────────────────
+// Comment extraction
+// ────────────────────────────────────────────────
+
+const renderComment = (parts = []) =>
+  parts
+    .map((c) => {
+      if (c.kind === 'text' || c.kind === 'code') return c.text ?? ''
+      if (c.kind === 'inline-tag' && c.tag === '@link') return c.text ?? ''
+      return c.text ?? ''
+    })
+    .join('')
 
 const summaryOf = (node) => {
-  const parts = []
-  for (const c of node.comment?.summary ?? []) parts.push(c.text ?? '')
-  const sigSummary = node.signatures?.[0]?.comment?.summary
-  if (sigSummary) for (const c of sigSummary) parts.push(c.text ?? '')
-  return firstLine(parts.join(''))
+  // Functions: prefer signature comment (own description), fall back to top comment.
+  // Re-exported functions inherit the module-level comment on .comment, so signatures[0] is more specific.
+  const sig = renderComment(node.signatures?.[0]?.comment?.summary)
+  if (sig.trim()) return sig.trim()
+  return renderComment(node.comment?.summary).trim()
 }
 
-const seeOf = (node) => {
-  const tags = [
-    ...(node.comment?.blockTags ?? []),
-    ...(node.signatures?.[0]?.comment?.blockTags ?? []),
-  ]
-  const see = tags.find((t) => t.tag === '@see')
+const blockTagsOf = (node) => [
+  ...(node.comment?.blockTags ?? []),
+  ...(node.signatures?.[0]?.comment?.blockTags ?? []),
+]
+
+const seeUrlOf = (node) => {
+  const see = blockTagsOf(node).find((t) => t.tag === '@see')
   if (!see) return ''
-  const text = (see.content ?? []).map((c) => c.text ?? '').join('').trim()
-  const url = text.match(/https?:\S+/)?.[0]
-  return url ?? ''
+  const text = renderComment(see.content)
+  return text.match(/https?:\S+/)?.[0] ?? ''
 }
+
+const exampleOf = (node) => {
+  const ex = blockTagsOf(node).find((t) => t.tag === '@example')
+  return ex ? renderComment(ex.content).trim() : ''
+}
+
+const oneLine = (s) =>
+  s.split(/\n\s*\n/)[0].replace(/\s+/g, ' ').trim()
+
+// ────────────────────────────────────────────────
+// Signature reconstruction
+// ────────────────────────────────────────────────
+
+const renderType = (t) => {
+  if (!t) return 'unknown'
+  switch (t.type) {
+    case 'intrinsic': return t.name
+    case 'literal': return JSON.stringify(t.value)
+    case 'reference': return t.name + (t.typeArguments?.length ? `<${t.typeArguments.map(renderType).join(', ')}>` : '')
+    case 'array': return `${renderType(t.elementType)}[]`
+    case 'union': return t.types.map(renderType).join(' | ')
+    case 'intersection': return t.types.map(renderType).join(' & ')
+    case 'tuple': return `[${(t.elements ?? []).map(renderType).join(', ')}]`
+    case 'reflection': {
+      const sig = t.declaration?.signatures?.[0]
+      if (sig) return renderSignature(sig, true)
+      return 'object'
+    }
+    case 'predicate': return `${t.name} is ${renderType(t.targetType)}`
+    case 'typeOperator': return `${t.operator} ${renderType(t.target)}`
+    case 'query': return `typeof ${renderType(t.queryType)}`
+    case 'indexedAccess': return `${renderType(t.objectType)}[${renderType(t.indexType)}]`
+    case 'mapped': return 'mapped'
+    case 'conditional': return 'conditional'
+    case 'templateLiteral': return 'string-template'
+    default: return t.name ?? t.type ?? 'unknown'
+  }
+}
+
+const renderSignature = (sig, arrow = false) => {
+  const params = (sig.parameters ?? [])
+    .map((p) => {
+      const opt = p.flags?.isOptional ? '?' : ''
+      return `${p.name}${opt}: ${renderType(p.type)}`
+    })
+    .join(', ')
+  const ret = renderType(sig.type)
+  return arrow ? `(${params}) => ${ret}` : `(${params}): ${ret}`
+}
+
+const signatureHint = (node) => {
+  if (node.signatures?.[0]) return renderSignature(node.signatures[0])
+  if (node.type) return `: ${renderType(node.type)}`
+  return ''
+}
+
+// ────────────────────────────────────────────────
+// Module ordering + filtering
+// ────────────────────────────────────────────────
 
 const KIND_ORDER = {
   patterns: 1, axes: 2, state: 3, store: 4,
   roving: 5, key: 6, gesture: 7, local: 8, index: 9,
 }
 
-const out = []
-out.push('# @p/headless')
-out.push('')
-out.push(
-  'ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.',
-)
-out.push('')
-out.push('> Headless package — 시각은 소비자가 Tailwind utility class로 직접 구성. 이름·구조는 W3C ARIA/APG 어휘 그대로.')
-out.push('')
-
 const modules = (data.children ?? [])
-  .filter((m) => m.kind === 2) // Module
+  .filter((m) => m.kind === 2)
   .sort((a, b) => (KIND_ORDER[a.name] ?? 99) - (KIND_ORDER[b.name] ?? 99))
 
-for (const mod of modules) {
-  out.push(`## ${mod.name}`)
-  const modSummary = summaryOf(mod)
-  if (modSummary) out.push('', modSummary)
-  out.push('')
-
-  const exports = (mod.children ?? []).filter(
+const exportsOf = (mod) =>
+  (mod.children ?? []).filter(
     (c) => c.kind !== 2 && !c.flags?.isPrivate && !c.flags?.isInternal,
   )
 
-  for (const ex of exports) {
-    const summary = summaryOf(ex) || '(undocumented)'
-    const see = seeOf(ex)
-    const suffix = see ? ` ${see}` : ''
-    out.push(`- **${ex.name}** — ${summary}${suffix}`)
-  }
+// ────────────────────────────────────────────────
+// llms.txt — concise index
+// ────────────────────────────────────────────────
+
+const writeIndex = () => {
+  const out = []
+  out.push('# @p/headless')
   out.push('')
+  out.push(
+    'ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.',
+  )
+  out.push('')
+  out.push('> 시각은 소비자가 Tailwind utility class 로 직접 구성. 이름·구조는 W3C ARIA/APG 어휘 그대로.')
+  out.push('')
+  out.push('## Docs')
+  out.push('- [llms-full.txt](llms-full.txt): 전체 시그니처·@example 포함 (LLM 컨텍스트용)')
+  out.push('- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant')
+  out.push('- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처')
+  out.push('- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처')
+  out.push('')
+
+  for (const mod of modules) {
+    out.push(`## ${mod.name}`)
+    const modSummary = oneLine(summaryOf(mod))
+    if (modSummary) out.push('', modSummary)
+    out.push('')
+    for (const ex of exportsOf(mod)) {
+      const summary = oneLine(summaryOf(ex)) || '(undocumented)'
+      const see = seeUrlOf(ex)
+      const suffix = see ? ` ${see}` : ''
+      out.push(`- **${ex.name}** — ${summary}${suffix}`)
+    }
+    out.push('')
+  }
+
+  return out.join('\n')
 }
 
-out.push('## Optional')
-out.push('')
-out.push('- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처')
-out.push('- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant')
-out.push('- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처')
-out.push('')
+// ────────────────────────────────────────────────
+// llms-full.txt — full content
+// ────────────────────────────────────────────────
 
-process.stdout.write(out.join('\n'))
+const writeFull = () => {
+  const out = []
+  out.push('# @p/headless — 전체 API')
+  out.push('')
+  out.push('이 파일은 LLM 컨텍스트 주입용 — 모든 public export 의 시그니처 + TSDoc + @example 을 한 문서에 직렬화한다.')
+  out.push('')
+
+  for (const mod of modules) {
+    out.push(`# Module: ${mod.name}`)
+    out.push('')
+    const modSummary = summaryOf(mod)
+    if (modSummary) out.push(modSummary, '')
+
+    for (const ex of exportsOf(mod)) {
+      out.push(`## ${ex.name}`)
+      const sig = signatureHint(ex)
+      if (sig) {
+        out.push('')
+        out.push('```ts')
+        out.push(`${ex.name}${sig.startsWith(':') ? sig : ' ' + sig}`)
+        out.push('```')
+      }
+      const summary = summaryOf(ex)
+      if (summary) out.push('', summary)
+
+      const see = seeUrlOf(ex)
+      if (see) out.push('', `See: ${see}`)
+
+      const example = exampleOf(ex)
+      if (example) {
+        out.push('', '**Example**')
+        out.push('')
+        // example may already contain code fence
+        if (!example.startsWith('```')) {
+          out.push('```ts')
+          out.push(example)
+          out.push('```')
+        } else {
+          out.push(example)
+        }
+      }
+      out.push('')
+    }
+  }
+
+  return out.join('\n')
+}
+
+// ────────────────────────────────────────────────
+// Write
+// ────────────────────────────────────────────────
+
+fs.writeFileSync(path.join(ROOT, 'llms.txt'), writeIndex())
+fs.writeFileSync(path.join(ROOT, 'llms-full.txt'), writeFull())
+
+const idx = fs.statSync(path.join(ROOT, 'llms.txt'))
+const full = fs.statSync(path.join(ROOT, 'llms-full.txt'))
+console.log(`✅ llms.txt       ${(idx.size / 1024).toFixed(1)} kB`)
+console.log(`✅ llms-full.txt  ${(full.size / 1024).toFixed(1)} kB`)

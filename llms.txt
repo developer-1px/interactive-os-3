@@ -2,7 +2,13 @@
 
 ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.
 
-> Headless package — 시각은 소비자가 Tailwind utility class로 직접 구성. 이름·구조는 W3C ARIA/APG 어휘 그대로.
+> 시각은 소비자가 Tailwind utility class 로 직접 구성. 이름·구조는 W3C ARIA/APG 어휘 그대로.
+
+## Docs
+- [llms-full.txt](llms-full.txt): 전체 시그니처·@example 포함 (LLM 컨텍스트용)
+- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant
+- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처
+- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처
 
 ## patterns
 
@@ -71,7 +77,7 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **useDialogPattern** — dialog — APG `/dialog-modal/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
 - **useFeedPattern** — feed — APG `/feed/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/feed/
 - **useGridPattern** — grid — APG `/grid/` recipe (data grid keyboard model, cell-focus). https://www.w3.org/WAI/ARIA/apg/patterns/grid/
-- **useListboxPattern** — @p/headless/patterns — W3C APG `/patterns/` recipe layer.
+- **useListboxPattern** — listbox — APG `/listbox/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
 - **useMenubarPattern** — menubar — APG `/menubar/` recipe (top bar + nested sub-menus). https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
 - **useMenuPattern** — menu — APG `/menu/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/menu/
 - **useRadioGroupPattern** — radioGroup — APG `/radio/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/radio/
@@ -143,16 +149,17 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **ResourceEvent** — Resource dispatch 가 받는 4 종 이벤트 — set(전체)/patch(부분)/refetch(다시 load)/invalidate(캐시 비움).
 - **ResourceEventRouter** — ui/ UiEvent 를 받아 resource 의 다음 값으로 매핑하는 라우터 (undefined 면 무시).
 - **defineFeature** — Feature spec identity — 타입 추론 + 런타임 spec 통과 helper. 라이프사이클: useFeature 가 spec 을 받아 useReducer 로 state 생성 → state 변화마다 query → view 재계산. 직렬화 가능성: state 는 plain JSON 가능해야 한다 (HMR/replay 지원).
-- **defineResource** — @p/headless/store — 옵션 데이터 흐름 어댑터.
+- **defineResource** — Resource spec identity — 타입 추론 + 런타임 spec 통과 helper. 라이프사이클: 첫 useResource 호출 시 load/initial 로 hydrate → subscribe 로 외부 push 채널 attach (refCount=1 시) → dispatch 로 set/patch/refetch/invalidate → 마지막 구독자 unmount 시 unsub. 직렬화 가능성: value 는 plain object 권장 — serialize 가 호출되어 외부 저장소(URL/localStorage)와 왕복.
 - **invalidateQuery** — 명시적 invalidate — mutation 이후 호출.
 - **readQuery** — spec 을 캐시에서 읽거나 첫 read 시 fn 실행. enabled=false 면 idle 상태 반환.
 - **subscribeQueries** — query 변경 구독 — useFeature 가 view 재계산 트리거에 사용.
 - **useFeature** — Feature spec → React 연결. 라이프사이클: useReducer 로 spec.state 시드 → cmd dispatch 시 spec.on[type] 적용 → state 변화마다 spec.query 재해석 → resolveQueries → spec.view 재계산. 직렬화 가능성: state/cmd 모두 plain JSON — replay/HMR 가능.
-- **useResource** — @p/headless/store — 옵션 데이터 흐름 어댑터.
-- **writeResource** — @p/headless/store — 옵션 데이터 흐름 어댑터.
+- **useResource** — Resource 를 React 에 연결 — 첫 read 시 load 트리거, 외부 채널 자동 attach/detach, useSyncExternalStore 로 tearing-free 구독. 반환은 `[value, dispatch]` 단일 인터페이스.
+- **writeResource** — 컴포넌트 외부(이벤트 핸들러·HMR 콜백 등)에서 자원에 직접 쓰기.
 
 ## roving
 
+- **UseSpatialNavigationOptions** — (undocumented)
 - **useActiveDescendant** — (undocumented)
 - **useRovingTabIndex** — roving — APG roving tabindex 의 두 축 + activedescendant 모드.
 - **useSpatialNavigation** — (undocumented)
@@ -256,9 +263,3 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **parentOf** — (undocumented)
 - **selectionFollowsFocus** — (undocumented)
 - **siblingsOf** — (undocumented)
-
-## Optional
-
-- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처
-- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant
-- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처

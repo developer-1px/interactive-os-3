@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "docs:api": "cd packages/headless && npx typedoc --json ../../docs/api.json --out ../../docs/api",
-    "docs:llms": "pnpm docs:api && node scripts/gen-llms-txt.mjs > llms.txt"
+    "docs:llms": "pnpm docs:api && node scripts/gen-llms-txt.mjs"
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
