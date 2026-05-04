@@ -3,8 +3,8 @@ import { copyFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
-import fsTree from './vite-plugin-fs'
-import { inspectorPlugin } from './vite-plugin-inspector'
+import fsTree from './tooling/vite-plugins/fs'
+import { inspectorPlugin } from './tooling/vite-plugins/inspector'
 
 const spaFallback = () => ({
   name: 'spa-404-fallback',
@@ -21,9 +21,9 @@ const spaFallback = () => ({
 })
 
 export default defineConfig({
-  root: resolve(__dirname, 'site'),
+  root: resolve(__dirname, 'apps/site'),
   base: process.env.GITHUB_PAGES ? '/interactive-os-3/' : '/',
-  publicDir: resolve(__dirname, 'public'),
+  publicDir: resolve(__dirname, 'apps/site/public'),
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
@@ -36,8 +36,8 @@ export default defineConfig({
       { find: /^@p\/fs\//, replacement: resolve(__dirname, 'packages/fs/src/') + '/' },
       { find: /^@p\/devtools$/, replacement: resolve(__dirname, 'packages/devtools/src/index.ts') },
       { find: /^@p\/devtools\//, replacement: resolve(__dirname, 'packages/devtools/src/') + '/' },
-      { find: /^@p\/site$/, replacement: resolve(__dirname, 'site/src/main.tsx') },
-      { find: /^@p\/site\//, replacement: resolve(__dirname, 'site/src/') + '/' },
+      { find: /^@p\/site$/, replacement: resolve(__dirname, 'apps/site/src/main.tsx') },
+      { find: /^@p\/site\//, replacement: resolve(__dirname, 'apps/site/src/') + '/' },
       { find: /^@apps\/([^/]+)$/, replacement: resolve(__dirname, 'apps') + '/$1/src/index.ts' },
       { find: /^@apps\/([^/]+)\//, replacement: resolve(__dirname, 'apps') + '/$1/src/' },
     ],
@@ -45,8 +45,8 @@ export default defineConfig({
   plugins: [
     tanstackRouter({
       target: 'react',
-      routesDirectory: resolve(__dirname, 'site/src/routes'),
-      generatedRouteTree: resolve(__dirname, 'site/src/routeTree.gen.ts'),
+      routesDirectory: resolve(__dirname, 'apps/site/src/routes'),
+      generatedRouteTree: resolve(__dirname, 'apps/site/src/routeTree.gen.ts'),
       autoCodeSplitting: true,
       // 컴포넌트 파일(PascalCase)은 라우트로 해석하지 않는다.
       // 라우트 파일은 모두 lowercase / dot-segment 규약(예: finder.$.tsx)을 따른다.

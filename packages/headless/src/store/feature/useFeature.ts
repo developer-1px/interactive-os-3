@@ -28,4 +28,4 @@ export function useFeature<S, Cmd extends CommandBase, Q extends Record<string, 
   const view = useMemo(() => spec.view(state, queries as never), [spec, state, queries])
 
   return [view, dispatch as (cmd: Cmd) => void]
-} 
+}

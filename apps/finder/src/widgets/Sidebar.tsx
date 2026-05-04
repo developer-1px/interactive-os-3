@@ -1,56 +1,57 @@
-import type { ComponentPropsWithoutRef } from 'react'
+import { Fragment, type ComponentPropsWithoutRef } from 'react'
 import { useListboxPattern } from '@p/headless/patterns'
-import type { NormalizedData, UiEvent } from '@p/headless'
 import { useSidebarNav } from './useSidebarNav'
 
+const GROUPS = ['최근', '즐겨찾기'] as const
+
 export function Sidebar() {
-  const { recent, fav } = useSidebarNav()
+  const { data, onEvent, items } = useSidebarNav()
+  const { rootProps, optionProps, items: rovingItems } = useListboxPattern(data, onEvent)
+  const byId = new Map(items.map((it) => [it.id, it]))
+
   return (
-    <nav aria-label="사이드바" className="flex flex-col gap-4 overflow-y-auto p-3">
-      <SidebarSection title="최근" data={recent.data} onEvent={recent.onEvent} />
-      <SidebarSection title="즐겨찾기" data={fav.data} onEvent={fav.onEvent} />
-    </nav>
+    <ul
+      {...(rootProps as ComponentPropsWithoutRef<'ul'>)}
+      aria-label="사이드바"
+      className="m-0 flex list-none flex-col overflow-y-auto p-3"
+    >
+      {GROUPS.map((g) => {
+        const groupItems = rovingItems
+          .map((it) => ({ it, view: byId.get(it.id) }))
+          .filter((x): x is { it: typeof rovingItems[number]; view: SidebarItemView } => !!x.view && x.view.group === g)
+        if (!groupItems.length) return null
+        return (
+          <Fragment key={g}>
+            <li
+              role="presentation"
+              className="px-2 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-neutral-500"
+            >
+              {g}
+            </li>
+            {groupItems.map(({ it, view }) => (
+              <li
+                key={it.id}
+                {...(optionProps(it.id) as ComponentPropsWithoutRef<'li'>)}
+                aria-posinset={it.posinset}
+                aria-setsize={it.setsize}
+                aria-selected={view.selected || undefined}
+                aria-disabled={it.disabled || undefined}
+                className={
+                  'cursor-pointer rounded px-2 py-1 text-sm ' +
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
+                  (view.selected
+                    ? 'bg-neutral-900 text-white'
+                    : 'text-neutral-700 hover:bg-neutral-100')
+                }
+              >
+                {view.label}
+              </li>
+            ))}
+          </Fragment>
+        )
+      })}
+    </ul>
   )
 }
 
-export function SidebarSection({
-  title, data, onEvent,
-}: { title: string; data: NormalizedData; onEvent: (e: UiEvent) => void }) {
-  const headingId = `sidebar-${title.replace(/\s+/g, '-')}`
-  const { rootProps, optionProps, items } = useListboxPattern(data, onEvent)
-  return (
-    <section aria-labelledby={headingId}>
-      <h3 id={headingId} className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-        {title}
-      </h3>
-      <ul
-        {...(rootProps as ComponentPropsWithoutRef<'ul'>)}
-        aria-labelledby={headingId}
-        className="m-0 list-none p-0"
-      >
-        {items.map((it) => {
-          const d = data.entities[it.id] ?? {}
-          return (
-            <li
-              key={it.id}
-              {...(optionProps(it.id) as ComponentPropsWithoutRef<'li'>)}
-              aria-posinset={it.posinset}
-              aria-setsize={it.setsize}
-              aria-selected={it.selected || undefined}
-              aria-disabled={it.disabled || undefined}
-              className={
-                'cursor-pointer rounded px-2 py-1 text-sm ' +
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 ' +
-                (it.selected
-                  ? 'bg-neutral-900 text-white'
-                  : 'text-neutral-700 hover:bg-neutral-100')
-              }
-            >
-              {String(d.label ?? it.label)}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  )
-}
+type SidebarItemView = ReturnType<typeof useSidebarNav>['items'][number]

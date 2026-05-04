@@ -38,7 +38,7 @@ const textLoaders = {
   ...import.meta.glob('/docs/**/*.{md,mdx,txt}', {
     query: '?raw', import: 'default',
   }),
-  ...import.meta.glob('/{README,package,tsconfig,eslint.config,vite.config,vite-plugin-fs}.*', {
+  ...import.meta.glob('/{README,package,tsconfig,eslint.config,vite.config,tooling/vite-plugins/fs}.*', {
     query: '?raw', import: 'default',
   }),
 } as Record<string, () => Promise<string>>

@@ -5,65 +5,92 @@ import {
   type UiEvent, type NormalizedData,
 } from '@p/headless'
 import { useResource, writeResource } from '@p/headless/store'
-import { sidebar, smartGroups, isSmartPath } from '../features/data'
+import { smartGroups, sidebar } from '../features/data'
 import { pathResource, pinnedRootResource } from '../features/resources'
 
-/** L2 — sidebar 두 listbox 의 wiring.
- *  recent: smart group 항목. activate → path 변경.
- *  fav:    folder 즐겨찾기. activate → path 변경 + pinnedRoot 갱신(부수 효과).
- *
- *  resource ↔ pattern wiring 은 useResource + useControlState + useEventBridge
- *  3 조각 합성으로 인라인. (이전 useFlow 추상화는 1-소비자라 흡수). */
+/** L2 — sidebar 단일 listbox wiring.
+ *  recent(smart group) + fav(folder bookmark) 를 하나의 NormalizedData 로 합쳐 roving 횡단.
+ *  activate 시 id prefix 로 분기: recent → path 변경, fav → pinnedRoot 갱신. */
 
 const META_SCOPE: ReadonlyArray<UiEvent['type']> = ['navigate', 'typeahead']
 
-export type SidebarNav = { data: NormalizedData; onEvent: (e: UiEvent) => void }
+export type SidebarItemView = {
+  id: string
+  realPath: string
+  label: string
+  icon: string
+  group: '최근' | '즐겨찾기'
+  selected: boolean
+}
 
-export function useSidebarNav(): { recent: SidebarNav; fav: SidebarNav } {
+export type SidebarNav = {
+  data: NormalizedData
+  onEvent: (e: UiEvent) => void
+  items: SidebarItemView[]
+}
+
+export function useSidebarNav(): SidebarNav {
   const [path, dispatchPath] = useResource(pathResource)
-  const recentBase = useMemo(
+  const [pinned] = useResource(pinnedRootResource)
+
+  const items = useMemo<SidebarItemView[]>(() => [
+    ...smartGroups.map((g): SidebarItemView => ({
+      id: `recent:${g.path}`,
+      realPath: g.path,
+      label: g.label,
+      icon: g.icon,
+      group: '최근',
+      selected: g.path === path,
+    })),
+    ...sidebar.map((s): SidebarItemView => ({
+      id: `fav:${s.path}`,
+      realPath: s.path,
+      label: s.label,
+      icon: s.icon,
+      group: '즐겨찾기',
+      selected: s.path === pinned,
+    })),
+  ], [path, pinned])
+
+  const focusId = useMemo(() => {
+    const sel = items.find((it) => it.selected)
+    return sel?.id ?? items[0]?.id ?? null
+  }, [items])
+
+  const base = useMemo(
     () => fromTree(
-      smartGroups.map((g) => ({ id: g.path, label: g.label, icon: g.icon, selected: g.path === path })),
-      { focusId: path ?? '/' },
+      items.map((it) => ({
+        id: it.id,
+        label: it.label,
+        icon: it.icon,
+        realPath: it.realPath,
+        group: it.group,
+        selected: it.selected,
+      })),
+      { focusId },
     ),
-    [path],
+    [items, focusId],
   )
-  const [recentData, dispatchRecentMeta] = useControlState(recentBase)
-  const recentEvent = useEventBridge({
-    data: recentData,
+
+  const [data, dispatchMeta] = useControlState(base)
+
+  const onEvent = useEventBridge({
+    data,
     gestures: navigateOnActivate,
-    dispatchMeta: (e) => { if (META_SCOPE.includes(e.type)) dispatchRecentMeta(e) },
+    dispatchMeta: (e) => { if (META_SCOPE.includes(e.type)) dispatchMeta(e) },
     onIntent: (e) => {
-      const next = pathResource.onEvent?.(e, { value: path, data: recentData })
-      if (next !== undefined) dispatchPath({ type: 'set', value: next })
+      if (e.type !== 'activate') return
+      const it = items.find((x) => x.id === e.id)
+      if (!it) return
+      if (it.group === '최근') {
+        const intent: UiEvent = { type: 'activate', id: it.realPath }
+        const next = pathResource.onEvent?.(intent, { value: path, data })
+        if (next !== undefined) dispatchPath({ type: 'set', value: next })
+      } else {
+        writeResource(pinnedRootResource, it.realPath)
+      }
     },
   })
 
-  const [pinned] = useResource(pinnedRootResource)
-  const favBase = useMemo(
-    () => fromTree(
-      sidebar.map((s) => ({ id: s.path, label: s.label, icon: s.icon, selected: s.path === pinned })),
-      { focusId: pinned ?? '/' },
-    ),
-    [pinned],
-  )
-  const [favData, dispatchFavMeta] = useControlState(favBase)
-  const favBaseEvent = useEventBridge({
-    data: favData,
-    gestures: navigateOnActivate,
-    dispatchMeta: (e) => { if (META_SCOPE.includes(e.type)) dispatchFavMeta(e) },
-  })
-  // fav 활성화는 pinnedRoot 갱신만. URL 은 그대로 — "그 폴더를 columns 의 root 로 본다"
-  // 의미. 사용자가 깊은 path 에 있어도 fav 클릭으로 anchor 를 옮겨가며 columns chain 을
-  // 그 anchor 기준으로 보게 한다.
-  const favEvent = (e: UiEvent) => {
-    favBaseEvent(e)
-    if (e.type === 'activate' && !isSmartPath(e.id)) {
-      writeResource(pinnedRootResource, e.id)
-    }
-  }
-  return {
-    recent: { data: recentData, onEvent: recentEvent },
-    fav: { data: favData, onEvent: favEvent },
-  }
+  return { data, onEvent, items }
 }
