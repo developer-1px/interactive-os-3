@@ -8,7 +8,7 @@
  */
 
 const sources = import.meta.glob<string>(
-  '../../../packages/headless/src/patterns/*.ts',
+  '../../../../packages/headless/src/patterns/*.ts',
   { eager: true, query: '?raw', import: 'default' },
 )
 

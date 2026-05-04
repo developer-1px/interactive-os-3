@@ -25,8 +25,8 @@ const slugFor = (filename: string) =>
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .toLowerCase()
 
-const modules = import.meta.glob<WrapperModule>('./examples/*.tsx', { eager: true })
-const sources = import.meta.glob<string>('./examples/*.tsx', {
+const modules = import.meta.glob<WrapperModule>('../examples/*.tsx', { eager: true })
+const sources = import.meta.glob<string>('../examples/*.tsx', {
   eager: true,
   query: '?raw',
   import: 'default',
