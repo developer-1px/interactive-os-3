@@ -75,8 +75,8 @@
     "build": "tsup",
     "test": "vitest run --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
-    "docs": "typedoc",
-    "docs:watch": "typedoc --watch",
+    "typedoc": "typedoc",
+    "typedoc:watch": "typedoc --watch",
     "clean": "rm -rf dist docs/api"
   },
   "dependencies": {

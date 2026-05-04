@@ -13,19 +13,9 @@ import { Route as WrappersRouteImport } from './routes/wrappers'
 import { Route as PatternsRouteImport } from './routes/patterns'
 import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppsAdminRouteImport } from './routes/apps.admin'
-import { Route as AppsAdminIndexRouteImport } from './routes/apps.admin.index'
 import { Route as AppsSlidesSplatRouteImport } from './routes/apps.slides.$'
 import { Route as AppsMarkdownSplatRouteImport } from './routes/apps.markdown.$'
 import { Route as AppsFinderSplatRouteImport } from './routes/apps.finder.$'
-import { Route as AppsAdminVideosRouteImport } from './routes/apps.admin.videos'
-import { Route as AppsAdminVideoOrderRouteImport } from './routes/apps.admin.video-order'
-import { Route as AppsAdminRoleCategoriesRouteImport } from './routes/apps.admin.role-categories'
-import { Route as AppsAdminDashboardRouteImport } from './routes/apps.admin.dashboard'
-import { Route as AppsAdminCourseCategoriesRouteImport } from './routes/apps.admin.course-categories'
-import { Route as AppsAdminVideosIndexRouteImport } from './routes/apps.admin.videos.index'
-import { Route as AppsAdminVideosNewRouteImport } from './routes/apps.admin.videos.new'
-import { Route as AppsAdminVideosIdEditRouteImport } from './routes/apps.admin.videos.$id.edit'
 
 const WrappersRoute = WrappersRouteImport.update({
   id: '/wrappers',
@@ -47,16 +37,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppsAdminRoute = AppsAdminRouteImport.update({
-  id: '/apps/admin',
-  path: '/apps/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppsAdminIndexRoute = AppsAdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppsAdminRoute,
-} as any)
 const AppsSlidesSplatRoute = AppsSlidesSplatRouteImport.update({
   id: '/apps/slides/$',
   path: '/apps/slides/$',
@@ -72,83 +52,24 @@ const AppsFinderSplatRoute = AppsFinderSplatRouteImport.update({
   path: '/apps/finder/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppsAdminVideosRoute = AppsAdminVideosRouteImport.update({
-  id: '/videos',
-  path: '/videos',
-  getParentRoute: () => AppsAdminRoute,
-} as any)
-const AppsAdminVideoOrderRoute = AppsAdminVideoOrderRouteImport.update({
-  id: '/video-order',
-  path: '/video-order',
-  getParentRoute: () => AppsAdminRoute,
-} as any)
-const AppsAdminRoleCategoriesRoute = AppsAdminRoleCategoriesRouteImport.update({
-  id: '/role-categories',
-  path: '/role-categories',
-  getParentRoute: () => AppsAdminRoute,
-} as any)
-const AppsAdminDashboardRoute = AppsAdminDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppsAdminRoute,
-} as any)
-const AppsAdminCourseCategoriesRoute =
-  AppsAdminCourseCategoriesRouteImport.update({
-    id: '/course-categories',
-    path: '/course-categories',
-    getParentRoute: () => AppsAdminRoute,
-  } as any)
-const AppsAdminVideosIndexRoute = AppsAdminVideosIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppsAdminVideosRoute,
-} as any)
-const AppsAdminVideosNewRoute = AppsAdminVideosNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AppsAdminVideosRoute,
-} as any)
-const AppsAdminVideosIdEditRoute = AppsAdminVideosIdEditRouteImport.update({
-  id: '/$id/edit',
-  path: '/$id/edit',
-  getParentRoute: () => AppsAdminVideosRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
-  '/apps/admin': typeof AppsAdminRouteWithChildren
-  '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
-  '/apps/admin/dashboard': typeof AppsAdminDashboardRoute
-  '/apps/admin/role-categories': typeof AppsAdminRoleCategoriesRoute
-  '/apps/admin/video-order': typeof AppsAdminVideoOrderRoute
-  '/apps/admin/videos': typeof AppsAdminVideosRouteWithChildren
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
-  '/apps/admin/': typeof AppsAdminIndexRoute
-  '/apps/admin/videos/new': typeof AppsAdminVideosNewRoute
-  '/apps/admin/videos/': typeof AppsAdminVideosIndexRoute
-  '/apps/admin/videos/$id/edit': typeof AppsAdminVideosIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
-  '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
-  '/apps/admin/dashboard': typeof AppsAdminDashboardRoute
-  '/apps/admin/role-categories': typeof AppsAdminRoleCategoriesRoute
-  '/apps/admin/video-order': typeof AppsAdminVideoOrderRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
-  '/apps/admin': typeof AppsAdminIndexRoute
-  '/apps/admin/videos/new': typeof AppsAdminVideosNewRoute
-  '/apps/admin/videos': typeof AppsAdminVideosIndexRoute
-  '/apps/admin/videos/$id/edit': typeof AppsAdminVideosIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -156,19 +77,9 @@ export interface FileRoutesById {
   '/axes': typeof AxesRoute
   '/patterns': typeof PatternsRoute
   '/wrappers': typeof WrappersRoute
-  '/apps/admin': typeof AppsAdminRouteWithChildren
-  '/apps/admin/course-categories': typeof AppsAdminCourseCategoriesRoute
-  '/apps/admin/dashboard': typeof AppsAdminDashboardRoute
-  '/apps/admin/role-categories': typeof AppsAdminRoleCategoriesRoute
-  '/apps/admin/video-order': typeof AppsAdminVideoOrderRoute
-  '/apps/admin/videos': typeof AppsAdminVideosRouteWithChildren
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
-  '/apps/admin/': typeof AppsAdminIndexRoute
-  '/apps/admin/videos/new': typeof AppsAdminVideosNewRoute
-  '/apps/admin/videos/': typeof AppsAdminVideosIndexRoute
-  '/apps/admin/videos/$id/edit': typeof AppsAdminVideosIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -177,55 +88,27 @@ export interface FileRouteTypes {
     | '/axes'
     | '/patterns'
     | '/wrappers'
-    | '/apps/admin'
-    | '/apps/admin/course-categories'
-    | '/apps/admin/dashboard'
-    | '/apps/admin/role-categories'
-    | '/apps/admin/video-order'
-    | '/apps/admin/videos'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
-    | '/apps/admin/'
-    | '/apps/admin/videos/new'
-    | '/apps/admin/videos/'
-    | '/apps/admin/videos/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/axes'
     | '/patterns'
     | '/wrappers'
-    | '/apps/admin/course-categories'
-    | '/apps/admin/dashboard'
-    | '/apps/admin/role-categories'
-    | '/apps/admin/video-order'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
-    | '/apps/admin'
-    | '/apps/admin/videos/new'
-    | '/apps/admin/videos'
-    | '/apps/admin/videos/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/axes'
     | '/patterns'
     | '/wrappers'
-    | '/apps/admin'
-    | '/apps/admin/course-categories'
-    | '/apps/admin/dashboard'
-    | '/apps/admin/role-categories'
-    | '/apps/admin/video-order'
-    | '/apps/admin/videos'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
-    | '/apps/admin/'
-    | '/apps/admin/videos/new'
-    | '/apps/admin/videos/'
-    | '/apps/admin/videos/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,7 +116,6 @@ export interface RootRouteChildren {
   AxesRoute: typeof AxesRoute
   PatternsRoute: typeof PatternsRoute
   WrappersRoute: typeof WrappersRoute
-  AppsAdminRoute: typeof AppsAdminRouteWithChildren
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
   AppsMarkdownSplatRoute: typeof AppsMarkdownSplatRoute
   AppsSlidesSplatRoute: typeof AppsSlidesSplatRoute
@@ -269,20 +151,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/apps/admin': {
-      id: '/apps/admin'
-      path: '/apps/admin'
-      fullPath: '/apps/admin'
-      preLoaderRoute: typeof AppsAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/apps/admin/': {
-      id: '/apps/admin/'
-      path: '/'
-      fullPath: '/apps/admin/'
-      preLoaderRoute: typeof AppsAdminIndexRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
     '/apps/slides/$': {
       id: '/apps/slides/$'
       path: '/apps/slides/$'
@@ -304,109 +172,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsFinderSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/apps/admin/videos': {
-      id: '/apps/admin/videos'
-      path: '/videos'
-      fullPath: '/apps/admin/videos'
-      preLoaderRoute: typeof AppsAdminVideosRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
-    '/apps/admin/video-order': {
-      id: '/apps/admin/video-order'
-      path: '/video-order'
-      fullPath: '/apps/admin/video-order'
-      preLoaderRoute: typeof AppsAdminVideoOrderRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
-    '/apps/admin/role-categories': {
-      id: '/apps/admin/role-categories'
-      path: '/role-categories'
-      fullPath: '/apps/admin/role-categories'
-      preLoaderRoute: typeof AppsAdminRoleCategoriesRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
-    '/apps/admin/dashboard': {
-      id: '/apps/admin/dashboard'
-      path: '/dashboard'
-      fullPath: '/apps/admin/dashboard'
-      preLoaderRoute: typeof AppsAdminDashboardRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
-    '/apps/admin/course-categories': {
-      id: '/apps/admin/course-categories'
-      path: '/course-categories'
-      fullPath: '/apps/admin/course-categories'
-      preLoaderRoute: typeof AppsAdminCourseCategoriesRouteImport
-      parentRoute: typeof AppsAdminRoute
-    }
-    '/apps/admin/videos/': {
-      id: '/apps/admin/videos/'
-      path: '/'
-      fullPath: '/apps/admin/videos/'
-      preLoaderRoute: typeof AppsAdminVideosIndexRouteImport
-      parentRoute: typeof AppsAdminVideosRoute
-    }
-    '/apps/admin/videos/new': {
-      id: '/apps/admin/videos/new'
-      path: '/new'
-      fullPath: '/apps/admin/videos/new'
-      preLoaderRoute: typeof AppsAdminVideosNewRouteImport
-      parentRoute: typeof AppsAdminVideosRoute
-    }
-    '/apps/admin/videos/$id/edit': {
-      id: '/apps/admin/videos/$id/edit'
-      path: '/$id/edit'
-      fullPath: '/apps/admin/videos/$id/edit'
-      preLoaderRoute: typeof AppsAdminVideosIdEditRouteImport
-      parentRoute: typeof AppsAdminVideosRoute
-    }
   }
 }
-
-interface AppsAdminVideosRouteChildren {
-  AppsAdminVideosNewRoute: typeof AppsAdminVideosNewRoute
-  AppsAdminVideosIndexRoute: typeof AppsAdminVideosIndexRoute
-  AppsAdminVideosIdEditRoute: typeof AppsAdminVideosIdEditRoute
-}
-
-const AppsAdminVideosRouteChildren: AppsAdminVideosRouteChildren = {
-  AppsAdminVideosNewRoute: AppsAdminVideosNewRoute,
-  AppsAdminVideosIndexRoute: AppsAdminVideosIndexRoute,
-  AppsAdminVideosIdEditRoute: AppsAdminVideosIdEditRoute,
-}
-
-const AppsAdminVideosRouteWithChildren = AppsAdminVideosRoute._addFileChildren(
-  AppsAdminVideosRouteChildren,
-)
-
-interface AppsAdminRouteChildren {
-  AppsAdminCourseCategoriesRoute: typeof AppsAdminCourseCategoriesRoute
-  AppsAdminDashboardRoute: typeof AppsAdminDashboardRoute
-  AppsAdminRoleCategoriesRoute: typeof AppsAdminRoleCategoriesRoute
-  AppsAdminVideoOrderRoute: typeof AppsAdminVideoOrderRoute
-  AppsAdminVideosRoute: typeof AppsAdminVideosRouteWithChildren
-  AppsAdminIndexRoute: typeof AppsAdminIndexRoute
-}
-
-const AppsAdminRouteChildren: AppsAdminRouteChildren = {
-  AppsAdminCourseCategoriesRoute: AppsAdminCourseCategoriesRoute,
-  AppsAdminDashboardRoute: AppsAdminDashboardRoute,
-  AppsAdminRoleCategoriesRoute: AppsAdminRoleCategoriesRoute,
-  AppsAdminVideoOrderRoute: AppsAdminVideoOrderRoute,
-  AppsAdminVideosRoute: AppsAdminVideosRouteWithChildren,
-  AppsAdminIndexRoute: AppsAdminIndexRoute,
-}
-
-const AppsAdminRouteWithChildren = AppsAdminRoute._addFileChildren(
-  AppsAdminRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AxesRoute: AxesRoute,
   PatternsRoute: PatternsRoute,
   WrappersRoute: WrappersRoute,
-  AppsAdminRoute: AppsAdminRouteWithChildren,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
   AppsMarkdownSplatRoute: AppsMarkdownSplatRoute,
   AppsSlidesSplatRoute: AppsSlidesSplatRoute,
