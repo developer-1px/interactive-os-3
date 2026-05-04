@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
-import { ROOT, fromList, useControlState, type UiEvent } from '@p/headless'
-import { comboboxAxis, useComboboxPattern } from '@p/headless/patterns'
+import { ROOT, fromList } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
+import { comboboxAxis, useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
 import { dedupe, probe } from '../keys'
 
 export const meta = {
@@ -13,13 +13,12 @@ export const meta = {
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']
 
-export default function Demo() {
-  const raw = useMemo(() => fromList(ALL.map((label) => ({ label }))), [])
-  const [data, dispatch] = useControlState(raw)
-  const onEvent = (e: UiEvent) => dispatch(e)
+/** wrapper 와 동일 props interface — InputPatternProps 그대로. */
+export type ComboboxDemoProps = ValuedPatternProps<string>
 
+export function ComboboxDemo({ data, value, onEvent, 'aria-label': ariaLabel }: ComboboxDemoProps) {
   const { comboboxProps, listboxProps, optionProps, items } =
-    useComboboxPattern(data, onEvent, { label: 'Country' })
+    useComboboxPattern(data, onEvent, { label: ariaLabel, value })
 
   const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
@@ -27,7 +26,7 @@ export default function Demo() {
     <div className="relative w-64">
       <input
         {...comboboxProps}
-        placeholder="Search country…"
+        placeholder="Search…"
         className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm"
       />
       {expanded && (
@@ -51,4 +50,9 @@ export default function Demo() {
       )}
     </div>
   )
+}
+
+export default function Demo() {
+  const [data, onEvent] = useLocalData(() => fromList(ALL.map((label) => ({ label }))))
+  return <ComboboxDemo data={data} onEvent={onEvent} aria-label="Country" />
 }

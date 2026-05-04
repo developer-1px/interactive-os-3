@@ -1,21 +1,20 @@
-import { ROOT, useControlState, type NormalizedData, type UiEvent } from '@p/headless'
-import { useComboboxPattern } from '@p/headless/patterns'
+import { ROOT, useControlState, type UiEvent } from '@p/headless'
+import { useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
 import {
   defaultLabel,
   renderSlot,
   type ComboboxSlots,
 } from './slots'
 
-export interface ComboboxProps<TItem extends object = Record<string, unknown>> {
-  data: NormalizedData
-  onEvent: (event: UiEvent) => void
-  'aria-label': string
+export interface ComboboxProps<TItem extends object = Record<string, unknown>>
+  extends ValuedPatternProps<string> {
   slots?: ComboboxSlots<TItem>
   placeholder?: string
 }
 
 export function Combobox<TItem extends object = Record<string, unknown>>({
   data: rawData,
+  value,
   onEvent,
   slots = {},
   'aria-label': ariaLabel,
@@ -29,7 +28,7 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
   }
 
   const { comboboxProps, listboxProps, optionProps, items } =
-    useComboboxPattern(data, relay, { label: ariaLabel })
+    useComboboxPattern(data, relay, { label: ariaLabel, value })
 
   const expanded = Boolean(data.meta?.open?.includes(ROOT))
 

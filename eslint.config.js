@@ -4,6 +4,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import tsdoc from 'eslint-plugin-tsdoc'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
@@ -352,6 +353,10 @@ export default defineConfig([
   // role/className/style escape hatch 금지 — ds 본체 외 전 영역
   { files: ['packages/**/*.{ts,tsx}', 'apps/**/*.{ts,tsx}', 'showcase/**/*.{ts,tsx}'],
     rules: { 'no-restricted-syntax': ['error', role, className, style] } },
+  // @p/headless — TSDoc 주석 문법 검증 (소스 SSOT 보장)
+  { files: ['packages/headless/src/**/*.{ts,tsx}'],
+    plugins: { tsdoc },
+    rules: { 'tsdoc/syntax': 'warn' } },
   // ds/ui 정의부 — role 리터럴 + 동적 style 허용 (anchor-name 등 정적 CSS 표현 불가 영역)
   { files: ['packages/ds/src/ui/**/*.{ts,tsx}'],
     rules: { 'no-restricted-syntax': ['error', className] } },

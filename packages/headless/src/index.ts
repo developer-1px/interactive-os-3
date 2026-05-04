@@ -22,6 +22,7 @@ export { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
 export { fromTree, fromList, pathAncestors } from './state/fromTree'
 export { useControlState } from './state/useControlState'
 export { useEventBridge } from './state/useEventBridge'
+export { useValue } from './state/useValue'
 
 export { useRovingTabIndex } from './roving/useRovingTabIndex'
 export { useSpatialNavigation } from './roving/useSpatialNavigation'

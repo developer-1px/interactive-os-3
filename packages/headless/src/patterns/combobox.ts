@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useMemo } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getFocus,
   type NormalizedData, type UiEvent,
@@ -8,6 +8,7 @@ import {
   navigate as navigateAxis,
 } from '../axes'
 import { bindAxis } from '../state/bind'
+import { useValue } from '../state/useValue'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -89,14 +90,8 @@ export function useComboboxPattern(
     label, labelledBy, popupLabel, popupLabelledBy,
   } = opts
 
-  // query state — uncontrolled default, value 옵션으로 controlled.
-  const [internalValue, setInternalValue] = useState(defaultValue)
-  const isControlled = valueProp !== undefined
-  const query = isControlled ? valueProp : internalValue
-  const setValue = (next: string) => {
-    if (!isControlled) setInternalValue(next)
-    onEvent?.({ type: 'value', id: ROOT, value: next })
-  }
+  // query state — controlled/uncontrolled hybrid 헬퍼.
+  const [query, setValue] = useValue<string>(valueProp, defaultValue, onEvent)
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
