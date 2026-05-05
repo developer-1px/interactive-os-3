@@ -1,5 +1,7 @@
 # ds core — 영속 불변식
 
+> Naming dictionary: [NAMING.md](./NAMING.md) · Recipe 명세: [PATTERNS.md](./PATTERNS.md)
+
 zone(data/composition)·pattern(flat/grouped/caged) 불문하고 뒤집히지 않는 규약. 이 문서의 항목을 깨는 변경은 버그 또는 정책 전환이지 개선이 아니다.
 
 ## A. APG 외부 권위 — 뒤집을 수 없음

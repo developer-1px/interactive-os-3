@@ -1,5 +1,7 @@
 # `@p/headless/patterns` — APG recipe layer
 
+> Naming dictionary: [NAMING.md](./NAMING.md) — canonical export/option/prop 이름 SSOT.
+
 W3C APG `https://www.w3.org/WAI/ARIA/apg/patterns/` 의 각 패턴을 **axis 묶음 + props getter + items view** 의 단일 함수로 박제. 컴포넌트·markup 어휘 0건. 정체성: `project_headless_identity` (Behavior infra, not component wrapper).
 
 ## 통일 시그니처

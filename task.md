@@ -924,3 +924,144 @@ PRD: `docs/2026/2026-05/2026-05-05/01_outlinerPrd.md`
 - ❌ memory의 *Single data interface* / *Gesture/Intent 분리* 원칙 위반 0
 
 
+
+---
+
+# Naming audit 후속 — canonical 정합 작업 (2026-05-05)
+
+근거: `packages/headless/NAMING.md` §5 (식별된 위반).
+
+## T1 — dialog `alert` 플래그 제거 (❌ violation, 반영)
+
+**위반**: `useDialogPattern({alert: true})` 가 `role="alertdialog"` 를 토글. *1 role = 1 pattern* 위반.
+
+**작업**:
+1. `packages/headless/src/patterns/dialog.ts`
+   - `DialogOptions.alert` 제거, `role: 'dialog'` 고정
+2. `packages/headless/src/patterns/alertDialog.ts`
+   - 현재 `useDialogPattern({...opts, alert: true})` preset 깨짐 → role override 방식으로 최소 변경
+   - `const r = useDialogPattern(opts)` 후 `rootProps: { ...r.rootProps, role: 'alertdialog' }`
+3. `alertdialogPattern` (declarative, alert.ts) 그대로 유지
+4. 검증: tsc + `grep -rn "alert: true" apps/site/src/demos/` 0건
+
+## T2 — treeGrid `navMode` → `navigationMode` (⚠️ rename)
+
+**위반**: APG "row focus" / "cell focus" 명명 직역 아님.
+
+**작업**:
+1. `packages/headless/src/patterns/treeGrid.ts`
+   - `navMode` → `navigationMode`
+   - 값: `'rowsFirst'`→`'row'`, `'cellsFirst'`→`'cell'`, `'cellsOnly'`→`'cellOnly'`
+   - JSDoc 에 APG TreeGrid §Row/Cell Focus 인용
+2. 데모 `apps/site/src/demos/treeGridCellsFirst.tsx`, `treeGridCellsOnly.tsx` 업데이트
+3. 검증: tsc + 키보드 동작 동일
+
+## T3 — NAMING.md cross-link
+
+1. `PATTERNS.md` 상단에 "Naming dictionary: [NAMING.md](./NAMING.md)" 한 줄
+2. `INVARIANTS.md` 동일 한 줄
+3. `README.md` docs 섹션 추가
+
+## 실행 순서
+
+T1 → T2 → T3. 각 T 완료 시 `npx tsc --noEmit -p tsconfig.app.json` 0 에러 확인.
+
+---
+
+# Audit 후속 — Checkbox Mixed + API 단순화 (2026-05-05)
+
+## T4 — Checkbox Mixed Group 오동작 fix (트랙 B)
+
+**위반**: APG `/checkbox/examples/checkbox-mixed/`. parent toggle 이 disabled child 까지 강제 toggle. 영구 mixed 상태 발생 가능.
+
+### T4.1 [CRITICAL] — disabled child 를 parent 연산에서 제외
+
+`packages/headless/src/patterns/checkbox.ts:106-113`:
+```ts
+const enabled = items.filter((it) => !it.disabled)
+const enabledIds = enabled.map((it) => it.id)
+const checkedCount = enabled.filter((it) => it.selected).length
+const parentChecked: CheckboxState =
+  enabled.length === 0 ? false
+  : checkedCount === 0 ? false
+  : checkedCount === enabled.length ? true
+  : 'mixed'
+
+const toggleParent = () => {
+  if (enabled.length === 0) return
+  const next = parentChecked !== true
+  onEvent?.({ type: 'selectMany', ids: enabledIds, to: next })
+}
+```
+
+### T4.2 [HIGH] — group disabled 옵션 + auto-disable
+
+`CheckboxGroupOptions` 에 `disabled?: boolean` 추가. 모든 child disabled 시 parent 도 자동 disabled.
+parentProps: `tabIndex: groupDisabled ? -1 : 0`, `'aria-disabled': groupDisabled || undefined`.
+
+### T4.3 [HIGH] — parent `aria-controls`
+
+parentProps 에 `'aria-controls': ids.join(' ') || undefined` 추가. (단, child id 가 실제 DOM id 와 일치해야 의미 — childProps 에 id 노출 필요. 현재는 미노출 — 별도 검토.)
+
+### T4.4 [MED] — parent/child accessible name pass-through
+
+childProps 에 `'aria-label': it?.label` 추가. parentProps 에 `parentLabel?: string` 옵션 또는 그룹 label 재사용.
+
+### T4 검증
+- 데모 `checkboxMixed.tsx` 에 disabled child 1개 추가 → parent click 시 변하지 않는지 확인
+- 모든 child disabled → parent 도 disabled
+- tsc 0
+
+---
+
+## T5 — API 단순화 믹스인 (트랙 A, P0 만)
+
+### T5.1 BasePatternOptions
+
+`packages/headless/src/patterns/types.ts` 에 추가:
+```ts
+export interface BasePatternOptions {
+  /** ARIA accessible name. */
+  label?: string
+  /** ARIA labelledBy — id of element naming this pattern. */
+  labelledBy?: string
+}
+```
+
+25패턴의 `Options` interface 가 `extends BasePatternOptions`. 기존 `label`/`labelledBy` 필드는 삭제.
+
+### T5.2 CollectionOptions
+
+```ts
+export interface CollectionOptions extends BasePatternOptions {
+  containerId?: string
+  idPrefix?: string
+  autoFocus?: boolean
+  orientation?: 'horizontal' | 'vertical'
+}
+```
+
+collection 13패턴(listbox, tabs, tree, treeGrid, grid, radioGroup, toolbar, menu, menubar, accordion, feed, combobox, comboboxGrid) 의 Options 가 `extends CollectionOptions`. 패턴별로 orientation 미지원이면 Omit.
+
+### T5.3 FormAttrs (선택, 회의 후)
+
+`disabled`/`invalid`/`required`/`readOnly` 12패턴 공통. 패턴마다 의미가 미묘히 달라 회의 후 결정. 일단 보류.
+
+### T5 검증
+- `npx tsc --noEmit` 0 에러 (Options 시그니처 변경되어도 외부 호환)
+- 외부 사용처(데모 30+개) 영향 없음 (옵션은 interface union 으로 그대로 노출)
+
+---
+
+## T6 — 보존 권고 (NAMING.md 에 명시 필요)
+
+이번 audit 에서 기각된 단순화 후보. NAMING.md §6 에 추가:
+- `idPrefix` 제거 ❌ (SSR 안정성)
+- Menu `onEscape` 제거 ❌ (gesture/intent split 의도적 hook)
+- `focusMode` 공통화 ❌ (실제 사용 사례 부족, 백로그)
+
+## 실행 순서
+
+T4 → T5 → T6 (T4 가 가장 critical, T5 는 surface 정리, T6 은 docs)
+
+T4.1, T4.2 만 우선 반영해도 APG 정합 회복. T4.3 은 child id 노출 작업 동반 필요 — 별도 검토.

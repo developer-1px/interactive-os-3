@@ -23,7 +23,7 @@ export interface AlertdialogOptions {
  * https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
  *
  * dialog 변종 — 즉시 주의 필요. role=alertdialog. focus trap 등 동작은 useDialogPattern 사용.
- * 본 함수는 declarative props 만 — 행동까지 필요하면 `useDialogPattern({ alert: true })`.
+ * 본 함수는 declarative props 만 — 행동까지 필요하면 `useAlertDialogPattern`.
  */
 export function alertdialogPattern(opts: AlertdialogOptions = {}): { rootProps: RootProps } {
   const { label, labelledBy, describedBy } = opts

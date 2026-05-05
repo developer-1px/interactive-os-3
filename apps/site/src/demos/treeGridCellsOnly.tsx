@@ -41,7 +41,7 @@ export default function Demo() {
   } = useTreeGridPattern(data, onEvent, {
     label: 'Files (cells-only)',
     colCount: COLS.length,
-    navMode: 'cellsOnly',
+    navigationMode: 'cellOnly',
   })
 
   return (

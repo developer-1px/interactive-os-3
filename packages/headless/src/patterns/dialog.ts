@@ -18,8 +18,6 @@ export interface DialogOptions {
   /** controlled 통지 + uncontrolled 에서도 호출 (양 모드 공통 콜백). */
   onOpenChange?: (open: boolean) => void
   modal?: boolean
-  /** APG `alertdialog` 변종 — role 만 다르고 동작 동일. */
-  alert?: boolean
   /** focus 복귀 대상. trigger element ref 권장. */
   returnFocusRef?: RefObject<HTMLElement | null>
   /** open 직후 우선 focus 대상. 없으면 첫 focusable, 그것도 없으면 dialog root. */
@@ -68,7 +66,6 @@ export function useDialogPattern(opts: DialogOptions = {}): {
     defaultOpen = false,
     onOpenChange,
     modal = true,
-    alert = false,
     returnFocusRef,
     initialFocusRef,
     returnFocus = true,
@@ -130,7 +127,7 @@ export function useDialogPattern(opts: DialogOptions = {}): {
   }, [open, rootRef, onOpenChange, returnFocusRef, initialFocusRef, returnFocus, modal])
 
   const rootProps: RootProps = {
-    role: alert ? 'alertdialog' : 'dialog',
+    role: 'dialog',
     'aria-modal': modal,
     'aria-label': label,
     'aria-labelledby': labelledBy,

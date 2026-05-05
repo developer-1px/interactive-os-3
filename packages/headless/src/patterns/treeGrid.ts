@@ -23,12 +23,12 @@ export interface TreeGridOptions {
   /** aria-colcount — total columns (header column count). */
   colCount?: number
   /**
-   * APG email-inbox 3 모드. default `'rowsFirst'`.
-   * - `'rowsFirst'`: focus 단위 = row. 화살표 = treeNavigate (위/아래 row, 좌/우 expand/collapse).
-   * - `'cellsFirst'`: focus 단위 = cell. 2D 화살표, row 의 `aria-selected` 가 focused cell 의 row 를 반영.
-   * - `'cellsOnly'`: cellsFirst 와 동일 키보드, 단 row 자체엔 `aria-selected` 표시 안 함.
+   * APG TreeGrid §"Row Focus" / §"Cell Focus". default `'row'`.
+   * - `'row'`: focus 단위 = row. 화살표 = treeNavigate (위/아래 row, 좌/우 expand/collapse).
+   * - `'cell'`: focus 단위 = cell. 2D 화살표, row 의 `aria-selected` 가 focused cell 의 row 를 반영.
+   * - `'cellOnly'`: cell 와 동일 키보드, 단 row 자체엔 `aria-selected` 표시 안 함 (spec 외 변종).
    */
-  navMode?: 'rowsFirst' | 'cellsFirst' | 'cellsOnly'
+  navigationMode?: 'row' | 'cell' | 'cellOnly'
   /**
    * 편집 모드 — Enter/Backspace 키를 패턴이 디폴트로 흡수한다.
    * Tab 은 셀 모델과 충돌하므로 매핑하지 않는다.
@@ -73,10 +73,10 @@ export function useTreeGridPattern(
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'horizontal',
-    label, labelledBy, colCount, navMode = 'rowsFirst', editable = false,
+    label, labelledBy, colCount, navigationMode = 'row', editable = false,
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
-  const cellsMode = navMode !== 'rowsFirst'
+  const cellsMode = navigationMode !== 'row'
   const colsCount = colCount ?? 1
 
   const relay = useCallback(
@@ -115,7 +115,7 @@ export function useTreeGridPattern(
   const HEADER_ROWS = 1
   const rowMap = new Map(flat.map((it, idx) => [it.id, { it, idx }]))
 
-  // ─── cells-mode (cellsFirst / cellsOnly) ────────────────────────────────
+  // ─── cells-mode (cell / cellOnly) ────────────────────────────────
   const [cellFocus, setCellFocus] = useState<{ rowId: string; col: number } | null>(null)
   useEffect(() => {
     if (!cellsMode) return
@@ -146,8 +146,9 @@ export function useTreeGridPattern(
     if (!editable || !id || id === containerId) return false
     if (e.key === 'Enter') {
       e.preventDefault()
-      const parentId = findParent(data, id) ?? containerId
-      relay({ type: 'create', parentId, key: undefined })
+      const parentId = findParent(data, id)
+      if (parentId) relay({ type: 'insertAfter', siblingId: id })
+      else          relay({ type: 'appendChild', parentId: id })
       return true
     }
     if (e.key === 'Backspace') {
@@ -208,7 +209,7 @@ export function useTreeGridPattern(
     const entry = rowMap.get(id)
     const it = entry?.it
     if (cellsMode) {
-      const isFocusRow = navMode === 'cellsFirst' && cellFocus?.rowId === id
+      const isFocusRow = navigationMode === 'cell' && cellFocus?.rowId === id
       return {
         role: 'row',
         'data-id': id,

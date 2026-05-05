@@ -1,14 +1,13 @@
-import { useState } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import {
+  ROOT, getChildren, getLabel, isDisabled,
+  type NormalizedData, type UiEvent, type ValueEvent,
+} from '../types'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export type CheckboxState = boolean | 'mixed'
 
 /** Options for {@link checkboxPattern}. */
 export interface CheckboxOptions {
-  checked?: CheckboxState
-  defaultChecked?: CheckboxState
-  onCheckedChange?: (next: boolean) => void
   disabled?: boolean
   required?: boolean
   invalid?: boolean
@@ -24,23 +23,20 @@ export interface CheckboxOptions {
  *   1) host element 가 `<button>` / `<div>` 인 케이스
  *   2) tri-state (`aria-checked="mixed"`)
  * 두 변종을 흡수. mixed → click 은 false → true 로 진행 (APG default).
+ *
+ * 시그니처는 `switchPattern` 정합 — `(checked, dispatch?, opts)`. dispatch 는
+ * `{type:'value', value: !current}` 만 emit (mixed → true). uncontrolled 모드는
+ * `useLocalValue` 와 조합.
  */
-export function checkboxPattern(opts: CheckboxOptions = {}): {
-  checkboxProps: ItemProps
-  checked: CheckboxState
-  setChecked: (next: boolean) => void
-} {
-  const { checked: cProp, defaultChecked = false, onCheckedChange, disabled, required, invalid, label, labelledBy } = opts
-  const [internal, setInternal] = useState<CheckboxState>(defaultChecked)
-  const isControlled = cProp !== undefined
-  const checked = isControlled ? cProp : internal
-  const setChecked = (next: boolean) => {
-    if (!isControlled) setInternal(next)
-    onCheckedChange?.(next)
-  }
+export function checkboxPattern(
+  checked: CheckboxState,
+  dispatch?: (e: ValueEvent<CheckboxState>) => void,
+  opts: CheckboxOptions = {},
+): { checkboxProps: ItemProps } {
+  const { disabled, required, invalid, label, labelledBy } = opts
   const toggle = () => {
     if (disabled) return
-    setChecked(checked === true ? false : true)
+    dispatch?.({ type: 'value', value: checked === true ? false : true })
   }
 
   const checkboxProps: ItemProps = {
@@ -63,14 +59,19 @@ export function checkboxPattern(opts: CheckboxOptions = {}): {
     },
   } as unknown as ItemProps
 
-  return { checkboxProps, checked, setChecked }
+  return { checkboxProps }
 }
 
 /** Options for {@link useCheckboxGroupPattern}. */
 export interface CheckboxGroupOptions {
   containerId?: string
+  /** group 전체 비활성화. 모든 child 가 disabled 면 자동으로 true 가 된다. */
+  disabled?: boolean
+  /** group container `aria-label`. */
   label?: string
   labelledBy?: string
+  /** parent checkbox 자체의 accessible name (group label 과 분리 가능). */
+  parentLabel?: string
 }
 
 /**
@@ -97,7 +98,7 @@ export function useCheckboxGroupPattern(
   parentChecked: CheckboxState
   items: BaseItem[]
 } {
-  const { containerId = ROOT, label, labelledBy } = opts
+  const { containerId = ROOT, disabled: optDisabled, label, labelledBy, parentLabel } = opts
   const ids = getChildren(data, containerId)
   const items: BaseItem[] = ids.map((id, i) => ({
     id,
@@ -107,13 +108,21 @@ export function useCheckboxGroupPattern(
     posinset: i + 1,
     setsize: ids.length,
   }))
-  const checkedCount = items.filter((it) => it.selected).length
+  // APG: disabled 자식은 parent 연산에서 제외. 영구 mixed 회피.
+  const enabled = items.filter((it) => !it.disabled)
+  const enabledIds = enabled.map((it) => it.id)
+  const checkedCount = enabled.filter((it) => it.selected).length
   const parentChecked: CheckboxState =
-    checkedCount === 0 ? false : checkedCount === items.length ? true : 'mixed'
+    enabled.length === 0 ? false
+    : checkedCount === 0 ? false
+    : checkedCount === enabled.length ? true
+    : 'mixed'
+  const groupDisabled = optDisabled || enabled.length === 0
 
   const toggleParent = () => {
+    if (groupDisabled) return
     const next = parentChecked !== true
-    onEvent?.({ type: 'selectMany', ids, to: next })
+    onEvent?.({ type: 'selectMany', ids: enabledIds, to: next })
   }
 
   const groupProps: RootProps = {
@@ -125,8 +134,11 @@ export function useCheckboxGroupPattern(
   const parentProps: ItemProps = {
     role: 'checkbox',
     type: 'button',
-    tabIndex: 0,
+    tabIndex: groupDisabled ? -1 : 0,
     'aria-checked': parentChecked === 'mixed' ? 'mixed' : Boolean(parentChecked),
+    'aria-disabled': groupDisabled || undefined,
+    'aria-controls': ids.length ? ids.join(' ') : undefined,
+    'aria-label': parentLabel,
     'data-state': parentChecked === 'mixed' ? 'mixed' : parentChecked ? 'checked' : 'unchecked',
     onClick: toggleParent,
     onKeyDown: (e: React.KeyboardEvent) => {
@@ -139,13 +151,15 @@ export function useCheckboxGroupPattern(
 
   const childProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
-    const disabled = it?.disabled || false
+    const disabled = (it?.disabled || false) || groupDisabled
     return {
+      id,
       role: 'checkbox',
       type: 'button',
       tabIndex: disabled ? -1 : 0,
       'aria-checked': Boolean(it?.selected),
       'aria-disabled': disabled || undefined,
+      'aria-label': it?.label,
       'data-state': it?.selected ? 'checked' : 'unchecked',
       onClick: () => {
         if (disabled) return
