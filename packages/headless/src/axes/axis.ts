@@ -1,5 +1,6 @@
 import type { UiEvent, NormalizedData } from '../types'
 import type { Trigger } from '../trigger'
+import { parseTrigger } from '../trigger'
 import { matchChord, type KeyChord } from './keys'
 
 /**
@@ -73,10 +74,11 @@ const applyTemplate = (t: UiEventTemplate, focusId: string): UiEvent => {
  *   ])
  */
 export const fromKeyMap = (entries: KeyMap): Axis => (d, id, t) => {
-  if (t.kind !== 'key') return null
+  const p = parseTrigger(t)
+  if (p.kind !== 'key') return null
   for (const [chord, rhs] of entries) {
     const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
-    if (!matchChord(t, list)) continue
+    if (!matchChord(p, list)) continue
     if (isHandlerFn(rhs)) return rhs(d, id)
     const tmpls = Array.isArray(rhs) ? rhs : [rhs as UiEventTemplate]
     return tmpls.map((tmpl) => applyTemplate(tmpl, id))

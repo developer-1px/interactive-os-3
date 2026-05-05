@@ -27,12 +27,23 @@ const detectMac = (): boolean => {
   return /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 }
 
+const cache = new Map<string, ParsedChord>()
+
 /**
  * parseChord — tinykeys string → ParsedChord. modifier 순서 무관, case-insensitive.
  *
  * `$mod` magic: Mac=Meta, 그 외=Control. opts.isMac 으로 override 가능 (test/SSR).
+ *
+ * 결과 캐시 (`Map<string, ParsedChord>`). opts 미지정 시 두 번째 호출부터 O(1).
  */
 export const parseChord = (s: Chord, opts: { isMac?: boolean } = {}): ParsedChord => {
+  if (!opts.isMac && cache.has(s)) return cache.get(s)!
+  const result = parseChordImpl(s, opts)
+  if (!opts.isMac) cache.set(s, result)
+  return result
+}
+
+const parseChordImpl = (s: Chord, opts: { isMac?: boolean } = {}): ParsedChord => {
   const isMac = opts.isMac ?? detectMac()
   // 마지막 '+' 이후를 key 로 (그 자체가 key 인 '+' 케이스도 포함).
   const lastPlus = s.lastIndexOf('+')

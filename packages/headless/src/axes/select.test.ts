@@ -14,7 +14,7 @@ const data: NormalizedData = {
   meta: {},
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('select axis', () => {
   it('emits select on Space chord', () => {
@@ -22,12 +22,12 @@ describe('select axis', () => {
   })
 
   it('emits select on click', () => {
-    expect(select(data, 'a', { kind: 'click' })).toEqual([{ type: 'select', id: 'a' }])
+    expect(select(data, 'a', 'Click')).toEqual([{ type: 'select', id: 'a' }])
   })
 
   it('returns null when disabled', () => {
     expect(select(data, 'dis', key(KEYS.Space))).toBeNull()
-    expect(select(data, 'dis', { kind: 'click' })).toBeNull()
+    expect(select(data, 'dis', 'Click')).toBeNull()
   })
 
   it('returns null on Enter (activate has priority)', () => {

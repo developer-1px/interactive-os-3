@@ -12,7 +12,7 @@ const data: NormalizedData = {
   meta: { root: ['a', 'b', 'c', 'd'] },
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('navigate axis (vertical)', () => {
   const ax = navigate('vertical')

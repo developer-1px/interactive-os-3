@@ -1,4 +1,5 @@
 import { fromKeyMap, type Axis, type KeyHandler } from './axis'
+import { parseTrigger } from '../trigger'
 import { getSelectAnchor, type NormalizedData, type UiEvent } from '../types'
 import { enabledSiblings } from './index'
 import { INTENTS } from './keys'
@@ -42,15 +43,29 @@ const rangeStep = (delta: number): KeyHandler => (d, id) => {
 }
 
 const multiSelectKeys: Axis = fromKeyMap([
-  [INTENTS.multiSelect.toggle, { type: 'select' }],
+  // Space — toggle add/remove. setAnchor 로 anchor 갱신 (select 는 single-replace
+  // 의미라 사용 불가). 그 뒤 selectMany 로 토글.
+  [INTENTS.multiSelect.toggle, (d, id) => {
+    const cur = Boolean(d.entities[id]?.selected)
+    return [{ type: 'setAnchor', id }, { type: 'selectMany', ids: [id], to: !cur }]
+  }],
   [INTENTS.multiSelect.selectAll, (d, id) => [{ type: 'selectMany', ids: enabledSiblings(d, id), to: true }]],
   [INTENTS.multiSelect.rangeDown, rangeStep(+1)],
   [INTENTS.multiSelect.rangeUp, rangeStep(-1)],
 ])
 
 export const multiSelect: Axis = (d, id, t) => {
-  if (t.kind === 'click') {
-    if (t.shift) return rangeFrom(d, id, id)
+  const p = parseTrigger(t)
+  if (p.kind === 'click') {
+    if (p.shift) return rangeFrom(d, id, id)
+    if (p.meta || p.ctrl) {
+      const cur = Boolean(d.entities[id]?.selected)
+      return [
+        { type: 'navigate', id },
+        { type: 'setAnchor', id },
+        { type: 'selectMany', ids: [id], to: !cur },
+      ]
+    }
     return [{ type: 'navigate', id }, { type: 'select', id }]
   }
   return multiSelectKeys(d, id, t)

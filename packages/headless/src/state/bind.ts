@@ -1,8 +1,7 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
 import type { Axis } from '../axes'
 import { ROOT, type NormalizedData, type UiEvent, type ValueEvent } from '../types'
-import { fromKeyboardEvent } from '../key'
-import { clickTrigger, keyTrigger } from '../trigger'
+import { eventToChord, clickTrigger } from '../trigger'
 
 /** axis 가 emit 한 UiEvent 를 React 의 onKeyDown/onClick 에 잇는 핸들러 페어. */
 export interface AxisBindings {
@@ -25,7 +24,7 @@ export const bindAxis = (
   onEvent: (e: UiEvent) => void,
 ): AxisBindings => ({
   onKey: (ke, id) => {
-    const events = axis(d, id, keyTrigger(fromKeyboardEvent(ke)))
+    const events = axis(d, id, eventToChord(ke as unknown as globalThis.KeyboardEvent))
     if (!events) return false
     events.forEach(onEvent)
     ke.preventDefault()

@@ -1,6 +1,7 @@
 import type { ValueEvent } from '../types'
 import type { ItemProps, RootProps } from './types'
 import { numericStep } from '../axes/numericStep'
+import { eventToChord } from '../trigger'
 
 /** Range slider axis — single-axis numericStep, applied per thumb. */
 export const sliderRangeAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
@@ -82,12 +83,7 @@ export function sliderRangePattern(
         relationships: {},
         meta: {},
       } as never
-      const trigger = {
-        kind: 'key',
-        key: e.key,
-        mods: { shift: e.shiftKey, ctrl: e.ctrlKey, alt: e.altKey, meta: e.metaKey },
-      } as never
-      const events = axis(data, '_thumb', trigger)
+      const events = axis(data, '_thumb', eventToChord(e as unknown as KeyboardEvent))
       if (!events) return
       const ev = events[0]
       if (!ev || ev.type !== 'value') return

@@ -18,7 +18,7 @@ const data: NormalizedData = {
   meta: { root: ['a', 'b'], expanded: ['a', 'a1'] },
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('treeNavigate axis', () => {
   it('ArrowDown moves to next visible (DFS, collapse-aware)', () => {

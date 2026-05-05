@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { gridNavigate } from './gridNavigate'
-import { keyTrigger } from '../trigger'
 import type { NormalizedData } from '../types'
 import { grid3x3 } from './_fixtures'
 
-const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
-  keyTrigger({ key, ctrl: false, shift: false, meta: false, alt: false, ...mods })
+const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}): string => {
+  const parts: string[] = []
+  if (mods.ctrl)  parts.push('Control')
+  if (mods.meta)  parts.push('Meta')
+  if (mods.shift) parts.push('Shift')
+  parts.push(key === ' ' ? 'Space' : key)
+  return parts.join('+')
+}
 
 describe('gridNavigate axis', () => {
   const d = grid3x3()
@@ -72,8 +77,7 @@ describe('gridNavigate axis', () => {
   })
 
   it('returns null for non-key triggers', () => {
-    const click = { kind: 'click', shift: false, ctrl: false, meta: false, alt: false } as const
-    expect(gridNavigate(d, 'c22', click)).toBeNull()
+    expect(gridNavigate(d, 'c22', 'Click')).toBeNull()
   })
 
   it('returns null for unrelated keys', () => {

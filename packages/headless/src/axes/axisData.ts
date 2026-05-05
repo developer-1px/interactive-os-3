@@ -9,7 +9,8 @@
 
 import type { UiEvent } from '../types'
 import type { Trigger } from '../trigger'
-import type { Chord, ParsedChord } from './chord'
+import { triggerMatches } from '../trigger'
+import type { Chord } from './chord'
 import { parseChord } from './chord'
 import type { UiEventTemplate } from './axis'
 
@@ -22,29 +23,19 @@ export type AxisEntry = readonly [
 /** AxisData — plain array, 직렬화 가능, grep 가능. */
 export type AxisData = readonly AxisEntry[]
 
-const matchParsed = (t: Trigger, c: ParsedChord): boolean => {
-  if (t.kind !== 'key') return false
-  return t.key === c.key
-    && Boolean(t.ctrl)  === Boolean(c.ctrl)
-    && Boolean(t.alt)   === Boolean(c.alt)
-    && Boolean(t.meta)  === Boolean(c.meta)
-    && Boolean(t.shift) === Boolean(c.shift)
-}
-
 const applyTemplate = (t: UiEventTemplate, focusId: string): UiEvent => {
   const hasId = typeof (t as { id?: unknown }).id === 'string' && (t as { id: string }).id.length > 0
   return (hasId ? t : { ...t, id: focusId }) as UiEvent
 }
 
 /**
- * runAxis — AxisData 를 trigger 에 대해 실행. 첫 매치 entry 의 template(s) 을
+ * runAxis — AxisData 를 string Trigger 에 대해 실행. 첫 매치 entry 의 template(s) 을
  * UiEvent[] 로 확장 (id 비면 focusId 자동 주입). 매치 없으면 null.
  */
 export const runAxis = (axis: AxisData, focusId: string, trigger: Trigger): UiEvent[] | null => {
-  if (trigger.kind !== 'key') return null
   for (const [chord, rhs] of axis) {
     const list = Array.isArray(chord) ? (chord as readonly Chord[]) : [chord as Chord]
-    const hit = list.some((s) => matchParsed(trigger, parseChord(s)))
+    const hit = list.some((s) => triggerMatches(trigger, s))
     if (!hit) continue
     const tmpls = Array.isArray(rhs) ? (rhs as readonly UiEventTemplate[]) : [rhs as UiEventTemplate]
     return tmpls.map((t) => applyTemplate(t, focusId))

@@ -1,4 +1,5 @@
 import type { Axis } from './axis'
+import { parseTrigger } from '../trigger'
 import { INTENTS, matchChord } from './keys'
 
 /** escapeKeys — 선언형 SSOT. escape axis 가 응답하는 chord 의 key 이름. */
@@ -12,7 +13,8 @@ export const escapeKeys = (): readonly string[] => INTENTS.escape.close.map((c) 
  * onEvent 에서 결정.
  */
 export const escape: Axis = (_d, id, t) => {
-  if (t.kind !== 'key') return null
-  if (!matchChord(t, INTENTS.escape.close)) return null
+  const p = parseTrigger(t)
+  if (p.kind !== 'key') return null
+  if (!matchChord(p, INTENTS.escape.close)) return null
   return [{ type: 'open', id, open: false }]
 }

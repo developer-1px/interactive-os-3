@@ -6,7 +6,7 @@ import { fromKeyMap } from './axis'
 import { INTENTS, KEYS } from './keys'
 
 const data = { entities: {}, relationships: {}, meta: {} } as NormalizedData
-const trigger = (key: string) => ({ kind: 'key' as const, key })
+const trigger = (k: string): string => k === ' ' ? 'Space' : k
 
 describe('fromKeyMap — template form (intent-form UiEvent)', () => {
   it('injects focusId into id-less template on chord match', () => {
