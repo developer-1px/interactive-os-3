@@ -17,28 +17,20 @@ const key = (k: string) => k
 describe('navigate axis (vertical)', () => {
   const ax = navigate('vertical')
 
-  it('moves to next sibling on ArrowDown', () => {
-    expect(ax(data, 'a', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'b' }])
+  it('emits dir:next on ArrowDown', () => {
+    expect(ax(data, 'a', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a', dir: 'next' }])
   })
 
-  it('moves to prev sibling on ArrowUp', () => {
-    expect(ax(data, 'b', key(KEYS.ArrowUp))).toEqual([{ type: 'navigate', id: 'a' }])
+  it('emits dir:prev on ArrowUp', () => {
+    expect(ax(data, 'b', key(KEYS.ArrowUp))).toEqual([{ type: 'navigate', id: 'b', dir: 'prev' }])
   })
 
-  it('wraps from last to first on ArrowDown', () => {
-    expect(ax(data, 'd', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a' }])
+  it('emits dir:start on Home', () => {
+    expect(ax(data, 'c', key(KEYS.Home))).toEqual([{ type: 'navigate', id: 'c', dir: 'start' }])
   })
 
-  it('wraps from first to last on ArrowUp', () => {
-    expect(ax(data, 'a', key(KEYS.ArrowUp))).toEqual([{ type: 'navigate', id: 'd' }])
-  })
-
-  it('jumps to first on Home', () => {
-    expect(ax(data, 'c', key(KEYS.Home))).toEqual([{ type: 'navigate', id: 'a' }])
-  })
-
-  it('jumps to last on End', () => {
-    expect(ax(data, 'a', key(KEYS.End))).toEqual([{ type: 'navigate', id: 'd' }])
+  it('emits dir:end on End', () => {
+    expect(ax(data, 'a', key(KEYS.End))).toEqual([{ type: 'navigate', id: 'a', dir: 'end' }])
   })
 
   it('returns null on non-matching key', () => {
@@ -50,8 +42,8 @@ describe('navigate axis (horizontal)', () => {
   const ax = navigate('horizontal')
 
   it('uses ArrowLeft/ArrowRight for prev/next', () => {
-    expect(ax(data, 'a', key(KEYS.ArrowRight))).toEqual([{ type: 'navigate', id: 'b' }])
-    expect(ax(data, 'b', key(KEYS.ArrowLeft))).toEqual([{ type: 'navigate', id: 'a' }])
+    expect(ax(data, 'a', key(KEYS.ArrowRight))).toEqual([{ type: 'navigate', id: 'a', dir: 'next' }])
+    expect(ax(data, 'b', key(KEYS.ArrowLeft))).toEqual([{ type: 'navigate', id: 'b', dir: 'prev' }])
   })
 
   it('does not respond to ArrowDown/ArrowUp', () => {

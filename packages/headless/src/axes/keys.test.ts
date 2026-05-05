@@ -68,7 +68,7 @@ describe('axes pull from SSOT (regression guard)', () => {
 
   it('navigate.vertical respects INTENTS.navigate.vertical.next', () => {
     const events = navigate('vertical')(data, 'a', k(INTENTS.navigate.vertical.next.key))
-    expect(events).toEqual([{ type: 'navigate', id: 'b' }])
+    expect(events).toEqual([{ type: 'navigate', id: 'a', dir: 'next' }])
   })
 
   it('activate ignores click without payload (test sanity)', () => {
