@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WrappersRouteImport } from './routes/wrappers'
+import { Route as UieventsRouteImport } from './routes/uievents'
 import { Route as PatternsRouteImport } from './routes/patterns'
 import { Route as MatrixRouteImport } from './routes/matrix'
 import { Route as DataRouteImport } from './routes/data'
@@ -22,6 +23,11 @@ import { Route as AppsFinderSplatRouteImport } from './routes/apps.finder.$'
 const WrappersRoute = WrappersRouteImport.update({
   id: '/wrappers',
   path: '/wrappers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UieventsRoute = UieventsRouteImport.update({
+  id: '/uievents',
+  path: '/uievents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PatternsRoute = PatternsRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/data': typeof DataRoute
   '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
+  '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/data': typeof DataRoute
   '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
+  '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/data': typeof DataRoute
   '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
+  '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/matrix'
     | '/patterns'
+    | '/uievents'
     | '/wrappers'
     | '/apps/finder/$'
     | '/apps/markdown/$'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/matrix'
     | '/patterns'
+    | '/uievents'
     | '/wrappers'
     | '/apps/finder/$'
     | '/apps/markdown/$'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/matrix'
     | '/patterns'
+    | '/uievents'
     | '/wrappers'
     | '/apps/finder/$'
     | '/apps/markdown/$'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   DataRoute: typeof DataRoute
   MatrixRoute: typeof MatrixRoute
   PatternsRoute: typeof PatternsRoute
+  UieventsRoute: typeof UieventsRoute
   WrappersRoute: typeof WrappersRoute
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
   AppsMarkdownSplatRoute: typeof AppsMarkdownSplatRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/wrappers'
       fullPath: '/wrappers'
       preLoaderRoute: typeof WrappersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uievents': {
+      id: '/uievents'
+      path: '/uievents'
+      fullPath: '/uievents'
+      preLoaderRoute: typeof UieventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/patterns': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   DataRoute: DataRoute,
   MatrixRoute: MatrixRoute,
   PatternsRoute: PatternsRoute,
+  UieventsRoute: UieventsRoute,
   WrappersRoute: WrappersRoute,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
   AppsMarkdownSplatRoute: AppsMarkdownSplatRoute,

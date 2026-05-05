@@ -8,12 +8,7 @@ import { router } from './router'
 // devtools overlay 는 DEV 에서만 lazy 로드.
 const Devtools = import.meta.env.DEV
   ? lazy(() => import('@p/devtools').then((m) => ({
-      default: () => (
-        <>
-          <m.ReproRecorderOverlay />
-          <m.SpacingOverlay />
-        </>
-      ),
+      default: () => <m.ReproRecorderOverlay />,
     })))
   : null
 
