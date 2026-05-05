@@ -90,7 +90,7 @@ export type JsonCrud<T extends JsonValue = JsonValue, I = unknown> = {
   canPaste: (targetId: NodeId, options?: PasteOptions) => OperationResult;
   canUndo: () => boolean;
   canRedo: () => boolean;
-  subscribe: (notify: () => void) => () => void;
+  subscribe: (notify: (changes: JsonChange[], focusNodeId?: NodeId) => void) => () => void;
   undo: () => OperationResult;
   redo: () => OperationResult;
 };
@@ -112,7 +112,7 @@ export function createJsonCrud<T extends JsonValue, I = unknown>(
   let redoStack: HistoryEntry[] = [];
   let clipboard: Clipboard | null = null;
   let nextNodeIndex = maxNodeIndex(doc) + 1;
-  const listeners = new Set<() => void>();
+  const listeners = new Set<(changes: JsonChange[], focusNodeId?: NodeId) => void>();
 
   const validation = validateDocument(schema, doc);
 
@@ -478,8 +478,10 @@ export function createJsonCrud<T extends JsonValue, I = unknown>(
       ...(previous.focusNodeIds === undefined ? {} : { focusNodeIds: previous.focusNodeIds }),
     });
     doc = previous.doc;
-    notifyListeners();
-    return successResult(current, previous.doc, invertChanges(previous.changes), previous.nodeId, undefined, undefined, options.focusFilter);
+    const undoChanges = invertChanges(previous.changes);
+    const undoResult = successResult(current, previous.doc, undoChanges, previous.nodeId, undefined, undefined, options.focusFilter);
+    notifyListeners(undoChanges, undoResult.ok ? undoResult.focusNodeId : undefined);
+    return undoResult;
   }
 
   function redo(): OperationResult {
@@ -499,8 +501,9 @@ export function createJsonCrud<T extends JsonValue, I = unknown>(
       ...(next.focusNodeIds === undefined ? {} : { focusNodeIds: next.focusNodeIds }),
     });
     doc = next.doc;
-    notifyListeners();
-    return successResult(current, next.doc, next.changes, next.nodeId, next.focusNodeId, next.focusNodeIds, options.focusFilter);
+    const redoResult = successResult(current, next.doc, next.changes, next.nodeId, next.focusNodeId, next.focusNodeIds, options.focusFilter);
+    notifyListeners(next.changes, redoResult.ok ? redoResult.focusNodeId : next.focusNodeId);
+    return redoResult;
   }
 
   function pasteCandidates(
@@ -691,7 +694,7 @@ export function createJsonCrud<T extends JsonValue, I = unknown>(
     });
     doc = next;
     redoStack = [];
-    notifyListeners();
+    notifyListeners(changes, focusNodeId);
   }
 
   function allocateNodeId(): NodeId {
@@ -706,16 +709,16 @@ export function createJsonCrud<T extends JsonValue, I = unknown>(
     return id;
   }
 
-  function subscribe(notify: () => void): () => void {
+  function subscribe(notify: (changes: JsonChange[], focusNodeId?: NodeId) => void): () => void {
     listeners.add(notify);
     return () => {
       listeners.delete(notify);
     };
   }
 
-  function notifyListeners(): void {
+  function notifyListeners(changes: JsonChange[], focusNodeId?: NodeId): void {
     for (const listener of listeners) {
-      listener();
+      listener(changes, focusNodeId);
     }
   }
 
