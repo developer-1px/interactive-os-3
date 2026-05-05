@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react'
 import {
-  ROOT, getChildren, getLabel, isDisabled, getFocus, getOpen,
+  ROOT, getChildren, getLabel, isDisabled, getFocus, isOpen,
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
@@ -125,7 +125,7 @@ export function useComboboxPattern(
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
 
-  const expanded = getOpen(data).has(ROOT)
+  const expanded = isOpen(data, ROOT)
   const activeId = getFocus(data) ?? null
   const allIds = getChildren(data, ROOT)
   const listId = `${idPrefix}-list`

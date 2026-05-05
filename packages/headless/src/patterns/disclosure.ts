@@ -1,5 +1,5 @@
 import type { ItemProps, RootProps } from './types'
-import { getExpanded, type NormalizedData, type UiEvent } from '../types'
+import { isExpanded, type NormalizedData, type UiEvent } from '../types'
 import { activate } from '../axes'
 import { bindAxis } from '../state/bind'
 
@@ -39,7 +39,7 @@ export function disclosurePattern(
   panelProps: RootProps
 } {
   const { onOpenChange, idPrefix = 'disc' } = opts
-  const open = getExpanded(data).has(id)
+  const open = isExpanded(data, id)
   const panelId = `${idPrefix}-${id}-panel`
 
   const intent = (e: UiEvent) => {

@@ -51,16 +51,17 @@ export type UiEvent =
   /** zoom: cursor (cx, cy)를 고정점으로 scale을 k 배 — Figma/Miro 식 cursor-anchored zoom */
   | { type: 'zoom'; id: string; cx: number; cy: number; k: number }
   /**
-   * Edit / Clipboard / History 어휘 (8종) — 정본은 zod-crud `JsonCrud` op.
-   * ARIA spec 밖이라 상태 어휘 정본주의로 결정 불가 → 이미 닫힌 op 어휘를 차용.
-   * `update`는 id-bound (`ValueEvent<T>`는 id 없는 단일값 변종, 슬라이더/스위치 전용).
+   * Edit / Clipboard / History 어휘 — 정본 = zod-crud `JsonCrud` op 1:1.
+   * 의도적으로 시그니처가 zod-crud 와 동일 (insertAfter / appendChild / update / delete / copy / cut / paste / undo / redo).
+   * 추상화 0, 옵션 0 — opinionated.
    */
-  | { type: 'create'; parentId: string; key?: string | number; value?: unknown }
+  | { type: 'insertAfter'; siblingId: string; value?: unknown }
+  | { type: 'appendChild'; parentId: string; value?: unknown }
   | { type: 'update'; id: string; value: unknown }
   | { type: 'remove'; id: string }
   | { type: 'copy'; id: string }
   | { type: 'cut'; id: string }
-  | { type: 'paste'; id: string; mode?: 'auto' | 'child' | 'overwrite' }
+  | { type: 'paste'; targetId: string; mode?: 'auto' | 'child' | 'overwrite'; index?: number }
   | { type: 'undo' }
   | { type: 'redo' }
 
@@ -124,6 +125,14 @@ export const isSelected = (d: NormalizedData, id: string): boolean =>
 /** id 가 현재 focus 와 일치하는지. */
 export const isFocused = (d: NormalizedData, id: string): boolean =>
   d.meta?.focus === id
+
+/** id 가 `meta.open` 집합에 포함되는지 (popover/menu/dialog/combobox popup). */
+export const isOpen = (d: NormalizedData, id: string): boolean =>
+  d.meta?.open?.includes(id) ?? false
+
+/** id 가 `meta.expanded` 집합에 포함되는지 (accordion/tree branch). */
+export const isExpanded = (d: NormalizedData, id: string): boolean =>
+  d.meta?.expanded?.includes(id) ?? false
 
 /** ControlProps — data + onEvent. 상호작용 컴포넌트의 공용 prop shape. */
 export interface ControlProps<
