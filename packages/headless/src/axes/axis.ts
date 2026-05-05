@@ -2,6 +2,8 @@ import type { UiEvent, NormalizedData } from '../types'
 import type { Trigger } from '../trigger'
 import { parseTrigger } from '../trigger'
 import { matchChord, type KeyChord } from './keys'
+import { type Chord } from './chord'
+import { triggerMatches } from '../trigger'
 
 /**
  * Axis — data 기반 APG 키/포인터 처리 primitive.
@@ -87,7 +89,8 @@ export type KeyMapEntryRhs = UiEventTemplate | UiEventTemplate[] | KeyHandler
  * - tuple 순서 = 우선순위 (앞쪽 항목 먼저 매칭, 첫 hit 의 결과 반환)
  * - chord 는 항상 `INTENTS.X` 또는 `KEYS.X` 통과 — raw 문자열 금지
  */
-export type KeyMap = ReadonlyArray<readonly [KeyChord | readonly KeyChord[], KeyMapEntryRhs]>
+export type KeyMapChord = KeyChord | readonly KeyChord[] | Chord | readonly Chord[]
+export type KeyMap = ReadonlyArray<readonly [KeyMapChord, KeyMapEntryRhs]>
 
 const isHandlerFn = (rhs: KeyMapEntryRhs): rhs is KeyHandler => typeof rhs === 'function'
 const applyTemplate = (t: UiEventTemplate, focusId: string): UiEvent => {
@@ -115,13 +118,28 @@ const chordToString = (c: KeyChord): string => {
   return parts.join('+')
 }
 
+const isStringChord = (c: unknown): c is Chord => typeof c === 'string'
+const normalizeChord = (chord: KeyMapChord): { strings: readonly Chord[]; objects: readonly KeyChord[] } => {
+  const arr = Array.isArray(chord) ? chord : [chord]
+  const strings: Chord[] = []
+  const objects: KeyChord[] = []
+  for (const c of arr) {
+    if (isStringChord(c)) strings.push(c)
+    else objects.push(c as KeyChord)
+  }
+  return { strings, objects }
+}
+
 export const fromKeyMap = (entries: KeyMap): Axis => {
   const fn = (d: NormalizedData, id: string, t: Trigger): UiEvent[] | null => {
     const p = parseTrigger(t)
     if (p.kind !== 'key') return null
     for (const [chord, rhs] of entries) {
-      const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
-      if (!matchChord(p, list)) continue
+      const { strings, objects } = normalizeChord(chord)
+      const hit =
+        (objects.length > 0 && matchChord(p, objects)) ||
+        (strings.length > 0 && strings.some((s) => triggerMatches(t, s)))
+      if (!hit) continue
       if (isHandlerFn(rhs)) return rhs(d, id)
       const tmpls = Array.isArray(rhs) ? rhs : [rhs as UiEventTemplate]
       return tmpls.map((tmpl) => applyTemplate(tmpl, id))
@@ -131,9 +149,12 @@ export const fromKeyMap = (entries: KeyMap): Axis => {
   const chords: string[] = []
   const seen = new Set<string>()
   for (const [chord] of entries) {
-    const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
-    for (const c of list) {
+    const { strings, objects } = normalizeChord(chord)
+    for (const c of objects) {
       const s = chordToString(c)
+      if (!seen.has(s)) { seen.add(s); chords.push(s) }
+    }
+    for (const s of strings) {
       if (!seen.has(s)) { seen.add(s); chords.push(s) }
     }
   }

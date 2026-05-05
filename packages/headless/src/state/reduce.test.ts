@@ -1,6 +1,9 @@
 /**
- * reduce — selectMany 의 default 의미 검증 (#23).
- * `entities[id].selected` 를 `to` 로 write. `to` undefined 면 토글.
+ * reduce — core invariant: select/selectMany 는 identity (host territory).
+ * 의미는 `singleSelect` / `multiSelectToggle` / `singleCheck` / `checkToggle` 가 합성.
+ *
+ * #23/#24 가 #37 (PRD: check/select 두 축 분리) 로 superseded — selectMany 의
+ * entity-write 책임은 multiSelectToggle 에 단일화. core 는 anchor 만 메타로 갱신.
  */
 import { describe, expect, it } from 'vitest'
 import { reduce } from './reduce'
@@ -14,29 +17,34 @@ const data = (selected: Record<string, boolean | undefined>): NormalizedData => 
   meta: {},
 })
 
-describe('reduce — selectMany default semantics (#23)', () => {
-  it('to:true sets all ids to selected:true', () => {
-    const next = reduce(data({ a: false, b: false }), { type: 'selectMany', ids: ['a', 'b'], to: true })
-    expect(next.entities.a.selected).toBe(true)
-    expect(next.entities.b.selected).toBe(true)
+describe('reduce — core invariants', () => {
+  it('selectMany is identity in core (host territory)', () => {
+    const d = data({ a: false, b: false })
+    const next = reduce(d, { type: 'selectMany', ids: ['a', 'b'], to: true })
+    expect(next).toBe(d)
   })
 
-  it('to:false sets all ids to selected:false', () => {
-    const next = reduce(data({ a: true, b: true }), { type: 'selectMany', ids: ['a', 'b'], to: false })
-    expect(next.entities.a.selected).toBe(false)
-    expect(next.entities.b.selected).toBe(false)
+  it('check is identity in core (host territory)', () => {
+    const d = data({ a: false })
+    const next = reduce(d, { type: 'check', id: 'a', to: true })
+    expect(next).toBe(d)
   })
 
-  it('to undefined toggles each id', () => {
-    const next = reduce(data({ a: true, b: false }), { type: 'selectMany', ids: ['a', 'b'] })
-    expect(next.entities.a.selected).toBe(false)
-    expect(next.entities.b.selected).toBe(true)
+  it('checkMany is identity in core (host territory)', () => {
+    const d = data({ a: false, b: false })
+    const next = reduce(d, { type: 'checkMany', ids: ['a', 'b'], to: true })
+    expect(next).toBe(d)
   })
 
-  it('preserves entities not in ids', () => {
-    const next = reduce(data({ a: false, b: false, c: true }), { type: 'selectMany', ids: ['a'], to: true })
-    expect(next.entities.a.selected).toBe(true)
-    expect(next.entities.b.selected).toBe(false)
-    expect(next.entities.c.selected).toBe(true)
+  it('select is identity in core (anchor 갱신은 setAnchor 단일 책임)', () => {
+    const d = data({ a: false })
+    const next = reduce(d, { type: 'select', id: 'a' })
+    expect(next).toBe(d)
+  })
+
+  it('setAnchor sets meta.selectAnchor (axis-driven anchor 갱신)', () => {
+    const d = data({ a: false })
+    const next = reduce(d, { type: 'setAnchor', id: 'a' })
+    expect(next.meta?.selectAnchor).toBe('a')
   })
 })

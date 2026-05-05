@@ -33,7 +33,7 @@ export function usePatternBase(
   ids: string[]
 } {
   const { containerId = ROOT, autoFocus } = opts
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay ?? (() => {}), {
     autoFocus,
     containerId,
   })

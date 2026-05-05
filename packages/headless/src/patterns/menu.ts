@@ -1,13 +1,12 @@
 import { useCallback, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { KEYS, matchChord, type KeyChord } from '../axes/keys'
-import { activate, composeAxes, escape, expand, navigate, typeahead } from '../axes'
+import { activate, composeAxes, escape, expand, navigate, typeahead, matchAnyChord } from '../axes'
 
 /** menu trigger button chord registry — declarative SSOT. */
-const TRIGGER_OPEN_CHORDS: readonly KeyChord[] = [{ key: KEYS.ArrowDown }]
+const TRIGGER_OPEN_CHORDS = ['ArrowDown'] as const
 
 /** menuButtonTriggerKeys — trigger button 이 등록하는 키 (open 트리거). */
-export const menuButtonTriggerKeys = (): readonly string[] => TRIGGER_OPEN_CHORDS.map((c) => c.key)
+export const menuButtonTriggerKeys = (): readonly string[] => [...TRIGGER_OPEN_CHORDS]
 import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -139,7 +138,7 @@ export function useMenuPattern(
     'aria-expanded': open,
     onClick: () => setOpen(!open),
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (!open && matchChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_CHORDS)) {
+      if (!open && matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_CHORDS)) {
         e.preventDefault()
         setOpen(true)
       }

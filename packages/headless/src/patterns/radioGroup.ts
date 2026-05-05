@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
-import { useRovingTabIndex } from '../roving/useRovingTabIndex'
+import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Options for {@link useRadioGroupPattern}. */
@@ -68,15 +68,14 @@ export function useRadioGroupPattern(
     [data, onEvent],
   )
 
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
-  const ids = getChildren(data, ROOT)
+  const { focusId, bindFocus, delegate, ids } = usePatternBase(data, axis, relay, { autoFocus })
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}
     return {
       id,
       label: getLabel(data, id),
-      selected: Boolean(ent.selected),
+      selected: Boolean(ent.checked),
       disabled: isDisabled(data, id),
       posinset: i + 1,
       setsize: ids.length,

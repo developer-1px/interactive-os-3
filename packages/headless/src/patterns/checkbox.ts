@@ -2,18 +2,18 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent, type ValueEvent,
 } from '../types'
-import { KEYS, matchChord } from '../axes'
-import type { KeyChord } from '../axes/keys'
+import { matchAnyChord } from '../axes'
+import { parseChord } from '../axes/chord'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
-/** checkbox keymap registry — declarative SSOT. probe / checkboxKeys 가 읽음. */
-const CHECKBOX_CHORDS: readonly KeyChord[] = [{ key: KEYS.Space }]
+/** checkbox keymap registry — declarative SSOT. axisKeys / checkboxKeys 가 읽음. */
+const CHECKBOX_CHORDS = ['Space'] as const
 
 /** checkboxKeys — chord registry 에서 자동 도출. 손으로 적은 사본 0. */
-export const checkboxKeys = (): readonly string[] => CHECKBOX_CHORDS.map((c) => c.key)
+export const checkboxKeys = (): readonly string[] => CHECKBOX_CHORDS.map((c) => parseChord(c).key)
 
 const handleCheckboxKey = (e: React.KeyboardEvent, action: () => void): void => {
-  if (!CHECKBOX_CHORDS.some((c) => matchChord(e as unknown as KeyboardEvent, c))) return
+  if (!matchAnyChord(e as unknown as KeyboardEvent, CHECKBOX_CHORDS)) return
   e.preventDefault()
   action()
 }
@@ -111,7 +111,7 @@ export function useCheckboxGroupPattern(
   const items: BaseItem[] = ids.map((id, i) => ({
     id,
     label: getLabel(data, id),
-    selected: Boolean(data.entities[id]?.selected),
+    selected: Boolean(data.entities[id]?.checked),
     disabled: isDisabled(data, id),
     posinset: i + 1,
     setsize: ids.length,
@@ -130,7 +130,7 @@ export function useCheckboxGroupPattern(
   const toggleParent = () => {
     if (groupDisabled) return
     const next = parentChecked !== true
-    onEvent?.({ type: 'selectMany', ids: enabledIds, to: next })
+    onEvent?.({ type: 'checkMany', ids: enabledIds, to: next })
   }
 
   const groupProps: RootProps = {
@@ -166,11 +166,11 @@ export function useCheckboxGroupPattern(
       'data-state': it?.selected ? 'checked' : 'unchecked',
       onClick: () => {
         if (disabled) return
-        onEvent?.({ type: 'selectMany', ids: [id], to: !it?.selected })
+        onEvent?.({ type: 'check', id, to: !it?.selected })
       },
       onKeyDown: (e: React.KeyboardEvent) => {
         if (disabled) return
-        handleCheckboxKey(e, () => onEvent?.({ type: 'selectMany', ids: [id], to: !it?.selected }))
+        handleCheckboxKey(e, () => onEvent?.({ type: 'check', id, to: !it?.selected }))
       },
     } as unknown as ItemProps
   }

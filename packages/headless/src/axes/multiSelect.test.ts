@@ -73,9 +73,10 @@ describe('multiSelect axis', () => {
     expect(multiSelect(data('a'), 'a', key(KEYS.ArrowUp, { shift: true }))).toBeNull()
   })
 
-  it('plain click navigates + selects', () => {
+  it('plain click navigates + sets anchor + single-replaces', () => {
     expect(multiSelect(data(), 'b', click())).toEqual([
       { type: 'navigate', id: 'b' },
+      { type: 'setAnchor', id: 'b' },
       { type: 'select', id: 'b' },
     ])
   })

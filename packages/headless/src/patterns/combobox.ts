@@ -4,22 +4,21 @@ import {
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, INTENTS, matchChord,
+  activate as activateAxis, composeAxes, escape as escapeAxis, INTENT_CHORDS, matchAnyChord,
   navigate as navigateAxis,
 } from '../axes'
-import type { KeyChord } from '../axes/keys'
 import { bindAxis } from '../state/bind'
 import { useValue } from '../state/useValue'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** combobox chord registry — declarative SSOT. */
-const ARROW_DOWN: readonly KeyChord[] = [{ key: KEYS.ArrowDown }]
-const ARROW_UP: readonly KeyChord[] = [{ key: KEYS.ArrowUp }]
-const HOME: readonly KeyChord[] = [{ key: KEYS.Home }]
-const END: readonly KeyChord[] = [{ key: KEYS.End }]
-const FORWARD_OPEN: readonly KeyChord[] = [...ARROW_DOWN, ...HOME] // closed → first
-const BACKWARD_OPEN: readonly KeyChord[] = [...ARROW_UP, ...END] // closed → last
+const ARROW_DOWN = ['ArrowDown'] as const
+const ARROW_UP = ['ArrowUp'] as const
+const HOME = ['Home'] as const
+const END = ['End'] as const
+const FORWARD_OPEN = [...ARROW_DOWN, ...HOME] as const
+const BACKWARD_OPEN = [...ARROW_UP, ...END] as const
 
 /** Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter) */
 export const comboboxAxis = () =>
@@ -193,33 +192,33 @@ export function useComboboxPattern(
     // select-only + closed: Enter/Space/Down/Up/Home/End all open popup (APG)
     const ev = e as unknown as KeyboardEvent
     if (!editable && !expanded && (
-      matchChord(ev, INTENTS.activate.trigger) ||
-      matchChord(ev, ARROW_DOWN) || matchChord(ev, ARROW_UP) ||
-      matchChord(ev, HOME) || matchChord(ev, END)
+      matchAnyChord(ev, INTENT_CHORDS.activate.trigger) ||
+      matchAnyChord(ev, ARROW_DOWN) || matchAnyChord(ev, ARROW_UP) ||
+      matchAnyChord(ev, HOME) || matchAnyChord(ev, END)
     )) {
       e.preventDefault()
       onEvent?.({ type: 'open', id: ROOT, open: true })
-      const target = matchChord(ev, BACKWARD_OPEN)
+      const target = matchAnyChord(ev, BACKWARD_OPEN)
         ? allIds[allIds.length - 1]
         : (selectedId ?? allIds[0])
       if (target) onEvent?.({ type: 'navigate', id: target })
       return
     }
     if (!activeId) {
-      if (matchChord(ev, FORWARD_OPEN)) {
+      if (matchAnyChord(ev, FORWARD_OPEN)) {
         e.preventDefault()
         const target = visibleIds[0]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
-      if (matchChord(ev, BACKWARD_OPEN)) {
+      if (matchAnyChord(ev, BACKWARD_OPEN)) {
         e.preventDefault()
         const target = visibleIds[visibleIds.length - 1]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
     }
-    if ((matchChord(ev, HOME) || matchChord(ev, END)) && !expanded) return
+    if ((matchAnyChord(ev, HOME) || matchAnyChord(ev, END)) && !expanded) return
     dispatchKey(e, activeId ?? ROOT)
   }
 

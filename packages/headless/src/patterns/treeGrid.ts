@@ -1,19 +1,19 @@
 // editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, INTENTS, matchChord } from '../axes'
-import type { KeyChord } from '../axes/keys'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, INTENT_CHORDS, matchAnyChord } from '../axes'
+import { parseChord } from '../axes/chord'
 
 /** treeGrid edit-mode chord registry — declarative SSOT. */
-const TREEGRID_EDIT_INSERT: readonly KeyChord[] = [{ key: KEYS.Enter }]
-const TREEGRID_EDIT_REMOVE: readonly KeyChord[] = [{ key: KEYS.Backspace }]
-const TREEGRID_EDIT_ACTIVATE_TAB: readonly KeyChord[] = [{ key: KEYS.Tab }]
+const TREEGRID_EDIT_INSERT = ['Enter'] as const
+const TREEGRID_EDIT_REMOVE = ['Backspace'] as const
+const TREEGRID_EDIT_ACTIVATE_TAB = ['Tab'] as const
 
 /** treeGridEditKeys — chord registry 합집합 도출. */
 export const treeGridEditKeys = (): readonly string[] =>
   Array.from(new Set([
     ...TREEGRID_EDIT_INSERT, ...TREEGRID_EDIT_REMOVE, ...TREEGRID_EDIT_ACTIVATE_TAB,
-  ].map((c) => c.key)))
+  ].map((c) => parseChord(c).key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -160,19 +160,19 @@ export function useTreeGridPattern(
 
   const editKeyDown = (id: string | undefined, e: React.KeyboardEvent): boolean => {
     if (!editable || !id || id === containerId) return false
-    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_INSERT)) {
+    if (matchAnyChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_INSERT)) {
       e.preventDefault()
       const parentId = findParent(data, id)
       if (parentId) relay({ type: 'insertAfter', siblingId: id })
       else          relay({ type: 'appendChild', parentId: id })
       return true
     }
-    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_REMOVE)) {
+    if (matchAnyChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_REMOVE)) {
       e.preventDefault()
       relay({ type: 'remove', id })
       return true
     }
-    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_ACTIVATE_TAB)) {
+    if (matchAnyChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_ACTIVATE_TAB)) {
       e.preventDefault()
       relay({ type: 'activate', id })
       return true
@@ -182,13 +182,13 @@ export function useTreeGridPattern(
 
   const cellModeKeyDown = (rowId: string, _col: number) => (e: React.KeyboardEvent) => {
     if (editKeyDown(rowId, e)) return
-    if (matchChord(e, INTENTS.gridNavigate.left)) { e.preventDefault(); moveCell(0, -1); return }
-    if (matchChord(e, INTENTS.gridNavigate.right)) { e.preventDefault(); moveCell(0, 1); return }
-    if (matchChord(e, INTENTS.gridNavigate.up)) { e.preventDefault(); moveCell(-1, 0); return }
-    if (matchChord(e, INTENTS.gridNavigate.down)) { e.preventDefault(); moveCell(1, 0); return }
-    if (matchChord(e, INTENTS.gridNavigate.rowStart)) { e.preventDefault(); setCellFocus({ rowId, col: 0 }); return }
-    if (matchChord(e, INTENTS.gridNavigate.rowEnd)) { e.preventDefault(); setCellFocus({ rowId, col: colsCount - 1 }); return }
-    if (matchChord(e, INTENTS.activate.trigger)) {
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.left])) { e.preventDefault(); moveCell(0, -1); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.right])) { e.preventDefault(); moveCell(0, 1); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.up])) { e.preventDefault(); moveCell(-1, 0); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.down])) { e.preventDefault(); moveCell(1, 0); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.rowStart])) { e.preventDefault(); setCellFocus({ rowId, col: 0 }); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, [INTENT_CHORDS.gridNavigate.rowEnd])) { e.preventDefault(); setCellFocus({ rowId, col: colsCount - 1 }); return }
+    if (matchAnyChord(e as unknown as KeyboardEvent, INTENT_CHORDS.activate.trigger)) {
       e.preventDefault()
       relay({ type: 'activate', id: rowId })
     }

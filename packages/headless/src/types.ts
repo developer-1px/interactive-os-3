@@ -52,6 +52,12 @@ export type UiEvent =
   | { type: 'select'; id: string }
   /** Batch select for multi-mode all/range/none — O(N) instead of N×O(N²) per-event spread. `to` undefined ⇒ toggle. */
   | { type: 'selectMany'; ids: string[]; to?: boolean }
+  /** setAnchor — range-select 의 시작점 갱신. Space/Cmd+click 같은 사용자-의도 토글에서 axis 가 emit. */
+  | { type: 'setAnchor'; id: string }
+  /** check — `aria-checked` 축. checkbox/radio/switch 의 독립 boolean 상태. `to` undefined ⇒ toggle. */
+  | { type: 'check'; id: string; to?: boolean | 'mixed' }
+  /** Batch check — checkbox group 의 부모 cascade 등. `to` undefined ⇒ 각 id 독립 토글. */
+  | { type: 'checkMany'; ids: string[]; to?: boolean | 'mixed' }
   | { type: 'value'; id: string; value: unknown }
   | { type: 'open'; id: string; open: boolean }
   | { type: 'typeahead'; buf: string; deadline: number }

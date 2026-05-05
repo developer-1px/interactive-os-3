@@ -48,9 +48,3 @@ export {
 export { useHistoryShortcuts } from './key/useHistoryShortcuts'
 export { useClipboardShortcuts } from './key/useClipboardShortcuts'
 
-export {
-  defineMiddleware,
-  type Middleware, type Phase,
-  type PreDispatchCtx, type PostDispatchCtx, type ResourceCtx,
-} from './middleware'
-

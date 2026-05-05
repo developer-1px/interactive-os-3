@@ -24,7 +24,7 @@ describe('checkboxPattern', () => {
 })
 
 describe('useCheckboxGroupPattern', () => {
-  it('Space on parent toggles via selectMany', () => {
+  it('Space on parent emits checkMany cascade', () => {
     const data = fromList([{ id: 'a' }, { id: 'b' }])
     const onEvent = vi.fn()
     function H() {
@@ -33,12 +33,12 @@ describe('useCheckboxGroupPattern', () => {
     }
     const { getByText } = render(<H />)
     fireEvent.keyDown(getByText('p'), { key: ' ' })
-    expect(onEvent).toHaveBeenCalledWith(expect.objectContaining({ type: 'selectMany' }))
+    expect(onEvent).toHaveBeenCalledWith(expect.objectContaining({ type: 'checkMany' }))
   })
 })
 
-describe('useCheckboxGroupPattern child toggle (#24)', () => {
-  it('child click emits selectMany with toggled to', () => {
+describe('useCheckboxGroupPattern child toggle', () => {
+  it('child click emits check with toggled to', () => {
     const data = fromList([{ id: 'a' }, { id: 'b' }])
     const onEvent = vi.fn()
     function H() {
@@ -47,10 +47,10 @@ describe('useCheckboxGroupPattern child toggle (#24)', () => {
     }
     const { getByText } = render(<H />)
     fireEvent.click(getByText('a'))
-    expect(onEvent).toHaveBeenCalledWith({ type: 'selectMany', ids: ['a'], to: true })
+    expect(onEvent).toHaveBeenCalledWith({ type: 'check', id: 'a', to: true })
   })
 
-  it('child Space emits selectMany', () => {
+  it('child Space emits check', () => {
     const data = fromList([{ id: 'a' }])
     const onEvent = vi.fn()
     function H() {
@@ -59,12 +59,12 @@ describe('useCheckboxGroupPattern child toggle (#24)', () => {
     }
     const { getByText } = render(<H />)
     fireEvent.keyDown(getByText('a'), { key: ' ' })
-    expect(onEvent).toHaveBeenCalledWith({ type: 'selectMany', ids: ['a'], to: true })
+    expect(onEvent).toHaveBeenCalledWith({ type: 'check', id: 'a', to: true })
   })
 
-  it('child click on already-selected toggles to false', () => {
+  it('child click on already-checked toggles to false', () => {
     const data: NormalizedData = {
-      entities: { a: { id: 'a', selected: true } },
+      entities: { a: { id: 'a', checked: true } },
       relationships: { ROOT: ['a'] },
       meta: { root: ['a'] },
     }
@@ -75,7 +75,7 @@ describe('useCheckboxGroupPattern child toggle (#24)', () => {
     }
     const { getByText } = render(<H />)
     fireEvent.click(getByText('a'))
-    expect(onEvent).toHaveBeenCalledWith({ type: 'selectMany', ids: ['a'], to: false })
+    expect(onEvent).toHaveBeenCalledWith({ type: 'check', id: 'a', to: false })
   })
 })
 

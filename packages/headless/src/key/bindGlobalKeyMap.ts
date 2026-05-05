@@ -9,6 +9,7 @@
 import type { KeyMap, UiEventTemplate } from '../axes/axis'
 import type { KeyChord } from '../axes/keys'
 import { matchChord } from '../axes/keys'
+import { matchAnyChord, type Chord } from '../axes/chord'
 import type { UiEvent } from '../types'
 
 const isEditable = (t: EventTarget | null): boolean => {
@@ -19,8 +20,18 @@ const isEditable = (t: EventTarget | null): boolean => {
 }
 
 const hasModifier = (c: KeyChord): boolean => !!(c.ctrl || c.alt || c.meta)
-const chordList = (chord: KeyChord | readonly KeyChord[]): readonly KeyChord[] =>
-  Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
+const isStringChord = (c: unknown): c is Chord => typeof c === 'string'
+const splitChords = (chord: unknown): { strings: readonly Chord[]; objects: readonly KeyChord[] } => {
+  const arr = Array.isArray(chord) ? chord : [chord]
+  const strings: Chord[] = []
+  const objects: KeyChord[] = []
+  for (const c of arr) {
+    if (isStringChord(c)) strings.push(c)
+    else objects.push(c as KeyChord)
+  }
+  return { strings, objects }
+}
+const stringHasModifier = (s: string): boolean => /(?:Control|Ctrl|Alt|Meta|\$mod)\+/.test(s)
 
 const fromEvent = (e: KeyboardEvent): KeyChord => ({
   key: e.key, ctrl: e.ctrlKey, alt: e.altKey, meta: e.metaKey, shift: e.shiftKey,
@@ -34,10 +45,13 @@ export const bindGlobalKeyMap = (
     if (e.defaultPrevented) return
     const trig = fromEvent(e)
     for (const [chord, rhs] of entries) {
-      const list = chordList(chord)
-      if (!matchChord(trig, list)) continue
+      const { strings, objects } = splitChords(chord)
+      const hit =
+        (objects.length > 0 && matchChord(trig, objects)) ||
+        (strings.length > 0 && matchAnyChord(e, strings))
+      if (!hit) continue
       // editable 안에서 modifier 없는 chord 는 탈취 금지
-      const anyModified = list.some(hasModifier)
+      const anyModified = objects.some(hasModifier) || strings.some(stringHasModifier)
       if (!anyModified && isEditable(e.target)) return
       e.preventDefault()
       if (typeof rhs === 'function') return // 글로벌은 KeyHandler 미지원 (data/focusId 없음)

@@ -28,8 +28,8 @@ describe('usePatternBase', () => {
   it('honors custom containerId', () => {
     const nested = fromTree([
       { id: 'parent', label: 'P', children: [
-        { id: 'x', label: 'X' },
-        { id: 'y', label: 'Y' },
+        { id: 'x', label: 'X', children: [] },
+        { id: 'y', label: 'Y', children: [] },
       ] },
     ])
     const { result } = renderHook(() => usePatternBase(nested, axis, undefined, { containerId: 'parent' }))

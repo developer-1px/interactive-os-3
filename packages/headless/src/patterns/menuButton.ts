@@ -3,24 +3,23 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { KEYS, INTENTS, matchChord } from '../axes'
-import type { KeyChord } from '../axes/keys'
+import { KEYS, INTENT_CHORDS, matchAnyChord } from '../axes'
+import { parseChord } from '../axes/chord'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
-/** menuButton chord registry — declarative SSOT. probe / menuButtonKeys 가 읽음. */
-const TRIGGER_OPEN_DOWN: readonly KeyChord[] = [{ key: KEYS.ArrowDown }, ...INTENTS.activate.trigger]
-const TRIGGER_OPEN_UP: readonly KeyChord[] = [{ key: KEYS.ArrowUp }]
-const MENU_NAV_CHORDS: readonly KeyChord[] = [
-  { key: KEYS.ArrowDown }, { key: KEYS.ArrowUp },
-  { key: KEYS.Home }, { key: KEYS.End },
-  ...INTENTS.escape.close,
-  ...INTENTS.activate.trigger,
-]
+/** menuButton chord registry — declarative SSOT. */
+const TRIGGER_OPEN_DOWN = ['ArrowDown', ...INTENT_CHORDS.activate.trigger] as const
+const TRIGGER_OPEN_UP = ['ArrowUp'] as const
+const MENU_NAV_CHORDS = [
+  'ArrowDown', 'ArrowUp', 'Home', 'End',
+  INTENT_CHORDS.escape.close,
+  ...INTENT_CHORDS.activate.trigger,
+] as const
 
 /** menuButtonKeys — chord registry 합집합에서 자동 도출. */
 export const menuButtonKeys = (): readonly string[] => {
   const all = [...TRIGGER_OPEN_DOWN, ...TRIGGER_OPEN_UP, ...MENU_NAV_CHORDS]
-  return Array.from(new Set(all.map((c) => c.key)))
+  return Array.from(new Set(all.map((c) => parseChord(c).key)))
 }
 
 /** Options for {@link useMenuButtonPattern}. */
@@ -169,11 +168,11 @@ export function useMenuButtonPattern(
     },
     onKeyDown: (e: React.KeyboardEvent) => {
       if (!open) {
-        if (matchChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_DOWN)) {
+        if (matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_DOWN)) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[0] ?? null)
-        } else if (matchChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_UP)) {
+        } else if (matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_UP)) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[ids.length - 1] ?? null)

@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
 
 /** Tabs 가 등록하는 axis — SSOT. */
 export const tabsAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
   composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
-import { useRovingTabIndex } from '../roving/useRovingTabIndex'
+import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Options for {@link useTabsPattern}. */
@@ -57,8 +57,7 @@ export function useTabsPattern(
     [data, onEvent, activationMode],
   )
 
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, { autoFocus })
-  const ids = getChildren(data, ROOT)
+  const { focusId, bindFocus, delegate, ids } = usePatternBase(data, axis, relay, { autoFocus })
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}

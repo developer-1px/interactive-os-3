@@ -83,3 +83,7 @@ export const matchChord = (e: KeyboardEvent, chord: Chord, opts?: { isMac?: bool
     && Boolean(e.metaKey)  === Boolean(c.meta)
     && Boolean(e.shiftKey) === Boolean(c.shift)
 }
+
+/** matchAnyChord — KeyboardEvent 가 chord string 배열 중 하나라도 매치되는지. patterns 의 chord registry 매처. */
+export const matchAnyChord = (e: KeyboardEvent, chords: readonly Chord[], opts?: { isMac?: boolean }): boolean =>
+  chords.some((c) => matchChord(e, c, opts))

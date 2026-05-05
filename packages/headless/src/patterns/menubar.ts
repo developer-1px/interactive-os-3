@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
-  fromKeyMap, INTENTS, KEYS, matchChord, navigate as navigateAxis, seedExpand,
+  fromKeyMap, INTENT_CHORDS, INTENTS, matchChord, navigate as navigateAxis, seedExpand,
 } from '../axes'
 import { tagAxis, type Axis } from '../axes/axis'
 import { parseTrigger } from '../trigger'
@@ -62,8 +62,8 @@ const crossTop: Axis = tagAxis((d, id, t) => {
 // ArrowLeft/Right → horizontal navigate, Escape → close.
 // expandSeedAxis: chord ↔ seed 매핑을 KeyMap 으로 선언 (raw 키 array 금지).
 const expandSeedAxis = fromKeyMap([
-  [INTENTS.expand.open,   seedExpand('first')],
-  [[{ key: KEYS.ArrowUp }], seedExpand('last')],
+  [INTENT_CHORDS.expand.open,   seedExpand('first')],
+  ['ArrowUp',                    seedExpand('last')],
 ])
 
 /** Menubar 가 등록하는 axis — SSOT. top + sub 합집합 (probe 용 단일 surface). */
