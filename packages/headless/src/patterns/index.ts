@@ -20,7 +20,7 @@
 
 export { useListboxPattern, listboxAxis, listboxEditKeys, type ListboxOptions } from './listbox'
 export { useTabsPattern, tabsAxis, type TabsOptions } from './tabs'
-export { useTreePattern, treeAxis, type TreeOptions } from './tree'
+export { useTreePattern, treeAxis, treeEditKeys, type TreeOptions } from './tree'
 export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'
 export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 
