@@ -1,8 +1,14 @@
 import { useCallback, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { KEYS, matchKey } from '../axes/keys'
+import { KEYS, matchChord, type KeyChord } from '../axes/keys'
 import { activate, composeAxes, escape, expand, navigate, typeahead } from '../axes'
-import { useRovingTabIndex } from '../roving/useRovingTabIndex'
+
+/** menu trigger button chord registry — declarative SSOT. */
+const TRIGGER_OPEN_CHORDS: readonly KeyChord[] = [{ key: KEYS.ArrowDown }]
+
+/** menuButtonTriggerKeys — trigger button 이 등록하는 키 (open 트리거). */
+export const menuButtonTriggerKeys = (): readonly string[] => TRIGGER_OPEN_CHORDS.map((c) => c.key)
+import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Options for {@link useMenuPattern}. */
@@ -77,10 +83,9 @@ export function useMenuPattern(
     }
     onEvent?.(e)
   }, [onEvent, onEscape, setOpen, closeOnSelect])
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    axis, data, relay, { autoFocus: autoFocus ?? open, containerId },
+  const { focusId, bindFocus, delegate, ids } = usePatternBase(
+    data, axis, relay, { autoFocus: autoFocus ?? open, containerId },
   )
-  const ids = getChildren(data, containerId)
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}
@@ -134,7 +139,7 @@ export function useMenuPattern(
     'aria-expanded': open,
     onClick: () => setOpen(!open),
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (matchKey(e, KEYS.ArrowDown) && !open) {
+      if (!open && matchChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_CHORDS)) {
         e.preventDefault()
         setOpen(true)
       }
