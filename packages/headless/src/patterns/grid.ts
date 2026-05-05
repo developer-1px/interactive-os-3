@@ -7,7 +7,14 @@ import {
   type NormalizedData,
   type UiEvent,
 } from '../types'
-import { activate, composeAxes, gridNavigate, gridMultiSelect, KEYS, matchKey } from '../axes'
+import { activate, composeAxes, gridNavigate, gridMultiSelect, KEYS, matchChord } from '../axes'
+import type { KeyChord } from '../axes/keys'
+
+/** grid edit-mode chord registry — declarative SSOT (F2 enters edit mode). */
+const GRID_EDIT_CHORDS: readonly KeyChord[] = [{ key: KEYS.F2 }]
+
+/** gridEditKeys — chord registry 도출. */
+export const gridEditKeys = (): readonly string[] => GRID_EDIT_CHORDS.map((c) => c.key)
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps } from './types'
 
@@ -195,7 +202,7 @@ export function useGridPattern(
       ...(editable
         ? {
             onKeyDown: (e: React.KeyboardEvent) => {
-              if (matchKey(e, KEYS.F2)) {
+              if (matchChord(e as unknown as KeyboardEvent, GRID_EDIT_CHORDS)) {
                 e.preventDefault()
                 onEvent?.({ type: 'activate', id })
               }
