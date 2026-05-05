@@ -36,7 +36,7 @@ export {
   useComboboxGridPattern, comboboxGridAxis,
   type ComboboxGridOptions, type ComboboxGridCell,
 } from './comboboxGrid'
-export { useTreeGridPattern, treeGridAxis, type TreeGridOptions } from './treeGrid'
+export { useTreeGridPattern, treeGridAxis, treeGridEditKeys, type TreeGridOptions } from './treeGrid'
 export { useAccordionPattern, accordionAxis, type AccordionOptions } from './accordion'
 export { useDialogPattern, dialogKeys, type DialogOptions } from './dialog'
 export { useFocusTrap, focusTrapKeys } from './focusTrap'
