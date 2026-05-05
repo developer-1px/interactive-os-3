@@ -22,6 +22,11 @@ export interface TreeOptions {
   /** aria-label — ARIA: tree requires accessible name. */
   label?: string
   labelledBy?: string
+  /**
+   * APG `treeview-navigation` 변종. `'navigation'` 일 때 selected treeitem 에
+   * `aria-current="page"` 가 추가로 emit 된다 (sidebar/route nav 용도). default `'select'`.
+   */
+  variant?: 'select' | 'navigation'
 }
 
 /** Tree 가 등록하는 axis — SSOT. */

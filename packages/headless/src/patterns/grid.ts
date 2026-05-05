@@ -23,6 +23,22 @@ export interface GridOptions {
   colCount?: number
   /** aria-multiselectable — Ctrl+Space (col), Shift+Space (row), Ctrl+A (all) 활성화. */
   multiSelectable?: boolean
+  /**
+   * APG 분기. `'cell'` 단일 selection · `'row'` 행 단위 selection · `'rect'`
+   * spreadsheet 식 2D 범위 (Shift+Arrow). `'row'` 와 `'rect'` 는 multiSelectable 를
+   * 자동 켠다. default `'cell'`.
+   */
+  selectionMode?: 'cell' | 'row' | 'rect'
+  /**
+   * column header click 시 `{type: 'activate', id: <headerId>}` emit — 소비자
+   * reducer 가 `entity.sort` 를 ascending/descending/none 사이에서 회전.
+   */
+  sortable?: boolean
+  /**
+   * F2 시 `{type: 'activate', id: <cellId>}` emit (de facto edit intent). 셀 자체에
+   * `aria-readonly` 가 부여된다. default false.
+   */
+  editable?: boolean
   autoFocus?: boolean
   /** aria-label — ARIA: grid requires accessible name. */
   label?: string
@@ -71,9 +87,12 @@ export function useGridPattern(
   rows: { id: string; cells: GridCell[] }[]
 } {
   const {
-    autoFocus, containerId = ROOT, readOnly, rowCount, colCount, multiSelectable,
+    autoFocus, containerId = ROOT, readOnly, rowCount, colCount,
+    selectionMode = 'cell', sortable, editable,
     label, labelledBy,
   } = opts
+  // 'row'/'rect' implies multi-selectable.
+  const multiSelectable = opts.multiSelectable ?? selectionMode !== 'cell'
   const rowIds = getChildren(data, containerId)
   // grid 의 focus 단위는 cell. useRovingTabIndex 의 default 계산을 cell 차원에서 하도록
   // 첫 row id 를 focus-container 로 전달 (containerId 자체는 ROOT/grid id 그대로 의미).
@@ -144,6 +163,12 @@ export function useGridPattern(
       'aria-colindex': idx ? idx.col + 1 : undefined,
       'aria-rowindex': idx ? idx.row + 1 : undefined,
       'aria-sort': ariaSort,
+      ...(sortable && role === 'columnheader'
+        ? {
+            'data-sortable': '',
+            onClick: () => onEvent?.({ type: 'activate', id }),
+          }
+        : {}),
     } as unknown as ItemProps
   }
 
@@ -161,11 +186,22 @@ export function useGridPattern(
       tabIndex: isFocus ? 0 : -1,
       'aria-selected': cell?.selected ?? undefined,
       'aria-disabled': cell?.disabled || undefined,
+      'aria-readonly': editable === false ? true : undefined,
       'aria-colindex': idx ? idx.col + 1 : undefined,
       'aria-rowindex': idx ? idx.row + 1 : undefined,
       'data-selected': cell?.selected ? '' : undefined,
       'data-disabled': cell?.disabled ? '' : undefined,
       'data-focus-visible': isFocus ? '' : undefined,
+      ...(editable
+        ? {
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.key === 'F2') {
+                e.preventDefault()
+                onEvent?.({ type: 'activate', id })
+              }
+            },
+          }
+        : {}),
     } as unknown as ItemProps
   }
 

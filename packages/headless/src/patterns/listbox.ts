@@ -27,6 +27,19 @@ export interface ListboxOptions {
   /** aria-label — ARIA: listbox requires accessible name. */
   label?: string
   labelledBy?: string
+  /**
+   * APG `listbox-grouped` 변종. 활성화 시 ROOT 의 자식이 group entity 이고, 각 group 의
+   * 자식이 option 이다 (`fromTree`로 빌드). `<groupProps(groupId)>` getter 와 `groups`
+   * 배열이 추가로 노출된다. default false (flat list).
+   */
+  groups?: boolean
+  /**
+   * APG `listbox-rearrangeable` 변종. 의미적 marker — root 에 `data-rearrangeable=""`
+   * 가 붙고 소비자가 Toolbar (Move Up/Down/Add/Remove) 와 wiring 한다.
+   * 패턴 자체는 이벤트를 emit 하지 않는다 — 소비자가 toolbar 버튼 click 을 직접 처리.
+   */
+  rearrangeable?: boolean
+  idPrefix?: string
 }
 
 // multiSelect must precede navigate — otherwise navigate matches Shift+Arrow first and the range branch never runs.
@@ -52,11 +65,14 @@ export function useListboxPattern(
 ): {
   rootProps: RootProps
   optionProps: (id: string) => ItemProps
+  groupProps: (groupId: string) => ItemProps
   items: BaseItem[]
+  groups: { id: string; label: string; options: BaseItem[] }[]
 } {
   const {
     multiSelectable, autoFocus, containerId = ROOT, orientation = 'vertical',
     required, readOnly, invalid, disabled, label, labelledBy,
+    groups: groupsOpt, rearrangeable, idPrefix = 'lb',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -74,7 +90,13 @@ export function useListboxPattern(
     autoFocus,
     containerId,
   })
-  const ids = getChildren(data, containerId)
+
+  // groups 모드: ROOT 자식 = group, 각 group 자식 = option. 평면 ids 는 모든 option.
+  const directChildren = getChildren(data, containerId)
+  const groupIds = groupsOpt ? directChildren : []
+  const ids = groupsOpt
+    ? groupIds.flatMap((gid) => getChildren(data, gid))
+    : directChildren
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}
@@ -88,6 +110,15 @@ export function useListboxPattern(
     }
   })
   const itemMap = new Map(items.map((it) => [it.id, it]))
+  const groups = groupIds.map((gid) => {
+    const optionIds = getChildren(data, gid)
+    return {
+      id: gid,
+      label: getLabel(data, gid),
+      options: optionIds.map((oid) => itemMap.get(oid)!).filter(Boolean),
+    }
+  })
+  const groupLabelDomId = (gid: string) => `${idPrefix}-glbl-${gid}`
 
   const rootProps: RootProps = {
     role: 'listbox',
@@ -99,6 +130,7 @@ export function useListboxPattern(
     'aria-disabled': disabled || undefined,
     'aria-label': label,
     'aria-labelledby': labelledBy,
+    ...(rearrangeable ? { 'data-rearrangeable': '' } : {}),
     ...delegate,
   } as RootProps
 
@@ -120,5 +152,15 @@ export function useListboxPattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, optionProps, items }
+  const groupProps = (groupId: string): ItemProps => ({
+    role: 'group',
+    'data-id': groupId,
+    'aria-labelledby': groupLabelDomId(groupId),
+  } as unknown as ItemProps)
+
+  return { rootProps, optionProps, groupProps, items, groups }
 }
+
+/** group 의 label 요소에 부여할 id (소비자가 groupProps 의 aria-labelledby 와 매칭). */
+export const groupLabelId = (idPrefix: string, gid: string): string =>
+  `${idPrefix}-glbl-${gid}`
