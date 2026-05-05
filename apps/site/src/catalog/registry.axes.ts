@@ -51,7 +51,7 @@ function extractDirectAxisCalls(src: string): string[] {
   return [...out]
 }
 
-interface Pattern {
+export interface Pattern {
   name: string
   source: string
   axes: string[]
@@ -71,6 +71,9 @@ const patterns: Pattern[] = Object.entries(sources)
   .filter((p) => p.axes.length > 0)
 
 function dedupe<T>(xs: T[]) { return [...new Set(xs)] }
+
+/** pattern → axis 어휘 (정방향). axis 추출 후 dedupe된 결과. */
+export const PATTERNS: Pattern[] = patterns.slice().sort((a, b) => a.name.localeCompare(b.name))
 
 export interface AxisEntry {
   axis: string
