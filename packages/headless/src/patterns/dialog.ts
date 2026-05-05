@@ -1,59 +1,54 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { KEYS, matchKey } from '../axes/keys'
-import { INTENTS, matchChord } from '../axes'
+import { escapeKeys } from '../axes/escape'
+import { INTENTS } from '../axes'
+import { bindGlobalKeyMap } from '../key/bindGlobalKeyMap'
+import { useFocusTrap, focusTrapKeys } from './focusTrap'
 import type { ItemProps, RootProps } from './types'
 
 /**
- * Dialog 가 실제 등록하는 키 — SSOT.
- * Escape: 닫기. Tab: focus-trap (modal=true 에서만, axis 아님 → 직접 표기).
+ * Dialog 가 등록하는 키 — declarative SSOT 합집합.
+ * - Escape: `escape` axis 의 chord (INTENTS.escape.close)
+ * - Tab: `useFocusTrap` 의 focusTrapKeys (modal 일 때만)
+ *
+ * 손으로 적은 사본 0 — 모든 키가 자기 primitive 의 선언에서 도출됨.
  */
-export const dialogKeys = (opts: { modal?: boolean } = {}) =>
-  (opts.modal ?? true) ? [KEYS.Escape, KEYS.Tab] : [KEYS.Escape]
+export const dialogKeys = (opts: { modal?: boolean } = {}): readonly string[] =>
+  (opts.modal ?? true) ? [...escapeKeys(), ...focusTrapKeys()] : [...escapeKeys()]
 
 /** Options for {@link useDialogPattern}. */
 export interface DialogOptions {
-  /** controlled. 생략 시 패턴이 useState 로 자체 소유 (uncontrolled). */
   open?: boolean
-  /** uncontrolled 초기값. */
   defaultOpen?: boolean
-  /** controlled 통지 + uncontrolled 에서도 호출 (양 모드 공통 콜백). */
   onOpenChange?: (open: boolean) => void
   modal?: boolean
-  /** focus 복귀 대상. trigger element ref 권장. */
   returnFocusRef?: RefObject<HTMLElement | null>
-  /** open 직후 우선 focus 대상. 없으면 첫 focusable, 그것도 없으면 dialog root. */
   initialFocusRef?: RefObject<HTMLElement | null>
   returnFocus?: boolean
-  /** aria-label — ARIA: dialog/alertdialog requires accessible name. */
   label?: string
   labelledBy?: string
   describedBy?: string
-  /** 외부에서 root ref 를 제어해야 할 때 주입. 미주입 시 내부 ref 생성. */
   rootRef?: RefObject<HTMLElement | null>
 }
 
-const FOCUSABLE_SELECTOR =
-  [
-    'a[href]',
-    'area[href]',
-    'button:not([disabled])',
-    'input:not([disabled]):not([type="hidden"])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    'iframe',
-    'audio[controls]',
-    'video[controls]',
-    '[contenteditable="true"]',
-    'summary',
-    '[tabindex]:not([tabindex="-1"])',
-  ].join(',')
+const FOCUSABLE_SELECTOR = [
+  'a[href]', 'area[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])', 'textarea:not([disabled])',
+  'iframe', 'audio[controls]', 'video[controls]',
+  '[contenteditable="true"]', 'summary',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',')
 
 /**
  * dialog — APG `/dialog-modal/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
  *
- * 동작: open 시 첫 focusable 에 focus, Escape 닫기, 닫힘 시 trigger 로 focus
- * 복귀, modal 일 때 Tab 이 dialog 내부에서 순환 (focus trap).
+ * 키 처리는 두 declarative primitive 의 합성:
+ * - `bindGlobalKeyMap` + `INTENTS.escape.close` → Escape 닫기
+ * - `useFocusTrap` → Tab/Shift+Tab DOM focus 경계 (modal=true)
+ *
+ * focus 진입/복귀 는 별도 layer (focus management) — useEffect 잔존.
  */
 export function useDialogPattern(opts: DialogOptions = {}): {
   rootRef: RefObject<HTMLElement | null>
@@ -70,9 +65,7 @@ export function useDialogPattern(opts: DialogOptions = {}): {
     returnFocusRef,
     initialFocusRef,
     returnFocus = true,
-    label,
-    labelledBy,
-    describedBy,
+    label, labelledBy, describedBy,
   } = opts
   const internalRootRef = useRef<HTMLElement | null>(null)
   const rootRef = opts.rootRef ?? internalRootRef
@@ -85,6 +78,22 @@ export function useDialogPattern(opts: DialogOptions = {}): {
   }
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
+  // Escape 닫기 — declarative keymap 등록 (bindGlobalKeyMap 이 SSOT 메커니즘).
+  useEffect(() => {
+    if (!open) return
+    return bindGlobalKeyMap(
+      [[INTENTS.escape.close, { type: 'open', id: 'dialog', open: false }]],
+      (e) => {
+        if (e.type === 'open' && e.open === false) setOpen(false)
+      },
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  // Tab focus trap — declarative focus primitive (modal 일 때만 활성).
+  useFocusTrap(rootRef, open && modal)
+
+  // Focus management — 진입 focus + 닫힐 때 trigger 복귀.
   useEffect(() => {
     if (!open) return
     const root = rootRef.current
@@ -93,39 +102,12 @@ export function useDialogPattern(opts: DialogOptions = {}): {
     previousFocusRef.current = active instanceof HTMLElement ? active : null
     const first = initialFocusRef?.current ?? root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? root
     first.focus({ preventScroll: true })
-    const onKey = (e: KeyboardEvent) => {
-      if (matchChord(e, INTENTS.escape.close)) {
-        e.preventDefault()
-        setOpen(false)
-        return
-      }
-      // Tab focus trap (modal only)
-      if (modal && matchKey(e, KEYS.Tab)) {
-        const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
-        if (!focusables.length) {
-          e.preventDefault()
-          return
-        }
-        const first = focusables[0]
-        const last = focusables[focusables.length - 1]
-        const active = document.activeElement as HTMLElement | null
-        if (e.shiftKey && (active === first || !root.contains(active))) {
-          e.preventDefault()
-          last.focus()
-        } else if (!e.shiftKey && (active === last || !root.contains(active))) {
-          e.preventDefault()
-          first.focus()
-        }
-      }
-    }
-    document.addEventListener('keydown', onKey)
     return () => {
-      document.removeEventListener('keydown', onKey)
       if (!returnFocus) return
       const target = returnFocusRef?.current ?? previousFocusRef.current
       if (target && document.contains(target)) target.focus({ preventScroll: true })
     }
-  }, [open, rootRef, onOpenChange, returnFocusRef, initialFocusRef, returnFocus, modal])
+  }, [open, rootRef, returnFocusRef, initialFocusRef, returnFocus])
 
   const rootProps: RootProps = {
     role: 'dialog',
