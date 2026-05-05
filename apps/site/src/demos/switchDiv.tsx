@@ -1,13 +1,13 @@
 import { useLocalValue } from '@p/headless/local'
 import { switchAxis, switchPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Switch · div',
   apg: 'switch',
   kind: 'single-value' as const,
   blurb: 'role="switch" applied to a <div> — same hook, different host element.',
-  keys: () => dedupe(probe(switchAxis())),
+  keys: () => axisKeys(switchAxis()),
 }
 
 export default function Demo() {

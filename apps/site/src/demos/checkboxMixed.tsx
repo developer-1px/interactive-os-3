@@ -20,7 +20,7 @@ const ITEMS = [
 export default function Demo() {
   const [data, onEvent] = useLocalData(() => {
     const d = fromList(ITEMS)
-    d.entities['lettuce'] = { ...(d.entities['lettuce'] ?? {}), selected: true }
+    d.entities['lettuce'] = { ...(d.entities['lettuce'] ?? {}), checked: true }
     return d
   })
   const { groupProps, parentProps, childProps, parentChecked, items } =

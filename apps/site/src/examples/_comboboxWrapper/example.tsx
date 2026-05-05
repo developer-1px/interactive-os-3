@@ -1,4 +1,4 @@
 import { comboboxAxis } from '@p/headless/patterns'
-import { dedupe, probe } from '../../catalog/keys'
+import { axisKeys } from '@p/headless'
 
-export const comboboxWrapperKeys = () => dedupe(probe(comboboxAxis()))
+export const comboboxWrapperKeys = () => axisKeys(comboboxAxis())

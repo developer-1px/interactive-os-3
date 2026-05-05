@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { feedAxis, useFeedPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 const blurb = 'A scrollable container of articles where new items append on demand.'
 
@@ -9,7 +9,7 @@ export const meta = {
   apg: 'feed',
   kind: 'collection' as const,
   blurb,
-  keys: () => dedupe(probe(feedAxis())),
+  keys: () => axisKeys(feedAxis()),
 }
 
 interface Article {

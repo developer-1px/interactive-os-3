@@ -1,14 +1,14 @@
 import { fromList, reduceWithMultiSelect } from '@p/headless'
 import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Listbox · Multi',
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'A selectable list that can keep multiple options active at the same time.',
-  keys: () => dedupe(probe(listboxAxis({ multiSelectable: true }))),
+  keys: () => axisKeys(listboxAxis({ multiSelectable: true })),
 }
 
 export default function Demo() {

@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { accordionAxis, useAccordionPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Accordion',
   apg: 'accordion',
   kind: 'collection' as const,
   blurb: 'A stack of expandable sections that can open independently.',
-  keys: () => dedupe(probe(accordionAxis())),
+  keys: () => axisKeys(accordionAxis()),
 }
 
 export default function Demo() {

@@ -1,4 +1,4 @@
 import { tabsAxis } from '@p/headless/patterns'
-import { dedupe, probe } from '../../catalog/keys'
+import { axisKeys } from '@p/headless'
 
-export const tabsWrapperKeys = () => dedupe(probe(tabsAxis()))
+export const tabsWrapperKeys = () => axisKeys(tabsAxis())

@@ -1,19 +1,20 @@
-import { fromList } from '@p/headless'
+import { fromList, reduceWithRadio } from '@p/headless'
 import { radioGroupAxis, useRadioGroupPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Radio Group',
   apg: 'radio',
   kind: 'collection' as const,
   blurb: 'A compact choice set where moving between options updates the selected value.',
-  keys: () => dedupe(probe(radioGroupAxis())),
+  keys: () => axisKeys(radioGroupAxis()),
 }
 
 export default function Demo() {
-  const [data, onEvent] = useLocalData(() =>
-    fromList([{ label: 'Small' }, { label: 'Medium', selected: true }, { label: 'Large' }]),
+  const [data, onEvent] = useLocalData(
+    () => fromList([{ label: 'Small' }, { label: 'Medium', checked: true }, { label: 'Large' }]),
+    reduceWithRadio,
   )
   const { rootProps, radioProps, items } = useRadioGroupPattern(data, onEvent)
 

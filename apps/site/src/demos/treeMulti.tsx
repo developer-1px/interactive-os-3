@@ -6,14 +6,14 @@ import {
 } from '@p/headless'
 import { treeAxis, useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tree · Multi',
   apg: 'treeview',
   kind: 'collection' as const,
   blurb: 'A nested file tree that supports selecting several visible items at once.',
-  keys: () => dedupe(probe(treeAxis({ multiSelectable: true }))),
+  keys: () => axisKeys(treeAxis({ multiSelectable: true })),
 }
 
 interface Node {

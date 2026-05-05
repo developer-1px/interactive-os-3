@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { toolbarAxis, useToolbarPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Toolbar',
   apg: 'toolbar',
   kind: 'collection' as const,
   blurb: 'A compact command row that keeps related actions reachable in one place.',
-  keys: () => dedupe(probe(toolbarAxis())),
+  keys: () => axisKeys(toolbarAxis()),
 }
 
 export default function Demo() {

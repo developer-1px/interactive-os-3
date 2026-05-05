@@ -2,7 +2,7 @@ import { Fragment, type KeyboardEvent } from 'react'
 import { fromList } from '@p/headless'
 import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Sidebar (custom)',
@@ -11,7 +11,7 @@ export const meta = {
   blurb:
     'A grouped sidebar for mailbox-style navigation, with quick jumps for frequent destinations.',
   // listbox pattern axis + demo 가 직접 추가하는 Cmd+1…9 (custom kind 의 정직한 표기).
-  keys: () => dedupe([...probe(listboxAxis()), 'Cmd+1…9']),
+  keys: () => [...axisKeys(listboxAxis()), 'Cmd+1…9'],
 }
 
 const ITEMS = [

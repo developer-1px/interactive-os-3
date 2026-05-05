@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 import { switchAxis } from '@p/headless/patterns'
 
 export const meta = {
@@ -7,7 +7,7 @@ export const meta = {
   apg: 'switch',
   kind: 'collection' as const,
   blurb: 'Native <input type="checkbox" role="switch"> — UA semantics with switch role.',
-  keys: () => dedupe(probe(switchAxis())),
+  keys: () => axisKeys(switchAxis()),
 }
 
 const SETTINGS = [

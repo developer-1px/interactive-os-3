@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { menuAxis, useMenuPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Menu',
   apg: 'menu',
   kind: 'collection' as const,
   blurb: 'A command menu for choosing actions from a focused list.',
-  keys: () => dedupe(probe(menuAxis())),
+  keys: () => axisKeys(menuAxis()),
 }
 
 export default function Demo() {

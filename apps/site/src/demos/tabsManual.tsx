@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { tabsAxis, useTabsPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tabs · Manual Activation',
   apg: 'tabs',
   kind: 'collection' as const,
   blurb: 'Arrow keys move focus only; Space or Enter activates the focused tab.',
-  keys: () => dedupe(probe(tabsAxis())),
+  keys: () => axisKeys(tabsAxis()),
 }
 
 export default function Demo() {

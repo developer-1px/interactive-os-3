@@ -1,14 +1,14 @@
 import { fromTree, type UiEvent } from '@p/headless'
 import { menubarAxis, useMenubarPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Menubar · Editor',
   apg: 'menubar',
   kind: 'collection' as const,
   blurb: 'Format menu with menuitemcheckbox + menuitemradio (single-group exclusivity).',
-  keys: () => dedupe(probe(menubarAxis())),
+  keys: () => axisKeys(menubarAxis()),
 }
 
 interface Node { id: string; label: string; kind?: string; group?: string; checked?: boolean; children?: Node[] }

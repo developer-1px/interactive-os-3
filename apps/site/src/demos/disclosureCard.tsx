@@ -1,14 +1,14 @@
 import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Disclosure · Card',
   apg: 'disclosure',
   kind: 'single-value' as const,
   blurb: 'A product card that reveals additional details on demand.',
-  keys: () => dedupe(probe(disclosureAxis())),
+  keys: () => axisKeys(disclosureAxis()),
 }
 
 const ID = 'details'

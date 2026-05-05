@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { fromList, getFocus, type UiEvent } from '@p/headless'
 import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Listbox · Rearrangeable',
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'Single-select listbox paired with a toolbar — Move Up/Down, Remove, Add.',
-  keys: () => dedupe(probe(listboxAxis())),
+  keys: () => axisKeys(listboxAxis()),
 }
 
 const POOL = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape', 'Honeydew']

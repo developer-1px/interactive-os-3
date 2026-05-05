@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxAxis, useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Combobox',
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'A searchable picker that keeps typed input and matching options together.',
-  keys: () => dedupe(probe(comboboxAxis())),
+  keys: () => axisKeys(comboboxAxis()),
 }
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']

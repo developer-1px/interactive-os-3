@@ -1,19 +1,20 @@
-import { fromList } from '@p/headless'
+import { fromList, reduceWithRadio } from '@p/headless'
 import { radioGroupAxis, useRadioGroupPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Radio Group · activeDescendant',
   apg: 'radio',
   kind: 'collection' as const,
   blurb: 'DOM focus stays on the radiogroup; aria-activedescendant points to the active radio.',
-  keys: () => dedupe(probe(radioGroupAxis())),
+  keys: () => axisKeys(radioGroupAxis()),
 }
 
 export default function Demo() {
-  const [data, onEvent] = useLocalData(() =>
-    fromList([{ label: 'Small' }, { label: 'Medium', selected: true }, { label: 'Large' }]),
+  const [data, onEvent] = useLocalData(
+    () => fromList([{ label: 'Small' }, { label: 'Medium', checked: true }, { label: 'Large' }]),
+    reduceWithRadio,
   )
   const { rootProps, radioProps, items } = useRadioGroupPattern(data, onEvent, {
     focusMode: 'activeDescendant',

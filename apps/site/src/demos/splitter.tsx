@@ -1,13 +1,13 @@
 import { useLocalValue } from '@p/headless/local'
 import { splitterAxis, splitterPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Splitter',
   apg: 'windowsplitter',
   kind: 'single-value' as const,
   blurb: 'A resizable split panel controlled by a single percentage value.',
-  keys: () => dedupe(probe(splitterAxis())),
+  keys: () => axisKeys(splitterAxis()),
 }
 
 export default function Demo() {

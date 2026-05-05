@@ -1,14 +1,14 @@
 import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Disclosure · Navigation',
   apg: 'disclosure',
   kind: 'collection' as const,
   blurb: 'Top-level nav buttons reveal sub-link panels — only one open at a time is host policy.',
-  keys: () => dedupe(probe(disclosureAxis())),
+  keys: () => axisKeys(disclosureAxis()),
 }
 
 const NAV = [

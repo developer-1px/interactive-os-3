@@ -1,4 +1,4 @@
 import { accordionAxis } from '@p/headless/patterns'
-import { dedupe, probe } from '../../catalog/keys'
+import { axisKeys } from '@p/headless'
 
-export const accordionWrapperKeys = () => dedupe(probe(accordionAxis()))
+export const accordionWrapperKeys = () => axisKeys(accordionAxis())

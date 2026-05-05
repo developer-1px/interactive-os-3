@@ -1,13 +1,13 @@
 import { useLocalValue } from '@p/headless/local'
 import { switchAxis, switchPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Switch',
   apg: 'switch',
   kind: 'single-value' as const,
   blurb: 'A binary control for turning a setting on or off.',
-  keys: () => dedupe(probe(switchAxis())),
+  keys: () => axisKeys(switchAxis()),
 }
 
 export default function Demo() {

@@ -1,14 +1,14 @@
 import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Disclosure · Image Description',
   apg: 'disclosure',
   kind: 'single-value' as const,
   blurb: 'Toggle a long description for an image (alt-text supplement).',
-  keys: () => dedupe(probe(disclosureAxis())),
+  keys: () => axisKeys(disclosureAxis()),
 }
 
 const ID = 'desc'

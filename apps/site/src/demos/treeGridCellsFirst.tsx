@@ -6,14 +6,14 @@ import {
 } from '@p/headless'
 import { treeGridAxis, useTreeGridPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tree Grid · Cells-First',
   apg: 'treegrid',
   kind: 'collection' as const,
   blurb: 'Cells take focus by default; the row containing the focused cell is aria-selected.',
-  keys: () => dedupe(probe(treeGridAxis())),
+  keys: () => axisKeys(treeGridAxis()),
 }
 
 interface Row {

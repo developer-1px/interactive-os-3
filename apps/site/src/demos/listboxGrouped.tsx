@@ -1,14 +1,14 @@
 import { fromTree } from '@p/headless'
 import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Listbox · Grouped',
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'Single-select listbox with grouped options — analogous to <select> with <optgroup>.',
-  keys: () => dedupe(probe(listboxAxis())),
+  keys: () => axisKeys(listboxAxis()),
 }
 
 interface Node { id: string; label: string; children?: Node[] }

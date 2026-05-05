@@ -1,14 +1,14 @@
 import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Disclosure · FAQ',
   apg: 'disclosure',
   kind: 'collection' as const,
   blurb: 'A list of independently expandable Q&A items — same disclosure hook, repeated.',
-  keys: () => dedupe(probe(disclosureAxis())),
+  keys: () => axisKeys(disclosureAxis()),
 }
 
 const QA = [

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { KEYS, matchKey } from '@p/headless'
 import { useDialogPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 import { gridAxis } from '@p/headless/patterns'
 import { CalendarGrid } from './_calendarGrid'
 
@@ -10,7 +10,7 @@ export const meta = {
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'Editable combobox that opens a dialog containing a calendar grid.',
-  keys: () => dedupe(probe(gridAxis())),
+  keys: () => axisKeys(gridAxis()),
 }
 
 export default function Demo() {

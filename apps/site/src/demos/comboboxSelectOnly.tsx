@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxAxis, useComboboxPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Combobox · Select-Only',
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'Button-like combobox without text input — functionally similar to <select>.',
-  keys: () => dedupe(probe(comboboxAxis())),
+  keys: () => axisKeys(comboboxAxis()),
 }
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']

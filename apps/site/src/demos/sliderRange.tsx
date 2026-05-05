@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { sliderRangePattern, sliderRangeAxis } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Slider · Multi-Thumb',
   apg: 'slider',
   kind: 'single-value' as const,
   blurb: 'Two-thumb price range — each thumb is clamped by its neighbor.',
-  keys: () => dedupe(probe(sliderRangeAxis())),
+  keys: () => axisKeys(sliderRangeAxis()),
 }
 
 export default function Demo() {

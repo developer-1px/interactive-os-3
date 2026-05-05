@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { toolbarAxis, useToolbarPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Toolbar · Mixed Items',
   apg: 'toolbar',
   kind: 'collection' as const,
   blurb: 'Toggle, radios, menu button, spinbutton, checkbox, and link share one toolbar.',
-  keys: () => dedupe(probe(toolbarAxis())),
+  keys: () => axisKeys(toolbarAxis()),
 }
 
 const ITEMS = [

@@ -1,14 +1,14 @@
 import { applyGesture, expandBranchOnActivate, fromTree, reduceWithDefaults } from '@p/headless'
 import { treeAxis, useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tree · Navigation',
   apg: 'treeview',
   kind: 'collection' as const,
   blurb: 'Site-navigation tree — selected treeitem carries aria-current="page".',
-  keys: () => dedupe(probe(treeAxis())),
+  keys: () => axisKeys(treeAxis()),
 }
 
 interface Node { id: string; label: string; children?: Node[] }

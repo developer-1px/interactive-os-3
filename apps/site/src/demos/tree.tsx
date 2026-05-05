@@ -6,14 +6,14 @@ import {
 } from '@p/headless'
 import { treeAxis, useTreePattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tree',
   apg: 'treeview',
   kind: 'collection' as const,
   blurb: 'A collapsible hierarchy for browsing nested files and folders.',
-  keys: () => dedupe(probe(treeAxis())),
+  keys: () => axisKeys(treeAxis()),
 }
 
 interface Node {

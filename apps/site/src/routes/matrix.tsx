@@ -2,7 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import * as patternsAll from '@p/headless/patterns'
 import { PATTERNS, AXES } from '../catalog/registry.axes'
-import { probe, fmtKey, dedupe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
+import { fmtKey } from '../catalog/keys'
 import type { Axis } from '@p/headless'
 
 export const Route = createFileRoute('/matrix')({
@@ -162,7 +163,7 @@ function probePatterns(): { name: string; keys: string[] }[] {
     try {
       const built = (fn as (...args: unknown[]) => Axis | Axis[])()
       const axes = Array.isArray(built) ? built : [built]
-      const keys = dedupe(axes.flatMap((ax) => probe(ax)))
+      const keys = Array.from(new Set(axes.flatMap((ax) => axisKeys(ax))))
       // 이름 패턴 다듬기 — accordionAxis → accordion
       const name = exportName.replace(/(Axis|Keys)$/, '')
       rows.push({ name, keys })

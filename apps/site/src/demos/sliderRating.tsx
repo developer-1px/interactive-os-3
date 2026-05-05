@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { sliderAxis, sliderPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Slider · Rating',
   apg: 'slider',
   kind: 'single-value' as const,
   blurb: 'Five-step satisfaction scale with descriptive aria-valuetext.',
-  keys: () => dedupe(probe(sliderAxis())),
+  keys: () => axisKeys(sliderAxis()),
 }
 
 const LABELS = ['', 'Very poor', 'Poor', 'Average', 'Good', 'Excellent']

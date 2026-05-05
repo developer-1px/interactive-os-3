@@ -29,7 +29,7 @@ export { useSpatialNavigation } from './roving/useSpatialNavigation'
 export { useActiveDescendant } from './roving/useActiveDescendant'
 
 export {
-  composeAxes, parentOf, siblingsOf, enabledSiblings,
+  composeAxes, axisKeys, tagAxis, parentOf, siblingsOf, enabledSiblings,
   navigate, activate, expand, escape, typeahead, treeNavigate, treeExpand,
   multiSelect, select, numericStep,
   KEYS, INTENTS, matchChord, matchKey, gridNavigate, gridMultiSelect,

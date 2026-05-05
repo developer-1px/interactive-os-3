@@ -1,14 +1,14 @@
 import { fromTree } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxGridAxis, useComboboxGridPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Combobox · Grid Popup',
   apg: 'combobox',
   kind: 'collection' as const,
   blurb: 'Editable combobox whose popup is a grid — 2D arrows navigate cells, Enter commits the row.',
-  keys: () => dedupe(probe(comboboxGridAxis())),
+  keys: () => axisKeys(comboboxGridAxis()),
 }
 
 interface Node { id: string; label: string; children?: Node[] }

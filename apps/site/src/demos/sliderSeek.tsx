@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { sliderAxis, sliderPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Slider · Media Seek',
   apg: 'slider',
   kind: 'single-value' as const,
   blurb: 'Time slider where aria-valuetext announces minutes:seconds, not raw seconds.',
-  keys: () => dedupe(probe(sliderAxis())),
+  keys: () => axisKeys(sliderAxis()),
 }
 
 const fmt = (s: number) =>

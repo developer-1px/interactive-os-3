@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { spinbuttonAxis, spinbuttonPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Spinbutton',
   apg: 'spinbutton',
   kind: 'collection' as const,
   blurb: 'Hotel booking quantity selectors — adults, children, pets.',
-  keys: () => dedupe(probe(spinbuttonAxis())),
+  keys: () => axisKeys(spinbuttonAxis()),
 }
 
 type Field = { id: string; label: string; min: number; max: number }

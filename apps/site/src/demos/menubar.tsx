@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { menubarAxis, useMenubarPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Menubar',
   apg: 'menubar',
   kind: 'collection' as const,
   blurb: 'An application menu row for top-level commands and nested choices.',
-  keys: () => dedupe(probe(menubarAxis())),
+  keys: () => axisKeys(menubarAxis()),
 }
 
 export default function Demo() {

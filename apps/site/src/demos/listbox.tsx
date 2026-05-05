@@ -1,14 +1,14 @@
 import { fromList } from '@p/headless'
 import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Listbox',
   apg: 'listbox',
   kind: 'collection' as const,
   blurb: 'A selectable list where one option represents the current value.',
-  keys: () => dedupe(probe(listboxAxis())),
+  keys: () => axisKeys(listboxAxis()),
 }
 
 export default function Demo() {

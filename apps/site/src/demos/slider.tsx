@@ -1,13 +1,13 @@
 import { useLocalValue } from '@p/headless/local'
 import { sliderAxis, sliderPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Slider',
   apg: 'slider',
   kind: 'single-value' as const,
   blurb: 'A bounded numeric control for adjusting a value in fixed steps.',
-  keys: () => dedupe(probe(sliderAxis())),
+  keys: () => axisKeys(sliderAxis()),
 }
 
 export default function Demo() {

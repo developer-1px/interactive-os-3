@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { fromTree, type NormalizedData, type UiEvent } from '@p/headless'
 import { gridAxis, useGridPattern } from '@p/headless/patterns'
-import { dedupe, probe } from '../catalog/keys'
+import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Grid · Sortable',
   apg: 'grid',
   kind: 'collection' as const,
   blurb: 'Click a column header to rotate ascending → descending → none; aria-sort reflects the state.',
-  keys: () => dedupe(probe(gridAxis())),
+  keys: () => axisKeys(gridAxis()),
 }
 
 interface Person { name: string; role: string; email: string }
