@@ -1,4 +1,4 @@
-import type { Axis } from './axis'
+import { tagAxis, type Axis } from './axis'
 import type { UiEvent } from '../types'
 import { getLabel, getTypeahead } from '../types'
 import { isPrintable } from '../key'
@@ -16,7 +16,7 @@ const WINDOW_MS = 500
  * 합성). chord 매칭이 아닌 isPrintable 게이트라 fromKeyMap 사용 X — printable
  * 어휘 자체가 KeyMap 어휘 밖에 있다.
  */
-export const typeahead: Axis = (d, id, t) => {
+export const typeahead: Axis = tagAxis((d, id, t) => {
   const p = parseTrigger(t)
   if (p.kind !== 'key') return null
   if (!isPrintable(p)) return null
@@ -29,4 +29,4 @@ export const typeahead: Axis = (d, id, t) => {
   const events: UiEvent[] = [{ type: 'typeahead', buf: nextBuf, deadline: now + WINDOW_MS }]
   if (match) events.push({ type: 'navigate', id: match })
   return events
-}
+}, ['<printable>'])

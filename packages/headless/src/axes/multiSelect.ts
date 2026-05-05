@@ -1,4 +1,4 @@
-import { fromKeyMap, type Axis, type KeyHandler } from './axis'
+import { fromKeyMap, tagAxis, type Axis, type KeyHandler } from './axis'
 import { parseTrigger } from '../trigger'
 import { getSelectAnchor, type NormalizedData, type UiEvent } from '../types'
 import { enabledSiblings } from './index'
@@ -54,7 +54,7 @@ const multiSelectKeys: Axis = fromKeyMap([
   [INTENTS.multiSelect.rangeUp, rangeStep(-1)],
 ])
 
-export const multiSelect: Axis = (d, id, t) => {
+export const multiSelect: Axis = tagAxis((d, id, t) => {
   const p = parseTrigger(t)
   if (p.kind === 'click') {
     if (p.shift) return rangeFrom(d, id, id)
@@ -66,7 +66,7 @@ export const multiSelect: Axis = (d, id, t) => {
         { type: 'selectMany', ids: [id], to: !cur },
       ]
     }
-    return [{ type: 'navigate', id }, { type: 'select', id }]
+    return [{ type: 'navigate', id }, { type: 'setAnchor', id }, { type: 'select', id }]
   }
   return multiSelectKeys(d, id, t)
-}
+}, [...multiSelectKeys.chords, 'Click', 'Shift+Click', 'Meta+Click', 'Control+Click'])

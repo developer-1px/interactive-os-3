@@ -7,7 +7,7 @@ import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
   fromKeyMap, INTENTS, KEYS, matchChord, navigate as navigateAxis, seedExpand,
 } from '../axes'
-import type { Axis } from '../axes/axis'
+import { tagAxis, type Axis } from '../axes/axis'
 import { parseTrigger } from '../trigger'
 import { parentOf } from '../axes/index'
 import { bindAxis } from '../state/bind'
@@ -31,7 +31,7 @@ export interface MenubarOptions {
  * 데이터 가정: id = sub item, parentOf(id) = top, parentOf(top) = ROOT.
  * 출력: 현재 top 을 collapse + 다음 top 으로 navigate + 다음 top 을 expand + 첫 sub navigate.
  */
-const crossTop: Axis = (d, id, t) => {
+const crossTop: Axis = tagAxis((d, id, t) => {
   const p = parseTrigger(t)
   if (p.kind !== 'key') return null
   const isNext = matchChord(p, INTENTS.navigate.horizontal.next)
@@ -56,7 +56,7 @@ const crossTop: Axis = (d, id, t) => {
   ]
   if (nextSubs[0]) events.push({ type: 'navigate', id: nextSubs[0] })
   return events
-}
+}, ['ArrowLeft', 'ArrowRight'])
 
 // top axis: ArrowDown/Enter/Space → expand+focus first, ArrowUp → expand+focus last,
 // ArrowLeft/Right → horizontal navigate, Escape → close.

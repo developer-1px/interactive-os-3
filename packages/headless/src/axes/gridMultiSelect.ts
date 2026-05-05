@@ -1,4 +1,4 @@
-import { fromKeyMap, type Axis, type KeyHandler } from './axis'
+import { fromKeyMap, tagAxis, type Axis, type KeyHandler } from './axis'
 import { parseTrigger } from '../trigger'
 import { parentOf } from './index'
 import { getChildren, getSelectAnchor, type NormalizedData, type UiEvent } from '../types'
@@ -107,11 +107,11 @@ const gridMultiSelectKeys: Axis = fromKeyMap([
   [INTENTS.gridMultiSelect.toggle, { type: 'select' }],
 ])
 
-export const gridMultiSelect: Axis = (d, id, t) => {
+export const gridMultiSelect: Axis = tagAxis((d, id, t) => {
   const p = parseTrigger(t)
   if (p.kind === 'click') {
     if (p.ctrl || p.meta) return [{ type: 'select', id }]
     return null
   }
   return gridMultiSelectKeys(d, id, t)
-}
+}, [...gridMultiSelectKeys.chords, 'Meta+Click', 'Control+Click'])
