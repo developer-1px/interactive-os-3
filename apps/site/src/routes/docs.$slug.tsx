@@ -8,6 +8,8 @@ const sources = import.meta.glob<string>('../docs/*.md', {
   import: 'default',
 })
 
+const DOCS_ORDER = ['getting-started', 'overview', 'core-concept']
+
 const DOCS = (() => {
   const out: { slug: string; title: string; raw: string }[] = []
   for (const [path, raw] of Object.entries(sources)) {
@@ -17,8 +19,6 @@ const DOCS = (() => {
   }
   return out.sort((a, b) => DOCS_ORDER.indexOf(a.slug) - DOCS_ORDER.indexOf(b.slug))
 })()
-
-const DOCS_ORDER = ['getting-started', 'overview', 'core-concept']
 
 export const Route = createFileRoute('/docs/$slug')({
   component: DocPage,
