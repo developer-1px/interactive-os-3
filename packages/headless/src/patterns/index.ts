@@ -18,7 +18,7 @@
  * 자세한 명세는 packages/headless/PATTERNS.md
  */
 
-export { useListboxPattern, listboxAxis, type ListboxOptions } from './listbox'
+export { useListboxPattern, listboxAxis, listboxEditKeys, type ListboxOptions } from './listbox'
 export { useTabsPattern, tabsAxis, type TabsOptions } from './tabs'
 export { useTreePattern, treeAxis, type TreeOptions } from './tree'
 export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'
