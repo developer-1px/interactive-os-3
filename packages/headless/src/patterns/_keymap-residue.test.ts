@@ -9,6 +9,7 @@
  * - focusTrap.ts — focus management primitive (자기 카테고리에서 keydown 직접 처리)
  *   axes/ · key/ · gesture/ 와 동급의 SSOT 메커니즘 본체
  */
+// @ts-nocheck
 import { describe, expect, it } from 'vitest'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'

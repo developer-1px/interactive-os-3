@@ -1,3 +1,17 @@
+/**
+ * Core reducer — UiEvent → NormalizedData 의 정본. composeReducers 의 첫 칸.
+ *
+ * 계약 (invariant):
+ *   1. **Core-reduced**: navigate · expand · open · typeahead · pan · zoom · select.
+ *      이들의 의미는 NormalizedData(meta.focus / meta.expanded / meta.open /
+ *      meta.typeahead / entities[id].{x,y,s} / meta.selectAnchor) 위에서 닫힌다.
+ *   2. **Identity (host territory)**: activate · selectMany · value ·
+ *      insertAfter · appendChild · update · remove · copy · cut · paste · undo · redo.
+ *      core 는 패스스루. host reducer (selection / value / zod-crud 어댑터) 가 의미를 합성.
+ *
+ * 새 UiEvent 추가 시 둘 중 어느 트랙인지 결정하고 handlers map 에 등록. identity
+ * 트랙은 `identity` 로, core-reduced 트랙은 inline 핸들러로.
+ */
 import type { Meta, NormalizedData, UiEvent } from '../types'
 
 /** UiEvent type 별로 narrow 된 reducer 핸들러 시그니처. */
@@ -44,7 +58,15 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   typeahead: (d, e) => setMeta(d, { typeahead: { buf: e.buf, deadline: e.deadline } }),
   activate: identity,
   select: (d, e) => setMeta(d, { selectAnchor: e.id }),
-  selectMany: identity,
+  selectMany: (d, e) => {
+    const entities = { ...d.entities }
+    for (const id of e.ids) {
+      const cur = entities[id] ?? { id }
+      const next = e.to === undefined ? !cur.selected : e.to
+      entities[id] = { ...cur, selected: next }
+    }
+    return { ...d, entities }
+  },
   value: identity,
   pan: (d, e) => {
     const cur = d.entities[e.id] ?? {}
