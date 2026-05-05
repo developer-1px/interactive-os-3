@@ -65,7 +65,7 @@ function DocPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-[220px_minmax(0,1fr)_220px] gap-8 px-8 py-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-6 md:px-8 md:py-10 lg:grid-cols-[220px_minmax(0,1fr)_220px]">
         <DocsNav active={doc.slug} />
         <article className="prose-doc min-w-0" dangerouslySetInnerHTML={{ __html: html }} />
         <PageToc headings={headings} />
@@ -76,7 +76,7 @@ function DocPage() {
 
 function DocsNav({ active }: { active: string }) {
   return (
-    <nav aria-label="Docs index" className="sticky top-10 self-start text-sm">
+    <nav aria-label="Docs index" className="hidden self-start text-sm lg:sticky lg:top-10 lg:block">
       <h2 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
         Documentation
       </h2>
@@ -127,7 +127,7 @@ function DocsNav({ active }: { active: string }) {
 function PageToc({ headings }: { headings: Heading[] }) {
   if (!headings.length) return <div />
   return (
-    <nav aria-label="On this page" className="sticky top-10 self-start text-sm">
+    <nav aria-label="On this page" className="hidden self-start text-sm lg:sticky lg:top-10 lg:block">
       <h2 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
         On this page
       </h2>

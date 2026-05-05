@@ -18,14 +18,21 @@ export function SidebarNav() {
   return (
     <nav
       aria-label="Site navigation"
-      className="flex h-screen w-56 shrink-0 flex-col gap-4 overflow-y-auto border-r border-stone-200 bg-stone-50 p-3 text-sm"
+      className="shrink-0 border-stone-200 bg-stone-50 text-sm border-b md:border-b-0 md:border-r md:h-screen md:w-56 md:overflow-y-auto"
     >
-      <Link
-        to="/"
-        className="rounded px-2 py-1 font-semibold text-stone-900 hover:bg-stone-100"
+      <details
+        className="group flex flex-col gap-4 p-3 md:!block"
+        open
       >
-        @p/headless
-      </Link>
+        <summary className="cursor-pointer list-none rounded px-2 py-1 font-semibold text-stone-900 marker:hidden hover:bg-stone-100 md:hidden">
+          ☰ @p/headless
+        </summary>
+        <Link
+          to="/"
+          className="hidden rounded px-2 py-1 font-semibold text-stone-900 hover:bg-stone-100 md:block"
+        >
+          @p/headless
+        </Link>
       {[...groups.entries()].map(([cat, list]) => (
         <div key={cat} className="flex flex-col gap-0.5">
           <h3 className="px-2 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
@@ -44,6 +51,7 @@ export function SidebarNav() {
           ))}
         </div>
       ))}
+      </details>
     </nav>
   )
 }
