@@ -4,7 +4,20 @@ import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, KEYS, matchKey, matchChord } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, KEYS, matchChord } from '../axes'
+import type { KeyChord } from '../axes/keys'
+
+/** tree edit-mode chord registry — declarative SSOT (Enter, Backspace, Tab, Shift+Tab). */
+const TREE_EDIT_INSERT: readonly KeyChord[] = [{ key: KEYS.Enter }]
+const TREE_EDIT_REMOVE: readonly KeyChord[] = [{ key: KEYS.Backspace }]
+const TREE_EDIT_DEMOTE: readonly KeyChord[] = [{ key: KEYS.Tab }]
+const TREE_EDIT_PROMOTE: readonly KeyChord[] = [{ key: KEYS.Tab, shift: true }]
+
+/** treeEditKeys — chord registry 합집합 도출. editable 모드 추가 키. */
+export const treeEditKeys = (): readonly string[] =>
+  Array.from(new Set([
+    ...TREE_EDIT_INSERT, ...TREE_EDIT_REMOVE, ...TREE_EDIT_DEMOTE, ...TREE_EDIT_PROMOTE,
+  ].map((c) => c.key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -113,7 +126,7 @@ export function useTreePattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
-          if (matchKey(e, KEYS.Enter)) {
+          if (matchChord(e as unknown as KeyboardEvent, TREE_EDIT_INSERT)) {
             e.preventDefault()
             // root 면 자식 추가, else 시블 추가. crud op 어휘 1:1.
             const parentId = findParent(data, id)
@@ -121,12 +134,12 @@ export function useTreePattern(
             else          relay({ type: 'appendChild', parentId: id })
             return
           }
-          if (matchKey(e, KEYS.Backspace)) {
+          if (matchChord(e as unknown as KeyboardEvent, TREE_EDIT_REMOVE)) {
             e.preventDefault()
             relay({ type: 'remove', id })
             return
           }
-          if (matchChord(e, { key: KEYS.Tab })) {
+          if (matchChord(e as unknown as KeyboardEvent, TREE_EDIT_DEMOTE)) {
             const parentId = findParent(data, id)
             if (parentId) {
               const siblings = data.relationships[parentId] ?? []
@@ -140,7 +153,7 @@ export function useTreePattern(
               }
             }
           }
-          if (matchChord(e, { key: KEYS.Tab, shift: true })) {
+          if (matchChord(e as unknown as KeyboardEvent, TREE_EDIT_PROMOTE)) {
             const parentId = findParent(data, id)
             if (parentId && parentId !== containerId) {
               e.preventDefault()
