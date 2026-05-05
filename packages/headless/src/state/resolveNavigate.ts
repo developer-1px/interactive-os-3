@@ -5,9 +5,10 @@
  * 방향 의도 (`dir`) 만 emit. reducer 가 data + 현재 focus + dir 로 next id 계산.
  */
 import type { NavigateDir, NormalizedData } from '../types'
-import { ROOT } from '../types'
+import { ROOT, getChildren } from '../types'
 import { siblingsOf, parentOf } from '../axes/index'
 import { visibleEnabled } from '../axes/_visibleFlat'
+import { gridCoord } from '../axes/gridNavigate'
 
 const enabledOf = (d: NormalizedData, ids: readonly string[]): string[] =>
   ids.filter((id) => !d.entities[id]?.disabled)
@@ -53,6 +54,31 @@ export const resolveNavigate = (d: NormalizedData, dir: NavigateDir, from?: stri
     return p && p !== ROOT ? p : null
   }
 
-  // page/grid 방향은 phase 3b 에서. 지금은 axis 가 여전히 id 로 emit.
+  // grid 2D 좌표 (phase 3b)
+  if (dir === 'gridLeft' || dir === 'gridRight' || dir === 'gridUp' || dir === 'gridDown'
+      || dir === 'rowStart' || dir === 'rowEnd' || dir === 'gridStart' || dir === 'gridEnd') {
+    const c = gridCoord(d, focus)
+    if (!c) return null
+    if (dir === 'gridLeft')   return c.colIdx > 0 ? c.cellsInRow[c.colIdx - 1] : null
+    if (dir === 'gridRight')  return c.colIdx < c.cellsInRow.length - 1 ? c.cellsInRow[c.colIdx + 1] : null
+    if (dir === 'gridUp' || dir === 'gridDown') {
+      const tRow = c.rowIdx + (dir === 'gridDown' ? 1 : -1)
+      if (tRow < 0 || tRow >= c.rows.length) return null
+      const cells = getChildren(d, c.rows[tRow])
+      return cells.length ? cells[Math.min(c.colIdx, cells.length - 1)] : null
+    }
+    if (dir === 'rowStart') return c.cellsInRow[0] ?? null
+    if (dir === 'rowEnd')   return c.cellsInRow[c.cellsInRow.length - 1] ?? null
+    if (dir === 'gridStart') {
+      const first = getChildren(d, c.rows[0])
+      return first[0] ?? null
+    }
+    if (dir === 'gridEnd') {
+      const last = getChildren(d, c.rows[c.rows.length - 1])
+      return last[last.length - 1] ?? null
+    }
+  }
+
+  // pageNext/pagePrev 는 step 파라미터 필요 — phase 3c.
   return null
 }
