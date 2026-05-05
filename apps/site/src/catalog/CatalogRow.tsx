@@ -34,7 +34,7 @@ export function CatalogRow({
   filename: string
 }) {
   return (
-    <section id={slug} tabIndex={-1} className="snap-start h-screen flex flex-col">
+    <section id={slug} tabIndex={-1} className="flex flex-col md:snap-start md:h-screen">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
         <span
           className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.className}`}
@@ -82,10 +82,10 @@ export function CatalogRow({
         )}
       </header>
 
-      <div className="grid flex-1 grid-cols-2 overflow-hidden">
-        <div className="overflow-auto bg-stone-50">{preview}</div>
+      <div className="grid flex-1 grid-cols-1 md:grid-cols-2 md:overflow-hidden">
+        <div className="bg-stone-50 md:overflow-auto">{preview}</div>
 
-        <div className="flex flex-col overflow-hidden border-l border-stone-200 bg-stone-950">
+        <div className="flex flex-col bg-stone-950 border-t md:border-t-0 md:border-l border-stone-200 md:overflow-hidden">
           <div className="flex items-center justify-between border-b border-stone-800 px-4 py-2">
             <code className="text-xs font-mono text-stone-400">{filename}</code>
             <CopyButton text={source} />
@@ -102,7 +102,7 @@ export function CatalogRow({
 export function PreviewCenter({ children }: { children: ReactNode }) {
   return (
     <div className="grid h-full place-items-center p-8">
-      <div className="w-[420px]">{children}</div>
+      <div className="w-full max-w-[420px]">{children}</div>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 export function Intro() {
   return (
-    <section id="intro" tabIndex={-1} className="snap-start h-screen grid place-items-center bg-white">
+    <section id="intro" tabIndex={-1} className="md:snap-start md:h-screen grid place-items-center bg-white">
       <div className="max-w-3xl px-8">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cyan-700">
           Wrapper layer

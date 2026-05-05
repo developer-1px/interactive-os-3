@@ -8,7 +8,7 @@ export function WrapperApp() {
   const activeHash = useHashNavigation()
 
   return (
-    <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
+    <div className="md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll">
       <Intro />
       {WRAPPER_ENTRIES.map((entry, index) => (
         <WrapperScreen

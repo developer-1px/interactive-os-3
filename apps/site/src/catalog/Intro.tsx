@@ -21,7 +21,7 @@ function SlideHero() {
     <section
       id="intro"
       tabIndex={-1}
-      className="snap-start min-h-screen flex items-center bg-gradient-to-b from-white to-stone-50"
+      className="md:snap-start md:min-h-screen flex items-center bg-gradient-to-b from-white to-stone-50"
     >
       <div className="mx-auto w-full max-w-5xl px-8 py-12">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-1 text-xs font-medium text-stone-700">
@@ -83,7 +83,7 @@ function SlideIndex() {
     <section
       id="index"
       tabIndex={-1}
-      className="snap-start min-h-screen flex flex-col justify-center bg-white"
+      className="md:snap-start md:min-h-screen flex flex-col justify-center bg-white"
     >
       <div className="mx-auto w-full max-w-[1400px] px-8 py-12">
         <h2 className="text-3xl font-bold tracking-tight text-stone-900">
