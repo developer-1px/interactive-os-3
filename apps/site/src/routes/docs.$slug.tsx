@@ -27,6 +27,7 @@ export const Route = createFileRoute('/docs/$slug')({
       label: 'Docs',
       to: '/docs/$slug',
       params: { slug: 'getting-started' },
+      category: 'Docs',
       sub: 'Getting Started · Overview · Core Concept',
     },
   },

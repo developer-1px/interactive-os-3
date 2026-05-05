@@ -11,31 +11,24 @@ export const meta = {
   keys: () => dedupe(probe(comboboxGridAxis())),
 }
 
-interface Row {
-  id: string
-  label: string
-  children: { id: string; label: string }[]
-}
+interface Node { id: string; label: string; children?: Node[] }
 
-const ROWS: Row[] = [
-  { id: 'r1', label: 'Argentina · ARS · Buenos Aires', children: [
-    { id: 'r1c1', label: 'Argentina' }, { id: 'r1c2', label: 'ARS' }, { id: 'r1c3', label: 'Buenos Aires' },
-  ] },
-  { id: 'r2', label: 'Australia · AUD · Canberra', children: [
-    { id: 'r2c1', label: 'Australia' }, { id: 'r2c2', label: 'AUD' }, { id: 'r2c3', label: 'Canberra' },
-  ] },
-  { id: 'r3', label: 'Brazil · BRL · Brasília', children: [
-    { id: 'r3c1', label: 'Brazil' }, { id: 'r3c2', label: 'BRL' }, { id: 'r3c3', label: 'Brasília' },
-  ] },
-  { id: 'r4', label: 'Canada · CAD · Ottawa', children: [
-    { id: 'r4c1', label: 'Canada' }, { id: 'r4c2', label: 'CAD' }, { id: 'r4c3', label: 'Ottawa' },
-  ] },
-  { id: 'r5', label: 'Denmark · DKK · Copenhagen', children: [
-    { id: 'r5c1', label: 'Denmark' }, { id: 'r5c2', label: 'DKK' }, { id: 'r5c3', label: 'Copenhagen' },
-  ] },
-  { id: 'r6', label: 'Japan · JPY · Tokyo', children: [
-    { id: 'r6c1', label: 'Japan' }, { id: 'r6c2', label: 'JPY' }, { id: 'r6c3', label: 'Tokyo' },
-  ] },
+const row = (id: string, label: string, c: [string, string, string]): Node => ({
+  id, label,
+  children: [
+    { id: `${id}c1`, label: c[0] },
+    { id: `${id}c2`, label: c[1] },
+    { id: `${id}c3`, label: c[2] },
+  ],
+})
+
+const ROWS: Node[] = [
+  row('r1', 'Argentina · ARS · Buenos Aires', ['Argentina', 'ARS', 'Buenos Aires']),
+  row('r2', 'Australia · AUD · Canberra', ['Australia', 'AUD', 'Canberra']),
+  row('r3', 'Brazil · BRL · Brasília', ['Brazil', 'BRL', 'Brasília']),
+  row('r4', 'Canada · CAD · Ottawa', ['Canada', 'CAD', 'Ottawa']),
+  row('r5', 'Denmark · DKK · Copenhagen', ['Denmark', 'DKK', 'Copenhagen']),
+  row('r6', 'Japan · JPY · Tokyo', ['Japan', 'JPY', 'Tokyo']),
 ]
 
 export default function Demo() {
