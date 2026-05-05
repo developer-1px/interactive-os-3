@@ -1,7 +1,7 @@
 // editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, INTENTS, matchChord } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, matchKey, INTENTS, matchChord } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -148,19 +148,19 @@ export function useTreeGridPattern(
 
   const editKeyDown = (id: string | undefined, e: React.KeyboardEvent): boolean => {
     if (!editable || !id || id === containerId) return false
-    if (e.key === KEYS.Enter) {
+    if (matchKey(e, KEYS.Enter)) {
       e.preventDefault()
       const parentId = findParent(data, id)
       if (parentId) relay({ type: 'insertAfter', siblingId: id })
       else          relay({ type: 'appendChild', parentId: id })
       return true
     }
-    if (e.key === KEYS.Backspace) {
+    if (matchKey(e, KEYS.Backspace)) {
       e.preventDefault()
       relay({ type: 'remove', id })
       return true
     }
-    if (e.key === KEYS.Tab) {
+    if (matchKey(e, KEYS.Tab)) {
       e.preventDefault()
       relay({ type: 'activate', id })
       return true

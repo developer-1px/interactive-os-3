@@ -4,7 +4,7 @@ import {
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, INTENTS, matchChord,
+  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, matchKey, INTENTS, matchChord,
   navigate as navigateAxis,
 } from '../axes'
 import { bindAxis } from '../state/bind'
@@ -184,32 +184,32 @@ export function useComboboxPattern(
     // select-only + closed: Enter/Space/Down/Up/Home/End all open popup (APG)
     if (!editable && !expanded && (
       matchChord(e, INTENTS.activate.trigger) ||
-      e.key === KEYS.ArrowDown || e.key === KEYS.ArrowUp ||
-      e.key === KEYS.Home || e.key === KEYS.End
+      matchKey(e, KEYS.ArrowDown) || matchKey(e, KEYS.ArrowUp) ||
+      matchKey(e, KEYS.Home) || matchKey(e, KEYS.End)
     )) {
       e.preventDefault()
       onEvent?.({ type: 'open', id: ROOT, open: true })
-      const target = (e.key === KEYS.ArrowUp || e.key === KEYS.End)
+      const target = (matchKey(e, KEYS.ArrowUp) || matchKey(e, KEYS.End))
         ? allIds[allIds.length - 1]
         : (selectedId ?? allIds[0])
       if (target) onEvent?.({ type: 'navigate', id: target })
       return
     }
     if (!activeId) {
-      if (e.key === KEYS.ArrowDown || e.key === KEYS.Home) {
+      if (matchKey(e, KEYS.ArrowDown) || matchKey(e, KEYS.Home)) {
         e.preventDefault()
         const target = visibleIds[0]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
-      if (e.key === KEYS.ArrowUp || e.key === KEYS.End) {
+      if (matchKey(e, KEYS.ArrowUp) || matchKey(e, KEYS.End)) {
         e.preventDefault()
         const target = visibleIds[visibleIds.length - 1]
         if (target) intent({ type: 'navigate', id: target })
         return
       }
     }
-    if ((e.key === KEYS.Home || e.key === KEYS.End) && !expanded) return
+    if ((matchKey(e, KEYS.Home) || matchKey(e, KEYS.End)) && !expanded) return
     dispatchKey(e, activeId ?? ROOT)
   }
 

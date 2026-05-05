@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, navigate, typeahead, KEYS } from '../axes'
+import { activate, composeAxes, multiSelect, navigate, typeahead, KEYS, matchKey } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -130,12 +130,12 @@ export function useListboxPattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
-          if (e.key === KEYS.Enter) {
+          if (matchKey(e, KEYS.Enter)) {
             e.preventDefault()
             relay({ type: 'insertAfter', siblingId: id })
             return
           }
-          if (e.key === KEYS.Backspace) {
+          if (matchKey(e, KEYS.Backspace)) {
             e.preventDefault()
             relay({ type: 'remove', id })
             return

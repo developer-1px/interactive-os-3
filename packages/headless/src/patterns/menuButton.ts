@@ -3,7 +3,7 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { KEYS, INTENTS, matchChord } from '../axes'
+import { KEYS, matchKey, INTENTS, matchChord } from '../axes'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Options for {@link useMenuButtonPattern}. */
@@ -152,11 +152,11 @@ export function useMenuButtonPattern(
     },
     onKeyDown: (e: React.KeyboardEvent) => {
       if (!open) {
-        if (e.key === KEYS.ArrowDown || matchChord(e, INTENTS.activate.trigger)) {
+        if (matchKey(e, KEYS.ArrowDown) || matchChord(e, INTENTS.activate.trigger)) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[0] ?? null)
-        } else if (e.key === KEYS.ArrowUp) {
+        } else if (matchKey(e, KEYS.ArrowUp)) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[ids.length - 1] ?? null)
@@ -165,6 +165,7 @@ export function useMenuButtonPattern(
       }
       // open 상태 — activedescendant 모드에선 trigger 가 계속 키 받음
       if (focusMode !== 'activeDescendant') return
+      // switch (e.key) — pattern 내부의 mini-axis. menu local activeId 만 다루는 짧은 분기라 fromKeyMap 대신 switch 그대로. KEYS SSOT 사용.
       switch (e.key) {
         case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
         case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break
@@ -212,6 +213,7 @@ export function useMenuButtonPattern(
       }) as unknown as React.Ref<HTMLElement>
       base.tabIndex = isActive ? 0 : -1
       base.onKeyDown = (e: React.KeyboardEvent) => {
+        // switch (e.key) — roving 모드의 menuitem 키. 동일 사유 (local activeId).
         switch (e.key) {
           case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
           case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break

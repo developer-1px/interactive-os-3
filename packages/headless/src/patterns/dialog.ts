@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { KEYS } from '../axes/keys'
+import { KEYS, matchKey } from '../axes/keys'
 import { INTENTS, matchChord } from '../axes'
 import type { ItemProps, RootProps } from './types'
 
@@ -100,7 +100,7 @@ export function useDialogPattern(opts: DialogOptions = {}): {
         return
       }
       // Tab focus trap (modal only)
-      if (modal && e.key === KEYS.Tab) {
+      if (modal && matchKey(e, KEYS.Tab)) {
         const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
         if (!focusables.length) {
           e.preventDefault()
