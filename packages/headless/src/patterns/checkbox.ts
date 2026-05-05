@@ -166,11 +166,11 @@ export function useCheckboxGroupPattern(
       'data-state': it?.selected ? 'checked' : 'unchecked',
       onClick: () => {
         if (disabled) return
-        onEvent?.({ type: 'select', id })
+        onEvent?.({ type: 'selectMany', ids: [id], to: !it?.selected })
       },
       onKeyDown: (e: React.KeyboardEvent) => {
         if (disabled) return
-        handleCheckboxKey(e, () => onEvent?.({ type: 'select', id }))
+        handleCheckboxKey(e, () => onEvent?.({ type: 'selectMany', ids: [id], to: !it?.selected }))
       },
     } as unknown as ItemProps
   }
