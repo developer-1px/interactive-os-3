@@ -1,7 +1,7 @@
-import type { Axis } from './axis'
+import { fromKeyMap, type Axis, type KeyHandler } from './axis'
 import { getSelectAnchor, type NormalizedData, type UiEvent } from '../types'
 import { enabledSiblings } from './index'
-import { INTENTS, matchChord } from './keys'
+import { INTENTS } from './keys'
 
 /**
  * multiSelect — `aria-multiselectable` axis. anchor-range, Ctrl+A, Shift+Click.
@@ -15,32 +15,6 @@ import { INTENTS, matchChord } from './keys'
  *
  * APG: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/  (Selection)
  */
-// 키 매핑은 `INTENTS.multiSelect` 에서 import (SSOT).
-export const multiSelect: Axis = (d, id, t) => {
-  const I = INTENTS.multiSelect
-  if (t.kind === 'click') {
-    if (t.shift) return rangeFrom(d, id, id)
-    return [{ type: 'navigate', id }, { type: 'select', id }]
-  }
-  if (t.kind !== 'key') return null
-
-  if (matchChord(t, I.toggle)) return [{ type: 'select', id }]
-
-  if (matchChord(t, I.selectAll)) {
-    return [{ type: 'selectMany', ids: enabledSiblings(d, id), to: true }]
-  }
-
-  if (matchChord(t, I.rangeDown) || matchChord(t, I.rangeUp)) {
-    const ids = enabledSiblings(d, id)
-    const idx = ids.indexOf(id)
-    if (idx < 0) return null
-    const nextIdx = matchChord(t, I.rangeDown) ? idx + 1 : idx - 1
-    if (nextIdx < 0 || nextIdx >= ids.length) return null
-    return rangeFrom(d, id, ids[nextIdx])
-  }
-
-  return null
-}
 
 /** Build [navigate, deselect-outside, select-inside] from anchor to `nextId`. */
 const rangeFrom = (d: NormalizedData, currentId: string, nextId: string): UiEvent[] => {
@@ -56,4 +30,28 @@ const rangeFrom = (d: NormalizedData, currentId: string, nextId: string): UiEven
   if (outRange.length) events.push({ type: 'selectMany', ids: outRange, to: false })
   events.push({ type: 'selectMany', ids: inRange, to: true })
   return events
+}
+
+const rangeStep = (delta: number): KeyHandler => (d, id) => {
+  const ids = enabledSiblings(d, id)
+  const idx = ids.indexOf(id)
+  if (idx < 0) return null
+  const nextIdx = idx + delta
+  if (nextIdx < 0 || nextIdx >= ids.length) return null
+  return rangeFrom(d, id, ids[nextIdx])
+}
+
+const multiSelectKeys: Axis = fromKeyMap([
+  [INTENTS.multiSelect.toggle, { type: 'select' }],
+  [INTENTS.multiSelect.selectAll, (d, id) => [{ type: 'selectMany', ids: enabledSiblings(d, id), to: true }]],
+  [INTENTS.multiSelect.rangeDown, rangeStep(+1)],
+  [INTENTS.multiSelect.rangeUp, rangeStep(-1)],
+])
+
+export const multiSelect: Axis = (d, id, t) => {
+  if (t.kind === 'click') {
+    if (t.shift) return rangeFrom(d, id, id)
+    return [{ type: 'navigate', id }, { type: 'select', id }]
+  }
+  return multiSelectKeys(d, id, t)
 }
