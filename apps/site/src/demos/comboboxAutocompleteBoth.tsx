@@ -1,4 +1,4 @@
-import { ROOT, fromList } from '@p/headless'
+import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxAxis, useComboboxPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../catalog/keys'
@@ -15,11 +15,10 @@ const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() => fromList(ALL.map((label) => ({ label }))))
-  const { comboboxProps, listboxProps, optionProps, items } = useComboboxPattern(data, onEvent, {
+  const { comboboxProps, listboxProps, optionProps, items, expanded } = useComboboxPattern(data, onEvent, {
     label: 'Country',
     autocomplete: 'both',
   })
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">

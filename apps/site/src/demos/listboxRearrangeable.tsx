@@ -18,12 +18,12 @@ export default function Demo() {
   const [focus, setFocusId] = useState<string | null>('Apple')
   const remaining = POOL.filter((p) => !order.includes(p))
 
-  const data = fromList(order.map((label) => ({ label, id: label })))
+  const data = fromList(order.map((label) => ({ label, id: label, selected: label === focus })))
   data.meta = { ...(data.meta ?? {}), focus: focus ?? undefined }
-  if (focus) data.entities[focus] = { ...(data.entities[focus] ?? {}), selected: true }
 
   const onEvent = (e: UiEvent) => {
     if (e.type === 'navigate') setFocusId(e.id)
+    if (e.type === 'select' && e.id) setFocusId(e.id)
   }
 
   const { rootProps, optionProps, items } = useListboxPattern(data, onEvent, {

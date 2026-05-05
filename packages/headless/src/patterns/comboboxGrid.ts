@@ -71,6 +71,8 @@ export function useComboboxGridPattern(
   rowProps: (id: string) => ItemProps
   cellProps: (id: string) => ItemProps
   rows: { id: string; cells: ComboboxGridCell[] }[]
+  /** popup 열림 상태 — 호스트가 렌더 분기에 사용. data 에서 다시 derive 금지. */
+  expanded: boolean
 } {
   const {
     value: valueProp, defaultValue = '',
@@ -248,5 +250,5 @@ export function useComboboxGridPattern(
     } as unknown as ItemProps
   }
 
-  return { comboboxProps, gridProps, rowProps, cellProps, rows }
+  return { comboboxProps, gridProps, rowProps, cellProps, rows, expanded }
 }

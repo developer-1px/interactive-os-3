@@ -1,4 +1,4 @@
-import { ROOT, fromList } from '@p/headless'
+import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxAxis, useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
 import { dedupe, probe } from '../catalog/keys'
@@ -17,10 +17,8 @@ const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 
 export type ComboboxDemoProps = ValuedPatternProps<string>
 
 export function ComboboxDemo({ data, value, onEvent, 'aria-label': ariaLabel }: ComboboxDemoProps) {
-  const { comboboxProps, listboxProps, optionProps, items } =
+  const { comboboxProps, listboxProps, optionProps, items, expanded } =
     useComboboxPattern(data, onEvent, { label: ariaLabel, value })
-
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">

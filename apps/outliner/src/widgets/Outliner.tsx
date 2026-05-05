@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { useResource } from '@p/headless/store'
 import { useTreePattern } from '@p/headless/patterns'
-import { reduce, type Meta, type UiEvent } from '@p/headless'
+import { getFocus, reduce, type Meta, type UiEvent } from '@p/headless'
 import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
 import { outlineResource } from '../features/outlineResource'
 import { flattenOutline } from '../features/flattenOutline'
@@ -28,7 +28,7 @@ export function Outliner() {
   }
 
   const tree = useTreePattern(data, onEvent, { editable: true, label: 'outline' })
-  const activeId = data.meta?.focus ?? tree.items[0]?.id ?? null
+  const activeId = getFocus(data) ?? tree.items[0]?.id ?? null
 
   useHistoryShortcuts(onEvent)
   useClipboardShortcuts(onEvent, () => activeId)

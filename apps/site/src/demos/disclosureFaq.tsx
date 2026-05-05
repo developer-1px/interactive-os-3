@@ -1,4 +1,4 @@
-import { fromList, getExpanded } from '@p/headless'
+import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../catalog/keys'
@@ -18,7 +18,7 @@ const QA = [
 ]
 
 function Item({ id, q, a, data, onEvent }: { id: string; q: string; a: string; data: any; onEvent: any }) {
-  const open = getExpanded(data).has(id)
+  const open = isExpanded(data, id)
   const { triggerProps, panelProps } = disclosurePattern(data, id, onEvent)
   return (
     <div className="border-b border-stone-200 last:border-b-0">

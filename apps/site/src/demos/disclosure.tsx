@@ -1,4 +1,4 @@
-import { fromList, getExpanded } from '@p/headless'
+import { fromList, isExpanded } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../catalog/keys'
@@ -15,7 +15,7 @@ const PANEL_ID = 'details'
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() => fromList([{ id: PANEL_ID }]))
-  const open = getExpanded(data).has(PANEL_ID)
+  const open = isExpanded(data, PANEL_ID)
   const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, onEvent)
 
   return (

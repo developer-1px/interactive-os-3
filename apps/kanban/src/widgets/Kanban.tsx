@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useResource } from '@p/headless/store'
 import { useListboxPattern } from '@p/headless/patterns'
-import { reduce, type Meta, type UiEvent } from '@p/headless'
+import { getFocus, reduce, type Meta, type UiEvent } from '@p/headless'
 import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
 import { boardResource } from '../features/boardResource'
 import { flattenBoard } from '../features/flattenBoard'
@@ -42,7 +42,7 @@ export function Kanban() {
     onEvent(e)
   }
 
-  const activeId = meta.selected?.[0] ?? meta.focus ?? null
+  const activeId = meta.selected?.[0] ?? getFocus(merged) ?? null
 
   useHistoryShortcuts(onEvent)
   useClipboardShortcuts(onClipboard, () => activeId)

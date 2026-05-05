@@ -1,4 +1,4 @@
-import { ROOT, useControlState, type UiEvent } from '@p/headless'
+import { useControlState, type UiEvent } from '@p/headless'
 import { useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
 import { defaultLabel, renderSlot, type Slot } from '../../catalog/slots'
 
@@ -27,10 +27,8 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
     onEvent(e)
   }
 
-  const { comboboxProps, listboxProps, optionProps, items } =
+  const { comboboxProps, listboxProps, optionProps, items, expanded } =
     useComboboxPattern(data, relay, { label: ariaLabel, value })
-
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-64">

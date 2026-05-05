@@ -1,4 +1,4 @@
-import { ROOT, fromTree } from '@p/headless'
+import { fromTree } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { comboboxGridAxis, useComboboxGridPattern } from '@p/headless/patterns'
 import { dedupe, probe } from '../catalog/keys'
@@ -33,12 +33,11 @@ const ROWS: Node[] = [
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() => fromTree(ROWS))
-  const { comboboxProps, gridProps, rowProps, cellProps, rows } = useComboboxGridPattern(
+  const { comboboxProps, gridProps, rowProps, cellProps, rows, expanded } = useComboboxGridPattern(
     data,
     onEvent,
     { label: 'Country', popupLabel: 'Country options' },
   )
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
 
   return (
     <div className="relative w-96">

@@ -103,6 +103,8 @@ export function useComboboxPattern(
   listboxProps: RootProps
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
+  /** popup 열림 상태 — 호스트가 렌더 분기에 사용. data 에서 다시 derive 금지. */
+  expanded: boolean
 } {
   const {
     value: valueProp, defaultValue = '',
@@ -309,5 +311,5 @@ export function useComboboxPattern(
     } as unknown as ItemProps
   }
 
-  return { comboboxProps, listboxProps, optionProps, items }
+  return { comboboxProps, listboxProps, optionProps, items, expanded }
 }
