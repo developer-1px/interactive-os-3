@@ -52,20 +52,13 @@ describe('navigate axis (horizontal)', () => {
 })
 
 describe('pageNavigate axis', () => {
-  it('PageDown moves N siblings forward, clamped at end', () => {
+  it('emits pageStep next with step on PageDown', () => {
     const ax = pageNavigate('vertical', 2)
-    expect(ax(data, 'a', key(KEYS.PageDown))).toEqual([{ type: 'navigate', id: 'c' }])
-    expect(ax(data, 'c', key(KEYS.PageDown))).toEqual([{ type: 'navigate', id: 'd' }])
+    expect(ax(data, 'a', key(KEYS.PageDown))).toEqual([{ type: 'pageStep', id: 'a', dir: 'next', step: 2 }])
   })
 
-  it('PageUp moves N siblings backward, clamped at start', () => {
+  it('emits pageStep prev with step on PageUp', () => {
     const ax = pageNavigate('vertical', 2)
-    expect(ax(data, 'd', key(KEYS.PageUp))).toEqual([{ type: 'navigate', id: 'b' }])
-    expect(ax(data, 'b', key(KEYS.PageUp))).toEqual([{ type: 'navigate', id: 'a' }])
-  })
-
-  it('returns null when target equals current (no movement)', () => {
-    const ax = pageNavigate('vertical', 1)
-    expect(ax(data, 'd', key(KEYS.PageDown))).toBeNull()
+    expect(ax(data, 'd', key(KEYS.PageUp))).toEqual([{ type: 'pageStep', id: 'd', dir: 'prev', step: 2 }])
   })
 })
