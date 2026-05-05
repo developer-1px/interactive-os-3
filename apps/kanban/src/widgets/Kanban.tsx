@@ -28,7 +28,7 @@ export function Kanban() {
   /**
    * Kanban paste 의미 = "여기 다음에 끼우기" (sibling insert), 절대 overwrite 금지.
    * card target → parent cards-array + index 로 매핑해 zod-crud 에 전달.
-   * 빈 컬럼에 paste 하면 target = column → mode='child' 로 appendChild.
+   * (도메인-특화 — P2: ARIA 어휘 아님이라 widget 잔존이 정당.)
    */
   const onClipboard = (e: UiEvent) => {
     if (e.type === 'paste' && e.targetId && cardParentArray[e.targetId]) {
@@ -72,23 +72,12 @@ function Column({
   data: import('@p/headless').NormalizedData
   onEvent: (e: UiEvent) => void
 }) {
-  const lb = useListboxPattern(data, onEvent, { containerId: id, label: data.entities[id]?.label })
+  const lb = useListboxPattern(data, onEvent, {
+    containerId: id,
+    label: data.entities[id]?.label,
+    editable: true,
+  })
   const title = data.entities[id]?.label ?? ''
-
-  const onKey = (e: React.KeyboardEvent) => {
-    const focusedCard = (e.target as HTMLElement).closest('[role="option"]')?.getAttribute('data-id')
-    if (e.key === 'Enter' && focusedCard) {
-      e.preventDefault()
-      onEvent({ type: 'insertAfter', siblingId: focusedCard })
-      return
-    }
-    if (e.key === 'Backspace' && focusedCard) {
-      e.preventDefault()
-      onEvent({ type: 'remove', id: focusedCard })
-      return
-    }
-    lb.rootProps.onKeyDown?.(e as unknown as KeyboardEvent & { preventDefault(): void })
-  }
 
   return (
     <section className="flex w-64 shrink-0 flex-col gap-2 rounded-lg bg-white p-3 shadow-sm">
@@ -102,7 +91,7 @@ function Column({
           +
         </button>
       </div>
-      <ul {...lb.rootProps} onKeyDown={onKey} className="flex flex-col gap-1.5 outline-none">
+      <ul {...lb.rootProps} className="flex flex-col gap-1.5 outline-none">
         {lb.items.length === 0 && (
           <li className="rounded border border-dashed border-neutral-200 p-2 text-xs text-neutral-300">
             empty

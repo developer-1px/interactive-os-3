@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, navigate, typeahead } from '../axes'
+import { activate, composeAxes, multiSelect, navigate, typeahead, KEYS } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -39,6 +39,12 @@ export interface ListboxOptions {
    * 패턴 자체는 이벤트를 emit 하지 않는다 — 소비자가 toolbar 버튼 click 을 직접 처리.
    */
   rearrangeable?: boolean
+  /**
+   * 편집 모드 — Enter→insertAfter(focused option), Backspace→remove(focused option) 흡수.
+   * tree 의 `editable` 와 동일 어휘. listbox 는 indent 가 없으므로 Tab 매핑은 없음.
+   * 디폴트 false.
+   */
+  editable?: boolean
   idPrefix?: string
 }
 
@@ -72,7 +78,7 @@ export function useListboxPattern(
   const {
     multiSelectable, autoFocus, containerId = ROOT, orientation = 'vertical',
     required, readOnly, invalid, disabled, label, labelledBy,
-    groups: groupsOpt, rearrangeable, idPrefix = 'lb',
+    groups: groupsOpt, rearrangeable, editable = false, idPrefix = 'lb',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -120,6 +126,25 @@ export function useListboxPattern(
   })
   const groupLabelDomId = (gid: string) => `${idPrefix}-glbl-${gid}`
 
+  const editKeyDown = editable
+    ? (e: React.KeyboardEvent) => {
+        const id = focusId
+        if (id && id !== containerId) {
+          if (e.key === KEYS.Enter) {
+            e.preventDefault()
+            relay({ type: 'insertAfter', siblingId: id })
+            return
+          }
+          if (e.key === KEYS.Backspace) {
+            e.preventDefault()
+            relay({ type: 'remove', id })
+            return
+          }
+        }
+        delegate.onKeyDown(e)
+      }
+    : delegate.onKeyDown
+
   const rootProps: RootProps = {
     role: 'listbox',
     'aria-multiselectable': multiSelectable || undefined,
@@ -132,6 +157,7 @@ export function useListboxPattern(
     'aria-labelledby': labelledBy,
     ...(rearrangeable ? { 'data-rearrangeable': '' } : {}),
     ...delegate,
+    onKeyDown: editKeyDown,
   } as RootProps
 
   const optionProps = (id: string): ItemProps => {
