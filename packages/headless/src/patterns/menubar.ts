@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
-  expandKeys, INTENTS, KEYS, matchChord, navigate as navigateAxis,
+  fromKeyMap, INTENTS, KEYS, matchChord, navigate as navigateAxis, seedExpand,
 } from '../axes'
 import type { Axis } from '../axes/axis'
 import { parentOf } from '../axes/index'
@@ -57,19 +57,23 @@ const crossTop: Axis = (d, id, t) => {
 }
 
 // top axis: ArrowDown/Enter/Space → expand+focus first, ArrowUp → expand+focus last,
-// ArrowLeft/Right → horizontal navigate, Escape → close. 키는 KEYS SSOT 에서 import.
+// ArrowLeft/Right → horizontal navigate, Escape → close.
+// expandSeedAxis: chord ↔ seed 매핑을 KeyMap 으로 선언 (raw 키 array 금지).
+const expandSeedAxis = fromKeyMap([
+  [INTENTS.expand.open,   seedExpand('first')],
+  [[{ key: KEYS.ArrowUp }], seedExpand('last')],
+])
+
 /** Menubar 가 등록하는 axis — SSOT. top + sub 합집합 (probe 용 단일 surface). */
 export const menubarAxis = () => composeAxes(
-  expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first'),
-  expandKeys([KEYS.ArrowUp], 'last'),
+  expandSeedAxis,
   navigateAxis('horizontal'),
   navigateAxis('vertical'),
   activateAxis,
   escapeAxis,
 )
 const topAxis = composeAxes(
-  expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first'),
-  expandKeys([KEYS.ArrowUp], 'last'),
+  expandSeedAxis,
   navigateAxis('horizontal'),
   escapeAxis,
 )
@@ -93,7 +97,7 @@ const subAxis = composeAxes(
  *     ⋮
  *
  * 키 매핑은 모두 axis 합성으로 박제. 인라인 onKeyDown 0.
- *   top — `expandKeys` (Down/Enter/Space, Up) + `navigate('horizontal')` + `escape`
+ *   top — `expandSeedAxis` (Down/Enter/Space=first, Up=last) + `navigate('horizontal')` + `escape`
  *   sub — `crossTop` (Left/Right) + `navigate('vertical')` + `activate` + `escape`
  *
  * intent relay 가 expand/open UiEvent 를 openId state 로 흡수 (gesture/intent split).

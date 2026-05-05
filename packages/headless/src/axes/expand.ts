@@ -1,8 +1,8 @@
-import type { Axis } from './axis'
+import type { Axis, KeyHandler } from './axis'
 import type { UiEvent } from '../types'
 import { ROOT, getChildren, isDisabled } from '../types'
 import { parentOf } from './index'
-import { INTENTS, matchChord, type KeyChord } from './keys'
+import { INTENTS, matchChord } from './keys'
 
 /**
  * expand — accordion·menu 의 단순 open/close (aria-expanded). branch leaf 통과 +
@@ -28,27 +28,21 @@ export const expand: Axis = (d, id, t) => {
 }
 
 /**
- * expandKeys — `expand` 의 일반화 factory. open 키와 seed(첫/끝 자식) 를 명시.
+ * seedExpand — `KeyMap` handler primitive. id 를 open 하고 seed(첫/끝 enabled child)
+ * 로 navigate. axis factory 가 chord 별로 다른 seed 를 매핑할 때 사용.
  *
- * openKeys 는 단순 string 배열 (modifier 무시) 또는 `KeyChord[]` (modifier 정밀).
- * SSOT 정합을 위해 가능하면 `INTENTS` 의 chord 를 import 해서 전달 권장.
- *
- * 사용처:
- *   - menubar top: `expandKeys([KEYS.ArrowDown, KEYS.Enter, KEYS.Space], 'first')`
- *
- * close 분기는 별도(또는 `escape` axis) — `expandKeys` 는 open 만 책임.
+ * @example
+ *   fromKeyMap([
+ *     [INTENTS.expand.open, seedExpand('first')],
+ *     [[KEYS.ArrowUp],      seedExpand('last')],
+ *   ])
  */
-export const expandKeys =
-  (openKeys: readonly (string | KeyChord)[], seed: 'first' | 'last' = 'first'): Axis =>
-  (d, id, t) => {
-    if (t.kind !== 'key') return null
-    const chords = openKeys.map((k) => (typeof k === 'string' ? { key: k } : k))
-    if (!matchChord(t, chords)) return null
-    const kids = getChildren(d, id)
-    if (kids.length === 0 || isDisabled(d, id)) return null
-    const enabled = kids.filter((c) => !isDisabled(d, c))
-    const events: UiEvent[] = [{ type: 'expand', id, open: true }]
-    const target = seed === 'first' ? enabled[0] : enabled[enabled.length - 1]
-    if (target) events.push({ type: 'navigate', id: target })
-    return events
-  }
+export const seedExpand = (seed: 'first' | 'last'): KeyHandler => (d, id) => {
+  const kids = getChildren(d, id)
+  if (kids.length === 0 || isDisabled(d, id)) return null
+  const enabled = kids.filter((c) => !isDisabled(d, c))
+  const events: UiEvent[] = [{ type: 'expand', id, open: true }]
+  const target = seed === 'first' ? enabled[0] : enabled[enabled.length - 1]
+  if (target) events.push({ type: 'navigate', id: target })
+  return events
+}

@@ -1,5 +1,6 @@
 import type { UiEvent, NormalizedData } from '../types'
 import type { Trigger } from '../trigger'
+import { matchChord, type KeyChord } from './keys'
 
 /**
  * Axis — data 기반 APG 키/포인터 처리 primitive.
@@ -26,6 +27,39 @@ export const composeAxes = (...axes: Axis[]): Axis => (d, id, t) => {
   for (const a of axes) {
     const r = a(d, id, t)
     if (r) return r
+  }
+  return null
+}
+
+/**
+ * KeyHandler — chord 매칭 시 호출되는 data-driven 함수. UiEvent[] 또는 null 반환.
+ */
+export type KeyHandler = (d: NormalizedData, id: string) => UiEvent[] | null
+
+/**
+ * KeyMap — `[chord(s), handler]` tuple 의 선언적 배열. 키 ↔ 동작 매핑이 그대로 코드 형태.
+ *
+ * - chord 는 단일 `KeyChord` 또는 `KeyChord[]` (합집합 — 어느 하나만 매치되면 hit)
+ * - tuple 순서 = 우선순위 (앞쪽 항목 먼저 매칭, 첫 hit 의 handler 결과 반환)
+ * - SSOT 정합: chord 는 항상 `INTENTS.X` 또는 `KEYS.X` 통과 — raw 문자열 금지
+ */
+export type KeyMap = ReadonlyArray<readonly [KeyChord | readonly KeyChord[], KeyHandler]>
+
+/**
+ * fromKeyMap — `KeyMap` 선언을 `Axis` 로 만든다. axis 가 imperative if-else 로 키
+ * 분기하는 대신 chord ↔ handler 1:1 선언으로만 표현되도록 강제하는 정본 factory.
+ *
+ * @example
+ *   const expandTopAxis = fromKeyMap([
+ *     [INTENTS.expand.open, (d, id) => seedExpand(d, id, 'first')],
+ *     [[KEYS.ArrowUp],      (d, id) => seedExpand(d, id, 'last')],
+ *   ])
+ */
+export const fromKeyMap = (entries: KeyMap): Axis => (d, id, t) => {
+  if (t.kind !== 'key') return null
+  for (const [chord, handler] of entries) {
+    const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
+    if (matchChord(t, list)) return handler(d, id)
   }
   return null
 }

@@ -1,6 +1,6 @@
 import { ROOT, type NormalizedData } from '../types'
 
-export { composeAxes, type Axis } from './axis'
+export { composeAxes, fromKeyMap, type Axis, type KeyHandler, type KeyMap } from './axis'
 
 /**
  * parentOf — returns parent id, or ROOT sentinel if id is top-level.
@@ -24,7 +24,7 @@ export const enabledSiblings = (d: NormalizedData, id: string): string[] =>
   siblingsOf(d, id).filter((sid) => !d.entities[sid]?.disabled)
 
 export { navigate } from './navigate'
-export { expand, expandKeys } from './expand'
+export { expand, seedExpand } from './expand'
 export { activate } from './activate'
 export { typeahead } from './typeahead'
 export { treeNavigate } from './treeNavigate'
