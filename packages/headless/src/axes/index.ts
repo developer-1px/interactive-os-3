@@ -1,6 +1,6 @@
 import { ROOT, type NormalizedData } from '../types'
 
-export { composeAxes, fromKeyMap, type Axis, type KeyHandler, type KeyMap } from './axis'
+export { composeAxes, fromKeyMap, tagAxis, axisKeys, type Axis, type KeyHandler, type KeyMap } from './axis'
 
 /**
  * parentOf — returns parent id, or ROOT sentinel if id is top-level.

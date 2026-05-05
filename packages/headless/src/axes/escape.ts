@@ -1,4 +1,4 @@
-import type { Axis } from './axis'
+import { tagAxis, type Axis } from './axis'
 import { parseTrigger } from '../trigger'
 import { INTENTS, matchChord } from './keys'
 
@@ -12,9 +12,9 @@ export const escapeKeys = (): readonly string[] => INTENTS.escape.close.map((c) 
  * Menu/Combobox/Dialog 의 닫기 의도를 axis 로 박제. 어느 layer 가 닫힐지는 host 가
  * onEvent 에서 결정.
  */
-export const escape: Axis = (_d, id, t) => {
+export const escape: Axis = tagAxis((_d, id, t) => {
   const p = parseTrigger(t)
   if (p.kind !== 'key') return null
   if (!matchChord(p, INTENTS.escape.close)) return null
   return [{ type: 'open', id, open: false }]
-}
+}, ['Escape'])
