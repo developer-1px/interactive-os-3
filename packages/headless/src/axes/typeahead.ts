@@ -8,14 +8,22 @@ const WINDOW_MS = 500
 
 /**
  * typeahead — printable key → 누적 buffer (500ms window) 로 sibling label prefix 매치.
- * `{type:'typeahead', buf, deadline}` 와 매치 시 `{type:'navigate', id}` emit. APG /listbox/ /menu/ /tree/ 의 type-to-search.
+ * `{type:'typeahead', buf, deadline}` 와 매치 시 `{type:'navigate', id}` emit. APG
+ * /listbox/ /menu/ /tree/ 의 type-to-search.
+ *
+ * 이미 의도형 (typeahead 자체가 buf+deadline payload — 결과형 navigate 와 함께
+ * 합성). chord 매칭이 아닌 isPrintable 게이트라 fromKeyMap 사용 X — printable
+ * 어휘 자체가 KeyMap 어휘 밖에 있다.
  */
-export const typeahead: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
-  if (!isPrintable(k)) return null
+export const typeahead: Axis = (d, id, t) => {
+  if (t.kind !== 'key') return null
+  if (!isPrintable(t)) return null
   const now = Date.now()
   const { buf, deadline } = getTypeahead(d)
-  const nextBuf = (now < deadline ? buf : '') + k.key.toLowerCase()
-  const match = enabledSiblings(d, id).find((sid) => getLabel(d, sid).toLowerCase().startsWith(nextBuf))
+  const nextBuf = (now < deadline ? buf : '') + t.key.toLowerCase()
+  const match = enabledSiblings(d, id).find(
+    (sid) => getLabel(d, sid).toLowerCase().startsWith(nextBuf),
+  )
   const events: UiEvent[] = [{ type: 'typeahead', buf: nextBuf, deadline: now + WINDOW_MS }]
   if (match) events.push({ type: 'navigate', id: match })
   return events
