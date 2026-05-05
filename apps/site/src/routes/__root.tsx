@@ -3,9 +3,9 @@ import { SidebarNav } from '../nav/SidebarNav'
 
 export const Route = createRootRoute({
   component: () => (
-    <div className="flex h-screen w-screen flex-col overflow-hidden md:flex-row">
+    <div className="flex w-screen flex-col md:h-screen md:flex-row md:overflow-hidden">
       <SidebarNav />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 md:overflow-auto">
         <Outlet />
       </div>
     </div>

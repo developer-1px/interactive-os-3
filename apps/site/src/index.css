@@ -17,7 +17,8 @@ html { scroll-behavior: smooth; }
 .prose-doc ul, .prose-doc ol { margin: 0.75rem 0; padding-left: 1.5rem; }
 .prose-doc li { margin: 0.25rem 0; }
 .prose-doc code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.875em; background: rgb(245 245 244); padding: 0.125em 0.375em; border-radius: 0.25rem; color: rgb(28 25 23); }
-.prose-doc pre { background: rgb(12 10 9); color: rgb(245 245 244); border-radius: 0.5rem; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0; font-size: 0.8125rem; line-height: 1.6; }
+.prose-doc pre { background: rgb(12 10 9); color: rgb(245 245 244); border-radius: 0.5rem; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0; font-size: 0.8125rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+@media (min-width: 768px) { .prose-doc pre { white-space: pre; word-break: normal; } }
 .prose-doc pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
 .prose-doc a { color: rgb(28 25 23); text-decoration: underline; text-decoration-color: rgb(168 162 158); text-underline-offset: 2px; }
 .prose-doc a:hover { text-decoration-color: rgb(28 25 23); }

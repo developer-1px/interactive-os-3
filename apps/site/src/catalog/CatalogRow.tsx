@@ -90,7 +90,7 @@ export function CatalogRow({
             <code className="text-xs font-mono text-stone-400">{filename}</code>
             <CopyButton text={source} />
           </div>
-          <pre className="flex-1 overflow-auto p-4 text-xs leading-relaxed text-stone-100 font-mono">
+          <pre className="flex-1 whitespace-pre-wrap break-words p-4 text-xs leading-relaxed text-stone-100 font-mono md:overflow-auto md:whitespace-pre md:break-normal">
             <code>{source}</code>
           </pre>
         </div>
