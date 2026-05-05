@@ -13,6 +13,7 @@
  * 트랙은 `identity` 로, core-reduced 트랙은 inline 핸들러로.
  */
 import type { Meta, NormalizedData, UiEvent } from '../types'
+import { resolveNavigate } from './resolveNavigate'
 
 /** UiEvent type 별로 narrow 된 reducer 핸들러 시그니처. */
 type Handler<T extends UiEvent['type']> = (
@@ -52,21 +53,19 @@ const toggleSet = (d: NormalizedData, key: 'expanded' | 'open', id: string, on: 
 const identity = (d: NormalizedData) => d
 
 const handlers: { [K in UiEvent['type']]: Handler<K> } = {
-  navigate: (d, e) => setMeta(d, { focus: e.id }),
+  navigate: (d, e) => {
+    const id = e.dir ? resolveNavigate(d, e.dir, e.id) : e.id
+    return id ? setMeta(d, { focus: id }) : d
+  },
   expand: (d, e) => toggleSet(d, 'expanded', e.id, e.open),
   open: (d, e) => toggleSet(d, 'open', e.id, e.open),
   typeahead: (d, e) => setMeta(d, { typeahead: { buf: e.buf, deadline: e.deadline } }),
   activate: identity,
-  select: (d, e) => setMeta(d, { selectAnchor: e.id }),
-  selectMany: (d, e) => {
-    const entities = { ...d.entities }
-    for (const id of e.ids) {
-      const cur = entities[id] ?? { id }
-      const next = e.to === undefined ? !cur.selected : e.to
-      entities[id] = { ...cur, selected: next }
-    }
-    return { ...d, entities }
-  },
+  select: identity,
+  setAnchor: (d, e) => setMeta(d, { selectAnchor: e.id }),
+  selectMany: identity,
+  check: identity,
+  checkMany: identity,
   value: identity,
   pan: (d, e) => {
     const cur = d.entities[e.id] ?? {}
