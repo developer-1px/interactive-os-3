@@ -1,4 +1,5 @@
-import { checkboxPattern } from '@p/headless/patterns'
+import { useLocalValue } from '@p/headless/local'
+import { checkboxPattern, type CheckboxState } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Checkbox',
@@ -9,8 +10,8 @@ export const meta = {
 }
 
 export default function Demo() {
-  const { checkboxProps, checked } = checkboxPattern({
-    defaultChecked: false,
+  const [checked, dispatch] = useLocalValue<CheckboxState>(false)
+  const { checkboxProps } = checkboxPattern(checked, dispatch, {
     label: 'Subscribe to newsletter',
   })
 

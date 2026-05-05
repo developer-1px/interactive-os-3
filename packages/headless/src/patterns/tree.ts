@@ -4,7 +4,7 @@ import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, KEYS, matchChord } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, KEYS, matchKey, matchChord } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -113,7 +113,7 @@ export function useTreePattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
-          if (e.key === KEYS.Enter) {
+          if (matchKey(e, KEYS.Enter)) {
             e.preventDefault()
             // root 면 자식 추가, else 시블 추가. crud op 어휘 1:1.
             const parentId = findParent(data, id)
@@ -121,7 +121,7 @@ export function useTreePattern(
             else          relay({ type: 'appendChild', parentId: id })
             return
           }
-          if (e.key === KEYS.Backspace) {
+          if (matchKey(e, KEYS.Backspace)) {
             e.preventDefault()
             relay({ type: 'remove', id })
             return

@@ -13,7 +13,13 @@
       "WebFetch(domain:polaris-react.shopify.com)",
       "WebFetch(domain:m3.material.io)",
       "WebFetch(domain:uxpatterns.dev)",
-      "WebFetch(domain:ant-design.antgroup.com)"
+      "WebFetch(domain:ant-design.antgroup.com)",
+      "Bash(gh run *)",
+      "Bash(gh issue close:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)"
     ]
   },
   "enabledPlugins": {}

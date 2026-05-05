@@ -1,33 +1,23 @@
-
-import type { Axis } from './axis'
-import { ROOT, getChildren, getExpanded, isDisabled, type NormalizedData } from '../types'
+import { fromKeyMap, type Axis, type KeyHandler } from './axis'
 import { INTENTS } from './keys'
-
-const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
-  for (const id of getChildren(d, parent)) {
-    out.push(id)
-    if (exp.has(id)) visibleFlat(d, id, exp, out)
-  }
-  return out
-}
+import { visibleEnabled } from './_visibleFlat'
 
 /**
  * treeNavigate — DFS visible 순회 (collapse 반영). 단일 부모 prev/next 는 navigate.
+ *
+ * KeyMap form — chord 매핑 선언, visible flat 좌표 산수는 KeyHandler 캡슐화.
  */
-// 키 매핑은 `INTENTS.treeNavigate` + `INTENTS.navigate.start/end` 에서 import (SSOT).
-type IndexFn = (len: number, i: number) => number
-const TABLE: Partial<Record<string, IndexFn>> = {
-  [INTENTS.treeNavigate.next.key]: (len, i) => Math.min(len - 1, i + 1),
-  [INTENTS.treeNavigate.prev.key]: (_, i) => Math.max(0, i - 1),
-  [INTENTS.navigate.start.key]: () => 0,
-  [INTENTS.navigate.end.key]: (len) => len - 1,
-}
+const seekVisible = (offset: (len: number, i: number) => number): KeyHandler =>
+  (d, id) => {
+    const v = visibleEnabled(d)
+    const i = v.indexOf(id)
+    if (i < 0) return null
+    return [{ type: 'navigate', id: v[offset(v.length, i)] }]
+  }
 
-export const treeNavigate: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
-  const fn = TABLE[k.key]
-  const visible = fn ? visibleFlat(d, ROOT, getExpanded(d)).filter((vid) => !isDisabled(d, vid)) : null
-  const i = visible ? visible.indexOf(id) : -1
-  return fn && visible && i >= 0
-    ? [{ type: 'navigate', id: visible[fn(visible.length, i)] }]
-    : null
-}
+export const treeNavigate: Axis = fromKeyMap([
+  [INTENTS.treeNavigate.next, seekVisible((len, i) => Math.min(len - 1, i + 1))],
+  [INTENTS.treeNavigate.prev, seekVisible((_, i) => Math.max(0, i - 1))],
+  [INTENTS.navigate.start, seekVisible(() => 0)],
+  [INTENTS.navigate.end, seekVisible((len) => len - 1)],
+])

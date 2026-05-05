@@ -91,8 +91,9 @@ function CodeView({ node }: { node: FsNode }) {
   const [text] = useResource(textResource, node.path)
   const [html] = useResource(codeHtmlResource, node.path, lang)
   if (text == null) return <pre aria-busy="true" className="rounded bg-neutral-50 p-3 text-xs" />
+  const lineNoCx = '[counter-reset:line] [&_.line]:before:[counter-increment:line] [&_.line]:before:content-[counter(line)] [&_.line]:before:inline-block [&_.line]:before:w-8 [&_.line]:before:pr-3 [&_.line]:before:mr-3 [&_.line]:before:text-right [&_.line]:before:text-neutral-400 [&_.line]:before:select-none [&_.line]:before:border-r [&_.line]:before:border-neutral-200'
   if (html == null) return <pre data-lang={lang} className="overflow-auto rounded bg-neutral-50 p-3 text-xs">{text}</pre>
-  return <div className="overflow-auto rounded bg-neutral-50 p-3 text-xs [&_pre]:m-0" dangerouslySetInnerHTML={{ __html: html }} />
+  return <div className={`overflow-auto rounded bg-neutral-50 p-3 text-xs [&_pre]:m-0 ${lineNoCx}`} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 function MarkdownView({ node }: { node: FsNode }) {

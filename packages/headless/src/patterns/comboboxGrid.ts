@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
-  gridNavigate, KEYS,
+  gridNavigate, KEYS, matchKey,
 } from '../axes'
 import { bindAxis } from '../state/bind'
 import { useValue } from '../state/useValue'
@@ -152,10 +152,10 @@ export function useComboboxGridPattern(
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     // closed + ArrowDown/Up → open + 첫/마지막 row 의 첫 cell focus
-    if (!expanded && (e.key === KEYS.ArrowDown || e.key === KEYS.ArrowUp)) {
+    if (!expanded && (matchKey(e, KEYS.ArrowDown) || matchKey(e, KEYS.ArrowUp))) {
       e.preventDefault()
       onEvent?.({ type: 'open', id: ROOT, open: true })
-      const targetRow = e.key === KEYS.ArrowUp ? visibleRowIds[visibleRowIds.length - 1] : visibleRowIds[0]
+      const targetRow = matchKey(e, KEYS.ArrowUp) ? visibleRowIds[visibleRowIds.length - 1] : visibleRowIds[0]
       const targetCell = targetRow ? getChildren(data, targetRow)[0] : undefined
       if (targetCell) onEvent?.({ type: 'navigate', id: targetCell })
       return

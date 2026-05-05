@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useResource } from '@p/headless/store'
 import { useListboxPattern } from '@p/headless/patterns'
-import { getFocus, reduce, type Meta, type UiEvent } from '@p/headless'
+import { getFocus, KEYS, matchKey, reduce, type Meta, type UiEvent } from '@p/headless'
 import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
 import { boardResource } from '../features/boardResource'
 import { flattenBoard } from '../features/flattenBoard'
@@ -11,6 +11,7 @@ export function Kanban() {
   const [doc, dispatch] = useResource(boardResource)
   const snapshot = doc ?? crud.snapshot()
   const [meta, setMeta] = useState<Meta>({})
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   useEffect(() =>
     crud.subscribe((_changes, focus) => {
@@ -26,9 +27,8 @@ export function Kanban() {
   }
 
   /**
-   * Kanban paste 의미 = "여기 다음에 끼우기" (sibling insert), 절대 overwrite 금지.
-   * card target → parent cards-array + index 로 매핑해 zod-crud 에 전달.
-   * (도메인-특화 — P2: ARIA 어휘 아님이라 widget 잔존이 정당.)
+   * Kanban paste 의미 = sibling insert. card target → cards-array + index 매핑.
+   * (P2: 도메인-특화, ARIA 어휘 아님이라 widget 잔존이 정당.)
    */
   const onClipboard = (e: UiEvent) => {
     if (e.type === 'paste' && e.targetId && cardParentArray[e.targetId]) {
@@ -44,16 +44,56 @@ export function Kanban() {
 
   const activeId = meta.selected?.[0] ?? getFocus(merged) ?? null
 
-  useHistoryShortcuts(onEvent)
-  useClipboardShortcuts(onClipboard, () => activeId)
+  // 편집 중에는 history/clipboard shortcut 가 input 입력을 가로채면 안 됨.
+  // useShortcut 이 isEditable 체크로 single-key Backspace 등 자동 회피하지만
+  // mod+key 는 무조건 캡처 — 그래서 editingId 가 있으면 dispatch 차단.
+  const guard = (e: UiEvent) => { if (!editingId) onEvent(e) }
+  useHistoryShortcuts(guard)
+  useClipboardShortcuts((e) => { if (!editingId) onClipboard(e) }, () => activeId)
+
+  /** 좌/우 arrow — 인접 컬럼 같은 index card 로 focus 이동. */
+  const moveAcrossColumn = (cardId: string, dir: -1 | 1) => {
+    const colIdx = columnIds.findIndex((cid) => (data.relationships[cid] ?? []).includes(cardId))
+    if (colIdx < 0) return
+    const cardIdx = (data.relationships[columnIds[colIdx]] ?? []).indexOf(cardId)
+    const target = columnIds[colIdx + dir]
+    if (!target) return
+    const targetCards = data.relationships[target] ?? []
+    const targetCard = targetCards[Math.min(cardIdx, targetCards.length - 1)]
+    if (targetCard) {
+      const el = document.querySelector(`[data-id="${targetCard}"]`) as HTMLElement | null
+      el?.focus()
+      // 컬럼 간 이동은 listbox sff 가 안 닿음 — meta 직접 동기화로 activeId stale 방지.
+      setMeta((prev) => ({ ...prev, focus: targetCard, selected: [targetCard] }))
+    }
+  }
 
   return (
     <main className="flex h-screen gap-4 overflow-x-auto bg-neutral-50 p-6">
       <header className="absolute right-6 top-6 text-xs text-neutral-400">
-        Tab · ↑↓ · Enter · Backspace · Cmd+X→Tab→Cmd+V (move) · Cmd+Z
+        Tab · ↑↓ · ←→ · Enter (edit) · Esc (cancel) · Backspace · Cmd+X→Tab→Cmd+V · Cmd+Z
       </header>
       {columnIds.map((colId) => (
-        <Column key={colId} id={colId} data={merged} onEvent={onEvent} />
+        <Column
+          key={colId}
+          id={colId}
+          data={merged}
+          onEvent={onEvent}
+          editingId={editingId}
+          onStartEdit={(id) => setEditingId(id)}
+          onCommitEdit={(id, title, andInsertAfter) => {
+            onEvent({ type: 'update', id, value: { title } })
+            setEditingId(null)
+            // 새 sibling 은 빈 title 로 생성됨 → AutoEditOnInsert 가 자동으로 edit 진입.
+            if (andInsertAfter) onEvent({ type: 'insertAfter', siblingId: id })
+          }}
+          onCancelEdit={(idIfEmptyToRemove) => {
+            setEditingId(null)
+            // 빈 title 새 카드를 cancel 하면 카드 자체를 제거 (Workflowy 흐름).
+            if (idIfEmptyToRemove) onEvent({ type: 'remove', id: idIfEmptyToRemove })
+          }}
+          onMoveAcrossColumn={moveAcrossColumn}
+        />
       ))}
       <button
         onClick={() => onEvent({ type: 'appendChild', parentId: rootId })}
@@ -61,23 +101,79 @@ export function Kanban() {
       >
         + Column
       </button>
+      <AutoEditOnInsert focus={meta.focus} onEnter={(id) => setEditingId(id)} editingId={editingId} data={merged} />
     </main>
   )
 }
 
+/**
+ * 새 card 가 생기면(focus 가 빈 title 의 card 로 가면) 자동으로 edit mode 진입.
+ * Workflowy 식 "Enter 로 commit + 새 카드 즉시 편집" 흐름.
+ */
+function AutoEditOnInsert({
+  focus, editingId, data, onEnter,
+}: {
+  focus: string | undefined
+  editingId: string | null
+  data: import('@p/headless').NormalizedData
+  onEnter: (id: string) => void
+}) {
+  const last = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (!focus || focus === last.current || editingId) return
+    last.current = focus
+    const label = data.entities[focus]?.label
+    if (label === '') onEnter(focus)
+  }, [focus, editingId, data, onEnter])
+  return null
+}
+
 function Column({
-  id, data, onEvent,
+  id, data, onEvent, editingId, onStartEdit, onCommitEdit, onCancelEdit, onMoveAcrossColumn,
 }: {
   id: string
   data: import('@p/headless').NormalizedData
   onEvent: (e: UiEvent) => void
+  editingId: string | null
+  onStartEdit: (id: string) => void
+  onCommitEdit: (id: string, title: string, andInsertAfter: boolean) => void
+  onCancelEdit: (idIfEmptyToRemove: string | null) => void
+  onMoveAcrossColumn: (id: string, dir: -1 | 1) => void
 }) {
   const lb = useListboxPattern(data, onEvent, {
     containerId: id,
     label: data.entities[id]?.label,
-    editable: true,
   })
   const title = data.entities[id]?.label ?? ''
+
+  const onListKey = (e: React.KeyboardEvent) => {
+    const focusedCard = (e.target as HTMLElement).closest('[role="option"]')?.getAttribute('data-id')
+    if (!focusedCard) {
+      lb.rootProps.onKeyDown?.(e as unknown as KeyboardEvent & { preventDefault(): void })
+      return
+    }
+    if (matchKey(e, KEYS.Enter)) {
+      e.preventDefault()
+      onStartEdit(focusedCard)
+      return
+    }
+    if (matchKey(e, KEYS.Backspace)) {
+      e.preventDefault()
+      onEvent({ type: 'remove', id: focusedCard })
+      return
+    }
+    if (matchKey(e, KEYS.ArrowLeft)) {
+      e.preventDefault()
+      onMoveAcrossColumn(focusedCard, -1)
+      return
+    }
+    if (matchKey(e, KEYS.ArrowRight)) {
+      e.preventDefault()
+      onMoveAcrossColumn(focusedCard, 1)
+      return
+    }
+    lb.rootProps.onKeyDown?.(e as unknown as KeyboardEvent & { preventDefault(): void })
+  }
 
   return (
     <section className="flex w-64 shrink-0 flex-col gap-2 rounded-lg bg-white p-3 shadow-sm">
@@ -91,7 +187,7 @@ function Column({
           +
         </button>
       </div>
-      <ul {...lb.rootProps} className="flex flex-col gap-1.5 outline-none">
+      <ul {...lb.rootProps} onKeyDown={onListKey} className="flex flex-col gap-1.5 outline-none">
         {lb.items.length === 0 && (
           <li className="rounded border border-dashed border-neutral-200 p-2 text-xs text-neutral-300">
             empty
@@ -102,11 +198,55 @@ function Column({
             key={it.id}
             {...lb.optionProps(it.id)}
             className="cursor-default rounded border border-neutral-200 bg-white p-2 text-sm text-neutral-800 outline-none focus:border-blue-400 focus:bg-blue-50 data-[selected]:bg-blue-100"
+            onDoubleClick={() => onStartEdit(it.id)}
           >
-            {it.label || <em className="text-neutral-300">empty</em>}
+            {editingId === it.id ? (
+              <CardEditor
+                initial={it.label || ''}
+                onCommit={(title, andInsertAfter) => onCommitEdit(it.id, title, andInsertAfter)}
+                onCancel={() => onCancelEdit(it.label === '' ? it.id : null)}
+              />
+            ) : (
+              it.label || <em className="text-neutral-300">empty</em>
+            )}
           </li>
         ))}
       </ul>
     </section>
+  )
+}
+
+function CardEditor({
+  initial, onCommit, onCancel,
+}: {
+  initial: string
+  onCommit: (title: string, andInsertAfter: boolean) => void
+  onCancel: () => void
+}) {
+  const [value, setValue] = useState(initial)
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    ref.current?.focus()
+    ref.current?.select()
+  }, [])
+  return (
+    <input
+      ref={ref}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onKeyDown={(e) => {
+        if (matchKey(e, KEYS.Enter)) {
+          e.preventDefault()
+          e.stopPropagation()
+          onCommit(value, !e.shiftKey) // Enter = commit + new sibling, Shift+Enter = commit only
+        } else if (matchKey(e, KEYS.Escape)) {
+          e.preventDefault()
+          e.stopPropagation()
+          onCancel()
+        }
+      }}
+      onBlur={() => onCommit(value, false)}
+      className="w-full bg-transparent outline-none"
+    />
   )
 }

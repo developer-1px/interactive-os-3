@@ -65,7 +65,8 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
     return mergeData(d, e.id, { x, y, s })
   },
   // Edit / Clipboard / History — 모두 host reducer (예: zod-crud 어댑터) 가 처리할 의도 이벤트.
-  create: identity,
+  insertAfter: identity,
+  appendChild: identity,
   update: identity,
   remove: identity,
   copy: identity,

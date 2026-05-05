@@ -109,3 +109,17 @@ import { useShortcut, onShortcut } from '@p/headless/key/useShortcut'
 - 메모리 (사용자 글로벌 누적 규약): `~/.claude/projects/-Users-user-Desktop-ds/memory/MEMORY.md`
 
 **원칙**: minimize choices for LLM — 1 role = 1 ARIA 패턴, prop 이름은 ARIA 그대로. 시각 결정은 Tailwind 에 위임. 새 어휘·새 wrapper 만들기 전에 grep.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues — `developer-1px/interactive-os-3` (`gh` CLI). 새 이슈는 `needs-triage` 라벨로 시작. 자세한 규약은 `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+5단계 canonical state machine — `needs-triage` / `needs-info` / `ready-for-agent` / `ready-for-human` / `wontfix`. 자세한 적용 규약은 `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Multi-context. 루트 `CONTEXT-MAP.md` 가 패키지별 `CONTEXT.md` 를 인덱싱. ADR은 `docs/adr/`. 소비 규약은 `docs/agents/domain.md`.

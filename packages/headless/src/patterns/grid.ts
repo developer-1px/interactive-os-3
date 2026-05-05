@@ -7,7 +7,7 @@ import {
   type NormalizedData,
   type UiEvent,
 } from '../types'
-import { activate, composeAxes, gridNavigate, gridMultiSelect, KEYS } from '../axes'
+import { activate, composeAxes, gridNavigate, gridMultiSelect, KEYS, matchKey } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps } from './types'
 
@@ -195,7 +195,7 @@ export function useGridPattern(
       ...(editable
         ? {
             onKeyDown: (e: React.KeyboardEvent) => {
-              if (e.key === KEYS.F2) {
+              if (matchKey(e, KEYS.F2)) {
                 e.preventDefault()
                 onEvent?.({ type: 'activate', id })
               }

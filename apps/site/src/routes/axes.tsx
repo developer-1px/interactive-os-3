@@ -1,10 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { AxesIntro } from '../catalog/AxesIntro'
 import { AxisScreen } from '../catalog/AxisScreen'
 import { AXES } from '../catalog/registry.axes'
 
 function AxesApp() {
   return (
     <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
+      <AxesIntro />
       {AXES.map((entry, i) => (
         <AxisScreen key={entry.axis} entry={entry} index={i} total={AXES.length} />
       ))}

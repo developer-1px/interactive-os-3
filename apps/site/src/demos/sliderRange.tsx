@@ -12,10 +12,14 @@ export const meta = {
 
 export default function Demo() {
   const [values, setValues] = useState<number[]>([20, 70])
-  const { rootProps, trackProps, rangeProps, thumbProps } = sliderRangePattern(values, setValues, {
-    min: 0, max: 100, step: 1,
-    labels: ['Min price', 'Max price'],
-  })
+  const { rootProps, trackProps, rangeProps, thumbProps } = sliderRangePattern(
+    values,
+    (e) => setValues(e.value),
+    {
+      min: 0, max: 100, step: 1,
+      labels: ['Min price', 'Max price'],
+    },
+  )
 
   return (
     <div className="w-72">

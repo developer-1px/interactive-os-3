@@ -17,7 +17,7 @@ export const navigateOnActivate: GestureHelper = (_d, e) =>
 
 /** navigate → [navigate, activate] 분해. APG single-select listbox/tabs 의 selection-follows-focus. disabled 는 skip. */
 export const selectionFollowsFocus: GestureHelper = (d, e) => {
-  if (e.type !== 'navigate') return [e]
+  if (e.type !== 'navigate' || !e.id) return [e] // intent-form (dir) 은 통과 — selection follow 는 result-form 에서만
   const ent = d.entities[e.id]
   if (ent?.disabled) return [e]
   return [e, { type: 'activate', id: e.id }]

@@ -27,3 +27,5 @@ export const fromKeyboardEvent = (e: {
 export { useShortcut, onShortcut } from './useShortcut'
 export { useHistoryShortcuts } from './useHistoryShortcuts'
 export { useClipboardShortcuts } from './useClipboardShortcuts'
+export { bindGlobalKeyMap } from './bindGlobalKeyMap'
+export { useKeyMap } from './useKeyMap'

@@ -18,8 +18,8 @@ export function useClipboardShortcuts(
   }
   useShortcut('mod+c',       withId((id) => ({ type: 'copy', id })))
   useShortcut('mod+x',       withId((id) => ({ type: 'cut',  id })))
-  useShortcut('mod+v',       withId((id) => ({ type: 'paste', id, mode: 'auto' })))
-  useShortcut('mod+shift+v', withId((id) => ({ type: 'paste', id, mode: 'child'   })))
+  useShortcut('mod+v',       withId((id) => ({ type: 'paste', targetId: id, mode: 'auto' })))
+  useShortcut('mod+shift+v', withId((id) => ({ type: 'paste', targetId: id, mode: 'child' })))
   useShortcut('Backspace',   withId((id) => ({ type: 'remove', id })))
   useShortcut('Delete',      withId((id) => ({ type: 'remove', id })))
 }

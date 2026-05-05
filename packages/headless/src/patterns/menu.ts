@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { KEYS } from '../axes/keys'
+import { KEYS, matchKey } from '../axes/keys'
 import { activate, composeAxes, escape, expand, navigate, typeahead } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -134,7 +134,7 @@ export function useMenuPattern(
     'aria-expanded': open,
     onClick: () => setOpen(!open),
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === KEYS.ArrowDown && !open) {
+      if (matchKey(e, KEYS.ArrowDown) && !open) {
         e.preventDefault()
         setOpen(true)
       }

@@ -1,28 +1,19 @@
-import type { Axis } from './axis'
+import { fromKeyMap, type Axis, type KeyHandler } from './axis'
 import type { UiEvent, NormalizedData } from '../types'
 import { ROOT, getChildren, getExpanded, isDisabled } from '../types'
 import { parentOf } from './index'
 import { INTENTS } from './keys'
-
-const visibleFlat = (d: NormalizedData, parent: string, exp: Set<string>, out: string[] = []): string[] => {
-  for (const id of getChildren(d, parent)) {
-    out.push(id)
-    if (exp.has(id)) visibleFlat(d, id, exp, out)
-  }
-  return out
-}
-
-/** leaf 에서 ArrowRight → 다음 visible item (de facto: VS Code/Finder). APG 엄격은 do nothing 이지만 키 누르고 있을 때 전체 트리 순회 가능한 흐름이 필요. */
-const nextVisibleLeaf = (d: NormalizedData, id: string): UiEvent[] | null => {
-  const visible = visibleFlat(d, ROOT, getExpanded(d)).filter((vid) => !isDisabled(d, vid))
-  const i = visible.indexOf(id)
-  if (i < 0 || i >= visible.length - 1) return null
-  return [{ type: 'navigate', id: visible[i + 1] }]
-}
+import { visibleEnabled } from './_visibleFlat'
 
 type Branch = 'branchClosed' | 'branchOpen' | 'leaf'
-type Ctx = { d: NormalizedData; id: string; kids: string[] }
-type Action = (c: Ctx) => UiEvent[] | null
+
+const classify = (kids: string[], open: boolean): Branch =>
+  kids.length === 0 ? 'leaf' : open ? 'branchOpen' : 'branchClosed'
+
+const branchAt = (d: NormalizedData, id: string): { branch: Branch; kids: string[] } => {
+  const kids = getChildren(d, id)
+  return { branch: classify(kids, getExpanded(d).has(id)), kids }
+}
 
 const toParentOrNull = (d: NormalizedData, id: string): UiEvent[] | null => {
   const p = parentOf(d, id)
@@ -30,41 +21,46 @@ const toParentOrNull = (d: NormalizedData, id: string): UiEvent[] | null => {
 }
 const firstEnabled = (d: NormalizedData, kids: string[]) => kids.find((c) => !isDisabled(d, c))
 
-const TOGGLE: Record<Branch, Action> = {
-  branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
-  branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
-  leaf: () => null,
+/** leaf ArrowRight → 다음 visible item (de facto: VS Code/Finder). */
+const nextVisibleLeaf = (d: NormalizedData, id: string): UiEvent[] | null => {
+  const v = visibleEnabled(d)
+  const i = v.indexOf(id)
+  if (i < 0 || i >= v.length - 1) return null
+  return [{ type: 'navigate', id: v[i + 1] }]
 }
+
+const branchHandler =
+  (perBranch: Record<Branch, (d: NormalizedData, id: string, kids: string[]) => UiEvent[] | null>): KeyHandler =>
+  (d, id) => {
+    if (isDisabled(d, id)) return null
+    const { branch, kids } = branchAt(d, id)
+    return perBranch[branch](d, id, kids)
+  }
 
 /**
  * treeExpand — APG /treeview/ "Right/Left Arrow". branchClosed/branchOpen/leaf 3분기 +
  * nextVisibleLeaf 도출. 일반 open/close 는 expand.
+ *
+ * KeyMap form — open/close/activate chord 가 KeyHandler 로 매핑되어 branch 분기 처리.
  */
-// 키 매핑은 `INTENTS.treeExpand` (open/close) + `INTENTS.activate.trigger` 에서 import (SSOT).
-const TABLE: Record<string, Record<Branch, Action>> = {
-  [INTENTS.treeExpand.open.key]: {
-    branchClosed: ({ id }) => [{ type: 'expand', id, open: true }],
-    branchOpen: ({ d, kids }) => {
+export const treeExpand: Axis = fromKeyMap([
+  [INTENTS.treeExpand.open, branchHandler({
+    branchClosed: (_d, id) => [{ type: 'expand', id, open: true }],
+    branchOpen: (d, _id, kids) => {
       const first = firstEnabled(d, kids)
       return first ? [{ type: 'navigate', id: first }] : null
     },
-    // leaf: APG 는 do nothing 이나 de facto (VS Code/Finder) 는 다음 visible 로 흐름.
-    leaf: ({ d, id }) => nextVisibleLeaf(d, id),
-  },
-  [INTENTS.treeExpand.close.key]: {
-    branchClosed: ({ d, id }) => toParentOrNull(d, id),
-    branchOpen: ({ id }) => [{ type: 'expand', id, open: false }],
-    leaf: ({ d, id }) => toParentOrNull(d, id),
-  },
-  ...Object.fromEntries(INTENTS.activate.trigger.map((c) => [c.key, TOGGLE])),
-}
-
-const classify = (kids: string[], open: boolean): Branch =>
-  kids.length === 0 ? 'leaf' : open ? 'branchOpen' : 'branchClosed'
-
-export const treeExpand: Axis = (d, id, t) => { if (t.kind !== "key") return null; const k = t;
-  const kids = getChildren(d, id)
-  const branch = classify(kids, getExpanded(d).has(id))
-  const action = !isDisabled(d, id) ? TABLE[k.key]?.[branch] : undefined
-  return action ? action({ d, id, kids }) : null
-}
+    // leaf: APG 는 do nothing, de facto 는 다음 visible.
+    leaf: (d, id) => nextVisibleLeaf(d, id),
+  })],
+  [INTENTS.treeExpand.close, branchHandler({
+    branchClosed: (d, id) => toParentOrNull(d, id),
+    branchOpen: (_d, id) => [{ type: 'expand', id, open: false }],
+    leaf: (d, id) => toParentOrNull(d, id),
+  })],
+  [INTENTS.activate.trigger, branchHandler({
+    branchClosed: (_d, id) => [{ type: 'expand', id, open: true }],
+    branchOpen: (_d, id) => [{ type: 'expand', id, open: false }],
+    leaf: () => null,
+  })],
+])

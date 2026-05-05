@@ -1,3 +1,4 @@
+import type { ValueEvent } from '../types'
 import type { ItemProps, RootProps } from './types'
 import { numericStep } from '../axes/numericStep'
 
@@ -28,7 +29,7 @@ export interface SliderRangeOptions {
  */
 export function sliderRangePattern(
   values: number[],
-  onChange?: (next: number[]) => void,
+  dispatch?: (e: ValueEvent<number[]>) => void,
   opts: SliderRangeOptions = {},
 ): {
   rootProps: RootProps
@@ -47,7 +48,7 @@ export function sliderRangePattern(
     if (clamped === values[i]) return
     const out = [...values]
     out[i] = clamped
-    onChange?.(out)
+    dispatch?.({ type: 'value', value: out })
   }
 
   const rootProps: RootProps = {
