@@ -21,23 +21,17 @@ const data: NormalizedData = {
 const key = (k: string) => k
 
 describe('treeNavigate axis', () => {
-  it('ArrowDown moves to next visible (DFS, collapse-aware)', () => {
-    expect(treeNavigate(data, 'a', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a1' }])
-    expect(treeNavigate(data, 'a1', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a1x' }])
-    expect(treeNavigate(data, 'a1x', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a2' }])
+  it('emits dir:visibleNext on ArrowDown', () => {
+    expect(treeNavigate(data, 'a', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'a', dir: 'visibleNext' }])
   })
 
-  it('ArrowUp moves to prev visible', () => {
-    expect(treeNavigate(data, 'a1x', key(KEYS.ArrowUp))).toEqual([{ type: 'navigate', id: 'a1' }])
+  it('emits dir:visiblePrev on ArrowUp', () => {
+    expect(treeNavigate(data, 'a1x', key(KEYS.ArrowUp))).toEqual([{ type: 'navigate', id: 'a1x', dir: 'visiblePrev' }])
   })
 
-  it('clamps at last on ArrowDown', () => {
-    expect(treeNavigate(data, 'b', key(KEYS.ArrowDown))).toEqual([{ type: 'navigate', id: 'b' }])
-  })
-
-  it('Home jumps to first visible, End to last', () => {
-    expect(treeNavigate(data, 'b', key(KEYS.Home))).toEqual([{ type: 'navigate', id: 'a' }])
-    expect(treeNavigate(data, 'a', key(KEYS.End))).toEqual([{ type: 'navigate', id: 'b' }])
+  it('emits dir:start on Home, dir:end on End', () => {
+    expect(treeNavigate(data, 'b', key(KEYS.Home))).toEqual([{ type: 'navigate', id: 'b', dir: 'start' }])
+    expect(treeNavigate(data, 'a', key(KEYS.End))).toEqual([{ type: 'navigate', id: 'a', dir: 'end' }])
   })
 
   it('returns null on non-matching key', () => {
