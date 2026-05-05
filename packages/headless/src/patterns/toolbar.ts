@@ -1,6 +1,6 @@
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
-import { useRovingTabIndex } from '../roving/useRovingTabIndex'
+import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Toolbar 가 등록하는 axis — SSOT. */
@@ -40,12 +40,10 @@ export function useToolbarPattern(
 } {
   const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
 
-  const relay = onEvent ?? (() => {})
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(
-    toolbarAxis({ orientation }), data, relay, { autoFocus },
+  const { focusId, bindFocus, delegate, ids } = usePatternBase(
+    data, toolbarAxis({ orientation }), onEvent, { autoFocus },
   )
 
-  const ids = getChildren(data, ROOT)
   const items = ids.map((id, i) => ({
     id,
     label: getLabel(data, id),

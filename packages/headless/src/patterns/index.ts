@@ -39,6 +39,7 @@ export {
 export { useTreeGridPattern, treeGridAxis, type TreeGridOptions } from './treeGrid'
 export { useAccordionPattern, accordionAxis, type AccordionOptions } from './accordion'
 export { useDialogPattern, dialogKeys, type DialogOptions } from './dialog'
+export { useFocusTrap, focusTrapKeys } from './focusTrap'
 export { useAlertDialogPattern, type AlertDialogOptions } from './alertDialog'
 export { sliderRangePattern, sliderRangeAxis, type SliderRangeOptions } from './sliderRange'
 export { useTooltipPattern, tooltipKeys, type TooltipOptions } from './tooltip'
