@@ -27,7 +27,7 @@ export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 export { useMenuPattern, menuAxis, type MenuOptions } from './menu'
 export { useMenuButtonPattern, type MenuButtonOptions } from './menuButton'
 export {
-  checkboxPattern, useCheckboxGroupPattern,
+  checkboxPattern, useCheckboxGroupPattern, checkboxKeys,
   type CheckboxOptions, type CheckboxGroupOptions, type CheckboxState,
 } from './checkbox'
 export { useMenubarPattern, menubarAxis, type MenubarOptions } from './menubar'
