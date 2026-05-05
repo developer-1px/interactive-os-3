@@ -22,6 +22,14 @@ export interface RadioGroupOptions {
   label?: string
   /** aria-labelledby (외부 label element 연결). */
   labelledBy?: string
+  /**
+   * APG 분기 — `'roving'` (default, DOM focus 가 radio 사이를 이동) vs
+   * `'activeDescendant'` (DOM focus 는 radiogroup root, `aria-activedescendant`
+   * 가 활성 radio 의 DOM id 를 가리킴).
+   */
+  focusMode?: 'roving' | 'activeDescendant'
+  /** activeDescendant 모드의 radio DOM id prefix. */
+  idPrefix?: string
 }
 
 // APG radiogroup: 양 축 Arrow 모두 navigate.
@@ -45,7 +53,12 @@ export function useRadioGroupPattern(
   radioProps: (id: string) => ItemProps
   items: BaseItem[]
 } {
-  const { orientation = 'vertical', autoFocus, required, readOnly, invalid, disabled, label, labelledBy } = opts
+  const {
+    orientation = 'vertical', autoFocus, required, readOnly, invalid, disabled,
+    label, labelledBy, focusMode = 'roving', idPrefix = 'rg',
+  } = opts
+  const isActiveDescendant = focusMode === 'activeDescendant'
+  const radioDomId = (id: string) => `${idPrefix}-radio-${id}`
 
   const relay = useCallback(
     (e: UiEvent) => {
@@ -80,11 +93,29 @@ export function useRadioGroupPattern(
     'aria-label': label,
     'aria-labelledby': labelledBy,
     ...delegate,
+    ...(isActiveDescendant
+      ? {
+          tabIndex: disabled ? -1 : 0,
+          'aria-activedescendant': focusId ? radioDomId(focusId) : undefined,
+        }
+      : {}),
   } as RootProps
 
   const radioProps = (id: string): ItemProps => {
     const it = items.find((x) => x.id === id)
     const isFocus = focusId === id
+    if (isActiveDescendant) {
+      return {
+        role: 'radio',
+        id: radioDomId(id),
+        'data-id': id,
+        'aria-checked': it?.selected ?? false,
+        'aria-disabled': it?.disabled || undefined,
+        'data-selected': it?.selected ? '' : undefined,
+        'data-disabled': it?.disabled ? '' : undefined,
+        'data-active': isFocus ? '' : undefined,
+      } as unknown as ItemProps
+    }
     return {
       role: 'radio',
       ref: bindFocus(id) as React.Ref<HTMLElement>,

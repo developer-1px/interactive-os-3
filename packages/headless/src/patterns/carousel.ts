@@ -24,6 +24,12 @@ export interface CarouselOptions {
   /** carousel container 의 aria-label. */
   label?: string
   idPrefix?: string
+  /**
+   * APG 분기. `'buttons'` (default) — prev/next 버튼 + rotation toggle.
+   * `'tabs'` — APG `carousel-2-tablist` 변종, 각 슬라이드가 tab 으로 이동. 이 모드는
+   * 추가로 `tablistProps`, `tabProps(i)` getter 를 노출한다.
+   */
+  control?: 'buttons' | 'tabs'
 }
 
 /**
@@ -50,6 +56,8 @@ export function useCarouselPattern(opts: CarouselOptions): {
   nextButtonProps: ItemProps
   rotationButtonProps: ItemProps
   liveRegionProps: ItemProps
+  tablistProps: RootProps
+  tabProps: (slideIndex: number) => ItemProps
 } {
   const {
     slides,
@@ -61,6 +69,7 @@ export function useCarouselPattern(opts: CarouselOptions): {
     loop = true,
     label,
     idPrefix = 'carousel',
+    control = 'buttons',
   } = opts
   const count = slides.length
 
@@ -115,6 +124,8 @@ export function useCarouselPattern(opts: CarouselOptions): {
 
   const containerId = `${idPrefix}-container`
   const slideId = (i: number) => `${idPrefix}-slide-${i}`
+  const tabId = (i: number) => `${idPrefix}-tab-${i}`
+  const tablistDomId = `${idPrefix}-tablist`
 
   const rootProps: RootProps = {
     role: 'region',
@@ -129,6 +140,17 @@ export function useCarouselPattern(opts: CarouselOptions): {
 
   const slideProps = (i: number): ItemProps => {
     const slide = slides[i]
+    if (control === 'tabs') {
+      return {
+        role: 'tabpanel',
+        id: slideId(i),
+        'aria-roledescription': 'slide',
+        'aria-labelledby': tabId(i),
+        hidden: i !== index,
+        tabIndex: 0,
+        'data-active': i === index ? '' : undefined,
+      } as unknown as ItemProps
+    }
     return {
       role: 'group',
       id: slideId(i),
@@ -136,6 +158,37 @@ export function useCarouselPattern(opts: CarouselOptions): {
       'aria-label': slide ? `Slide ${i + 1} of ${count}: ${slide.label}` : `Slide ${i + 1} of ${count}`,
       hidden: i !== index,
       'data-active': i === index ? '' : undefined,
+    } as unknown as ItemProps
+  }
+
+  const tablistProps: RootProps = {
+    role: 'tablist',
+    id: tablistDomId,
+    'aria-label': label ? `${label} · slides` : 'Slides',
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (control !== 'tabs') return
+      switch (e.key) {
+        case 'ArrowRight': e.preventDefault(); next(); break
+        case 'ArrowLeft': e.preventDefault(); prev(); break
+        case 'Home': e.preventDefault(); goTo(0); break
+        case 'End': e.preventDefault(); goTo(count - 1); break
+      }
+    },
+  } as unknown as RootProps
+
+  const tabProps = (i: number): ItemProps => {
+    const slide = slides[i]
+    const isActive = i === index
+    return {
+      role: 'tab',
+      id: tabId(i),
+      type: 'button',
+      tabIndex: isActive ? 0 : -1,
+      'aria-selected': isActive,
+      'aria-controls': slideId(i),
+      'aria-label': slide ? `Slide ${i + 1}: ${slide.label}` : `Slide ${i + 1}`,
+      'data-active': isActive ? '' : undefined,
+      onClick: () => goTo(i),
     } as unknown as ItemProps
   }
 
@@ -175,5 +228,7 @@ export function useCarouselPattern(opts: CarouselOptions): {
     nextButtonProps,
     rotationButtonProps,
     liveRegionProps,
+    tablistProps,
+    tabProps,
   }
 }

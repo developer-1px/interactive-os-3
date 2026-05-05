@@ -1,3 +1,4 @@
+// editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, multiSelect, treeExpand, treeNavigate } from '../axes'
@@ -28,6 +29,19 @@ export interface TreeGridOptions {
    * - `'cellsOnly'`: cellsFirst 와 동일 키보드, 단 row 자체엔 `aria-selected` 표시 안 함.
    */
   navMode?: 'rowsFirst' | 'cellsFirst' | 'cellsOnly'
+  /**
+   * 편집 모드 — Enter/Backspace 키를 패턴이 디폴트로 흡수한다.
+   * Tab 은 셀 모델과 충돌하므로 매핑하지 않는다.
+   * 디폴트 false. true 일 때 UiEvent (create/remove) 로 emit.
+   */
+  editable?: boolean
+}
+
+const findParent = (data: NormalizedData, id: string): string | null => {
+  for (const [pid, kids] of Object.entries(data.relationships)) {
+    if (kids.includes(id)) return pid
+  }
+  return null
 }
 
 /** TreeGrid 가 등록하는 axis — SSOT. */
@@ -59,7 +73,7 @@ export function useTreeGridPattern(
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'horizontal',
-    label, labelledBy, colCount, navMode = 'rowsFirst',
+    label, labelledBy, colCount, navMode = 'rowsFirst', editable = false,
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
   const cellsMode = navMode !== 'rowsFirst'
@@ -128,7 +142,29 @@ export function useTreeGridPattern(
     setCellFocus({ rowId: flat[nextRowIdx].id, col: nextCol })
   }
 
+  const editKeyDown = (id: string | undefined, e: React.KeyboardEvent): boolean => {
+    if (!editable || !id || id === containerId) return false
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const parentId = findParent(data, id) ?? containerId
+      relay({ type: 'create', parentId, key: undefined })
+      return true
+    }
+    if (e.key === 'Backspace') {
+      e.preventDefault()
+      relay({ type: 'remove', id })
+      return true
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      relay({ type: 'activate', id })
+      return true
+    }
+    return false
+  }
+
   const cellModeKeyDown = (rowId: string, _col: number) => (e: React.KeyboardEvent) => {
+    if (editKeyDown(rowId, e)) return
     switch (e.key) {
       case 'ArrowLeft': e.preventDefault(); moveCell(0, -1); break
       case 'ArrowRight': e.preventDefault(); moveCell(0, 1); break
@@ -154,7 +190,13 @@ export function useTreeGridPattern(
     'aria-labelledby': labelledBy,
     'aria-rowcount': flat.length + HEADER_ROWS,
     'aria-colcount': colCount,
-    ...(cellsMode ? {} : delegate),
+    ...(cellsMode ? {} : {
+      ...delegate,
+      onKeyDown: (e: React.KeyboardEvent) => {
+        if (editKeyDown(focusId ?? undefined, e)) return
+        delegate.onKeyDown(e)
+      },
+    }),
   } as RootProps
 
   const headerRowProps: ItemProps = {

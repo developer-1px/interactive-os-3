@@ -1,0 +1,53 @@
+import { fromList, getExpanded } from '@p/headless'
+import { useLocalData } from '@p/headless/local'
+import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
+import { dedupe, probe } from '../catalog/keys'
+
+export const meta = {
+  title: 'Disclosure · Navigation',
+  apg: 'disclosure',
+  kind: 'collection' as const,
+  blurb: 'Top-level nav buttons reveal sub-link panels — only one open at a time is host policy.',
+  keys: () => dedupe(probe(disclosureAxis())),
+}
+
+const NAV = [
+  { id: 'products', label: 'Products', subs: ['Cloud', 'On-prem', 'API'] },
+  { id: 'company', label: 'Company', subs: ['About', 'Careers', 'Contact'] },
+  { id: 'resources', label: 'Resources', subs: ['Blog', 'Docs', 'Changelog'] },
+]
+
+function Section({ id, label, subs, data, onEvent }: { id: string; label: string; subs: string[]; data: any; onEvent: any }) {
+  const open = getExpanded(data).has(id)
+  const { triggerProps, panelProps } = disclosurePattern(data, id, onEvent)
+  return (
+    <li className="relative">
+      <button
+        {...triggerProps}
+        className="rounded px-3 py-1.5 text-sm hover:bg-stone-100 data-[state=open]:bg-stone-900 data-[state=open]:text-white"
+      >
+        {label} <span aria-hidden>{open ? '▴' : '▾'}</span>
+      </button>
+      <ul {...panelProps} className="absolute left-0 top-full mt-1 w-40 rounded-md border border-stone-200 bg-white p-1 text-sm shadow-lg">
+        {subs.map((s) => (
+          <li key={s}>
+            <a href={`#${s}`} className="block rounded px-2 py-1 hover:bg-stone-100">{s}</a>
+          </li>
+        ))}
+      </ul>
+    </li>
+  )
+}
+
+export default function Demo() {
+  const [data, onEvent] = useLocalData(() => fromList(NAV.map(({ id }) => ({ id }))))
+  return (
+    <nav>
+      <ul className="flex gap-1 rounded-md border border-stone-200 bg-white p-1">
+        {NAV.map((s) => (
+          <Section key={s.id} {...s} data={data} onEvent={onEvent} />
+        ))}
+      </ul>
+    </nav>
+  )
+}

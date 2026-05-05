@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import type { UiEvent as UiEvent, NormalizedData } from '../types'
+import type { UiEvent as UiEvent } from '../types'
 
 /**
  * Resource — ui/ `(data, onEvent)`의 데이터 레이어 평행.
@@ -17,14 +17,20 @@ export type ResourceEvent<T> =
   | { type: 'refetch' }
   | { type: 'invalidate' }
 
-/** `(event) → void` — resource 쓰기 통로. */
-export type ResourceDispatch<T> = (e: ResourceEvent<T>) => void
+/**
+ * `(event) → void` — resource 쓰기 통로.
+ * ResourceEvent (set/patch/refetch/invalidate) 또는 UiEvent (활성화/편집/네비 등) 모두 수용한다.
+ * UiEvent 가 들어오면 `resource.onEvent` 라우터로 흘려 다음 값을 결정한다.
+ */
+export type ResourceDispatch<T> = (e: ResourceEvent<T> | UiEvent) => void
 
-/** ui/ UiEvent 를 받아 resource 의 다음 값으로 매핑하는 라우터 (undefined 면 무시). */
+/** ui/ UiEvent 를 받아 resource 의 다음 값으로 매핑하는 라우터 (undefined 면 무시 = no-op). */
 export type ResourceEventRouter<T> = (
   e: UiEvent,
-  ctx: { value: T | undefined; data: NormalizedData },
+  ctx: { value: T | undefined },
 ) => T | undefined
+
+const RESOURCE_EVENT_TYPES = new Set<string>(['set', 'patch', 'refetch', 'invalidate'])
 
 /** Resource 정의 — keyed external store spec. key/load/initial/subscribe/serialize/onEvent 슬롯. */
 export interface Resource<T, Args extends unknown[] = []> {
@@ -170,6 +176,17 @@ export function useResource<T, Args extends unknown[] = []>(
 
   const dispatch: ResourceDispatch<T> = (e) => {
     const entry = getEntry(key)
+    // UiEvent 분기 — onEvent 라우터로 위임.
+    if (!RESOURCE_EVENT_TYPES.has(e.type)) {
+      if (!resource.onEvent) return
+      const next = resource.onEvent(e as UiEvent, { value: entry.value as T | undefined })
+      if (next !== undefined) {
+        setValue(key, next)
+        resource.serialize?.(key, next, ...args)
+      }
+      return
+    }
+    // ResourceEvent 분기 — set/patch/refetch/invalidate.
     if (e.type === 'set') {
       setValue(key, e.value)
       resource.serialize?.(key, e.value, ...args)

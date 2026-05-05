@@ -15,6 +15,11 @@ export interface SliderOptions {
   step?: number
   label?: string
   disabled?: boolean
+  /**
+   * `aria-valuetext` 합성기. 의미 있는 표현 (예: 시간 포맷, 별점 텍스트, 단위) 이 필요할 때.
+   * APG: rating/seek/temperature 예제는 모두 valuetext 를 다르게 합성.
+   */
+  valueText?: (value: number) => string
 }
 
 /**
@@ -38,7 +43,7 @@ export function sliderPattern(
   rangeProps: ItemProps
   thumbProps: ItemProps
 } {
-  const { orientation = 'horizontal', min = 0, max = 100, step = 1, label, disabled = false } = opts
+  const { orientation = 'horizontal', min = 0, max = 100, step = 1, label, disabled = false, valueText } = opts
   const pct = ((value - min) / (max - min)) * 100
 
   const { onKey } = bindValueAxis(
@@ -71,6 +76,7 @@ export function sliderPattern(
     'aria-valuenow': value,
     'aria-valuemin': min,
     'aria-valuemax': max,
+    'aria-valuetext': valueText ? valueText(value) : undefined,
     'aria-label': label,
     'aria-disabled': disabled || undefined,
     onKeyDown: onKey,

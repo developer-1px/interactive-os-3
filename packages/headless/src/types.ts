@@ -60,7 +60,7 @@ export type UiEvent =
   | { type: 'remove'; id: string }
   | { type: 'copy'; id: string }
   | { type: 'cut'; id: string }
-  | { type: 'paste'; id: string; mode?: 'sibling' | 'child' | 'replace' }
+  | { type: 'paste'; id: string; mode?: 'auto' | 'child' | 'overwrite' }
   | { type: 'undo' }
   | { type: 'redo' }
 

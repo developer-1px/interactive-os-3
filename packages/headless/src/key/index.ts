@@ -23,3 +23,7 @@ export const fromKeyboardEvent = (e: {
 }): KeySpec => ({
   key: e.key, ctrl: e.ctrlKey, alt: e.altKey, meta: e.metaKey, shift: e.shiftKey,
 })
+
+export { useShortcut, onShortcut } from './useShortcut'
+export { useHistoryShortcuts } from './useHistoryShortcuts'
+export { useClipboardShortcuts } from './useClipboardShortcuts'

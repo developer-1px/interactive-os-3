@@ -1,3 +1,4 @@
+// editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
@@ -27,6 +28,18 @@ export interface TreeOptions {
    * `aria-current="page"` 가 추가로 emit 된다 (sidebar/route nav 용도). default `'select'`.
    */
   variant?: 'select' | 'navigation'
+  /**
+   * 편집 모드 — Enter/Tab/Shift+Tab/Backspace 키를 패턴이 디폴트로 흡수한다.
+   * 디폴트 false (비편집). UiEvent 8종 (create/remove + paste 시퀀스) 으로 emit.
+   */
+  editable?: boolean
+}
+
+const findParent = (data: NormalizedData, id: string): string | null => {
+  for (const [pid, kids] of Object.entries(data.relationships)) {
+    if (kids.includes(id)) return pid
+  }
+  return null
 }
 
 /** Tree 가 등록하는 axis — SSOT. */
@@ -52,7 +65,7 @@ export function useTreePattern(
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'vertical',
-    label, labelledBy, variant = 'select',
+    label, labelledBy, variant = 'select', editable = false,
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -96,6 +109,51 @@ export function useTreePattern(
   walk(containerId, 1)
   const itemMap = new Map(flat.map((it) => [it.id, it]))
 
+  const editKeyDown = editable
+    ? (e: React.KeyboardEvent) => {
+        const id = focusId
+        if (id && id !== containerId) {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            const parentId = findParent(data, id) ?? containerId
+            relay({ type: 'create', parentId, key: undefined })
+            return
+          }
+          if (e.key === 'Backspace') {
+            e.preventDefault()
+            relay({ type: 'remove', id })
+            return
+          }
+          if (e.key === 'Tab' && !e.shiftKey) {
+            const parentId = findParent(data, id)
+            if (parentId) {
+              const siblings = data.relationships[parentId] ?? []
+              const idx = siblings.indexOf(id)
+              const prev = idx > 0 ? siblings[idx - 1] : null
+              if (prev) {
+                e.preventDefault()
+                relay({ type: 'cut', id })
+                relay({ type: 'paste', id: prev, mode: 'child' })
+                return
+              }
+            }
+          }
+          if (e.key === 'Tab' && e.shiftKey) {
+            const parentId = findParent(data, id)
+            if (parentId && parentId !== containerId) {
+              const grand = findParent(data, parentId) ?? containerId
+              e.preventDefault()
+              relay({ type: 'cut', id })
+              relay({ type: 'paste', id: parentId, mode: 'auto' })
+              void grand
+              return
+            }
+          }
+        }
+        delegate.onKeyDown(e)
+      }
+    : delegate.onKeyDown
+
   const rootProps: RootProps = {
     role: 'tree',
     'aria-multiselectable': multiSelectable || undefined,
@@ -103,6 +161,7 @@ export function useTreePattern(
     'aria-label': label,
     'aria-labelledby': labelledBy,
     ...delegate,
+    onKeyDown: editKeyDown,
   } as RootProps
 
   const itemProps = (id: string): ItemProps => {

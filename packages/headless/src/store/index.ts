@@ -20,3 +20,5 @@ export {
   type QuerySpec, type QueryResult,
   readQuery, invalidateQuery, subscribeQueries,
 } from './feature'
+
+export { routeUiEventToCrud, type CrudPort } from './routeUiEventToCrud'

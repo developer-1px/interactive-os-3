@@ -45,6 +45,9 @@ export {
   type GestureHelper,
 } from './gesture'
 
+export { useHistoryShortcuts } from './key/useHistoryShortcuts'
+export { useClipboardShortcuts } from './key/useClipboardShortcuts'
+
 export {
   defineMiddleware,
   type Middleware, type Phase,

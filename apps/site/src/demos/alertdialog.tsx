@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { dialogKeys, useDialogPattern } from '@p/headless/patterns'
+import { dialogKeys, useAlertDialogPattern } from '@p/headless/patterns'
 
 export const meta = {
   title: 'Alert Dialog',
@@ -11,9 +11,10 @@ export const meta = {
 
 export default function Demo() {
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const { rootProps, closeProps, open, setOpen } = useDialogPattern({
-    alert: true,
+  const cancelRef = useRef<HTMLButtonElement>(null)
+  const { rootProps, closeProps, open, setOpen } = useAlertDialogPattern({
     returnFocusRef: triggerRef,
+    cancelRef,
     label: 'Delete confirmation',
   })
 
@@ -32,7 +33,7 @@ export default function Demo() {
             <h2 className="text-base font-semibold text-red-900">Delete account?</h2>
             <p className="mt-2 text-sm text-stone-600">This action cannot be undone.</p>
             <div className="mt-4 flex justify-end gap-2">
-              <button {...closeProps} className="rounded-md border border-stone-300 px-3 py-1.5 text-sm">
+              <button ref={cancelRef} {...closeProps} className="rounded-md border border-stone-300 px-3 py-1.5 text-sm">
                 Cancel
               </button>
               <button onClick={() => setOpen(false)} className="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white">

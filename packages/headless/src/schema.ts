@@ -53,7 +53,7 @@ export const UiEventSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('paste'),
     id: z.string().min(1),
-    mode: z.enum(['sibling', 'child', 'replace']).optional(),
+    mode: z.enum(['auto', 'child', 'overwrite']).optional(),
   }),
   z.object({ type: z.literal('undo') }),
   z.object({ type: z.literal('redo') }),

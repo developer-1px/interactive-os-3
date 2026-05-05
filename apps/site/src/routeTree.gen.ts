@@ -18,6 +18,7 @@ import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 import { Route as AppsSlidesSplatRouteImport } from './routes/apps.slides.$'
+import { Route as AppsOutlinerSplatRouteImport } from './routes/apps.outliner.$'
 import { Route as AppsMarkdownSplatRouteImport } from './routes/apps.markdown.$'
 import { Route as AppsFinderSplatRouteImport } from './routes/apps.finder.$'
 
@@ -66,6 +67,11 @@ const AppsSlidesSplatRoute = AppsSlidesSplatRouteImport.update({
   path: '/apps/slides/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsOutlinerSplatRoute = AppsOutlinerSplatRouteImport.update({
+  id: '/apps/outliner/$',
+  path: '/apps/outliner/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsMarkdownSplatRoute = AppsMarkdownSplatRouteImport.update({
   id: '/apps/markdown/$',
   path: '/apps/markdown/$',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
+  '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
+  '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
+  '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
+    | '/apps/outliner/$'
     | '/apps/slides/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
+    | '/apps/outliner/$'
     | '/apps/slides/$'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
+    | '/apps/outliner/$'
     | '/apps/slides/$'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   DocsSlugRoute: typeof DocsSlugRoute
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
   AppsMarkdownSplatRoute: typeof AppsMarkdownSplatRoute
+  AppsOutlinerSplatRoute: typeof AppsOutlinerSplatRoute
   AppsSlidesSplatRoute: typeof AppsSlidesSplatRoute
 }
 
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsSlidesSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/outliner/$': {
+      id: '/apps/outliner/$'
+      path: '/apps/outliner/$'
+      fullPath: '/apps/outliner/$'
+      preLoaderRoute: typeof AppsOutlinerSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/markdown/$': {
       id: '/apps/markdown/$'
       path: '/apps/markdown/$'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsSlugRoute: DocsSlugRoute,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
   AppsMarkdownSplatRoute: AppsMarkdownSplatRoute,
+  AppsOutlinerSplatRoute: AppsOutlinerSplatRoute,
   AppsSlidesSplatRoute: AppsSlidesSplatRoute,
 }
 export const routeTree = rootRouteImport
