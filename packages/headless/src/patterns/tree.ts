@@ -52,7 +52,7 @@ export function useTreePattern(
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'vertical',
-    label, labelledBy,
+    label, labelledBy, variant = 'select',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -114,6 +114,7 @@ export function useTreePattern(
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
       'aria-selected': it?.selected ?? false,
+      'aria-current': variant === 'navigation' && it?.selected ? 'page' : undefined,
       'aria-disabled': it?.disabled || undefined,
       'aria-expanded': it?.hasChildren ? it.expanded : undefined,
       'aria-level': it?.level,

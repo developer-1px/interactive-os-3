@@ -23,6 +23,11 @@ export interface ToolbarOptions {
  *
  * `entity.separator: true` 항목은 roving skip + role="separator".
  * `entity.pressed` 는 toggle button 상태 — 데이터 owner 가 set.
+ *
+ * Per-item ARIA role 디스크리미네이터 — `entity.itemRole` 에 다음 중 하나:
+ *   `'button'` (default), `'toggle'`, `'radio'`, `'checkbox'`,
+ *   `'menubutton'`, `'spinbutton'`, `'link'`.
+ * APG toolbar example 의 혼합 itemRole 변종을 1:1 흡수.
  */
 export function useToolbarPattern(
   data: NormalizedData,
@@ -66,14 +71,50 @@ export function useToolbarPattern(
     }
     const isFocus = focusId === id
     const disabled = isDisabled(data, id)
-    return {
+    const itemRole = ent?.itemRole as
+      | 'button' | 'toggle' | 'radio' | 'checkbox' | 'menubutton' | 'spinbutton' | 'link'
+      | undefined
+
+    const base = {
       ref: bindFocus(id) as React.Ref<HTMLElement>,
       'data-id': id,
       tabIndex: isFocus ? 0 : -1,
-      'aria-pressed': ent?.pressed === undefined ? undefined : Boolean(ent.pressed),
       'aria-disabled': disabled || undefined,
       'data-disabled': disabled ? '' : undefined,
-    } as unknown as ItemProps
+    } as Record<string, unknown>
+
+    switch (itemRole) {
+      case 'radio':
+        base.role = 'radio'
+        base['aria-checked'] = Boolean(ent?.pressed ?? ent?.selected)
+        break
+      case 'checkbox':
+        base.role = 'checkbox'
+        base['aria-checked'] = Boolean(ent?.pressed ?? ent?.selected)
+        break
+      case 'menubutton':
+        base['aria-haspopup'] = 'menu'
+        base['aria-expanded'] = Boolean(ent?.expanded)
+        break
+      case 'spinbutton':
+        base.role = 'spinbutton'
+        if (ent?.value !== undefined) base['aria-valuenow'] = ent.value
+        if (ent?.min !== undefined) base['aria-valuemin'] = ent.min
+        if (ent?.max !== undefined) base['aria-valuemax'] = ent.max
+        break
+      case 'link':
+        // native <a> 권장 — role 따로 안 박음. tabIndex 만 roving 그대로.
+        break
+      case 'toggle':
+        base['aria-pressed'] = Boolean(ent?.pressed)
+        break
+      case 'button':
+      default:
+        // 기존 호환: pressed 가 명시되어 있으면 toggle 로 취급.
+        if (ent?.pressed !== undefined) base['aria-pressed'] = Boolean(ent.pressed)
+        break
+    }
+    return base as unknown as ItemProps
   }
 
   return { rootProps, toolbarItemProps, items }

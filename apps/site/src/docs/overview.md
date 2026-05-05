@@ -114,35 +114,12 @@ data → 화면 → 이벤트 → reducer → data
 
 라이브 데모: [/patterns](/patterns) · [/axes](/axes) · [/matrix](/matrix) · [/data](/data) · [/uievents](/uievents)
 
-## 누가 써야 하나
-
-**잘 맞는 분**
-- 자체 디자인 시스템을 가진 팀이 행동 인프라만 빌리려는 경우
-- Tailwind v3 등 utility-class 기반 시각 어휘를 이미 쓰고 있음
-- LLM 친화 codebase — 단일 어휘로 추론하길 원함
-
-**다른 도구가 더 나은 분**
-- 즉시 입을 수 있는 시각 컴포넌트(`<Button variant="primary">`)가 필요 → **shadcn/ui · Radix Themes · Material UI**
-- 디자인 시스템 토큰까지 라이브러리가 정의해 주길 바람 → **MUI · Chakra**
-- markup · 스타일 · 행동 묶음 한 줄 import 를 원함 → **Radix UI · Base UI · Ariakit**
-- production 안정성이 최우선 → **React Aria** (Adobe 팀 + 다수 production)
-
-## 알려진 한계
-
-본 라이브러리를 쓰기 전에 알아야 할 것입니다.
-
-- **버전**: v0.0.2 — breaking change 가능, semver 보장은 1.0 이후
-- **저자**: 1인 OSS — 회사가 backed 하지 않음
-- **production 사례**: 같은 repo 의 데모(`apps/finder` · `apps/markdown` · `apps/slides`) 외 없음
-- **React 19 only** — 18 사용자 호환 ❌
-- **자동 테스트**: 단위 테스트는 있으나 axe-core 통합 · screen-reader matrix · APG spec compliance 자동화는 미완
-- **시각 invariant**: focus ring · dark mode · motion 대응은 소비자 책임
-
 ## 다음 단계
 
 - [Getting Started](/docs/getting-started) — 5분 안에 첫 화면
+- [Comparison](/docs/comparison) — 다른 라이브러리와의 차이
 - [Core Concept](/docs/core-concept) — 데이터 흐름 · 어휘 · 합성 모델
-- [FAQ](/docs/faq) — 27가지 의문에 대한 정직한 답변
+- [FAQ](/docs/faq) — 자주 묻는 질문
 
 ## 참조
 

@@ -25,6 +25,11 @@ export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './
 export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 
 export { useMenuPattern, menuAxis, type MenuOptions } from './menu'
+export { useMenuButtonPattern, type MenuButtonOptions } from './menuButton'
+export {
+  checkboxPattern, useCheckboxGroupPattern,
+  type CheckboxOptions, type CheckboxGroupOptions, type CheckboxState,
+} from './checkbox'
 export { useMenubarPattern, menubarAxis, type MenubarOptions } from './menubar'
 export { useComboboxPattern, comboboxAxis, type ComboboxOptions } from './combobox'
 export {

@@ -34,7 +34,7 @@ const toggleSet = (d: NormalizedData, key: 'expanded' | 'open', id: string, on: 
   return setMeta(d, { [key]: next } as Partial<Meta>)
 }
 
-/** identity reducer — 데이터 패스스루. activate/selectMany/value 처럼 host reducer 가 처리할 의도 이벤트. */
+/** identity reducer — 데이터 패스스루. activate/selectMany/value/edit 어휘처럼 host reducer 가 처리할 의도 이벤트. */
 const identity = (d: NormalizedData) => d
 
 const handlers: { [K in UiEvent['type']]: Handler<K> } = {
@@ -64,6 +64,15 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
     const y = e.cy - (e.cy - y0) * k
     return mergeData(d, e.id, { x, y, s })
   },
+  // Edit / Clipboard / History — 모두 host reducer (예: zod-crud 어댑터) 가 처리할 의도 이벤트.
+  create: identity,
+  update: identity,
+  remove: identity,
+  copy: identity,
+  cut: identity,
+  paste: identity,
+  undo: identity,
+  redo: identity,
 }
 
 /**

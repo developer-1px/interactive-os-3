@@ -829,3 +829,98 @@ useToolbarPattern(data, onEvent, opts: {
 
 Tabs · Disclosure · Switch · Tooltip · Button · Breadcrumb · Link · Landmarks · Meter · Table · Splitter · Alert · Spinbutton · Feed · Dialog
 
+---
+
+# `@p/headless` Edit / Clipboard / History 어휘 gap 닫기
+
+trigger: zod-crud × @p/headless 콜라보 example(`apps/outliner`) 설계 중 `UiEvent` 에 편집 동사가 통째로 없음을 발견. ARIA spec은 *상태* 어휘만 정본 — 편집 동사는 spec 밖이라 내부 결정. 기준 출처는 zod-crud `JsonCrud` op 어휘로 정렬 (이미 닫혀 있음).
+
+참조: `docs/2026/2026-05/2026-05-05/01_outlinerPrd.md`
+
+## 결정 트리
+
+```
+편집 동사 후보
+ ├─ zod-crud op 와 1:1 매칭?
+ │   ├─ YES → UiEvent 추가 후보
+ │   └─ NO  → 보류 (재발명 위험)
+ └─ 단독 컬렉션 앱(outliner) 외에서도 재사용?
+     ├─ YES → P0/P1 (본체 추가)
+     └─ NO  → 앱 국지 어휘로 유지
+```
+
+범례: ✅ done · 🟡 in-progress · ❌ todo · 🚫 out
+
+## P0 — UiEvent 어휘 확장 (본체 spec)
+
+`packages/headless/src/types.ts` + `schema.ts` 동시 갱신. zod-crud op 어휘를 정본으로 채택.
+
+| event | shape | zod-crud 매핑 | 상태 |
+|---|---|---|---|
+| `create` | `{ type, parentId, key?, value? }` | `crud.create(parentId, key, value)` | ❌ |
+| `update` (id-bound) | `{ type, id, value }` | `crud.update(id, value)` | ❌ |
+| `remove` | `{ type, id }` | `crud.delete(id)` | ❌ |
+| `copy` | `{ type, id }` | `crud.copy(id)` | ❌ |
+| `cut` | `{ type, id }` | `crud.cut(id)` | ❌ |
+| `paste` | `{ type, id, mode?: 'sibling'\|'child'\|'replace' }` | `crud.paste(id, {mode})` | ❌ |
+| `undo` | `{ type }` | `crud.undo()` | ❌ |
+| `redo` | `{ type }` | `crud.redo()` | ❌ |
+
+서브태스크:
+- ❌ `UiEvent` discriminated union 8종 추가
+- ❌ `parseUiEvent` zod schema 동기화
+- ❌ 기존 `value` 변종(슬라이더용 `ValueEvent<T>`)과 새 `update`(id-bound)의 책임 경계 주석
+- ❌ `INVARIANTS.md` / `PATTERNS.md` 업데이트
+
+## P1 — gesture/intent 헬퍼 (key → UiEvent)
+
+memory의 *Gesture/Intent 분리* 원칙을 편집 어휘에 확장. 키 입력 → UiEvent 변환을 앱이 매번 짜지 않도록.
+
+- ❌ `useShortcut` 결과를 dispatch로 직결하는 thin helper
+- ❌ 클립보드 표준 키 매핑 helper: `useClipboardShortcuts(dispatch, () => activeId)` — Cmd+C/X/V/Delete 일괄
+- ❌ 히스토리 표준 키 매핑 helper: `useHistoryShortcuts(dispatch)` — Cmd+Z / Cmd+Shift+Z
+
+## P2 — `useTreePattern` / `useTreeGridPattern` 편집 동사 통합
+
+현재는 nav/select/expand 만. tree 내 편집 키 디폴트를 패턴이 흡수.
+
+- ❌ `Enter` → `create` (형제 추가) 디폴트 emit
+- ❌ `Tab` / `Shift+Tab` → `move` 또는 `cut+paste` 시퀀스
+- ❌ `Backspace` (빈 노드) → `remove`
+- ❌ 옵션 플래그 `editable: boolean` — 비편집 모드와 분리
+
+## P3 — flat-tree 어댑터 유틸
+
+flat record 백엔드(zod-crud, FS, DB recordset)를 `NormalizedData`로 잇는 일반화된 헬퍼.
+
+- ❌ `fromFlatTree<N>(nodes: Record<string, N>, rootId: string, accessors: { children: (n: N) => string[] })` 추가
+- ❌ `fromTree` / `fromList` 와 같은 위치에서 export
+- ❌ 단위테스트: zod-crud `JsonDoc` 통과, 임의 FS-style record 통과
+
+## P4 — `defineResource.onEvent` 라우팅 헬퍼
+
+매 `defineResource` 가 동일한 switch 문을 반복하지 않도록.
+
+- ❌ `routeUiEventToCrud(crud, event) → nextSnapshot | undefined` 헬퍼
+- ❌ 8종 새 UiEvent 자동 매핑, focus 복귀(`OperationResult.focusNodeId`) 자동 흐름
+- ❌ 단, `@p/headless/store` 본체에 zod-crud import 금지 — *interface* 만 받는 구조 (`{ copy(id), cut(id), paste(id, opts), ... }`)
+
+## P5 — example 앱으로 검증 (`apps/outliner`)
+
+PRD: `docs/2026/2026-05/2026-05-05/01_outlinerPrd.md`
+
+- ❌ `apps/outliner/` 스캐폴드 (entities/features/widgets/routes)
+- ❌ zod-crud npm dep 추가
+- ❌ Outliner.tsx ~80줄, outlineResource ~30줄
+- ❌ Acceptance criteria 8항목 통과 (PRD §8)
+- ❌ tsc + vite dev 콘솔 에러 0
+- ❌ axe 검사 위반 0
+
+## 검증 — 끝났음을 안다
+
+- ❌ `useShortcut('mod+z', () => dispatch({ type: 'undo' }))` 한 줄로 동작
+- ❌ outliner 키보드만으로 100% CRUD + clipboard + history
+- ❌ 기존 패턴 회귀 0 (listbox/menu/treegrid 테스트 통과)
+- ❌ memory의 *Single data interface* / *Gesture/Intent 분리* 원칙 위반 0
+
+

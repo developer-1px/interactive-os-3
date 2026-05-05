@@ -50,8 +50,24 @@ export type UiEvent =
   | { type: 'pan'; id: string; dx: number; dy: number }
   /** zoom: cursor (cx, cy)를 고정점으로 scale을 k 배 — Figma/Miro 식 cursor-anchored zoom */
   | { type: 'zoom'; id: string; cx: number; cy: number; k: number }
+  /**
+   * Edit / Clipboard / History 어휘 (8종) — 정본은 zod-crud `JsonCrud` op.
+   * ARIA spec 밖이라 상태 어휘 정본주의로 결정 불가 → 이미 닫힌 op 어휘를 차용.
+   * `update`는 id-bound (`ValueEvent<T>`는 id 없는 단일값 변종, 슬라이더/스위치 전용).
+   */
+  | { type: 'create'; parentId: string; key?: string | number; value?: unknown }
+  | { type: 'update'; id: string; value: unknown }
+  | { type: 'remove'; id: string }
+  | { type: 'copy'; id: string }
+  | { type: 'cut'; id: string }
+  | { type: 'paste'; id: string; mode?: 'sibling' | 'child' | 'replace' }
+  | { type: 'undo' }
+  | { type: 'redo' }
 
-/** UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter. */
+/**
+ * UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter.
+ * Note: id-bound `update` 는 `UiEvent` 본체에. `ValueEvent<T>` 는 id 없는 단일값 컨트롤 전용.
+ */
 export type ValueEvent<T> = { type: 'value'; value: T }
 
 /** meta.root (top-level id 배열) read. */

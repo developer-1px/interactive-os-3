@@ -40,6 +40,23 @@ export const UiEventSchema = z.discriminatedUnion('type', [
     cy: z.number().finite(),
     k: z.number().finite().positive(),
   }),
+  z.object({
+    type: z.literal('create'),
+    parentId: z.string().min(1),
+    key: z.union([z.string(), z.number()]).optional(),
+    value: z.unknown().optional(),
+  }),
+  z.object({ type: z.literal('update'), id: z.string().min(1), value: z.unknown() }),
+  z.object({ type: z.literal('remove'), id: z.string().min(1) }),
+  z.object({ type: z.literal('copy'), id: z.string().min(1) }),
+  z.object({ type: z.literal('cut'), id: z.string().min(1) }),
+  z.object({
+    type: z.literal('paste'),
+    id: z.string().min(1),
+    mode: z.enum(['sibling', 'child', 'replace']).optional(),
+  }),
+  z.object({ type: z.literal('undo') }),
+  z.object({ type: z.literal('redo') }),
 ])
 
 /** EntitySchema 추론 타입. */
