@@ -1,6 +1,15 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, navigate, typeahead, KEYS, matchKey } from '../axes'
+import { activate, composeAxes, multiSelect, navigate, typeahead, KEYS, matchChord } from '../axes'
+import type { KeyChord } from '../axes/keys'
+
+/** listbox edit-mode chord registry — declarative SSOT (Enter=insertAfter, Backspace=remove). */
+const LISTBOX_EDIT_INSERT: readonly KeyChord[] = [{ key: KEYS.Enter }]
+const LISTBOX_EDIT_REMOVE: readonly KeyChord[] = [{ key: KEYS.Backspace }]
+
+/** listboxEditKeys — chord registry 합집합 도출. editable 모드 추가 키. */
+export const listboxEditKeys = (): readonly string[] =>
+  Array.from(new Set([...LISTBOX_EDIT_INSERT, ...LISTBOX_EDIT_REMOVE].map((c) => c.key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -130,12 +139,12 @@ export function useListboxPattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
-          if (matchKey(e, KEYS.Enter)) {
+          if (matchChord(e as unknown as KeyboardEvent, LISTBOX_EDIT_INSERT)) {
             e.preventDefault()
             relay({ type: 'insertAfter', siblingId: id })
             return
           }
-          if (matchKey(e, KEYS.Backspace)) {
+          if (matchChord(e as unknown as KeyboardEvent, LISTBOX_EDIT_REMOVE)) {
             e.preventDefault()
             relay({ type: 'remove', id })
             return
