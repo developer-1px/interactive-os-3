@@ -1,81 +1,44 @@
 # Overview
 
-`@p/headless` 는 WAI-ARIA 행동 인프라입니다. axis 합성 · roving tabindex · 24 APG recipe 를 hook 으로 제공하고, 시각·markup·토큰은 다루지 않습니다.
+## 익숙한 풍경
 
-> **Status.** v0.0.2 · 1인 OSS · production 사례 없음. 본 문서는 라이브러리가 무엇을 약속하고 무엇을 약속하지 않는지 명확히 합니다.
+웹앱을 만들 때 우리는 보통 컴포넌트 라이브러리에 손을 내밉니다. Material UI · Ant Design · shadcn/ui · Radix UI · Headless UI — 이름은 다양하지만 약속은 같습니다.
 
-## Why
+> "리스트, 탭, 메뉴, 드롭다운, 다이얼로그… 자주 쓰는 UI 를 미리 만들어 둘 테니 가져다 쓰세요."
 
-ARIA 패턴을 정확히 구현하려면 다음을 모두 챙겨야 합니다 — `aria-selected` · `aria-activedescendant` · roving tabindex · Home/End · typeahead · multi-select range chord · APG focus model. listbox 하나에 200줄 이상이 일반적입니다.
+설치 한 줄, import 한 줄, 쓰기만 하면 키보드로 화살표 눌러서 메뉴 항목을 이동하고, Enter 로 선택하고, Escape 로 닫고, 스크린리더가 옳게 읽어 주는 — 이런 **접근성 동작**까지 다 들어 있는 컴포넌트가 화면에 등장합니다. 편합니다.
 
-기존 라이브러리는 이 부담을 흡수하지만 동시에 **markup · 스타일 · 컴포넌트 어휘**를 함께 제공합니다 (Radix UI · Headless UI · Ariakit · React Aria). 그 묶음이 자기 디자인 시스템과 맞으면 최선의 선택이지만, **행동만 가져오고 시각은 직접 그리고 싶은** 팀에게는 과합니다.
+## 그런데 이런 적이 있지 않으셨나요
 
-`@p/headless` 의 목적은 단순합니다.
+이렇게 가져다 쓰다가 어느 순간 **시각**을 다르게 하고 싶어집니다. 디자이너가 "우리 브랜드는 이런 색·간격·radius 로 통일해 주세요" 라고 합니다. 자체 디자인 시스템이 있을 수도, 그냥 미감이 다를 수도 있습니다.
 
-> ARIA spec 을 그대로 코드로 옮긴 행동 인프라.
-> spec 을 읽으면 코드 의미가 그대로 보이고, LLM 도 한 어휘로 추론할 수 있도록.
+이때부터 묘한 마찰이 시작됩니다.
 
-## How — 4가지 약속
+- 라이브러리 컴포넌트 안에 **이미 들어있는 색·여백·아이콘·border** 와 싸웁니다. CSS 우선순위 전쟁, `!important`, 깊은 selector 가 등장합니다.
+- 컴포넌트가 강요하는 **markup 구조**(`<Listbox.Root>` 안에 `<Listbox.Trigger>` 안에 `<Listbox.Items>` …) 를 그대로 받아들여야 합니다. 디자인이 살짝만 어긋나도 분해됩니다.
+- 결국 "**그냥 처음부터 직접 만들자**" 결정이 내려집니다.
 
-### 1. 행동 인프라 층에 자리잡습니다
+직접 만들기 시작하면 곧 깨닫습니다.
 
-```
-                     visual ↑
-                            │
-   shadcn / Material        │
-   Radix UI / Base UI       │   component wrappers
-   Ariakit / React Aria     │   (markup + style 포함)
-                            │
-   ─────────────────────────┼──────────────
-                            │
-   @p/headless              │   behavior infrastructure
-   axes · roving · gesture  │   (행동만, markup/style 0건)
-   · pattern recipe         │
-                            │
-   WAI-ARIA / APG           │   spec
-                            │
-                     vocab ↓
-```
+> "키보드 동작 하나 제대로 만드는 게 이렇게 어려웠나?"
 
-기존 라이브러리들은 spec ↔ visual 사이의 wrapper 층에 있고, 이 라이브러리는 그 한 단 아래 — spec 바로 위, 컴포넌트 아래입니다.
+리스트 하나에 이런 것들을 다 챙겨야 합니다 — 위/아래 화살표로 항목 이동, Home/End 로 처음·끝, 글자 입력하면 그 글자로 시작하는 항목으로 점프(typeahead), Tab 키로 빠져나가기, Shift+화살표로 범위 선택, 활성 항목을 스크린리더가 읽도록 `aria-activedescendant` 갱신, 포커스를 한 항목에만 두고 나머지는 `tabindex="-1"` 로 빼는 roving tabindex…
 
-### 2. ARIA 값 어휘를 그대로 사용합니다
+W3C 가 [APG](https://www.w3.org/WAI/ARIA/apg/) 라는 가이드를 만들어 두었지만 이걸 정확히 따라 구현하면 listbox 하나에 보통 200줄이 넘습니다. 그리고 다음 화면에서 tree 가 필요해지면 또 처음부터.
 
-값 어휘 — `role`, `aria-*`, prop 키 — 는 [WAI-ARIA](https://www.w3.org/TR/wai-aria-1.2/) + [APG](https://www.w3.org/WAI/ARIA/apg/) spec 그대로입니다.
+## 그래서 우리가 정말 원하는 것은
 
-- `role="listbox"` · `role="option"` · `aria-selected` · `aria-expanded` 그대로
-- part-getter 이름은 ARIA role 그대로 — `optionProps`, `tabProps`, `rowProps`, `gridcellProps`
+이 두 가지입니다.
 
-함수 식별자는 React 컨벤션과 APG slug 를 결합합니다. 예: `useListboxPattern` (Rules of Hooks 컨벤션 + APG `/listbox/` slug). `Pattern` suffix · `rootProps` · `useResource` 등은 라이브러리 어휘이며, 이는 React 호환성과 가독성을 위한 최소한의 추가입니다.
+> **시각은 우리가 직접 그리고 싶다. 행동(키보드·포커스·접근성)은 누가 대신 보증해 줬으면 좋겠다.**
 
-### 3. 시각은 소비자가 직접 표현합니다
+기존 라이브러리들은 "행동 + 시각 + markup" 묶음을 줍니다. 묶음이 잘 맞으면 좋지만, 시각만 떼어내려고 하면 잘 안 떨어집니다.
 
-- 행동 = `useListboxPattern(data, onEvent)` 가 반환하는 props · items
-- 시각 = 그 props 를 spread 한 `<ul className="...">`. utility class 는 직접
+**행동만**, 그 한 가지만 책임지는 도구가 있다면 — 시각은 자유롭게 (Tailwind 든 자체 CSS 든) 그리고, 동작은 spec 대로 작동한다고 안심할 수 있다면 — 어떨까요?
 
-라이브러리는 토큰 시스템 · CSS-in-JS · classless 어휘를 제공하지 않습니다. focus ring · dark mode · 모션 대응도 시각 책임이므로 소비자가 챙겨야 합니다 — Tailwind v3 의 `focus-visible:`, `dark:`, `motion-reduce:` modifier 로 표현 가능.
+## 답 — `@p/headless`
 
-이 거래(trade)가 본 라이브러리의 핵심입니다.
-- **얻는 것**: 시각 자유도 100%, 어떤 디자인 시스템에도 행동 인프라가 맞춰짐
-- **잃는 것**: utility class 작성 부담, 시각 invariant 직접 챙겨야 함
-
-### 4. 단일 데이터 인터페이스 + 단방향 흐름
-
-```
-data → axes → patterns → ui → reducer → data
-```
-
-- `data: NormalizedData` — `{entities, relationships, meta}` 3-store, plain JSON
-- `onEvent(e: UiEvent)` — 모든 dispatch 는 11 variant `UiEvent` discriminated union 한 채널로
-- 양방향 바인딩 · side-channel · class · ref · closure 잔재 없음
-
-이 invariant 가 직렬화 · replay · HMR · LLM 추론을 가능하게 합니다.
-
-## What — 진입점
-
-### Pattern recipe (24개)
-
-각 recipe = `(data, onEvent, opts?) → { rootProps, partProps(id), items }` 통일 시그니처.
+`@p/headless` 는 정확히 그 한 가지만 합니다.
 
 ```ts
 import { fromList } from '@p/headless'
@@ -98,76 +61,82 @@ return (
 )
 ```
 
-24 recipe 는 [APG `/patterns/`](https://www.w3.org/WAI/ARIA/apg/patterns/) 카테고리 + 일부 ARIA role(`alert` · `switch`) 를 미러합니다.
+이게 전부입니다. `useListboxPattern` 이 키보드 동작·포커스·`aria-*` 속성을 다 챙겨 주고, `<ul>`·`<li>`·`className` 은 본인이 결정합니다.
 
-→ [/patterns](/patterns) — 라이브 데모.
+화살표 눌러 보세요 — 항목이 이동합니다. 글자 입력해 보세요 — typeahead 가 작동합니다. Tab 눌러 보세요 — 빠져나갑니다. 스크린리더로 읽어 보세요 — `role="listbox"` · `aria-selected` 다 들어가 있습니다.
 
-### Axis primitive (escape hatch)
+**행동은 끝났고**, 이제 시각은 마음껏.
 
-24 recipe 가 부족하면 axis primitive 로 직접 합성합니다.
+## 라이브러리의 정체성
 
-```ts
-import { composeAxes, navigate, activate, typeahead } from '@p/headless'
+이 한 줄이 핵심입니다.
 
-const axis = composeAxes(navigate('vertical'), activate, typeahead)
+> **컴포넌트 라이브러리가 아니라, 행동 인프라입니다.**
+
+세 가지 약속이 따라옵니다.
+
+### 1. markup · 스타일 · 토큰을 만들지 않습니다
+
+- `<ul>` 을 `<ol>` 로 바꿔도 동작합니다 — 라이브러리는 markup 구조를 강요하지 않습니다
+- 색·여백·border 어휘 0건 — Tailwind utility class 또는 본인 CSS 로 직접
+- 컴포넌트 wrapper(`<Listbox.Root>` 같은 것) 0건 — hook + props getter 만
+
+### 2. 어휘는 W3C ARIA 그대로
+
+라이브러리가 자체 어휘를 만들지 않습니다. role 이름, ARIA 속성, prop 키 모두 [WAI-ARIA spec](https://www.w3.org/TR/wai-aria-1.2/) 그대로입니다.
+
+- `role="listbox"` · `role="option"` · `aria-selected` · `aria-expanded`
+- `optionProps`, `tabProps`, `rowProps`, `gridcellProps` (ARIA role 그대로)
+
+함수 식별자(`useListboxPattern`)는 React 컨벤션과 APG slug(`/listbox/`) 를 결합한 것 — 이 정도가 라이브러리가 추가하는 어휘의 전부입니다.
+
+### 3. 데이터 한 곳, 이벤트 한 채널
+
+```
+data → 화면 → 이벤트 → reducer → data
 ```
 
-→ [/axes](/axes) · [/matrix](/matrix) — axis ↔ pattern 매핑.
+- 데이터는 `NormalizedData` 한 형태 — `{ entities, relationships, meta }` plain JSON
+- 이벤트는 `onEvent(e)` 한 채널 — 11가지 의미 변종(navigate · activate · expand · select …) 한 union
+- 양방향 바인딩 ❌ · class · ref · closure 잔재 ❌
 
-### 데이터 빌더
+이 한 방향 흐름 덕에 직렬화 · 디버깅 · 테스트 · LLM 추론이 쉬워집니다.
 
-`fromList` · `fromTree` · `pathAncestors` 가 `NormalizedData` 진입점.
+## 진입점
 
-→ [/data](/data) — live preview.
+| 진입점 | 어디 | 무엇 |
+|--------|------|------|
+| Pattern recipe (24개) | `@p/headless/patterns` | listbox · tabs · tree · menu · combobox · dialog · slider … |
+| Axis primitive | `@p/headless` | navigate · activate · expand · typeahead · multiSelect … (recipe 가 부족할 때 직접 합성) |
+| 데이터 빌더 | `@p/headless` | `fromList`, `fromTree`, `pathAncestors` |
+| 단일 dispatch 어휘 | `@p/headless` (`UiEvent`) | 11 variant union |
+| LLM 컨텍스트 | [/llms.txt](/llms.txt) · [/llms-full.txt](/llms-full.txt) | 226 export 인덱스 + 시그니처 전문 |
 
-### 단일 dispatch 어휘 — UiEvent
+라이브 데모: [/patterns](/patterns) · [/axes](/axes) · [/matrix](/matrix) · [/data](/data) · [/uievents](/uievents)
 
-`navigate` · `activate` · `expand` · `select` · `selectMany` · `value` · `open` · `typeahead` · `pan` · `zoom` (11 variant).
+## 누가 써야 하나
 
-→ [/uievents](/uievents) — variant 카탈로그.
-
-### LLM 컨텍스트
-
-- [/llms.txt](/llms.txt) — 226 export 인덱스 (23kB)
-- [/llms-full.txt](/llms-full.txt) — 시그니처 + TSDoc + `@example` 전문 (47kB)
-
-## 비교
-
-| 축 | React Aria | Radix UI / Base UI | Ariakit | @p/headless |
-|---|---|---|---|---|
-| 어휘 | 자체 (`<ListBox>`, `Item`) | compound (`<Listbox.Root>`) | 자체 + 일부 ARIA | W3C ARIA 그대로 |
-| markup | RAC 가 제공 | 라이브러리가 결정 | 라이브러리가 결정 | 소비자가 결정 |
-| style | 시작 스타일 제공 | 무스타일 | 시작 스타일 제공 | 0건 |
-| 데이터 | Collection iterator | uncontrolled/controlled | controlled | NormalizedData (3-store) |
-| 이벤트 | `onAction`, `onSelectionChange` 등 | callback per part | callback per part | 단일 `onEvent(UiEvent)` |
-| 저자 | Adobe (풀타임 팀) | WorkOS (회사 backed) | Ariakit | 1인 OSS |
-| Production | 다수 | 다수 | 다수 | 없음 |
-| 번들 | 큰 편 | 중간 | 중간 | 작음 |
-
-본 라이브러리의 강점은 (a) 작고 (b) 합성 가능하고 (c) 어휘가 W3C 그대로입니다. 약점은 (a) 1인 OSS, (b) production 사례 없음, (c) v0.x unstable.
-
-행동(키보드·포커스·접근성 동작)의 de facto 는 Radix · Base · Ariakit · RAC 최소 2곳 수렴한 것을 따릅니다. **이름·구조** 는 W3C 만 — 라이브러리 어휘 차용 ❌.
-
-## When to use
-
+**잘 맞는 분**
 - 자체 디자인 시스템을 가진 팀이 행동 인프라만 빌리려는 경우
-- LLM 친화 codebase — W3C 어휘 통일, 단일 dispatch 어휘로 LLM 추론이 쉬움
-- 다른 라이브러리에서 행동만 떼어내려다 실패한 경우
-- ARIA 행동을 정확히 보증해야 하는 컬렉션 UI (listbox · tree · grid · tabs · menu · combobox)
+- Tailwind v3 등 utility-class 기반 시각 어휘를 이미 쓰고 있음
+- LLM 친화 codebase — 단일 어휘로 추론하길 원함
 
-## When not to use
-
-- **즉시 입을 수 있는 시각 컴포넌트가 필요** → shadcn/ui · Radix Themes · Material UI
-- **디자인 시스템 토큰까지 라이브러리가 정의해 주길 바람** → MUI · Chakra
-- **markup · 스타일 · 행동 묶음 한 줄 import 를 원함** → Radix UI · Base UI · Ariakit
-- **production 안정성이 최우선** → React Aria (Adobe 팀 + 다수 production)
+**다른 도구가 더 나은 분**
+- 즉시 입을 수 있는 시각 컴포넌트(`<Button variant="primary">`)가 필요 → **shadcn/ui · Radix Themes · Material UI**
+- 디자인 시스템 토큰까지 라이브러리가 정의해 주길 바람 → **MUI · Chakra**
+- markup · 스타일 · 행동 묶음 한 줄 import 를 원함 → **Radix UI · Base UI · Ariakit**
+- production 안정성이 최우선 → **React Aria** (Adobe 팀 + 다수 production)
 
 ## 알려진 한계
 
+본 라이브러리를 쓰기 전에 알아야 할 것입니다.
+
 - **버전**: v0.0.2 — breaking change 가능, semver 보장은 1.0 이후
-- **React 19 only** — `peer: react@^19`. 18 사용자는 호환되지 않음
-- **테스트 커버리지**: axes/patterns/state 단위 테스트는 있으나 axe-core 통합 · screen-reader matrix · APG spec compliance 자동 테스트는 미완
-- **시각 invariant**: focus ring · dark mode · motion 대응은 소비자 책임 (라이브러리가 다루지 않음)
+- **저자**: 1인 OSS — 회사가 backed 하지 않음
+- **production 사례**: 같은 repo 의 데모(`apps/finder` · `apps/markdown` · `apps/slides`) 외 없음
+- **React 19 only** — 18 사용자 호환 ❌
+- **자동 테스트**: 단위 테스트는 있으나 axe-core 통합 · screen-reader matrix · APG spec compliance 자동화는 미완
+- **시각 invariant**: focus ring · dark mode · motion 대응은 소비자 책임
 
 ## 다음 단계
 
@@ -177,6 +146,5 @@ const axis = composeAxes(navigate('vertical'), activate, typeahead)
 
 ## 참조
 
-- [/llms.txt](/llms.txt) — 전체 export 인덱스
-- [/patterns](/patterns) · [/axes](/axes) · [/matrix](/matrix) · [/data](/data) · [/uievents](/uievents) — live reference
 - [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/) — 정본 어휘 출처
+- [/llms.txt](/llms.txt) — 전체 export 인덱스
