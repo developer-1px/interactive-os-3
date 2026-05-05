@@ -4,7 +4,7 @@ import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, KEYS, matchChord } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -113,18 +113,20 @@ export function useTreePattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
-          if (e.key === 'Enter') {
+          if (e.key === KEYS.Enter) {
             e.preventDefault()
-            const parentId = findParent(data, id) ?? containerId
-            relay({ type: 'create', parentId, key: undefined })
+            // root 면 자식 추가, else 시블 추가. crud op 어휘 1:1.
+            const parentId = findParent(data, id)
+            if (parentId) relay({ type: 'insertAfter', siblingId: id })
+            else          relay({ type: 'appendChild', parentId: id })
             return
           }
-          if (e.key === 'Backspace') {
+          if (e.key === KEYS.Backspace) {
             e.preventDefault()
             relay({ type: 'remove', id })
             return
           }
-          if (e.key === 'Tab' && !e.shiftKey) {
+          if (matchChord(e, { key: KEYS.Tab })) {
             const parentId = findParent(data, id)
             if (parentId) {
               const siblings = data.relationships[parentId] ?? []
@@ -133,19 +135,17 @@ export function useTreePattern(
               if (prev) {
                 e.preventDefault()
                 relay({ type: 'cut', id })
-                relay({ type: 'paste', id: prev, mode: 'child' })
+                relay({ type: 'paste', targetId: prev, mode: 'child' })
                 return
               }
             }
           }
-          if (e.key === 'Tab' && e.shiftKey) {
+          if (matchChord(e, { key: KEYS.Tab, shift: true })) {
             const parentId = findParent(data, id)
             if (parentId && parentId !== containerId) {
-              const grand = findParent(data, parentId) ?? containerId
               e.preventDefault()
               relay({ type: 'cut', id })
-              relay({ type: 'paste', id: parentId, mode: 'auto' })
-              void grand
+              relay({ type: 'paste', targetId: parentId, mode: 'auto' })
               return
             }
           }

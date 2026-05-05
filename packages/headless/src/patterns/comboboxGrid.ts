@@ -1,11 +1,11 @@
 import { useRef } from 'react'
 import {
-  ROOT, getChildren, getLabel, isDisabled, getFocus,
+  ROOT, getChildren, getLabel, isDisabled, getFocus, getOpen,
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
-  gridNavigate,
+  gridNavigate, KEYS,
 } from '../axes'
 import { bindAxis } from '../state/bind'
 import { useValue } from '../state/useValue'
@@ -89,7 +89,7 @@ export function useComboboxGridPattern(
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
 
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
+  const expanded = getOpen(data).has(ROOT)
   const activeId = getFocus(data) ?? null
   const allRowIds = getChildren(data, ROOT)
   const gridId = `${idPrefix}-grid`
@@ -150,10 +150,10 @@ export function useComboboxGridPattern(
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     // closed + ArrowDown/Up → open + 첫/마지막 row 의 첫 cell focus
-    if (!expanded && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+    if (!expanded && (e.key === KEYS.ArrowDown || e.key === KEYS.ArrowUp)) {
       e.preventDefault()
       onEvent?.({ type: 'open', id: ROOT, open: true })
-      const targetRow = e.key === 'ArrowUp' ? visibleRowIds[visibleRowIds.length - 1] : visibleRowIds[0]
+      const targetRow = e.key === KEYS.ArrowUp ? visibleRowIds[visibleRowIds.length - 1] : visibleRowIds[0]
       const targetCell = targetRow ? getChildren(data, targetRow)[0] : undefined
       if (targetCell) onEvent?.({ type: 'navigate', id: targetCell })
       return

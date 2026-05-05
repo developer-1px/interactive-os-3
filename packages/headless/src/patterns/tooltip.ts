@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, type RefObject } from 'react'
 import { KEYS } from '../axes/keys'
+import { INTENTS, matchChord } from '../axes'
 import type { ItemProps, RootProps } from './types'
 
 /** Tooltip 이 실제 등록하는 키 — SSOT. Escape 로 닫기. */
@@ -48,7 +49,7 @@ export function useTooltipPattern(opts: TooltipOptions = {}): {
   }
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === KEYS.Escape) setOpen(false) }
+    const onKey = (e: KeyboardEvent) => { if (matchChord(e, INTENTS.escape.close)) setOpen(false) }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [])

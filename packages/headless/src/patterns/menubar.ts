@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate as activateAxis, composeAxes, escape as escapeAxis,
-  expandKeys, KEYS, navigate as navigateAxis,
+  expandKeys, INTENTS, KEYS, matchChord, navigate as navigateAxis,
 } from '../axes'
 import type { Axis } from '../axes/axis'
 import { parentOf } from '../axes/index'
@@ -32,7 +32,9 @@ export interface MenubarOptions {
  */
 const crossTop: Axis = (d, id, t) => {
   if (t.kind !== 'key') return null
-  if (t.key !== 'ArrowLeft' && t.key !== 'ArrowRight') return null
+  const isNext = matchChord(t, INTENTS.navigate.horizontal.next)
+  const isPrev = matchChord(t, INTENTS.navigate.horizontal.prev)
+  if (!isNext && !isPrev) return null
   const top = parentOf(d, id)
   if (!top) return null
   const grand = parentOf(d, top)
@@ -40,7 +42,7 @@ const crossTop: Axis = (d, id, t) => {
   const tops = getChildren(d, grand).filter((tid) => !isDisabled(d, tid))
   const idx = tops.indexOf(top)
   if (idx < 0) return null
-  const nextIdx = t.key === 'ArrowRight'
+  const nextIdx = isNext
     ? (idx + 1) % tops.length
     : (idx - 1 + tops.length) % tops.length
   const nextTop = tops[nextIdx]

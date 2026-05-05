@@ -24,6 +24,8 @@ export const KEYS = {
   End: 'End',
   PageUp: 'PageUp',
   PageDown: 'PageDown',
+  F2: 'F2',
+  Backspace: 'Backspace',
 } as const
 export type KeyName = keyof typeof KEYS
 

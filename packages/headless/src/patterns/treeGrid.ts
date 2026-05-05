@@ -1,7 +1,7 @@
 // editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, INTENTS, matchChord } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -144,19 +144,19 @@ export function useTreeGridPattern(
 
   const editKeyDown = (id: string | undefined, e: React.KeyboardEvent): boolean => {
     if (!editable || !id || id === containerId) return false
-    if (e.key === 'Enter') {
+    if (e.key === KEYS.Enter) {
       e.preventDefault()
       const parentId = findParent(data, id)
       if (parentId) relay({ type: 'insertAfter', siblingId: id })
       else          relay({ type: 'appendChild', parentId: id })
       return true
     }
-    if (e.key === 'Backspace') {
+    if (e.key === KEYS.Backspace) {
       e.preventDefault()
       relay({ type: 'remove', id })
       return true
     }
-    if (e.key === 'Tab') {
+    if (e.key === KEYS.Tab) {
       e.preventDefault()
       relay({ type: 'activate', id })
       return true
@@ -166,18 +166,15 @@ export function useTreeGridPattern(
 
   const cellModeKeyDown = (rowId: string, _col: number) => (e: React.KeyboardEvent) => {
     if (editKeyDown(rowId, e)) return
-    switch (e.key) {
-      case 'ArrowLeft': e.preventDefault(); moveCell(0, -1); break
-      case 'ArrowRight': e.preventDefault(); moveCell(0, 1); break
-      case 'ArrowUp': e.preventDefault(); moveCell(-1, 0); break
-      case 'ArrowDown': e.preventDefault(); moveCell(1, 0); break
-      case 'Home': e.preventDefault(); setCellFocus({ rowId, col: 0 }); break
-      case 'End': e.preventDefault(); setCellFocus({ rowId, col: colsCount - 1 }); break
-      case 'Enter':
-      case ' ':
-        e.preventDefault()
-        relay({ type: 'activate', id: rowId })
-        break
+    if (matchChord(e, INTENTS.gridNavigate.left)) { e.preventDefault(); moveCell(0, -1); return }
+    if (matchChord(e, INTENTS.gridNavigate.right)) { e.preventDefault(); moveCell(0, 1); return }
+    if (matchChord(e, INTENTS.gridNavigate.up)) { e.preventDefault(); moveCell(-1, 0); return }
+    if (matchChord(e, INTENTS.gridNavigate.down)) { e.preventDefault(); moveCell(1, 0); return }
+    if (matchChord(e, INTENTS.gridNavigate.rowStart)) { e.preventDefault(); setCellFocus({ rowId, col: 0 }); return }
+    if (matchChord(e, INTENTS.gridNavigate.rowEnd)) { e.preventDefault(); setCellFocus({ rowId, col: colsCount - 1 }); return }
+    if (matchChord(e, INTENTS.activate.trigger)) {
+      e.preventDefault()
+      relay({ type: 'activate', id: rowId })
     }
   }
   // ────────────────────────────────────────────────────────────────────────

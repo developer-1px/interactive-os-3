@@ -1,10 +1,10 @@
 import { useRef, useMemo } from 'react'
 import {
-  ROOT, getChildren, getLabel, isDisabled, getFocus,
+  ROOT, getChildren, getLabel, isDisabled, getFocus, getOpen,
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS,
+  activate as activateAxis, composeAxes, escape as escapeAxis, KEYS, INTENTS, matchChord,
   navigate as navigateAxis,
 } from '../axes'
 import { bindAxis } from '../state/bind'
@@ -125,7 +125,7 @@ export function useComboboxPattern(
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
 
-  const expanded = Boolean(data.meta?.open?.includes(ROOT))
+  const expanded = getOpen(data).has(ROOT)
   const activeId = getFocus(data) ?? null
   const allIds = getChildren(data, ROOT)
   const listId = `${idPrefix}-list`
@@ -181,7 +181,7 @@ export function useComboboxPattern(
   const onKeyDown = (e: React.KeyboardEvent) => {
     // select-only + closed: Enter/Space/Down/Up/Home/End all open popup (APG)
     if (!editable && !expanded && (
-      e.key === KEYS.Enter || e.key === ' ' ||
+      matchChord(e, INTENTS.activate.trigger) ||
       e.key === KEYS.ArrowDown || e.key === KEYS.ArrowUp ||
       e.key === KEYS.Home || e.key === KEYS.End
     )) {

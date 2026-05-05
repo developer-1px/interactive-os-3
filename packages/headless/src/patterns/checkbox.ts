@@ -2,6 +2,7 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent, type ValueEvent,
 } from '../types'
+import { KEYS } from '../axes'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 export type CheckboxState = boolean | 'mixed'
@@ -52,7 +53,7 @@ export function checkboxPattern(
     'data-state': checked === 'mixed' ? 'mixed' : checked ? 'checked' : 'unchecked',
     onClick: toggle,
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === ' ') {
+      if (e.key === KEYS.Space) {
         e.preventDefault()
         toggle()
       }
@@ -142,7 +143,7 @@ export function useCheckboxGroupPattern(
     'data-state': parentChecked === 'mixed' ? 'mixed' : parentChecked ? 'checked' : 'unchecked',
     onClick: toggleParent,
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === ' ') {
+      if (e.key === KEYS.Space) {
         e.preventDefault()
         toggleParent()
       }
@@ -166,7 +167,7 @@ export function useCheckboxGroupPattern(
         onEvent?.({ type: 'select', id })
       },
       onKeyDown: (e: React.KeyboardEvent) => {
-        if (e.key === ' ' && !disabled) {
+        if (e.key === KEYS.Space && !disabled) {
           e.preventDefault()
           onEvent?.({ type: 'select', id })
         }

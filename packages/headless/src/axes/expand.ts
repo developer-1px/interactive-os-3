@@ -2,7 +2,7 @@ import type { Axis } from './axis'
 import type { UiEvent } from '../types'
 import { ROOT, getChildren, isDisabled } from '../types'
 import { parentOf } from './index'
-import { INTENTS, matchChord } from './keys'
+import { INTENTS, matchChord, type KeyChord } from './keys'
 
 /**
  * expand — accordion·menu 의 단순 open/close (aria-expanded). branch leaf 통과 +
@@ -39,10 +39,11 @@ export const expand: Axis = (d, id, t) => {
  * close 분기는 별도(또는 `escape` axis) — `expandKeys` 는 open 만 책임.
  */
 export const expandKeys =
-  (openKeys: readonly string[], seed: 'first' | 'last' = 'first'): Axis =>
+  (openKeys: readonly (string | KeyChord)[], seed: 'first' | 'last' = 'first'): Axis =>
   (d, id, t) => {
     if (t.kind !== 'key') return null
-    if (!openKeys.includes(t.key)) return null
+    const chords = openKeys.map((k) => (typeof k === 'string' ? { key: k } : k))
+    if (!matchChord(t, chords)) return null
     const kids = getChildren(d, id)
     if (kids.length === 0 || isDisabled(d, id)) return null
     const enabled = kids.filter((c) => !isDisabled(d, c))

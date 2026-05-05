@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { KEYS, INTENTS, matchChord } from '../axes'
 import type { ItemProps, RootProps } from './types'
 
 /** Carousel slide descriptor — id + label fragment. */
@@ -168,10 +169,10 @@ export function useCarouselPattern(opts: CarouselOptions): {
     onKeyDown: (e: React.KeyboardEvent) => {
       if (control !== 'tabs') return
       switch (e.key) {
-        case 'ArrowRight': e.preventDefault(); next(); break
-        case 'ArrowLeft': e.preventDefault(); prev(); break
-        case 'Home': e.preventDefault(); goTo(0); break
-        case 'End': e.preventDefault(); goTo(count - 1); break
+        case KEYS.ArrowRight: e.preventDefault(); next(); break
+        case KEYS.ArrowLeft: e.preventDefault(); prev(); break
+        case KEYS.Home: e.preventDefault(); goTo(0); break
+        case KEYS.End: e.preventDefault(); goTo(count - 1); break
       }
     },
   } as unknown as RootProps

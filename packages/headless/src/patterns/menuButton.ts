@@ -3,6 +3,7 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent,
 } from '../types'
+import { KEYS, INTENTS, matchChord } from '../axes'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** Options for {@link useMenuButtonPattern}. */
@@ -151,11 +152,11 @@ export function useMenuButtonPattern(
     },
     onKeyDown: (e: React.KeyboardEvent) => {
       if (!open) {
-        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        if (e.key === KEYS.ArrowDown || matchChord(e, INTENTS.activate.trigger)) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[0] ?? null)
-        } else if (e.key === 'ArrowUp') {
+        } else if (e.key === KEYS.ArrowUp) {
           e.preventDefault()
           setOpen(true)
           setActiveId(ids[ids.length - 1] ?? null)
@@ -165,13 +166,13 @@ export function useMenuButtonPattern(
       // open 상태 — activedescendant 모드에선 trigger 가 계속 키 받음
       if (focusMode !== 'activeDescendant') return
       switch (e.key) {
-        case 'ArrowDown': e.preventDefault(); moveActive(1); break
-        case 'ArrowUp': e.preventDefault(); moveActive(-1); break
-        case 'Home': e.preventDefault(); moveActive('first'); break
-        case 'End': e.preventDefault(); moveActive('last'); break
-        case 'Escape': e.preventDefault(); closeAndReturnFocus(); break
-        case 'Enter':
-        case ' ':
+        case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
+        case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break
+        case KEYS.Home: e.preventDefault(); moveActive('first'); break
+        case KEYS.End: e.preventDefault(); moveActive('last'); break
+        case KEYS.Escape: e.preventDefault(); closeAndReturnFocus(); break
+        case KEYS.Enter:
+        case KEYS.Space:
           e.preventDefault()
           if (activeId) onEvent?.({ type: 'activate', id: activeId })
           closeAndReturnFocus()
@@ -212,14 +213,14 @@ export function useMenuButtonPattern(
       base.tabIndex = isActive ? 0 : -1
       base.onKeyDown = (e: React.KeyboardEvent) => {
         switch (e.key) {
-          case 'ArrowDown': e.preventDefault(); moveActive(1); break
-          case 'ArrowUp': e.preventDefault(); moveActive(-1); break
-          case 'Home': e.preventDefault(); moveActive('first'); break
-          case 'End': e.preventDefault(); moveActive('last'); break
-          case 'Escape': e.preventDefault(); closeAndReturnFocus(); break
-          case 'Tab': closeAndReturnFocus(); break
-          case 'Enter':
-          case ' ':
+          case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
+          case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break
+          case KEYS.Home: e.preventDefault(); moveActive('first'); break
+          case KEYS.End: e.preventDefault(); moveActive('last'); break
+          case KEYS.Escape: e.preventDefault(); closeAndReturnFocus(); break
+          case KEYS.Tab: closeAndReturnFocus(); break
+          case KEYS.Enter:
+          case KEYS.Space:
             e.preventDefault()
             if (!disabled) onEvent?.({ type: 'activate', id })
             closeAndReturnFocus()

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { KEYS } from '../axes/keys'
+import { INTENTS, matchChord } from '../axes'
 import type { ItemProps, RootProps } from './types'
 
 /**
@@ -93,7 +94,7 @@ export function useDialogPattern(opts: DialogOptions = {}): {
     const first = initialFocusRef?.current ?? root.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? root
     first.focus({ preventScroll: true })
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === KEYS.Escape) {
+      if (matchChord(e, INTENTS.escape.close)) {
         e.preventDefault()
         setOpen(false)
         return
