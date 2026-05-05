@@ -2,8 +2,21 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent, type ValueEvent,
 } from '../types'
-import { KEYS, matchKey } from '../axes'
+import { KEYS, matchChord } from '../axes'
+import type { KeyChord } from '../axes/keys'
 import type { BaseItem, ItemProps, RootProps } from './types'
+
+/** checkbox keymap registry — declarative SSOT. probe / checkboxKeys 가 읽음. */
+const CHECKBOX_CHORDS: readonly KeyChord[] = [{ key: KEYS.Space }]
+
+/** checkboxKeys — chord registry 에서 자동 도출. 손으로 적은 사본 0. */
+export const checkboxKeys = (): readonly string[] => CHECKBOX_CHORDS.map((c) => c.key)
+
+const handleCheckboxKey = (e: React.KeyboardEvent, action: () => void): void => {
+  if (!CHECKBOX_CHORDS.some((c) => matchChord(e as unknown as KeyboardEvent, c))) return
+  e.preventDefault()
+  action()
+}
 
 export type CheckboxState = boolean | 'mixed'
 
@@ -52,14 +65,8 @@ export function checkboxPattern(
     'aria-labelledby': labelledBy,
     'data-state': checked === 'mixed' ? 'mixed' : checked ? 'checked' : 'unchecked',
     onClick: toggle,
-    onKeyDown: (e: React.KeyboardEvent) => {
-      if (matchKey(e, KEYS.Space)) {
-        e.preventDefault()
-        toggle()
-      }
-    },
+    onKeyDown: (e: React.KeyboardEvent) => handleCheckboxKey(e, toggle),
   } as unknown as ItemProps
-
   return { checkboxProps }
 }
 
@@ -142,12 +149,7 @@ export function useCheckboxGroupPattern(
     'aria-label': parentLabel,
     'data-state': parentChecked === 'mixed' ? 'mixed' : parentChecked ? 'checked' : 'unchecked',
     onClick: toggleParent,
-    onKeyDown: (e: React.KeyboardEvent) => {
-      if (matchKey(e, KEYS.Space)) {
-        e.preventDefault()
-        toggleParent()
-      }
-    },
+    onKeyDown: (e: React.KeyboardEvent) => handleCheckboxKey(e, toggleParent),
   } as unknown as ItemProps
 
   const childProps = (id: string): ItemProps => {
@@ -167,10 +169,8 @@ export function useCheckboxGroupPattern(
         onEvent?.({ type: 'select', id })
       },
       onKeyDown: (e: React.KeyboardEvent) => {
-        if (matchKey(e, KEYS.Space) && !disabled) {
-          e.preventDefault()
-          onEvent?.({ type: 'select', id })
-        }
+        if (disabled) return
+        handleCheckboxKey(e, () => onEvent?.({ type: 'select', id }))
       },
     } as unknown as ItemProps
   }
