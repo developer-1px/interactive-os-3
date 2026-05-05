@@ -1,7 +1,19 @@
 // editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, matchKey, INTENTS, matchChord } from '../axes'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, KEYS, INTENTS, matchChord } from '../axes'
+import type { KeyChord } from '../axes/keys'
+
+/** treeGrid edit-mode chord registry — declarative SSOT. */
+const TREEGRID_EDIT_INSERT: readonly KeyChord[] = [{ key: KEYS.Enter }]
+const TREEGRID_EDIT_REMOVE: readonly KeyChord[] = [{ key: KEYS.Backspace }]
+const TREEGRID_EDIT_ACTIVATE_TAB: readonly KeyChord[] = [{ key: KEYS.Tab }]
+
+/** treeGridEditKeys — chord registry 합집합 도출. */
+export const treeGridEditKeys = (): readonly string[] =>
+  Array.from(new Set([
+    ...TREEGRID_EDIT_INSERT, ...TREEGRID_EDIT_REMOVE, ...TREEGRID_EDIT_ACTIVATE_TAB,
+  ].map((c) => c.key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { ItemProps, RootProps, TreeItem } from './types'
@@ -148,19 +160,19 @@ export function useTreeGridPattern(
 
   const editKeyDown = (id: string | undefined, e: React.KeyboardEvent): boolean => {
     if (!editable || !id || id === containerId) return false
-    if (matchKey(e, KEYS.Enter)) {
+    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_INSERT)) {
       e.preventDefault()
       const parentId = findParent(data, id)
       if (parentId) relay({ type: 'insertAfter', siblingId: id })
       else          relay({ type: 'appendChild', parentId: id })
       return true
     }
-    if (matchKey(e, KEYS.Backspace)) {
+    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_REMOVE)) {
       e.preventDefault()
       relay({ type: 'remove', id })
       return true
     }
-    if (matchKey(e, KEYS.Tab)) {
+    if (matchChord(e as unknown as KeyboardEvent, TREEGRID_EDIT_ACTIVATE_TAB)) {
       e.preventDefault()
       relay({ type: 'activate', id })
       return true
