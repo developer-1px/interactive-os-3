@@ -37,7 +37,11 @@ export interface Resource<T, Args extends unknown[] = []> {
   key: (...args: Args) => string
   load?: (...args: Args) => T | Promise<T>
   initial?: T | ((...args: Args) => T)
-  subscribe?: (key: string, notify: () => void, ...args: Args) => () => void
+  /**
+   * 외부 push 채널 attach. 외부 store 가 바뀌면 `push(newValue)` 를 부른다 — 캐시 갱신 + 구독자 자동 통지.
+   * 값을 모르고 신호만 보낼 땐 `push(load())` 또는 `push(getCurrent())` 로 명시.
+   */
+  subscribe?: (key: string, push: (value: T) => void, ...args: Args) => () => void
   serialize?: (key: string, value: T, ...args: Args) => void
   /** ui/ event → 다음 값 매퍼. flow에서 intent 라우터로 사용. */
   onEvent?: ResourceEventRouter<T>
@@ -152,7 +156,7 @@ export function useResource<T, Args extends unknown[] = []>(
     const entry = getEntry(key)
     entry.refCount += 1
     if (entry.refCount === 1 && resource.subscribe && !entry.externalUnsub) {
-      entry.externalUnsub = resource.subscribe(key, () => notify(key), ...args)
+      entry.externalUnsub = resource.subscribe(key, (v) => setValue(key, v as T), ...args)
     }
     return () => {
       entry.refCount -= 1

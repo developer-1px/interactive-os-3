@@ -20,6 +20,7 @@ import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 import { Route as AppsSlidesSplatRouteImport } from './routes/apps.slides.$'
 import { Route as AppsOutlinerSplatRouteImport } from './routes/apps.outliner.$'
 import { Route as AppsMarkdownSplatRouteImport } from './routes/apps.markdown.$'
+import { Route as AppsKanbanSplatRouteImport } from './routes/apps.kanban.$'
 import { Route as AppsFinderSplatRouteImport } from './routes/apps.finder.$'
 
 const WrappersRoute = WrappersRouteImport.update({
@@ -77,6 +78,11 @@ const AppsMarkdownSplatRoute = AppsMarkdownSplatRouteImport.update({
   path: '/apps/markdown/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsKanbanSplatRoute = AppsKanbanSplatRouteImport.update({
+  id: '/apps/kanban/$',
+  path: '/apps/kanban/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsFinderSplatRoute = AppsFinderSplatRouteImport.update({
   id: '/apps/finder/$',
   path: '/apps/finder/$',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/wrappers': typeof WrappersRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
+  '/apps/kanban/$': typeof AppsKanbanSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/wrappers': typeof WrappersRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
+  '/apps/kanban/$': typeof AppsKanbanSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/wrappers': typeof WrappersRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
+  '/apps/kanban/$': typeof AppsKanbanSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/outliner/$': typeof AppsOutlinerSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/wrappers'
     | '/docs/$slug'
     | '/apps/finder/$'
+    | '/apps/kanban/$'
     | '/apps/markdown/$'
     | '/apps/outliner/$'
     | '/apps/slides/$'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/wrappers'
     | '/docs/$slug'
     | '/apps/finder/$'
+    | '/apps/kanban/$'
     | '/apps/markdown/$'
     | '/apps/outliner/$'
     | '/apps/slides/$'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/wrappers'
     | '/docs/$slug'
     | '/apps/finder/$'
+    | '/apps/kanban/$'
     | '/apps/markdown/$'
     | '/apps/outliner/$'
     | '/apps/slides/$'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   WrappersRoute: typeof WrappersRoute
   DocsSlugRoute: typeof DocsSlugRoute
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
+  AppsKanbanSplatRoute: typeof AppsKanbanSplatRoute
   AppsMarkdownSplatRoute: typeof AppsMarkdownSplatRoute
   AppsOutlinerSplatRoute: typeof AppsOutlinerSplatRoute
   AppsSlidesSplatRoute: typeof AppsSlidesSplatRoute
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsMarkdownSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps/kanban/$': {
+      id: '/apps/kanban/$'
+      path: '/apps/kanban/$'
+      fullPath: '/apps/kanban/$'
+      preLoaderRoute: typeof AppsKanbanSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/finder/$': {
       id: '/apps/finder/$'
       path: '/apps/finder/$'
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   WrappersRoute: WrappersRoute,
   DocsSlugRoute: DocsSlugRoute,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
+  AppsKanbanSplatRoute: AppsKanbanSplatRoute,
   AppsMarkdownSplatRoute: AppsMarkdownSplatRoute,
   AppsOutlinerSplatRoute: AppsOutlinerSplatRoute,
   AppsSlidesSplatRoute: AppsSlidesSplatRoute,

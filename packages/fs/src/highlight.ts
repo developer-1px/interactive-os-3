@@ -23,7 +23,7 @@ export async function highlightCode(code: string, lang: string): Promise<string>
   try {
     const html = h.codeToHtml(code, {
       lang: use,
-      themes: { light: 'github-light', dark: 'github-dark' },
+      theme: 'github-light',
     })
     // shiki는 <pre class="shiki"><code>…</code></pre> 형태를 반환하지만
     // 우리 CodeView가 이미 <pre>로 감싸므로 outer <pre>를 벗겨 중첩을 제거한다.
