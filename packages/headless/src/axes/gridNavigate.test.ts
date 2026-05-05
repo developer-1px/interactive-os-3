@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { gridNavigate } from './gridNavigate'
-import type { NormalizedData } from '../types'
 import { grid3x3 } from './_fixtures'
 
 const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}): string => {
@@ -12,68 +11,33 @@ const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean 
   return parts.join('+')
 }
 
-describe('gridNavigate axis', () => {
+describe('gridNavigate axis (intent-form)', () => {
   const d = grid3x3()
 
-  it('ArrowRight moves to next cell in row', () => {
-    expect(gridNavigate(d, 'c22', k('ArrowRight'))).toEqual([{ type: 'navigate', id: 'c23' }])
+  it('emits dir:gridRight on ArrowRight', () => {
+    expect(gridNavigate(d, 'c22', k('ArrowRight'))).toEqual([{ type: 'navigate', id: 'c22', dir: 'gridRight' }])
   })
 
-  it('ArrowLeft moves to prev cell in row', () => {
-    expect(gridNavigate(d, 'c22', k('ArrowLeft'))).toEqual([{ type: 'navigate', id: 'c21' }])
+  it('emits dir:gridLeft on ArrowLeft', () => {
+    expect(gridNavigate(d, 'c22', k('ArrowLeft'))).toEqual([{ type: 'navigate', id: 'c22', dir: 'gridLeft' }])
   })
 
-  it('ArrowDown moves to same column in next row', () => {
-    expect(gridNavigate(d, 'c12', k('ArrowDown'))).toEqual([{ type: 'navigate', id: 'c22' }])
+  it('emits dir:gridDown on ArrowDown', () => {
+    expect(gridNavigate(d, 'c12', k('ArrowDown'))).toEqual([{ type: 'navigate', id: 'c12', dir: 'gridDown' }])
   })
 
-  it('ArrowUp moves to same column in prev row', () => {
-    expect(gridNavigate(d, 'c32', k('ArrowUp'))).toEqual([{ type: 'navigate', id: 'c22' }])
+  it('emits dir:gridUp on ArrowUp', () => {
+    expect(gridNavigate(d, 'c32', k('ArrowUp'))).toEqual([{ type: 'navigate', id: 'c32', dir: 'gridUp' }])
   })
 
-  it('does not wrap at right edge', () => {
-    expect(gridNavigate(d, 'c13', k('ArrowRight'))).toBeNull()
+  it('emits dir:rowStart on Home, dir:rowEnd on End', () => {
+    expect(gridNavigate(d, 'c23', k('Home'))).toEqual([{ type: 'navigate', id: 'c23', dir: 'rowStart' }])
+    expect(gridNavigate(d, 'c21', k('End'))).toEqual([{ type: 'navigate', id: 'c21', dir: 'rowEnd' }])
   })
 
-  it('does not wrap at left edge', () => {
-    expect(gridNavigate(d, 'c11', k('ArrowLeft'))).toBeNull()
-  })
-
-  it('does not wrap at top edge', () => {
-    expect(gridNavigate(d, 'c11', k('ArrowUp'))).toBeNull()
-  })
-
-  it('does not wrap at bottom edge', () => {
-    expect(gridNavigate(d, 'c33', k('ArrowDown'))).toBeNull()
-  })
-
-  it('Home moves to first cell in current row', () => {
-    expect(gridNavigate(d, 'c23', k('Home'))).toEqual([{ type: 'navigate', id: 'c21' }])
-  })
-
-  it('End moves to last cell in current row', () => {
-    expect(gridNavigate(d, 'c21', k('End'))).toEqual([{ type: 'navigate', id: 'c23' }])
-  })
-
-  it('Ctrl+Home moves to first cell of first row', () => {
-    expect(gridNavigate(d, 'c33', k('Home', { ctrl: true }))).toEqual([{ type: 'navigate', id: 'c11' }])
-  })
-
-  it('Ctrl+End moves to last cell of last row', () => {
-    expect(gridNavigate(d, 'c11', k('End', { ctrl: true }))).toEqual([{ type: 'navigate', id: 'c33' }])
-  })
-
-  it('clamps column when target row is shorter (sparse)', () => {
-    const sparse: NormalizedData = {
-      entities: { r1: {}, r2: {}, a: {}, b: {}, c: {}, d: {} },
-      relationships: {
-        r1: ['a', 'b', 'c'],   // 3 cells
-        r2: ['d'],              // 1 cell
-      },
-      meta: { root: ['r1', 'r2'] },
-    }
-    // From c (col 2) ArrowDown into r2 → r2 only has 1 cell, clamp to col 0
-    expect(gridNavigate(sparse, 'c', k('ArrowDown'))).toEqual([{ type: 'navigate', id: 'd' }])
+  it('emits dir:gridStart on Ctrl+Home, dir:gridEnd on Ctrl+End', () => {
+    expect(gridNavigate(d, 'c33', k('Home', { ctrl: true }))).toEqual([{ type: 'navigate', id: 'c33', dir: 'gridStart' }])
+    expect(gridNavigate(d, 'c11', k('End', { ctrl: true }))).toEqual([{ type: 'navigate', id: 'c11', dir: 'gridEnd' }])
   })
 
   it('returns null for non-key triggers', () => {

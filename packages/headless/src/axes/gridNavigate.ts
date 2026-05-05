@@ -1,4 +1,4 @@
-import { fromKeyMap, type Axis, type KeyHandler } from './axis'
+import { fromKeyMap, type Axis } from './axis'
 import { parentOf } from './index'
 import { getChildren, type NormalizedData } from '../types'
 import { INTENTS } from './keys'
@@ -8,19 +8,12 @@ import { INTENTS } from './keys'
  * Selection rect (Shift+Arrow / Ctrl+Space col / Shift+Space row) 은 gridMultiSelect.
  * https://www.w3.org/WAI/ARIA/apg/patterns/grid/
  *
- * KeyMap form — chord 매핑은 fromKeyMap, 2D 좌표 산수는 KeyHandler 캡슐화.
+ * Intent-form (PRD #38 phase 3b): chord → `{type:'navigate', dir}` 만 emit.
+ * 2D 좌표 산수는 reducer (`resolveNavigate`) 가 담당.
  *
  * data 모델:
  *   container (= ROOT 또는 containerId)
  *     ├─ row entity → cell entity (focus 는 cell)
- *
- * 키 매핑 (data grid model, no wrap):
- *   ArrowLeft/Right  : 같은 row 의 prev/next cell. 양 끝에서 정지.
- *   ArrowUp/Down     : 인접 row 의 같은 column index cell. 양 끝에서 정지.
- *   Home / End       : 현재 row 의 첫/끝 cell.
- *   Ctrl+Home / End  : grid 의 첫 row 첫 cell / 끝 row 끝 cell.
- *
- * column index 가 인접 row 보다 클 경우 가능한 마지막 cell 로 clamp.
  */
 
 interface Coord {
@@ -44,40 +37,13 @@ export const gridCoord = (d: NormalizedData, id: string): Coord | null => {
   return { cellsInRow, colIdx, rows, rowIdx }
 }
 
-const inRow = (pick: (c: Coord) => string | undefined): KeyHandler => (d, id) => {
-  const c = gridCoord(d, id)
-  if (!c) return null
-  const target = pick(c)
-  return target ? [{ type: 'navigate', id: target }] : null
-}
-
-const intoAdjacentRow = (delta: number): KeyHandler => (d, id) => {
-  const c = gridCoord(d, id)
-  if (!c) return null
-  const targetRow = c.rowIdx + delta
-  if (targetRow < 0 || targetRow >= c.rows.length) return null
-  const cells = getChildren(d, c.rows[targetRow])
-  if (!cells.length) return null
-  return [{ type: 'navigate', id: cells[Math.min(c.colIdx, cells.length - 1)] }]
-}
-
 export const gridNavigate: Axis = fromKeyMap([
-  [INTENTS.gridNavigate.left, inRow((c) => c.colIdx > 0 ? c.cellsInRow[c.colIdx - 1] : undefined)],
-  [INTENTS.gridNavigate.right, inRow((c) => c.colIdx < c.cellsInRow.length - 1 ? c.cellsInRow[c.colIdx + 1] : undefined)],
-  [INTENTS.gridNavigate.up, intoAdjacentRow(-1)],
-  [INTENTS.gridNavigate.down, intoAdjacentRow(+1)],
-  [INTENTS.gridNavigate.rowStart, inRow((c) => c.cellsInRow[0])],
-  [INTENTS.gridNavigate.rowEnd, inRow((c) => c.cellsInRow[c.cellsInRow.length - 1])],
-  [INTENTS.gridNavigate.gridStart, (d, id) => {
-    const c = gridCoord(d, id)
-    if (!c) return null
-    const first = getChildren(d, c.rows[0])
-    return first[0] ? [{ type: 'navigate', id: first[0] }] : null
-  }],
-  [INTENTS.gridNavigate.gridEnd, (d, id) => {
-    const c = gridCoord(d, id)
-    if (!c) return null
-    const last = getChildren(d, c.rows[c.rows.length - 1])
-    return last.length ? [{ type: 'navigate', id: last[last.length - 1] }] : null
-  }],
+  [INTENTS.gridNavigate.left,      { type: 'navigate', dir: 'gridLeft' }],
+  [INTENTS.gridNavigate.right,     { type: 'navigate', dir: 'gridRight' }],
+  [INTENTS.gridNavigate.up,        { type: 'navigate', dir: 'gridUp' }],
+  [INTENTS.gridNavigate.down,      { type: 'navigate', dir: 'gridDown' }],
+  [INTENTS.gridNavigate.rowStart,  { type: 'navigate', dir: 'rowStart' }],
+  [INTENTS.gridNavigate.rowEnd,    { type: 'navigate', dir: 'rowEnd' }],
+  [INTENTS.gridNavigate.gridStart, { type: 'navigate', dir: 'gridStart' }],
+  [INTENTS.gridNavigate.gridEnd,   { type: 'navigate', dir: 'gridEnd' }],
 ])
