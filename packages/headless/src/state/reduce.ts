@@ -14,6 +14,9 @@
  */
 import type { Meta, NormalizedData, UiEvent } from '../types'
 import { resolveNavigate } from './resolveNavigate'
+import { resolveIntent } from './resolveIntent'
+import type { AxisIntent } from '../axes/intents'
+import { isAxisIntent } from '../axes/intents'
 
 /** UiEvent type 별로 narrow 된 reducer 핸들러 시그니처. */
 type Handler<T extends UiEvent['type']> = (
@@ -104,5 +107,9 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
  * @example
  * const myReduce = composeReducers(reduce, singleSelect, setValue)
  */
-export const reduce = (d: NormalizedData, e: UiEvent): NormalizedData =>
-  (handlers[e.type] as Handler<UiEvent['type']>)(d, e)
+export const reduce = (d: NormalizedData, e: UiEvent | AxisIntent): NormalizedData => {
+  if (isAxisIntent(e as { type: string })) {
+    return resolveIntent(d, e as AxisIntent).reduce(reduce, d)
+  }
+  return (handlers[(e as UiEvent).type] as Handler<UiEvent['type']>)(d, e as UiEvent)
+}

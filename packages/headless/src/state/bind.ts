@@ -2,6 +2,7 @@ import type { KeyboardEvent, MouseEvent } from 'react'
 import type { Axis } from '../axes'
 import { ROOT, type NormalizedData, type UiEvent, type ValueEvent } from '../types'
 import { eventToChord, clickTrigger } from '../trigger'
+import { resolveIntent } from './resolveIntent'
 
 /** axis 가 emit 한 UiEvent 를 React 의 onKeyDown/onClick 에 잇는 핸들러 페어. */
 export interface AxisBindings {
@@ -26,7 +27,7 @@ export const bindAxis = (
   onKey: (ke, id) => {
     const events = axis(d, id, eventToChord(ke as unknown as globalThis.KeyboardEvent))
     if (!events) return false
-    events.forEach(onEvent)
+    events.flatMap((e) => resolveIntent(d, e as never)).forEach(onEvent)
     ke.preventDefault()
     return true
   },
@@ -35,7 +36,7 @@ export const bindAxis = (
       shift: me.shiftKey, ctrl: me.ctrlKey, alt: me.altKey, meta: me.metaKey,
     }))
     if (!events) return false
-    events.forEach(onEvent)
+    events.flatMap((e) => resolveIntent(d, e as never)).forEach(onEvent)
     return true
   },
 })
