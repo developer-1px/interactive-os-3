@@ -63,6 +63,8 @@ export function Kanban() {
     if (targetCard) {
       const el = document.querySelector(`[data-id="${targetCard}"]`) as HTMLElement | null
       el?.focus()
+      // 컬럼 간 이동은 listbox sff 가 안 닿음 — meta 직접 동기화로 activeId stale 방지.
+      setMeta((prev) => ({ ...prev, focus: targetCard, selected: [targetCard] }))
     }
   }
 
@@ -85,7 +87,11 @@ export function Kanban() {
             // 새 sibling 은 빈 title 로 생성됨 → AutoEditOnInsert 가 자동으로 edit 진입.
             if (andInsertAfter) onEvent({ type: 'insertAfter', siblingId: id })
           }}
-          onCancelEdit={() => setEditingId(null)}
+          onCancelEdit={(idIfEmptyToRemove) => {
+            setEditingId(null)
+            // 빈 title 새 카드를 cancel 하면 카드 자체를 제거 (Workflowy 흐름).
+            if (idIfEmptyToRemove) onEvent({ type: 'remove', id: idIfEmptyToRemove })
+          }}
           onMoveAcrossColumn={moveAcrossColumn}
         />
       ))}
@@ -131,7 +137,7 @@ function Column({
   editingId: string | null
   onStartEdit: (id: string) => void
   onCommitEdit: (id: string, title: string, andInsertAfter: boolean) => void
-  onCancelEdit: () => void
+  onCancelEdit: (idIfEmptyToRemove: string | null) => void
   onMoveAcrossColumn: (id: string, dir: -1 | 1) => void
 }) {
   const lb = useListboxPattern(data, onEvent, {
@@ -198,7 +204,7 @@ function Column({
               <CardEditor
                 initial={it.label || ''}
                 onCommit={(title, andInsertAfter) => onCommitEdit(it.id, title, andInsertAfter)}
-                onCancel={onCancelEdit}
+                onCancel={() => onCancelEdit(it.label === '' ? it.id : null)}
               />
             ) : (
               it.label || <em className="text-neutral-300">empty</em>
