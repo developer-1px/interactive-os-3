@@ -4,8 +4,8 @@ import {
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis,
-  fromKeyMap, INTENT_CHORDS, INTENTS, matchChord, navigate as navigateAxis, seedExpand,
+  activate, composeAxes, escape,
+  fromKeyMap, INTENT_CHORDS, INTENTS, matchChord, navigate, seedExpand,
 } from '../axes'
 import { tagAxis, type Axis } from '../axes/axis'
 import { parseTrigger } from '../trigger'
@@ -69,23 +69,23 @@ const expandSeedAxis = fromKeyMap([
 /** Menubar 가 등록하는 axis — SSOT. top + sub 합집합 (probe 용 단일 surface). */
 export const menubarAxis = () => composeAxes(
   expandSeedAxis,
-  navigateAxis('horizontal'),
-  navigateAxis('vertical'),
-  activateAxis,
-  escapeAxis,
+  navigate('horizontal'),
+  navigate('vertical'),
+  activate,
+  escape,
 )
 const topAxis = composeAxes(
   expandSeedAxis,
-  navigateAxis('horizontal'),
-  escapeAxis,
+  navigate('horizontal'),
+  escape,
 )
 
 // sub axis: ArrowLeft/Right → crossTop, vertical Arrow/Home/End → navigate, Enter/Space → activate, Escape → close.
 const subAxis = composeAxes(
   crossTop,
-  navigateAxis('vertical'),
-  activateAxis,
-  escapeAxis,
+  navigate('vertical'),
+  activate,
+  escape,
 )
 
 /**

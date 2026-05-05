@@ -4,11 +4,11 @@ import {
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis, INTENT_CHORDS, matchAnyChord,
-  navigate as navigateAxis,
+  activate, composeAxes, escape, INTENT_CHORDS, matchAnyChord,
+  navigate,
 } from '../axes'
 import { bindAxis } from '../state/bind'
-import { useValue } from '../state/useValue'
+import { useControlValue } from '../state/useControlValue'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -22,7 +22,7 @@ const BACKWARD_OPEN = [...ARROW_UP, ...END] as const
 
 /** Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter) */
 export const comboboxAxis = () =>
-  composeAxes(escapeAxis, navigateAxis('vertical'), activateAxis)
+  composeAxes(escape, navigate('vertical'), activate)
 
 /** Options for {@link useComboboxPattern}. */
 export interface ComboboxOptions {
@@ -130,7 +130,7 @@ export function useComboboxPattern(
   } = opts
 
   // query state — controlled/uncontrolled hybrid 헬퍼.
-  const [query, setValue] = useValue<string>(valueProp, defaultValue, onEvent)
+  const [query, setValue] = useControlValue<string>(valueProp, defaultValue, onEvent)
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)

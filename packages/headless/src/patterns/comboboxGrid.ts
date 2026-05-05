@@ -4,11 +4,11 @@ import {
   type NormalizedData, type UiEvent,
 } from '../types'
 import {
-  activate as activateAxis, composeAxes, escape as escapeAxis,
+  activate, composeAxes, escape,
   gridNavigate, matchAnyChord,
 } from '../axes'
 import { bindAxis } from '../state/bind'
-import { useValue } from '../state/useValue'
+import { useControlValue } from '../state/useControlValue'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
 import type { ItemProps, RootProps } from './types'
 
@@ -18,7 +18,7 @@ const ARROW_UP = ['ArrowUp'] as const
 
 /** Combobox(grid popup) 가 등록하는 axis — Escape · 2D nav · Enter. */
 export const comboboxGridAxis = () =>
-  composeAxes(escapeAxis, gridNavigate, activateAxis)
+  composeAxes(escape, gridNavigate, activate)
 
 export interface ComboboxGridOptions {
   value?: string
@@ -91,7 +91,7 @@ export function useComboboxGridPattern(
     rowCount, colCount,
   } = opts
 
-  const [query, setValue] = useValue<string>(valueProp, defaultValue, onEvent)
+  const [query, setValue] = useControlValue<string>(valueProp, defaultValue, onEvent)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const blurTimerRef = useRef<number | null>(null)
 
