@@ -37,7 +37,7 @@ export function SidebarNav() {
               to={e.to as never}
               params={e.params as never}
               activeProps={{ className: 'bg-stone-900 text-white' }}
-              className="block rounded px-2 py-1 text-stone-700 hover:bg-stone-100 [&.active]:bg-stone-900 [&.active]:text-white"
+              className="block rounded px-2 py-1 text-stone-700 [&:not(.active)]:hover:bg-stone-100 [&.active]:bg-stone-900 [&.active]:text-white [&.active]:hover:bg-stone-800"
             >
               {e.label}
             </Link>
