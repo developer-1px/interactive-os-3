@@ -31,6 +31,29 @@ export interface ComboboxOptions {
   closeOnBlurDelay?: number
   /** activate 시 input value 를 선택된 label 로 갱신 (APG default). */
   commitOnActivate?: boolean
+  /**
+   * focus 시 popup 자동 open. APG `combobox-autocomplete-none` 은 false
+   * (Alt+Down 또는 typing 으로만 open). 그 외 default true.
+   */
+  openOnFocus?: boolean
+  /** typing(onChange) 시 popup 자동 open. default true. */
+  openOnType?: boolean
+  /**
+   * blur 시 현재 highlighted option 을 자동 commit.
+   * APG `autocomplete='both'` default true, 그 외 false.
+   */
+  selectOnBlur?: boolean
+  /**
+   * query 변경 시 첫 visible option 을 자동 highlight (`aria-activedescendant`).
+   * APG `autocomplete='both'` default true, 그 외 false.
+   */
+  autoHighlightFirst?: boolean
+  /**
+   * editable=false → APG `combobox-select-only`. textbox 가 아니라 button-like
+   * `role="combobox"` 로 동작. 표시값은 selected option 의 label, 사용자 typing 없음.
+   * default true.
+   */
+  editable?: boolean
   idPrefix?: string
   required?: boolean
   readOnly?: boolean
@@ -86,6 +109,11 @@ export function useComboboxPattern(
     filter = defaultFilter,
     autocomplete = 'list', haspopup = 'listbox',
     closeOnBlurDelay = 100, commitOnActivate = true,
+    openOnFocus = autocomplete !== 'none',
+    openOnType = true,
+    selectOnBlur = autocomplete === 'both',
+    autoHighlightFirst = autocomplete === 'both',
+    editable = true,
     idPrefix = 'cmbx',
     required, readOnly, invalid, disabled,
     label, labelledBy, popupLabel, popupLabelledBy,
@@ -122,6 +150,10 @@ export function useComboboxPattern(
     }
   })
 
+  // select-only: 표시 label = currently selected option's label
+  const selectedId = allIds.find((id) => data.entities[id]?.selected)
+  const selectedLabel = selectedId ? getLabel(data, selectedId) : ''
+
   const cancelBlurClose = () => {
     if (blurTimerRef.current !== null) {
       clearTimeout(blurTimerRef.current)
@@ -147,6 +179,20 @@ export function useComboboxPattern(
   const { onKey: dispatchKey } = bindAxis(axis, data, intent)
 
   const onKeyDown = (e: React.KeyboardEvent) => {
+    // select-only + closed: Enter/Space/Down/Up/Home/End all open popup (APG)
+    if (!editable && !expanded && (
+      e.key === KEYS.Enter || e.key === ' ' ||
+      e.key === KEYS.ArrowDown || e.key === KEYS.ArrowUp ||
+      e.key === KEYS.Home || e.key === KEYS.End
+    )) {
+      e.preventDefault()
+      onEvent?.({ type: 'open', id: ROOT, open: true })
+      const target = (e.key === KEYS.ArrowUp || e.key === KEYS.End)
+        ? allIds[allIds.length - 1]
+        : (selectedId ?? allIds[0])
+      if (target) onEvent?.({ type: 'navigate', id: target })
+      return
+    }
     if (!activeId) {
       if (e.key === KEYS.ArrowDown || e.key === KEYS.Home) {
         e.preventDefault()
@@ -166,41 +212,75 @@ export function useComboboxPattern(
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-    if (!expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
+    const next = e.target.value
+    setValue(next)
+    if (openOnType && !expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
+    if (autoHighlightFirst) {
+      const firstVisible = allIds.find((id) => filter(next, getLabel(data, id), id))
+      if (firstVisible) onEvent?.({ type: 'navigate', id: firstVisible })
+    }
   }
   const onFocus = () => {
     cancelBlurClose()
     inputRef.current?.select()
-    if (!expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
+    if (openOnFocus && !expanded) onEvent?.({ type: 'open', id: ROOT, open: true })
   }
   const onBlur = () => {
     cancelBlurClose()
     blurTimerRef.current = window.setTimeout(() => {
+      if (selectOnBlur && activeId) {
+        onEvent?.({ type: 'activate', id: activeId })
+        if (commitOnActivate) {
+          const lbl = data.entities[activeId]?.label
+          if (typeof lbl === 'string') setValue(lbl)
+        }
+      }
       onEvent?.({ type: 'open', id: ROOT, open: false })
       blurTimerRef.current = null
     }, closeOnBlurDelay)
   }
 
-  const comboboxProps: ItemProps = {
-    role: 'combobox',
-    ref: inputRef as React.Ref<HTMLElement>,
-    value: query,
-    'aria-autocomplete': autocomplete,
-    'aria-expanded': expanded,
-    'aria-controls': listId,
-    'aria-haspopup': haspopup,
-    'aria-required': required || undefined,
-    'aria-readonly': readOnly || undefined,
-    'aria-invalid': invalid || undefined,
-    'aria-disabled': disabled || undefined,
-    'aria-label': label,
-    'aria-labelledby': labelledBy,
-    onKeyDown,
-    onChange,
-    onFocus,
-    onBlur,
-  } as unknown as ItemProps
+  const comboboxProps: ItemProps = editable
+    ? ({
+        role: 'combobox',
+        ref: inputRef as React.Ref<HTMLElement>,
+        value: query,
+        'aria-autocomplete': autocomplete,
+        'aria-expanded': expanded,
+        'aria-controls': listId,
+        'aria-haspopup': haspopup,
+        'aria-required': required || undefined,
+        'aria-readonly': readOnly || undefined,
+        'aria-invalid': invalid || undefined,
+        'aria-disabled': disabled || undefined,
+        'aria-label': label,
+        'aria-labelledby': labelledBy,
+        onKeyDown,
+        onChange,
+        onFocus,
+        onBlur,
+      } as unknown as ItemProps)
+    : ({
+        role: 'combobox',
+        ref: inputRef as React.Ref<HTMLElement>,
+        tabIndex: disabled ? -1 : 0,
+        'aria-expanded': expanded,
+        'aria-controls': listId,
+        'aria-haspopup': haspopup,
+        'aria-required': required || undefined,
+        'aria-invalid': invalid || undefined,
+        'aria-disabled': disabled || undefined,
+        'aria-label': label,
+        'aria-labelledby': labelledBy,
+        'data-value': selectedLabel,
+        children: selectedLabel,
+        onClick: () => {
+          if (disabled) return
+          onEvent?.({ type: 'open', id: ROOT, open: !expanded })
+        },
+        onKeyDown,
+        onBlur,
+      } as unknown as ItemProps)
 
   const listboxProps: RootProps = {
     role: 'listbox',

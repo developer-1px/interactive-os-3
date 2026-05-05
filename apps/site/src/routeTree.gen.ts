@@ -16,6 +16,7 @@ import { Route as MatrixRouteImport } from './routes/matrix'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 import { Route as AppsSlidesSplatRouteImport } from './routes/apps.slides.$'
 import { Route as AppsMarkdownSplatRouteImport } from './routes/apps.markdown.$'
 import { Route as AppsFinderSplatRouteImport } from './routes/apps.finder.$'
@@ -55,6 +56,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocsSlugRoute = DocsSlugRouteImport.update({
+  id: '/docs/$slug',
+  path: '/docs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppsSlidesSplatRoute = AppsSlidesSplatRouteImport.update({
   id: '/apps/slides/$',
   path: '/apps/slides/$',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/apps/finder/$': typeof AppsFinderSplatRoute
   '/apps/markdown/$': typeof AppsMarkdownSplatRoute
   '/apps/slides/$': typeof AppsSlidesSplatRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/patterns'
     | '/uievents'
     | '/wrappers'
+    | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/patterns'
     | '/uievents'
     | '/wrappers'
+    | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/patterns'
     | '/uievents'
     | '/wrappers'
+    | '/docs/$slug'
     | '/apps/finder/$'
     | '/apps/markdown/$'
     | '/apps/slides/$'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   PatternsRoute: typeof PatternsRoute
   UieventsRoute: typeof UieventsRoute
   WrappersRoute: typeof WrappersRoute
+  DocsSlugRoute: typeof DocsSlugRoute
   AppsFinderSplatRoute: typeof AppsFinderSplatRoute
   AppsMarkdownSplatRoute: typeof AppsMarkdownSplatRoute
   AppsSlidesSplatRoute: typeof AppsSlidesSplatRoute
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs/$slug': {
+      id: '/docs/$slug'
+      path: '/docs/$slug'
+      fullPath: '/docs/$slug'
+      preLoaderRoute: typeof DocsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apps/slides/$': {
       id: '/apps/slides/$'
       path: '/apps/slides/$'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatternsRoute: PatternsRoute,
   UieventsRoute: UieventsRoute,
   WrappersRoute: WrappersRoute,
+  DocsSlugRoute: DocsSlugRoute,
   AppsFinderSplatRoute: AppsFinderSplatRoute,
   AppsMarkdownSplatRoute: AppsMarkdownSplatRoute,
   AppsSlidesSplatRoute: AppsSlidesSplatRoute,
