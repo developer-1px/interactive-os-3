@@ -8,7 +8,7 @@ const sources = import.meta.glob<string>('../docs/*.md', {
   import: 'default',
 })
 
-const DOCS_ORDER = ['getting-started', 'overview', 'core-concept']
+const DOCS_ORDER = ['getting-started', 'overview', 'core-concept', 'faq']
 
 const DOCS = (() => {
   const out: { slug: string; title: string; raw: string }[] = []
