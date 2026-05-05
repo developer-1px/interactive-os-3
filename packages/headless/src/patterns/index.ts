@@ -48,7 +48,7 @@ export {
   useFeedPattern, feedAxis,
   type FeedItem, type FeedEvent, type FeedOptions,
 } from './feed'
-export { useGridPattern, gridAxis, type GridOptions, type GridCell } from './grid'
+export { useGridPattern, gridAxis, gridEditKeys, type GridOptions, type GridCell } from './grid'
 export { useCarouselPattern, type CarouselOptions, type CarouselSlide } from './carousel'
 export { spinbuttonPattern, spinbuttonAxis, type SpinbuttonOptions } from './spinbutton'
 
