@@ -30,9 +30,13 @@ export interface TreeGridOptions {
    */
   navigationMode?: 'row' | 'cell' | 'cellOnly'
   /**
-   * 편집 모드 — Enter/Backspace 키를 패턴이 디폴트로 흡수한다.
-   * Tab 은 셀 모델과 충돌하므로 매핑하지 않는다.
-   * 디폴트 false. true 일 때 UiEvent (create/remove) 로 emit.
+   * 편집 모드 — Enter/Backspace/Tab 을 패턴이 디폴트로 흡수한다.
+   * 디폴트 false. true 일 때 emit 하는 UiEvent:
+   * - Enter (focused row 의 부모 존재) → `{type:'insertAfter', siblingId}`
+   * - Enter (focused row 가 root 직속) → `{type:'appendChild', parentId}`
+   * - Backspace → `{type:'remove', id}`
+   * - Tab      → `{type:'activate', id}`
+   * Host reducer 가 `insertAfter`/`appendChild` 를 처리해야 한다.
    */
   editable?: boolean
 }

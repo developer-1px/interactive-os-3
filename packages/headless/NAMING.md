@@ -74,6 +74,8 @@ use<X>Pattern(opts?): { ...props, open, setOpen, ... }
 
 **rootProps 규칙**: 패턴에 distinct role 외곽이 1개면 무조건 `rootProps`. 2개 이상(combobox=input+listbox, tooltip=trigger+tip, disclosure=trigger+panel, menuButton=trigger+menu)일 때만 role-name 허용.
 
+**`id` override 금지**: 일부 part-getter (`childProps(id)`, `optionProps(id)`, `rowProps(id)`, `cellProps(id)`, `radioProps(id)` 등) 는 entity id 를 DOM `id` 로 emit. 이 id 는 `aria-controls`/`aria-activedescendant` 의 참조 대상이므로 소비자가 spread 후 `id={...}` 로 덮어쓰면 ARIA 관계가 깨진다. id 는 그대로 둘 것 — 시각 식별 위해선 `data-*` 사용.
+
 ## 4. ARIA 어휘 정합 — Option/Prop 이름
 
 ### W3C 직역 (변경 금지)

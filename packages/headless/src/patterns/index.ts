@@ -61,4 +61,5 @@ export { alertPattern, alertdialogPattern, type AlertdialogOptions } from './ale
 export type {
   BaseItem, TreeItem, RootProps, ItemProps,
   PatternProps, ValuedPatternProps,
+  BasePatternOptions, CollectionOptions,
 } from './types'

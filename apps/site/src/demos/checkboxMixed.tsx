@@ -24,7 +24,10 @@ export default function Demo() {
     return d
   })
   const { groupProps, parentProps, childProps, parentChecked, items } =
-    useCheckboxGroupPattern(data, onEvent, { label: 'Sandwich toppings' })
+    useCheckboxGroupPattern(data, onEvent, {
+      label: 'Sandwich toppings',
+      parentLabel: 'All toppings',
+    })
 
   return (
     <fieldset {...groupProps} className="rounded-md border border-stone-200 p-3 text-sm">
