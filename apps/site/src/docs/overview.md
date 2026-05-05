@@ -10,60 +10,91 @@
 
 ## 그런데 이런 적이 있지 않으셨나요
 
-이렇게 가져다 쓰다가 어느 순간 **시각**을 다르게 하고 싶어집니다. 디자이너가 "우리 브랜드는 이런 색·간격·radius 로 통일해 주세요" 라고 합니다. 자체 디자인 시스템이 있을 수도, 그냥 미감이 다를 수도 있습니다.
+PowerPoint 의 좌측 슬라이드 썸네일 목록을 떠올려 보세요.
 
-이때부터 묘한 마찰이 시작됩니다.
+- 슬라이드는 **번호 매겨진 평평한 리스트** 처럼 보입니다
+- 그러나 실제로는 섹션(슬라이드 그룹)이 있고, 섹션을 접고 펼칠 수 있고, 슬라이드를 다른 섹션으로 옮길 수도 있습니다
+- 즉 **데이터 구조는 tree 인데, 시각은 (썸네일 카드를 세로로 쌓은) list** 입니다
 
-- 라이브러리 컴포넌트 안에 **이미 들어있는 색·여백·아이콘·border** 와 싸웁니다. CSS 우선순위 전쟁, `!important`, 깊은 selector 가 등장합니다.
-- 컴포넌트가 강요하는 **markup 구조**(`<Listbox.Root>` 안에 `<Listbox.Trigger>` 안에 `<Listbox.Items>` …) 를 그대로 받아들여야 합니다. 디자인이 살짝만 어긋나도 분해됩니다.
-- 결국 "**그냥 처음부터 직접 만들자**" 결정이 내려집니다.
+이런 화면을 만들려고 컴포넌트 라이브러리를 찾아 보면 곧 막힙니다.
 
-직접 만들기 시작하면 곧 깨닫습니다.
+- `<TreeView>` 컴포넌트 — 들여쓰기 + disclosure 화살표 + 들여쓴 자식. **시각은 트리 모양 그 자체**. 썸네일 카드 모양으로 못 만듭니다.
+- `<List>` 컴포넌트 — 평평한 리스트만. 섹션 접기/펼치기, 자식 이동 같은 tree 행동 없음.
 
-> "키보드 동작 하나 제대로 만드는 게 이렇게 어려웠나?"
+같은 일이 다른 곳에서도 일어납니다.
 
-리스트 하나에 이런 것들을 다 챙겨야 합니다 — 위/아래 화살표로 항목 이동, Home/End 로 처음·끝, 글자 입력하면 그 글자로 시작하는 항목으로 점프(typeahead), Tab 키로 빠져나가기, Shift+화살표로 범위 선택, 활성 항목을 스크린리더가 읽도록 `aria-activedescendant` 갱신, 포커스를 한 항목에만 두고 나머지는 `tabindex="-1"` 로 빼는 roving tabindex…
+- **파일 탐색기의 column view** (Mac Finder) — 데이터는 tree, 시각은 가로 컬럼 3개
+- **카탈로그의 카테고리 그리드** — 데이터는 tree (대분류 > 중분류 > 상품), 시각은 카드 grid
+- **타임라인의 중첩 이벤트** — 데이터는 tree (이벤트 > 하위 단계), 시각은 가로 timeline
+- **Kanban 의 그룹 보드** — 데이터는 tree (스윔레인 > 카드), 시각은 가로 컬럼
 
-W3C 가 [APG](https://www.w3.org/WAI/ARIA/apg/) 라는 가이드를 만들어 두었지만 이걸 정확히 따라 구현하면 listbox 하나에 보통 200줄이 넘습니다. 그리고 다음 화면에서 tree 가 필요해지면 또 처음부터.
+**행동 그래프(tree)** 와 **시각 표현** 이 다른 경우. 흔합니다. 그런데 이걸 다루는 헤드리스 라이브러리는 없습니다 — 모두 행동과 시각을 묶어서 같이 줍니다.
+
+## 그래서 LLM 에게 시키면
+
+이런 화면이 필요할 때 우리는 보통 LLM 에 시킵니다 — "PPT 슬라이드 썸네일 목록 만들어줘". LLM 은 결국 **custom 코드** 를 씁니다. 그리고 거의 매번 놓칩니다.
+
+- 화살표 키 이동 (위/아래만 챙기고 좌/우 섹션 간 이동은 빠뜨림)
+- typeahead — 글자로 슬라이드 찾기
+- Home/End · PageUp/PageDown
+- 다중 선택 — Shift+클릭 범위, Ctrl/Meta+클릭 토글, Ctrl+A 전체
+- `aria-activedescendant` · `aria-selected` · `aria-multiselectable` · `aria-level`
+- roving tabindex (포커스 하나 + 나머지 `tabindex="-1"`)
+- 섹션 접힘 시 자식 건너뛰는 visible-flat traversal
+- 드래그·키보드 이동 시 부모 변경 처리
+
+[W3C APG](https://www.w3.org/WAI/ARIA/apg/) 가이드는 이걸 다 정의해 두었지만, 정확히 따라가려면 listbox 하나에 200줄 이상이 듭니다. LLM 은 그 양을 한 번에 다 챙기지 못합니다.
 
 ## 그래서 우리가 정말 원하는 것은
 
 이 두 가지입니다.
 
-> **시각은 우리가 직접 그리고 싶다. 행동(키보드·포커스·접근성)은 누가 대신 보증해 줬으면 좋겠다.**
+> **데이터 구조(tree·list·grid…)와 시각 표현(카드·컬럼·grid·timeline…) 을 따로 결정하고 싶다.
+> 그리고 행동(키보드·포커스·접근성) 은 누가 보증해 줬으면 좋겠다.**
 
-기존 라이브러리들은 "행동 + 시각 + markup" 묶음을 줍니다. 묶음이 잘 맞으면 좋지만, 시각만 떼어내려고 하면 잘 안 떨어집니다.
+기존 라이브러리들은 "행동 + 시각 + markup" 을 묶어서 줍니다. tree 데이터에는 tree 모양 UI 가, list 데이터에는 list 모양 UI 가 따라옵니다. **데이터 구조와 시각이 어긋나는 화면은 라이브러리 밖**입니다.
 
-**행동만**, 그 한 가지만 책임지는 도구가 있다면 — 시각은 자유롭게 (Tailwind 든 자체 CSS 든) 그리고, 동작은 spec 대로 작동한다고 안심할 수 있다면 — 어떨까요?
+이 어긋남을 메우는 도구가 있다면 — 행동 그래프는 spec 그대로 보증되고, 시각은 자유롭게 (썸네일이든 컬럼이든 카드든) 그릴 수 있다면 — 어떨까요?
 
 ## 답 — `@p/headless`
 
 `@p/headless` 는 정확히 그 한 가지만 합니다.
 
-```ts
-import { fromList } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
+PPT 썸네일 예제로 돌아가 봅시다 — 데이터는 tree, 시각은 평평한 카드 list.
 
-const data = fromList([
-  { id: 'a', label: 'Apple' },
-  { id: 'b', label: 'Banana' },
+```ts
+import { fromTree } from '@p/headless'
+import { useTreePattern } from '@p/headless/patterns'
+
+// 데이터: tree (섹션 > 슬라이드)
+const data = fromTree([
+  { id: 'intro', label: 'Intro', children: [
+    { id: 's1', label: 'Slide 1' },
+    { id: 's2', label: 'Slide 2' },
+  ]},
+  { id: 'body', label: 'Body', children: [
+    { id: 's3', label: 'Slide 3' },
+  ]},
 ])
 
-const { rootProps, optionProps, items } = useListboxPattern(data, onEvent)
+const { rootProps, itemProps, items } = useTreePattern(data, onEvent)
+
+// 시각: 평평한 카드 list (들여쓰기·disclosure 화살표 없음)
 return (
-  <ul {...rootProps} className="rounded border bg-white">
+  <div {...rootProps} className="flex flex-col gap-2 p-3">
     {items.map((it) => (
-      <li key={it.id} {...optionProps(it.id)} className="px-3 py-1.5 hover:bg-stone-100">
+      <div key={it.id} {...itemProps(it.id)} className="rounded border bg-white p-2 shadow-sm hover:bg-stone-50">
         {it.label}
-      </li>
+      </div>
     ))}
-  </ul>
+  </div>
 )
 ```
 
-이게 전부입니다. `useListboxPattern` 이 키보드 동작·포커스·`aria-*` 속성을 다 챙겨 주고, `<ul>`·`<li>`·`className` 은 본인이 결정합니다.
+**행동은 tree** — 화살표로 섹션을 접고 펼치고, 자식 건너뛰기, 부모 이동, `aria-level` · `aria-expanded` · roving tabindex 다 들어 있습니다.
+**시각은 list** — 들여쓰기·disclosure 화살표 없이 카드를 세로로 쌓을 뿐입니다.
 
-화살표 눌러 보세요 — 항목이 이동합니다. 글자 입력해 보세요 — typeahead 가 작동합니다. Tab 눌러 보세요 — 빠져나갑니다. 스크린리더로 읽어 보세요 — `role="listbox"` · `aria-selected` 다 들어가 있습니다.
+`useTreePattern` 이 행동을 보증하고, markup 과 className 은 본인이 결정합니다. 카드 grid 로 바꾸고 싶다면? `flex flex-col` 을 `grid grid-cols-3` 로 바꾸기만 하면 됩니다 — 행동은 그대로.
 
 **행동은 끝났고**, 이제 시각은 마음껏.
 
