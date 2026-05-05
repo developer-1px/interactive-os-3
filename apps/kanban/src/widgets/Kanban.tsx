@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useResource } from '@p/headless/store'
 import { useListboxPattern } from '@p/headless/patterns'
-import { getFocus, reduce, type Meta, type UiEvent } from '@p/headless'
+import { getFocus, KEYS, matchKey, reduce, type Meta, type UiEvent } from '@p/headless'
 import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
 import { boardResource } from '../features/boardResource'
 import { flattenBoard } from '../features/flattenBoard'
@@ -152,22 +152,22 @@ function Column({
       lb.rootProps.onKeyDown?.(e as unknown as KeyboardEvent & { preventDefault(): void })
       return
     }
-    if (e.key === 'Enter') {
+    if (matchKey(e, KEYS.Enter)) {
       e.preventDefault()
       onStartEdit(focusedCard)
       return
     }
-    if (e.key === 'Backspace') {
+    if (matchKey(e, KEYS.Backspace)) {
       e.preventDefault()
       onEvent({ type: 'remove', id: focusedCard })
       return
     }
-    if (e.key === 'ArrowLeft') {
+    if (matchKey(e, KEYS.ArrowLeft)) {
       e.preventDefault()
       onMoveAcrossColumn(focusedCard, -1)
       return
     }
-    if (e.key === 'ArrowRight') {
+    if (matchKey(e, KEYS.ArrowRight)) {
       e.preventDefault()
       onMoveAcrossColumn(focusedCard, 1)
       return
@@ -235,11 +235,11 @@ function CardEditor({
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') {
+        if (matchKey(e, KEYS.Enter)) {
           e.preventDefault()
           e.stopPropagation()
           onCommit(value, !e.shiftKey) // Enter = commit + new sibling, Shift+Enter = commit only
-        } else if (e.key === 'Escape') {
+        } else if (matchKey(e, KEYS.Escape)) {
           e.preventDefault()
           e.stopPropagation()
           onCancel()

@@ -16,7 +16,6 @@ export * from './schema'
 export { reduce } from './state/reduce'
 export { composeReducers, applyGesture, type Reducer } from './state/compose'
 export { singleSelect, singleCurrent, multiSelectToggle } from './state/selection'
-export { singleExpand } from './state/expansion'
 export { setValue } from './state/value'
 export { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
 export { fromTree, fromList, pathAncestors } from './state/fromTree'
@@ -33,7 +32,8 @@ export {
   composeAxes, parentOf, siblingsOf, enabledSiblings,
   navigate, activate, expand, escape, typeahead, treeNavigate, treeExpand,
   multiSelect, select, numericStep,
-  type Axis,
+  KEYS, INTENTS, matchChord, matchKey, gridNavigate, gridMultiSelect,
+  type Axis, type KeyChord, type KeyName,
 } from './axes'
 export {
   navigateOnActivate,
