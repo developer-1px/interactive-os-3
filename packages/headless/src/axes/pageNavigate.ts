@@ -1,6 +1,16 @@
-import type { Axis } from './axis'
+import { fromKeyMap, type Axis, type KeyHandler } from './axis'
 import { enabledSiblings } from './index'
-import { INTENTS, matchChord } from './keys'
+import { INTENTS } from './keys'
+
+const stepToward = (delta: (i: number, len: number) => number): KeyHandler =>
+  (d, id) => {
+    const sibs = enabledSiblings(d, id)
+    if (!sibs.length) return null
+    const i = Math.max(0, sibs.indexOf(id))
+    const t = delta(i, sibs.length)
+    if (t === i) return null
+    return [{ type: 'navigate', id: sibs[t] }]
+  }
 
 /**
  * pageNavigate — PageUp/PageDown 키로 sibling 단위 N 칸 이동.
@@ -10,14 +20,7 @@ import { INTENTS, matchChord } from './keys'
  */
 export const pageNavigate =
   (_orientation: 'vertical' | 'horizontal' = 'vertical', step = 1): Axis =>
-  (d, id, t) => {
-    if (t.kind !== 'key') return null
-    const sibs = enabledSiblings(d, id)
-    if (!sibs.length) return null
-    const i = Math.max(0, sibs.indexOf(id))
-    let target = -1
-    if (matchChord(t, INTENTS.pageNavigate.next)) target = Math.min(sibs.length - 1, i + step)
-    else if (matchChord(t, INTENTS.pageNavigate.prev)) target = Math.max(0, i - step)
-    if (target < 0 || target === i) return null
-    return [{ type: 'navigate', id: sibs[target] }]
-  }
+    fromKeyMap([
+      [INTENTS.pageNavigate.next, stepToward((i, len) => Math.min(len - 1, i + step))],
+      [INTENTS.pageNavigate.prev, stepToward((i) => Math.max(0, i - step))],
+    ])
