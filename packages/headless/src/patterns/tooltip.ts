@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, type RefObject } from 'react'
-import { KEYS } from '../axes/keys'
-import { INTENTS, matchChord } from '../axes'
+import { INTENTS } from '../axes'
+import { escapeKeys } from '../axes/escape'
+import { bindGlobalKeyMap } from '../key/bindGlobalKeyMap'
 import type { ItemProps, RootProps } from './types'
 
-/** Tooltip 이 실제 등록하는 키 — SSOT. Escape 로 닫기. */
-export const tooltipKeys = () => [KEYS.Escape]
+/** Tooltip 키 — declarative SSOT. escape axis 의 chord 도출. */
+export const tooltipKeys = (): readonly string[] => [...escapeKeys()]
 
 /** Options for {@link useTooltipPattern}. */
 export interface TooltipOptions {
@@ -21,10 +22,8 @@ export interface TooltipOptions {
  * tooltip — APG `/tooltip/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
  *
- * hover/focus 로 열림, blur/Escape 로 닫힘. `aria-describedby` 로 trigger ↔ tip 연결.
- *
- * @example
- *   const { triggerProps, tipProps, open } = useTooltipPattern({ idPrefix: 'save' })
+ * hover/focus 로 열림, blur/Escape 로 닫힘. Escape 처리는 `bindGlobalKeyMap`
+ * (declarative SSOT 메커니즘).
  */
 export function useTooltipPattern(opts: TooltipOptions = {}): {
   open: boolean
@@ -48,11 +47,16 @@ export function useTooltipPattern(opts: TooltipOptions = {}): {
     tRef.current = window.setTimeout(() => setOpen(false), delayHide)
   }
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (matchChord(e, INTENTS.escape.close)) setOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [])
+  useEffect(
+    () =>
+      bindGlobalKeyMap(
+        [[INTENTS.escape.close, { type: 'open', id: 'tooltip', open: false }]],
+        (e) => {
+          if (e.type === 'open' && e.open === false) setOpen(false)
+        },
+      ),
+    [],
+  )
 
   const triggerProps: ItemProps = {
     ref: triggerRef as React.Ref<HTMLElement>,
