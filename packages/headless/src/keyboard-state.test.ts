@@ -2,12 +2,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { activate, composeAxes, multiSelect, navigate, numericStep, treeExpand, treeNavigate } from './axes'
 import { fromTree } from './state/fromTree'
 import { reduceWithDefaults, reduceWithMultiSelect } from './state/defaults'
-import { keyTrigger } from './trigger'
 import { getExpanded, getFocus, type NormalizedData, type UiEvent } from './types'
 
-const key = (keyName: string) => keyTrigger({ key: keyName })
-const modKey = (keyName: string, mods: Partial<Parameters<typeof keyTrigger>[0]> = {}) =>
-  keyTrigger({ key: keyName, ...mods })
+const key = (keyName: string): string => keyName === ' ' ? 'Space' : keyName
+const modKey = (keyName: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean; alt?: boolean } = {}): string => {
+  const parts: string[] = []
+  if (mods.ctrl)  parts.push('Control')
+  if (mods.alt)   parts.push('Alt')
+  if (mods.meta)  parts.push('Meta')
+  if (mods.shift) parts.push('Shift')
+  parts.push(keyName === ' ' ? 'Space' : keyName)
+  return parts.join('+')
+}
 
 const listData = (): NormalizedData =>
   fromTree(
@@ -130,7 +136,7 @@ describe('keyboard input to state contract', () => {
     expect(getFocus(data)).toBe('d')
     expect(selectedIds(data)).toEqual(['a', 'b', 'd'])
 
-    data = applyMulti(data, multiSelect(data, 'd', { kind: 'click', shift: true }))
+    data = applyMulti(data, multiSelect(data, 'd', 'Shift+Click'))
     expect(selectedIds(data)).toEqual(['a', 'b', 'd'])
   })
 

@@ -14,7 +14,7 @@ const data: NormalizedData = {
   meta: {},
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('numericStep axis (horizontal)', () => {
   const ax = numericStep('horizontal')

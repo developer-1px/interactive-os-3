@@ -14,7 +14,7 @@ const data = (buf = '', deadline = 0): NormalizedData => ({
   meta: { root: ['apple', 'avocado', 'banana'], typeahead: { buf, deadline } },
 })
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('typeahead axis', () => {
   it('emits typeahead + navigate to first matching sibling on printable key', () => {
@@ -42,6 +42,6 @@ describe('typeahead axis', () => {
   })
 
   it('returns null on click trigger', () => {
-    expect(typeahead(data(), 'apple', { kind: 'click' })).toBeNull()
+    expect(typeahead(data(), 'apple', 'Click')).toBeNull()
   })
 })
