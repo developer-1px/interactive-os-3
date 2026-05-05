@@ -13,23 +13,54 @@ import { matchChord, type KeyChord } from './keys'
  * /treeNavigate/treeExpand)는 key 만 반응하고 click 은 바로 null 반환 — 컴포넌트
  * 쪽에서 click 의 focus 이동은 별도 처리한다.
  */
-export type Axis = (d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null
+/**
+ * Axis — function-with-property. 호출 가능 (data + trigger → UiEvent[] | null) 하면서
+ * `chords` 메타데이터로 자신이 응답하는 chord 목록을 노출.
+ *
+ * `chords` 는 phase 4 (PRD #38) 추가 — demo 가 `keys: () => dedupe(probe(...))`
+ * 보일러플레이트 없이 `axisKeys(axis)` 한 줄로 chord 추출 가능.
+ */
+export type Axis = ((d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null) & {
+  /** axis 가 응답하는 chord 목록 (string tinykeys 형식). 직렬화 가능. */
+  readonly chords: readonly string[]
+}
+
+/** axis 함수에 chords 메타 부착하는 helper. axis wrapper 가 inner axis chords 흡수할 때 사용. */
+export const tagAxis = (fn: (d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null, chords: readonly string[]): Axis => {
+  const tagged = fn as Axis
+  Object.defineProperty(tagged, 'chords', { value: Object.freeze([...chords]), enumerable: true, configurable: true })
+  return tagged
+}
 
 /**
- * composeAxes — 여러 Axis 를 우선순위 순으로 합성. 첫 non-null 반환을 채택, 나머지 axis 는 단락(short-circuit).
+ * composeAxes — 여러 Axis 를 우선순위 순으로 합성. 첫 non-null 반환을 채택, 나머지 axis 는 단락.
+ * 합성된 Axis 의 `chords` 는 sub-axis chords 의 union (중복 제거).
  *
  * 같은 키를 두 axis 가 다루면 앞쪽이 이긴다 (예: treeExpand 가 Space 를 흡수해야 activate 가 leaf 에서만 발화).
- *
- * @example
- *   const onKey = composeAxes(treeExpand, treeNavigate, typeahead, activate)
- *   const events = onKey(data, focusId, { kind: 'key', key: 'ArrowRight' })
  */
-export const composeAxes = (...axes: Axis[]): Axis => (d, id, t) => {
-  for (const a of axes) {
-    const r = a(d, id, t)
-    if (r) return r
+export const composeAxes = (...axes: Axis[]): Axis => {
+  const fn = (d: NormalizedData, id: string, t: Trigger): UiEvent[] | null => {
+    for (const a of axes) {
+      const r = a(d, id, t)
+      if (r) return r
+    }
+    return null
   }
-  return null
+  const seen = new Set<string>()
+  for (const a of axes) for (const c of a.chords ?? []) seen.add(c)
+  return tagAxis(fn, [...seen])
+}
+
+/** axisKeys — axis 가 응답하는 chord 의 key 부분만 추출 (display 용). */
+export const axisKeys = (axis: Axis): readonly string[] => {
+  const seen = new Set<string>()
+  for (const c of axis.chords ?? []) {
+    // chord 의 마지막 '+' 뒤가 key (Click / Space alias 처리는 표시 단계에서)
+    const lp = c.lastIndexOf('+')
+    const k = lp === -1 ? c : c.slice(lp + 1) || '+'
+    seen.add(k === 'Space' ? ' ' : k)
+  }
+  return [...seen]
 }
 
 /**
@@ -73,15 +104,38 @@ const applyTemplate = (t: UiEventTemplate, focusId: string): UiEvent => {
  *     [INTENTS.activate.trigger, { type: 'activate' }],
  *   ])
  */
-export const fromKeyMap = (entries: KeyMap): Axis => (d, id, t) => {
-  const p = parseTrigger(t)
-  if (p.kind !== 'key') return null
-  for (const [chord, rhs] of entries) {
-    const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
-    if (!matchChord(p, list)) continue
-    if (isHandlerFn(rhs)) return rhs(d, id)
-    const tmpls = Array.isArray(rhs) ? rhs : [rhs as UiEventTemplate]
-    return tmpls.map((tmpl) => applyTemplate(tmpl, id))
+/** KeyChord object → tinykeys string (display/메타용). */
+const chordToString = (c: KeyChord): string => {
+  const parts: string[] = []
+  if (c.ctrl)  parts.push('Control')
+  if (c.alt)   parts.push('Alt')
+  if (c.meta)  parts.push('Meta')
+  if (c.shift) parts.push('Shift')
+  parts.push(c.key === ' ' ? 'Space' : c.key)
+  return parts.join('+')
+}
+
+export const fromKeyMap = (entries: KeyMap): Axis => {
+  const fn = (d: NormalizedData, id: string, t: Trigger): UiEvent[] | null => {
+    const p = parseTrigger(t)
+    if (p.kind !== 'key') return null
+    for (const [chord, rhs] of entries) {
+      const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
+      if (!matchChord(p, list)) continue
+      if (isHandlerFn(rhs)) return rhs(d, id)
+      const tmpls = Array.isArray(rhs) ? rhs : [rhs as UiEventTemplate]
+      return tmpls.map((tmpl) => applyTemplate(tmpl, id))
+    }
+    return null
   }
-  return null
+  const chords: string[] = []
+  const seen = new Set<string>()
+  for (const [chord] of entries) {
+    const list = Array.isArray(chord) ? (chord as readonly KeyChord[]) : [chord as KeyChord]
+    for (const c of list) {
+      const s = chordToString(c)
+      if (!seen.has(s)) { seen.add(s); chords.push(s) }
+    }
+  }
+  return tagAxis(fn, chords)
 }

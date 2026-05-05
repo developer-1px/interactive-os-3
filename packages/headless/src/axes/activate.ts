@@ -1,4 +1,4 @@
-import { fromKeyMap, type Axis } from './axis'
+import { fromKeyMap, tagAxis, type Axis } from './axis'
 import { parseTrigger } from '../trigger'
 import { getChildren, isDisabled } from '../types'
 import { INTENTS } from './keys'
@@ -16,9 +16,9 @@ const activateOnLeafKey = fromKeyMap([
   [INTENTS.activate.trigger, (d, id) => (getChildren(d, id).length ? null : [{ type: 'activate', id }])],
 ])
 
-export const activate: Axis = (d, id, t) => {
+export const activate: Axis = tagAxis((d, id, t) => {
   if (isDisabled(d, id)) return null
   const p = parseTrigger(t)
   if (p.kind === 'click') return [{ type: 'activate', id }]
   return activateOnLeafKey(d, id, t)
-}
+}, [...activateOnLeafKey.chords, 'Click'])
