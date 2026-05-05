@@ -24,7 +24,7 @@ export { useTreePattern, treeAxis, type TreeOptions } from './tree'
 export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'
 export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 
-export { useMenuPattern, menuAxis, type MenuOptions } from './menu'
+export { useMenuPattern, menuAxis, menuButtonTriggerKeys, type MenuOptions } from './menu'
 export { useMenuButtonPattern, menuButtonKeys, type MenuButtonOptions } from './menuButton'
 export {
   checkboxPattern, useCheckboxGroupPattern, checkboxKeys,
