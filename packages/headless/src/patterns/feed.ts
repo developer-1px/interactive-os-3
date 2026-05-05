@@ -61,7 +61,7 @@ export function useFeedPattern(
   }), [items])
 
   const intent = (e: UiEvent) => {
-    if (e.type === 'navigate') dispatch?.({ type: 'navigate', id: e.id })
+    if (e.type === 'navigate' && e.id) dispatch?.({ type: 'navigate', id: e.id })
   }
 
   const { bindFocus, delegate } = useRovingTabIndex(feedAxis(), synth, intent, { autoFocus })

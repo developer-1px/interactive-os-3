@@ -138,7 +138,7 @@ export function useMenubarPattern(
       onEvent?.(e)
       return
     }
-    if (e.type === 'navigate') {
+    if (e.type === 'navigate' && e.id) {
       // navigate target 이 sub item 이면 subFocusId, top item 이면 top 의 roving 으로
       if (topIds.includes(e.id)) {
         // top 으로 이동 — 열려있던 sub 는 닫음 (전제: top 간 이동은 항상 close)

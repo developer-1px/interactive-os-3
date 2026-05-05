@@ -1,3 +1,11 @@
+/** navigate dir 어휘 — schema.ts 의 NavigateDirSchema 와 동기. */
+export type NavigateDir =
+  | 'next' | 'prev' | 'start' | 'end'
+  | 'pageNext' | 'pagePrev'
+  | 'visibleNext' | 'visiblePrev' | 'firstChild' | 'toParent'
+  | 'gridUp' | 'gridDown' | 'gridLeft' | 'gridRight'
+  | 'rowStart' | 'rowEnd' | 'gridStart' | 'gridEnd'
+
 /**
  * NormalizedData — three separated stores:
  *   entities      = id → user data (id is the key, value IS the data)
@@ -37,7 +45,8 @@ export interface Meta {
  * `Ui` prefix 명시.
  */
 export type UiEvent =
-  | { type: 'navigate'; id: string }
+  /** navigate — id ⊕ dir (result-form ⊕ intent-form). schema.ts 의 zod refine 으로 런타임 강제. */
+  | { type: 'navigate'; id?: string; dir?: NavigateDir }
   | { type: 'activate'; id: string }
   | { type: 'expand'; id: string; open: boolean }
   | { type: 'select'; id: string }
