@@ -2,6 +2,7 @@ import type { Axis } from './axis'
 import type { UiEvent } from '../types'
 import { getLabel, getTypeahead } from '../types'
 import { isPrintable } from '../key'
+import { parseTrigger } from '../trigger'
 import { enabledSiblings } from './index'
 
 const WINDOW_MS = 500
@@ -16,11 +17,12 @@ const WINDOW_MS = 500
  * 어휘 자체가 KeyMap 어휘 밖에 있다.
  */
 export const typeahead: Axis = (d, id, t) => {
-  if (t.kind !== 'key') return null
-  if (!isPrintable(t)) return null
+  const p = parseTrigger(t)
+  if (p.kind !== 'key') return null
+  if (!isPrintable(p)) return null
   const now = Date.now()
   const { buf, deadline } = getTypeahead(d)
-  const nextBuf = (now < deadline ? buf : '') + t.key.toLowerCase()
+  const nextBuf = (now < deadline ? buf : '') + p.key.toLowerCase()
   const match = enabledSiblings(d, id).find(
     (sid) => getLabel(d, sid).toLowerCase().startsWith(nextBuf),
   )

@@ -3,10 +3,18 @@ import { INTENTS, KEYS, matchChord, matchKey } from './keys'
 import { activate } from './activate'
 import { escape } from './escape'
 import { navigate } from './navigate'
-import { keyTrigger, clickTrigger } from '../trigger'
+import { clickTrigger, parseTrigger } from '../trigger'
 
-const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
-  keyTrigger({ key, ctrl: false, shift: false, meta: false, alt: false, ...mods })
+const k = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}): string => {
+  const parts: string[] = []
+  if (mods.ctrl)  parts.push('Control')
+  if (mods.meta)  parts.push('Meta')
+  if (mods.shift) parts.push('Shift')
+  parts.push(key === ' ' ? 'Space' : key)
+  return parts.join('+')
+}
+const kp = (key: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
+  parseTrigger(k(key, mods))
 
 describe('keys.ts SSOT', () => {
   it('KEYS exposes raw KeyboardEvent.key strings', () => {
@@ -26,14 +34,14 @@ describe('keys.ts SSOT', () => {
   })
 
   it('matchChord respects modifiers', () => {
-    expect(matchChord(k('a', { ctrl: true }), { key: 'a', ctrl: true })).toBe(true)
-    expect(matchChord(k('a'), { key: 'a', ctrl: true })).toBe(false)  // missing ctrl
-    expect(matchChord(k('a', { ctrl: true, shift: true }), { key: 'a', ctrl: true })).toBe(false) // extra shift
+    expect(matchChord(kp('a', { ctrl: true }), { key: 'a', ctrl: true })).toBe(true)
+    expect(matchChord(kp('a'), { key: 'a', ctrl: true })).toBe(false)  // missing ctrl
+    expect(matchChord(kp('a', { ctrl: true, shift: true }), { key: 'a', ctrl: true })).toBe(false) // extra shift
   })
 
   it('matchKey ignores modifiers', () => {
-    expect(matchKey(k('Enter', { ctrl: true }), 'Enter')).toBe(true)
-    expect(matchKey(k('Enter'), [{ key: 'Enter' }, { key: ' ' }])).toBe(true)
+    expect(matchKey(kp('Enter', { ctrl: true }), 'Enter')).toBe(true)
+    expect(matchKey(kp('Enter'), [{ key: 'Enter' }, { key: ' ' }])).toBe(true)
   })
 })
 
@@ -69,6 +77,6 @@ describe('axes pull from SSOT (regression guard)', () => {
   })
 
   it('matchChord rejects modifier-less Enter when chord requires ctrl', () => {
-    expect(matchChord(k('Enter'), { key: 'Enter', ctrl: true })).toBe(false)
+    expect(matchChord(kp('Enter'), { key: 'Enter', ctrl: true })).toBe(false)
   })
 })

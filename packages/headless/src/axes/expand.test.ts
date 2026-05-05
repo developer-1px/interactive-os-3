@@ -18,7 +18,7 @@ const data: NormalizedData = {
   meta: { focus: 'leaf', root: ['branch', 'disabledBranch'] },
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('expand axis', () => {
   it('opens branch + seeds first enabled child on ArrowRight', () => {
@@ -48,6 +48,6 @@ describe('expand axis', () => {
   })
 
   it('returns null on click trigger', () => {
-    expect(expand(data, 'branch', { kind: 'click' })).toBeNull()
+    expect(expand(data, 'branch', 'Click')).toBeNull()
   })
 })

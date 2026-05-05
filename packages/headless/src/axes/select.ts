@@ -1,4 +1,5 @@
 import { fromKeyMap, type Axis } from './axis'
+import { parseTrigger } from '../trigger'
 import { isDisabled } from '../types'
 import { INTENTS } from './keys'
 
@@ -22,6 +23,7 @@ const selectByKey = fromKeyMap([
 
 export const select: Axis = (d, id, t) => {
   if (isDisabled(d, id)) return null
-  if (t.kind === 'click') return [{ type: 'select', id }]
+  const p = parseTrigger(t)
+  if (p.kind === 'click') return [{ type: 'select', id }]
   return selectByKey(d, id, t)
 }

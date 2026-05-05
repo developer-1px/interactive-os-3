@@ -17,7 +17,7 @@ const data: NormalizedData = {
   meta: {},
 }
 
-const key = (k: string) => ({ kind: 'key' as const, key: k })
+const key = (k: string) => k
 
 describe('activate axis', () => {
   it('emits activate on Enter for a leaf', () => {
@@ -37,12 +37,12 @@ describe('activate axis', () => {
   })
 
   it('emits activate on click for any non-disabled entity (branch or leaf)', () => {
-    expect(activate(data, 'branch', { kind: 'click' })).toEqual([{ type: 'activate', id: 'branch' }])
-    expect(activate(data, 'leaf', { kind: 'click' })).toEqual([{ type: 'activate', id: 'leaf' }])
+    expect(activate(data, 'branch', 'Click')).toEqual([{ type: 'activate', id: 'branch' }])
+    expect(activate(data, 'leaf', 'Click')).toEqual([{ type: 'activate', id: 'leaf' }])
   })
 
   it('returns null on click when disabled', () => {
-    expect(activate(data, 'disabled', { kind: 'click' })).toBeNull()
+    expect(activate(data, 'disabled', 'Click')).toBeNull()
   })
 
   it('returns null on non-matching key', () => {

@@ -13,7 +13,7 @@ describe('INTENT_CHORDS — string mirror of INTENTS', () => {
   })
 
   it('activate.trigger', () => {
-    expect(INTENT_CHORDS.activate.trigger.map(parseChord))
+    expect(INTENT_CHORDS.activate.trigger.map((c) => parseChord(c)))
       .toEqual([{ key: 'Enter' }, { key: ' ' }])
   })
 
@@ -28,7 +28,7 @@ describe('INTENT_CHORDS — string mirror of INTENTS', () => {
   })
 
   it('gridMultiSelect.selectAll — 4 variants (case + Mac/PC)', () => {
-    const parsed = INTENT_CHORDS.gridMultiSelect.selectAll.map(parseChord)
+    const parsed = INTENT_CHORDS.gridMultiSelect.selectAll.map((c) => parseChord(c))
     expect(parsed).toEqual([
       { key: 'a', ctrl: true },
       { key: 'A', ctrl: true },

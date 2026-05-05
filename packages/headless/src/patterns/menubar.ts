@@ -8,6 +8,7 @@ import {
   fromKeyMap, INTENTS, KEYS, matchChord, navigate as navigateAxis, seedExpand,
 } from '../axes'
 import type { Axis } from '../axes/axis'
+import { parseTrigger } from '../trigger'
 import { parentOf } from '../axes/index'
 import { bindAxis } from '../state/bind'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
@@ -31,9 +32,10 @@ export interface MenubarOptions {
  * 출력: 현재 top 을 collapse + 다음 top 으로 navigate + 다음 top 을 expand + 첫 sub navigate.
  */
 const crossTop: Axis = (d, id, t) => {
-  if (t.kind !== 'key') return null
-  const isNext = matchChord(t, INTENTS.navigate.horizontal.next)
-  const isPrev = matchChord(t, INTENTS.navigate.horizontal.prev)
+  const p = parseTrigger(t)
+  if (p.kind !== 'key') return null
+  const isNext = matchChord(p, INTENTS.navigate.horizontal.next)
+  const isPrev = matchChord(p, INTENTS.navigate.horizontal.prev)
   if (!isNext && !isPrev) return null
   const top = parentOf(d, id)
   if (!top) return null

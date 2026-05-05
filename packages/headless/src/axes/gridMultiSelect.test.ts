@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { gridMultiSelect } from './gridMultiSelect'
-import { keyTrigger, clickTrigger } from '../trigger'
+import { clickTrigger } from '../trigger'
 import type { NormalizedData } from '../types'
 import { grid3x3 } from './_fixtures'
 
-const key = (k: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}) =>
-  keyTrigger({ key: k, ctrl: false, shift: false, meta: false, alt: false, ...mods })
+const key = (k: string, mods: { ctrl?: boolean; shift?: boolean; meta?: boolean } = {}): string => {
+  const parts: string[] = []
+  if (mods.ctrl)  parts.push('Control')
+  if (mods.meta)  parts.push('Meta')
+  if (mods.shift) parts.push('Shift')
+  parts.push(k === ' ' ? 'Space' : k)
+  return parts.join('+')
+}
 
 describe('gridMultiSelect axis', () => {
   const d = grid3x3()
