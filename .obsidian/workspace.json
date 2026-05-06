@@ -170,17 +170,17 @@
   },
   "active": "825ee3727135bc1f",
   "lastOpenFiles": [
+    "apps/outliner/src/features/resolveTextNodeId.ts",
+    "apps/outliner/src/widgets/JsonInspector.tsx",
+    "apps/outliner/src/widgets/KeymapPanel.tsx",
+    "apps/outliner/src/widgets/EditInput.tsx",
+    "apps/outliner/src/lib/fmtChord.ts",
+    "apps/outliner/src/lib",
     "apps/site/src/demos/outliner.test.tsx",
     "packages/zod-crud/dist/index.d.ts",
     "packages/zod-crud/dist/index.js",
     "packages/zod-crud/dist/editor/operation-result.js",
     "packages/zod-crud/dist/editor/json-crud.d.ts",
-    "packages/zod-crud/dist/editor/operation-result.d.ts",
-    "packages/zod-crud/dist/editor/json-crud.js",
-    "packages/zod-crud/dist/editor/json-paste.js",
-    "packages/zod-crud/dist/editor/json-paste.d.ts",
-    "packages/zod-crud/dist/editor",
-    "packages/zod-crud/dist/schema/schema-path.js",
     "docs/2026/2026-05/2026-05-06/02_writeAdapterPriorArt.md",
     "docs/2026/2026-05/2026-05-06/03_prdHeadlessClipboardAbsorption.md"
   ]
