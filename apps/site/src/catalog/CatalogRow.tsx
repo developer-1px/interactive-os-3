@@ -79,17 +79,19 @@ export function CatalogRow({
   return (
     <section id={slug} tabIndex={-1} className="flex flex-col md:snap-start md:h-screen">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-8 py-4 pr-32">
-        <span
-          className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.className}`}
-        >
-          {badge.label}
-        </span>
         <h2
-          className={`text-xl font-bold text-stone-900 ${titleMono ? 'font-mono' : ''}`}
+          className={`w-full text-xl font-bold text-stone-900 ${titleMono ? 'font-mono' : ''}`}
         >
           {title}
         </h2>
-        {blurb && <p className="text-sm text-stone-600">{blurb}</p>}
+        <p className="flex flex-wrap items-baseline gap-2 text-sm text-stone-600">
+          <span
+            className={`rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.className}`}
+          >
+            {badge.label}
+          </span>
+          {blurb}
+        </p>
         {apg && (
           <a
             href={`https://www.w3.org/WAI/ARIA/apg/patterns/${apg}/`}

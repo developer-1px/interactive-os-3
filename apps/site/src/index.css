@@ -6,15 +6,11 @@ html, body, #root { height: 100%; }
 html { scroll-behavior: smooth; }
 [hidden] { display: none !important; }
 
-/* Unified focus ring — keyboard only, color-adaptive.
-   light surface: stone-900 ring; dark surface: stone-100 ring.
-   2px outline + 2px offset, follows element's own border-radius. */
-:root { --ring: 28 25 23; }
-.bg-stone-950, .bg-stone-900, .bg-stone-800, [data-surface="dark"] { --ring: 245 245 244; }
+/* Unified focus ring — keyboard only, accent color, inside element (clip-safe). */
 *:focus { outline: none; }
 *:focus-visible {
-  outline: 2px solid rgb(var(--ring) / 0.7);
-  outline-offset: 2px;
+  outline: 2px solid #0ea5e9; /* sky-500 — light·dark surface 모두에서 또렷. */
+  outline-offset: -2px;
 }
 
 /* docs prose — minimal typography for /docs/* pages */

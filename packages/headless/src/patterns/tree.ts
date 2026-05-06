@@ -179,25 +179,26 @@ export function useTreePattern(
             return
           }
           if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_DEMOTE)) {
+            // editable 모드의 Tab 은 항상 흡수 — demote 불가(첫 자식 등) 일 때도
+            // browser default 로 빠져 focus 가 트리 밖으로 이탈하면 사용자에게 불편.
+            e.preventDefault()
             const parentId = findParent(data, id)
             if (parentId) {
               const siblings = data.relationships[parentId] ?? []
               const idx = siblings.indexOf(id)
               const prev = idx > 0 ? siblings[idx - 1] : null
-              if (prev) {
-                e.preventDefault()
-                relay({ type: 'move', id, targetId: prev, mode: 'child' })
-                return
-              }
+              if (prev) relay({ type: 'move', id, targetId: prev, mode: 'child' })
             }
+            return
           }
           if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_PROMOTE)) {
+            // editable 모드의 Shift+Tab 도 항상 흡수 — promote 불가(root 직속) 일 때도 focus 보존.
+            e.preventDefault()
             const parentId = findParent(data, id)
             if (parentId && parentId !== containerId) {
-              e.preventDefault()
               relay({ type: 'move', id, targetId: parentId, mode: 'sibling-after' })
-              return
             }
+            return
           }
         }
         delegate.onKeyDown(e)
