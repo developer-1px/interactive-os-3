@@ -81,8 +81,8 @@ export const listboxBuiltinChords: readonly BuiltinChordDescriptor[] = [
   { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused option', scope: 'item' },
   { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused option', scope: 'item' },
   // editable 모드 chord (opts.editable=true 일 때만 활성)
+  // NOTE: Backspace=remove 는 base 에 이미 등록됨(line 80) — editable 도 동일 emit 이라 중복 descriptor 금지.
   { chord: LISTBOX_EDIT_INSERT[0], uiEvent: 'insertAfter', description: 'Insert sibling option — editable mode', scope: 'item' },
-  { chord: LISTBOX_EDIT_REMOVE[0], uiEvent: 'remove',      description: 'Remove focused option — editable mode', scope: 'item' },
   // clipboard React events
   { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused option (React onCopy)',   scope: 'item' },
   { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused option (React onCut)',     scope: 'item' },

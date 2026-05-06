@@ -1,5 +1,5 @@
 import type { BuiltinChordDescriptor } from '@p/headless/patterns'
-import { fmtChord } from '../lib/fmtChord'
+import { fmtChord } from './fmtChord'
 
 /** KeymapPanel — chord registry SSOT 표 렌더. clipboard:* 의사 chord 는 표시 제외. */
 export function KeymapPanel({ chords, title }: { chords: readonly BuiltinChordDescriptor[]; title: string }) {
