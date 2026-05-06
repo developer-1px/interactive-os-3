@@ -9,8 +9,9 @@ import { parseChord } from '../axes/chord'
 import type { InsideEditableMode } from '../key/insideEditable'
 import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
 
-/** tree edit-mode chord registry — declarative SSOT (Enter, Backspace, Tab, Shift+Tab). */
-const TREE_EDIT_INSERT = ['Enter'] as const
+/** tree edit-mode chord registry — declarative SSOT. */
+const TREE_EDIT_RENAME = ['Enter'] as const
+const TREE_EDIT_INSERT = ['Shift+Enter'] as const
 const TREE_EDIT_REMOVE = ['Backspace'] as const
 const TREE_EDIT_DEMOTE = ['Tab'] as const
 const TREE_EDIT_PROMOTE = ['Shift+Tab'] as const
@@ -18,7 +19,7 @@ const TREE_EDIT_PROMOTE = ['Shift+Tab'] as const
 /** treeEditKeys — chord registry 합집합 도출. editable 모드 추가 키. */
 export const treeEditKeys = (): readonly string[] =>
   Array.from(new Set([
-    ...TREE_EDIT_INSERT, ...TREE_EDIT_REMOVE, ...TREE_EDIT_DEMOTE, ...TREE_EDIT_PROMOTE,
+    ...TREE_EDIT_RENAME, ...TREE_EDIT_INSERT, ...TREE_EDIT_REMOVE, ...TREE_EDIT_DEMOTE, ...TREE_EDIT_PROMOTE,
   ].map((c) => parseChord(c).key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
@@ -76,6 +77,7 @@ export const treeBuiltinChords: readonly BuiltinChordDescriptor[] = [
   { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
   { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused item', scope: 'item' },
   // editable 모드 chord (opts.editable=true 일 때만 활성)
+  { chord: TREE_EDIT_RENAME[0],  uiEvent: 'editStart',               description: 'Rename — enter inline edit',                       scope: 'item' },
   { chord: TREE_EDIT_INSERT[0],  uiEvent: 'insertAfter|appendChild', description: 'Insert sibling (or child if root) — editable mode', scope: 'item' },
   { chord: TREE_EDIT_REMOVE[0],  uiEvent: 'remove',                  description: 'Remove focused item — editable mode',              scope: 'item' },
   { chord: TREE_EDIT_DEMOTE[0],  uiEvent: 'cut+paste',               description: 'Demote (move under previous sibling)',             scope: 'item' },
@@ -165,6 +167,11 @@ export function useTreePattern(
     ? (e: React.KeyboardEvent) => {
         const id = focusId
         if (id && id !== containerId) {
+          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_RENAME)) {
+            e.preventDefault()
+            relay({ type: 'editStart', id })
+            return
+          }
           if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_INSERT)) {
             e.preventDefault()
             // root 면 자식 추가, else 시블 추가. crud op 어휘 1:1.

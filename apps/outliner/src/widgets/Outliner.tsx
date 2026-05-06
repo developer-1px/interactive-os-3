@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, type CSSProperties } from 'react'
 import { useTreePattern, treeBuiltinChords } from '@p/headless/patterns'
 import { useZodCrudResource } from '@p/headless/adapters/zod-crud'
 import { outlineResource } from '../features/outlineResource'
@@ -21,6 +21,35 @@ const fmtChord = (chord: string): string =>
       return part.charAt(0).toUpperCase() + part.slice(1)
     })
     .join('+')
+
+function EditInput({ initial, onCommit }: { initial: string; onCommit: (value: string, cancelled: boolean) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const cancelRef = useRef(false)
+  const committedRef = useRef(false)
+  const commit = () => {
+    if (committedRef.current) return
+    committedRef.current = true
+    onCommit(inputRef.current?.value ?? '', cancelRef.current)
+  }
+  // Tree 의 roving tabindex 가 treeitem li 로 focus 를 가져가므로, 마운트 후 microtask 로 input 에 다시 focus.
+  useEffect(() => {
+    const t = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select() }, 0)
+    return () => clearTimeout(t)
+  }, [])
+  return (
+    <input
+      ref={inputRef}
+      defaultValue={initial}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        e.stopPropagation()
+        if (e.key === 'Enter') commit()
+        if (e.key === 'Escape') { cancelRef.current = true; commit() }
+      }}
+      className="flex-1 rounded border border-blue-400 bg-white px-1 outline-none"
+    />
+  )
+}
 
 export function Outliner() {
   const [data, onEvent] = useZodCrudResource(outlineResource, crud, flattenOutline, { kind: 'tree' })
@@ -48,7 +77,24 @@ export function Outliner() {
               <span aria-hidden className="text-neutral-400">
                 {item.hasChildren ? (item.expanded ? '▾' : '▸') : '•'}
               </span>
-              <span>{item.label || <em className="text-neutral-300">empty</em>}</span>
+              {data.meta?.editing === item.id ? (
+                <EditInput
+                  initial={item.label}
+                  onCommit={(value, cancelled) => {
+                    if (!cancelled) {
+                      const doc = crud.snapshot()
+                      const obj = doc.nodes[item.id]
+                      const textNodeId = obj?.type === 'object'
+                        ? obj.children.find((cid) => doc.nodes[cid]?.key === 'text')
+                        : undefined
+                      if (textNodeId) onEvent({ type: 'update', id: textNodeId, value })
+                    }
+                    onEvent({ type: 'editEnd' })
+                  }}
+                />
+              ) : (
+                <span>{item.label || <em className="text-neutral-300">empty</em>}</span>
+              )}
             </li>
           ))}
         </ul>
@@ -60,8 +106,8 @@ export function Outliner() {
           </h2>
           <table className="w-full text-xs">
             <tbody>
-              {visibleChords.map((c) => (
-                <tr key={c.chord + c.uiEvent} className="border-b border-neutral-100 last:border-0">
+              {visibleChords.map((c, i) => (
+                <tr key={i} className="border-b border-neutral-100 last:border-0">
                   <td className="py-1 pr-3 align-top">
                     <kbd className="rounded border border-neutral-300 bg-white px-1.5 py-0.5 font-mono text-[11px] text-neutral-700 shadow-[0_1px_0_0_#d6d3d1]">
                       {fmtChord(c.chord)}

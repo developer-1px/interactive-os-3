@@ -38,6 +38,8 @@ export interface Meta {
   open?: string[]
   typeahead?: { buf: string; deadline: number }
   selectAnchor?: string | null
+  /** 인라인 편집 중인 entity id (rename/edit-in-place). null/undefined ⇒ 비편집. */
+  editing?: string | null
 }
 
 /**
@@ -85,6 +87,10 @@ export type UiEvent =
   | { type: 'move'; id: string; targetId: string; mode: 'child' | 'sibling-after' | 'sibling-before' }
   | { type: 'undo' }
   | { type: 'redo' }
+  /** editStart — 인라인 편집 진입(meta.editing = id). UI 가 input 으로 swap. */
+  | { type: 'editStart'; id: string }
+  /** editEnd — 인라인 편집 종료(meta.editing = null). commit 은 별도 update 이벤트로. */
+  | { type: 'editEnd' }
 
 /**
  * UiEvent 의 `value` 변종에서 id 가 빠진 단일값 dispatch shape — slider/switch/spinbutton/splitter.

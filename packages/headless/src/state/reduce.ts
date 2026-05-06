@@ -98,6 +98,9 @@ const handlers: { [K in UiEvent['type']]: Handler<K> } = {
   paste: identity,
   undo: identity,
   redo: identity,
+  move: identity,
+  editStart: (d, e) => setMeta(d, { editing: e.id }),
+  editEnd: (d) => setMeta(d, { editing: null }),
 }
 
 /**
