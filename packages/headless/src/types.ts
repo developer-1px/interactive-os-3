@@ -77,6 +77,12 @@ export type UiEvent =
   | { type: 'copy'; id: string; event?: ClipboardEvent }
   | { type: 'cut'; id: string; event?: ClipboardEvent }
   | { type: 'paste'; targetId: string; mode?: 'auto' | 'child' | 'overwrite'; index?: number; event?: ClipboardEvent }
+  /**
+   * move — id 를 targetId 로 이동. clipboard 를 거치지 않음 (Tab demote/promote 같은
+   * 구조 편집은 사용자의 cut/copy buffer 를 오염시키면 안 됨). adapter 가 read + insert +
+   * delete 시퀀스로 구현하거나 backend native move 위임.
+   */
+  | { type: 'move'; id: string; targetId: string; mode: 'child' | 'sibling-after' | 'sibling-before' }
   | { type: 'undo' }
   | { type: 'redo' }
 

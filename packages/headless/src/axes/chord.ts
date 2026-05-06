@@ -55,9 +55,10 @@ const parseChordImpl = (s: Chord, opts: { isMac?: boolean } = {}): ParsedChord =
       .filter((p) => p.length > 0)
       .map((p) => p.toLowerCase()),
   )
-  // $mod 처리
-  if (mods.has('$mod')) {
+  // $mod / mod 처리 — 둘 다 platform-aware modifier alias (Mac=meta, 기타=ctrl)
+  if (mods.has('$mod') || mods.has('mod')) {
     mods.delete('$mod')
+    mods.delete('mod')
     mods.add(isMac ? 'meta' : 'ctrl')
   }
   // ctrl/control 정규화

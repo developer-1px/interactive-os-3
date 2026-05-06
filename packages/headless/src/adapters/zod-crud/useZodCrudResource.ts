@@ -94,12 +94,34 @@ export function useZodCrudResource<
       return
     }
 
+    // ── move — clipboard 미오염 구조 편집 (Tab demote/promote) ────────────────
+    // read + insert + delete 시퀀스. crud.cut/paste 안 씀 → 사용자 clipboard buffer 보존.
+    if (e.type === 'move') {
+      const value = crud.read?.(e.id)
+      if (value === undefined) return
+      if (e.mode === 'child') {
+        crud.appendChild(e.targetId, value as unknown as Parameters<CrudWithSubscribe['appendChild']>[1])
+      } else if (e.mode === 'sibling-after' || e.mode === 'sibling-before') {
+        // insertBefore 미노출 — sibling-before 도 insertAfter 로 근사 (현 zod-crud port 한계).
+        crud.insertAfter(e.targetId, value as unknown as Parameters<CrudWithSubscribe['insertAfter']>[1])
+      }
+      const result = crud.delete(e.id) as OperationResultLike
+      baseDispatch({type: 'set', value: crud.snapshot()})
+      if (result?.focusNodeId) setMeta((prev) => ({...prev, focus: result.focusNodeId}))
+      return
+    }
+
     if (e.type === 'paste') {
-      if (!cb) return
-      const value = decode(cb, {kind, schema: opts.schema})
-      if (value == null) return // schema 검증 실패 → silent 무시 (User Story #23)
+      // DOM clipboard event 동봉 시: schema 검증만 (zod-crud paste 는 내부 buffer 사용 — value 안 받음).
+      // 검증 실패 → silent 무시 (User Story #23). 단 DOM event 없을 때(Tab demote / Shift+Cmd+V keymap)
+      // 는 검증 단계 skip 하고 내부 buffer 로 paste — Tab demote 시퀀스 cut+paste 가 같은 frame 안에서
+      // 동작하므로 buffer 가 항상 fresh. cross-app paste 미지원(zod-crud 한계).
+      if (cb) {
+        const value = decode(cb, {kind, schema: opts.schema})
+        if (value == null) return
+        ev!.preventDefault()
+      }
       const result = crud.paste(e.targetId, {mode: e.mode, index: e.index}) as OperationResultLike
-      ev!.preventDefault()
       baseDispatch({type: 'set', value: crud.snapshot()})
       if (result?.focusNodeId) setMeta((prev) => ({...prev, focus: result.focusNodeId}))
       return

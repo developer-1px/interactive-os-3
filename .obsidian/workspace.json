@@ -170,6 +170,7 @@
   },
   "active": "825ee3727135bc1f",
   "lastOpenFiles": [
+    "apps/site/src/demos/outliner.test.tsx",
     "packages/zod-crud/dist/index.d.ts",
     "packages/zod-crud/dist/index.js",
     "packages/zod-crud/dist/editor/operation-result.js",
@@ -180,7 +181,6 @@
     "packages/zod-crud/dist/editor/json-paste.d.ts",
     "packages/zod-crud/dist/editor",
     "packages/zod-crud/dist/schema/schema-path.js",
-    "packages/zod-crud/dist/schema/schema-path.d.ts",
     "docs/2026/2026-05/2026-05-06/02_writeAdapterPriorArt.md",
     "docs/2026/2026-05/2026-05-06/03_prdHeadlessClipboardAbsorption.md"
   ]

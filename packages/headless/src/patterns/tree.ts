@@ -186,8 +186,7 @@ export function useTreePattern(
               const prev = idx > 0 ? siblings[idx - 1] : null
               if (prev) {
                 e.preventDefault()
-                relay({ type: 'cut', id })
-                relay({ type: 'paste', targetId: prev, mode: 'child' })
+                relay({ type: 'move', id, targetId: prev, mode: 'child' })
                 return
               }
             }
@@ -196,8 +195,7 @@ export function useTreePattern(
             const parentId = findParent(data, id)
             if (parentId && parentId !== containerId) {
               e.preventDefault()
-              relay({ type: 'cut', id })
-              relay({ type: 'paste', targetId: parentId, mode: 'auto' })
+              relay({ type: 'move', id, targetId: parentId, mode: 'sibling-after' })
               return
             }
           }
