@@ -3,41 +3,79 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { KEYS, INTENT_CHORDS, matchAnyChord } from '../axes'
-import { parseChord } from '../axes/chord'
+import {
+  activate, axisKeys, composeAxes, escape, fromKeyMap, INTENT_CHORDS, navigate,
+  submenuOpen, submenuClose, type Axis,
+} from '../axes'
+import { bindAxis } from '../state/bind'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
-/** menuButton chord registry — declarative SSOT. */
-const TRIGGER_OPEN_DOWN = ['ArrowDown', ...INTENT_CHORDS.activate.trigger] as const
-const TRIGGER_OPEN_UP = ['ArrowUp'] as const
-const MENU_NAV_CHORDS = [
-  'ArrowDown', 'ArrowUp', 'Home', 'End',
-  INTENT_CHORDS.escape.close,
-  ...INTENT_CHORDS.activate.trigger,
-] as const
+/**
+ * trigger-state axis — closed 일 때 trigger button 키.
+ *   ArrowDown / Enter / Space → open + first menuitem
+ *   ArrowUp                   → open + last menuitem
+ */
+const triggerOpenAxis: Axis = fromKeyMap([
+  [['ArrowDown', ...INTENT_CHORDS.activate.trigger],
+    (d, id) => {
+      const kids = getChildren(d, id).filter((k) => !isDisabled(d, k))
+      const first = kids[0]
+      return first
+        ? [{ type: 'open', id, open: true }, { type: 'navigate', id: first }]
+        : [{ type: 'open', id, open: true }]
+    },
+  ],
+  ['ArrowUp',
+    (d, id) => {
+      const kids = getChildren(d, id).filter((k) => !isDisabled(d, k))
+      const last = kids[kids.length - 1]
+      return last
+        ? [{ type: 'open', id, open: true }, { type: 'navigate', id: last }]
+        : [{ type: 'open', id, open: true }]
+    },
+  ],
+])
 
-/** menuButtonKeys — chord registry 합집합에서 자동 도출. */
-export const menuButtonKeys = (): readonly string[] => {
-  const all = [...TRIGGER_OPEN_DOWN, ...TRIGGER_OPEN_UP, ...MENU_NAV_CHORDS]
-  return Array.from(new Set(all.map((c) => parseChord(c).key)))
+/**
+ * menu-state axis — open 일 때 menuitem 키. 정본 합성:
+ *   navigate('vertical')  ↑↓ Home/End (wrap)
+ *   submenuOpen           → (parent only — leaf 에선 activate 로 흐름)
+ *   submenuClose          ←
+ *   activate              Enter/Space + Click
+ *   escape                Escape
+ */
+const menuStateAxis: Axis = composeAxes(
+  navigate('vertical'),
+  submenuOpen,
+  submenuClose,
+  activate,
+  escape,
+)
+
+/** menuButton 이 응답하는 chord 합집합 — keys 카탈로그 SSOT. */
+export const menuButtonAxis = (): Axis => composeAxes(triggerOpenAxis, menuStateAxis)
+
+export type MenuItemKind = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio'
+
+export interface MenuItem extends BaseItem {
+  kind: MenuItemKind
+  checked?: boolean | 'mixed'
+  hasSubmenu: boolean
+  submenuOpen: boolean
+  /** aria-current — menubar-navigation 등에서 사용 */
+  current?: 'page' | 'step' | 'location' | 'date' | 'time' | true
 }
 
-/** Options for {@link useMenuButtonPattern}. */
+export interface MenuLevel {
+  menuProps: RootProps
+  itemProps: (id: string) => ItemProps
+  items: MenuItem[]
+}
+
 export interface MenuButtonOptions {
-  /** controlled open. 생략 시 패턴이 useState 자체 보유. */
   open?: boolean
   defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
-  /**
-   * APG `menu-button-actions` (roving) vs `menu-button-actions-active-descendant`.
-   * default `'roving'`.
-   */
   focusMode?: 'roving' | 'activeDescendant'
-  /**
-   * APG 분기. `'action'` (default) — menuitem 이 `<button>`/`<div role=menuitem>`.
-   * `'navigation'` — menuitem 이 `<a>`. 차이는 markup 만 (host 책임).
-   */
-  variant?: 'action' | 'navigation'
   containerId?: string
   label?: string
   labelledBy?: string
@@ -48,19 +86,25 @@ export interface MenuButtonOptions {
  * menu-button — APG `/menu-button/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
  *
- * Trigger button + popup menu glue. Trigger 키:
- *   ArrowDown / Enter / Space → open + first item focus
- *   ArrowUp                   → open + last item focus
- * Menu 키:
- *   Escape → close + return focus to trigger
- *   ArrowDown/Up → 다음/이전 menuitem
- *   Home/End → 첫/마지막
- *   Enter/Space → activate + close + return focus
- *   click outside → close
+ * 키보드 처리는 axis 합성 정본:
+ *   trigger(closed) → `triggerOpenAxis`
+ *   menu(open)      → `menuStateAxis`
  *
- * `focusMode='activeDescendant'` 일 때 trigger 가 계속 DOM focus 를 보유,
- * 활성 menuitem 은 `aria-activedescendant` 로 표시. `'roving'` 일 때 menuitem 이
- * 직접 DOM focus.
+ * N-level nested submenu 지원. data.entities[id].kind 로 menuitem /
+ * menuitemcheckbox / menuitemradio 구분. data.entities[id].checked 로 체크 상태.
+ * data.entities[id].current (aria-current) 도 흡수.
+ *
+ * Submenu 렌더 (재귀):
+ *   const root = useMenuButtonPattern(data, ...)
+ *   <Level data={root.rootLevel} pattern={root} />
+ *   function Level({ data: lv, pattern }) {
+ *     return <ul {...lv.menuProps}>{lv.items.map(it => (
+ *       <li {...lv.itemProps(it.id)}>
+ *         {it.label}
+ *         {it.submenuOpen && <Level data={pattern.getSubmenu(it.id)!} pattern={pattern} />}
+ *       </li>
+ *     ))}</ul>
+ *   }
  */
 export function useMenuButtonPattern(
   data: NormalizedData,
@@ -68,16 +112,22 @@ export function useMenuButtonPattern(
   opts: MenuButtonOptions = {},
 ): {
   triggerProps: ItemProps
+  rootLevel: MenuLevel
+  getSubmenu: (parentId: string) => MenuLevel | null
+  /** root level alias */
   menuProps: RootProps
+  /** root level alias */
   itemProps: (id: string) => ItemProps
-  items: BaseItem[]
+  /** root level alias */
+  items: MenuItem[]
   open: boolean
   setOpen: (open: boolean) => void
+  /** 현재 열려있는 submenu path (root → leaf). UI 가 어떤 부모들이 expand 인지 알기 위해. */
+  openPath: string[]
 } {
   const {
     open: openProp,
     defaultOpen = false,
-    onOpenChange,
     focusMode = 'roving',
     containerId = ROOT,
     label, labelledBy,
@@ -89,67 +139,121 @@ export function useMenuButtonPattern(
   const open = isControlled ? openProp : internalOpen
   const setOpen = (next: boolean) => {
     if (!isControlled) setInternalOpen(next)
-    onOpenChange?.(next)
   }
 
   const triggerRef = useRef<HTMLElement | null>(null)
-  const menuRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef(new Map<string, HTMLElement | null>())
 
-  const ids = getChildren(data, containerId).filter((id) => !isDisabled(data, id))
-  const items: BaseItem[] = ids.map((id, i) => ({
-    id,
-    label: getLabel(data, id),
-    selected: false,
-    disabled: isDisabled(data, id),
-    posinset: i + 1,
-    setsize: ids.length,
-  }))
-
+  /** 열린 submenu 들의 부모 id chain. [] = root menu only. */
+  const [openPath, setOpenPath] = useState<string[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const triggerDomId = `${idPrefix}-trigger`
-  const menuDomId = `${idPrefix}-menu`
+  const rootMenuId = `${idPrefix}-menu`
+  const submenuDomId = (parentId: string) => `${idPrefix}-submenu-${parentId}`
   const itemDomId = (id: string) => `${idPrefix}-item-${id}`
 
-  // open 시 first/last focus, close 시 trigger 로 복귀
+  /** 어떤 id 가 어떤 parentId 아래 있는지 — submenu 추적용. */
+  const parentOfItem = (id: string): string | null => {
+    for (const [pid, kids] of Object.entries(data.relationships)) {
+      if (kids.includes(id)) return pid
+    }
+    return null
+  }
+
   const closeAndReturnFocus = () => {
     setOpen(false)
     setActiveId(null)
+    setOpenPath([])
     triggerRef.current?.focus({ preventScroll: true })
   }
 
+  // roving — activeId 변경 시 .focus() 동기화
   useEffect(() => {
     if (!open || focusMode !== 'roving') return
     if (!activeId) return
     itemRefs.current.get(activeId)?.focus({ preventScroll: true })
   }, [open, activeId, focusMode])
 
-  // outside click → close
+  // outside click → close all
   useEffect(() => {
     if (!open) return
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node | null
       if (!t) return
       if (triggerRef.current?.contains(t)) return
-      if (menuRef.current?.contains(t)) return
+      // 모든 menu DOM 안 클릭은 통과
+      const inAnyMenu = Array.from(itemRefs.current.values()).some((el) => el?.contains(t))
+      if (inAnyMenu) return
       setOpen(false)
       setActiveId(null)
+      setOpenPath([])
     }
     document.addEventListener('mousedown', onDown)
     return () => document.removeEventListener('mousedown', onDown)
   }, [open])
 
-  const moveActive = (delta: number | 'first' | 'last') => {
-    if (!ids.length) return
-    let next = 0
-    if (delta === 'first') next = 0
-    else if (delta === 'last') next = ids.length - 1
-    else {
-      const cur = activeId ? ids.indexOf(activeId) : -1
-      next = Math.max(0, Math.min(ids.length - 1, cur + delta))
+  const intent = (e: UiEvent) => {
+    if (e.type === 'open') {
+      if (e.open) setOpen(true)
+      else closeAndReturnFocus()
+      return
     }
-    setActiveId(ids[next])
+    if (e.type === 'expand') {
+      if (e.open) {
+        // submenu open — path push
+        setOpenPath((path) => [...path, e.id])
+        // navigate 가 함께 들어옴 (submenuOpen axis가 첫 자식 navigate emit)
+      } else {
+        // submenu close — current 가 leaf-of-path 이면 path pop + 부모 refocus
+        // ArrowLeft 시 e.id 는 현재 활성 menuitem (자식). 그 부모를 path 에서 찾음.
+        const parent = parentOfItem(e.id)
+        if (parent && openPath.includes(parent)) {
+          setOpenPath((path) => path.filter((p) => p !== parent))
+          setActiveId(parent)
+        } else {
+          // 이미 root level — close all
+          closeAndReturnFocus()
+        }
+      }
+      return
+    }
+    if (e.type === 'navigate') {
+      setActiveId(e.id ?? null)
+      return
+    }
+    if (e.type === 'activate') {
+      const ent = data.entities[e.id] ?? {}
+      const kind = (ent.kind as MenuItemKind | undefined) ?? 'menuitem'
+      // checkbox/radio 는 메뉴 닫지 않음 (APG: 토글만, 메뉴 유지)
+      if (kind === 'menuitemcheckbox') {
+        const cur = ent.checked
+        const next = cur === 'mixed' ? true : !cur
+        onEvent?.({ type: 'check', id: e.id, to: next })
+        return
+      }
+      if (kind === 'menuitemradio') {
+        // 같은 부모의 모든 radio sibling unchecked, 자기는 checked
+        const parent = parentOfItem(e.id) ?? containerId
+        const sibs = getChildren(data, parent)
+        for (const sid of sibs) {
+          const sEnt = data.entities[sid] ?? {}
+          if (sEnt.kind === 'menuitemradio' && sid !== e.id && sEnt.checked) {
+            onEvent?.({ type: 'check', id: sid, to: false })
+          }
+        }
+        onEvent?.({ type: 'check', id: e.id, to: true })
+        return
+      }
+      // plain menuitem — activate + close all
+      onEvent?.(e)
+      closeAndReturnFocus()
+      return
+    }
+    onEvent?.(e)
   }
+
+  const triggerBind = bindAxis(triggerOpenAxis, data, intent)
+  const menuBind = bindAxis(menuStateAxis, data, intent)
 
   const triggerProps: ItemProps = {
     type: 'button',
@@ -157,97 +261,138 @@ export function useMenuButtonPattern(
     ref: triggerRef as React.Ref<HTMLElement>,
     'aria-haspopup': 'menu',
     'aria-expanded': open,
-    'aria-controls': menuDomId,
+    'aria-controls': rootMenuId,
     'aria-activedescendant': focusMode === 'activeDescendant' && open && activeId
       ? itemDomId(activeId) : undefined,
     onClick: () => {
       const next = !open
       setOpen(next)
-      if (next) setActiveId(ids[0] ?? null)
-      else setActiveId(null)
+      if (next) {
+        const firstId = getChildren(data, containerId).filter((k) => !isDisabled(data, k))[0] ?? null
+        setActiveId(firstId)
+      } else {
+        setActiveId(null)
+        setOpenPath([])
+      }
     },
     onKeyDown: (e: React.KeyboardEvent) => {
       if (!open) {
-        if (matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_DOWN)) {
-          e.preventDefault()
-          setOpen(true)
-          setActiveId(ids[0] ?? null)
-        } else if (matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_UP)) {
-          e.preventDefault()
-          setOpen(true)
-          setActiveId(ids[ids.length - 1] ?? null)
-        }
+        triggerBind.onKey(e, containerId)
         return
       }
-      // open 상태 — activedescendant 모드에선 trigger 가 계속 키 받음
-      if (focusMode !== 'activeDescendant') return
-      // switch (e.key) — pattern 내부의 mini-axis. menu local activeId 만 다루는 짧은 분기라 fromKeyMap 대신 switch 그대로. KEYS SSOT 사용.
-      switch (e.key) {
-        case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
-        case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break
-        case KEYS.Home: e.preventDefault(); moveActive('first'); break
-        case KEYS.End: e.preventDefault(); moveActive('last'); break
-        case KEYS.Escape: e.preventDefault(); closeAndReturnFocus(); break
-        case KEYS.Enter:
-        case KEYS.Space:
-          e.preventDefault()
-          if (activeId) onEvent?.({ type: 'activate', id: activeId })
-          closeAndReturnFocus()
-          break
+      if (focusMode === 'activeDescendant') {
+        menuBind.onKey(e, activeId ?? containerId)
       }
     },
   } as unknown as ItemProps
 
-  const menuProps: RootProps = {
-    role: 'menu',
-    id: menuDomId,
-    ref: menuRef as React.Ref<HTMLElement>,
-    'aria-labelledby': labelledBy ?? triggerDomId,
-    'aria-label': label,
-    hidden: !open || undefined,
-    tabIndex: -1,
-  } as unknown as RootProps
-
-  const itemProps = (id: string): ItemProps => {
-    const isActive = activeId === id
-    const disabled = isDisabled(data, id)
-    const base: Record<string, unknown> = {
-      role: 'menuitem',
-      id: itemDomId(id),
-      'data-id': id,
-      'aria-disabled': disabled || undefined,
-      'data-active': isActive ? '' : undefined,
-      onClick: () => {
-        if (disabled) return
-        onEvent?.({ type: 'activate', id })
-        closeAndReturnFocus()
-      },
-    }
-    if (focusMode === 'roving') {
-      base.ref = ((el: HTMLElement | null) => {
-        itemRefs.current.set(id, el)
-      }) as unknown as React.Ref<HTMLElement>
-      base.tabIndex = isActive ? 0 : -1
-      base.onKeyDown = (e: React.KeyboardEvent) => {
-        // switch (e.key) — roving 모드의 menuitem 키. 동일 사유 (local activeId).
-        switch (e.key) {
-          case KEYS.ArrowDown: e.preventDefault(); moveActive(1); break
-          case KEYS.ArrowUp: e.preventDefault(); moveActive(-1); break
-          case KEYS.Home: e.preventDefault(); moveActive('first'); break
-          case KEYS.End: e.preventDefault(); moveActive('last'); break
-          case KEYS.Escape: e.preventDefault(); closeAndReturnFocus(); break
-          case KEYS.Tab: closeAndReturnFocus(); break
-          case KEYS.Enter:
-          case KEYS.Space:
-            e.preventDefault()
-            if (!disabled) onEvent?.({ type: 'activate', id })
-            closeAndReturnFocus()
-            break
-        }
+  /** 한 레벨의 menu props/itemProps 빌더 — root + submenu 공유. */
+  const buildLevel = (parentId: string, isRoot: boolean): MenuLevel => {
+    const ids = getChildren(data, parentId).filter((id) => !isDisabled(data, id))
+    const items: MenuItem[] = ids.map((id, i) => {
+      const ent = data.entities[id] ?? {}
+      const kind = (ent.kind as MenuItemKind | undefined) ?? 'menuitem'
+      const rawChecked = ent.checked
+      const checked: boolean | 'mixed' | undefined =
+        kind === 'menuitem' ? undefined
+          : rawChecked === 'mixed' ? 'mixed'
+          : Boolean(rawChecked)
+      return {
+        id,
+        label: getLabel(data, id),
+        selected: false,
+        disabled: isDisabled(data, id),
+        posinset: i + 1,
+        setsize: ids.length,
+        kind,
+        checked,
+        hasSubmenu: getChildren(data, id).length > 0,
+        submenuOpen: openPath.includes(id),
+        current: ent.current as MenuItem['current'],
       }
+    })
+
+    const menuProps: RootProps = {
+      role: 'menu',
+      id: isRoot ? rootMenuId : submenuDomId(parentId),
+      'aria-labelledby': isRoot ? (labelledBy ?? triggerDomId) : itemDomId(parentId),
+      'aria-label': isRoot ? label : undefined,
+      'aria-orientation': 'vertical',
+      hidden: isRoot ? !open || undefined : undefined,
+      tabIndex: -1,
+    } as unknown as RootProps
+
+    const itemProps = (id: string): ItemProps => {
+      const item = items.find((x) => x.id === id)!
+      const isActive = activeId === id
+      const disabled = item.disabled
+      const checked = item.checked
+      const hasSub = item.hasSubmenu
+      const isOpen = item.submenuOpen
+      return {
+        role: item.kind,
+        id: itemDomId(id),
+        'data-id': id,
+        'aria-disabled': disabled || undefined,
+        'aria-checked': checked,
+        'aria-haspopup': hasSub ? 'menu' : undefined,
+        'aria-expanded': hasSub ? isOpen : undefined,
+        'aria-controls': hasSub ? submenuDomId(id) : undefined,
+        'aria-current': item.current,
+        'data-active': isActive ? '' : undefined,
+        'data-state': hasSub ? (isOpen ? 'open' : 'closed') : undefined,
+        'data-checked': checked === true ? '' : checked === 'mixed' ? 'mixed' : undefined,
+        ref: ((el: HTMLElement | null) => {
+          itemRefs.current.set(id, el)
+        }) as unknown as React.Ref<HTMLElement>,
+        tabIndex: focusMode === 'roving' ? (isActive ? 0 : -1) : -1,
+        onClick: () => {
+          if (disabled) return
+          if (hasSub) {
+            // parent menuitem click → submenu toggle
+            if (isOpen) {
+              setOpenPath((path) => path.filter((p) => p !== id))
+            } else {
+              setOpenPath((path) => [...path, id])
+              const firstChild = getChildren(data, id).filter((k) => !isDisabled(data, k))[0]
+              if (firstChild) setActiveId(firstChild)
+            }
+            return
+          }
+          // leaf — activate via intent (checkbox/radio/plain 분기 흡수)
+          intent({ type: 'activate', id })
+        },
+        onKeyDown: focusMode === 'roving'
+          ? (e: React.KeyboardEvent) => {
+              if (menuBind.onKey(e, id)) e.stopPropagation()
+            }
+          : undefined,
+      } as unknown as ItemProps
     }
-    return base as unknown as ItemProps
+
+    return { menuProps, itemProps, items }
   }
 
-  return { triggerProps, menuProps, itemProps, items, open, setOpen }
+  const rootLevel = buildLevel(containerId, true)
+
+  const getSubmenu = (parentId: string): MenuLevel | null => {
+    if (!openPath.includes(parentId)) return null
+    return buildLevel(parentId, false)
+  }
+
+  return {
+    triggerProps,
+    rootLevel,
+    getSubmenu,
+    // backward-compat aliases — root level 그대로 노출.
+    menuProps: rootLevel.menuProps,
+    itemProps: rootLevel.itemProps,
+    items: rootLevel.items,
+    open,
+    setOpen,
+    openPath,
+  }
 }
+
+/** keys SSOT — axisKeys 정본 사용. */
+export const menuButtonKeys = (): readonly string[] => axisKeys(menuButtonAxis())

@@ -1,4 +1,4 @@
-import { fromList } from '@p/headless'
+import { fromList, axisKeys, toggle } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
 import { useCheckboxGroupPattern } from '@p/headless/patterns'
 
@@ -7,7 +7,7 @@ export const meta = {
   apg: 'checkbox',
   kind: 'collection' as const,
   blurb: 'Parent checkbox derives mixed-state from children; clicking it sets all on/off.',
-  keys: () => ['Space'],
+  keys: () => axisKeys(toggle),
 }
 
 const ITEMS = [

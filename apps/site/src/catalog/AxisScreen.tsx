@@ -48,7 +48,7 @@ export function AxisScreen({
               className={`rounded px-2 py-1 text-left text-sm font-mono ${
                 p.name === current?.name
                   ? 'bg-stone-900 text-white'
-                  : 'text-stone-700 hover:bg-stone-100'
+                  : 'text-stone-700 hover:bg-stone-200'
               }`}
             >
               {p.name}.ts
@@ -56,8 +56,14 @@ export function AxisScreen({
           ))}
         </nav>
       }
-      source={current?.source ?? ''}
-      filename={`packages/headless/src/patterns/${current?.name}.ts`}
+      tabs={[{
+        key: current?.name ?? 'axis',
+        label: 'Source',
+        filename: `${current?.name}.ts`,
+        source: current?.source ?? '',
+        symbols: [],
+      }]}
+      filenamePrefix="packages/headless/src/patterns/"
     />
   )
 }

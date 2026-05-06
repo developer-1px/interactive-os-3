@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import { KINDS, type Kind } from './kind'
+import { buildAppTabs, type AppTab } from './buildAppTabs'
 
 export interface DemoMeta {
   title: string
@@ -19,7 +20,7 @@ export interface Entry extends DemoMeta {
   filename: string
   slug: string
   Component: ComponentType
-  source: string
+  tabs: AppTab[]
 }
 
 const slugFor = (filename: string) =>
@@ -28,21 +29,45 @@ const slugFor = (filename: string) =>
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .toLowerCase()
 
-const modules = import.meta.glob<DemoModule>('../demos/*.tsx', { eager: true })
-const sources = import.meta.glob<string>('../demos/*.tsx', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-})
+const modules = import.meta.glob<DemoModule>(
+  ['../demos/*.tsx', '!../demos/*.test.tsx'],
+  { eager: true },
+)
+const sourcesRaw = import.meta.glob<string>(
+  ['../demos/*.tsx', '../demos/**/*.ts', '../demos/**/*.tsx'],
+  { eager: true, query: '?raw', import: 'default' },
+)
+const pkgRaw = import.meta.glob<string>(
+  '../../../../packages/*/src/**/*.{ts,tsx}',
+  { eager: true, query: '?raw', import: 'default' },
+)
+const PREFIX = '../demos/'
+const sources: Record<string, string> = {}
+for (const [k, v] of Object.entries(sourcesRaw)) {
+  sources[k.startsWith(PREFIX) ? k.slice(PREFIX.length) : k] = v
+}
+// @p/<pkg>/<rel-from-src> 키 부여 — buildAppTabs 가 `@p/headless` 같은 bare spec 도 그대로 매칭.
+for (const [k, v] of Object.entries(pkgRaw)) {
+  const m = k.match(/\/packages\/([^/]+)\/src\/(.+)$/)
+  if (m) sources[`@p/${m[1]}/${m[2]}`] = v
+}
+
+const isTest = (path: string) => /\.test\.tsx$/.test(path)
 
 export const ENTRIES: Entry[] = Object.entries(modules)
-  .filter(([path]) => !path.includes('/_'))
+  .filter(([path]) => !path.includes('/_') && !isTest(path))
   .map(([path, mod]) => {
     const filename = path.split('/').pop()!
+    const testFilename = filename.replace(/\.tsx$/, '.test.tsx')
+    const hasTest = testFilename in sources
+    const tabs = buildAppTabs(sources, [
+      { filename, label: 'Demo' },
+      ...(hasTest ? [{ filename: testFilename, label: 'Test' }] : []),
+    ])
     return {
       ...mod.meta,
       Component: mod.default,
-      source: sources[path] ?? '',
+      tabs,
       filename,
       slug: slugFor(filename),
     }

@@ -16,7 +16,9 @@ export const treeGridEditKeys = (): readonly string[] =>
   ].map((c) => parseChord(c).key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { ItemProps, RootProps, TreeItem } from './types'
+import type { InsideEditableMode } from '../key/insideEditable'
+import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
+import type { BuiltinChordDescriptor, ItemProps, RootProps, TreeItem } from './types'
 
 /** Options for {@link useTreeGridPattern}. */
 export interface TreeGridOptions {
@@ -51,7 +53,36 @@ export interface TreeGridOptions {
    * Host reducer 가 `insertAfter`/`appendChild` 를 처리해야 한다.
    */
   editable?: boolean
+  /**
+   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드. default 'forward'.
+   */
+  insideEditable?: InsideEditableMode
+  /**
+   * 사용자 chord 미들웨어. default 와 충돌 시 userFn(event, originalFn) 으로 wrap.
+   */
+  on?: ClipboardOnMiddleware
 }
+
+/**
+ * treeGrid 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
+ * treeGrid 는 Backspace 가 'editable' 모드의 remove 와도 겹치므로,
+ * 빌트인 clipboard 'remove' 와 동일 의미로 통합된다.
+ */
+export const treeGridBuiltinChords: readonly BuiltinChordDescriptor[] = [
+  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
+  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
+  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
+  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused row',    scope: 'item' },
+  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused row',    scope: 'item' },
+  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused row', scope: 'item' },
+  // editable 모드 chord (opts.editable=true 일 때만 활성)
+  { chord: TREEGRID_EDIT_INSERT[0],        uiEvent: 'insertAfter', description: 'Insert sibling row — editable mode',     scope: 'item' },
+  { chord: TREEGRID_EDIT_ACTIVATE_TAB[0],  uiEvent: 'activate',    description: 'Activate row (Tab) — editable mode',     scope: 'item' },
+  // clipboard React events
+  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused row (React onCopy)',   scope: 'item' },
+  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused row (React onCut)',     scope: 'item' },
+  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused row (React onPaste)', scope: 'item' },
+]
 
 const findParent = (data: NormalizedData, id: string): string | null => {
   for (const [pid, kids] of Object.entries(data.relationships)) {
@@ -90,6 +121,7 @@ export function useTreeGridPattern(
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'horizontal',
     label, labelledBy, colCount, navigationMode = 'row', editable = false,
+    insideEditable = 'forward',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
   const cellsMode = navigationMode !== 'row'
@@ -195,6 +227,18 @@ export function useTreeGridPattern(
   }
   // ────────────────────────────────────────────────────────────────────────
 
+  const activeId = cellsMode
+    ? (cellFocus?.rowId ?? null)
+    : (focusId && focusId !== containerId ? focusId : null)
+
+  const clipboard = usePatternClipboard({
+    onEvent,
+    activeId,
+    insideEditable,
+    on: opts.on,
+    builtinChords: treeGridBuiltinChords,
+  })
+
   // cells-mode 에선 row 단위 onKeyDown delegate 를 끈다 (cell 이 직접 수신).
   const treegridProps: RootProps = {
     role: 'treegrid',
@@ -209,8 +253,14 @@ export function useTreeGridPattern(
       onKeyDown: (e: React.KeyboardEvent) => {
         if (editKeyDown(focusId ?? undefined, e)) return
         delegate.onKeyDown(e)
+        if (e.defaultPrevented) return
+        clipboard.handleKeyDown(e)
       },
     }),
+    ...(cellsMode ? { onKeyDown: clipboard.handleKeyDown } : {}),
+    onCopy: clipboard.onCopy,
+    onCut: clipboard.onCut,
+    onPaste: clipboard.onPaste,
   } as RootProps
 
   const headerRowProps: ItemProps = {

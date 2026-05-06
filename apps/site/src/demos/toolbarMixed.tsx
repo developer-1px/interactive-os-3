@@ -67,7 +67,7 @@ export default function Demo() {
             key={item.id}
             type="button"
             {...toolbarItemProps(item.id)}
-            className="rounded px-2 py-1 hover:bg-stone-100 aria-pressed:bg-stone-900 aria-pressed:text-white aria-checked:bg-stone-900 aria-checked:text-white"
+            className="rounded px-2 py-1 [&:not([aria-pressed=true])]:[&:not([aria-checked=true])]:hover:bg-stone-200 aria-pressed:bg-stone-900 aria-pressed:text-white aria-checked:bg-stone-900 aria-checked:text-white"
           >
             {item.label}
           </button>

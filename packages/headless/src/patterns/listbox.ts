@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, multiSelect, navigate, typeahead, matchAnyChord } from '../axes'
+import type { InsideEditableMode } from '../key/insideEditable'
+import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
 
 /** listbox edit-mode chord registry — declarative SSOT (Enter=insertAfter, Backspace=remove). */
 const LISTBOX_EDIT_INSERT = ['Enter'] as const
@@ -11,7 +13,7 @@ export const listboxEditKeys = (): readonly string[] =>
   [...LISTBOX_EDIT_INSERT, ...LISTBOX_EDIT_REMOVE]
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { BaseItem, ItemProps, RootProps } from './types'
+import type { BaseItem, BuiltinChordDescriptor, ItemProps, RootProps } from './types'
 
 /** Options for {@link useListboxPattern}. */
 export interface ListboxOptions {
@@ -53,8 +55,39 @@ export interface ListboxOptions {
    * 디폴트 false.
    */
   editable?: boolean
+  /**
+   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드.
+   * 'forward' (default) — emit 하되 native 동작 보존.
+   * 'native' — input 안이면 skip(인라인 편집 셀에서 native 양보).
+   * 'preventDefault' — emit + native 차단.
+   */
+  insideEditable?: InsideEditableMode
   idPrefix?: string
+  /**
+   * 사용자 chord 미들웨어. key+mouse 통합. default chord 와 충돌 시
+   * userFn(event, originalFn) 으로 wrap — originalFn 호출 여부로 default 실행 결정.
+   */
+  on?: ClipboardOnMiddleware
 }
+
+/**
+ * listbox 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
+ */
+export const listboxBuiltinChords: readonly BuiltinChordDescriptor[] = [
+  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
+  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
+  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
+  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused option', scope: 'item' },
+  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused option', scope: 'item' },
+  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused option', scope: 'item' },
+  // editable 모드 chord (opts.editable=true 일 때만 활성)
+  { chord: LISTBOX_EDIT_INSERT[0], uiEvent: 'insertAfter', description: 'Insert sibling option — editable mode', scope: 'item' },
+  { chord: LISTBOX_EDIT_REMOVE[0], uiEvent: 'remove',      description: 'Remove focused option — editable mode', scope: 'item' },
+  // clipboard React events
+  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused option (React onCopy)',   scope: 'item' },
+  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused option (React onCut)',     scope: 'item' },
+  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused option (React onPaste)', scope: 'item' },
+]
 
 // multiSelect must precede navigate — otherwise navigate matches Shift+Arrow first and the range branch never runs.
 /**
@@ -87,6 +120,7 @@ export function useListboxPattern(
     multiSelectable, autoFocus, containerId = ROOT, orientation = 'vertical',
     required, readOnly, invalid, disabled, label, labelledBy,
     groups: groupsOpt, rearrangeable, editable = false, idPrefix = 'lb',
+    insideEditable = 'forward',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -99,18 +133,25 @@ export function useListboxPattern(
     [data, onEvent, sff],
   )
 
-  const axis = listboxAxis(opts)
-  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, data, relay, {
-    autoFocus,
-    containerId,
-  })
-
   // groups 모드: ROOT 자식 = group, 각 group 자식 = option. 평면 ids 는 모든 option.
   const directChildren = getChildren(data, containerId)
   const groupIds = groupsOpt ? directChildren : []
   const ids = groupsOpt
     ? groupIds.flatMap((gid) => getChildren(data, gid))
     : directChildren
+
+  // grouped listbox 의 키보드 순회는 group 경계를 무시한 flat 순회 (APG `listbox-grouped` 표준).
+  // navigate axis 는 sibling 그래프(parent=group)를 따르므로 group 안에서만 wrap 한다 — 이를 피하려고
+  // 옵션을 ROOT 직속으로 재배치한 합성 데이터를 useRovingTabIndex 에 통과시킨다. 렌더링용 data 는 원본 유지.
+  const navData: NormalizedData = groupsOpt
+    ? { entities: data.entities, relationships: {}, meta: { ...data.meta, root: ids } }
+    : data
+
+  const axis = listboxAxis(opts)
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(axis, navData, relay, {
+    autoFocus,
+    containerId: groupsOpt ? ROOT : containerId,
+  })
 
   const items: BaseItem[] = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}
@@ -153,6 +194,22 @@ export function useListboxPattern(
       }
     : delegate.onKeyDown
 
+  const activeId = focusId && focusId !== containerId ? focusId : null
+
+  const clipboard = usePatternClipboard({
+    onEvent,
+    activeId,
+    insideEditable,
+    on: opts.on,
+    builtinChords: listboxBuiltinChords,
+  })
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    editKeyDown(e)
+    if (e.defaultPrevented) return
+    clipboard.handleKeyDown(e)
+  }
+
   const rootProps: RootProps = {
     role: 'listbox',
     'aria-multiselectable': multiSelectable || undefined,
@@ -165,7 +222,10 @@ export function useListboxPattern(
     'aria-labelledby': labelledBy,
     ...(rearrangeable ? { 'data-rearrangeable': '' } : {}),
     ...delegate,
-    onKeyDown: editKeyDown,
+    onKeyDown: handleKeyDown,
+    onCopy: clipboard.onCopy,
+    onCut: clipboard.onCut,
+    onPaste: clipboard.onPaste,
   } as RootProps
 
   const optionProps = (id: string): ItemProps => {

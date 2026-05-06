@@ -61,7 +61,7 @@ export default function Demo() {
                 <button
                   type="button"
                   onClick={() => onHeaderClick(c.key)}
-                  className="w-full px-3 py-1.5 text-left hover:bg-stone-100"
+                  className="w-full px-3 py-1.5 text-left hover:bg-stone-200"
                 >
                   {c.label}
                   <span aria-hidden className="text-stone-400">{indicator}</span>

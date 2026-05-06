@@ -53,6 +53,7 @@ const rotate = (cur: 'ascending' | 'descending' | 'none'): 'ascending' | 'descen
 
 export default function Demo() {
   const [sort, setSort] = useState<Record<string, 'ascending' | 'descending' | 'none'>>({})
+  const [focus, setFocus] = useState<string | null>(null)
   const sortedRows = (() => {
     const activeCol = COLS.find((c) => sort[c.id] && sort[c.id] !== 'none')
     if (!activeCol) return PEOPLE
@@ -60,10 +61,13 @@ export default function Demo() {
     return [...PEOPLE].sort((a, b) => a[activeCol.key].localeCompare(b[activeCol.key]) * dir)
   })()
   const data = buildData(sortedRows, sort)
+  if (focus) data.meta = { ...data.meta, focus }
   const onEvent = (e: UiEvent) => {
     if (e.type === 'activate' && COLS.some((c) => c.id === e.id)) {
       setSort((s) => ({ ...s, [e.id]: rotate(s[e.id] ?? 'none') }))
+      return
     }
+    if (e.type === 'navigate' && e.id) setFocus(e.id)
   }
   const { rootProps, rowProps, columnHeaderProps, cellProps, rows } = useGridPattern(data, onEvent, {
     label: 'People',
@@ -84,7 +88,7 @@ export default function Demo() {
             <span
               key={c.id}
               {...columnHeaderProps(c.id)}
-              className="cursor-pointer select-none px-3 py-2 hover:bg-stone-100"
+              className="cursor-pointer select-none px-3 py-2 hover:bg-stone-200"
             >
               {c.label}
               <span aria-hidden className="ml-1 text-stone-400">
@@ -94,7 +98,7 @@ export default function Demo() {
           )
         })}
       </div>
-      {rows.slice(COLS.length ? 1 : 0, undefined).filter((r) => r.id.startsWith('r')).map((row) => (
+      {rows.map((row) => (
         <div
           key={row.id}
           {...rowProps(row.id)}

@@ -84,7 +84,7 @@ function SlideIndex() {
             <div key={entry.axis}>
               <a
                 href={`#${slugForAxis(entry.axis)}`}
-                className="block rounded px-2 py-1 font-mono text-sm font-semibold text-stone-900 hover:bg-stone-100"
+                className="block rounded px-2 py-1 font-mono text-sm font-semibold text-stone-900 hover:bg-stone-200"
               >
                 {entry.axis}{' '}
                 <span className="text-[10px] text-stone-400">({entry.patterns.length})</span>

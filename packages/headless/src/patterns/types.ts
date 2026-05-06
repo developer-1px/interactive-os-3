@@ -22,21 +22,25 @@ export interface PatternProps {
 }
 
 /**
- * controlled value 를 가지는 패턴의 props base — 도메인 별 T 다름.
- * Radix·React Aria de facto: value + defaultValue + (single dispatch via onEvent).
+ * Control 패턴(switch · checkbox · radio · slider · spinbutton · textbox · combobox 입력)의
+ * wrapper props base. collection 패턴(`PatternProps`)과 형제 — `data` 를 들지 않고 단일 T value 만 다룸.
+ * Radix · React Aria de facto: value + defaultValue + single dispatch via onEvent.
  *
- *  T = string         — combobox · textbox · spinbutton · single-select · radiogroup · tab
- *  T = string[]       — multi-select listbox · multi-select tree · treegrid multi
- *  T = number         — slider · progressbar · meter
- *  T = boolean        — switch · checkbox · disclosure
- *  T = [number, number] — range slider
+ *  T = string  — combobox 입력 · textbox · spinbutton 표시값
+ *  T = number  — slider · progressbar · meter
+ *  T = boolean — switch · checkbox · disclosure
  *
  * value 주입   → controlled
  * value 미주입 → 패턴 내부 useState (defaultValue 시작값)
+ *
+ * 표준 어댑터: `useControlValue` (state/useControlValue).
  */
-export interface ValuedPatternProps<T> extends PatternProps {
+export interface ControlProps<T> {
   value?: T
   defaultValue?: T
+  onEvent: (e: UiEvent) => void
+  'aria-label'?: string
+  'aria-labelledby'?: string
 }
 
 /** 모든 recipe 의 item view 공통 필드. pattern 별로 추가 필드 확장. */
@@ -81,6 +85,21 @@ export interface CollectionOptions extends BasePatternOptions {
   autoFocus?: boolean
   /** ARIA orientation. */
   orientation?: 'horizontal' | 'vertical'
+}
+
+/**
+ * Builtin chord descriptor — pattern 이 자기 디폴트로 흡수하는 chord 한 entry.
+ * llms.txt / 문서 자동 추출 + 사용자/LLM 이 어떤 chord 가 reserved 인지 알게 함.
+ *  chord       : axes/chord parseChord 형식 (e.g. 'mod+z', 'Shift+Tab')
+ *  uiEvent     : emit 되는 UiEvent['type']
+ *  description : 한 줄 설명
+ *  scope       : 'root' (default) | 'item' (focused item 필요)
+ */
+export interface BuiltinChordDescriptor {
+  chord: string
+  uiEvent: string
+  description: string
+  scope?: 'root' | 'item'
 }
 
 /** rootProps — pattern 컨테이너에 spread. role/aria-* 필수, ref/onKey 포함. */

@@ -89,7 +89,7 @@ function DocsNav({ active }: { active: string }) {
                 to="/docs/$slug"
                 params={{ slug: d.slug }}
                 className={`block rounded px-2 py-1.5 ${
-                  isActive ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100'
+                  isActive ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-200'
                 }`}
               >
                 {d.title}
@@ -103,12 +103,12 @@ function DocsNav({ active }: { active: string }) {
           Reference
         </h3>
         <ul className="space-y-0.5">
-          <li><Link to="/patterns" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">Patterns</Link></li>
-          <li><Link to="/wrappers" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">Wrappers</Link></li>
-          <li><Link to="/axes" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">Axes</Link></li>
-          <li><Link to="/matrix" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">Matrix</Link></li>
-          <li><Link to="/data" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">Data</Link></li>
-          <li><Link to="/uievents" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-100">UiEvents</Link></li>
+          <li><Link to="/patterns" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">Patterns</Link></li>
+          <li><Link to="/wrappers" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">Wrappers</Link></li>
+          <li><Link to="/axes" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">Axes</Link></li>
+          <li><Link to="/matrix" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">Matrix</Link></li>
+          <li><Link to="/data" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">Data</Link></li>
+          <li><Link to="/uievents" className="block rounded px-2 py-1.5 text-stone-700 hover:bg-stone-200">UiEvents</Link></li>
         </ul>
       </div>
       <div className="mt-6 border-t border-stone-200 pt-4">
@@ -116,8 +116,8 @@ function DocsNav({ active }: { active: string }) {
           For LLMs
         </h3>
         <ul className="space-y-0.5">
-          <li><a href="/llms.txt" className="block rounded px-2 py-1.5 font-mono text-xs text-stone-700 hover:bg-stone-100">/llms.txt</a></li>
-          <li><a href="/llms-full.txt" className="block rounded px-2 py-1.5 font-mono text-xs text-stone-700 hover:bg-stone-100">/llms-full.txt</a></li>
+          <li><a href="/llms.txt" className="block rounded px-2 py-1.5 font-mono text-xs text-stone-700 hover:bg-stone-200">/llms.txt</a></li>
+          <li><a href="/llms-full.txt" className="block rounded px-2 py-1.5 font-mono text-xs text-stone-700 hover:bg-stone-200">/llms-full.txt</a></li>
         </ul>
       </div>
     </nav>
@@ -136,7 +136,7 @@ function PageToc({ headings }: { headings: Heading[] }) {
           <li key={h.id} className={h.level === 3 ? 'pl-3' : ''}>
             <a
               href={`#${h.id}`}
-              className="block rounded px-2 py-1 text-stone-600 hover:bg-stone-100 hover:text-stone-900"
+              className="block rounded px-2 py-1 text-stone-600 hover:bg-stone-200 hover:text-stone-900"
             >
               {h.text}
             </a>

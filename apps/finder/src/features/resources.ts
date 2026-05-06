@@ -4,13 +4,11 @@ import { finderNavigate } from './nav'
 import {
   loadText,
   getImageUrl,
-  smartItems,
-  isSmartPath,
   getTree,
   subscribeTree,
 } from './data'
 import { highlightCode, renderMarkdown } from '@p/fs'
-import type { FsNode, ViewMode, SmartGroupId } from '../entities/types'
+import type { FsNode, ViewMode } from '../entities/types'
 
 /** Finder의 모든 데이터는 이 모듈의 Resource 정의를 통해서만 노출된다.
  *  컴포넌트는 useResource(...) 단일 인터페이스로만 read/write.
@@ -45,8 +43,7 @@ export const pathResource = defineResource<string>({
   key: () => 'finder/path',
   initial: '/',
   serialize: (_k, v) => {
-    const splat = isSmartPath(v) ? v : v.replace(/^\//, '')
-    finderNavigate(splat)
+    finderNavigate(v.replace(/^\//, ''))
   },
   onEvent: (e, { data }) => {
     if (e.type === 'activate' || e.type === 'navigate') return e.id
@@ -67,11 +64,6 @@ export const textResource = defineResource<string | null, [string]>({
 export const imageResource = defineResource<string | null, [string]>({
   key: (path) => `finder/image:${path}`,
   load: (path) => getImageUrl(path) ?? null,
-})
-
-export const smartResource = defineResource<FsNode[], [SmartGroupId]>({
-  key: (id) => `finder/smart:${id}`,
-  load: (id) => smartItems(id),
 })
 
 export const codeHtmlResource = defineResource<string | null, [string, string]>({

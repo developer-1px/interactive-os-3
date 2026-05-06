@@ -32,7 +32,7 @@ export default function Demo() {
         <button
           key={item.id}
           {...toolbarItemProps(item.id)}
-          className="rounded px-2 py-1 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-stone-900"
+          className="rounded px-2 py-1 hover:bg-stone-200 focus-visible:outline-2 focus-visible:outline-stone-900"
         >
           {item.label}
         </button>

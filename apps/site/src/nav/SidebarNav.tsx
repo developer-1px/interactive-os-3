@@ -32,13 +32,13 @@ export function SidebarNav() {
         className="group flex flex-col gap-4 p-3 md:!block"
         open
       >
-        <summary className="cursor-pointer list-none rounded px-2 py-1 font-semibold text-stone-900 marker:hidden hover:bg-stone-100 md:hidden">
+        <summary className="cursor-pointer list-none rounded px-2 py-1 font-semibold text-stone-900 marker:hidden hover:bg-stone-200 md:hidden">
           ☰ @p/headless
         </summary>
         <Link
           to="/"
           onClick={closeOnMobile}
-          className="hidden rounded px-2 py-1 font-semibold text-stone-900 hover:bg-stone-100 md:block"
+          className="hidden rounded px-2 py-1 font-semibold text-stone-900 hover:bg-stone-200 md:block"
         >
           @p/headless
         </Link>
@@ -53,8 +53,7 @@ export function SidebarNav() {
               to={e.to as never}
               params={e.params as never}
               onClick={closeOnMobile}
-              activeProps={{ className: 'bg-stone-900 text-white' }}
-              className="block rounded px-2 py-1 text-stone-700 [&:not(.active)]:hover:bg-stone-100 [&.active]:bg-stone-900 [&.active]:text-white [&.active]:hover:bg-stone-800"
+              className="block rounded px-2 py-1 text-stone-700 [&:not([aria-current=page])]:hover:bg-stone-200 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
             >
               {e.label}
             </Link>

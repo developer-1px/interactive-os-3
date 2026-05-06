@@ -19,7 +19,6 @@ export const dialogKeys = (opts: { modal?: boolean } = {}): readonly string[] =>
 export interface DialogOptions {
   open?: boolean
   defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
   modal?: boolean
   returnFocusRef?: RefObject<HTMLElement | null>
   initialFocusRef?: RefObject<HTMLElement | null>
@@ -60,7 +59,6 @@ export function useDialogPattern(opts: DialogOptions = {}): {
   const {
     open: openProp,
     defaultOpen = false,
-    onOpenChange,
     modal = true,
     returnFocusRef,
     initialFocusRef,
@@ -74,7 +72,6 @@ export function useDialogPattern(opts: DialogOptions = {}): {
   const open = isControlled ? openProp : internalOpen
   const setOpen = (next: boolean) => {
     if (!isControlled) setInternalOpen(next)
-    onOpenChange?.(next)
   }
   const previousFocusRef = useRef<HTMLElement | null>(null)
 

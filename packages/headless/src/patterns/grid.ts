@@ -15,7 +15,9 @@ const GRID_EDIT_CHORDS = ['F2'] as const
 /** gridEditKeys — chord registry 도출. */
 export const gridEditKeys = (): readonly string[] => [...GRID_EDIT_CHORDS]
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { ItemProps, RootProps } from './types'
+import type { InsideEditableMode } from '../key/insideEditable'
+import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
+import type { BuiltinChordDescriptor, ItemProps, RootProps } from './types'
 
 /** Options for {@link useGridPattern}. */
 export interface GridOptions {
@@ -49,7 +51,34 @@ export interface GridOptions {
   /** aria-label — ARIA: grid requires accessible name. */
   label?: string
   labelledBy?: string
+  /**
+   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드.
+   * 'forward' (default) — emit 하되 native 동작 보존.
+   */
+  insideEditable?: InsideEditableMode
+  /**
+   * 사용자 chord 미들웨어. default 와 충돌 시 userFn(event, originalFn) 으로 wrap.
+   */
+  on?: ClipboardOnMiddleware
 }
+
+/**
+ * grid 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
+ */
+export const gridBuiltinChords: readonly BuiltinChordDescriptor[] = [
+  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
+  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
+  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
+  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused cell',   scope: 'item' },
+  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused cell',   scope: 'item' },
+  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused cell', scope: 'item' },
+  // grid-specific edit-mode (F2 enters cell edit, opts.editable=true 일 때 active)
+  { chord: GRID_EDIT_CHORDS[0], uiEvent: 'activate', description: 'Enter cell edit mode (F2)', scope: 'item' },
+  // clipboard React events
+  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused cell (React onCopy)',   scope: 'item' },
+  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused cell (React onCut)',     scope: 'item' },
+  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused cell (React onPaste)', scope: 'item' },
+]
 
 /** Cell view fed to consumer for rendering. */
 export interface GridCell {
@@ -95,11 +124,13 @@ export function useGridPattern(
   const {
     autoFocus, containerId = ROOT, readOnly, rowCount, colCount,
     selectionMode = 'cell', sortable, editable,
-    label, labelledBy,
+    label, labelledBy, insideEditable = 'forward',
   } = opts
   // 'row'/'rect' implies multi-selectable.
   const multiSelectable = opts.multiSelectable ?? selectionMode !== 'cell'
-  const rowIds = getChildren(data, containerId)
+  // ROOT 자식 중 cell 을 가진 entity 만 row 로 인정. column header 처럼 자식 없는
+  // top-level entity (gridSortable 데모 등) 는 row 로 보지 않아야 gridCoord 가 깨지지 않는다.
+  const rowIds = getChildren(data, containerId).filter((id) => getChildren(data, id).length > 0)
   // grid 의 focus 단위는 cell. useRovingTabIndex 의 default 계산을 cell 차원에서 하도록
   // 첫 row id 를 focus-container 로 전달 (containerId 자체는 ROOT/grid id 그대로 의미).
   const focusContainerId = rowIds[0] ?? containerId
@@ -135,6 +166,22 @@ export function useGridPattern(
     [rows],
   )
 
+  const activeId = focusId && focusId !== containerId ? focusId : null
+
+  const clipboard = usePatternClipboard({
+    onEvent,
+    activeId,
+    insideEditable,
+    on: opts.on,
+    builtinChords: gridBuiltinChords,
+  })
+
+  const rootHandleKeyDown = (e: React.KeyboardEvent) => {
+    delegate.onKeyDown(e)
+    if (e.defaultPrevented) return
+    clipboard.handleKeyDown(e)
+  }
+
   const rootProps: RootProps = {
     role: 'grid',
     'aria-readonly': readOnly || undefined,
@@ -144,6 +191,10 @@ export function useGridPattern(
     'aria-label': label,
     'aria-labelledby': labelledBy,
     ...delegate,
+    onKeyDown: rootHandleKeyDown,
+    onCopy: clipboard.onCopy,
+    onCut: clipboard.onCut,
+    onPaste: clipboard.onPaste,
   } as unknown as RootProps
 
   const rowProps = (id: string): ItemProps => {

@@ -1,48 +1,41 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { useResource } from '@p/headless/store'
-import { useTreePattern } from '@p/headless/patterns'
-import { getFocus, reduce, type Meta, type UiEvent } from '@p/headless'
-import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
+import { useMemo, type CSSProperties } from 'react'
+import { useTreePattern, treeBuiltinChords } from '@p/headless/patterns'
+import { useZodCrudResource } from '@p/headless/adapters/zod-crud'
 import { outlineResource } from '../features/outlineResource'
 import { flattenOutline } from '../features/flattenOutline'
 import { crud } from '../features/outlineCrud'
 
+const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform)
+
+/** chord-string → display 형태. `mod` → ⌘/Ctrl, modifier 토큰 기호화. */
+const fmtChord = (chord: string): string =>
+  chord
+    .split('+')
+    .map((part) => {
+      const lower = part.toLowerCase()
+      if (lower === 'mod') return isMac ? '⌘' : 'Ctrl'
+      if (lower === 'shift') return '⇧'
+      if (lower === 'alt') return isMac ? '⌥' : 'Alt'
+      if (lower === 'ctrl') return 'Ctrl'
+      if (lower === 'meta') return '⌘'
+      return part.charAt(0).toUpperCase() + part.slice(1)
+    })
+    .join('+')
+
 export function Outliner() {
-  const [doc, dispatch] = useResource(outlineResource)
-  const snapshot = doc ?? crud.snapshot()
-  const [meta, setMeta] = useState<Meta>({})
-
-  useEffect(() =>
-    crud.subscribe((_changes, focus) => {
-      if (focus) setMeta((prev) => ({ ...prev, focus }))
-    }), [])
-
-  const data = useMemo(() => {
-    const d = flattenOutline(snapshot)
-    return { ...d, meta: { ...d.meta, ...meta } }
-  }, [snapshot, meta])
-
-  const onEvent = (e: UiEvent) => {
-    dispatch(e)
-    setMeta((prev) => reduce({ ...data, meta: prev }, e).meta ?? prev)
-  }
-
+  const [data, onEvent] = useZodCrudResource(outlineResource, crud, flattenOutline, { kind: 'tree' })
   const tree = useTreePattern(data, onEvent, { editable: true, label: 'outline' })
-  const activeId = getFocus(data) ?? tree.items[0]?.id ?? null
 
-  useHistoryShortcuts(onEvent)
-  useClipboardShortcuts(onEvent, () => activeId)
+  const json = useMemo(() => JSON.stringify(crud.toJson(), null, 2), [data])
 
-  const json = useMemo(() => JSON.stringify(crud.toJson(), null, 2), [snapshot])
+  // chord-string 정본에서 SSOT 렌더. clipboard:* 의사 chord 는 표시 제외.
+  const visibleChords = treeBuiltinChords.filter((c) => !c.chord.startsWith('clipboard:'))
 
   return (
     <main className="grid h-screen grid-cols-2 divide-x divide-neutral-200">
       <section className="overflow-auto p-6">
-        <header className="mb-4 flex items-baseline gap-3">
+        <header className="mb-4">
           <h1 className="text-sm font-semibold text-neutral-500">Outliner</h1>
-          <p className="text-xs text-neutral-400">
-            Enter · Tab · Shift+Tab · Backspace · Cmd+C/X/V · Cmd+Z/Shift+Z
-          </p>
         </header>
         <ul {...tree.rootProps} className="font-mono text-sm">
           {tree.items.map((item) => (
@@ -60,11 +53,35 @@ export function Outliner() {
           ))}
         </ul>
       </section>
-      <aside className="overflow-auto bg-neutral-50 p-6">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-          Live JSON (zod-crud snapshot)
-        </h2>
-        <pre className="whitespace-pre font-mono text-xs leading-relaxed text-neutral-800">{json}</pre>
+      <aside className="flex flex-col overflow-hidden bg-neutral-50">
+        <section className="border-b border-neutral-200 p-6">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            Keymap (SSOT — treeBuiltinChords)
+          </h2>
+          <table className="w-full text-xs">
+            <tbody>
+              {visibleChords.map((c) => (
+                <tr key={c.chord + c.uiEvent} className="border-b border-neutral-100 last:border-0">
+                  <td className="py-1 pr-3 align-top">
+                    <kbd className="rounded border border-neutral-300 bg-white px-1.5 py-0.5 font-mono text-[11px] text-neutral-700 shadow-[0_1px_0_0_#d6d3d1]">
+                      {fmtChord(c.chord)}
+                    </kbd>
+                  </td>
+                  <td className="py-1 pr-3 align-top font-mono text-[11px] text-blue-600">
+                    {c.uiEvent}
+                  </td>
+                  <td className="py-1 align-top text-neutral-600">{c.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+        <section className="flex-1 overflow-auto p-6">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            Live JSON (zod-crud snapshot)
+          </h2>
+          <pre className="whitespace-pre font-mono text-xs leading-relaxed text-neutral-800">{json}</pre>
+        </section>
       </aside>
     </main>
   )

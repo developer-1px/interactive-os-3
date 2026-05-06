@@ -1,3 +1,4 @@
+import { axisKeys, toggle } from '@p/headless'
 import { useLocalValue } from '@p/headless/local'
 import { checkboxPattern, type CheckboxState } from '@p/headless/patterns'
 
@@ -6,7 +7,7 @@ export const meta = {
   apg: 'checkbox',
   kind: 'collection' as const,
   blurb: 'Two-state checkbox built on a button — toggle with Space.',
-  keys: () => ['Space'],
+  keys: () => axisKeys(toggle),
 }
 
 export default function Demo() {

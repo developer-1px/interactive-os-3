@@ -6,6 +6,8 @@ import {
 } from '../types'
 import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, matchAnyChord } from '../axes'
 import { parseChord } from '../axes/chord'
+import type { InsideEditableMode } from '../key/insideEditable'
+import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
 
 /** tree edit-mode chord registry — declarative SSOT (Enter, Backspace, Tab, Shift+Tab). */
 const TREE_EDIT_INSERT = ['Enter'] as const
@@ -20,7 +22,7 @@ export const treeEditKeys = (): readonly string[] =>
   ].map((c) => parseChord(c).key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { ItemProps, RootProps, TreeItem } from './types'
+import type { BuiltinChordDescriptor, ItemProps, RootProps, TreeItem } from './types'
 
 /** Options for {@link useTreePattern}. */
 export interface TreeOptions {
@@ -46,7 +48,43 @@ export interface TreeOptions {
    * 디폴트 false (비편집). UiEvent 8종 (create/remove + paste 시퀀스) 으로 emit.
    */
   editable?: boolean
+  /**
+   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드.
+   * 'forward' (default) — emit 하되 native 동작 보존(검색창 paste 등).
+   * 'native' — input 안이면 skip(인라인 편집 셀에서 native 양보).
+   * 'preventDefault' — emit + native 차단(커스텀 에디터).
+   */
+  insideEditable?: InsideEditableMode
+  /**
+   * 사용자 chord 미들웨어. key+mouse 통합. default chord 와 충돌 시
+   * userFn(event, originalFn) 으로 wrap — originalFn 호출 여부로 default 실행 결정.
+   * default win — preventDefault 는 항상 발생.
+   */
+  on?: ClipboardOnMiddleware
 }
+
+/**
+ * tree 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
+ * clipboard event handler(onCopy/onCut/onPaste) 는 chord 가 아닌 React clipboard event 라
+ * 별도 entry 로 표현 — chord 필드에 'clipboard:copy' 등 prefix 사용.
+ */
+export const treeBuiltinChords: readonly BuiltinChordDescriptor[] = [
+  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
+  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
+  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
+  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
+  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
+  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused item', scope: 'item' },
+  // editable 모드 chord (opts.editable=true 일 때만 활성)
+  { chord: TREE_EDIT_INSERT[0],  uiEvent: 'insertAfter|appendChild', description: 'Insert sibling (or child if root) — editable mode', scope: 'item' },
+  { chord: TREE_EDIT_REMOVE[0],  uiEvent: 'remove',                  description: 'Remove focused item — editable mode',              scope: 'item' },
+  { chord: TREE_EDIT_DEMOTE[0],  uiEvent: 'cut+paste',               description: 'Demote (move under previous sibling)',             scope: 'item' },
+  { chord: TREE_EDIT_PROMOTE[0], uiEvent: 'cut+paste',               description: 'Promote (move out of parent)',                     scope: 'item' },
+  // clipboard React events — not chord-based but reserved on rootProps
+  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused item (React onCopy)',   scope: 'item' },
+  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused item (React onCut)',     scope: 'item' },
+  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused item (React onPaste)', scope: 'item' },
+]
 
 const findParent = (data: NormalizedData, id: string): string | null => {
   for (const [pid, kids] of Object.entries(data.relationships)) {
@@ -79,6 +117,7 @@ export function useTreePattern(
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'vertical',
     label, labelledBy, variant = 'select', editable = false,
+    insideEditable = 'forward',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
 
@@ -167,6 +206,22 @@ export function useTreePattern(
       }
     : delegate.onKeyDown
 
+  const activeId = focusId && focusId !== containerId ? focusId : null
+
+  const clipboard = usePatternClipboard({
+    onEvent,
+    activeId,
+    insideEditable,
+    on: opts.on,
+    builtinChords: treeBuiltinChords,
+  })
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    editKeyDown(e)
+    if (e.defaultPrevented) return
+    clipboard.handleKeyDown(e)
+  }
+
   const rootProps: RootProps = {
     role: 'tree',
     'aria-multiselectable': multiSelectable || undefined,
@@ -174,7 +229,10 @@ export function useTreePattern(
     'aria-label': label,
     'aria-labelledby': labelledBy,
     ...delegate,
-    onKeyDown: editKeyDown,
+    onKeyDown: handleKeyDown,
+    onCopy: clipboard.onCopy,
+    onCut: clipboard.onCut,
+    onPaste: clipboard.onPaste,
   } as RootProps
 
   const itemProps = (id: string): ItemProps => {

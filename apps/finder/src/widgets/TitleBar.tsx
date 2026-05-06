@@ -1,7 +1,6 @@
 import { useMemo, type ComponentPropsWithoutRef } from 'react'
 import { fromList, type UiEvent } from '@p/headless'
 import { useToolbarPattern } from '@p/headless/patterns'
-import { smartGroupOf } from '../features/data'
 import type { ViewMode } from '../entities/types'
 
 const VIEW_ITEMS = [
@@ -11,10 +10,7 @@ const VIEW_ITEMS = [
   { id: 'gallery', label: '갤러리' },
 ]
 
-const titleOf = (path: string) => {
-  const smart = smartGroupOf(path)
-  return smart ? `최근 — ${smart.label}` : (path.split('/').filter(Boolean).pop() ?? 'root')
-}
+const titleOf = (path: string) => path.split('/').filter(Boolean).pop() ?? 'root'
 
 export function TitleBar({
   path, onBack, canBack, view, onViewChange,

@@ -1,55 +1,32 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useResource } from '@p/headless/store'
 import { useListboxPattern } from '@p/headless/patterns'
-import { getFocus, KEYS, matchKey, reduce, type Meta, type UiEvent } from '@p/headless'
-import { useHistoryShortcuts, useClipboardShortcuts } from '@p/headless/key'
+import { KEYS, matchKey, type UiEvent } from '@p/headless'
+import { useZodCrudResource } from '@p/headless/adapters/zod-crud'
 import { boardResource } from '../features/boardResource'
 import { flattenBoard } from '../features/flattenBoard'
 import { crud } from '../features/boardCrud'
 
 export function Kanban() {
-  const [doc, dispatch] = useResource(boardResource)
-  const snapshot = doc ?? crud.snapshot()
-  const [meta, setMeta] = useState<Meta>({})
+  const [data, onEventRaw] = useZodCrudResource(boardResource, crud, flattenBoard, { kind: 'list' })
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  useEffect(() =>
-    crud.subscribe((_changes, focus) => {
-      if (focus) setMeta((prev) => ({ ...prev, focus }))
-    }), [])
-
-  const { data, columnIds, rootId, cardParentArray } = useMemo(() => flattenBoard(snapshot), [snapshot])
-  const merged = useMemo(() => ({ ...data, meta: { ...data.meta, ...meta } }), [data, meta])
-
-  const onEvent = (e: UiEvent) => {
-    dispatch(e)
-    setMeta((prev) => reduce({ ...merged, meta: prev }, e).meta ?? prev)
-  }
+  const { columnIds, rootId, cardParentArray } = useMemo(() => flattenBoard(crud.snapshot()), [data])
 
   /**
    * Kanban paste 의미 = sibling insert. card target → cards-array + index 매핑.
    * (P2: 도메인-특화, ARIA 어휘 아님이라 widget 잔존이 정당.)
    */
-  const onClipboard = (e: UiEvent) => {
+  const onEvent = (e: UiEvent) => {
     if (e.type === 'paste' && e.targetId && cardParentArray[e.targetId]) {
       const arrId = cardParentArray[e.targetId]
       const idx = (data.relationships[Object.keys(data.relationships).find(
         (k) => data.relationships[k]?.includes(e.targetId!),
       ) ?? ''] ?? []).indexOf(e.targetId)
-      onEvent({ type: 'paste', targetId: arrId, mode: 'child', index: idx + 1 })
+      onEventRaw({ type: 'paste', targetId: arrId, mode: 'child', index: idx + 1 })
       return
     }
-    onEvent(e)
+    onEventRaw(e)
   }
-
-  const activeId = meta.selected?.[0] ?? getFocus(merged) ?? null
-
-  // 편집 중에는 history/clipboard shortcut 가 input 입력을 가로채면 안 됨.
-  // useShortcut 이 isEditable 체크로 single-key Backspace 등 자동 회피하지만
-  // mod+key 는 무조건 캡처 — 그래서 editingId 가 있으면 dispatch 차단.
-  const guard = (e: UiEvent) => { if (!editingId) onEvent(e) }
-  useHistoryShortcuts(guard)
-  useClipboardShortcuts((e) => { if (!editingId) onClipboard(e) }, () => activeId)
 
   /** 좌/우 arrow — 인접 컬럼 같은 index card 로 focus 이동. */
   const moveAcrossColumn = (cardId: string, dir: -1 | 1) => {
@@ -63,8 +40,9 @@ export function Kanban() {
     if (targetCard) {
       const el = document.querySelector(`[data-id="${targetCard}"]`) as HTMLElement | null
       el?.focus()
-      // 컬럼 간 이동은 listbox sff 가 안 닿음 — meta 직접 동기화로 activeId stale 방지.
-      setMeta((prev) => ({ ...prev, focus: targetCard, selected: [targetCard] }))
+      // 컬럼 간 이동은 listbox sff 가 안 닿음 — focus/select event 로 meta 동기화.
+      onEvent({ type: 'navigate', id: targetCard })
+      onEvent({ type: 'select', id: targetCard })
     }
   }
 
@@ -77,7 +55,7 @@ export function Kanban() {
         <Column
           key={colId}
           id={colId}
-          data={merged}
+          data={data}
           onEvent={onEvent}
           editingId={editingId}
           onStartEdit={(id) => setEditingId(id)}
@@ -101,7 +79,7 @@ export function Kanban() {
       >
         + Column
       </button>
-      <AutoEditOnInsert focus={meta.focus} onEnter={(id) => setEditingId(id)} editingId={editingId} data={merged} />
+      <AutoEditOnInsert focus={data.meta?.focus} onEnter={(id) => setEditingId(id)} editingId={editingId} data={data} />
     </main>
   )
 }
@@ -143,6 +121,7 @@ function Column({
   const lb = useListboxPattern(data, onEvent, {
     containerId: id,
     label: data.entities[id]?.label,
+    insideEditable: 'native',
   })
   const title = data.entities[id]?.label ?? ''
 

@@ -36,7 +36,7 @@ export function CatalogSidebar({
           <a
             href="#intro"
             onClick={() => setOpen(false)}
-            className="mb-3 block rounded px-2 py-1 text-xs font-medium text-stone-600 hover:bg-stone-100"
+            className="mb-3 block rounded px-2 py-1 text-xs font-medium text-stone-600 hover:bg-stone-200"
           >
             ← Intro
           </a>
@@ -56,7 +56,7 @@ export function CatalogSidebar({
                           href={`#${e.slug}`}
                           onClick={() => setOpen(false)}
                           className={`flex items-center justify-between rounded px-2 py-1 text-sm ${
-                            isActive ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100'
+                            isActive ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-200'
                           }`}
                         >
                           <span>{e.title}</span>

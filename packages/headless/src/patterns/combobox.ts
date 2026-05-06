@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useId, useEffect } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getFocus, isOpen,
   type NormalizedData, type UiEvent,
@@ -10,6 +10,7 @@ import {
 import { bindAxis } from '../state/bind'
 import { useControlValue } from '../state/useControlValue'
 import { useActiveDescendant } from '../roving/useActiveDescendant'
+import { useDialogPattern, type DialogOptions } from './dialog'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
 /** combobox chord registry — declarative SSOT. */
@@ -102,16 +103,55 @@ const defaultFilter = (q: string, label: string): boolean =>
  *
  * INVARIANT B11: input 에 focus 유지, popup option 활성은 aria-activedescendant.
  */
+/** dialog-popup 변종 반환 shape. APG combobox-datepicker recipe. */
+export interface ComboboxDialogReturn {
+  /** input/textbox element 에 spread. role="combobox" + aria-* 자동. */
+  inputProps: ItemProps
+  /** popover container (dialog) 에 spread. useDialogPattern 의 rootProps. */
+  popoverProps: RootProps
+  /** open icon button 에 spread (선택사항). */
+  triggerProps: ItemProps
+  open: boolean
+  setOpen: (open: boolean) => void
+}
+
+/** dialog-popup variant (data 불필요). single-arg signature. */
+export function useComboboxPattern(
+  opts: Omit<ComboboxOptions, 'haspopup'> & { haspopup: 'dialog' } & Pick<DialogOptions, 'returnFocusRef' | 'initialFocusRef' | 'modal'>,
+): ComboboxDialogReturn
+/** listbox/tree/grid-popup variant (기존). */
 export function useComboboxPattern(
   data: NormalizedData,
   onEvent?: (e: UiEvent) => void,
-  opts: ComboboxOptions = {},
+  opts?: ComboboxOptions,
 ): {
   comboboxProps: ItemProps
   listboxProps: RootProps
   optionProps: (id: string) => ItemProps
   items: BaseItem[]
-  /** popup 열림 상태 — 호스트가 렌더 분기에 사용. data 에서 다시 derive 금지. */
+  expanded: boolean
+}
+export function useComboboxPattern(
+  arg0: NormalizedData | (Omit<ComboboxOptions, 'haspopup'> & { haspopup: 'dialog' } & Pick<DialogOptions, 'returnFocusRef' | 'initialFocusRef' | 'modal'>),
+  onEvent?: (e: UiEvent) => void,
+  optsArg: ComboboxOptions = {},
+): unknown {
+  // dialog-popup 분기 — single-arg form. data 불필요.
+  if (!('entities' in (arg0 as object))) {
+    return useComboboxDialogVariant(arg0 as Omit<ComboboxOptions, 'haspopup'> & { haspopup: 'dialog' } & Pick<DialogOptions, 'returnFocusRef' | 'initialFocusRef' | 'modal'>)
+  }
+  return useComboboxListboxVariant(arg0 as NormalizedData, onEvent, optsArg)
+}
+
+function useComboboxListboxVariant(
+  data: NormalizedData,
+  onEvent: ((e: UiEvent) => void) | undefined,
+  opts: ComboboxOptions,
+): {
+  comboboxProps: ItemProps
+  listboxProps: RootProps
+  optionProps: (id: string) => ItemProps
+  items: BaseItem[]
   expanded: boolean
 } {
   const {
@@ -180,6 +220,12 @@ export function useComboboxPattern(
         const lbl = data.entities[e.id]?.label
         if (typeof lbl === 'string') setValue(lbl)
       }
+      return
+    }
+    // escape axis emits { type:'open', id:activeId, open:false } — normalize to ROOT
+    // since combobox open-state is tracked at the container level.
+    if (e.type === 'open' && !e.open && e.id !== ROOT) {
+      onEvent?.({ type: 'open', id: ROOT, open: false })
       return
     }
     onEvent?.(e)
@@ -321,4 +367,89 @@ export function useComboboxPattern(
   }
 
   return { comboboxProps, listboxProps, optionProps, items, expanded }
+}
+
+/**
+ * combobox dialog-popup variant — APG `combobox-datepicker` recipe.
+ * https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-datepicker/
+ *
+ * data 없음 — popup 내용은 호스트가 임의 dialog 콘텐츠로 채움 (calendar grid 등).
+ * 자유 텍스트 입력 충돌 방지: openOnType / openOnFocus default false.
+ *
+ * 키 흡수: ArrowDown / Alt+ArrowDown → open. Escape / outside click → close (useDialogPattern).
+ * focus trap / returnFocus / Escape 모두 useDialogPattern 합성.
+ */
+function useComboboxDialogVariant(
+  opts: Omit<ComboboxOptions, 'haspopup'> & { haspopup: 'dialog' } & Pick<DialogOptions, 'returnFocusRef' | 'initialFocusRef' | 'modal'>,
+): ComboboxDialogReturn {
+  const {
+    label, labelledBy, required, readOnly, invalid, disabled,
+    returnFocusRef, initialFocusRef, modal = false,
+  } = opts
+  const dialogId = useId()
+  const inputRef = useRef<HTMLElement | null>(null)
+  const dialog = useDialogPattern({
+    modal,
+    returnFocusRef: returnFocusRef ?? (inputRef as React.RefObject<HTMLElement | null>),
+    initialFocusRef,
+    label: label ?? 'Combobox popup',
+    labelledBy,
+  })
+  const { open, setOpen, rootProps: dialogRootProps, rootRef: dialogRootRef } = dialog
+
+  // outside click — input + dialog 외부 mousedown 시 close.
+  useEffect(() => {
+    if (!open) return
+    const onDocDown = (e: MouseEvent) => {
+      const t = e.target as Node | null
+      if (!t) return
+      if (dialogRootRef.current?.contains(t)) return
+      if (inputRef.current?.contains(t)) return
+      setOpen(false)
+    }
+    document.addEventListener('mousedown', onDocDown)
+    return () => document.removeEventListener('mousedown', onDocDown)
+  }, [open, dialogRootRef, setOpen])
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const ev = e as unknown as KeyboardEvent
+    // Alt+ArrowDown / ArrowDown → open. APG combobox-datepicker.
+    if (matchAnyChord(ev, ['ArrowDown', 'Alt+ArrowDown'])) {
+      if (!open) {
+        e.preventDefault()
+        setOpen(true)
+      }
+      return
+    }
+    // Escape close — useDialogPattern 의 global Escape 가 처리.
+  }
+
+  const inputProps: ItemProps = {
+    role: 'combobox',
+    ref: inputRef as React.Ref<HTMLElement>,
+    'aria-haspopup': 'dialog',
+    'aria-expanded': open,
+    'aria-controls': dialogId,
+    'aria-required': required || undefined,
+    'aria-readonly': readOnly || undefined,
+    'aria-invalid': invalid || undefined,
+    'aria-disabled': disabled || undefined,
+    'aria-label': label,
+    'aria-labelledby': labelledBy,
+    onKeyDown,
+  } as unknown as ItemProps
+
+  const popoverProps: RootProps = {
+    ...dialogRootProps,
+    id: dialogId,
+  } as unknown as RootProps
+
+  const triggerProps: ItemProps = {
+    type: 'button',
+    tabIndex: -1,
+    'aria-label': label ? `Open ${label}` : 'Open',
+    onClick: () => setOpen(!open),
+  } as unknown as ItemProps
+
+  return { inputProps, popoverProps, triggerProps, open, setOpen }
 }

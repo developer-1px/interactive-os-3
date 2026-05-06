@@ -11,7 +11,7 @@ export function PatternScreen({
   index: number
   total: number
 }) {
-  const { Component, title, apg, kind, blurb, source, filename, slug } = entry
+  const { Component, title, apg, kind, blurb, slug, tabs } = entry
   return (
     <CatalogRow
       slug={slug}
@@ -27,8 +27,8 @@ export function PatternScreen({
           <Component />
         </PreviewCenter>
       }
-      source={source}
-      filename={`demos/${filename}`}
+      tabs={tabs}
+      filenamePrefix="demos/"
     />
   )
 }

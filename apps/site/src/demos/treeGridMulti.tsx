@@ -82,7 +82,7 @@ export default function Demo() {
           <div
             key={item.id}
             {...rowProps(item.id)}
-            className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-100 last:border-b-0 hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stone-900 aria-selected:bg-stone-900 aria-selected:text-white"
+            className="grid grid-cols-[minmax(0,1.5fr)_88px_132px] items-center border-b border-stone-100 last:border-b-0 [&:not([aria-selected=true])]:hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stone-900 aria-selected:bg-stone-900 aria-selected:text-white"
           >
             <span
               {...rowheaderProps(item.id)}

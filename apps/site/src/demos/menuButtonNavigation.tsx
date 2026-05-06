@@ -44,7 +44,7 @@ export default function Demo() {
                 <a
                   href={ent.href as string}
                   {...itemProps(item.id)}
-                  className="block cursor-pointer rounded px-2 py-1 hover:bg-stone-100 focus:bg-stone-900 focus:text-white focus:outline-none"
+                  className="block cursor-pointer rounded px-2 py-1 hover:bg-stone-200 focus:bg-stone-900 focus:text-white focus:outline-none"
                 >
                   {item.label}
                 </a>

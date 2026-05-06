@@ -29,7 +29,7 @@ export default function Demo() {
           <li key={item.id}>
             <a
               {...linkProps(item.id)}
-              className="block rounded px-3 py-1 hover:bg-stone-100 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
+              className="block rounded px-3 py-1 [&:not([aria-current=page])]:hover:bg-stone-200 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
             >
               {item.label}
             </a>

@@ -48,7 +48,7 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
       type="button"
       onClick={onClick}
       className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-        active ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100'
+        active ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-200'
       }`}
     >
       {children}

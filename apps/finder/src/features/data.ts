@@ -42,16 +42,6 @@ export const smartGroups: SmartGroupItem[] = [
   { id: 'thisYear',  label: '올해',     path: thisYearFolder(),  icon: 'calendar-range' },
 ]
 
-/** 더 이상 smart: 가상 경로를 쓰지 않음 — 모든 path 는 실제 폴더. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function isSmartPath(_path: string): boolean { return false }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function smartGroupOf(_path: string): SmartGroupItem | undefined { return undefined }
-
-/** smart 그룹은 실제 폴더 경로 alias. 더 이상 가상 파일 수집을 하지 않는다. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function smartItems(_group: SmartGroupItem['id']): FsNode[] { return [] }
-
 /** Tag 가상 폴더 sidebar 항목 — frontmatter.tags 기반.
  *  smartGroups가 캘린더 alias라면 tagGroups는 tag 인덱스 alias. */
 export function tagGroups(): TagGroupItem[] {
@@ -82,10 +72,7 @@ export function tagItems(tag: string): FsNode[] {
 void extToIcon
 
 export const sidebar: SidebarItem[] = [
-  { id: 'root',        label: tree.name,    path: '/',                  icon: 'home' },
-  { id: 'src',         label: 'src',        path: '/src',               icon: 'dir' },
-  { id: 'packages',    label: 'packages',   path: '/packages',          icon: 'dir' },
-  { id: 'ds',          label: 'ds',         path: '/packages/ds/src',   icon: 'palette' },
-  { id: 'finder',      label: 'finder',     path: '/apps/finder/src',   icon: 'dirOpen' },
-  { id: 'screenshots', label: 'screenshots', path: '/docs/screenshots', icon: 'fileImage' },
+  { id: 'root',     label: tree.name,           path: '/',                          icon: 'home' },
+  { id: 'headless', label: '@p/headless',       path: '/packages/headless/src',     icon: 'dir' },
+  { id: 'docs',     label: 'docs',              path: '/docs',                      icon: 'dir' },
 ]

@@ -681,6 +681,34 @@ focusable 자식이 native Tab 흐름. delegate.onKeyDown 의 `e.target.closest(
 
 Ctrl+Home/End (feed 바깥 first/last focusable) 은 host 책임.
 
+**Collection middleware 옵션** (tree/listbox/grid/treeGrid/feed 공통):
+
+```ts
+on?: Record<string, (event: KeyboardEvent | MouseEvent, originalFn: () => void) => void>
+insideEditable?: 'forward' | 'native' | 'preventDefault'  // default 'forward'
+```
+
+- `on` 은 chord → middleware 매핑. `originalFn()` 호출 여부로 default behavior 통과/차단 결정.
+  chord 문법은 `parseChordExtended` 와 동일 — keyboard(`mod+b`), mouse(`click`/`mod+click`/`contextmenu`),
+  scope prefix(`item:click`/`root:keydown`) 모두 사용 가능.
+- `insideEditable` — collection 내부 contenteditable/input 안에서 발생한 키/clipboard event 처리:
+  - `'forward'` (default): 패턴이 그대로 흡수 (편집 어휘 emit)
+  - `'native'`: 패턴이 양보, 브라우저 native 동작 보존 (input 편집 우선)
+  - `'preventDefault'`: 양보 + preventDefault — 흘러들어가는 것도 막음
+- Shift+Cmd+V 는 모든 collection 패턴에서 default 로 `paste {mode:'child'}` emit (자식으로 붙여넣기).
+
+```tsx
+useTreePattern(data, onEvent, {
+  editable: true,
+  insideEditable: 'native',           // input 안에서 native 양보
+  on: {
+    'mod+b': (_e, _orig) => myBold(),                 // default 차단, custom 만 실행
+    'mod+z': (_e, orig) => { orig(); telemetry() },   // default + 추가 동작
+    'item:contextmenu': (e) => myMenu(e),             // item scope mouse chord
+  },
+})
+```
+
 ## useGridPattern
 
 ```ts
@@ -704,6 +732,13 @@ useListboxPattern (data: NormalizedData, onEvent?: (e: UiEvent) => void, opts: L
 
 listbox — APG `/listbox/` recipe.
 https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+
+`rootProps` 가 W3C Clipboard event(`onCopy`/`onCut`/`onPaste`) 와
+Cmd+Z / Cmd+Shift+Z(또는 Cmd+Y) / Backspace / Delete `onKeyDown` 매핑을 자체 부착한다.
+소비자는 별도 hook 없이 편집 어휘(copy/cut/paste/undo/redo/remove)를 onEvent 로 받는다.
+
+옵션 `insideEditable: 'forward' | 'native' | 'preventDefault'` (default `'forward'`) —
+listbox 내부 contenteditable/input 안에서 발생한 키/clipboard event 처리 정책.
 
 ## useMenubarPattern
 
@@ -835,6 +870,13 @@ useTreePattern (data: NormalizedData, onEvent?: (e: UiEvent) => void, opts: Tree
 
 tree — APG `/treeview/` recipe.
 https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+
+`rootProps` 가 W3C Clipboard event(`onCopy`/`onCut`/`onPaste`) 와
+Cmd+Z / Cmd+Shift+Z(또는 Cmd+Y) / Backspace / Delete `onKeyDown` 매핑을 자체 부착한다.
+소비자는 별도 hook 없이 편집 어휘(copy/cut/paste/undo/redo/remove)를 onEvent 로 받는다.
+
+옵션 `insideEditable: 'forward' | 'native' | 'preventDefault'` (default `'forward'`) —
+tree 내부 contenteditable(node 라벨 inline 편집 등) 안에서 발생한 키/clipboard event 처리 정책.
 
 # Module: axes
 
@@ -985,6 +1027,43 @@ matchKey (t: KeyLike, keys: string | readonly string[] | KeyChord | readonly Key
 ```
 
 matchKey — modifier 무시, 키 이름만 비교 (modifier 매핑 별도 처리하는 axis 용).
+
+## parseChordExtended / matchEventToChord
+
+```ts
+parseChordExtended (chord: string): ChordDescriptor
+matchEventToChord (event: KeyboardEvent | MouseEvent, chord: ChordDescriptor, scope: 'item' | 'root'): boolean
+```
+
+`axes/chord.ts` — 확장 chord 문법 parser + event 매칭기.
+
+확장 문법:
+- **Keyboard**: `mod+b`, `shift+cmd+v`, `escape`, `arrowdown` (기존 KeyChord 동등)
+- **Mouse**: `click`, `dblclick`, `contextmenu`, `mod+click`, `shift+click`
+- **Scope prefix** (선택): `item:click` (해당 item DOM 위에서 발생) / `root:keydown` (root container 위) /
+  prefix 없으면 root scope default. 패턴 내부 미들웨어 dispatch 가 prefix 로 라우팅.
+
+`mod` 는 macOS 에서 Cmd, 그 외에서는 Ctrl 로 정규화 (기존 useShortcut 과 동일).
+
+## BuiltinChordDescriptor
+
+```ts
+type BuiltinChordDescriptor = {
+  chord: string                  // parseChordExtended 입력
+  uiEvent: string                // emit 되는 UiEvent.type (e.g. 'paste', 'copy', 'remove')
+  description: string            // 단축키 표/문서 렌더용
+}
+```
+
+각 collection 패턴이 자기가 흡수하는 chord 목록을 readonly array 로 export — 단축키 표·문서·테스트 SSOT.
+
+- `treeBuiltinChords: readonly BuiltinChordDescriptor[]`
+- `listboxBuiltinChords: readonly BuiltinChordDescriptor[]`
+- `gridBuiltinChords: readonly BuiltinChordDescriptor[]`
+- `treeGridBuiltinChords: readonly BuiltinChordDescriptor[]`
+- `feedBuiltinChords: readonly BuiltinChordDescriptor[]`
+
+각 array 에 `mod+c`/`mod+x`/`mod+v`/`mod+shift+v`(=Shift+Cmd+V → `paste {mode:'child'}`)/`mod+z`/`mod+shift+z`/`backspace`/`delete` 등이 포함.
 
 ## pageNavigate
 
@@ -1324,6 +1403,37 @@ writeResource (resource: Resource<T, Args>, value: T, args: Args): void
 
 컴포넌트 외부(이벤트 핸들러·HMR 콜백 등)에서 자원에 직접 쓰기.
 
+# Module: adapters/zod-crud
+
+## useZodCrudResource
+
+```ts
+useZodCrudResource<T, U> (
+  resource: Resource<T, []>,
+  crud: JsonCrud<T>,
+  flatten: (value: T | undefined) => NormalizedData<U>,
+  schema?: z.ZodType<U>,                          // entity zod schema — paste 시 검증 활성화
+  opts?: { kind?: 'list' | 'tree' | 'grid' },
+): [NormalizedData<U>, (e: UiEvent) => void]
+```
+
+`@p/headless/adapters/zod-crud` — resource + zod-crud `JsonCrud` + flatten 함수를 받아
+패턴 hook 의 `(data, dispatch)` 단일 인터페이스로 잇는 어댑터.
+
+내부 동작:
+- value 는 `flatten(resource value)` 로 NormalizedData 로 변환되어 그대로 노출.
+- dispatch 는 routeUiEventToCrud 로 UiEvent 편집 어휘 9종을 crud op 1:1 라우팅,
+  나머지 meta 어휘(focus/expand/typeahead 등)는 useControlState 로 흡수.
+- `opts.kind` 는 list/tree/grid 별 routeUiEventToCrud 전략 차이를 지정.
+- `schema` 인자가 주어지면 paste 시 클립보드 payload 를 zod 로 검증 — 실패 entity 는 drop.
+
+**Example**
+
+```tsx
+const [data, onEvent] = useZodCrudResource(outlineResource, crud, flattenOutline, { kind: 'tree' })
+const tree = useTreePattern(data, onEvent, { editable: true, label: 'outline' })
+```
+
 # Module: roving
 
 ## UseSpatialNavigationOptions
@@ -1387,10 +1497,6 @@ editable 안에선 modifier 없는 단일 키 탈취 X.
 ```ts
 useShortcut('mod+k', () => openCommandPalette())
 ```
-
-## useClipboardShortcuts
-
-## useHistoryShortcuts
 
 # Module: gesture
 
@@ -1603,6 +1709,10 @@ UiEvent: object | object | object | object | object | object | object | object |
 
 UiEvent — ui ↔ headless 통신의 단일 어휘. DOM `Event` global과 충돌 방지를 위해
 `Ui` prefix 명시.
+
+`copy` / `cut` / `paste` 변종은 옵셔널 `event?: ClipboardEvent` 필드를 갖는다 —
+패턴 rootProps 가 W3C Clipboard event 를 흡수하면서 원본 DOM event 를 그대로 전달,
+호스트 reducer/router 가 `event.clipboardData` 에 직접 접근할 수 있다.
 
 ## UiEventInput
 
@@ -2105,21 +2215,6 @@ const inputRef = useRef<HTMLInputElement>(null)
 useActiveDescendant(inputRef, focusId)
 ```
 
-## useClipboardShortcuts
-
-```ts
-useClipboardShortcuts (dispatch: (e: UiEvent) => void, getActiveId: () => string | null | undefined): void
-```
-
-useClipboardShortcuts — Cmd+C / Cmd+X / Cmd+V / Cmd+Shift+V / Backspace / Delete 표준 매핑.
-`getActiveId()` 로 현재 active 엔티티 id 를 받아 5종 어휘를 자동 emit.
-
-**Example**
-
-```ts
-useClipboardShortcuts(dispatch, () => activeId)
-```
-
 ## useControlState
 
 ```ts
@@ -2151,21 +2246,6 @@ UiEvent 라우팅 hook — gesture 통과 후 meta 이벤트는 control dispatch
 ```ts
 const onEvent = useEventBridge({ data, gestures: expandBranchOnActivate, dispatchMeta, onIntent })
 <TreeView data={data} onEvent={onEvent} />
-```
-
-## useHistoryShortcuts
-
-```ts
-useHistoryShortcuts (dispatch: (e: UiEvent) => void): void
-```
-
-useHistoryShortcuts — Cmd+Z / Cmd+Shift+Z 표준 매핑.
-dispatch 만 받으면 history 어휘 2종을 키보드로 자동 emit.
-
-**Example**
-
-```ts
-useHistoryShortcuts(dispatch)
 ```
 
 ## useRovingTabIndex

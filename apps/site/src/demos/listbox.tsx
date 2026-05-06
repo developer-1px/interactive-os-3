@@ -27,7 +27,7 @@ export default function Demo() {
         <li
           key={item.id}
           {...optionProps(item.id)}
-          className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white"
+          className="cursor-pointer rounded px-2 py-1 [&:not([aria-selected=true])]:hover:bg-stone-200 aria-selected:bg-stone-900 aria-selected:text-white"
         >
           {item.label}
         </li>

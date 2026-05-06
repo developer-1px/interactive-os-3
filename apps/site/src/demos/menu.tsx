@@ -34,7 +34,7 @@ export default function Demo() {
             <li
               key={item.id}
               {...menuitemProps(item.id)}
-              className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 aria-disabled:opacity-50"
+              className="cursor-pointer rounded px-2 py-1 hover:bg-stone-200 aria-disabled:opacity-50"
             >
               {item.label}
             </li>

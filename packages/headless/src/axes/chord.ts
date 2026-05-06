@@ -87,3 +87,118 @@ export const matchChord = (e: KeyboardEvent, chord: Chord, opts?: { isMac?: bool
 /** matchAnyChord — KeyboardEvent 가 chord string 배열 중 하나라도 매치되는지. patterns 의 chord registry 매처. */
 export const matchAnyChord = (e: KeyboardEvent, chords: readonly Chord[], opts?: { isMac?: boolean }): boolean =>
   chords.some((c) => matchChord(e, c, opts))
+
+/* ------------------------------------------------------------------ *
+ * Extended chord — key + mouse + scope prefix.                        *
+ *                                                                     *
+ *   'mod+shift+v'   · key                                             *
+ *   'click'         · mouse (root scope, default)                     *
+ *   'shift+click'   · mouse + modifier                                *
+ *   'item:click'    · mouse with item scope                           *
+ *   'root:keydown'  · explicit root scope (default 생략 가능)         *
+ *                                                                     *
+ * scope prefix: `'<scope>:'` 가 첫 토큰이면 scope, 나머지를 chord 로. *
+ * mouse eventType: click·dblclick·contextmenu·pointerdown·pointerup·  *
+ *   wheel·dragstart·drop. 그 외는 key 로 간주.                        *
+ * ------------------------------------------------------------------ */
+
+export type ChordScope = 'root' | 'item'
+export type ChordKind = 'key' | 'mouse'
+
+export type ChordModifiers = {
+  mod?: true
+  shift?: true
+  alt?: true
+  ctrl?: true
+  meta?: true
+}
+
+export type ParsedChordExtended = {
+  scope: ChordScope
+  kind: ChordKind
+  eventType: string  // key: KeyboardEvent.key value, mouse: event type name
+  modifiers: ChordModifiers
+}
+
+const MOUSE_EVENT_TYPES = new Set([
+  'click', 'dblclick', 'contextmenu',
+  'pointerdown', 'pointerup',
+  'mousedown', 'mouseup',
+  'wheel',
+  'dragstart', 'dragend', 'drop',
+])
+
+const SCOPES: ReadonlySet<ChordScope> = new Set<ChordScope>(['root', 'item'])
+
+/**
+ * parseChordExtended — chord-string → ParsedChordExtended.
+ *
+ * scope prefix 우선 분리(`'item:click'` → scope=item, body='click'),
+ * body 의 마지막 '+' 뒤를 eventType 으로, 앞을 modifier 토큰으로 파싱.
+ * eventType 이 MOUSE_EVENT_TYPES 에 속하면 kind='mouse', 아니면 'key'.
+ */
+export const parseChordExtended = (s: string, opts: { isMac?: boolean } = {}): ParsedChordExtended => {
+  const isMac = opts.isMac ?? detectMac()
+
+  // scope prefix
+  let scope: ChordScope = 'root'
+  let body = s
+  const colon = s.indexOf(':')
+  if (colon !== -1) {
+    const head = s.slice(0, colon).toLowerCase()
+    if (SCOPES.has(head as ChordScope)) {
+      scope = head as ChordScope
+      body = s.slice(colon + 1)
+    }
+  }
+
+  // split modifiers + eventType
+  const lastPlus = body.lastIndexOf('+')
+  const rawType = lastPlus === -1 ? body : body.slice(lastPlus + 1) || '+'
+  const modPart = lastPlus === -1 ? '' : body.slice(0, lastPlus)
+  const tokens = modPart
+    .split('+')
+    .filter((p) => p.length > 0)
+    .map((p) => p.toLowerCase())
+
+  const modifiers: ChordModifiers = {}
+  for (const t of tokens) {
+    if (t === 'mod' || t === '$mod') {
+      if (isMac) modifiers.meta = true
+      else modifiers.ctrl = true
+    } else if (t === 'control' || t === 'ctrl') modifiers.ctrl = true
+    else if (t === 'shift') modifiers.shift = true
+    else if (t === 'alt' || t === 'option') modifiers.alt = true
+    else if (t === 'meta' || t === 'cmd' || t === 'command') modifiers.meta = true
+  }
+
+  const lower = rawType.toLowerCase()
+  const isMouse = MOUSE_EVENT_TYPES.has(lower)
+  const eventType = isMouse ? lower : (rawType === 'Space' ? SPACE : rawType)
+
+  return { scope, kind: isMouse ? 'mouse' : 'key', eventType, modifiers }
+}
+
+/**
+ * matchEventToChord — KeyboardEvent 또는 MouseEvent/PointerEvent 가 chord-string 과 매치되는지.
+ *
+ * scope 검사는 호출자 책임(scope 는 parsed 결과로만 노출). modifier flag 정확 일치.
+ * 마우스 이벤트는 type 비교, 키 이벤트는 key 비교.
+ */
+export const matchEventToChord = (
+  event: KeyboardEvent | MouseEvent | PointerEvent,
+  chord: string,
+  opts?: { isMac?: boolean },
+): boolean => {
+  const p = parseChordExtended(chord, opts)
+  const m = p.modifiers
+  const ctrlOk  = Boolean(event.ctrlKey)  === Boolean(m.ctrl)
+  const altOk   = Boolean(event.altKey)   === Boolean(m.alt)
+  const metaOk  = Boolean(event.metaKey)  === Boolean(m.meta)
+  const shiftOk = Boolean(event.shiftKey) === Boolean(m.shift)
+  if (!ctrlOk || !altOk || !metaOk || !shiftOk) return false
+
+  if (p.kind === 'mouse') return event.type === p.eventType
+  // key
+  return (event as KeyboardEvent).key === p.eventType
+}

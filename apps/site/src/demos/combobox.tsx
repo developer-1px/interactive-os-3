@@ -1,6 +1,6 @@
 import { fromList } from '@p/headless'
 import { useLocalData } from '@p/headless/local'
-import { comboboxAxis, useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
+import { comboboxAxis, useComboboxPattern, type ControlProps, type PatternProps } from '@p/headless/patterns'
 import { axisKeys } from '@p/headless'
 
 export const meta = {
@@ -13,8 +13,8 @@ export const meta = {
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']
 
-/** wrapper 와 동일 props interface — InputPatternProps 그대로. */
-export type ComboboxDemoProps = ValuedPatternProps<string>
+/** wrapper 와 동일 props interface — collection(PatternProps) + control(ControlProps<string>) 합집합. */
+export type ComboboxDemoProps = PatternProps & ControlProps<string>
 
 export function ComboboxDemo({ data, value, onEvent, 'aria-label': ariaLabel }: ComboboxDemoProps) {
   const { comboboxProps, listboxProps, optionProps, items, expanded } =
@@ -37,7 +37,7 @@ export function ComboboxDemo({ data, value, onEvent, 'aria-label': ariaLabel }: 
                 <li
                   key={item.id}
                   {...optionProps(item.id)}
-                  className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 data-[active]:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white"
+                  className="cursor-pointer rounded px-2 py-1 [&:not([aria-selected=true])]:hover:bg-stone-200 [&:not([aria-selected=true])]:data-[active]:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white"
                 >
                   {item.label}
                 </li>

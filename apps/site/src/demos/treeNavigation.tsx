@@ -50,7 +50,7 @@ export default function Demo() {
             key={item.id}
             {...itemProps(item.id)}
             style={{ paddingLeft: `${(item.level - 1) * 16}px` }}
-            className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
+            className="cursor-pointer rounded px-2 py-1 [&:not([aria-current=page])]:hover:bg-stone-200 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
           >
             <span aria-hidden className="mr-1 inline-block w-3 text-stone-400">
               {item.hasChildren ? (item.expanded ? 'v' : '>') : ''}

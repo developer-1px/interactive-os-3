@@ -13,6 +13,9 @@ export const INTENT_CHORDS = {
   activate: {
     trigger: ['Enter', 'Space'] as readonly Chord[],
   },
+  toggle: {
+    trigger: ['Space'] as readonly Chord[],
+  },
   escape: {
     close: 'Escape' as Chord,
   },

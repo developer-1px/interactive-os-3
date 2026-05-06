@@ -69,7 +69,7 @@ export default function Demo() {
               <li
                 key={it.id}
                 {...optionProps(it.id)}
-                className="flex cursor-pointer items-center justify-between rounded px-2 py-1 hover:bg-stone-100 aria-selected:bg-stone-900 aria-selected:text-white"
+                className="flex cursor-pointer items-center justify-between rounded px-2 py-1 [&:not([aria-selected=true])]:hover:bg-stone-200 aria-selected:bg-stone-900 aria-selected:text-white"
               >
                 <span>{it.label}</span>
                 {i < 9 && (

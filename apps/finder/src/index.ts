@@ -5,7 +5,7 @@ export { PreviewBody, PreviewPane } from './widgets/Preview'
 export { useSidebarNav } from './widgets/useSidebarNav'
 
 export {
-  getTree, subscribeTree, smartGroupOf, smartItems, walk, isSmartPath,
+  getTree, subscribeTree, walk,
   formatDate, formatSize, loadText,
 } from './features/data'
 

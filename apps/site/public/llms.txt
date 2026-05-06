@@ -92,9 +92,12 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **useComboboxGridPattern** — combobox with grid popup — APG `/combobox/examples/grid-combo/`. https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/grid-combo/
 - **useComboboxPattern** — combobox — APG `/combobox/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
 - **useDialogPattern** — dialog — APG `/dialog-modal/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
-- **useFeedPattern** — feed — APG `/feed/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/feed/
-- **useGridPattern** — grid — APG `/grid/` recipe (data grid keyboard model, cell-focus). https://www.w3.org/WAI/ARIA/apg/patterns/grid/
-- **useListboxPattern** — listbox — APG `/listbox/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+- **useFeedPattern** — feed — APG `/feed/` recipe. 옵션 `on: Record<chord, (event, originalFn) => void>` 미들웨어 (originalFn 호출 여부로 default behavior 통과/차단). `insideEditable: 'forward'|'native'|'preventDefault'` (default 'forward'). Shift+Cmd+V → `paste {mode:'child'}`. https://www.w3.org/WAI/ARIA/apg/patterns/feed/
+- **feedBuiltinChords** — Feed 가 흡수하는 chord descriptor 목록 (chord + uiEvent + description). 단축키 표/문서 렌더링 SSOT.
+- **useGridPattern** — grid — APG `/grid/` recipe (data grid keyboard model, cell-focus). 옵션 `on: Record<chord, (event, originalFn) => void>` 미들웨어 (originalFn 호출 여부로 default behavior 통과/차단). `insideEditable: 'forward'|'native'|'preventDefault'` (default 'forward'). Shift+Cmd+V → `paste {mode:'child'}`. https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+- **gridBuiltinChords** — Grid 가 흡수하는 chord descriptor 목록.
+- **useListboxPattern** — listbox — APG `/listbox/` recipe. rootProps 가 W3C Clipboard event(onCopy/onCut/onPaste) + Cmd+Z/Y/Backspace/Delete 를 자체 부착. 옵션 `on: Record<chord, (event, originalFn) => void>` 미들웨어 (originalFn 호출 여부로 default behavior 통과/차단). `insideEditable: 'forward'|'native'|'preventDefault'` (default 'forward'). Shift+Cmd+V → `paste {mode:'child'}`. https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+- **listboxBuiltinChords** — Listbox 가 흡수하는 chord descriptor 목록.
 - **useMenubarPattern** — menubar — APG `/menubar/` recipe (top bar + nested sub-menus). https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
 - **useMenuButtonPattern** — menu-button — APG `/menu-button/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
 - **useMenuPattern** — menu — APG `/menu/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/menu/
@@ -102,8 +105,11 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **useTabsPattern** — tabs — APG `/tabs/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
 - **useToolbarPattern** — toolbar — APG `/toolbar/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
 - **useTooltipPattern** — tooltip — APG `/tooltip/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
-- **useTreeGridPattern** — treeGrid — APG `/treegrid/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/
-- **useTreePattern** — tree — APG `/treeview/` recipe. https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+- **useTreeGridPattern** — treeGrid — APG `/treegrid/` recipe. 옵션 `on: Record<chord, (event, originalFn) => void>` 미들웨어 (originalFn 호출 여부로 default behavior 통과/차단). `insideEditable: 'forward'|'native'|'preventDefault'` (default 'forward'). Shift+Cmd+V → `paste {mode:'child'}`. https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/
+- **treeGridBuiltinChords** — TreeGrid 가 흡수하는 chord descriptor 목록.
+- **useTreePattern** — tree — APG `/treeview/` recipe. rootProps 가 W3C Clipboard event(onCopy/onCut/onPaste) + Cmd+Z/Y/Backspace/Delete 를 자체 부착. 옵션 `on: Record<chord, (event, originalFn) => void>` 미들웨어 (originalFn 호출 여부로 default behavior 통과/차단). `insideEditable: 'forward'|'native'|'preventDefault'` (default 'forward'). Shift+Cmd+V → `paste {mode:'child'}`. https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+- **treeBuiltinChords** — Tree 가 흡수하는 chord descriptor 목록.
+- **BuiltinChordDescriptor** — `{chord, uiEvent, description}` shape — 패턴별 builtin chord 의 SSOT entry. `treeBuiltinChords`/`listboxBuiltinChords`/`gridBuiltinChords`/`treeGridBuiltinChords`/`feedBuiltinChords` 가 이 타입의 readonly array.
 
 ## axes
 
@@ -118,6 +124,8 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **enabledSiblings** — enabledSiblings — `siblingsOf` 결과에서 disabled entity 를 제거. navigate/multiSelect 의 활성 후보.
 - **fromKeyMap** — fromKeyMap — `KeyMap` 선언을 `Axis` 로 만든다. axis 가 imperative if-else 로 키 분기하는 대신 chord ↔ handler 1:1 선언으로만 표현되도록 강제하는 정본 factory.
 - **matchChord** — match — KeyChord 배열에 t (KeyboardEvent → KeySpec 또는 Trigger) 가 들어맞는지 검사.
+- **parseChordExtended** — chord 문자열 parser (확장판). 마우스 trigger (`click`/`dblclick`/`contextmenu`/`mod+click` 등) + scope prefix (`item:click`/`root:keydown`) 지원. `axes/chord.ts` 에서 export.
+- **matchEventToChord** — 확장 chord descriptor 와 React/DOM event(KeyboardEvent | MouseEvent) 매칭. scope prefix(item/root) 검사 포함.
 - **matchKey** — matchKey — modifier 무시, 키 이름만 비교 (modifier 매핑 별도 처리하는 axis 용).
 - **pageNavigate** — pageNavigate — PageUp/PageDown 키로 sibling 단위 N 칸 이동.
 - **parentOf** — parentOf — returns parent id, or ROOT sentinel if id is top-level. Returns undefined only if id isn't found anywhere.
@@ -181,6 +189,10 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **useResource** — Resource 를 React 에 연결 — 첫 read 시 load 트리거, 외부 채널 자동 attach/detach, useSyncExternalStore 로 tearing-free 구독. 반환은 `[value, dispatch]` 단일 인터페이스.
 - **writeResource** — 컴포넌트 외부(이벤트 핸들러·HMR 콜백 등)에서 자원에 직접 쓰기.
 
+## adapters/zod-crud
+
+- **useZodCrudResource** — `@p/headless/adapters/zod-crud` — resource + zod-crud `JsonCrud` + flatten 함수 + (선택) entity zod schema 를 받아 `[NormalizedData, dispatch]` 단일 인터페이스로 잇는 어댑터. 4번째 인자 schema 가 주어지면 paste 시 zod 검증 활성화. UiEvent 편집 어휘는 routeUiEventToCrud 로 crud op 에 흘리고, value 는 flatten 으로 NormalizedData 로 변환. opts: `{ kind?: 'list'|'tree'|'grid' }`.
+
 ## roving
 
 - **UseSpatialNavigationOptions** — (undocumented)
@@ -195,8 +207,6 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **isPrintable** — KeySpec → 인쇄 가능 단일 문자 여부. typeahead 트리거 판정용.
 - **onShortcut** — onShortcut — window 'keydown' 에 단축키 spec 을 등록. 해제 함수 반환. React 외부(vanilla/effect) 에서 사용. React 컴포넌트는 useShortcut 를 쓴다.
 - **useShortcut** — useShortcut — `mod+k` 같은 표기를 받아 글로벌 단축키 등록. 단발 keydown 처리.
-- **useClipboardShortcuts** — (undocumented)
-- **useHistoryShortcuts** — (undocumented)
 
 ## gesture
 
@@ -279,10 +289,8 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **pathAncestors** — path 문자열을 누적 prefix 배열로 — `/a/b/c` → `['/a', '/a/b', '/a/b/c']`. tree 의 조상 id 가 path prefix 와 1:1 일 때 expanded 시드 계산에 사용.
 - **reduce** — 코어 reducer — UiEvent 의 기본 의미(focus/expand/open/typeahead/pan/zoom)를 NormalizedData 에 적용. activate/select/selectMany/value 는 identity 로 패스 — host reducer 가 도메인 의미(selection/value)를 합성한다.
 - **useActiveDescendant** — useActiveDescendant — Combobox / Grid 등 INVARIANT B11 ("포커스는 실제 DOM element 에 있다 — `aria-activedescendant` 는 Combobox 1곳 예외") 의 코드화.
-- **useClipboardShortcuts** — useClipboardShortcuts — Cmd+C / Cmd+X / Cmd+V / Cmd+Shift+V / Backspace / Delete 표준 매핑. `getActiveId()` 로 현재 active 엔티티 id 를 받아 5종 어휘를 자동 emit.
 - **useControlState** — `useControlState` — 외부 base 데이터 위에 로컬 control meta(focus/expanded/typeahead)를 얹는 SSOT hook. base 가 갱신되면 사용자가 아직 건드리지 않은 키만 base 시드로 갱신, 사용자가 dispatch 한 키는 local 우선. 반환은 `[merged data, dispatch]` — ui/ 의 (data, onEvent) 인터페이스에 그대로 꽂힌다.
 - **useEventBridge** — UiEvent 라우팅 hook — gesture 통과 후 meta 이벤트는 control dispatch 로, intent 이벤트는 도메인 onIntent 로. 컴포넌트 소비자는 분기 없이 반환된 onEvent 한 개만 ui 에 꽂는다.
-- **useHistoryShortcuts** — useHistoryShortcuts — Cmd+Z / Cmd+Shift+Z 표준 매핑. dispatch 만 받으면 history 어휘 2종을 키보드로 자동 emit.
 - **useRovingTabIndex** — useRovingTabIndex — APG canonical roving tabindex. **데이터(관계 그래프) 기반** 이동.
 - **useSpatialNavigation** — useSpatialNavigation — W3C CSS Spatial Navigation 기반 roving tabindex. **시각 좌표 기반** 이동 — `getBoundingClientRect()` 로 다음 element 결정.
 - **useValue** — useValue<T> — controlled/uncontrolled hybrid value 표준 hook. SSOT 역할: switch/checkbox/radio/slider 등 값 한 개를 들고 있는 패턴의 공통 어댑터.

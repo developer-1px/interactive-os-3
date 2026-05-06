@@ -15,12 +15,15 @@ export type GestureHelper = (d: NormalizedData, e: UiEvent) => UiEvent[]
 export const navigateOnActivate: GestureHelper = (_d, e) =>
   e.type === 'activate' ? [{ type: 'navigate', id: e.id }, e] : [e]
 
-/** navigate → [navigate, activate] 분해. APG single-select listbox/tabs 의 selection-follows-focus. disabled 는 skip. */
+/** navigate → [navigate, select] 분해. APG single-select listbox/tabs/tree 의 selection-follows-focus.
+ *  `select` (순수 선택 상태) 를 emit — `activate` 가 아님. activate 는 사용자의 명시적 제스처(Enter/Space/Click)이고
+ *  tree 처럼 expand-on-activate 가 합성된 환경에서는 navigate→activate 분해가 focus=expand 부수효과를 만든다.
+ *  disabled 는 skip. */
 export const selectionFollowsFocus: GestureHelper = (d, e) => {
-  if (e.type !== 'navigate' || !e.id) return [e] // intent-form (dir) 은 통과 — selection follow 는 result-form 에서만
+  if (e.type !== 'navigate' || !e.id) return [e]
   const ent = d.entities[e.id]
   if (ent?.disabled) return [e]
-  return [e, { type: 'activate', id: e.id }]
+  return [e, { type: 'select', id: e.id }]
 }
 
 /** activate → 자식 有: [navigate, expand] / 자식 無: [navigate, activate]. Tree/Columns/Menu 용. */

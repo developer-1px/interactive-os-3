@@ -144,7 +144,7 @@ function MenuList<TItem extends object>({
           <li key={item.id} className="relative">
             <span
               {...menuitemProps(item.id)}
-              className="flex cursor-pointer items-center rounded px-2 py-1 hover:bg-stone-100 aria-disabled:opacity-50 data-[has-sub]:pr-2"
+              className="flex cursor-pointer items-center rounded px-2 py-1 hover:bg-stone-200 aria-disabled:opacity-50 data-[has-sub]:pr-2"
             >
               {hasSlots ? (
                 <span className="grid w-full grid-cols-[1.5rem_1fr_auto_0.75rem] items-center gap-2">

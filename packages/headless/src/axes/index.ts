@@ -26,6 +26,8 @@ export const enabledSiblings = (d: NormalizedData, id: string): string[] =>
 export { navigate } from './navigate'
 export { expand, seedExpand } from './expand'
 export { activate } from './activate'
+export { toggle } from './toggle'
+export { submenuOpen, submenuClose, submenuOpenDown, submenuOpenUp } from './submenu'
 export { typeahead } from './typeahead'
 export { treeNavigate } from './treeNavigate'
 export { treeExpand } from './treeExpand'

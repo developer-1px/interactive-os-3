@@ -8,8 +8,6 @@ export const disclosureAxis = () => activate
 
 /** Options for {@link disclosurePattern}. */
 export interface DisclosureOptions {
-  /** controlled fallback — host 가 onEvent reducer 로 EXPANDED 흡수 안 할 때 직접 받음. */
-  onOpenChange?: (open: boolean) => void
   idPrefix?: string
 }
 
@@ -38,15 +36,13 @@ export function disclosurePattern(
   triggerProps: ItemProps
   panelProps: RootProps
 } {
-  const { onOpenChange, idPrefix = 'disc' } = opts
+  const { idPrefix = 'disc' } = opts
   const open = isExpanded(data, id)
   const panelId = `${idPrefix}-${id}-panel`
 
   const intent = (e: UiEvent) => {
     if (e.type === 'activate') {
-      const next = !open
-      onOpenChange?.(next)
-      onEvent?.({ type: 'expand', id, open: next })
+      onEvent?.({ type: 'expand', id, open: !open })
       return
     }
     onEvent?.(e)

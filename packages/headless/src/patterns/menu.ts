@@ -1,49 +1,79 @@
-import { useCallback, useRef, useState } from 'react'
-import { ROOT, getChildren, getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, escape, expand, navigate, typeahead, matchAnyChord } from '../axes'
+import { useEffect, useRef, useState } from 'react'
+import {
+  ROOT, getChildren, getLabel, isDisabled,
+  type NormalizedData, type UiEvent,
+} from '../types'
+import {
+  activate, axisKeys, composeAxes, escape, navigate,
+  submenuOpen, submenuClose, typeahead, matchAnyChord,
+  type Axis,
+} from '../axes'
+import { bindAxis } from '../state/bind'
+import { parentOf } from '../axes/index'
+import type { ItemProps, RootProps } from './types'
+import type { MenuItem, MenuItemKind, MenuLevel } from './menuButton'
 
-/** menu trigger button chord registry — declarative SSOT. */
+/** menu trigger button chord registry — declarative SSOT (open 트리거 키). */
 const TRIGGER_OPEN_CHORDS = ['ArrowDown'] as const
-
-/** menuButtonTriggerKeys — trigger button 이 등록하는 키 (open 트리거). */
 export const menuButtonTriggerKeys = (): readonly string[] => [...TRIGGER_OPEN_CHORDS]
-import { usePatternBase } from './usePatternBase'
-import type { BaseItem, ItemProps, RootProps } from './types'
 
-/** Options for {@link useMenuPattern}. */
+/**
+ * menu axis — vertical menu 의 키. menubar 의 subAxis 와 동일 합성.
+ *   navigate('vertical')   ↑↓ wrap, Home/End
+ *   submenuOpen            → (parent only — leaf 면 activate 로 흐름)
+ *   submenuClose           ←
+ *   activate               Enter/Space + Click
+ *   escape                 Escape
+ *   typeahead              first-char search
+ */
+const menuVerticalAxis: Axis = composeAxes(
+  navigate('vertical'),
+  submenuOpen,
+  submenuClose,
+  activate,
+  escape,
+  typeahead,
+)
+
+const menuHorizontalAxis: Axis = composeAxes(
+  navigate('horizontal'),
+  submenuOpen,
+  submenuClose,
+  activate,
+  escape,
+  typeahead,
+)
+
+/** Menu 가 응답하는 chord 합집합 — keys SSOT. */
+export const menuAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}): Axis =>
+  opts.orientation === 'horizontal' ? menuHorizontalAxis : menuVerticalAxis
+
 export interface MenuOptions {
-  /** aria-orientation. Spec implicit value: 'vertical'. */
+  /** aria-orientation. default 'vertical'. */
   orientation?: 'horizontal' | 'vertical'
+  /** plain menuitem activate 시 자동 close (default true). */
   closeOnSelect?: boolean
   autoFocus?: boolean
   onEscape?: () => void
-  /** aria-label — ARIA: menu requires accessible name. */
   label?: string
   labelledBy?: string
-  /** Container entity for nested sub-menus; defaults to ROOT. 자식들이 children 으로 사용된다. */
   containerId?: string
-  /** controlled. 생략 시 패턴이 useState 자체 소유 — menu-button trigger 케이스. */
+  /** controlled open. 생략 시 패턴이 useState 자체 보유. */
   open?: boolean
   defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
-  /** activate 시 자동 닫힘 (closeOnSelect 와 조합되어 menu-button 표준 동작). */
+  idPrefix?: string
 }
-
-// escape 가 navigate 보다 먼저 — Escape 키가 일반 nav 매핑보다 우선.
-// expand 가 activate 보다 먼저 — children 있는 menuitem 의 Enter/Space/ArrowRight 는
-// submenu open(+ first child focus)로 흐름. children 없는 leaf 는 expand 가 null →
-// activate 로 떨어져 Enter/Space 가 activate 로 emit.
-/** Menu 가 등록하는 axis — SSOT. */
-export const menuAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
-  composeAxes(escape, expand, navigate(opts.orientation ?? 'vertical'), activate, typeahead)
-const verticalAxis = menuAxis({ orientation: 'vertical' })
-const horizontalAxis = menuAxis({ orientation: 'horizontal' })
 
 /**
  * menu — APG `/menu/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/menu/
  *
- * 키보드: ArrowUp/Down · Home/End · Enter/Space · typeahead. Escape 닫기는 소비자.
+ * 키보드: 모두 axis 합성 정본 (`menuAxis`). inline switch 0.
+ * N-level nested submenu 지원 (path-stack). `data.entities[id].kind` 로
+ * menuitem / menuitemcheckbox / menuitemradio 구분.
+ *
+ * trigger 가 필요하면 `useMenuButtonPattern` 사용. 본 패턴은 standalone menu
+ * (context menu, popover trigger 외부에서 관리) 케이스.
  */
 export function useMenuPattern(
   data: NormalizedData,
@@ -53,82 +83,203 @@ export function useMenuPattern(
   rootProps: RootProps
   menuitemProps: (id: string) => ItemProps
   buttonProps: ItemProps
-  items: BaseItem[]
+  rootLevel: MenuLevel
+  getSubmenu: (parentId: string) => MenuLevel | null
+  items: MenuItem[]
   open: boolean
-  /** 면제 사유: host-level menu-button 제어 (Escape 외부 닫기·외부 click 닫기 등). UI=activate 단발 (INVARIANTS #16) 의 host-control 예외. */
   setOpen: (open: boolean) => void
+  openPath: string[]
 } {
   const {
-    autoFocus, onEscape, orientation = 'vertical', label, labelledBy, containerId = ROOT,
-    open: openProp, defaultOpen = false, onOpenChange, closeOnSelect = true,
+    autoFocus, onEscape, orientation = 'vertical', label, labelledBy,
+    containerId = ROOT, open: openProp, defaultOpen = false,
+    closeOnSelect = true, idPrefix = 'menu',
   } = opts
+
   const [internalOpen, setInternalOpen] = useState(defaultOpen)
   const isControlled = openProp !== undefined
   const open = isControlled ? openProp : internalOpen
-  const triggerRef = useRef<HTMLElement | null>(null)
-  const setOpen = useCallback((next: boolean) => {
+  const setOpen = (next: boolean) => {
     if (!isControlled) setInternalOpen(next)
-    onOpenChange?.(next)
     if (!next) requestAnimationFrame(() => triggerRef.current?.focus())
-  }, [isControlled, onOpenChange])
-  const axis = orientation === 'horizontal' ? horizontalAxis : verticalAxis
-  // gesture/intent split: escape axis 가 emit 한 'open false' 를 close + onEscape 로 변환.
-  const relay = useCallback((e: UiEvent) => {
-    if (e.type === 'open' && e.open === false) { setOpen(false); onEscape?.(); return }
-    if (e.type === 'activate' && closeOnSelect) {
+  }
+
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const itemRefs = useRef(new Map<string, HTMLElement | null>())
+
+  const [openPath, setOpenPath] = useState<string[]>([])
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const rootMenuId = `${idPrefix}-menu`
+  const submenuDomId = (pid: string) => `${idPrefix}-submenu-${pid}`
+  const itemDomId = (id: string) => `${idPrefix}-item-${id}`
+
+  // roving — active 변경 시 .focus()
+  useEffect(() => {
+    if (!open) return
+    if (!activeId) return
+    itemRefs.current.get(activeId)?.focus({ preventScroll: true })
+  }, [open, activeId])
+
+  // autoFocus — 마운트 시 첫 enabled child 에 focus.
+  useEffect(() => {
+    if (!autoFocus || !open) return
+    const first = getChildren(data, containerId).filter((id) => !isDisabled(data, id))[0]
+    if (first) setActiveId(first)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoFocus, open])
+
+  const intent = (e: UiEvent) => {
+    if (e.type === 'open') {
+      if (e.open) {
+        setOpen(true)
+      } else {
+        // submenu open 상태에서 Escape → 한 단계만 닫고 부모 refocus
+        if (openPath.length) {
+          const last = openPath[openPath.length - 1]
+          setOpenPath((path) => path.slice(0, -1))
+          setActiveId(last)
+        } else {
+          setOpen(false)
+          onEscape?.()
+        }
+      }
+      return
+    }
+    if (e.type === 'expand') {
+      if (e.open) {
+        setOpenPath((path) => [...path, e.id])
+      } else {
+        // submenu 안 ArrowLeft → 부모 닫고 부모 refocus
+        const parent = parentOf(data, e.id)
+        if (parent && openPath.includes(parent)) {
+          setOpenPath((path) => path.filter((p) => p !== parent))
+          setActiveId(parent)
+        }
+      }
+      return
+    }
+    if (e.type === 'navigate' && e.id) {
+      setActiveId(e.id)
+      return
+    }
+    if (e.type === 'activate') {
+      const ent = data.entities[e.id] ?? {}
+      const kind = (ent.kind as MenuItemKind | undefined) ?? 'menuitem'
+      if (kind === 'menuitemcheckbox') {
+        const cur = ent.checked
+        const next = cur === 'mixed' ? true : !cur
+        onEvent?.({ type: 'check', id: e.id, to: next })
+        return
+      }
+      if (kind === 'menuitemradio') {
+        const parent = parentOf(data, e.id) ?? containerId
+        const sibs = getChildren(data, parent)
+        for (const sid of sibs) {
+          const sEnt = data.entities[sid] ?? {}
+          if (sEnt.kind === 'menuitemradio' && sid !== e.id && sEnt.checked) {
+            onEvent?.({ type: 'check', id: sid, to: false })
+          }
+        }
+        onEvent?.({ type: 'check', id: e.id, to: true })
+        return
+      }
       onEvent?.(e)
-      setOpen(false)
+      if (closeOnSelect) {
+        setOpen(false)
+        setOpenPath([])
+        setActiveId(null)
+      }
       return
     }
     onEvent?.(e)
-  }, [onEvent, onEscape, setOpen, closeOnSelect])
-  const { focusId, bindFocus, delegate, ids } = usePatternBase(
-    data, axis, relay, { autoFocus: autoFocus ?? open, containerId },
-  )
+  }
 
-  const items: BaseItem[] = ids.map((id, i) => {
-    const ent = data.entities[id] ?? {}
-    return {
-      id,
-      label: getLabel(data, id),
-      selected: Boolean(ent.selected),
-      disabled: isDisabled(data, id),
-      posinset: i + 1,
-      setsize: ids.length,
+  const axis = orientation === 'horizontal' ? menuHorizontalAxis : menuVerticalAxis
+  const menuBind = bindAxis(axis, data, intent)
+
+  const buildLevel = (parentId: string, isRoot: boolean): MenuLevel => {
+    const ids = getChildren(data, parentId).filter((id) => !isDisabled(data, id))
+    const items: MenuItem[] = ids.map((id, i) => {
+      const ent = data.entities[id] ?? {}
+      const kind = (ent.kind as MenuItemKind | undefined) ?? 'menuitem'
+      const rawChecked = ent.checked
+      const checked: boolean | 'mixed' | undefined =
+        kind === 'menuitem' ? undefined
+          : rawChecked === 'mixed' ? 'mixed'
+          : Boolean(rawChecked)
+      return {
+        id,
+        label: getLabel(data, id),
+        selected: false,
+        disabled: isDisabled(data, id),
+        posinset: i + 1,
+        setsize: ids.length,
+        kind,
+        checked,
+        hasSubmenu: getChildren(data, id).length > 0,
+        submenuOpen: openPath.includes(id),
+        current: ent.current as MenuItem['current'],
+      }
+    })
+
+    const menuProps: RootProps = {
+      role: 'menu',
+      id: isRoot ? rootMenuId : submenuDomId(parentId),
+      'aria-orientation': orientation,
+      'aria-label': isRoot ? label : undefined,
+      'aria-labelledby': isRoot ? labelledBy : itemDomId(parentId),
+      hidden: isRoot ? !open || undefined : undefined,
+      tabIndex: -1,
+    } as unknown as RootProps
+
+    const itemProps = (id: string): ItemProps => {
+      const item = items.find((x) => x.id === id)!
+      const isActive = activeId === id
+      const hasSub = item.hasSubmenu
+      const isOpen = item.submenuOpen
+      return {
+        role: item.kind,
+        id: itemDomId(id),
+        'data-id': id,
+        'aria-disabled': item.disabled || undefined,
+        'aria-checked': item.checked,
+        'aria-haspopup': hasSub ? 'menu' : undefined,
+        'aria-expanded': hasSub ? isOpen : undefined,
+        'aria-controls': hasSub ? submenuDomId(id) : undefined,
+        'aria-current': item.current,
+        'data-state': hasSub ? (isOpen ? 'open' : 'closed') : undefined,
+        'data-active': isActive ? '' : undefined,
+        'data-checked': item.checked === true ? '' : item.checked === 'mixed' ? 'mixed' : undefined,
+        ref: ((el: HTMLElement | null) => { itemRefs.current.set(id, el) }) as unknown as React.Ref<HTMLElement>,
+        tabIndex: isActive ? 0 : -1,
+        onClick: () => {
+          if (item.disabled) return
+          if (hasSub) {
+            if (isOpen) {
+              setOpenPath((path) => path.filter((p) => p !== id))
+            } else {
+              setOpenPath((path) => [...path, id])
+              const fc = getChildren(data, id).filter((k) => !isDisabled(data, k))[0]
+              if (fc) setActiveId(fc)
+            }
+            return
+          }
+          intent({ type: 'activate', id })
+        },
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (menuBind.onKey(e, id)) e.stopPropagation()
+        },
+      } as unknown as ItemProps
     }
-  })
 
-  const rootProps: RootProps = {
-    role: 'menu',
-    'aria-orientation': orientation,
-    'aria-label': label,
-    'aria-labelledby': labelledBy,
-    ...delegate,
-  } as RootProps
+    return { menuProps, itemProps, items }
+  }
 
-  const menuitemProps = (id: string): ItemProps => {
-    const it = items.find((x) => x.id === id)
-    const isFocus = focusId === id
-    const ent = data.entities[id] ?? {}
-    const kind = (ent.kind as 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | undefined) ?? 'menuitem'
-    const rawChecked = ent.checked ?? ent.selected
-    const checked: boolean | 'mixed' | undefined =
-      kind === 'menuitem' ? undefined
-        : rawChecked === 'mixed' ? 'mixed'
-        : Boolean(rawChecked)
-    const hasSub = getChildren(data, id).length > 0
-    return {
-      role: kind,
-      ref: bindFocus(id) as React.Ref<HTMLElement>,
-      'data-id': id,
-      tabIndex: isFocus ? 0 : -1,
-      'aria-disabled': it?.disabled || undefined,
-      'aria-checked': checked,
-      'aria-haspopup': hasSub ? 'menu' : undefined,
-      'data-disabled': it?.disabled ? '' : undefined,
-      'data-checked': checked === true ? '' : checked === 'mixed' ? 'mixed' : undefined,
-      'data-has-sub': hasSub ? '' : undefined,
-    } as unknown as ItemProps
+  const rootLevel = buildLevel(containerId, true)
+
+  const getSubmenu = (pid: string): MenuLevel | null => {
+    if (!openPath.includes(pid)) return null
+    return buildLevel(pid, false)
   }
 
   const buttonProps: ItemProps = {
@@ -136,14 +287,31 @@ export function useMenuPattern(
     ref: ((el: HTMLElement | null) => { triggerRef.current = el }) as React.Ref<HTMLElement>,
     'aria-haspopup': 'menu',
     'aria-expanded': open,
+    'aria-controls': rootMenuId,
     onClick: () => setOpen(!open),
     onKeyDown: (e: React.KeyboardEvent) => {
       if (!open && matchAnyChord(e as unknown as KeyboardEvent, TRIGGER_OPEN_CHORDS)) {
         e.preventDefault()
         setOpen(true)
+        const first = getChildren(data, containerId).filter((id) => !isDisabled(data, id))[0]
+        if (first) setActiveId(first)
       }
     },
   } as unknown as ItemProps
 
-  return { rootProps, menuitemProps, buttonProps, items, open, setOpen }
+  return {
+    rootProps: rootLevel.menuProps,
+    menuitemProps: rootLevel.itemProps,
+    buttonProps,
+    rootLevel,
+    getSubmenu,
+    items: rootLevel.items,
+    open,
+    setOpen,
+    openPath,
+  }
 }
+
+/** keys SSOT — axisKeys 정본 사용. */
+export const menuKeys = (orientation: 'horizontal' | 'vertical' = 'vertical'): readonly string[] =>
+  axisKeys(menuAxis({ orientation }))

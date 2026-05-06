@@ -29,8 +29,8 @@ export function WrapperScreen({
           <Component />
         </PreviewCenter>
       }
-      source={source}
-      filename={`examples/${filename}`}
+      tabs={[{ key: filename, label: 'Demo', filename, source, symbols: [] }]}
+      filenamePrefix="examples/"
     />
   )
 }

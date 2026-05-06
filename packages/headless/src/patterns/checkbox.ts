@@ -2,15 +2,14 @@ import {
   ROOT, getChildren, getLabel, isDisabled,
   type NormalizedData, type UiEvent, type ValueEvent,
 } from '../types'
-import { matchAnyChord } from '../axes'
-import { parseChord } from '../axes/chord'
+import { matchAnyChord, toggle, axisKeys, INTENT_CHORDS } from '../axes'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
-/** checkbox keymap registry — declarative SSOT. axisKeys / checkboxKeys 가 읽음. */
-const CHECKBOX_CHORDS = ['Space'] as const
+/** checkbox keymap registry — `toggle` axis 의 chord SSOT 재활용. */
+const CHECKBOX_CHORDS = INTENT_CHORDS.toggle.trigger
 
-/** checkboxKeys — chord registry 에서 자동 도출. 손으로 적은 사본 0. */
-export const checkboxKeys = (): readonly string[] => CHECKBOX_CHORDS.map((c) => parseChord(c).key)
+/** checkboxKeys — `toggle` axis 에서 자동 도출. 손으로 적은 사본 0. */
+export const checkboxKeys = (): readonly string[] => axisKeys(toggle)
 
 const handleCheckboxKey = (e: React.KeyboardEvent, action: () => void): void => {
   if (!matchAnyChord(e as unknown as KeyboardEvent, CHECKBOX_CHORDS)) return

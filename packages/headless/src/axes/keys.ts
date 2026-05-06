@@ -50,6 +50,9 @@ export const INTENTS = {
   activate: {
     trigger: [k(KEYS.Enter), k(KEYS.Space)],
   },
+  toggle: {
+    trigger: [k(KEYS.Space)],
+  },
   escape: {
     close: [k(KEYS.Escape)],
   },

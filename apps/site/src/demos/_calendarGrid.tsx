@@ -67,14 +67,14 @@ export function CalendarGrid({ value, onCommit, open }: CalendarGridProps) {
           type="button"
           onClick={() => setView((v) => ({ y: v.m === 0 ? v.y - 1 : v.y, m: (v.m + 11) % 12 }))}
           aria-label="Previous month"
-          className="rounded px-2 py-1 hover:bg-stone-100"
+          className="rounded px-2 py-1 hover:bg-stone-200"
         >‹</button>
         <span className="font-medium">{MONTH_NAMES[view.m]} {view.y}</span>
         <button
           type="button"
           onClick={() => setView((v) => ({ y: v.m === 11 ? v.y + 1 : v.y, m: (v.m + 1) % 12 }))}
           aria-label="Next month"
-          className="rounded px-2 py-1 hover:bg-stone-100"
+          className="rounded px-2 py-1 hover:bg-stone-200"
         >›</button>
       </div>
 
@@ -116,7 +116,7 @@ export function CalendarGrid({ value, onCommit, open }: CalendarGridProps) {
                       case KEYS.ArrowDown: e.preventDefault(); moveFocus(7); break
                     }
                   }}
-                  className="rounded p-1 text-center text-sm hover:bg-stone-100 focus:bg-stone-900 focus:text-white focus:outline-none aria-selected:bg-stone-200"
+                  className="rounded p-1 text-center text-sm hover:bg-stone-200 focus:bg-stone-900 focus:text-white focus:outline-none aria-selected:bg-stone-200"
                 >
                   {day}
                 </button>

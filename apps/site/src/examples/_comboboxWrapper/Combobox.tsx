@@ -1,5 +1,5 @@
 import { useControlState, type UiEvent } from '@p/headless'
-import { useComboboxPattern, type ValuedPatternProps } from '@p/headless/patterns'
+import { useComboboxPattern, type ControlProps, type PatternProps } from '@p/headless/patterns'
 import { defaultLabel, renderSlot, type Slot } from '../../catalog/slots'
 
 export interface ComboboxSlots<TItem extends object = Record<string, unknown>> {
@@ -7,7 +7,7 @@ export interface ComboboxSlots<TItem extends object = Record<string, unknown>> {
 }
 
 export interface ComboboxProps<TItem extends object = Record<string, unknown>>
-  extends ValuedPatternProps<string> {
+  extends PatternProps, ControlProps<string> {
   slots?: ComboboxSlots<TItem>
   placeholder?: string
 }
@@ -49,7 +49,7 @@ export function Combobox<TItem extends object = Record<string, unknown>>({
                   <li
                     key={item.id}
                     {...optionProps(item.id)}
-                    className="cursor-pointer rounded px-2 py-1 hover:bg-stone-100 data-[active]:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
+                    className="cursor-pointer rounded px-2 py-1 [&:not([aria-selected=true])]:hover:bg-stone-200 [&:not([aria-selected=true])]:data-[active]:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
                   >
                     {renderSlot(slots.label, defaultLabel, item, itemData)}
                   </li>

@@ -1,5 +1,5 @@
 import { ROOT, getChildren, getLabel, isDisabled, getExpanded, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, expand, navigate } from '../axes'
+import { activate, composeAxes, navigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { BaseItem, ItemProps, RootProps } from './types'
 
@@ -14,7 +14,7 @@ export interface AccordionOptions {
 }
 
 /** Accordion 이 등록하는 axis — SSOT. */
-export const accordionAxis = () => composeAxes(navigate('vertical'), expand, activate)
+export const accordionAxis = () => composeAxes(navigate('vertical'), activate)
 const axis = accordionAxis()
 
 /**

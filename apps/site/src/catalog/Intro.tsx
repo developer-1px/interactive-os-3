@@ -108,7 +108,7 @@ function SlideIndex() {
                 <li key={entry.slug}>
                   <a
                     href={`/wrappers#${entry.slug}`}
-                    className="block rounded px-2 py-0.5 text-sm text-stone-700 hover:bg-stone-100"
+                    className="block rounded px-2 py-0.5 text-sm text-stone-700 hover:bg-stone-200"
                   >
                     {entry.title}
                   </a>
@@ -163,7 +163,7 @@ function EntryList({ entries }: { entries: typeof ENTRIES }) {
         <li key={e.slug}>
           <a
             href={`#${e.slug}`}
-            className="block rounded px-2 py-0.5 text-sm text-stone-700 hover:bg-stone-100"
+            className="block rounded px-2 py-0.5 text-sm text-stone-700 hover:bg-stone-200"
           >
             {e.title}
           </a>

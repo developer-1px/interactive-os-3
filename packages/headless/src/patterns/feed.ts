@@ -2,7 +2,9 @@ import { useMemo } from 'react'
 import type { NormalizedData, UiEvent } from '../types'
 import { pageNavigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { ItemProps, RootProps } from './types'
+import type { InsideEditableMode } from '../key/insideEditable'
+import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
+import type { BuiltinChordDescriptor, ItemProps, RootProps } from './types'
 
 /** Feed 가 등록하는 axis — SSOT. PageUp/PageDown → 인접 article navigate. */
 export const feedAxis = () => pageNavigate('vertical', 1)
@@ -13,8 +15,8 @@ export interface FeedItem {
   label?: string
 }
 
-/** Single dispatch event emitted by feed pattern. */
-export type FeedEvent = { type: 'navigate'; id: string }
+/** Dispatch event emitted by feed pattern. navigate (article focus) + clipboard/history UiEvents. */
+export type FeedEvent = UiEvent
 
 /** Options for {@link useFeedPattern}. */
 export interface FeedOptions {
@@ -25,7 +27,33 @@ export interface FeedOptions {
   label?: string
   labelledBy?: string
   autoFocus?: boolean
+  /**
+   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드. default 'forward'.
+   */
+  insideEditable?: InsideEditableMode
+  /**
+   * 사용자 chord 미들웨어. default 와 충돌 시 userFn(event, originalFn) 으로 wrap.
+   */
+  on?: ClipboardOnMiddleware
 }
+
+/**
+ * feed 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
+ * feed 는 read-only article bundle 이지만 clipboard/history chord 일관 정책상 동일 chord 흡수.
+ * 호스트가 read-only 라면 dispatch 에서 해당 UiEvent 를 무시하면 된다.
+ */
+export const feedBuiltinChords: readonly BuiltinChordDescriptor[] = [
+  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
+  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
+  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
+  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused article', scope: 'item' },
+  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused article', scope: 'item' },
+  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused article', scope: 'item' },
+  // clipboard React events
+  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused article (React onCopy)',   scope: 'item' },
+  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused article (React onCut)',     scope: 'item' },
+  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused article (React onPaste)', scope: 'item' },
+]
 
 const ARTICLE_ATTR = 'data-feed-article'
 
@@ -52,7 +80,7 @@ export function useFeedPattern(
   labelProps: (id: string) => { id: string }
   items: (FeedItem & { posinset: number; setsize: number })[]
 } {
-  const { busy, idPrefix = 'feed', label, labelledBy, autoFocus } = opts
+  const { busy, idPrefix = 'feed', label, labelledBy, autoFocus, insideEditable = 'forward' } = opts
 
   const synth: NormalizedData = useMemo(() => ({
     entities: Object.fromEntries(items.map((it) => [it.id, { label: it.label }])),
@@ -61,10 +89,24 @@ export function useFeedPattern(
   }), [items])
 
   const intent = (e: UiEvent) => {
-    if (e.type === 'navigate' && e.id) dispatch?.({ type: 'navigate', id: e.id })
+    if (e.type === 'navigate' && e.id) dispatch?.(e)
   }
 
-  const { bindFocus, delegate } = useRovingTabIndex(feedAxis(), synth, intent, { autoFocus })
+  const { focusId, bindFocus, delegate } = useRovingTabIndex(feedAxis(), synth, intent, { autoFocus })
+
+  const clipboard = usePatternClipboard({
+    onEvent: dispatch,
+    activeId: focusId ?? null,
+    insideEditable,
+    on: opts.on,
+    builtinChords: feedBuiltinChords,
+  })
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    delegate.onKeyDown(e)
+    if (e.defaultPrevented) return
+    clipboard.handleKeyDown(e)
+  }
 
   const articleId = (id: string) => `${idPrefix}-article-${id}`
   const labelId = (id: string) => `${idPrefix}-article-${id}-label`
@@ -75,6 +117,10 @@ export function useFeedPattern(
     'aria-label': label,
     'aria-labelledby': labelledBy,
     ...delegate,
+    onKeyDown: handleKeyDown,
+    onCopy: clipboard.onCopy,
+    onCut: clipboard.onCut,
+    onPaste: clipboard.onPaste,
   } as unknown as RootProps
 
   const rendered = items.map((it, i) => ({ ...it, posinset: i + 1, setsize: items.length }))

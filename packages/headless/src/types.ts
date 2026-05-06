@@ -74,9 +74,9 @@ export type UiEvent =
   | { type: 'appendChild'; parentId: string; value?: unknown }
   | { type: 'update'; id: string; value: unknown }
   | { type: 'remove'; id: string }
-  | { type: 'copy'; id: string }
-  | { type: 'cut'; id: string }
-  | { type: 'paste'; targetId: string; mode?: 'auto' | 'child' | 'overwrite'; index?: number }
+  | { type: 'copy'; id: string; event?: ClipboardEvent }
+  | { type: 'cut'; id: string; event?: ClipboardEvent }
+  | { type: 'paste'; targetId: string; mode?: 'auto' | 'child' | 'overwrite'; index?: number; event?: ClipboardEvent }
   | { type: 'undo' }
   | { type: 'redo' }
 

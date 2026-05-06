@@ -24,14 +24,14 @@ function Section({ id, label, subs, data, onEvent }: { id: string; label: string
     <li className="relative">
       <button
         {...triggerProps}
-        className="rounded px-3 py-1.5 text-sm hover:bg-stone-100 data-[state=open]:bg-stone-900 data-[state=open]:text-white"
+        className="rounded px-3 py-1.5 text-sm [&:not([data-state=open])]:hover:bg-stone-200 data-[state=open]:bg-stone-900 data-[state=open]:text-white"
       >
         {label} <span aria-hidden>{open ? '▴' : '▾'}</span>
       </button>
       <ul {...panelProps} className="absolute left-0 top-full mt-1 w-40 rounded-md border border-stone-200 bg-white p-1 text-sm shadow-lg">
         {subs.map((s) => (
           <li key={s}>
-            <a href={`#${s}`} className="block rounded px-2 py-1 hover:bg-stone-100">{s}</a>
+            <a href={`#${s}`} className="block rounded px-2 py-1 hover:bg-stone-200">{s}</a>
           </li>
         ))}
       </ul>

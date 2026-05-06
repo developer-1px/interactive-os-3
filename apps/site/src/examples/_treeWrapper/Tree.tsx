@@ -33,7 +33,7 @@ export function Tree<TItem extends object = Record<string, unknown>>({
           <li
             key={item.id}
             {...itemProps(item.id)}
-            className="relative cursor-pointer leading-7 hover:bg-stone-100 aria-selected:bg-blue-600 aria-selected:text-white"
+            className="relative cursor-pointer leading-7 [&:not([aria-selected=true])]:hover:bg-stone-200 aria-selected:bg-blue-600 aria-selected:text-white"
           >
             {Array.from({ length: item.level }, (_, i) => (
               <span
