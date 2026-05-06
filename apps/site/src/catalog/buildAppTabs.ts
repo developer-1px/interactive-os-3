@@ -201,55 +201,38 @@ export function buildAppTabs(
     ? [{ filename: roots, label: 'Demo' }]
     : roots
 
-  const visited = new Set<string>()
-  const order: { filename: string; label: string }[] = []
-  const symbolsByFile = new Map<string, Set<string>>()
-  const queue: string[] = []
+  const tabs: AppTab[] = []
+  const usedKeys = new Set<string>()
 
-  // Phase 1 — roots 먼저 등록.
+  const pushTab = (key: string, label: string, filename: string, symbols: string[]) => {
+    if (usedKeys.has(key) || !(filename in map)) return
+    usedKeys.add(key)
+    tabs.push({ key, label, filename, source: map[filename], symbols })
+  }
+
+  // Phase 1 — roots (Demo/Test) — 전체 파일, highlight 없음.
+  for (const r of rootList) pushTab(r.filename, r.label, r.filename, [])
+
+  // Phase 2 — root 가 직접 import 한 이름 1개당 탭 1개 (같은 파일이어도 별도). barrel 은 정의 파일까지 추적.
   for (const r of rootList) {
-    if (visited.has(r.filename) || !(r.filename in map)) continue
-    visited.add(r.filename)
-    order.push({ filename: r.filename, label: r.label })
-    queue.push(r.filename)
-  }
-
-  const enqueue = (file: string, label?: string, symbol?: string) => {
-    if (symbol) {
-      if (!symbolsByFile.has(file)) symbolsByFile.set(file, new Set())
-      symbolsByFile.get(file)!.add(symbol)
-    }
-    if (visited.has(file) || !(file in map)) return
-    visited.add(file)
-    order.push({ filename: file, label: label ?? labelFor(file) })
-    queue.push(file)
-  }
-
-  // Phase 2 — BFS.
-  while (queue.length) {
-    const cur = queue.shift()!
-    const ast = parseFile(cur, map[cur])
+    if (!(r.filename in map)) continue
+    const ast = parseFile(r.filename, map[r.filename])
     if (!ast) continue
-    const dir = dirOf(cur)
+    const dir = dirOf(r.filename)
     for (const imp of collectImports(ast)) {
       const target = resolveSpec(map, dir, imp.spec)
       if (!target) continue
       if (imp.names && imp.names.length > 0) {
         for (const name of imp.names) {
           const def = findDefiningFile(map, target, name)
-          if (def) enqueue(def, name, name)
+          if (!def) continue
+          pushTab(`${def}#${name}`, name, def, [name])
         }
       } else {
-        enqueue(target)
+        pushTab(target, labelFor(target), target, [])
       }
     }
   }
 
-  return order.map(({ filename, label }) => ({
-    key: filename,
-    label,
-    filename,
-    source: map[filename],
-    symbols: [...(symbolsByFile.get(filename) ?? [])],
-  }))
+  return tabs
 }

@@ -99,15 +99,27 @@ export function useZodCrudResource<
     if (e.type === 'move') {
       const value = crud.read?.(e.id)
       if (value === undefined) return
+      let inserted: OperationResultLike | undefined
       if (e.mode === 'child') {
-        crud.appendChild(e.targetId, value as unknown as Parameters<CrudWithSubscribe['appendChild']>[1])
+        inserted = crud.appendChild(e.targetId, value as unknown as Parameters<CrudWithSubscribe['appendChild']>[1]) as OperationResultLike
       } else if (e.mode === 'sibling-after' || e.mode === 'sibling-before') {
         // insertBefore 미노출 — sibling-before 도 insertAfter 로 근사 (현 zod-crud port 한계).
-        crud.insertAfter(e.targetId, value as unknown as Parameters<CrudWithSubscribe['insertAfter']>[1])
+        inserted = crud.insertAfter(e.targetId, value as unknown as Parameters<CrudWithSubscribe['insertAfter']>[1]) as OperationResultLike
       }
-      const result = crud.delete(e.id) as OperationResultLike
+      crud.delete(e.id)
       baseDispatch({type: 'set', value: crud.snapshot()})
-      if (result?.focusNodeId) setMeta((prev) => ({...prev, focus: result.focusNodeId}))
+      // focus = 신규 삽입 노드(zod-crud 가 OperationResult.focusNodeId 로 제공). delete 의 focusNodeId 가 아님.
+      // child mode 면 부모(targetId) 자동 expand — 옮긴 노드가 화면에 보이도록.
+      const newId = inserted?.focusNodeId
+      setMeta((prev) => {
+        const next: Meta = {...prev}
+        if (newId) next.focus = newId
+        if (e.mode === 'child') {
+          const cur = prev.expanded ?? []
+          if (!cur.includes(e.targetId)) next.expanded = [...cur, e.targetId]
+        }
+        return next
+      })
       return
     }
 

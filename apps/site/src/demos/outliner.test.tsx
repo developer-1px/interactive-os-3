@@ -134,15 +134,13 @@ describe('Outliner — Cmd+Z undo', () => {
     render(<Outliner />)
     press('ArrowRight')
     press('ArrowDown'); press('ArrowDown')
-    const before = labels().join('|')
+    const beforeLabels = labels().join('|')
+    const beforeRootChildren = items().filter((el) => levelOf(el) === 2).length
     press('Tab')
-    expect(labels().join('|')).not.toBe(before)
+    expect(labels().join('|')).not.toBe(beforeLabels)
     // move = appendChild + delete (2 commits) — 2회 undo
     press('z', { ctrlKey: true })
     press('z', { ctrlKey: true })
-    // 핵심 검증: undo 후 SAMPLE root 의 자식 수 회복
-    const rootChildren = items().filter((el) => levelOf(el) === 2).length
-    const beforeRootChildren = before.split('|').filter((l, i, arr) => i > 0 && i <= 5).length
-    expect(rootChildren).toBe(beforeRootChildren)
+    expect(items().filter((el) => levelOf(el) === 2).length).toBe(beforeRootChildren)
   })
 })
