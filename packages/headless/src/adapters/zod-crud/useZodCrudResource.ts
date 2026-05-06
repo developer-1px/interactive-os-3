@@ -99,6 +99,18 @@ export function useZodCrudResource<
     if (e.type === 'move') {
       const value = crud.read?.(e.id)
       if (value === undefined) return
+      // 이동 전 — 옮길 subtree 안의 expanded 자손들을 상대 path 로 캡처.
+      // appendChild/insertAfter 가 새 id 를 allocate 하므로 meta.expanded 의 옛 id 들이
+      // 무효해진다. 이를 보존하려면 path → 새 id 로 재매핑해야 한다.
+      const wasExpanded = new Set(data.meta?.expanded ?? [])
+      const expandedPaths: number[][] = []
+      const captureExpanded = (id: string, path: number[]): void => {
+        if (wasExpanded.has(id)) expandedPaths.push(path)
+        const kids = data.relationships[id] ?? []
+        kids.forEach((kid, i) => captureExpanded(kid, [...path, i]))
+      }
+      captureExpanded(e.id, [])
+
       let inserted: OperationResultLike | undefined
       if (e.mode === 'child') {
         inserted = crud.appendChild(e.targetId, value as unknown as Parameters<CrudWithSubscribe['appendChild']>[1]) as OperationResultLike
@@ -108,16 +120,33 @@ export function useZodCrudResource<
       }
       crud.delete(e.id)
       baseDispatch({type: 'set', value: crud.snapshot()})
-      // focus = 신규 삽입 노드(zod-crud 가 OperationResult.focusNodeId 로 제공). delete 의 focusNodeId 가 아님.
-      // child mode 면 부모(targetId) 자동 expand — 옮긴 노드가 화면에 보이도록.
+
       const newId = inserted?.focusNodeId
+      // 새 subtree 의 relationships 를 flatten 으로 재구성해서 path → 새 id 매핑.
+      const newFlat = flatten(crud.snapshot() as ReturnType<CrudWithSubscribe['snapshot']>)
+      const findByPath = (rootId: string, path: number[]): string | undefined =>
+        path.reduce<string | undefined>((cur, i) => (cur ? (newFlat.relationships[cur] ?? [])[i] : undefined), rootId)
+
       setMeta((prev) => {
         const next: Meta = {...prev}
         if (newId) next.focus = newId
-        if (e.mode === 'child') {
-          const cur = prev.expanded ?? []
-          if (!cur.includes(e.targetId)) next.expanded = [...cur, e.targetId]
+        const expanded = new Set(prev.expanded ?? [])
+        // 옛 subtree 의 모든 id 를 expanded 에서 제거 (옛 id 는 이제 무효).
+        const purge = (id: string): void => {
+          expanded.delete(id)
+          ;(data.relationships[id] ?? []).forEach(purge)
         }
+        purge(e.id)
+        // 새 subtree 에 옛 expanded 위치를 매핑해 다시 추가.
+        if (newId) {
+          for (const path of expandedPaths) {
+            const mapped = findByPath(newId, path)
+            if (mapped) expanded.add(mapped)
+          }
+        }
+        // child mode 면 부모도 expand.
+        if (e.mode === 'child') expanded.add(e.targetId)
+        next.expanded = [...expanded]
         return next
       })
       return
