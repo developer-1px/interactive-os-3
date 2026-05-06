@@ -55,6 +55,17 @@ TypeError: Cannot read properties of undefined (reading 'n4') at Column (Kanban.
 
 ## 후속 (TODO)
 
-- [ ] 모든 `*BuiltinChords` 배열에 대한 `(chord, uiEvent)` unique 정적 검사 훅 추가 (`scripts/guardOsPatterns.mjs` 류).
+- [x] 모든 `*BuiltinChords` 배열에 대한 `(chord, uiEvent)` unique 정적 검사 훅 추가 → `scripts/guardChordRegistry.mjs` + `pnpm guard:chords`.
+- [x] **하네스 추가 직후 즉시 두 번째 곤조 발견** — `tree.ts:82` 의 `TREE_EDIT_REMOVE[0]=Backspace, uiEvent=remove` 가 76행과 중복. listbox 와 정확히 같은 패턴(LLM 생성 의심). 수정 완료.
 - [ ] 강연 슬라이드 2 자료로 console 캡처 + diff 박제.
 - [ ] 칸반 Column TypeError(`reading 'n4'`)가 이 수정으로 해소되는지 확인 — 안 되면 별도 진단.
+
+## 강연 메타-사례
+
+이 사건은 강연이 **자기 자신을 증명한 순간**:
+
+1. 정박-곤조-하네스 3막을 한 슬라이드에 압축한 사례를 우연히 발견
+2. 처방(하네스)을 실제로 만들어 돌렸더니
+3. **두 번째 곤조가 즉시 잡혔다** — 인간 눈으로는 못 본 것
+
+→ 슬라이드 3(하네스)의 라이브 demo 로 그대로 사용 가능. "처방대로 했더니 처방이 두 번째 환자를 발견했다."

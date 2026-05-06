@@ -170,6 +170,7 @@
   },
   "active": "825ee3727135bc1f",
   "lastOpenFiles": [
+    "scripts/guardChordRegistry.mjs",
     "apps/site/src/debug/fmtChord.ts",
     "apps/site/src/debug/KeymapPanel.tsx",
     "apps/site/src/debug/JsonInspector.tsx",
@@ -181,7 +182,6 @@
     "apps/outliner/src/widgets/EditInput.tsx",
     "apps/outliner/src/lib/fmtChord.ts",
     "apps/outliner/src/lib",
-    "apps/site/src/demos/outliner.test.tsx",
     "docs/2026/2026-05/2026-05-06/02_writeAdapterPriorArt.md",
     "docs/2026/2026-05/2026-05-06/03_prdHeadlessClipboardAbsorption.md"
   ]

@@ -77,9 +77,9 @@ export const treeBuiltinChords: readonly BuiltinChordDescriptor[] = [
   { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
   { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused item', scope: 'item' },
   // editable 모드 chord (opts.editable=true 일 때만 활성)
+  // NOTE: Backspace=remove 는 base 에 이미 등록됨(line 76) — editable 도 동일 emit 이라 중복 descriptor 금지.
   { chord: TREE_EDIT_RENAME[0],  uiEvent: 'editStart',               description: 'Rename — enter inline edit',                       scope: 'item' },
   { chord: TREE_EDIT_INSERT[0],  uiEvent: 'insertAfter|appendChild', description: 'Insert sibling (or child if root) — editable mode', scope: 'item' },
-  { chord: TREE_EDIT_REMOVE[0],  uiEvent: 'remove',                  description: 'Remove focused item — editable mode',              scope: 'item' },
   { chord: TREE_EDIT_DEMOTE[0],  uiEvent: 'cut+paste',               description: 'Demote (move under previous sibling)',             scope: 'item' },
   { chord: TREE_EDIT_PROMOTE[0], uiEvent: 'cut+paste',               description: 'Promote (move out of parent)',                     scope: 'item' },
   // clipboard React events — not chord-based but reserved on rootProps
@@ -115,6 +115,12 @@ export function useTreePattern(
   rootProps: RootProps
   itemProps: (id: string) => ItemProps
   items: TreeItem[]
+  /**
+   * editProps — 인라인 편집 슬롯 헬퍼. meta.editing === id 면 commit/cancel
+   * 콜백 + initial 을 반환, 아니면 null. widget 은 null 여부로 input/label 분기만.
+   * commit 시 update + editEnd 어휘를 자동 dispatch (adapter 가 labelField 라우팅).
+   */
+  editProps: (id: string) => null | { initial: string; onCommit: (value: string, cancelled: boolean) => void }
 } {
   const {
     autoFocus, multiSelectable, containerId = ROOT, orientation = 'vertical',
@@ -261,5 +267,18 @@ export function useTreePattern(
     } as unknown as ItemProps
   }
 
-  return { rootProps, itemProps, items: flat }
+  const editingId = data.meta?.editing
+  const editProps = (id: string) => {
+    if (editingId !== id) return null
+    const it = itemMap.get(id)
+    return {
+      initial: it?.label ?? '',
+      onCommit: (value: string, cancelled: boolean) => {
+        if (!cancelled) relay({ type: 'update', id, value })
+        relay({ type: 'editEnd' })
+      },
+    }
+  }
+
+  return { rootProps, itemProps, items: flat, editProps }
 }

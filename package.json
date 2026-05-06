@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "guard:chords": "node scripts/guardChordRegistry.mjs",
     "preview": "vite preview",
     "docs:api": "cd packages/headless && npx typedoc --json ../../docs/api.json --out ../../docs/api",
     "docs:llms": "pnpm docs:api && node scripts/gen-llms-txt.mjs"

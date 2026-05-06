@@ -36,6 +36,21 @@ interface OperationResultLike {
 interface UseZodCrudOptions {
   kind?: Kind
   schema?: ZodType
+  /**
+   * labelField — `update {id, value:string}` 시, value 를 entity 자체가 아닌
+   * entity 의 child 노드(key === labelField) 에 라우팅. nested-text 를 가진
+   * outline-style 도메인에서 widget 이 child id 매핑을 알 필요 없게 함.
+   */
+  labelField?: string
+}
+
+interface JsonNodeLike {
+  type?: string
+  key?: string
+  children?: string[]
+}
+interface JsonDocLike {
+  nodes?: Record<string, JsonNodeLike>
 }
 
 export function useZodCrudResource<
@@ -166,6 +181,21 @@ export function useZodCrudResource<
       baseDispatch({type: 'set', value: crud.snapshot()})
       if (result?.focusNodeId) setMeta((prev) => ({...prev, focus: result.focusNodeId}))
       return
+    }
+
+    // ── update + labelField — child 노드(key === labelField) 로 자동 라우팅 ─────
+    // widget 이 nested-text 매핑(예: outline 의 text child id) 을 알 필요 없게 함.
+    if (e.type === 'update' && opts.labelField && typeof e.value === 'string') {
+      const doc = crud.snapshot() as JsonDocLike
+      const obj = doc.nodes?.[e.id]
+      if (obj?.type === 'object' && obj.children) {
+        const childId = obj.children.find((cid) => doc.nodes?.[cid]?.key === opts.labelField)
+        if (childId) {
+          crud.update(childId, e.value as Parameters<CrudWithSubscribe['update']>[1])
+          baseDispatch({type: 'set', value: crud.snapshot()})
+          return
+        }
+      }
     }
 
     // ── 나머지 편집/히스토리 어휘 — routeUiEventToCrud 위임 ─────────────────────
