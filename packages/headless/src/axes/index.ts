@@ -41,3 +41,10 @@ export { pageNavigate } from './pageNavigate'
 export { KEYS, INTENTS, matchChord, matchKey, type KeyChord, type KeyName } from './keys'
 export { matchAnyChord } from './chord'
 export { INTENT_CHORDS } from './intentChords'
+export {
+  ALL_AXIS_EMITS,
+  activateEmits, escapeEmits, navigateEmits, typeaheadEmits,
+  multiSelectEmits, numericStepEmits, gridNavigateEmits, submenuEmits,
+  toggleEmits, treeExpandEmits, treeNavigateEmits, pageNavigateEmits,
+  expandEmits, selectEmits, gridMultiSelectEmits,
+} from './emits'
