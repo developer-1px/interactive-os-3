@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './checkboxMixed'
+import Demo, { meta } from './checkboxMixed'
 
 afterEach(cleanup)
 
@@ -56,5 +56,18 @@ describe('checkboxMixed demo — black-box (keyboard + mouse)', () => {
     render(<Demo />)
     fireEvent.keyDown(children()[1], { key: ' ' })
     expect(checkedOf(children()[1])).toBe('true')
+  })
+
+  it('meta.keys 의 모든 키가 child checkbox 토글을 일으킨다', () => {
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      const target = children()[1] // Tomato (초기 unchecked)
+      const before = checkedOf(target)
+      if (key === 'Click') fireEvent.click(target)
+      else fireEvent.keyDown(target, { key })
+      const after = checkedOf(target)
+      expect({ key, changed: before !== after }).toEqual({ key, changed: true })
+    }
   })
 })
