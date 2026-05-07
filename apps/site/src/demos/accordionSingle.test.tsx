@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './accordionSingle'
+import Demo, { meta } from './accordionSingle'
 
 afterEach(cleanup)
 
@@ -59,5 +59,26 @@ describe('accordionSingle demo — black-box (keyboard + mouse)', () => {
     render(<Demo />)
     const id = triggers()[0].getAttribute('aria-controls')!
     expect(document.getElementById(id)).not.toBeNull()
+  })
+
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다', () => {
+    const snap = () => ({
+      focus: (document.activeElement as HTMLElement)?.id,
+      expanded: triggers().map((b) => b.getAttribute('aria-expanded')).join(','),
+    })
+    const startsFromLast = ['Home', 'ArrowUp', 'ArrowLeft']
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      const list = triggers()
+      list[0].focus()
+      if (startsFromLast.includes(key)) fireEvent.keyDown(document.activeElement!, { key: 'End' })
+      const before = snap()
+      const target = document.activeElement as HTMLElement
+      if (key === 'Click' || key === ' ') fireEvent.click(target)
+      else fireEvent.keyDown(target, { key })
+      const changed = before.focus !== snap().focus || before.expanded !== snap().expanded
+      expect({ key, changed }).toEqual({ key, changed: true })
+    }
   })
 })
