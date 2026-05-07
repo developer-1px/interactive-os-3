@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './button'
+import Demo, { meta } from './button'
 
 afterEach(cleanup)
 
@@ -42,5 +42,19 @@ describe('button demo — black-box (keyboard + mouse)', () => {
     expect(muteBtn().textContent).toContain('Sound')
     fireEvent.click(muteBtn())
     expect(muteBtn().textContent).toContain('Muted')
+  })
+
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다 (toggle button 기준)', () => {
+    // native <button> 의 Enter/Space → click — jsdom 은 fireEvent.keyDown 만으로 click 미발사.
+    // 본 demo 의 advertise 는 ['Enter','Space'] (둘 다 click 동등) → 키별 fireEvent.click 으로 검증.
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      const before = muteBtn().getAttribute('aria-pressed')
+      // Enter/Space 모두 native button 에서 click 으로 귀결.
+      fireEvent.click(muteBtn())
+      const after = muteBtn().getAttribute('aria-pressed')
+      expect({ key, changed: before !== after }).toEqual({ key, changed: true })
+    }
   })
 })
