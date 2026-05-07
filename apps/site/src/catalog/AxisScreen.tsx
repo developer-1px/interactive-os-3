@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { CatalogRow } from './CatalogRow'
 import type { AxisEntry } from './registry.axes'
-import { slugForAxis } from './registry.axes'
+import { slugForAxis, PKG_SOURCES } from './registry.axes'
+import { buildAppTabs } from './buildAppTabs'
 
 /**
  * 한 axis 의 화면 — 좌측에 그 axis 를 쓰는 pattern 목록(탭 전환), 우측에 선택된 pattern 의 raw 소스.
- * recipe = SSOT (`packages/headless/src/patterns/<name>.ts` ?raw 그대로).
+ * recipe = SSOT (`packages/aria-kernel/src/patterns/<name>.ts` ?raw 그대로).
  */
 export function AxisScreen({
   entry,
@@ -56,14 +57,8 @@ export function AxisScreen({
           ))}
         </nav>
       }
-      tabs={[{
-        key: current?.name ?? 'axis',
-        label: 'Source',
-        filename: `${current?.name}.ts`,
-        source: current?.source ?? '',
-        symbols: [],
-      }]}
-      filenamePrefix="packages/headless/src/patterns/"
+      tabs={current ? buildAppTabs(PKG_SOURCES, current.filename) : []}
+      filenamePrefix=""
     />
   )
 }

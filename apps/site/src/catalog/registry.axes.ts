@@ -1,5 +1,5 @@
 /**
- * Axis SSOT — `packages/headless/src/patterns/*.ts` 의 raw 소스를 그대로 분석한다.
+ * Axis SSOT — `packages/aria-kernel/src/patterns/*.ts` 의 raw 소스를 그대로 분석한다.
  *
  * - 각 pattern 파일의 `composeAxes(...)` 호출에서 axis identifier 를 추출
  * - axis → 그 axis 를 쓰는 patterns 의 [{ name, source }] 매핑을 빌드
@@ -8,9 +8,23 @@
  */
 
 const sources = import.meta.glob<string>(
-  '../../../../packages/headless/src/patterns/*.ts',
+  '../../../../packages/aria-kernel/src/patterns/*.ts',
   { eager: true, query: '?raw', import: 'default' },
 )
+
+/** Full pkg raw — buildAppTabs 가 axis 화면에서 import 그래프를 따라가기 위함. PatternScreen 의 sources 와 동일 키 규약. */
+const pkgRawAll = import.meta.glob<string>(
+  '../../../../packages/*/src/**/*.{ts,tsx}',
+  { eager: true, query: '?raw', import: 'default' },
+)
+export const PKG_SOURCES: Record<string, string> = (() => {
+  const out: Record<string, string> = {}
+  for (const [k, v] of Object.entries(pkgRawAll)) {
+    const m = k.match(/\/packages\/([^/]+)\/src\/(.+)$/)
+    if (m) out[`@p/${m[1]}/${m[2]}`] = v
+  }
+  return out
+})()
 
 /**
  * KNOWN axes — `axes/index.ts` raw 에서 `export { X } from './X'` (export name ==
@@ -18,7 +32,7 @@ const sources = import.meta.glob<string>(
  * 이름≠파일이라 자동 배제. 새 axis 추가 → index.ts 만 수정하면 자동 반영.
  */
 const axesIndexSrc = import.meta.glob<string>(
-  '../../../../packages/headless/src/axes/index.ts',
+  '../../../../packages/aria-kernel/src/axes/index.ts',
   { eager: true, query: '?raw', import: 'default' },
 )
 const KNOWN_AXES: ReadonlySet<string> = (() => {
@@ -71,6 +85,8 @@ function extractDirectAxisCalls(src: string): string[] {
 
 export interface Pattern {
   name: string
+  /** PKG_SOURCES key — buildAppTabs root file. */
+  filename: string
   source: string
   axes: string[]
 }
@@ -79,7 +95,8 @@ const patterns: Pattern[] = Object.entries(sources)
   .map(([path, source]) => ({ path, source }))
   .map(({ path, source }) => {
     const name = path.split('/').pop()!.replace(/\.ts$/, '')
-    return { name, source, axes: [] as string[] }
+    const filename = `@p/aria-kernel/patterns/${name}.ts`
+    return { name, filename, source, axes: [] as string[] }
   })
   .filter((p) => !SKIP.has(p.name))
   .map((p) => ({
