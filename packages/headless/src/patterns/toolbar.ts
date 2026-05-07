@@ -1,4 +1,4 @@
-import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
+import { getChildren, getLabel, isDisabled, ROOT, type NormalizedData, type UiEvent } from '../types'
 import { activate, composeAxes, navigate } from '../axes'
 import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -40,19 +40,34 @@ export function useToolbarPattern(
 } {
   const { orientation = 'horizontal', autoFocus, label, labelledBy } = opts
 
-  const { focusId, bindFocus, delegate, ids } = usePatternBase(
-    data, toolbarAxis({ orientation }), onEvent, { autoFocus },
+  // separator 는 roving navigation 에서 skip — ROOT children 에서 제외한 합성 데이터로
+  // navigate axis 통과 (APG toolbar: separator MUST be skipped during keyboard nav).
+  const allChildren = getChildren(data, ROOT)
+  const navIds = allChildren.filter((id) => !data.entities[id]?.separator)
+  const navData: NormalizedData = navIds.length === allChildren.length
+    ? data
+    : { entities: data.entities, relationships: data.relationships, meta: { ...data.meta, root: navIds } }
+
+  const { focusId, bindFocus, delegate } = usePatternBase(
+    navData, toolbarAxis({ orientation }), onEvent, { autoFocus },
   )
 
-  const items = ids.map((id, i) => ({
-    id,
-    label: getLabel(data, id),
-    selected: Boolean(data.entities[id]?.pressed),
-    disabled: isDisabled(data, id),
-    posinset: i + 1,
-    setsize: ids.length,
-    separator: Boolean(data.entities[id]?.separator),
-  }))
+  // 렌더용 items 는 원본 ROOT children (separator 포함) — 데모가 separator 위치에 분리선 그리도록.
+  // posinset/setsize 는 non-separator 만 카운트 (APG toolbar: separator 는 collection 멤버 아님).
+  let pos = 0
+  const items = allChildren.map((id) => {
+    const isSep = Boolean(data.entities[id]?.separator)
+    if (!isSep) pos += 1
+    return {
+      id,
+      label: getLabel(data, id),
+      selected: Boolean(data.entities[id]?.pressed),
+      disabled: isDisabled(data, id),
+      posinset: isSep ? 0 : pos,
+      setsize: navIds.length,
+      separator: isSep,
+    }
+  })
 
   const rootProps: RootProps = {
     role: 'toolbar',

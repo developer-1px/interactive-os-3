@@ -45,11 +45,21 @@ describe('toolbar demo — black-box (keyboard + mouse)', () => {
     expect(focused().textContent).toBe('Bold')
   })
 
-  it('Home 으로 첫 item 으로 focus', () => {
+  it('Home/End — 첫/마지막 button 으로 focus (separator skip)', () => {
     render(<Demo />)
-    fireEvent.keyDown(focused(), { key: 'ArrowRight' })
+    fireEvent.keyDown(focused(), { key: 'End' })
+    expect(focused().textContent).toBe('Link')
     fireEvent.keyDown(focused(), { key: 'Home' })
     expect(focused().textContent).toBe('Bold')
+  })
+
+  it('separator 는 roving 에서 skip — Underline 다음 ArrowRight 는 Link', () => {
+    render(<Demo />)
+    fireEvent.keyDown(focused(), { key: 'ArrowRight' })
+    fireEvent.keyDown(focused(), { key: 'ArrowRight' })
+    expect(focused().textContent).toBe('Underline')
+    fireEvent.keyDown(focused(), { key: 'ArrowRight' })
+    expect(focused().textContent).toBe('Link')
   })
 
   it('separator 는 aria-hidden 으로 표시되어 있다', () => {
@@ -65,14 +75,14 @@ describe('toolbar demo — black-box (keyboard + mouse)', () => {
   })
 
   it('meta.keys navigate 키가 focus 를 이동시킨다', () => {
-    // Enter/Space/Click 은 toggle state 가 없는 demo 라 focus 변화 X — 별도 케이스에서 다루지 않음.
-    // End/ArrowLeft 는 separator(sep) 위로 focus 가 떠 어떤 button 도 tabIndex=0 이 아니게 되는
-    // 알려진 demo 한계 — 본 루프는 boundary 회피 키만 검증.
-    const skipKeys = ['Enter', ' ', 'Click', 'End', 'Home', 'ArrowLeft', 'ArrowUp', 'PageUp']
+    // Enter/Space/Click 은 toggle state 가 없는 demo 라 focus 변화 X — 별도 케이스 면제.
+    const skipKeys = ['Enter', ' ', 'Click']
+    const startsFromLast = ['Home', 'ArrowLeft', 'ArrowUp', 'PageUp']
     const navigateKeys = meta.keys!().filter((k) => !skipKeys.includes(k))
     for (const key of navigateKeys) {
       cleanup()
       render(<Demo />)
+      if (startsFromLast.includes(key)) fireEvent.keyDown(focused(), { key: 'End' })
       const before = focused().textContent
       fireEvent.keyDown(focused(), { key })
       const after = focused()?.textContent
