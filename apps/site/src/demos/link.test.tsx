@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './link'
+import Demo, { meta } from './link'
 
 afterEach(cleanup)
 
@@ -41,5 +41,18 @@ describe('link demo — black-box', () => {
   it('span[role=link] tabIndex=0 (focusable)', () => {
     render(<Demo />)
     expect(spanLink().tabIndex).toBe(0)
+  })
+
+  it('meta.keys 의 모든 키가 span[role=link] 활성화를 일으킨다', () => {
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      const before = log().textContent
+      // meta.keys 는 'Enter', 'Space' — fireEvent.keyDown 으로 dispatch.
+      const ev = key === 'Space' ? ' ' : key
+      fireEvent.keyDown(spanLink(), { key: ev })
+      const after = log().textContent
+      expect({ key, changed: before !== after }).toEqual({ key, changed: true })
+    }
   })
 })
