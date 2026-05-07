@@ -74,19 +74,19 @@ describe('toolbar demo — black-box (keyboard + mouse)', () => {
     expect(items()[3].getAttribute('data-id')).toBe('link')
   })
 
-  it('meta.keys navigate 키가 focus 를 이동시킨다', () => {
-    // Enter/Space/Click 은 toggle state 가 없는 demo 라 focus 변화 X — 별도 케이스 면제.
-    const skipKeys = ['Enter', ' ', 'Click']
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다 (focus 또는 activated)', () => {
     const startsFromLast = ['Home', 'ArrowLeft', 'ArrowUp', 'PageUp']
-    const navigateKeys = meta.keys!().filter((k) => !skipKeys.includes(k))
-    for (const key of navigateKeys) {
+    const activated = () => screen.getByTestId('toolbar-activated').textContent
+    for (const key of meta.keys!()) {
       cleanup()
       render(<Demo />)
       if (startsFromLast.includes(key)) fireEvent.keyDown(focused(), { key: 'End' })
-      const before = focused().textContent
-      fireEvent.keyDown(focused(), { key })
-      const after = focused()?.textContent
-      expect({ key, changed: before !== after }).toEqual({ key, changed: true })
+      const before = { focus: focused().textContent, act: activated() }
+      if (key === 'Click') fireEvent.click(focused())
+      else fireEvent.keyDown(focused(), { key })
+      const after = { focus: focused()?.textContent, act: activated() }
+      const changed = before.focus !== after.focus || before.act !== after.act
+      expect({ key, changed }).toEqual({ key, changed: true })
     }
   })
 })
