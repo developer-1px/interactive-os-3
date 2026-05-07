@@ -84,11 +84,29 @@ for (const [axisName, emits] of Object.entries(allAxisEmits)) {
   }
 }
 
+// ───── Check 3: meta.keys 전수 loop 존재 ─────
+// demo 가 비어있지 않은 meta.keys 를 advertise 하면 .test.tsx 도 전수 loop 를 가져야 한다.
+const loopMissing = []
+const demoFiles = readdirSync(demosDir).filter((f) => f.endsWith('.tsx') && !f.endsWith('.test.tsx') && !f.startsWith('_'))
+for (const df of demoFiles) {
+  const bn = df.replace(/\.tsx$/, '')
+  const tf = `${bn}.test.tsx`
+  if (!testFiles.includes(tf)) continue
+  const demoSrc = readFileSync(path.join(demosDir, df), 'utf8')
+  // meta.keys: () => ... — empty array (`=> []`) 면 skip.
+  if (!/keys:\s*\(\)\s*=>/.test(demoSrc) || /keys:\s*\(\)\s*=>\s*\[\]/.test(demoSrc)) continue
+  const testSrc = readFileSync(path.join(demosDir, tf), 'utf8')
+  if (!/meta\.keys!\(\)|for\s*\(\s*const\s+key\s+of\s+meta\.keys/.test(testSrc)) {
+    loopMissing.push({ demo: bn })
+  }
+}
+
 // ───── Output ─────
 const report = {
   escapeHatchViolations,
   axisCoverageViolations,
-  total: escapeHatchViolations.length + axisCoverageViolations.length,
+  loopMissing,
+  total: escapeHatchViolations.length + axisCoverageViolations.length + loopMissing.length,
 }
 
 const argv = process.argv.slice(2)
@@ -110,6 +128,13 @@ if (argv.includes('--json')) {
       process.stdout.write(`◇ axis emit not handled by any reducer preset (${axisCoverageViolations.length}):\n`)
       for (const v of axisCoverageViolations) {
         process.stdout.write(`  ${v.axis} → '${v.type}'\n`)
+      }
+      process.stdout.write('\n')
+    }
+    if (loopMissing.length > 0) {
+      process.stdout.write(`◇ demo test missing 'meta.keys 전수 loop' (${loopMissing.length}):\n`)
+      for (const v of loopMissing) {
+        process.stdout.write(`  ${v.demo}.test.tsx — advertises meta.keys but lacks loop\n`)
       }
       process.stdout.write('\n')
     }
