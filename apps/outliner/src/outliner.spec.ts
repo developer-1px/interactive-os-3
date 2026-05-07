@@ -69,20 +69,4 @@ export const outlinerSpec = {
     { chord: 'mod+y',       command: 'redo',          description: 'Redo (Windows fallback)' },
     { chord: 'mod+shift+v', command: 'paste-as-child', description: 'Paste as child of focused item' },
   ] as readonly TreeCommandDescriptor[],
-
-  // ── ④ View (외관) ─────────────────────────────────────────────────────
-  glyphs: {
-    open: '▾',   // children 있고 펼쳐짐
-    closed: '▸', // children 있고 접힘
-    leaf: '•',   // children 없음
-  },
-  indent: (level: number) => `${level}rem`,
-  classNames: {
-    container: 'font-mono text-sm p-6',
-    item: 'flex gap-2 py-0.5 outline-none focus:bg-blue-50 data-[selected]:bg-blue-100',
-    glyph: 'text-neutral-400',
-    emptyLabel: 'text-neutral-300',
-    editInput: 'flex-1 rounded border border-blue-400 bg-white px-1 outline-none',
-  },
-  emptyLabel: 'empty',
 } as const
