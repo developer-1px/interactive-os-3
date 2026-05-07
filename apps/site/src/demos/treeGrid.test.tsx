@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './treeGrid'
+import Demo, { meta } from './treeGrid'
 
 afterEach(cleanup)
 
@@ -63,5 +63,31 @@ describe('treeGrid demo — black-box (keyboard + mouse)', () => {
   it('gridcell 노출', () => {
     render(<Demo />)
     expect(screen.getAllByRole('gridcell').length).toBeGreaterThan(0)
+  })
+
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다', () => {
+    const snap = () => ({
+      focusLabel: focused()?.textContent ?? '',
+      expanded: dataRows().map((r) => r.getAttribute('aria-expanded') ?? '').join(','),
+      rowCount: dataRows().length,
+      sel: dataRows().map((r) => r.getAttribute('aria-selected') ?? '').join(','),
+    })
+    const printable = (k: string) => k === '<printable>' || (k.length === 1 && /[A-Za-z]/.test(k))
+    const startsFromLast = ['Home', 'ArrowUp', 'PageUp']
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      const first = dataRows()[0]
+      first.focus()
+      if (startsFromLast.includes(key)) fireEvent.keyDown(focused()!, { key: 'End' })
+      const before = snap()
+      const target = focused() ?? first
+      if (key === 'Click') fireEvent.click(dataRows()[3])
+      else if (printable(key)) fireEvent.keyDown(target, { key: 'p' })
+      else fireEvent.keyDown(target, { key })
+      const after = snap()
+      const changed = JSON.stringify(before) !== JSON.stringify(after)
+      expect({ key, changed }).toEqual({ key, changed: true })
+    }
   })
 })
