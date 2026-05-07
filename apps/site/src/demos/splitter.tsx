@@ -7,7 +7,7 @@ export const meta = {
   apg: 'windowsplitter',
   kind: 'single-value' as const,
   blurb: 'A resizable split panel controlled by a single percentage value.',
-  keys: () => axisKeys(splitterAxis()),
+  keys: () => axisKeys(splitterAxis({ orientation: 'horizontal' })),
 }
 
 export default function SplitterDemo() {
