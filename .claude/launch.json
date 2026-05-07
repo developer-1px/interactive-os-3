@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "ds-dev",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "cd /Users/user/Desktop/ds && export PATH=\"$HOME/.nvm/versions/node/v22.21.0/bin:$PATH\" && pnpm dev"],
       "port": 5174
     }
   ]
