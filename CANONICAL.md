@@ -19,7 +19,7 @@
 | C1 | **데이터가 곧 UI** | UI = f(data). 컴포넌트 children에 비즈니스 콘텐츠 JSX 금지 — `data` prop으로 |
 | C2 | **상태는 직렬화 가능** | useState 값은 JSON.stringify 가능해야 한다. DOM·함수·Promise를 상태에 두지 않는다 |
 | C3 | **분기는 데이터 룩업** | switch/if 체인 → 선언적 map. 실행 시점이 아닌 정의 시점에 결정 가능해야 한다 |
-| C4 | **명령형은 경계로** | DOM·네트워크·시간 같은 부작용은 ds/core 또는 resource로 격리. widget·route는 선언만 |
+| C4 | **명령형은 경계로** | DOM·네트워크·시간 같은 부작용은 `@p/aria-kernel` 또는 resource로 격리. widget·route는 선언만 |
 | C5 | **이름이 곧 계약 경계** | 앱/LLM authored className 금지. DS 내부 generated class가 component root를 소유하고, tag + role + aria + data-slot은 그 경계 안에서만 셀렉트한다 |
 | C6 | **정본 ≠ 이상형** | 코드에 한 곳도 안 쓰이는 형태를 정본으로 못 박지 않는다 |
 
@@ -36,7 +36,7 @@
 
 ### 컴포넌트 인터페이스
 - **ui/ role 인터페이스**: `ControlProps(data, onEvent)` 데이터 주도 · 임시: 없음 · 유산: children JSX prop
-- **gesture/intent**: ui/는 activate 단발 emit, navigate/expand는 ds/core/gesture 헬퍼 · 임시: 없음 · 유산: 컴포넌트 내부 onKeyDown 분기
+- **gesture/intent**: ui/는 activate 단발 emit, navigate/expand는 `@p/aria-kernel/gesture` 헬퍼 · 임시: 없음 · 유산: 컴포넌트 내부 onKeyDown 분기
 - **DOM 활성화**: JSX-children 스타일(TreeRow·GridCell 등) 요소의 클릭+Enter/Space 처리는 `activateProps(onActivate)` 헬퍼로 단일화 · 임시: 없음 · 유산: 콜사이트의 onClick + onKeyDown 키 분기
 - **roving**: 내부 self-attach (composeAxes 내장) · 임시: 없음 · 유산: 소비자 onKeyDown
 - **role=row 그룹**: `useRovingDOM` itemSelector='[role="row"]' 명시 · 임시: 없음 · 유산: 기본 TABBABLE 사용
@@ -45,6 +45,8 @@
 - **데이터 read/write 인터페이스**: `useResource → (value, dispatch(event))` 단일 인터페이스 · 임시: 없음 · 유산: 종류별 훅
 - **ui ↔ resource 연결**: `defineFlow` 1조각 + `useFlow` 한 줄. resource.onEvent가 intent 라우터 흡수 · 임시: 없음 · 유산: 컴포넌트 안의 직접 fetch/dispatch
 - **상태 직렬화**: 모든 useState는 JSON 직렬화 가능. DOM ref·함수·Promise 보관 금지 · 임시: 없음
+- **이벤트 어휘 (UiEvent)**: `@p/aria-kernel/src/types.ts` `UiEvent` discriminated union 이 SSOT. axis(논리 네비)→resolveIntent(축↔UiEvent)→reducer(상태) 3-layer 통과. select 는 `{ids, to?}` 단일 — `to` undefined ⇒ replace, true ⇒ additive, false ⇒ unset. 단수 `select{id}`·별도 `selectMany` 폐기. AxisIntent(`treeStep`·`pageStep`·`expandSeed`)는 UiEvent 가 아니라 resolveIntent 통과로 풀린다 — emits/handles 가 UiEvent type literal 자리에 AxisIntent 키를 섞어 쓰면 정본 위반 · 임시: 없음 · 유산: 단수 `select{id}`, `selectMany`, AxisIntent 의 UiEvent 누설
+- **Step A 키보드 보편 액션**: selectAll(Cmd+A)·selectNone(Esc)·selectRange(Shift+Arrow/Click)·focus·sort·filter·find(Cmd+F)·save(Cmd+S)·commit(Enter)·revert(Esc-edit)·duplicate(Cmd+D) 는 UiEvent 정본에 직접 등장. host reducer 가 의미 부여 — 어휘는 aria-kernel 이 정의, 효과는 host 가 결정 · 임시: 없음 · 유산: 앱 안에서 키 → 도메인 액션 직접 dispatch
 
 ### 콘텐츠
 - **콘텐츠 vs 컨트롤**: 비즈니스 콘텐츠는 entity로 분리 (사용처 1곳이어도 entity 승격) · 임시: 없음 · 유산: route 안 인라인 콘텐츠 JSX
@@ -69,7 +71,7 @@
 - **cmd+k 등록**: staticData.palette · 임시: 없음 · 유산: 별도 등록 코드
 
 ### 패키지·플러그인
-- **패키지 우선 구조**: pnpm workspace 모노레포. 제품 의의는 ARIA/headless behavior와 검증 인프라 패키지(`@p/headless` 중심)다. `apps/<X>`와 `showcase/<X>`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다 · 임시: 없음 · 유산: 앱 구현 안에 재사용 behavior/API를 숨기는 구조
+- **패키지 우선 구조**: pnpm workspace 모노레포. 제품 의의는 ARIA/headless behavior와 검증 인프라 패키지(`@p/aria-kernel` 중심)다. `apps/<X>`와 `showcase/<X>`는 독립 제품이 아니라 패키지를 소비자 관점에서 검사하는 쇼케이스·검증 harness다 · 임시: 없음 · 유산: 앱 구현 안에 재사용 behavior/API를 숨기는 구조
 - **디자인 컴포넌트 소유권**: visual component·brand/theme·디자인 토큰 제품 방향성은 이 repo가 아니라 `aria-design-system`이 맡는다. 이 repo의 `@p/ds`는 기존 검증/호환 표면으로만 취급한다 · 임시: 없음 · 유산: `@p/ds`를 디자인 컴포넌트 제품으로 확장하는 구조
 - **검증 앱 내부 구조 (FSD)**: 큰 apps/<X>/src/는 실제 사용 시나리오 검증을 위해 FSD 레이어로 분할 가능 — `entities/`(zod schema·types·헬퍼) · `features/`(feature·resources·data·nav 도메인 흐름) · `widgets/`(composite UI 컴포넌트·hook) · 선택 `<variant>/`(mobile 등) · 루트 `index.ts·plugin.ts·style.ts`. 단, 재사용 가능한 계약은 apps가 아니라 `packages/*`에 둔다 · 임시: 작은 검증 앱(파일 ≤ 5개)은 평탄 유지 — 분할 비용 > 이익 · 유산: 큰 앱(>10 파일)이 평탄 분포로 책임 혼재
 - **쇼케이스 내부 구조**: showcase/<X>/src/는 보통 평탄 (단일 검증 표면). 큰 시연만 1개 서브폴더(`samples/`·`sections/`·`pages/`·`demos/` 중 의미 정확한 것 1개) · 임시: 없음 · 유산: 한 패키지 안에 같은 종류 서브폴더 2개
@@ -78,7 +80,7 @@
 - **Middleware**: 파이프라인 훅은 `defineMiddleware({ name, phase, fn })` 정본. phase는 `pre-dispatch`(기존 gestures와 등가) · `post-dispatch` · `pre-resource-read` · `post-resource-write` · 임시: 기존 `defineFlow.gestures`는 pre-dispatch 특수 케이스로 흡수됨 — 시그니처 호환 유지 · 유산: 컴포넌트 안의 dispatch 가로채기
 
 ### 도메인 엔티티
-- **엔티티 정의**: `z.object({...})` 스키마로 선언하고 타입은 `z.infer<typeof X>`로 도출. 스키마 파일은 라우트/도메인 옆 `schema.ts` · 임시: (a) DS 내부 ARIA·DOM prop 타입(ds/core/types.ts) — 만료 조건: 외부 입력 자리에 닿을 때 zod 승격, (b) 내부 reducer 통신용 discriminated union(Cmd·VM) — 만료 조건: URL/스토리지/네트워크 경계 노출 시 zod 승격 · 유산: `routes/*/types.ts`의 도메인 type/interface
+- **엔티티 정의**: `z.object({...})` 스키마로 선언하고 타입은 `z.infer<typeof X>`로 도출. 스키마 파일은 라우트/도메인 옆 `schema.ts` · 임시: (a) aria-kernel 내부 ARIA·DOM prop 타입(`@p/aria-kernel/src/types.ts`) — 만료 조건: 외부 입력 자리에 닿을 때 zod 승격, (b) 내부 reducer 통신용 discriminated union(Cmd·VM) — 만료 조건: URL/스토리지/네트워크 경계 노출 시 zod 승격 · 유산: `routes/*/types.ts`의 도메인 type/interface
 - **외부 데이터 진입점**: 외부에서 들어오는 entity는 boundary에서 `Schema.parse(raw)`로 검증 (virtual·fetch·storage·라우트 파라미터 등) · 임시: 없음 · 유산: 진입 지점에서 검증 없이 `as FsNode` 같은 cast
 
 ### 네이밍·구조
@@ -165,3 +167,5 @@
 - 2026-04-27 · slides 정본 채택: apps/slides 신설 (FSD). 슬라이드 분할 정본 = 줄 단독 `^---$` 1개 (Marpit/Slidev/Deckset 3곳 수렴). `splitMarkdown`/`SlideSchema`/`DeckSchema` 시드. 라우트 /slides/$, finder Sidebar 재사용, Prose entity로 슬라이드 본문 격리, 키 ←→/PgUp PgDn/Space/Home/End 네비
 - 2026-05-02 · 프로젝트 방향 전환 정본화: repo 제품은 `packages/*` 라이브러리, `apps/*`와 `showcase/*`는 패키지 검증용 소비자 쇼케이스로 재정의. 재사용 가능한 behavior/API는 앱 안에 숨기지 않고 패키지에 둔다.
 - 2026-05-02 · 디자인 컴포넌트 방향성 제거: visual component·brand/theme·디자인 토큰 제품화는 `aria-design-system` 소유. 이 repo의 `@p/ds`는 ARIA/headless 검증/호환 표면으로 격하.
+- 2026-05-08 · UiEvent 어휘 SSOT 갱신: select/selectMany 분기 폐지 → `select{ids,to?}` 1축으로 통합(`to` undefined ⇒ replace). Step A 키보드 보편 액션 11종(selectAll/None/Range/focus/sort/filter/find/save/commit/revert/duplicate) 정본 등재 — host reducer 가 의미 부여. AxisIntent(treeStep/pageStep/expandSeed) 와 UiEvent 의 분리를 명문화. 수렴 완료: aria-kernel 내부 axes/multiSelect·gridMultiSelect·state/reduce·state/handles·state/check·gesture·emits 옛 어휘 마이그레이션 — 모노레포 tsc 0에러.
+- 2026-05-08 · 명명 갱신(SSOT): 매뉴얼 안 `ds/core` 표기를 `@p/aria-kernel` 로 정정 — C4·gesture/intent·엔티티 정의 임시 (a) 3곳. 패키지 분리(2026-04-26) 이후 잔존한 표기 일탈.

@@ -1,5 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import typesSrc from '@p/headless/types.ts?raw'
+import typesSrc from '@p/aria-kernel/types.ts?raw'
+import {
+  UI_EVENT_CATEGORY,
+  UI_EVENT_CATEGORY_META,
+  UI_EVENT_CATEGORY_ORDER,
+  type UiEventCategory,
+} from '@p/aria-kernel'
 
 export const Route = createFileRoute('/uievents')({
   component: UiEventsApp,
@@ -23,7 +29,7 @@ interface Variant {
  * SSOT = 코드. site는 그것을 비주얼라이즈만.
  */
 function extractVariants(): Variant[] {
-  const m = typesSrc.match(/export type UiEvent =\n([\s\S]*?)(?=\n\nexport |\n\n\/\*\*\s*UiEvent 의 `value`)/m)
+  const m = typesSrc.match(/export type UiEvent =\n([\s\S]*?)\n\n/m)
   if (!m) return []
   const body = m[1]
   const lines = body.split('\n')
@@ -48,53 +54,113 @@ function extractVariants(): Variant[] {
   return variants
 }
 
-const PATTERNS_THAT_EMIT: Record<string, string[]> = {
-  navigate:    ['listbox', 'tabs', 'menu', 'menubar', 'tree', 'treeGrid', 'grid', 'toolbar', 'radioGroup'],
-  activate:    ['listbox', 'tabs', 'menu', 'menubar', 'tree', 'treeGrid', 'grid', 'toolbar', 'radioGroup', 'accordion', 'disclosure', 'switch'],
-  expand:      ['accordion', 'menu', 'menubar', 'treeGrid'],
-  select:      ['listbox', 'tree', 'treeGrid', 'grid'],
-  selectMany:  ['listbox (multi)', 'tree (multi)', 'treeGrid (multi)', 'grid (multi)'],
-  value:       ['slider', 'spinbutton', 'splitter', 'switch'],
-  open:        ['combobox', 'dialog', 'tooltip', 'menu (root)'],
-  typeahead:   ['listbox', 'tabs', 'menu', 'menubar', 'tree', 'treeGrid', 'grid'],
-  pan:         ['(useZoomPanGesture)'],
-  zoom:        ['(useZoomPanGesture)'],
+/**
+ * 패턴 소스(`patterns/*.ts`, `gesture/*.ts`)를 raw 로 glob 해 `type: 'X'` 리터럴을
+ * 스캔하여 variant → emitter pattern 역인덱스를 빌드. SSOT = 코드.
+ */
+const PATTERN_SRCS = import.meta.glob(
+  [
+    '../../../../packages/aria-kernel/src/patterns/*.ts',
+    '../../../../packages/aria-kernel/src/gesture/*.ts',
+  ],
+  { query: '?raw', import: 'default', eager: true },
+) as Record<string, string>
+
+function buildEmittersIndex(variantTypes: Set<string>): Record<string, string[]> {
+  const index: Record<string, Set<string>> = {}
+  for (const [path, src] of Object.entries(PATTERN_SRCS)) {
+    const name = path.split('/').pop()!.replace(/\.ts$/, '')
+    if (name === 'index' || name === 'types' || name.startsWith('usePatternBase') || name.startsWith('usePatternClipboard')) continue
+    const matches = src.matchAll(/\btype:\s*'([a-zA-Z]+)'/g)
+    for (const m of matches) {
+      const t = m[1]
+      if (!variantTypes.has(t)) continue
+      ;(index[t] ??= new Set()).add(name)
+    }
+  }
+  return Object.fromEntries(Object.entries(index).map(([k, v]) => [k, [...v].sort()]))
 }
 
 function UiEventsApp() {
   const variants = extractVariants()
+  const byType = new Map(variants.map((v) => [v.type, v]))
+  const emitters = buildEmittersIndex(new Set(variants.map((v) => v.type)))
+
+  // SSOT — types.ts 의 UI_EVENT_CATEGORY map 으로 그룹화. 새 variant 추가 시
+  // TS Record<UiEvent['type'], ...> 가 누락 강제.
+  const groups = new Map<UiEventCategory, Variant[]>()
+  for (const v of variants) {
+    const cat = (UI_EVENT_CATEGORY as Record<string, UiEventCategory>)[v.type]
+    if (!cat) continue
+    ;(groups.get(cat) ?? groups.set(cat, []).get(cat)!).push(v)
+  }
+  const orphans = variants.filter(
+    (v) => !(UI_EVENT_CATEGORY as Record<string, UiEventCategory>)[v.type],
+  )
+
+  const renderVariant = (v: Variant) => {
+    const ems = emitters[v.type] ?? []
+    return (
+      <div key={v.type} className="grid grid-cols-[10rem_1fr] gap-x-6 gap-y-1 py-3 border-b border-stone-100 last:border-0">
+        <div className="font-mono text-[15px] font-semibold text-stone-900">{v.type}</div>
+        <div className="font-mono text-[14px] text-stone-500">
+          {v.shape === '(no payload)' ? '—' : v.shape}
+        </div>
+        {v.doc && (
+          <p className="col-start-2 text-[14px] leading-relaxed text-stone-600">{v.doc}</p>
+        )}
+        <div className="col-start-2 text-[13px] text-stone-500">
+          {ems.length === 0 ? <span className="text-stone-300">no emitter</span> : ems.join(', ')}
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="border-b border-stone-200 bg-white px-8 py-6">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500">Single dispatch vocabulary</p>
-        <h1 className="text-3xl font-bold tracking-tight text-stone-900">UiEvent 카탈로그</h1>
-        <p className="mt-2 max-w-3xl text-base text-stone-600">
-          UI ↔ headless 통신의 단일 어휘. 모든 패턴이 <code className="rounded bg-stone-100 px-1.5 font-mono">{`onEvent(e: UiEvent)`}</code> 한 채널로 dispatch — discriminated union의 <code className="font-mono">{`type`}</code> 필드가 disambiguator. 새 variant 는 <code className="font-mono">packages/headless/src/types.ts</code> SSOT 에 추가.
+    <div className="min-h-screen bg-white">
+      <header className="px-8 pt-12 pb-8 mx-auto max-w-4xl">
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900">UiEvent</h1>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-stone-600">
+          UI ↔ headless 통신의 단일 어휘. 모든 패턴이 <code className="font-mono text-stone-800">onEvent(e: UiEvent)</code> 한 채널로 dispatch.
+          SSOT 는 <code className="font-mono text-stone-800">packages/aria-kernel/src/types.ts</code>.
+        </p>
+        <p className="mt-2 text-[13px] text-stone-400">
+          {variants.length} variants · {groups.size} categories
         </p>
       </header>
-      <main className="mx-auto max-w-6xl px-8 py-8">
-        <div className="grid gap-3 md:grid-cols-2">
-          {variants.map((v) => (
-            <article key={v.type} className="rounded-xl border border-stone-200 bg-white p-5">
-              <header className="flex items-baseline justify-between gap-3">
-                <h2 className="font-mono text-base font-bold text-stone-900">{`{ type: '${v.type}' }`}</h2>
+
+      <main className="mx-auto max-w-4xl px-8 pb-20">
+        {UI_EVENT_CATEGORY_ORDER.map((cat) => {
+          const items = groups.get(cat) ?? []
+          if (!items.length) return null
+          const meta = UI_EVENT_CATEGORY_META[cat]
+          return (
+            <section key={cat} className="mt-12 first:mt-0">
+              <header className="mb-2 flex items-baseline gap-3 border-b border-stone-200 pb-2">
+                <h2 className="text-[17px] font-semibold text-stone-900">{meta.label}</h2>
+                {meta.hint && <span className="text-[13px] text-stone-400">{meta.hint}</span>}
               </header>
-              <code className="mt-2 block break-all rounded bg-stone-50 p-2 font-mono text-xs text-stone-800">
-                {`{ type: '${v.type}'${v.shape !== '(no payload)' ? `; ${v.shape}` : ''} }`}
-              </code>
-              {v.doc && <p className="mt-3 text-sm leading-relaxed text-stone-600">{v.doc}</p>}
-              <div className="mt-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Emitted by</p>
-                <p className="mt-1 text-xs text-stone-700">
-                  {(PATTERNS_THAT_EMIT[v.type] ?? []).join(' · ') || <em className="text-stone-400">(none mapped)</em>}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="mt-8 text-xs text-stone-500">
-          {variants.length} variants. SSOT: <code className="font-mono">{`packages/headless/src/types.ts`}</code> 에서 `?raw` import 로 직접 파싱.
-        </p>
+              <div>{items.map(renderVariant)}</div>
+            </section>
+          )
+        })}
+
+        {orphans.length > 0 && (
+          <section className="mt-12">
+            <header className="mb-2 flex items-baseline gap-3 border-b border-stone-200 pb-2">
+              <h2 className="text-[17px] font-semibold text-stone-900">Uncategorized</h2>
+              <span className="text-[13px] text-stone-400">UI_EVENT_CATEGORY 매핑 누락</span>
+            </header>
+            <div>
+              {orphans.map((v) => (
+                <div key={v.type} className="grid grid-cols-[10rem_1fr] gap-x-6 py-3 border-b border-stone-100 last:border-0">
+                  <div className="font-mono text-[15px] font-semibold text-stone-900">{v.type}</div>
+                  <div className="font-mono text-[14px] text-stone-500">{v.shape === '(no payload)' ? '—' : v.shape}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   )

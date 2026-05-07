@@ -1,7 +1,7 @@
-import { fromList, isExpanded } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { fromList, isExpanded } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import { disclosureAxis, disclosurePattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Disclosure · Card',

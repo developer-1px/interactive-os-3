@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { reduceWithDefaults, type NormalizedData } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
+import { reduceWithDefaults, type NormalizedData } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
 import { Menu, type MenuSlots, menuWrapperKeys } from './_menuWrapper'
 import type { SlotProps } from '../catalog/slots'
 

@@ -1,6 +1,6 @@
-import { useLocalValue } from '@p/headless/local'
-import { sliderAxis, sliderPattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { useLocalValue } from '@p/aria-kernel/local'
+import { sliderAxis, sliderPattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Slider',

@@ -6,7 +6,7 @@
 
 | 위치 | 컨텍스트 | 역할 |
 |---|---|---|
-| `packages/headless/CONTEXT.md` | ARIA behavior infra | 단 하나의 제품. axes·roving·gesture·patterns. |
+| `packages/aria-kernel/CONTEXT.md` | ARIA behavior infra | 단 하나의 제품. axes·roving·gesture·patterns. |
 | `packages/zod-crud/CONTEXT.md` | JsonCrud op 정본 | edit/clipboard/history 어휘 SSOT. headless가 import. |
 | `packages/fs/CONTEXT.md` | 파일시스템 추상 | finder/markdown 앱이 소비. |
 | `packages/devtools/CONTEXT.md` | 개발 도구 | repro recorder 등. |

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { sliderRangePattern, sliderRangeAxis } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { sliderRangePattern, sliderRangeAxis } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Slider · Multi-Thumb',

@@ -1,5 +1,5 @@
-import { ROOT, getChildren, getExpanded, type NormalizedData, type UiEvent } from '@p/headless'
-import { useMenuPattern, type PatternProps } from '@p/headless/patterns'
+import { ROOT, getChildren, getExpanded, type NormalizedData, type UiEvent } from '@p/aria-kernel'
+import { useMenuPattern, type PatternProps } from '@p/aria-kernel/patterns'
 import { useRef, useState } from 'react'
 import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../catalog/slots'
 

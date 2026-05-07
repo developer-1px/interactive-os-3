@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { spinbuttonAxis, spinbuttonPattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { spinbuttonAxis, spinbuttonPattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Spinbutton',

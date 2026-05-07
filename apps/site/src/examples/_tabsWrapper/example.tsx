@@ -1,4 +1,4 @@
-import { tabsAxis } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { tabsAxis } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const tabsWrapperKeys = () => axisKeys(tabsAxis())

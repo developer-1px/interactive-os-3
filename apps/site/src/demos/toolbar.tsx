@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { fromList, type UiEvent } from '@p/headless'
-import { toolbarAxis, useToolbarPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+import { fromList, type UiEvent } from '@p/aria-kernel'
+import { toolbarAxis, useToolbarPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Toolbar',

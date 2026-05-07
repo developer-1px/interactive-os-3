@@ -1,6 +1,6 @@
-import { fromList, singleCurrent } from '@p/headless'
-import { navigationListPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { fromList, singleCurrent } from '@p/aria-kernel'
+import { navigationListPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
 
 export const meta = {
   title: 'Navigation List',

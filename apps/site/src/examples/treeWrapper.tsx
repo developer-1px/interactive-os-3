@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { applyGesture, expandBranchOnActivate, fromTree, reduceWithDefaults } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import type { TreeItem } from '@p/headless/patterns'
+import { applyGesture, expandBranchOnActivate, fromTree, reduceWithDefaults } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import type { TreeItem } from '@p/aria-kernel/patterns'
 import { Tree, type TreeSlots, treeWrapperKeys } from './_treeWrapper'
 import type { SlotProps } from '../catalog/slots'
 

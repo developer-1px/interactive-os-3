@@ -20,7 +20,7 @@ const isHiddenDir = (name: string): boolean => name.startsWith('.')
  *  형태: '<topdir>' (전체) 또는 '<topdir>/<sub>' (한 단계 좁히기).
  *  배포 사이즈·노출 범위 모두 이 한 곳에서 통제. */
 const ALLOW_ROOTS: ReadonlyArray<readonly string[]> = [
-  ['packages', 'headless'],
+  ['packages', 'aria-kernel'],
   ['docs'],
 ]
 
@@ -68,7 +68,7 @@ function scan(root: string): FsNode[] {
     if (rest.length === 0) {
       topByName.set(top, leaf)
     } else {
-      // 합성된 중간 노드: e.g. ALLOW=['packages','headless'] → packages 라는 가상 dir 안에 headless 만 노출
+      // 합성된 중간 노드: e.g. ALLOW=['packages','aria-kernel'] → packages 라는 가상 dir 안에 headless 만 노출
       const existing = topByName.get(top)
       const child = leaf
       if (existing) existing.children!.push(child)

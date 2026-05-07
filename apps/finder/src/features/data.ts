@@ -73,6 +73,6 @@ void extToIcon
 
 export const sidebar: SidebarItem[] = [
   { id: 'root',     label: tree.name,           path: '/',                          icon: 'home' },
-  { id: 'headless', label: '@p/headless',       path: '/packages/headless/src',     icon: 'dir' },
+  { id: 'headless', label: '@p/aria-kernel',       path: '/packages/aria-kernel/src',     icon: 'dir' },
   { id: 'docs',     label: 'docs',              path: '/docs',                      icon: 'dir' },
 ]

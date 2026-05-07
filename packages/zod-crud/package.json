@@ -24,7 +24,7 @@
     "zod": "^4.0.0"
   },
   "dependencies": {
-    "@p/headless": "workspace:*"
+    "@p/aria-kernel": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

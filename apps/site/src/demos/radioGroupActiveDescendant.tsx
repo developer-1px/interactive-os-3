@@ -1,7 +1,7 @@
-import { fromList, reduceWithRadio } from '@p/headless'
-import { radioGroupAxis, useRadioGroupPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+import { fromList, reduceWithRadio } from '@p/aria-kernel'
+import { radioGroupAxis, useRadioGroupPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Radio Group · activeDescendant',

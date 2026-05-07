@@ -9,7 +9,7 @@ JsonCrud op의 정본. edit / clipboard / history 어휘를 zod schema로 박제
 
 ## 역할
 
-- `@p/headless`의 `UiEvent` 중 edit 계열은 본 패키지의 op과 1:1 동형.
+- `@p/aria-kernel`의 `UiEvent` 중 edit 계열은 본 패키지의 op과 1:1 동형.
 - 추상화 0, 옵션 0 — opinionated. 새 op 추가는 spec.md를 먼저 갱신.
 
 ## 어휘 출처

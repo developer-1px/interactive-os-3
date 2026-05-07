@@ -12,7 +12,7 @@ import {
   typeahead,
   type NormalizedData,
   type UiEvent,
-} from '@p/headless'
+} from '@p/aria-kernel'
 
 const axis = composeAxes(navigate('vertical'), expand, activate, typeahead)
 

@@ -1,6 +1,6 @@
-import { fromList } from '@p/headless'
-import { tabsKeys, useTabsPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { fromList } from '@p/aria-kernel'
+import { tabsKeys, useTabsPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
 
 export const meta = {
   title: 'Tabs',

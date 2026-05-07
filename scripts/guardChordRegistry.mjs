@@ -17,7 +17,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const PATTERNS_DIR = join(__dirname, '..', 'packages', 'headless', 'src', 'patterns')
+const PATTERNS_DIR = join(__dirname, '..', 'packages', 'aria-kernel', 'src', 'patterns')
 
 const files = readdirSync(PATTERNS_DIR)
   .filter((f) => f.endsWith('.ts') && !f.endsWith('.d.ts'))

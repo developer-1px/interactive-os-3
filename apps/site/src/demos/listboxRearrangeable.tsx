@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { fromList, getFocus, type UiEvent } from '@p/headless'
-import { listboxAxis, useListboxPattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { fromList, getFocus, type UiEvent } from '@p/aria-kernel'
+import { listboxAxis, useListboxPattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Listbox · Rearrangeable',
@@ -23,7 +23,7 @@ export default function ListboxRearrangeableDemo() {
 
   const onEvent = (e: UiEvent) => {
     if (e.type === 'navigate') setFocusId(e.id)
-    if (e.type === 'select' && e.id) setFocusId(e.id)
+    if (e.type === 'select' && e.ids.length === 1) setFocusId(e.ids[0]!)
   }
 
   const { rootProps, optionProps, items } = useListboxPattern(data, onEvent, {

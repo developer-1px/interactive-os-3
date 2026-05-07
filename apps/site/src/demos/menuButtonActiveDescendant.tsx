@@ -1,6 +1,6 @@
-import { fromList } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import { useMenuButtonPattern } from '@p/headless/patterns'
+import { fromList } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import { useMenuButtonPattern } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Menu Button · activeDescendant',

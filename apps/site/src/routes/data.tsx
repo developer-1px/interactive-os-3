@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { fromList, fromTree, pathAncestors } from '@p/headless'
+import { fromList, fromTree, pathAncestors } from '@p/aria-kernel'
 import { SnapPage } from '../layout/SnapPage'
 
 export const Route = createFileRoute('/data')({

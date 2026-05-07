@@ -3,8 +3,8 @@ import {
   fromTree, navigateOnActivate,
   useControlState, useEventBridge,
   type UiEvent, type NormalizedData,
-} from '@p/headless'
-import { useResource, writeResource } from '@p/headless/store'
+} from '@p/aria-kernel'
+import { useResource, writeResource } from '@p/aria-kernel/store'
 import { smartGroups, sidebar } from '../features/data'
 import { pathResource, pinnedRootResource } from '../features/resources'
 

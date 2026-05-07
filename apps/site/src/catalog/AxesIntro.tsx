@@ -50,7 +50,7 @@ function SlideHero() {
 
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <code className="rounded-md bg-stone-900 px-3 py-2 text-sm font-mono text-white">
-            import {'{ composeAxes, navigate, activate }'} from '@p/headless'
+            import {'{ composeAxes, navigate, activate }'} from '@p/aria-kernel'
           </code>
         </div>
 

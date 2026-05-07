@@ -1,6 +1,6 @@
-import { fromList, reduceWithRadio } from '@p/headless'
-import { radioGroupKeys, useRadioGroupPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { fromList, reduceWithRadio } from '@p/aria-kernel'
+import { radioGroupKeys, useRadioGroupPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
 
 export const meta = {
   title: 'Radio Group',

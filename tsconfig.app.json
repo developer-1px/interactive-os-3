@@ -24,8 +24,8 @@
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
     "paths": {
-      "@p/headless": ["packages/headless/src/index.ts"],
-      "@p/headless/*": ["packages/headless/src/*"],
+      "@p/aria-kernel": ["packages/aria-kernel/src/index.ts"],
+      "@p/aria-kernel/*": ["packages/aria-kernel/src/*"],
       "@p/fs": ["packages/fs/src/index.ts"],
       "@p/fs/*": ["packages/fs/src/*"],
       "@p/devtools": ["packages/devtools/src/index.ts"],
@@ -35,6 +35,6 @@
       "@apps/*": ["apps/*/src/index.ts", "apps/*/src"]
     }
   },
-  "include": ["apps/site/src", "packages/headless/src", "apps/*/src"],
+  "include": ["apps/site/src", "packages/aria-kernel/src", "apps/*/src"],
   "exclude": []
 }

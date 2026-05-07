@@ -1,4 +1,4 @@
-import { useTabsPattern, type PatternProps } from '@p/headless/patterns'
+import { useTabsPattern, type PatternProps } from '@p/aria-kernel/patterns'
 import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../catalog/slots'
 
 export interface TabsSlots<TItem extends object = Record<string, unknown>> {

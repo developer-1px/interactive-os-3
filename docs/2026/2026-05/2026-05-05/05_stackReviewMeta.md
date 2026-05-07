@@ -13,11 +13,11 @@ updated: 2026-05-05
 리뷰는 "정체성·어휘·store·추상화·boilerplate·확장성·문서·테스트" 8축으로 짰다. 빠진 축:
 
 - **성능/리렌더 비용** — `setMeta(prev => reduce({...data, meta:prev}, e).meta ?? prev)` 가 모든 이벤트마다 전체 doc spread + reduce 재실행. tree `findParent` O(N) 도 키 입력마다. 측정 0.
-- **번들/런타임 크기** — `@p/headless` 가 9 verb 라우터·zod-crud 동형 union 을 다 싣는데 사용처가 verb 1~2개만 쓸 때 tree-shake 가능 여부 미점검.
+- **번들/런타임 크기** — `@p/aria-kernel` 가 9 verb 라우터·zod-crud 동형 union 을 다 싣는데 사용처가 verb 1~2개만 쓸 때 tree-shake 가능 여부 미점검.
 - **스크린리더/실사용 a11y** — ARIA-faithful 을 표방하나 NVDA/VoiceOver 실제 announce 검증 0. role/aria 속성이 *문법적으로* 맞다는 것과 *발화* 가 맞다는 것은 다르다.
 - **에러 경로** — `routeUiEventToCrud` 가 9 verb 외 입력, crud op 실패, schema 위반 시 동작 미점검. happy-path 만 본다.
 - **동시성/race** — `crud.subscribe` 콜백과 `dispatch` 사이의 순서, unmount 중 setMeta — useEffect cleanup 검증 없음.
-- **API 안정성/버전** — UiEvent union 변경이 곧 `@p/headless` breaking. semver 정책 언급 0.
+- **API 안정성/버전** — UiEvent union 변경이 곧 `@p/aria-kernel` breaking. semver 정책 언급 0.
 - **DX 회복성** — 잘못 쓸 때의 type error 메시지 품질, `editable` 부분키셋의 컴파일타임 표현 가능성.
 
 ## 2. 편향/그룹씽크
@@ -37,7 +37,7 @@ updated: 2026-05-05
 ## 4. 과소평가 항목
 
 - **§4 약점**: tree `findParent` O(N) per keystroke — Y 가 "회귀 테스트 없음" 으로만 처리, 큰 트리(>10³ 노드)에서 성능 회귀 위험. 측정 권고 누락.
-- **§6 비-위계 backend 충돌**: "네번째 example 에서 재설계" 로 미룸 — 그러나 UiEvent 가 이미 `@p/headless` *공개 API* 라 후행 재설계 = breaking. 미루기 비용 과소.
+- **§6 비-위계 backend 충돌**: "네번째 example 에서 재설계" 로 미룸 — 그러나 UiEvent 가 이미 `@p/aria-kernel` *공개 API* 라 후행 재설계 = breaking. 미루기 비용 과소.
 - **§8 app 단위 회귀 0**: "보통" 으로 평가했지만 outliner/kanban 이 zod-crud 와 헤드리스의 *유일한 통합 증거* 인데 둘 다 test 0건은 "보통" 이 아니라 *blocking* 수준.
 - **§2 invariant 부분 위반**: "Vocabulary closed (ARIA)" 가 깨졌다고 자백하면서 권고는 "EditEvent 분리로 *표면* 만 가르자" — 문제 해결이 아니라 표기 변경에 그침.
 

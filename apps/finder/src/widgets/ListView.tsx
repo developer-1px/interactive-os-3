@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import { useTreeGridPattern } from '@p/headless/patterns'
-import { fromList } from '@p/headless'
+import { useTreeGridPattern } from '@p/aria-kernel/patterns'
+import { fromList } from '@p/aria-kernel'
 import { formatDate, formatSize } from '../features/data'
 import type { FsNode } from '../entities/types'
 

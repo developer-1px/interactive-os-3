@@ -11,7 +11,7 @@ updated: 2026-05-05
 
 # Kanban 예시 완성
 
-zod-crud × @p/headless 두번째 example. Outliner 와 다른 ARIA 패턴(Listbox 다중 인스턴스 + 컬럼간 cut+paste). 1차 구현 완료, 검증 중 발견된 갭 닫기.
+zod-crud × @p/aria-kernel 두번째 example. Outliner 와 다른 ARIA 패턴(Listbox 다중 인스턴스 + 컬럼간 cut+paste). 1차 구현 완료, 검증 중 발견된 갭 닫기.
 
 ## 1차 검증 결과
 

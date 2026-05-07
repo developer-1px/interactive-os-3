@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from '@tanstack/react-router'
-import { useShortcut } from '@p/headless/key/useShortcut'
+import { useShortcut } from '@p/aria-kernel/key/useShortcut'
 import { loadText, renderMarkdown } from '@p/fs'
 import { splitMarkdown } from '../features/split'
 import { ThumbnailStrip } from './ThumbnailStrip'

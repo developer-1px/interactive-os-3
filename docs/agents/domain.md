@@ -11,7 +11,7 @@
 
 `CONTEXT-MAP.md`가 정본. 요약:
 
-- `packages/headless/CONTEXT.md` — ARIA behavior infra (단 하나의 제품)
+- `packages/aria-kernel/CONTEXT.md` — ARIA behavior infra (단 하나의 제품)
 - `packages/zod-crud/CONTEXT.md` — JsonCrud op 정본
 - `packages/fs/CONTEXT.md` — 파일시스템 추상
 - `packages/devtools/CONTEXT.md` — 개발 도구

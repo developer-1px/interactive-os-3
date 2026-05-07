@@ -1,18 +1,18 @@
 # Getting Started
 
-5분 안에 첫 화면을 띄운다. `@p/headless` 는 ARIA 행동 인프라 — 시각은 Tailwind utility class 가 직접 표현한다.
+5분 안에 첫 화면을 띄운다. `@p/aria-kernel` 는 ARIA 행동 인프라 — 시각은 Tailwind utility class 가 직접 표현한다.
 
 ## 설치
 
 ```bash
-npm install @p/headless
+npm install @p/aria-kernel
 npm install react@^19
 ```
 
 또는 모노레포 인접:
 
 ```bash
-npm install file:../ds/packages/headless
+npm install file:../ds/packages/aria-kernel
 ```
 
 ## 첫 import
@@ -20,14 +20,14 @@ npm install file:../ds/packages/headless
 세 곳에서 끌어 쓴다 — core, patterns, local quick-start.
 
 ```ts
-import { fromList } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { fromList } from '@p/aria-kernel'
+import { useListboxPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
 ```
 
-- `@p/headless` — `NormalizedData`, `UiEvent`, axes, roving, gesture (core 어휘)
-- `@p/headless/patterns` — APG recipe 24종 (`useListboxPattern`, `useTabsPattern`, ...)
-- `@p/headless/local` — 데모용 quick-start state (`useLocalData`, `useLocalValue`)
+- `@p/aria-kernel` — `NormalizedData`, `UiEvent`, axes, roving, gesture (core 어휘)
+- `@p/aria-kernel/patterns` — APG recipe 24종 (`useListboxPattern`, `useTabsPattern`, ...)
+- `@p/aria-kernel/local` — 데모용 quick-start state (`useLocalData`, `useLocalValue`)
 
 ## 데이터 만들기 — `fromList`
 
@@ -49,9 +49,9 @@ const seed = fromList([
 recipe 한 줄이 `rootProps`, `optionProps(id)`, `items` 를 돌려준다. markup 결정은 소비자.
 
 ```tsx
-import { fromList } from '@p/headless'
-import { useListboxPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
+import { fromList } from '@p/aria-kernel'
+import { useListboxPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
 
 export default function Demo() {
   const [data, onEvent] = useLocalData(() =>

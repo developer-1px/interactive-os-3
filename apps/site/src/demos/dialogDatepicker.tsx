@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useDialogPattern } from '@p/headless/patterns'
+import { useDialogPattern } from '@p/aria-kernel/patterns'
 import { CalendarGrid } from './_calendarGrid'
 
 export const meta = {

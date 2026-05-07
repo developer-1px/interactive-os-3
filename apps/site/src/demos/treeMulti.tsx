@@ -3,10 +3,10 @@ import {
   expandBranchOnActivate,
   fromTree,
   reduceWithMultiSelect,
-} from '@p/headless'
-import { treeAxis, useTreePattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+} from '@p/aria-kernel'
+import { treeAxis, useTreePattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Tree · Multi',

@@ -1,4 +1,4 @@
-import { accordionAxis } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { accordionAxis } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const accordionWrapperKeys = () => axisKeys(accordionAxis())

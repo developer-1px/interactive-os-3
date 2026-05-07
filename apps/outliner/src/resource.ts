@@ -1,4 +1,4 @@
-import { defineResource, routeUiEventToCrud, type CrudPort } from '@p/headless/store'
+import { defineResource, routeUiEventToCrud, type CrudPort } from '@p/aria-kernel/store'
 import type { JsonDoc } from 'zod-crud'
 import { crud } from './crud'
 

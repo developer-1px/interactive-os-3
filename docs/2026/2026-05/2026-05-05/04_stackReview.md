@@ -10,7 +10,7 @@ updated: 2026-05-05
 
 ## 스코프
 
-- 코어: `packages/headless/src/{store,patterns,types.ts}`, `packages/zod-crud/src/{editor,types.ts}`
+- 코어: `packages/aria-kernel/src/{store,patterns,types.ts}`, `packages/zod-crud/src/{editor,types.ts}`
 - 사용처: `apps/outliner`, `apps/kanban`, `apps/finder/src/features/resources.ts`
 - 권위: `CLAUDE.md` · `INVARIANTS.md` · `PATTERNS.md` · MEMORY.md · 01_outlinerPrd · 03_imperativeAudit
 
@@ -18,15 +18,15 @@ updated: 2026-05-05
 
 ---
 
-## 1. 정체성/경계 — zod-crud ↔ @p/headless
+## 1. 정체성/경계 — zod-crud ↔ @p/aria-kernel
 
 | 페르소나 | 한 줄 |
 |---|---|
-| U | `routeUiEventToCrud` + `CrudPort` duck-typing 으로 `@p/headless` 안에 zod-crud import 0건 — 처음 봐도 깨끗합니다. |
+| U | `routeUiEventToCrud` + `CrudPort` duck-typing 으로 `@p/aria-kernel` 안에 zod-crud import 0건 — 처음 봐도 깨끗합니다. |
 | R | UiEvent 9 verb 시그니처가 zod-crud op 와 자구까지 동일(`insertAfter`/`appendChild`/`paste{mode,index}`)이라 "duck-typing" 은 형식상 분리, 어휘는 사실상 단방향 종속입니다. |
 | Y | `CrudPort` interface 는 단 1 consumer(`routeUiEventToCrud`)에만 쓰이는데 11개 메서드를 박제 — N=1 추상화입니다. |
 
-- **강점**: 코드 import graph 는 cleanly inverted (`@p/headless` 가 zod-crud 모름).
+- **강점**: 코드 import graph 는 cleanly inverted (`@p/aria-kernel` 가 zod-crud 모름).
 - **약점**: 어휘 자체가 `JsonCrud` op 명에 lock-in — `CrudPort` 가 사실은 `JsonCrudInterface` 의 alias.
 - **권고**: 의도적 1:1을 docstring 으로 *명시* 하거나, Crud 가 아닌 다른 백엔드(예: REST, CRDT)가 들어올 때를 대비해 verb 한두 개를 generic 화할지 결정.
 
@@ -35,7 +35,7 @@ updated: 2026-05-05
 | 페르소나 | 한 줄 |
 |---|---|
 | U | 9:9 mapping switch 가 한 파일에 다 보여서 mental model 1초 — 좋습니다. |
-| R | `types.ts:54-66` 주석이 "정본 = zod-crud op" 라고 자백 — `@p/headless` 는 ARIA-faithful 인데 편집 어휘는 backend-faithful, **두 개의 spec 권위**가 한 union 안에 공존합니다. |
+| R | `types.ts:54-66` 주석이 "정본 = zod-crud op" 라고 자백 — `@p/aria-kernel` 는 ARIA-faithful 인데 편집 어휘는 backend-faithful, **두 개의 spec 권위**가 한 union 안에 공존합니다. |
 | Y | `paste.mode: 'auto'\|'child'\|'overwrite'` 같은 zod-crud 내부 enum 이 그대로 UiEvent 에 노출 — 다른 backend 에선 의미 없을 표면. |
 
 - **강점**: 어댑터 코드가 사실상 0줄 (resource 파일 14줄). 우연이 아니라 의도적 동형사상.

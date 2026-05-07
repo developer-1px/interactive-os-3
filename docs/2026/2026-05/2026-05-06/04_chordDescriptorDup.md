@@ -28,7 +28,7 @@ TypeError: Cannot read properties of undefined (reading 'n4') at Column (Kanban.
 
 ### 근원
 
-`packages/headless/src/patterns/listbox.ts` `listboxBuiltinChords` 배열:
+`packages/aria-kernel/src/patterns/listbox.ts` `listboxBuiltinChords` 배열:
 
 - 80행: `{ chord: 'Backspace', uiEvent: 'remove', description: 'Remove focused option', scope: 'item' }`
 - 85행 (수정 전): `{ chord: LISTBOX_EDIT_REMOVE[0], uiEvent: 'remove', description: '... — editable mode', scope: 'item' }`
@@ -49,7 +49,7 @@ TypeError: Cannot read properties of undefined (reading 'n4') at Column (Kanban.
 
 ## 수정
 
-- `packages/headless/src/patterns/listbox.ts` 85행 중복 descriptor 제거.
+- `packages/aria-kernel/src/patterns/listbox.ts` 85행 중복 descriptor 제거.
 - `LISTBOX_EDIT_REMOVE` 상수는 line 187 의 editable 모드 runtime routing 에서 여전히 사용 → 보존.
 - editable 모드에서 Backspace=remove 의 runtime emit 은 base 의 clipboard 라우팅과 동치이므로 별도 descriptor 불필요.
 

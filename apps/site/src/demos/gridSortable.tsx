@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { fromTree, type NormalizedData, type UiEvent } from '@p/headless'
-import { gridAxis, useGridPattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { fromTree, type NormalizedData, type UiEvent } from '@p/aria-kernel'
+import { gridAxis, useGridPattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Grid · Sortable',

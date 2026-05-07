@@ -2,13 +2,13 @@
 id: headlessMultiWiring
 type: inbox
 slug: headlessMultiWiring
-title: '@p/headless multi-select 0% → 100% wiring + 회귀 테스트 + 패키지 진단'
+title: '@p/aria-kernel multi-select 0% → 100% wiring + 회귀 테스트 + 패키지 진단'
 tags: [inbox, headless, multi-select, regression-test, audit]
 created: 2026-05-02
 updated: 2026-05-02
 ---
 
-# @p/headless multi-select wiring + 회귀 테스트 + 패키지 진단
+# @p/aria-kernel multi-select wiring + 회귀 테스트 + 패키지 진단
 
 ## 시작점 — "지금 헤드리스에서 멀티 셀렉은 전혀 없는데"
 
@@ -125,14 +125,14 @@ APG 표준이 `aria-multiselectable`을 같은 role 안 분기로 둔다는 점,
 
 ## 근거
 
-- `/Users/user/Desktop/ds/packages/headless/src/axes/multiSelect.ts`
-- `/Users/user/Desktop/ds/packages/headless/src/state/selection.ts`
-- `/Users/user/Desktop/ds/packages/headless/src/state/expansion.ts`
-- `/Users/user/Desktop/ds/packages/headless/src/patterns/{listbox,tree,treeGrid,accordion}.ts`
-- `/Users/user/Desktop/ds/packages/headless/src/state/defaults.ts`
-- `/Users/user/Desktop/ds/packages/headless/INVARIANTS.md`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/axes/multiSelect.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/state/selection.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/state/expansion.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/patterns/{listbox,tree,treeGrid,accordion}.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/state/defaults.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/INVARIANTS.md`
 - `/Users/user/Desktop/ds/apps/headless-site/src/demos/{listboxMulti,treeMulti,treeGridMulti,accordionSingle}.tsx`
-- `/Users/user/Desktop/ds/packages/headless/src/{axes/multiSelect,state/selection,state/expansion,axes/numericStep}.test.ts`
+- `/Users/user/Desktop/ds/packages/aria-kernel/src/{axes/multiSelect,state/selection,state/expansion,axes/numericStep}.test.ts`
 
 ## 남은 의문
 

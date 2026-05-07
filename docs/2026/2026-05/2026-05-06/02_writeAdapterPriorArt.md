@@ -2,7 +2,7 @@
 type: reference
 mode: defacto
 query: "헤드리스/에디터/그리드/CRDT 라이브러리들이 컬렉션 쓰기(copy/cut/paste/undo/redo/delete + 시스템 클립보드 round-trip + edit mode + adapter 슬롯)를 어떻게 다루는가"
-internalGap: "@p/headless가 ARIA(읽기) + W3C Clipboard API(쓰기) + zod-crud(첫 어댑터) 조합으로 가려는데, 11개 레퍼런스 중 누가 어디까지 커버하는지 매트릭스가 없었음"
+internalGap: "@p/aria-kernel가 ARIA(읽기) + W3C Clipboard API(쓰기) + zod-crud(첫 어댑터) 조합으로 가려는데, 11개 레퍼런스 중 누가 어디까지 커버하는지 매트릭스가 없었음"
 tags: [headless, write-adapter, clipboard, crud, edit-mode, prior-art]
 ---
 
@@ -10,11 +10,11 @@ tags: [headless, write-adapter, clipboard, crud, edit-mode, prior-art]
 
 ## TL;DR
 
-조사한 11개 라이브러리(헤드리스 컴포넌트 5 + 에디터 3 + 데이터 그리드 4 + CRDT 5)에서 **컬렉션 쓰기를 1급 시민으로 다루는 헤드리스 라이브러리는 존재하지 않는다.** 가장 가까운 React Aria조차 `useListData`/`useTreeData`에 `insert/remove/move/update`만 정의하고 `copy/cut/paste/undo/redo`는 punt. `@p/headless`가 이 어휘를 1급으로 올리고 zod-crud 같은 어댑터로 백엔드를 분리하려는 시도는 **선행 자산이 없는 새 영역**이다 — 단, 패턴 재료는 PM/Lexical(triple-MIME 클립보드), AG Grid(edit-mode 키 라우팅), Automerge-repo(snapshot/subscribe/mutate 3단 어댑터)에서 이미 정합한 형태로 발견된다.
+조사한 11개 라이브러리(헤드리스 컴포넌트 5 + 에디터 3 + 데이터 그리드 4 + CRDT 5)에서 **컬렉션 쓰기를 1급 시민으로 다루는 헤드리스 라이브러리는 존재하지 않는다.** 가장 가까운 React Aria조차 `useListData`/`useTreeData`에 `insert/remove/move/update`만 정의하고 `copy/cut/paste/undo/redo`는 punt. `@p/aria-kernel`가 이 어휘를 1급으로 올리고 zod-crud 같은 어댑터로 백엔드를 분리하려는 시도는 **선행 자산이 없는 새 영역**이다 — 단, 패턴 재료는 PM/Lexical(triple-MIME 클립보드), AG Grid(edit-mode 키 라우팅), Automerge-repo(snapshot/subscribe/mutate 3단 어댑터)에서 이미 정합한 형태로 발견된다.
 
 ## Why — 왜 이 질문이 지금 중요한가
 
-`@p/headless`가 Outliner/Kanban 같은 진짜 앱을 쓰면서 발견한 비대칭:
+`@p/aria-kernel`가 Outliner/Kanban 같은 진짜 앱을 쓰면서 발견한 비대칭:
 
 - 읽기(navigation/focus/select) — APG spec이 정본, pattern hook의 rootProps가 자체 처리
 - 쓰기(copy/cut/paste/remove/undo/redo) — 두 보일러플레이트 hook(`useHistoryShortcuts`, `useClipboardShortcuts`)이 매 widget에 수동 호출
@@ -106,7 +106,7 @@ flowchart TD
 
 **발견:** 5개 CRDT 모두 **snapshot / subscribe / mutate** 3행으로 수렴. Automerge-repo의 Storage/Network/Awareness 3슬롯 분리가 가장 정연한 관용 패턴.
 
-## What-if — `@p/headless`에 적용하면
+## What-if — `@p/aria-kernel`에 적용하면
 
 ### 차용할 5가지
 

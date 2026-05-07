@@ -1,4 +1,4 @@
-# `@p/headless` APG Pattern Audit Pilot
+# `@p/aria-kernel` APG Pattern Audit Pilot
 
 Date: 2026-05-05
 
@@ -7,12 +7,12 @@ Scope: audit artifact only. No production code or test code changed.
 Primary sources:
 - W3C APG pattern catalog: https://www.w3.org/WAI/ARIA/apg/patterns/
 - W3C APG listbox pattern: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
-- Repository inventory source: `packages/headless/PATTERNS.md`
-- Public pattern export source: `packages/headless/src/patterns/index.ts`
+- Repository inventory source: `packages/aria-kernel/PATTERNS.md`
+- Public pattern export source: `packages/aria-kernel/src/patterns/index.ts`
 
 ## 1. Inventory
 
-`packages/headless/PATTERNS.md` defines the recipe layer as props-only APG behavior, with no JSX, component, token, or CSS ownership (`packages/headless/PATTERNS.md:5`, `packages/headless/PATTERNS.md:22`). `packages/headless/src/patterns/index.ts` exports the public pattern surface (`packages/headless/src/patterns/index.ts:21`).
+`packages/aria-kernel/PATTERNS.md` defines the recipe layer as props-only APG behavior, with no JSX, component, token, or CSS ownership (`packages/aria-kernel/PATTERNS.md:5`, `packages/aria-kernel/PATTERNS.md:22`). `packages/aria-kernel/src/patterns/index.ts` exports the public pattern surface (`packages/aria-kernel/src/patterns/index.ts:21`).
 
 | Export | File | Source mapping | Status |
 |---|---|---|---|
@@ -119,10 +119,10 @@ Verdict vocabulary:
 External source: W3C APG `/listbox/`.
 
 Implementation source:
-- `useListboxPattern`: `packages/headless/src/patterns/listbox.ts:67`
-- APG URL comment: `packages/headless/src/patterns/listbox.ts:63`
-- Public export: `packages/headless/src/patterns/index.ts:21`
-- Existing axe smoke test: `packages/headless/src/patterns/a11y.test.tsx:42`
+- `useListboxPattern`: `packages/aria-kernel/src/patterns/listbox.ts:67`
+- APG URL comment: `packages/aria-kernel/src/patterns/listbox.ts:63`
+- Public export: `packages/aria-kernel/src/patterns/index.ts:21`
+- Existing axe smoke test: `packages/aria-kernel/src/patterns/a11y.test.tsx:42`
 
 Pilot verdict: partial. Core role/ARIA props are mostly present, but the audit should not mark listbox complete until boundary keyboard behavior, horizontal keyboard aliasing, and host-data invariants are decided and covered by executable contract tests.
 
@@ -130,28 +130,28 @@ Pilot verdict: partial. Core role/ARIA props are mostly present, but the audit s
 
 | Clause | Classification | Verdict | Evidence |
 |---|---|---|---|
-| Container has `role="listbox"` | required | pass | `rootProps.role = 'listbox'` at `packages/headless/src/patterns/listbox.ts:148` |
-| Each option has `role="option"` | required | pass | `optionProps` returns `role: 'option'` at `packages/headless/src/patterns/listbox.ts:163` |
-| Standalone listbox has accessible name | required | partial | Conditional on standalone usage. API exposes `label` and `labelledBy` at `packages/headless/src/patterns/listbox.ts:27`; root forwards both at `packages/headless/src/patterns/listbox.ts:156`. No runtime enforcement. |
-| Multi-select listbox sets `aria-multiselectable=true` | required | pass | Conditional on multi-select support. `multiSelectable` option at `packages/headless/src/patterns/listbox.ts:14`; root prop at `packages/headless/src/patterns/listbox.ts:150` |
-| Selection state is represented consistently with `aria-selected` or `aria-checked`, not both | required | pass | option props use `aria-selected` at `packages/headless/src/patterns/listbox.ts:171`; no `aria-checked` in listbox props |
-| Unselected selectable options expose false state | required | pass | `aria-selected` falls back to `false` at `packages/headless/src/patterns/listbox.ts:171` |
-| Single-select listbox does not expose multiple selected options | required | partial | props mirror input data at `packages/headless/src/patterns/listbox.ts:107`; no guard prevents multiple selected entities when `multiSelectable` is false |
-| Grouped options are contained by `role="group"` with an accessible group name | required | partial | Conditional on grouped variant. `groupProps` returns `role: 'group'` and `aria-labelledby` at `packages/headless/src/patterns/listbox.ts:181`; `groups` can include an empty option list from host data at `packages/headless/src/patterns/listbox.ts:119` |
-| Dynamic/partial DOM option sets expose `aria-posinset` and `aria-setsize` | required | pass | Conditional on virtualized/dynamic option sets. Item view computes `posinset`/`setsize` at `packages/headless/src/patterns/listbox.ts:114`; option props forward them at `packages/headless/src/patterns/listbox.ts:173` |
-| Vertical Down/Up moves to next/previous enabled option | required | partial | axis composes `navigate('vertical')` at `packages/headless/src/patterns/listbox.ts:56`; `navigate` wraps at boundaries via modulo at `packages/headless/src/axes/navigate.ts:5`, which is an extra behavior not established by APG wording |
-| Home/End moves to first/last option | optional | pass | APG strongly recommends this for larger lists. `navigate` maps start/end at `packages/headless/src/axes/navigate.ts:27`; tests cover Home/End at `packages/headless/src/axes/navigate.test.ts:36` |
-| Type-ahead single and rapid multi-character search | recommended | pass | listbox axis includes `typeahead` at `packages/headless/src/patterns/listbox.ts:59`; typeahead buffers printable keys at `packages/headless/src/axes/typeahead.ts:18`; tests cover single and buffered matches at `packages/headless/src/axes/typeahead.test.ts:20` |
-| Multi-select Space toggles focused option | recommended | pass | APG recommended multi-select model. `multiSelect` maps Space to select at `packages/headless/src/axes/multiSelect.ts:44`; test at `packages/headless/src/axes/multiSelect.test.ts:18` |
-| Multi-select Shift+Arrow range behavior | optional | pass | `multiSelect` maps Shift+Arrow at `packages/headless/src/axes/multiSelect.ts:47`; test at `packages/headless/src/axes/multiSelect.test.ts:28` |
-| Multi-select Control+A select-all | optional | pass | `multiSelect` maps select-all at `packages/headless/src/axes/multiSelect.ts:46`; test at `packages/headless/src/axes/multiSelect.test.ts:22` |
-| Initial focus goes to selected option, otherwise first option | required | pass | Applies on focus entry. Default focus picks selected option or first enabled option at `packages/headless/src/roving/useRovingTabIndex.ts:21`; hook uses it at `packages/headless/src/roving/useRovingTabIndex.ts:54` |
-| Initial focus in multi-select does not automatically change selection | required | pass | `selectionFollowsFocus` is disabled by default when `multiSelectable` is true at `packages/headless/src/patterns/listbox.ts:83` |
-| Single-select selection may follow focus | optional | pass | default `sff = !multiSelectable` at `packages/headless/src/patterns/listbox.ts:83`; helper emits activate after navigate at `packages/headless/src/gesture/index.ts:18` |
-| Horizontal listbox keyboard remapping | required | partial | Conditional on horizontal orientation support. `orientation` supports `horizontal` at `packages/headless/src/patterns/listbox.ts:10`; `navigate('horizontal')` only handles Left/Right and tests assert Up/Down do not respond at `packages/headless/src/axes/navigate.test.ts:57`. APG horizontal note must be interpreted before final verdict. |
+| Container has `role="listbox"` | required | pass | `rootProps.role = 'listbox'` at `packages/aria-kernel/src/patterns/listbox.ts:148` |
+| Each option has `role="option"` | required | pass | `optionProps` returns `role: 'option'` at `packages/aria-kernel/src/patterns/listbox.ts:163` |
+| Standalone listbox has accessible name | required | partial | Conditional on standalone usage. API exposes `label` and `labelledBy` at `packages/aria-kernel/src/patterns/listbox.ts:27`; root forwards both at `packages/aria-kernel/src/patterns/listbox.ts:156`. No runtime enforcement. |
+| Multi-select listbox sets `aria-multiselectable=true` | required | pass | Conditional on multi-select support. `multiSelectable` option at `packages/aria-kernel/src/patterns/listbox.ts:14`; root prop at `packages/aria-kernel/src/patterns/listbox.ts:150` |
+| Selection state is represented consistently with `aria-selected` or `aria-checked`, not both | required | pass | option props use `aria-selected` at `packages/aria-kernel/src/patterns/listbox.ts:171`; no `aria-checked` in listbox props |
+| Unselected selectable options expose false state | required | pass | `aria-selected` falls back to `false` at `packages/aria-kernel/src/patterns/listbox.ts:171` |
+| Single-select listbox does not expose multiple selected options | required | partial | props mirror input data at `packages/aria-kernel/src/patterns/listbox.ts:107`; no guard prevents multiple selected entities when `multiSelectable` is false |
+| Grouped options are contained by `role="group"` with an accessible group name | required | partial | Conditional on grouped variant. `groupProps` returns `role: 'group'` and `aria-labelledby` at `packages/aria-kernel/src/patterns/listbox.ts:181`; `groups` can include an empty option list from host data at `packages/aria-kernel/src/patterns/listbox.ts:119` |
+| Dynamic/partial DOM option sets expose `aria-posinset` and `aria-setsize` | required | pass | Conditional on virtualized/dynamic option sets. Item view computes `posinset`/`setsize` at `packages/aria-kernel/src/patterns/listbox.ts:114`; option props forward them at `packages/aria-kernel/src/patterns/listbox.ts:173` |
+| Vertical Down/Up moves to next/previous enabled option | required | partial | axis composes `navigate('vertical')` at `packages/aria-kernel/src/patterns/listbox.ts:56`; `navigate` wraps at boundaries via modulo at `packages/aria-kernel/src/axes/navigate.ts:5`, which is an extra behavior not established by APG wording |
+| Home/End moves to first/last option | optional | pass | APG strongly recommends this for larger lists. `navigate` maps start/end at `packages/aria-kernel/src/axes/navigate.ts:27`; tests cover Home/End at `packages/aria-kernel/src/axes/navigate.test.ts:36` |
+| Type-ahead single and rapid multi-character search | recommended | pass | listbox axis includes `typeahead` at `packages/aria-kernel/src/patterns/listbox.ts:59`; typeahead buffers printable keys at `packages/aria-kernel/src/axes/typeahead.ts:18`; tests cover single and buffered matches at `packages/aria-kernel/src/axes/typeahead.test.ts:20` |
+| Multi-select Space toggles focused option | recommended | pass | APG recommended multi-select model. `multiSelect` maps Space to select at `packages/aria-kernel/src/axes/multiSelect.ts:44`; test at `packages/aria-kernel/src/axes/multiSelect.test.ts:18` |
+| Multi-select Shift+Arrow range behavior | optional | pass | `multiSelect` maps Shift+Arrow at `packages/aria-kernel/src/axes/multiSelect.ts:47`; test at `packages/aria-kernel/src/axes/multiSelect.test.ts:28` |
+| Multi-select Control+A select-all | optional | pass | `multiSelect` maps select-all at `packages/aria-kernel/src/axes/multiSelect.ts:46`; test at `packages/aria-kernel/src/axes/multiSelect.test.ts:22` |
+| Initial focus goes to selected option, otherwise first option | required | pass | Applies on focus entry. Default focus picks selected option or first enabled option at `packages/aria-kernel/src/roving/useRovingTabIndex.ts:21`; hook uses it at `packages/aria-kernel/src/roving/useRovingTabIndex.ts:54` |
+| Initial focus in multi-select does not automatically change selection | required | pass | `selectionFollowsFocus` is disabled by default when `multiSelectable` is true at `packages/aria-kernel/src/patterns/listbox.ts:83` |
+| Single-select selection may follow focus | optional | pass | default `sff = !multiSelectable` at `packages/aria-kernel/src/patterns/listbox.ts:83`; helper emits activate after navigate at `packages/aria-kernel/src/gesture/index.ts:18` |
+| Horizontal listbox keyboard remapping | required | partial | Conditional on horizontal orientation support. `orientation` supports `horizontal` at `packages/aria-kernel/src/patterns/listbox.ts:10`; `navigate('horizontal')` only handles Left/Right and tests assert Up/Down do not respond at `packages/aria-kernel/src/axes/navigate.test.ts:57`. APG horizontal note must be interpreted before final verdict. |
 | Options should not contain nested interactive elements | host-responsibility | not-applicable | recipe returns props only; consumer owns markup under option nodes |
-| Long or repetitive option names should be avoided | host-responsibility | not-applicable | recipe reads labels but cannot judge content quality at `packages/headless/src/patterns/listbox.ts:111` |
-| `aria-activedescendant` focus model is allowed alternative | optional | not-applicable | implementation chooses roving tabindex via `useRovingTabIndex` at `packages/headless/src/patterns/listbox.ts:94` |
+| Long or repetitive option names should be avoided | host-responsibility | not-applicable | recipe reads labels but cannot judge content quality at `packages/aria-kernel/src/patterns/listbox.ts:111` |
+| `aria-activedescendant` focus model is allowed alternative | optional | not-applicable | implementation chooses roving tabindex via `useRovingTabIndex` at `packages/aria-kernel/src/patterns/listbox.ts:94` |
 
 ### Pilot Gaps To Resolve Before Expanding
 
@@ -159,11 +159,11 @@ Pilot verdict: partial. Core role/ARIA props are mostly present, but the audit s
 2. Horizontal orientation: verify APG expected arrow aliases and decide whether listbox needs a horizontal-specific axis different from generic `navigate('horizontal')`.
 3. Data validity: decide whether pattern contracts assume normalized valid input, or whether props getters must actively prevent APG-invalid output such as multiple selected options in single-select mode.
 4. Group validity: decide whether empty option groups are invalid input or should be filtered/flagged.
-5. Test shape: current listbox has an axe smoke test (`packages/headless/src/patterns/a11y.test.tsx:42`) and axis unit tests, but no listbox-specific APG contract test combining props, focus, key events, and emitted events.
+5. Test shape: current listbox has an axe smoke test (`packages/aria-kernel/src/patterns/a11y.test.tsx:42`) and axis unit tests, but no listbox-specific APG contract test combining props, focus, key events, and emitted events.
 
 ## 4. Proposed Next Step
 
-After this pilot is approved, create `packages/headless/src/patterns/apg-contracts/` or a docs-only equivalent with one JSON/TS contract per pattern. Then expand in this order:
+After this pilot is approved, create `packages/aria-kernel/src/patterns/apg-contracts/` or a docs-only equivalent with one JSON/TS contract per pattern. Then expand in this order:
 
 1. Listbox executable contract test.
 2. Tabs and radio group, because they share selection-follows-focus risk.

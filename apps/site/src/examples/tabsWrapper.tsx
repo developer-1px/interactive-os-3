@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { fromList } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
+import { fromList } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
 import { Tabs, type TabsSlots, tabsWrapperKeys } from './_tabsWrapper'
 import type { SlotProps } from '../catalog/slots'
 

@@ -1,6 +1,6 @@
-import { axisKeys, toggle } from '@p/headless'
-import { useLocalValue } from '@p/headless/local'
-import { checkboxPattern, type CheckboxState } from '@p/headless/patterns'
+import { axisKeys, toggle } from '@p/aria-kernel'
+import { useLocalValue } from '@p/aria-kernel/local'
+import { checkboxPattern, type CheckboxState } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Checkbox',

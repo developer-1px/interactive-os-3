@@ -1,4 +1,4 @@
-import { useSpatialNavigation } from '@p/headless/roving'
+import { useSpatialNavigation } from '@p/aria-kernel/roving'
 
 export const meta = {
   title: 'Spatial Navigation (TV)',

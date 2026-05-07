@@ -1,7 +1,7 @@
-import { fromList } from '@p/headless'
-import { accordionAxis, useAccordionPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+import { fromList } from '@p/aria-kernel'
+import { accordionAxis, useAccordionPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Accordion · Single',
@@ -13,7 +13,7 @@ export const meta = {
 
 export default function AccordionSingleDemo() {
   const [data, onEvent] = useLocalData(() => fromList([
-    { id: 'a', label: 'What is @p/headless?' },
+    { id: 'a', label: 'What is @p/aria-kernel?' },
     { id: 'b', label: 'Why ARIA-first?' },
     { id: 'c', label: 'Bring my own styles?' },
   ]))

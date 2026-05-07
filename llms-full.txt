@@ -1,4 +1,4 @@
-# @p/headless — 전체 API
+# @p/aria-kernel — 전체 API
 
 이 파일은 LLM 컨텍스트 주입용 — 모든 public export 의 시그니처 + TSDoc + @example 을 한 문서에 직렬화한다.
 
@@ -933,7 +933,7 @@ INTENTS — axis 별 intent ↔ KeyChord 매핑.
 KEYS: object
 ```
 
-keys.ts — `@p/headless/axes` SSOT.
+keys.ts — `@p/aria-kernel/axes` SSOT.
 
 모든 axis 가 사용하는 키 ↔ intent 매핑을 단일 모듈에서 박제. 직렬화 가능한 plain
 데이터 — 다음 용도로 사용:
@@ -1111,7 +1111,7 @@ pickNumericValue (e: UiEvent): number | undefined
 
 ## reduce
 
-@p/headless/state — UiEvent → NormalizedData 변환 레이어.
+@p/aria-kernel/state — UiEvent → NormalizedData 변환 레이어.
 reducer (`reduce` · `singleSelect` · `setValue` …) + 합성기(`composeReducers` · `applyGesture`)
 + tree/list 빌더 + React 브리지 hook(`useControlState` · `useEventBridge`).
 
@@ -1142,7 +1142,7 @@ reducer (`reduce` · `singleSelect` · `setValue` …) + 합성기(`composeReduc
 CrudPort — UiEvent 편집 어휘를 받을 수 있는 minimal interface.
 시그니처는 zod-crud `JsonCrud` 와 1:1 — 추상화 0, opinionated.
 구현은 무엇이든 OK (FS, in-memory, server proxy).
-@p/headless 본체에 zod-crud import 0 — interface duck-typing.
+@p/aria-kernel 본체에 zod-crud import 0 — interface duck-typing.
 
 ## FeatureSpec
 

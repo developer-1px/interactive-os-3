@@ -1,4 +1,5 @@
 import { CatalogRow, PreviewCenter } from './CatalogRow'
+import { labelFor } from './buildAppTabs'
 import type { WrapperEntry } from './registry.wrappers'
 
 export function WrapperScreen({
@@ -29,7 +30,7 @@ export function WrapperScreen({
           <Component />
         </PreviewCenter>
       }
-      tabs={[{ key: filename, label: 'Demo', filename, source, symbols: [] }]}
+      tabs={[{ key: filename, label: labelFor(filename), filename, source, symbols: [] }]}
       filenamePrefix="examples/"
     />
   )

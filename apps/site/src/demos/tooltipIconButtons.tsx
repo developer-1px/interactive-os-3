@@ -1,4 +1,4 @@
-import { tooltipKeys, useTooltipPattern } from '@p/headless/patterns'
+import { tooltipKeys, useTooltipPattern } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Tooltip · Icon Buttons',

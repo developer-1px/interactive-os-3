@@ -33,7 +33,7 @@ const resolveRelative = (fromDir: string, spec: string): string => {
 
 const EXT_CANDIDATES = ['', '.ts', '.tsx', '/index.ts', '/index.tsx']
 
-const labelFor = (filename: string): string => {
+export const labelFor = (filename: string): string => {
   const parts = filename.split('/')
   let name = parts.pop()!.replace(/\.(test\.)?(tsx?|jsx?)$/, '')
   if (name === 'index') name = parts.pop() ?? 'index'
@@ -183,7 +183,7 @@ const stripToSrcRelative = (k: string): string => {
  * Vite glob 결과를 import 그래프로 BFS 순회하여 의존 파일을 탭 목록으로 만든다.
  *
  * 핵심: barrel(`export … from`)은 건너뛰고 **실제 선언 파일만** 결과에 포함.
- * 예: `import { menubarAxis } from '@p/headless/patterns'`
+ * 예: `import { menubarAxis } from '@p/aria-kernel/patterns'`
  *     → patterns/index.ts (barrel) X, patterns/menubar.ts (정의) ✓
  *
  * @babel/parser AST 기반 — 정규식 X, top-level statement 만 검사.
@@ -198,7 +198,7 @@ export function buildAppTabs(
   }
 
   const rootList: SourceRoot[] = typeof roots === 'string'
-    ? [{ filename: roots, label: 'Demo' }]
+    ? [{ filename: roots, label: labelFor(roots) }]
     : roots
 
   const tabs: AppTab[] = []

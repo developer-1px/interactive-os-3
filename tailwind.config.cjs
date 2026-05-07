@@ -5,7 +5,7 @@ module.exports = {
     files: [
       './site/index.html',
       './site/src/**/*.{ts,tsx}',
-      './packages/headless/src/**/*.{ts,tsx}',
+      './packages/aria-kernel/src/**/*.{ts,tsx}',
       './apps/*/src/**/*.{ts,tsx}',
     ],
   },

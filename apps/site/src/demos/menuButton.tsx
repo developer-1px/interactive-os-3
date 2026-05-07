@@ -1,6 +1,6 @@
-import { axisKeys, fromTree } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import { menuButtonAxis, useMenuButtonPattern, type MenuLevel } from '@p/headless/patterns'
+import { axisKeys, fromTree } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import { menuButtonAxis, useMenuButtonPattern, type MenuLevel } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Menu Button',

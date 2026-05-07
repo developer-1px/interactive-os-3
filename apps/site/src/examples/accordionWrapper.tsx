@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { fromList } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import type { BaseItem } from '@p/headless/patterns'
+import { fromList } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import type { BaseItem } from '@p/aria-kernel/patterns'
 import { Accordion, type AccordionSlots, accordionWrapperKeys } from './_accordionWrapper'
 import type { SlotProps } from '../catalog/slots'
 
@@ -13,7 +13,7 @@ interface FaqItem extends Record<string, unknown> {
 }
 
 const initialBase = fromList([
-  { id: 'what',   label: 'What is @p/headless?',  body: 'ARIA behavior infrastructure — axes, roving, gesture, patterns.' },
+  { id: 'what',   label: 'What is @p/aria-kernel?',  body: 'ARIA behavior infrastructure — axes, roving, gesture, patterns.' },
   { id: 'why',    label: 'Why ARIA-first?',       body: 'W3C/WHATWG specs are the canonical naming source.' },
   { id: 'styles', label: 'Bring my own styles?',  body: 'Tailwind utilities directly. No design tokens, no CSS-in-JS.' },
 ])

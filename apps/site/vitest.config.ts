@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 
-const headless = path.resolve(__dirname, '../../packages/headless/src')
+const headless = path.resolve(__dirname, '../../packages/aria-kernel/src')
 const outliner = path.resolve(__dirname, '../outliner/src')
 
 export default defineConfig({

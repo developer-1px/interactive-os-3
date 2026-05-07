@@ -9,6 +9,8 @@ export interface DemoMeta {
   blurb: string
   /** Demo 가 자기 키를 owns — registry 가 자동 수집. PATTERN_KEYS 매핑 폐기. */
   keys?: () => string[]
+  /** preview 영역이 기본 max-w-[420px] 보다 넓어야 할 때. */
+  wide?: boolean
 }
 
 interface DemoModule {
@@ -46,7 +48,7 @@ const sources: Record<string, string> = {}
 for (const [k, v] of Object.entries(sourcesRaw)) {
   sources[k.startsWith(PREFIX) ? k.slice(PREFIX.length) : k] = v
 }
-// @p/<pkg>/<rel-from-src> 키 부여 — buildAppTabs 가 `@p/headless` 같은 bare spec 도 그대로 매칭.
+// @p/<pkg>/<rel-from-src> 키 부여 — buildAppTabs 가 `@p/aria-kernel` 같은 bare spec 도 그대로 매칭.
 for (const [k, v] of Object.entries(pkgRaw)) {
   const m = k.match(/\/packages\/([^/]+)\/src\/(.+)$/)
   if (m) sources[`@p/${m[1]}/${m[2]}`] = v

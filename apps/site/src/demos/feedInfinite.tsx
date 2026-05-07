@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
-import { feedAxis, useFeedPattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { feedAxis, useFeedPattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 const blurb = 'A scrollable container of articles where new items append on demand.'
 

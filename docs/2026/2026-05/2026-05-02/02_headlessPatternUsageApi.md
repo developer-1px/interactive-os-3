@@ -2,17 +2,17 @@
 id: headlessPatternUsageApi
 type: inbox
 slug: headlessPatternUsageApi
-title: '@p/headless usage API — LLM pit of success 명세'
+title: '@p/aria-kernel usage API — LLM pit of success 명세'
 tags: [inbox, headless, api, llm, usage, patterns]
 created: 2026-05-02
 updated: 2026-05-02
 ---
 
-# @p/headless usage API — LLM pit of success 명세
+# @p/aria-kernel usage API — LLM pit of success 명세
 
 ## 목표
 
-`@p/headless`의 canonical usage는 LLM이 한 번 보고 같은 형태로 수렴해야 한다.
+`@p/aria-kernel`의 canonical usage는 LLM이 한 번 보고 같은 형태로 수렴해야 한다.
 
 원칙:
 
@@ -32,7 +32,7 @@ const ui = usePattern(pattern, config)
 ## Canonical API
 
 ```ts
-import { usePattern } from '@p/headless'
+import { usePattern } from '@p/aria-kernel'
 
 const ui = usePattern('tabs', {
   items,
@@ -604,7 +604,7 @@ raw ARIA 조립 금지:
 <div role="option" aria-selected={selected} onKeyDown={onKeyDown} />
 ```
 
-`@p/headless`가 소유한다.
+`@p/aria-kernel`가 소유한다.
 
 ```tsx
 <div {...listbox.props('option', item)} />

@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useListboxPattern } from '@p/headless/patterns'
-import { KEYS, matchKey, type UiEvent } from '@p/headless'
-import { useZodCrudResource } from '@p/headless/adapters/zod-crud'
+import { useListboxPattern } from '@p/aria-kernel/patterns'
+import { KEYS, matchKey, type UiEvent } from '@p/aria-kernel'
+import { useZodCrudResource } from '@p/aria-kernel/adapters/zod-crud'
 import { boardResource } from '../features/boardResource'
-import { flattenBoard } from '../features/flattenBoard'
+import { normalizeBoard } from '../features/normalizeBoard'
 import { crud } from '../features/boardCrud'
 
 export function Kanban() {
-  const [data, onEventRaw] = useZodCrudResource(boardResource, crud, flattenBoard, { kind: 'list' })
+  const [data, onEventRaw] = useZodCrudResource(boardResource, crud, normalizeBoard, { kind: 'list' })
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  const { columnIds, rootId, cardParentArray } = useMemo(() => flattenBoard(crud.snapshot()), [data])
+  const { columnIds, rootId, cardParentArray } = useMemo(() => normalizeBoard(crud.snapshot()), [data])
 
   /**
    * Kanban paste 의미 = sibling insert. card target → cards-array + index 매핑.
@@ -42,7 +42,7 @@ export function Kanban() {
       el?.focus()
       // 컬럼 간 이동은 listbox sff 가 안 닿음 — focus/select event 로 meta 동기화.
       onEvent({ type: 'navigate', id: targetCard })
-      onEvent({ type: 'select', id: targetCard })
+      onEvent({ type: 'select', ids: [targetCard] })
     }
   }
 
@@ -93,7 +93,7 @@ function AutoEditOnInsert({
 }: {
   focus: string | undefined
   editingId: string | null
-  data: import('@p/headless').NormalizedData
+  data: import('@p/aria-kernel').NormalizedData
   onEnter: (id: string) => void
 }) {
   const last = useRef<string | undefined>(undefined)
@@ -110,7 +110,7 @@ function Column({
   id, data, onEvent, editingId, onStartEdit, onCommitEdit, onCancelEdit, onMoveAcrossColumn,
 }: {
   id: string
-  data: import('@p/headless').NormalizedData
+  data: import('@p/aria-kernel').NormalizedData
   onEvent: (e: UiEvent) => void
   editingId: string | null
   onStartEdit: (id: string) => void

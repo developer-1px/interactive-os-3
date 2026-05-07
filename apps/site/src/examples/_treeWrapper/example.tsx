@@ -1,4 +1,4 @@
-import { activate, axisKeys, composeAxes, treeExpand, treeNavigate } from '@p/headless'
+import { activate, axisKeys, composeAxes, treeExpand, treeNavigate } from '@p/aria-kernel'
 
 /**
  * treeWrapperKeys — 이 wrapper 가 직렬 박제하는 키 매핑 (SSOT).

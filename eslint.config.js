@@ -353,8 +353,8 @@ export default defineConfig([
   // role/className/style escape hatch 금지 — ds 본체 외 전 영역
   { files: ['packages/**/*.{ts,tsx}', 'apps/**/*.{ts,tsx}', 'showcase/**/*.{ts,tsx}'],
     rules: { 'no-restricted-syntax': ['error', role, className, style] } },
-  // @p/headless — TSDoc 주석 문법 검증 (소스 SSOT 보장)
-  { files: ['packages/headless/src/**/*.{ts,tsx}'],
+  // @p/aria-kernel — TSDoc 주석 문법 검증 (소스 SSOT 보장)
+  { files: ['packages/aria-kernel/src/**/*.{ts,tsx}'],
     plugins: { tsdoc },
     rules: { 'tsdoc/syntax': 'warn' } },
   // ds/ui 정의부 — role 리터럴 + 동적 style 허용 (anchor-name 등 정적 CSS 표현 불가 영역)

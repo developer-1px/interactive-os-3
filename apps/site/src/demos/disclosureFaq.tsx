@@ -1,7 +1,7 @@
-import { fromList, isExpanded } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import { disclosureAxis, disclosurePattern } from '@p/headless/patterns'
-import { axisKeys } from '@p/headless'
+import { fromList, isExpanded } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import { disclosureAxis, disclosurePattern } from '@p/aria-kernel/patterns'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Disclosure · FAQ',
@@ -12,7 +12,7 @@ export const meta = {
 }
 
 const QA = [
-  { id: 'q1', q: 'How do I install?', a: 'Run npm install @p/headless.' },
+  { id: 'q1', q: 'How do I install?', a: 'Run npm install @p/aria-kernel.' },
   { id: 'q2', q: 'Does it work with Vite?', a: 'Yes — see the Vite plugin guide.' },
   { id: 'q3', q: 'How do I report a bug?', a: 'Open an issue on the GitHub repository.' },
 ]

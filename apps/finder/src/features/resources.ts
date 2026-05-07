@@ -1,5 +1,5 @@
-import { parentOf, ROOT } from '@p/headless'
-import { defineResource, writeResource } from '@p/headless/store'
+import { parentOf, ROOT } from '@p/aria-kernel'
+import { defineResource, writeResource } from '@p/aria-kernel/store'
 import { finderNavigate } from './nav'
 import {
   loadText,

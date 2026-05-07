@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { NormalizedData } from '@p/headless'
+import type { NormalizedData } from '@p/aria-kernel'
 import { Nav } from '../examples/_navigationListWrapper'
 import type { SlotProps } from './slots'
 
@@ -72,7 +72,12 @@ export function CatalogSidebar({
         >
           <a
             href="#intro"
-            onClick={() => setOpen(false)}
+            onClick={(e) => {
+              e.preventDefault()
+              window.history.pushState(null, '', '#intro')
+              window.dispatchEvent(new HashChangeEvent('hashchange'))
+              setOpen(false)
+            }}
             className="mb-3 block rounded px-2 py-1 text-xs font-medium text-stone-600 hover:bg-stone-200"
           >
             ← Intro
@@ -84,7 +89,8 @@ export function CatalogSidebar({
               if (e.type !== 'activate') return
               const ent = data.entities[e.id] as CatalogItem | undefined
               if (!ent) return
-              window.location.hash = ent.slug
+              window.history.pushState(null, '', `#${ent.slug}`)
+              window.dispatchEvent(new HashChangeEvent('hashchange'))
               setOpen(false)
             }}
             slots={{

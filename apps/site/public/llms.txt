@@ -1,4 +1,4 @@
-# @p/headless
+# @p/aria-kernel
 
 ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.
 
@@ -6,8 +6,8 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 
 ## Docs
 - [llms-full.txt](llms-full.txt): 전체 시그니처·@example 포함 (LLM 컨텍스트용)
-- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant
-- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처
+- [INVARIANTS.md](packages/aria-kernel/INVARIANTS.md): 헤드리스 invariant
+- [PATTERNS.md](packages/aria-kernel/PATTERNS.md): pattern recipe 시그니처
 - [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처
 
 ## patterns
@@ -120,7 +120,7 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **gridMultiSelect** — gridMultiSelect — APG `/grid/` Selection 키 매핑. focus 이동은 gridNavigate. https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 - **gridNavigate** — gridNavigate — APG `/grid/` 2D 셀 단위 navigation. focus 는 cell 에 있다. Selection rect (Shift+Arrow / Ctrl+Space col / Shift+Space row) 은 gridMultiSelect. https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 - **INTENTS** — INTENTS — axis 별 intent ↔ KeyChord 매핑.
-- **KEYS** — keys.ts — `@p/headless/axes` SSOT.
+- **KEYS** — keys.ts — `@p/aria-kernel/axes` SSOT.
 - **enabledSiblings** — enabledSiblings — `siblingsOf` 결과에서 disabled entity 를 제거. navigate/multiSelect 의 활성 후보.
 - **fromKeyMap** — fromKeyMap — `KeyMap` 선언을 `Axis` 로 만든다. axis 가 imperative if-else 로 키 분기하는 대신 chord ↔ handler 1:1 선언으로만 표현되도록 강제하는 정본 factory.
 - **matchChord** — match — KeyChord 배열에 t (KeyboardEvent → KeySpec 또는 Trigger) 가 들어맞는지 검사.
@@ -156,7 +156,7 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 - **fromTree** — (undocumented)
 - **multiSelectToggle** — (undocumented)
 - **pathAncestors** — (undocumented)
-- **reduce** — @p/headless/state — UiEvent → NormalizedData 변환 레이어. reducer (`reduce` · `singleSelect` · `setValue` …) + 합성기(`composeReducers` · `applyGesture`) + tree/list 빌더 + React 브리지 hook(`useControlState` · `useEventBridge`).
+- **reduce** — @p/aria-kernel/state — UiEvent → NormalizedData 변환 레이어. reducer (`reduce` · `singleSelect` · `setValue` …) + 합성기(`composeReducers` · `applyGesture`) + tree/list 빌더 + React 브리지 hook(`useControlState` · `useEventBridge`).
 - **Reducer** — (undocumented)
 - **reduceWithDefaults** — (undocumented)
 - **reduceWithMultiSelect** — (undocumented)
@@ -169,7 +169,7 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 ## store
 
 - **CommandBase** — 모든 command 의 base — discriminated union 의 `type` 필드.
-- **CrudPort** — CrudPort — UiEvent 편집 어휘를 받을 수 있는 minimal interface. 시그니처는 zod-crud `JsonCrud` 와 1:1 — 추상화 0, opinionated. 구현은 무엇이든 OK (FS, in-memory, server proxy). @p/headless 본체에 zod-crud import 0 — interface duck-typing.
+- **CrudPort** — CrudPort — UiEvent 편집 어휘를 받을 수 있는 minimal interface. 시그니처는 zod-crud `JsonCrud` 와 1:1 — 추상화 0, opinionated. 구현은 무엇이든 OK (FS, in-memory, server proxy). @p/aria-kernel 본체에 zod-crud import 0 — interface duck-typing.
 - **FeatureSpec** — Feature spec — 한 화면의 SSOT. `state`(초기값) · `on`(reducer map) · `query`(외부 데이터 선언) · `view`(뷰모델). 직렬화 가능한 plain object — class/ref/closure 잔재 금지.
 - **QueryResult** — Query 의 현재 상태 — data + isLoading + error.
 - **QuerySpec** — 외부 데이터 fetch 선언 — TanStack Query 호환 시그니처.
@@ -191,7 +191,7 @@ ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, ax
 
 ## adapters/zod-crud
 
-- **useZodCrudResource** — `@p/headless/adapters/zod-crud` — resource + zod-crud `JsonCrud` + flatten 함수 + (선택) entity zod schema 를 받아 `[NormalizedData, dispatch]` 단일 인터페이스로 잇는 어댑터. 4번째 인자 schema 가 주어지면 paste 시 zod 검증 활성화. UiEvent 편집 어휘는 routeUiEventToCrud 로 crud op 에 흘리고, value 는 flatten 으로 NormalizedData 로 변환. opts: `{ kind?: 'list'|'tree'|'grid' }`.
+- **useZodCrudResource** — `@p/aria-kernel/adapters/zod-crud` — resource + zod-crud `JsonCrud` + flatten 함수 + (선택) entity zod schema 를 받아 `[NormalizedData, dispatch]` 단일 인터페이스로 잇는 어댑터. 4번째 인자 schema 가 주어지면 paste 시 zod 검증 활성화. UiEvent 편집 어휘는 routeUiEventToCrud 로 crud op 에 흘리고, value 는 flatten 으로 NormalizedData 로 변환. opts: `{ kind?: 'list'|'tree'|'grid' }`.
 
 ## roving
 

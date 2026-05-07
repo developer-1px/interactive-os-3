@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WrappersRouteImport } from './routes/wrappers'
 import { Route as UieventsRouteImport } from './routes/uievents'
 import { Route as PatternsRouteImport } from './routes/patterns'
-import { Route as MatrixRouteImport } from './routes/matrix'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
@@ -36,11 +35,6 @@ const UieventsRoute = UieventsRouteImport.update({
 const PatternsRoute = PatternsRouteImport.update({
   id: '/patterns',
   path: '/patterns',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MatrixRoute = MatrixRouteImport.update({
-  id: '/matrix',
-  path: '/matrix',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataRoute = DataRouteImport.update({
@@ -93,7 +87,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
   '/data': typeof DataRoute
-  '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
@@ -108,7 +101,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
   '/data': typeof DataRoute
-  '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
@@ -124,7 +116,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
   '/data': typeof DataRoute
-  '/matrix': typeof MatrixRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
   '/wrappers': typeof WrappersRoute
@@ -141,7 +132,6 @@ export interface FileRouteTypes {
     | '/'
     | '/axes'
     | '/data'
-    | '/matrix'
     | '/patterns'
     | '/uievents'
     | '/wrappers'
@@ -156,7 +146,6 @@ export interface FileRouteTypes {
     | '/'
     | '/axes'
     | '/data'
-    | '/matrix'
     | '/patterns'
     | '/uievents'
     | '/wrappers'
@@ -171,7 +160,6 @@ export interface FileRouteTypes {
     | '/'
     | '/axes'
     | '/data'
-    | '/matrix'
     | '/patterns'
     | '/uievents'
     | '/wrappers'
@@ -187,7 +175,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AxesRoute: typeof AxesRoute
   DataRoute: typeof DataRoute
-  MatrixRoute: typeof MatrixRoute
   PatternsRoute: typeof PatternsRoute
   UieventsRoute: typeof UieventsRoute
   WrappersRoute: typeof WrappersRoute
@@ -220,13 +207,6 @@ declare module '@tanstack/react-router' {
       path: '/patterns'
       fullPath: '/patterns'
       preLoaderRoute: typeof PatternsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/matrix': {
-      id: '/matrix'
-      path: '/matrix'
-      fullPath: '/matrix'
-      preLoaderRoute: typeof MatrixRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data': {
@@ -299,7 +279,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AxesRoute: AxesRoute,
   DataRoute: DataRoute,
-  MatrixRoute: MatrixRoute,
   PatternsRoute: PatternsRoute,
   UieventsRoute: UieventsRoute,
   WrappersRoute: WrappersRoute,

@@ -7,7 +7,7 @@
 
 ## Context
 
-`@p/headless` 가 한때 `entity.selected` 한 필드 + `select`/`selectMany` 한 어휘로 두 가지 의미를 통합 표현했다:
+`@p/aria-kernel` 가 한때 `entity.selected` 한 필드 + `select`/`selectMany` 한 어휘로 두 가지 의미를 통합 표현했다:
 
 - 독립 boolean (체크박스, 라디오, 스위치 — `aria-checked`)
 - 관계적 selection 멤버십 (리스트박스 옵션, 탭, 그리드 셀 — `aria-selected`)

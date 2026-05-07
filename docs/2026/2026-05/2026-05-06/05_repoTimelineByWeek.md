@@ -161,20 +161,20 @@ W1  2026-04-23 ~ 2026-04-29   ds 본체 시기
 W2  2026-04-30 ~ 2026-05-06   headless 분리 → ds 폐기 → 정본 박기
 ─────────────────────────────────────────────────
 
-04-30  @p/headless 워크스페이스 분리 ★ 결정적 분기
+04-30  @p/aria-kernel 워크스페이스 분리 ★ 결정적 분기
 ├─ headless 가 registry 를 모르도록 module augmentation
-├─ @p/headless 별도 워크스페이스로 분리 ★★
-├─ vite alias @p/headless
+├─ @p/aria-kernel 별도 워크스페이스로 분리 ★★
+├─ vite alias @p/aria-kernel
 ├─ _demos 9건 키보드 부착 — APG roving 완성
 ├─ scripts/audit-kbd-conformance.mjs — APG 키보드 자동 검증 ★
-├─ /headless 라우트 — @p/headless API 카탈로그
+├─ /headless 라우트 — @p/aria-kernel API 카탈로그
 ├─ nodes.ts / preset/apply.ts SRP
 └─ focus/ 1-멤버 layer 해체
 
 05-01  (commit 활동 적음 — 회복)
 
 05-02  ds 폐기 → 단일 제품화 ★★ 가장 잔인한 결정
-├─ 제품 = @p/headless 단 하나
+├─ 제품 = @p/aria-kernel 단 하나
 ├─ 시각 = Tailwind utility 직접
 ├─ docs/2026-05-02/01_headlessMultiWiring.md
 └─ docs/2026-05-02/02_headlessPatternUsageApi.md
@@ -253,7 +253,7 @@ W2  2026-04-30 ~ 2026-05-06   headless 분리 → ds 폐기 → 정본 박기
    └─ phase 9+10 chord registry string 화
 
 05-06  clipboard 흡수 + zod-crud + outliner SRP + 강연 그릴
-├─ zod-crud → @p/headless workspace dep
+├─ zod-crud → @p/aria-kernel workspace dep
 ├─ axis 정본 어휘 단일화 — alias 제거 + KNOWN_AXES SSOT ★
 ├─ clipboard 어휘 흡수 + on 미들웨어 + zod-crud adapter (#47, #48) ★★
 ├─ Tab demote uses move op (clipboard 미오염) + Shift+Cmd+V chord

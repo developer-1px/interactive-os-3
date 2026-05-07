@@ -1,5 +1,5 @@
-import { ROOT, getChildren, type NormalizedData } from '@p/headless'
-import { navigationListPattern, type PatternProps } from '@p/headless/patterns'
+import { ROOT, getChildren, type NormalizedData } from '@p/aria-kernel'
+import { navigationListPattern, type PatternProps } from '@p/aria-kernel/patterns'
 import { defaultLabel, renderSlot, type Slot } from '../../catalog/slots'
 
 export interface NavSlots<TItem extends object = Record<string, unknown>> {

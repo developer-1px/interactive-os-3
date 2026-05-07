@@ -1,48 +1,7 @@
 import { type ReactNode } from 'react'
 import { fmtKey } from './keys'
-import { CopyButton } from './CopyButton'
-import { HighlightedCode } from './HighlightedCode'
+import { SourceTabs } from './SourceTabs'
 import type { AppTab } from './buildAppTabs'
-import { fromList } from '@p/headless'
-import { useTabsPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-
-function SourceTabs({ tabs, filenamePrefix }: { tabs: AppTab[]; filenamePrefix?: string }) {
-  const [data, onEvent] = useLocalData(() =>
-    fromList(tabs.map((t, i) => ({ id: t.key, label: t.label, selected: i === 0 }))),
-  )
-  const { rootProps, tabProps, panelProps, items } = useTabsPattern(data, onEvent)
-  const activeId = items.find((i) => i.selected)?.id ?? items[0]?.id
-  const active = tabs.find((t) => t.key === activeId) ?? tabs[0]
-  return (
-    <>
-      <div className="flex items-center justify-between border-b border-stone-800 px-4 py-2">
-        <div {...rootProps} className="flex items-center gap-1 overflow-x-auto">
-          {items.map((item) => (
-            <button
-              key={item.id}
-              {...tabProps(item.id)}
-              className="rounded px-2 py-0.5 text-[11px] font-mono text-stone-400 hover:text-stone-200 aria-selected:bg-stone-800 aria-selected:text-stone-100"
-            >
-              {item.label}
-            </button>
-          ))}
-          <code className="ml-2 whitespace-nowrap text-xs font-mono text-stone-500">
-            {(filenamePrefix ?? '') + active.filename}
-          </code>
-        </div>
-        <CopyButton text={active.source} />
-      </div>
-      <div {...panelProps(active.key)} className="flex flex-1 flex-col md:overflow-hidden">
-        <HighlightedCode
-          source={active.source}
-          filename={active.filename}
-          highlightSymbols={active.symbols}
-        />
-      </div>
-    </>
-  )
-}
 
 /**
  * 모든 카탈로그 surface 가 공유하는 풀스크린 row.
@@ -144,10 +103,10 @@ export function CatalogRow({
   )
 }
 
-export function PreviewCenter({ children }: { children: ReactNode }) {
+export function PreviewCenter({ children, wide }: { children: ReactNode; wide?: boolean }) {
   return (
     <div className="grid h-full place-items-center p-8">
-      <div className="w-full max-w-[420px]">{children}</div>
+      <div className={wide ? 'w-full' : 'w-full max-w-[420px]'}>{children}</div>
     </div>
   )
 }

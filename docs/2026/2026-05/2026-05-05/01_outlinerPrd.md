@@ -2,7 +2,7 @@
 id: outlinerPrd
 type: prd
 slug: outlinerPrd
-title: Outliner — zod-crud × @p/headless 콜라보 example PRD
+title: Outliner — zod-crud × @p/aria-kernel 콜라보 example PRD
 tags: [inbox, prd, idea]
 created: 2026-05-05
 updated: 2026-05-05
@@ -47,8 +47,8 @@ Outliner
 │           ├── focusNodeId: NodeId
 │           └── changes: JsonChange[]   (insert | update | delete)
 │
-├── features/outlineResource.ts ─────────────────── @p/headless/store 어댑터
-│   ├── import { defineResource } from '@p/headless/store'
+├── features/outlineResource.ts ─────────────────── @p/aria-kernel/store 어댑터
+│   ├── import { defineResource } from '@p/aria-kernel/store'
 │   ├── import { crud } from './outlineCrud'
 │   └── export const outlineResource = defineResource({
 │         key: () => 'outline',
@@ -74,10 +74,10 @@ Outliner
 │       })
 │
 ├── widgets/Outliner.tsx ────────────────────────── view
-│   ├── import { useResource } from '@p/headless/store'
-│   ├── import { useTreePattern } from '@p/headless/patterns'
-│   ├── import { fromFlatTree } from '@p/headless'
-│   ├── import { useShortcut } from '@p/headless/key/useShortcut'
+│   ├── import { useResource } from '@p/aria-kernel/store'
+│   ├── import { useTreePattern } from '@p/aria-kernel/patterns'
+│   ├── import { fromFlatTree } from '@p/aria-kernel'
+│   ├── import { useShortcut } from '@p/aria-kernel/key/useShortcut'
 │   └── export function Outliner() {
 │         const [doc, dispatch] = useResource(outlineResource)
 │         const data = useMemo(
@@ -129,11 +129,11 @@ Outliner
 ```
 
 
-# Outliner — zod-crud × @p/headless 콜라보 example PRD
+# Outliner — zod-crud × @p/aria-kernel 콜라보 example PRD
 
 ## 배경
 
-zod-crud(데이터·검증·history·clipboard)와 @p/headless(ARIA 행동·키보드·roving)는
+zod-crud(데이터·검증·history·clipboard)와 @p/aria-kernel(ARIA 행동·키보드·roving)는
 서로의 정체성을 지키면서 콜라보가 가능한지 *살아있는 증거*가 필요하다.
 JSON treegrid 편집기는 이미 zod-crud 자체 showcase가 가지고 있어 중복.
 Workflowy/Roam 스타일 키보드-only outliner가 가장 적은 표면적으로 양쪽 spec을 동시에 시연한다.
@@ -144,7 +144,7 @@ Workflowy/Roam 스타일 키보드-only outliner가 가장 적은 표면적으�
 Outliner (apps/outliner)
 ├── 1. Identity ─────────────── 키보드-only 중첩 노트 에디터
 │   ├── Vision ─────────────── "마우스 안 쓰는 Workflowy clone, 100줄대 코드"
-│   ├── Why ────────────────── zod-crud × @p/headless 콜라보를 정직하게 증명
+│   ├── Why ────────────────── zod-crud × @p/aria-kernel 콜라보를 정직하게 증명
 │   └── Non-goal
 │       ├── 마크다운 렌더링·rich text
 │       ├── 멀티유저·동기화
@@ -154,7 +154,7 @@ Outliner (apps/outliner)
 ├── 2. Stack ─────────────────── 의존성 위계 (아래 → 위)
 │   ├── zod ────────────────── schema 정의
 │   ├── zod-crud ───────────── npm dep, 데이터 엔진
-│   ├── @p/headless ────────── monorepo, 행동 엔진
+│   ├── @p/aria-kernel ────────── monorepo, 행동 엔진
 │   │   ├── /patterns ──────── useTreePattern (또는 useTreeGridPattern)
 │   │   ├── /store ─────────── useResource + defineResource
 │   │   └── /key ───────────── useShortcut
@@ -243,7 +243,7 @@ Outliner (apps/outliner)
 │   └── ARIA tree role 전 노드에 적용, axe 검사 위반 0
 │
 ├── 9. Out of Scope ─────────── 명시적 비스코프
-│   ├── 자체 treegrid 구현 ──── @p/headless 패턴 외 키보드 코드 ❌
+│   ├── 자체 treegrid 구현 ──── @p/aria-kernel 패턴 외 키보드 코드 ❌
 │   ├── 새 어휘 도입 ────────── ARIA + zod-crud op 어휘만 사용
 │   ├── 어댑터 패키지화 ─────── 코드는 app 안에만, 별도 npm 패키지 ❌
 │   └── 시각 wrapper ────────── Tailwind utility 직접만, 컴포넌트 wrap ❌

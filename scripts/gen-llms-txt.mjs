@@ -135,7 +135,7 @@ const exportsOf = (mod) =>
 
 const writeIndex = () => {
   const out = []
-  out.push('# @p/headless')
+  out.push('# @p/aria-kernel')
   out.push('')
   out.push(
     'ARIA 행동 인프라(Behavior infrastructure for WAI-ARIA). Roving tabindex, axis composition, 24 APG patterns — zero markup vocabulary, zero CSS.',
@@ -145,8 +145,8 @@ const writeIndex = () => {
   out.push('')
   out.push('## Docs')
   out.push('- [llms-full.txt](llms-full.txt): 전체 시그니처·@example 포함 (LLM 컨텍스트용)')
-  out.push('- [INVARIANTS.md](packages/headless/INVARIANTS.md): 헤드리스 invariant')
-  out.push('- [PATTERNS.md](packages/headless/PATTERNS.md): pattern recipe 시그니처')
+  out.push('- [INVARIANTS.md](packages/aria-kernel/INVARIANTS.md): 헤드리스 invariant')
+  out.push('- [PATTERNS.md](packages/aria-kernel/PATTERNS.md): pattern recipe 시그니처')
   out.push('- [W3C WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/): 정본 어휘 출처')
   out.push('')
 
@@ -173,7 +173,7 @@ const writeIndex = () => {
 
 const writeFull = () => {
   const out = []
-  out.push('# @p/headless — 전체 API')
+  out.push('# @p/aria-kernel — 전체 API')
   out.push('')
   out.push('이 파일은 LLM 컨텍스트 주입용 — 모든 public export 의 시그니처 + TSDoc + @example 을 한 문서에 직렬화한다.')
   out.push('')

@@ -1,7 +1,7 @@
-import { fromTree } from '@p/headless'
-import { menubarAxis, useMenubarPattern, type MenuLevel } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+import { fromTree } from '@p/aria-kernel'
+import { menubarAxis, useMenubarPattern, type MenuLevel } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Menubar · Navigation',

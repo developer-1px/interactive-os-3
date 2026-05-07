@@ -3,10 +3,10 @@ import {
   expandBranchOnActivate,
   fromTree,
   reduceWithDefaults,
-} from '@p/headless'
-import { treeGridAxis, useTreeGridPattern } from '@p/headless/patterns'
-import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
+} from '@p/aria-kernel'
+import { treeGridAxis, useTreeGridPattern } from '@p/aria-kernel/patterns'
+import { useLocalData } from '@p/aria-kernel/local'
+import { axisKeys } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Tree Grid · Cells-First',

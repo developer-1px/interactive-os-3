@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { alertPattern } from '@p/headless/patterns'
+import { alertPattern } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Alert · Toast',

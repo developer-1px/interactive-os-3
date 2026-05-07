@@ -1,10 +1,10 @@
-# @p/headless
+# @p/aria-kernel
 
 **ARIA-correct headless behavior infra** — axes composition, roving tabindex,
 gesture/intent split, declarative page tree (FlatLayout), single resource
 interface, feature spec.
 
-The repo is one product (`@p/headless`) plus a single integrated showcase site
+The repo is one product (`@p/aria-kernel`) plus a single integrated showcase site
 that proves it can ship real apps without ds layer.
 
 ## Layout
@@ -41,7 +41,7 @@ that proves it can ship real apps without ds layer.
 
 ## Stack
 
-- **Behavior**: `@p/headless` ARIA pattern recipes (`useListboxPattern`,
+- **Behavior**: `@p/aria-kernel` ARIA pattern recipes (`useListboxPattern`,
   `useToolbarPattern`, `useTreeGridPattern`, `useRovingTabIndex`,
   `useShortcut`, etc.).
 - **Visuals**: Tailwind v3 utility classes inline. No design tokens,
@@ -72,11 +72,11 @@ pnpm preview      # serve dist/
 
 ## Working agreement
 
-1. New reusable behavior → `packages/headless`.
+1. New reusable behavior → `packages/aria-kernel`.
 2. New visual decision → Tailwind utility class inline. No new token wrappers.
 3. New showcase app → `apps/<name>` workspace package, route added under
    `site/src/routes/apps.<name>.*.tsx`.
 4. Naming follows W3C / WHATWG (ARIA roles, semantic HTML). Library name
    borrowing forbidden.
-5. See `CLAUDE.md` for the full invariant set and `packages/headless/INVARIANTS.md`
+5. See `CLAUDE.md` for the full invariant set and `packages/aria-kernel/INVARIANTS.md`
    for behavior-layer contracts.

@@ -122,9 +122,9 @@ importers:
       '@babel/parser':
         specifier: ^7.29.2
         version: 7.29.2
-      '@p/headless':
+      '@p/aria-kernel':
         specifier: workspace:*
-        version: link:../../packages/headless
+        version: link:../../packages/aria-kernel
     devDependencies:
       '@testing-library/dom':
         specifier: ^10.4.1
@@ -148,7 +148,7 @@ importers:
 
   packages/fs: {}
 
-  packages/headless:
+  packages/aria-kernel:
     dependencies:
       react:
         specifier: ^19.0.0
@@ -184,7 +184,7 @@ importers:
 
   packages/zod-crud:
     dependencies:
-      '@p/headless':
+      '@p/aria-kernel':
         specifier: workspace:*
         version: link:../headless
     devDependencies:

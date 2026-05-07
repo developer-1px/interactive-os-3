@@ -1,4 +1,4 @@
-import { useTreePattern, type PatternProps, type TreeItem } from '@p/headless/patterns'
+import { useTreePattern, type PatternProps, type TreeItem } from '@p/aria-kernel/patterns'
 import { defaultLabel, emptySlot, renderSlot, type Slot } from '../../catalog/slots'
 
 export interface TreeSlots<TItem extends object = Record<string, unknown>> {

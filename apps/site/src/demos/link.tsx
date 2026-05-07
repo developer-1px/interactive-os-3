@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KEYS, matchKey } from '@p/headless'
+import { KEYS, matchKey } from '@p/aria-kernel'
 
 export const meta = {
   title: 'Link',

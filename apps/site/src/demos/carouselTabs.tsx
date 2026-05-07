@@ -1,4 +1,4 @@
-import { useCarouselPattern } from '@p/headless/patterns'
+import { useCarouselPattern } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Carousel · Tablist',

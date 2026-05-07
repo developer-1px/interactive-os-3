@@ -1,4 +1,4 @@
-import type { BaseItem } from '@p/headless/patterns'
+import type { BaseItem } from '@p/aria-kernel/patterns'
 import type { ReactNode } from 'react'
 
 export type Slot<TItem extends object, TView extends BaseItem = BaseItem> = (

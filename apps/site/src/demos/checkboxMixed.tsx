@@ -1,6 +1,6 @@
-import { fromList, axisKeys, toggle } from '@p/headless'
-import { useLocalData } from '@p/headless/local'
-import { useCheckboxGroupPattern } from '@p/headless/patterns'
+import { fromList, axisKeys, toggle } from '@p/aria-kernel'
+import { useLocalData } from '@p/aria-kernel/local'
+import { useCheckboxGroupPattern } from '@p/aria-kernel/patterns'
 
 export const meta = {
   title: 'Checkbox · Mixed (Group)',

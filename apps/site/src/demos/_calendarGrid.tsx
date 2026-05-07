@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { KEYS } from '@p/headless'
+import { KEYS } from '@p/aria-kernel'
 
 export const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',

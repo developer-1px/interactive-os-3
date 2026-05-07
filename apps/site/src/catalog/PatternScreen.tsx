@@ -11,7 +11,7 @@ export function PatternScreen({
   index: number
   total: number
 }) {
-  const { Component, title, apg, kind, blurb, slug, tabs } = entry
+  const { Component, title, apg, kind, blurb, slug, tabs, wide } = entry
   return (
     <CatalogRow
       slug={slug}
@@ -23,7 +23,7 @@ export function PatternScreen({
       apg={apg}
       keys={entry.keys?.()}
       preview={
-        <PreviewCenter>
+        <PreviewCenter wide={wide}>
           <Component />
         </PreviewCenter>
       }

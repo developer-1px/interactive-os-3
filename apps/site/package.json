@@ -8,7 +8,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@p/headless": "workspace:*",
+    "@p/aria-kernel": "workspace:*",
     "@babel/parser": "^7.29.2"
   },
   "devDependencies": {

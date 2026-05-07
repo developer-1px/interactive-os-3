@@ -9,7 +9,7 @@ created: 2026-05-05
 updated: 2026-05-05
 ---
 
-스캔 범위: `packages/headless/src/patterns/`, `apps/outliner/src/`, `apps/kanban/src/`, `apps/site/src/demos/` (컬렉션 데모 표본).
+스캔 범위: `packages/aria-kernel/src/patterns/`, `apps/outliner/src/`, `apps/kanban/src/`, `apps/site/src/demos/` (컬렉션 데모 표본).
 
 ## 1. Findings
 
@@ -36,7 +36,7 @@ updated: 2026-05-05
 |---|---|---|
 | apps/kanban/Kanban.tsx:33–43 (`paste→cards-array index`) | "paste-as-sibling-of-card" | zod-crud 의 array-as-parent 의미. ARIA/APG 어휘 아님. |
 | apps/kanban/Kanban.tsx:58–62, 96–103 (`+ Column`, `+`) | 도메인 button | toolbar/menu 패턴 아님. 1회성 click. |
-| flattenBoard / flattenOutline 전체 | zod-crud 트리 → NormalizedData | 도메인 schema 매핑. `@p/headless` 가 zod-crud 알면 안 됨. |
+| flattenBoard / flattenOutline 전체 | zod-crud 트리 → NormalizedData | 도메인 schema 매핑. `@p/aria-kernel` 가 zod-crud 알면 안 됨. |
 
 ### 데모 표본 (`apps/site/src/demos/` 5+개 확인)
 
@@ -46,7 +46,7 @@ updated: 2026-05-05
 
 ### P0-1 — `useListboxPattern` 에 `editable` 옵션 추가
 
-- 수정: `packages/headless/src/patterns/listbox.ts`
+- 수정: `packages/aria-kernel/src/patterns/listbox.ts`
   - 현재 시그니처: `useListboxPattern(data, onEvent, opts: { selectionFollowsFocus?, multiSelectable?, autoFocus?, containerId?, label?, labelledBy? })`
   - 추가: `editable?: boolean`. 동작은 `tree.ts:122–155` 의 `editKeyDown` 분기 그대로 — 단 Tab/Shift+Tab indent 어휘는 listbox 에 의미가 없으므로 **Enter→insertAfter, Backspace→remove 두 키만**. (옵션을 `editable: 'flat' | 'nested'` 로 두면 tree 와 통일 가능 — 결정은 1 turn 내 다음 PR.)
 - 삭제: `apps/kanban/src/widgets/Kanban.tsx:78–91` (`onKey` 핸들러 14 LOC). `<ul {...lb.rootProps}>` 에서 `onKeyDown={onKey}` override 제거.
@@ -55,7 +55,7 @@ updated: 2026-05-05
 
 ### P0-2 — `useResource` meta 동기화 흡수
 
-- 수정: `packages/headless/src/store/` (resource 모듈) — `defineResource` 에 `meta?: { syncFromCrud?(crud, prev): Meta; reduceWithEvent?: boolean }` 추가하거나, 더 단순하게 `useResource` 가 `[doc, meta, dispatch]` 3-tuple 반환. 내부에서 `crud.subscribe` 의 focus → meta 머지 + `reduce(...).meta` 합성을 한 곳에서.
+- 수정: `packages/aria-kernel/src/store/` (resource 모듈) — `defineResource` 에 `meta?: { syncFromCrud?(crud, prev): Meta; reduceWithEvent?: boolean }` 추가하거나, 더 단순하게 `useResource` 가 `[doc, meta, dispatch]` 3-tuple 반환. 내부에서 `crud.subscribe` 의 focus → meta 머지 + `reduce(...).meta` 합성을 한 곳에서.
 - 삭제:
   - `apps/outliner/Outliner.tsx:13–28` (`useState<Meta>`+`useEffect`+`onEvent` setMeta 분기) — 16 LOC
   - `apps/kanban/Kanban.tsx:13–26` 동일 — 14 LOC
@@ -70,7 +70,7 @@ updated: 2026-05-05
 
 - Kanban paste → cards-array index 매핑: zod-crud 의 array-as-parent 도메인 의미, ARIA 어휘 아님.
 - Kanban "+ Column", "+ Add card" 버튼: 단발 click, 패턴화 가치 없음.
-- `flattenOutline` / `flattenBoard`: 도메인 schema → NormalizedData. `@p/headless` 가 zod-crud 를 모르는 것이 정체성.
+- `flattenOutline` / `flattenBoard`: 도메인 schema → NormalizedData. `@p/aria-kernel` 가 zod-crud 를 모르는 것이 정체성.
 - Outliner header 의 키 가이드 텍스트 (`Enter · Tab …`): 데모 어포던스, 패턴화 대상 아님.
 
 ## 4. Open questions

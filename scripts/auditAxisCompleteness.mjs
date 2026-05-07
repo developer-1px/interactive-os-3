@@ -7,7 +7,7 @@
  *
  * 검사:
  *  1. apps/site/src/demos -- escape hatch (skipKeys/skipFor.../noopIn...) 부재
- *  2. packages/headless/src/axes/emits.ts subset of packages/headless/src/state/handles.ts
+ *  2. packages/aria-kernel/src/axes/emits.ts subset of packages/aria-kernel/src/state/handles.ts
  *     (REDUCE_PRESETS 합집합 cover)
  *
  * 사용:
@@ -42,10 +42,10 @@ for (const f of testFiles) {
 // ───── Check 2: axis emits ⊆ reducer handles ─────
 // emits.ts / handles.ts 에서 정적 카탈로그 추출 (간단한 파싱).
 const emitsFile = readFileSync(
-  path.join(root, 'packages/headless/src/axes/emits.ts'), 'utf8',
+  path.join(root, 'packages/aria-kernel/src/axes/emits.ts'), 'utf8',
 )
 const handlesFile = readFileSync(
-  path.join(root, 'packages/headless/src/state/handles.ts'), 'utf8',
+  path.join(root, 'packages/aria-kernel/src/state/handles.ts'), 'utf8',
 )
 
 const extractList = (src, varName) => {

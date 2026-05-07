@@ -1,8 +1,8 @@
 {
-  "name": "headless",
+  "name": "aria-kernel",
   "private": true,
   "version": "0.0.0",
-  "description": "@p/headless workspace with Tailwind-based app showcases (slides, finder, markdown).",
+  "description": "@p/aria-kernel workspace with Tailwind-based app showcases (slides, finder, markdown).",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,7 @@
     "guard:chords": "node scripts/guardChordRegistry.mjs",
     "audit:axis": "node scripts/auditAxisCompleteness.mjs",
     "preview": "vite preview",
-    "docs:api": "cd packages/headless && npx typedoc --json ../../docs/api.json --out ../../docs/api",
+    "docs:api": "cd packages/aria-kernel && npx typedoc --json ../../docs/api.json --out ../../docs/api",
     "docs:llms": "pnpm docs:api && node scripts/gen-llms-txt.mjs"
   },
   "dependencies": {

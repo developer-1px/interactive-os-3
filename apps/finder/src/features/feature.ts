@@ -12,8 +12,8 @@ import {
   fromTree,
   pathAncestors,
   type NormalizedData,
-} from '@p/headless'
-import { defineFeature, type QuerySpec } from '@p/headless/store'
+} from '@p/aria-kernel'
+import { defineFeature, type QuerySpec } from '@p/aria-kernel/store'
 import {
   getTree, loadText, getImageUrl, sidebar as favItems, smartGroups, walk,
   tagGroups, tagItems, isTagPath,
