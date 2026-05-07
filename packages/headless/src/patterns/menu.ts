@@ -44,9 +44,33 @@ const menuHorizontalAxis: Axis = composeAxes(
   typeahead,
 )
 
-/** Menu 가 응답하는 chord 합집합 — keys SSOT. */
-export const menuAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}): Axis =>
-  opts.orientation === 'horizontal' ? menuHorizontalAxis : menuVerticalAxis
+const menuVerticalAxisFlat: Axis = composeAxes(
+  navigate('vertical'),
+  activate,
+  escape,
+  typeahead,
+)
+
+const menuHorizontalAxisFlat: Axis = composeAxes(
+  navigate('horizontal'),
+  activate,
+  escape,
+  typeahead,
+)
+
+/**
+ * Menu 가 응답하는 chord 합집합 — keys SSOT.
+ * `hasSubmenu: false` 시 submenu open/close (ArrowRight/Left) 키 제외.
+ */
+export const menuAxis = (opts: {
+  orientation?: 'horizontal' | 'vertical'
+  hasSubmenu?: boolean
+} = {}): Axis => {
+  const horizontal = opts.orientation === 'horizontal'
+  const flat = opts.hasSubmenu === false
+  if (horizontal) return flat ? menuHorizontalAxisFlat : menuHorizontalAxis
+  return flat ? menuVerticalAxisFlat : menuVerticalAxis
+}
 
 export interface MenuOptions {
   /** aria-orientation. default 'vertical'. */
