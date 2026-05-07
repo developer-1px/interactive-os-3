@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(sliderRangeAxis()),
 }
 
-export default function Demo() {
+export default function SliderRangeDemo() {
   const [values, setValues] = useState<number[]>([20, 70])
   const { rootProps, trackProps, rangeProps, thumbProps } = sliderRangePattern(
     values,

@@ -15,7 +15,7 @@ const SETTINGS = [
   { id: 'reduce-motion', label: 'Reduce motion' },
 ]
 
-export default function Demo() {
+export default function SwitchCheckboxDemo() {
   const [state, setState] = useState<Record<string, boolean>>({ 'high-contrast': false, 'reduce-motion': true })
 
   return (

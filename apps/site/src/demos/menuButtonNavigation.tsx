@@ -17,7 +17,7 @@ const LINKS = [
   { id: 'about', label: 'About', href: '#about' },
 ]
 
-export default function Demo() {
+export default function MenuButtonNavigationDemo() {
   const [data, onEvent] = useLocalData(() => fromList(LINKS))
   const { triggerProps, menuProps, itemProps, items, open } = useMenuButtonPattern(data, onEvent, {
     variant: 'navigation',

@@ -13,7 +13,7 @@ const ROWS = [
   { name: 'Alan Turing', role: 'Researcher', dept: 'Theory' },
 ]
 
-export default function Demo() {
+export default function TableDemo() {
   return (
     <table className="w-full border-collapse border border-stone-200 text-sm">
       <caption className="caption-top pb-2 text-left text-xs text-stone-500">Employees</caption>

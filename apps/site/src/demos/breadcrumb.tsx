@@ -15,7 +15,7 @@ const TRAIL = [
   { label: 'Breadcrumb', href: '#breadcrumb' },
 ]
 
-export default function Demo() {
+export default function BreadcrumbDemo() {
   return (
     <nav aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-1 text-sm">

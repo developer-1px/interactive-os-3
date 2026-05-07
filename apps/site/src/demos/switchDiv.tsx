@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(switchAxis()),
 }
 
-export default function Demo() {
+export default function SwitchDivDemo() {
   const [on, dispatch] = useLocalValue(true)
   const { switchProps } = switchPattern(on, dispatch, { label: 'Sound' })
 

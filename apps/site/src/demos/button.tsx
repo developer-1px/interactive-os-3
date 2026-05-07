@@ -8,7 +8,7 @@ export const meta = {
   keys: () => ['Enter', 'Space'],
 }
 
-export default function Demo() {
+export default function ButtonDemo() {
   const [count, setCount] = useState(0)
   const [muted, setMuted] = useState(false)
   const [bold, setBold] = useState(true)

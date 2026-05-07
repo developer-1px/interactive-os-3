@@ -51,7 +51,7 @@ function buildData(rows: Person[], sort: Record<string, 'ascending' | 'descendin
 const rotate = (cur: 'ascending' | 'descending' | 'none'): 'ascending' | 'descending' | 'none' =>
   cur === 'none' ? 'ascending' : cur === 'ascending' ? 'descending' : 'none'
 
-export default function Demo() {
+export default function GridSortableDemo() {
   const [sort, setSort] = useState<Record<string, 'ascending' | 'descending' | 'none'>>({})
   const [focus, setFocus] = useState<string | null>(null)
   const sortedRows = (() => {

@@ -73,7 +73,7 @@ function MenuLevelView({
   )
 }
 
-export default function Demo() {
+export default function MenuButtonDemo() {
   const [data, onEvent] = useLocalData(() => fromTree(TREE))
   const { triggerProps, rootLevel, getSubmenu, open } = useMenuButtonPattern(data, onEvent)
 

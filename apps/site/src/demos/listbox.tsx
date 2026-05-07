@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(listboxAxis()),
 }
 
-export default function Demo() {
+export default function ListboxDemo() {
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'Apple' }, { label: 'Banana' }, { label: 'Cherry' }, { label: 'Durian' }]),
   )

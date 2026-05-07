@@ -9,7 +9,7 @@ export const meta = {
   keys: () => dialogKeys(),
 }
 
-export default function Demo() {
+export default function AlertdialogDemo() {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const cancelRef = useRef<HTMLButtonElement>(null)
   const { rootProps, closeProps, open, setOpen } = useAlertDialogPattern({

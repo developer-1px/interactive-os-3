@@ -13,7 +13,7 @@ export const meta = {
 
 const PANEL_ID = 'details'
 
-export default function Demo() {
+export default function DisclosureDemo() {
   const [data, onEvent] = useLocalData(() => fromList([{ id: PANEL_ID }]))
   const open = isExpanded(data, PANEL_ID)
   const { triggerProps, panelProps } = disclosurePattern(data, PANEL_ID, onEvent)

@@ -6,7 +6,7 @@ export const meta = {
   keys: () => [],
 }
 
-export default function Demo() {
+export default function LandmarksDemo() {
   return (
     <div className="grid w-full grid-cols-[160px_1fr_140px] grid-rows-[auto_1fr_auto] gap-2 text-xs">
       <header className="col-span-3 rounded border-2 border-dashed border-stone-300 bg-amber-50 p-2">

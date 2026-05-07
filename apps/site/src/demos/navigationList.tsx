@@ -10,7 +10,7 @@ export const meta = {
   keys: () => [],
 }
 
-export default function Demo() {
+export default function NavigationListDemo() {
   const [data, onEvent] = useLocalData(
     () => fromList([
       { id: 'home', label: 'Home', href: '#home' },

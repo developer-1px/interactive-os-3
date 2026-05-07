@@ -13,7 +13,7 @@ const GAUGES = [
   { label: 'Budget spent', value: 4200, min: 0, max: 5000, unit: ' USD', tone: 'bg-emerald-500' },
 ]
 
-export default function Demo() {
+export default function MeterDemo() {
   return (
     <div className="flex flex-col gap-6 text-sm">
       <section className="space-y-2">

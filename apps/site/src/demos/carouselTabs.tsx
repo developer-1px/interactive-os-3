@@ -17,7 +17,7 @@ const SLIDES = [
 
 const COLORS = ['from-amber-200', 'from-sky-200', 'from-emerald-200', 'from-rose-200']
 
-export default function Demo() {
+export default function CarouselTabsDemo() {
   const c = useCarouselPattern({
     slides: SLIDES,
     label: 'Featured photos',

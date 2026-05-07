@@ -31,7 +31,7 @@ const ROWS: Node[] = [
   row('r6', 'Japan · JPY · Tokyo', ['Japan', 'JPY', 'Tokyo']),
 ]
 
-export default function Demo() {
+export default function ComboboxGridDemo() {
   const [data, onEvent] = useLocalData(() => fromTree(ROWS))
   const { comboboxProps, gridProps, rowProps, cellProps, rows, expanded } = useComboboxGridPattern(
     data,

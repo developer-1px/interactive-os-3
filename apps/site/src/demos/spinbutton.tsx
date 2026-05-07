@@ -18,7 +18,7 @@ const FIELDS: Field[] = [
   { id: 'pets', label: 'Pets', min: 0, max: 3 },
 ]
 
-export default function Demo() {
+export default function SpinbuttonDemo() {
   const [values, setValues] = useState<Record<string, number>>({ adults: 2, children: 0, pets: 0 })
 
   return (

@@ -19,7 +19,7 @@ export const meta = {
   keys: comboboxWrapperKeys,
 }
 
-export default function Demo() {
+export default function ComboboxWrapperDemo() {
   const [data, onEvent] = useLocalData(() => initialData)
   return <Combobox aria-label="Country" data={data} onEvent={onEvent} placeholder="Search country…" />
 }

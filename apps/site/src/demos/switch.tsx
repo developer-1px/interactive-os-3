@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(switchAxis()),
 }
 
-export default function Demo() {
+export default function SwitchDemo() {
   const [on, dispatch] = useLocalValue(false)
   const { switchProps } = switchPattern(on, dispatch, { label: 'Notifications' })
 

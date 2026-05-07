@@ -43,7 +43,7 @@ const tree: Node[] = [
 
 const treeReducer = applyGesture(expandBranchOnActivate, reduceWithMultiSelect)
 
-export default function Demo() {
+export default function TreeMultiDemo() {
   const [data, onEvent] = useLocalData(
     () =>
       fromTree(tree, { expanded: ['src', 'demos'] }),

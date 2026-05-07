@@ -26,7 +26,7 @@ const ITEMS = [
   { id: 'help', label: 'Help', itemRole: 'link', href: '#help' },
 ]
 
-export default function Demo() {
+export default function ToolbarMixedDemo() {
   const [data, onEvent] = useLocalData(() => fromList(ITEMS))
   const { rootProps, toolbarItemProps, items } = useToolbarPattern(data, onEvent, {
     label: 'Editor toolbar',

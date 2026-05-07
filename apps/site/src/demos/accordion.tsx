@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(accordionAxis()),
 }
 
-export default function Demo() {
+export default function AccordionDemo() {
   const [data, onEvent] = useLocalData(() => fromList([
     { id: 'a', label: 'What is @p/headless?' },
     { id: 'b', label: 'Why ARIA-first?' },

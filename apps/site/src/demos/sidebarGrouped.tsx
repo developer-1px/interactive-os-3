@@ -26,7 +26,7 @@ const ITEMS = [
 
 const GROUPS = Array.from(new Set(ITEMS.map((i) => i.group)))
 
-export default function Demo() {
+export default function SidebarGroupedDemo() {
   const [data, onEvent] = useLocalData(() => fromList(ITEMS))
   const { rootProps, optionProps, items } = useListboxPattern(data, onEvent)
 

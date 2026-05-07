@@ -17,7 +17,7 @@ const ITEMS = [
   { id: 'export', label: 'Export' },
 ]
 
-export default function Demo() {
+export default function MenuButtonActiveDescendantDemo() {
   const [data, onEvent] = useLocalData(() => fromList(ITEMS))
   const { triggerProps, menuProps, itemProps, items, open } = useMenuButtonPattern(data, onEvent, {
     focusMode: 'activeDescendant',

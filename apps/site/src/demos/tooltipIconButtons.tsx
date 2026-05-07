@@ -41,7 +41,7 @@ function IconAction({ icon, label }: { icon: string; label: string }) {
   )
 }
 
-export default function Demo() {
+export default function TooltipIconButtonsDemo() {
   return (
     <div className="flex gap-1 rounded-md border border-stone-200 bg-white p-1">
       {ACTIONS.map((a) => (

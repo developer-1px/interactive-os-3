@@ -13,7 +13,7 @@ export const meta = {
 
 const ALL = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Denmark', 'France', 'Germany', 'Japan']
 
-export default function Demo() {
+export default function ComboboxAutocompleteNoneDemo() {
   const [data, onEvent] = useLocalData(() => fromList(ALL.map((label) => ({ label }))))
   const { comboboxProps, listboxProps, optionProps, items, expanded } = useComboboxPattern(data, onEvent, {
     label: 'Country',

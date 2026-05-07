@@ -54,7 +54,7 @@ export const meta = {
   keys: menuWrapperKeys,
 }
 
-export default function Demo() {
+export default function MenuWrapperDemo() {
   const [data, onEvent] = useLocalData(() => initialData, reduceWithDefaults)
 
   return <Menu aria-label="File" data={data} onEvent={onEvent} slots={slots as MenuSlots} />

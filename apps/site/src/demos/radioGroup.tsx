@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(radioGroupAxis()),
 }
 
-export default function Demo() {
+export default function RadioGroupDemo() {
   const [data, onEvent] = useLocalData(
     () => fromList([{ label: 'Small' }, { label: 'Medium', checked: true }, { label: 'Large' }]),
     reduceWithRadio,

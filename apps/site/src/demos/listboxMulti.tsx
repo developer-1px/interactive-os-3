@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(listboxAxis({ multiSelectable: true })),
 }
 
-export default function Demo() {
+export default function ListboxMultiDemo() {
   const [data, onEvent] = useLocalData(
     () => fromList([
       { label: 'Apple' },

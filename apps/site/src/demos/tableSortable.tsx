@@ -25,7 +25,7 @@ const COLS: { key: Col; label: string }[] = [
   { key: 'dept', label: 'Department' },
 ]
 
-export default function Demo() {
+export default function TableSortableDemo() {
   const [sort, setSort] = useState<Sort | null>(null)
 
   const onHeaderClick = (key: Col) => {

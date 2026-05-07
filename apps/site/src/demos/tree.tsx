@@ -43,7 +43,7 @@ const tree: Node[] = [
 
 const treeReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
-export default function Demo() {
+export default function TreeDemo() {
   const [data, onEvent] = useLocalData(
     () =>
       fromTree(tree, { expanded: ['src', 'demos'] }),

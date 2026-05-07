@@ -13,7 +13,7 @@ export const meta = {
 
 const ID = 'details'
 
-export default function Demo() {
+export default function DisclosureCardDemo() {
   const [data, onEvent] = useLocalData(() => fromList([{ id: ID }]))
   const open = isExpanded(data, ID)
   const { triggerProps, panelProps } = disclosurePattern(data, ID, onEvent)

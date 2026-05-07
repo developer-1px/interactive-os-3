@@ -13,7 +13,7 @@ export const meta = {
 const fmt = (s: number) =>
   `${Math.floor(s / 60)} minute${Math.floor(s / 60) === 1 ? '' : 's'} ${s % 60} second${s % 60 === 1 ? '' : 's'}`
 
-export default function Demo() {
+export default function SliderSeekDemo() {
   const [value, setValue] = useState(73)
   const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(
     value,

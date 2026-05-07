@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(tabsAxis()),
 }
 
-export default function Demo() {
+export default function TabsDemo() {
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'Overview', selected: true }, { label: 'Behavior' }, { label: 'Patterns' }]),
   )

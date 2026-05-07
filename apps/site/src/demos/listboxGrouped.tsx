@@ -31,7 +31,7 @@ const TREE: Node[] = [
 
 const IDP = 'lb'
 
-export default function Demo() {
+export default function ListboxGroupedDemo() {
   const [data, onEvent] = useLocalData(() => fromTree(TREE))
   const { rootProps, optionProps, groupProps, groups } = useListboxPattern(data, onEvent, {
     label: 'Foods',

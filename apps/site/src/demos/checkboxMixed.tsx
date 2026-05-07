@@ -17,7 +17,7 @@ const ITEMS = [
   { id: 'cheese', label: 'Cheese' },
 ]
 
-export default function Demo() {
+export default function CheckboxMixedDemo() {
   const [data, onEvent] = useLocalData(() => {
     const d = fromList(ITEMS)
     d.entities['lettuce'] = { ...(d.entities['lettuce'] ?? {}), checked: true }

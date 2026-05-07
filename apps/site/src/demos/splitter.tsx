@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(splitterAxis()),
 }
 
-export default function Demo() {
+export default function SplitterDemo() {
   const [value, dispatch] = useLocalValue(40)
   const { rootProps, handleProps } = splitterPattern(value, dispatch, {
     orientation: 'horizontal',

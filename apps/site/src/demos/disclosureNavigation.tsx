@@ -39,7 +39,7 @@ function Section({ id, label, subs, data, onEvent }: { id: string; label: string
   )
 }
 
-export default function Demo() {
+export default function DisclosureNavigationDemo() {
   const [data, onEvent] = useLocalData(() => fromList(NAV.map(({ id }) => ({ id }))))
   return (
     <nav>

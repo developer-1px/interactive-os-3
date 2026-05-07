@@ -9,7 +9,7 @@ export const meta = {
   keys: () => ['Enter', 'Space'],
 }
 
-export default function Demo() {
+export default function LinkDemo() {
   const [log, setLog] = useState<string[]>([])
   const trace = (msg: string) => setLog((l) => [msg, ...l].slice(0, 4))
 

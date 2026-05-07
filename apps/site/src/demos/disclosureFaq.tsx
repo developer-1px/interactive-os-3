@@ -34,7 +34,7 @@ function Item({ id, q, a, data, onEvent }: { id: string; q: string; a: string; d
   )
 }
 
-export default function Demo() {
+export default function DisclosureFaqDemo() {
   const [data, onEvent] = useLocalData(() => fromList(QA.map(({ id }) => ({ id }))))
   return (
     <div className="w-80 rounded-md border border-stone-200 bg-white px-3">

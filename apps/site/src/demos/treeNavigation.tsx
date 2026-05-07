@@ -28,7 +28,7 @@ const NAV: Node[] = [
 
 const reducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
-export default function Demo() {
+export default function TreeNavigationDemo() {
   const [data, onEvent] = useLocalData(
     () => {
       const d = fromTree(NAV, { expanded: ['docs', 'patterns'] })

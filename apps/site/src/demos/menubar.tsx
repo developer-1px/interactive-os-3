@@ -85,7 +85,7 @@ function SubmenuView({
   )
 }
 
-export default function Demo() {
+export default function MenubarDemo() {
   const [data, onEvent] = useLocalData(() => fromTree(TREE))
   const { rootProps, menubarItemProps, topItems, getSubmenu } = useMenubarPattern(data, onEvent, {
     label: 'Application',

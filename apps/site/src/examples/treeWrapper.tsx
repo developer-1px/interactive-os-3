@@ -71,7 +71,7 @@ export const meta = {
   keys: treeWrapperKeys,
 }
 
-export default function Demo() {
+export default function TreeWrapperDemo() {
   const [data, onEvent] = useLocalData(() => initialData, reducer)
 
   return (

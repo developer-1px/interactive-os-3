@@ -9,7 +9,7 @@ export const meta = {
   keys: () => [],
 }
 
-export default function Demo() {
+export default function AlertDemo() {
   const [count, setCount] = useState(0)
   const { rootProps } = alertPattern()
 

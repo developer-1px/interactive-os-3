@@ -41,7 +41,7 @@ const rows: Row[] = [
 const COLS = ['Name', 'Size', 'Modified']
 const treeGridReducer = applyGesture(expandBranchOnActivate, reduceWithDefaults)
 
-export default function Demo() {
+export default function TreeGridDemo() {
   const [data, onEvent] = useLocalData(() =>
     fromTree(rows, { expanded: ['src'] }),
     treeGridReducer,

@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(menuAxis()),
 }
 
-export default function Demo() {
+export default function MenuDemo() {
   const [data, onEvent] = useLocalData(() =>
     fromList([{ label: 'New file' }, { label: 'Open…' }, { label: 'Save' }, { label: 'Close' }]),
   )

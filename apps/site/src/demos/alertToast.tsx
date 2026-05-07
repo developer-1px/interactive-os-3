@@ -11,7 +11,7 @@ export const meta = {
 
 type Toast = { id: number; message: string; type: 'auto' | 'manual' }
 
-export default function Demo() {
+export default function AlertToastDemo() {
   const [toasts, setToasts] = useState<Toast[]>([])
   const nextId = useRef(1)
 

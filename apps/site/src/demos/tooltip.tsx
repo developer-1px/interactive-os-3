@@ -8,7 +8,7 @@ export const meta = {
   keys: () => tooltipKeys(),
 }
 
-export default function Demo() {
+export default function TooltipDemo() {
   const { open, triggerProps, tipProps } = useTooltipPattern()
 
   return (

@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(sliderAxis()),
 }
 
-export default function Demo() {
+export default function SliderDemo() {
   const [value, dispatch] = useLocalValue(40)
   const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(value, dispatch, {
     min: 0,

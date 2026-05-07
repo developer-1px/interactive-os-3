@@ -12,7 +12,7 @@ export const meta = {
 
 const LABELS = ['', 'Very poor', 'Poor', 'Average', 'Good', 'Excellent']
 
-export default function Demo() {
+export default function SliderRatingDemo() {
   const [value, setValue] = useState(3)
   const { rootProps, trackProps, rangeProps, thumbProps } = sliderPattern(
     value,

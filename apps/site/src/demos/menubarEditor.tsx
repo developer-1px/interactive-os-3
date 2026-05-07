@@ -59,7 +59,7 @@ function MenuLevelView({ level, getSubmenu }: { level: MenuLevel; getSubmenu: (i
   )
 }
 
-export default function Demo() {
+export default function MenubarEditorDemo() {
   const [data, onEvent] = useLocalData(() => fromTree(TREE))
   const { rootProps, menubarItemProps, topItems, getSubmenu } = useMenubarPattern(data, onEvent, {
     label: 'Editor',

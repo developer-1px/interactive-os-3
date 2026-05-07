@@ -50,7 +50,7 @@ const makeArticle = (i: number): Article => ({
   body: SAMPLE_BODIES[i % SAMPLE_BODIES.length],
 })
 
-export default function Demo() {
+export default function FeedInfiniteDemo() {
   const nextId = useRef(0)
   const [articles, setArticles] = useState<Article[]>(() =>
     Array.from({ length: 5 }, () => makeArticle(nextId.current++)),

@@ -10,7 +10,7 @@ export const meta = {
   keys: () => ['ArrowDown', 'Alt+ArrowDown', 'Escape'],
 }
 
-export default function Demo() {
+export default function ComboboxDatepickerDemo() {
   const [date, setDate] = useState('')
   const { inputProps, popoverProps, triggerProps, open, setOpen } = useComboboxPattern({
     haspopup: 'dialog',

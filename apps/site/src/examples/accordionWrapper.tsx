@@ -31,7 +31,7 @@ export const meta = {
   keys: accordionWrapperKeys,
 }
 
-export default function Demo() {
+export default function AccordionWrapperDemo() {
   const [data, onEvent] = useLocalData(() => initialData)
   return <Accordion aria-label="FAQ" data={data} onEvent={onEvent} slots={slots as AccordionSlots} />
 }

@@ -13,7 +13,7 @@ export const meta = {
 
 const POOL = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape', 'Honeydew']
 
-export default function Demo() {
+export default function ListboxRearrangeableDemo() {
   const [order, setOrder] = useState<string[]>(['Apple', 'Banana', 'Cherry'])
   const [focus, setFocusId] = useState<string | null>('Apple')
   const remaining = POOL.filter((p) => !order.includes(p))

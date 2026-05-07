@@ -10,7 +10,7 @@ export const meta = {
   keys: () => axisKeys(toggle),
 }
 
-export default function Demo() {
+export default function CheckboxDemo() {
   const [checked, dispatch] = useLocalValue<CheckboxState>(false)
   const { checkboxProps } = checkboxPattern(checked, dispatch, {
     label: 'Subscribe to newsletter',

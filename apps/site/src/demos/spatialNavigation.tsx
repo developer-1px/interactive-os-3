@@ -24,7 +24,7 @@ const POSTERS = [
   { title: 'Heat', hue: 'bg-blue-200' },
 ]
 
-export default function Demo() {
+export default function SpatialNavigationDemo() {
   const { ref, onKeyDown } = useSpatialNavigation<HTMLDivElement>(null, {
     orientation: 'both',
     itemSelector: '[data-card]',

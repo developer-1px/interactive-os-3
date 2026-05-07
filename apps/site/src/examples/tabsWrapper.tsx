@@ -27,7 +27,7 @@ export const meta = {
   keys: tabsWrapperKeys,
 }
 
-export default function Demo() {
+export default function TabsWrapperDemo() {
   const [data, onEvent] = useLocalData(() => initialData)
   return <Tabs aria-label="Documentation" data={data} onEvent={onEvent} slots={slots as TabsSlots} />
 }

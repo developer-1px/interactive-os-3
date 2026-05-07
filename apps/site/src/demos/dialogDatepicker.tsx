@@ -10,7 +10,7 @@ export const meta = {
   keys: () => ['Escape', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter', 'Space'],
 }
 
-export default function Demo() {
+export default function DialogDatepickerDemo() {
   const [date, setDate] = useState('')
   const triggerRef = useRef<HTMLButtonElement | null>(null)
   const { rootProps, open, setOpen } = useDialogPattern({

@@ -11,7 +11,7 @@ export const meta = {
   keys: () => axisKeys(toolbarAxis()),
 }
 
-export default function Demo() {
+export default function ToolbarDemo() {
   const [data, onEvent] = useLocalData(() => fromList([
     { id: 'bold', label: 'Bold' },
     { id: 'italic', label: 'Italic' },
