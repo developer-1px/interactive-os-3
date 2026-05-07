@@ -1,14 +1,13 @@
 import { fromList } from '@p/headless'
-import { tabsAxis, useTabsPattern } from '@p/headless/patterns'
+import { tabsKeys, useTabsPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Tabs',
   apg: 'tabs',
   kind: 'collection' as const,
   blurb: 'A tabbed view that switches panels as the active tab changes.',
-  keys: () => axisKeys(tabsAxis()),
+  keys: () => tabsKeys({ activationMode: 'automatic' }),
 }
 
 export default function TabsDemo() {

@@ -19,7 +19,7 @@
  */
 
 export { useListboxPattern, listboxAxis, listboxEditKeys, listboxBuiltinChords, type ListboxOptions } from './listbox'
-export { useTabsPattern, tabsAxis, type TabsOptions } from './tabs'
+export { useTabsPattern, tabsAxis, tabsKeys, type TabsOptions } from './tabs'
 export { useTreePattern, treeAxis, treeEditKeys, treeBuiltinChords, type TreeOptions } from './tree'
 export { type BuiltinChordDescriptor } from './types'
 export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'

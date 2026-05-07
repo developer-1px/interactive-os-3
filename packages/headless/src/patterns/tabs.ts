@@ -1,10 +1,23 @@
 import { useCallback } from 'react'
 import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, navigate } from '../axes'
+import { activate, axisKeys, composeAxes, navigate } from '../axes'
 
-/** Tabs 가 등록하는 axis — SSOT. */
+/** Tabs 가 등록하는 axis — SSOT (behavior 용 — click activation 위해 항상 activate 포함). */
 export const tabsAxis = (opts: { orientation?: 'horizontal' | 'vertical' } = {}) =>
   composeAxes(navigate(opts.orientation ?? 'horizontal'), activate)
+
+/**
+ * Tabs 가 advertise 하는 키 — `activationMode` 에 따라 Enter/Space 노출 여부 결정.
+ * automatic 모드에서는 sff 로 navigate 가 즉시 select 까지 가져가 Enter/Space 는 redundant
+ * (already-selected tab 에 대한 no-op activate). spec 상 optional 이므로 advertise 제외.
+ */
+export const tabsKeys = (opts: {
+  orientation?: 'horizontal' | 'vertical'
+  activationMode?: 'automatic' | 'manual'
+} = {}): readonly string[] => {
+  const all = axisKeys(tabsAxis(opts))
+  return opts.activationMode === 'manual' ? all : all.filter((k) => k !== 'Enter' && k !== ' ')
+}
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
