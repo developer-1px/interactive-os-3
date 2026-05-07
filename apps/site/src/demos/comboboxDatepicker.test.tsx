@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './comboboxDatepicker'
+import Demo, { meta } from './comboboxDatepicker'
 
 afterEach(cleanup)
 
@@ -60,5 +60,26 @@ describe('combobox datepicker — dialog-popup variant', () => {
     fireEvent.change(input(), { target: { value: '2026-' } })
     expect(input().getAttribute('aria-expanded')).toBe('false')
     expect(dialog()).toBeNull()
+  })
+
+  it('meta.keys 의 모든 키가 dialog open/close 를 일으킨다', () => {
+    // ArrowDown / Alt+ArrowDown — 닫힌 상태에서 open. Escape — 열린 상태에서 close.
+    const open = () => input().getAttribute('aria-expanded') === 'true'
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      input().focus()
+      // Escape 는 prelude 로 dialog 를 먼저 열어야 변화 발생.
+      if (key === 'Escape') fireEvent.keyDown(input(), { key: 'ArrowDown' })
+      const before = open()
+      const opts: KeyboardEventInit = key === 'Alt+ArrowDown'
+        ? { key: 'ArrowDown', altKey: true }
+        : { key }
+      // Escape 는 global keymap (document level), 그 외는 input 에서.
+      if (key === 'Escape') act(() => { fireEvent.keyDown(document, opts) })
+      else fireEvent.keyDown(input(), opts)
+      const after = open()
+      expect({ key, changed: before !== after }).toEqual({ key, changed: true })
+    }
   })
 })
