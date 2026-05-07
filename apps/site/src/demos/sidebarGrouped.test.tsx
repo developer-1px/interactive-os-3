@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Demo from './sidebarGrouped'
+import Demo, { meta } from './sidebarGrouped'
 
 afterEach(cleanup)
 
@@ -52,5 +52,28 @@ describe('sidebarGrouped demo — black-box (keyboard + mouse)', () => {
     render(<Demo />)
     expect(screen.getByText('⌘1')).toBeTruthy()
     expect(screen.getByText('⌘7')).toBeTruthy()
+  })
+
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다', () => {
+    const snap = () => ({
+      sel: options().map((o) => o.getAttribute('aria-selected')).join(','),
+      focusLabel: focused()?.textContent ?? '',
+    })
+    const startsFromLast = ['Home', 'ArrowUp', 'ArrowLeft', 'PageUp']
+    const printable = (k: string) => k === '<printable>' || (k.length === 1 && /[A-Za-z]/.test(k))
+    for (const key of meta.keys!()) {
+      cleanup()
+      render(<Demo />)
+      // 초기 focus = Inbox, selection = none → Enter/Space 도 변화 발생.
+      if (startsFromLast.includes(key)) fireEvent.keyDown(focused(), { key: 'End' })
+      const before = snap()
+      if (key === 'Click') fireEvent.click(options()[3])
+      else if (key === 'Cmd+1…9') fireEvent.keyDown(list(), { key: '4', metaKey: true })
+      else if (printable(key)) fireEvent.keyDown(focused(), { key: 's' })
+      else fireEvent.keyDown(focused(), { key })
+      const after = snap()
+      const changed = before.sel !== after.sel || before.focusLabel !== after.focusLabel
+      expect({ key, changed }).toEqual({ key, changed: true })
+    }
   })
 })
