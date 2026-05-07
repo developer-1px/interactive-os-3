@@ -15,6 +15,7 @@ import type { ItemProps, RootProps } from './types'
 /** comboboxGrid open-trigger chord registry — declarative SSOT. */
 const ARROW_DOWN = ['ArrowDown'] as const
 const ARROW_UP = ['ArrowUp'] as const
+const ESCAPE = ['Escape'] as const
 
 /** Combobox(grid popup) 가 등록하는 axis — Escape · 2D nav · Enter. */
 export const comboboxGridAxis = () =>
@@ -163,6 +164,14 @@ export function useComboboxGridPattern(
       const targetRow = matchAnyChord(ev, ARROW_UP) ? visibleRowIds[visibleRowIds.length - 1] : visibleRowIds[0]
       const targetCell = targetRow ? getChildren(data, targetRow)[0] : undefined
       if (targetCell) onEvent?.({ type: 'navigate', id: targetCell })
+      return
+    }
+    // Escape — open scope 는 ROOT (popup 자체). axis 가 activeId 로 dispatch 하면
+    // ROOT 의 expanded 가 변하지 않아 닫히지 않음 → 명시적으로 ROOT id 로 emit.
+    // APG combobox: Escape MUST close popup.
+    if (expanded && matchAnyChord(ev, ESCAPE)) {
+      e.preventDefault()
+      onEvent?.({ type: 'open', id: ROOT, open: false })
       return
     }
     dispatchKey(e, activeId ?? ROOT)

@@ -101,13 +101,17 @@ describe('comboboxGrid demo — black-box (keyboard + mouse)', () => {
     expect(input().value).toBe('Argentina')
   })
 
-  // NOTE: 현 demo 의 Escape 는 dispatchKey 가 activeId 를 target 으로 escape axis 를 돌려
-  // `{type:'open', id:activeCellId, open:false}` 를 emit — ROOT 의 expanded 가 derive 되는
-  // `isOpen(data, ROOT)` 는 영향받지 않아 grid 가 닫히지 않는다. blur 로만 닫힘.
-  it('blur 로 grid 닫힘 (closeOnBlurDelay)', async () => {
+  it('Escape 로 grid 닫힘', () => {
     render(<Demo />)
     fireEvent.keyDown(input(), { key: 'ArrowDown' })
     expect(grid()).not.toBeNull()
+    fireEvent.keyDown(input(), { key: 'Escape' })
+    expect(grid()).toBeNull()
+  })
+
+  it('blur 로도 grid 닫힘 (closeOnBlurDelay)', async () => {
+    render(<Demo />)
+    fireEvent.keyDown(input(), { key: 'ArrowDown' })
     fireEvent.blur(input())
     await new Promise((r) => setTimeout(r, 150))
     expect(grid()).toBeNull()
@@ -133,10 +137,7 @@ describe('comboboxGrid demo — black-box (keyboard + mouse)', () => {
       active: input().getAttribute('aria-activedescendant') ?? '',
       value: input().value,
     })
-    // Escape 는 본 demo 에서 active cell 에 dispatch 되어 ROOT-level expanded 를 토글하지
-    // 못함 → 관측치 변화 없음. 별도 테스트(blur 닫힘)에서 다룸.
-    const skipKeys = ['Escape']
-    for (const key of meta.keys!().filter((k) => !skipKeys.includes(k))) {
+    for (const key of meta.keys!()) {
       cleanup()
       render(<Demo />)
       // 시작점: grid 열려있고 row 2 col 2 활성 (모든 방향키가 변화를 일으킬 수 있는 중앙).
