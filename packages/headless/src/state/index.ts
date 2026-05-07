@@ -14,3 +14,8 @@ export { fromFlatTree } from './fromFlatTree'
 export { useControlState } from './useControlState'
 export { useEventBridge } from './useEventBridge'
 export { bindAxis, bindValueAxis, pickNumericValue } from './bind'
+export {
+  REDUCE_PRESETS,
+  reduceHandles, singleSelectHandles, singleCurrentHandles,
+  multiSelectToggleHandles, checkToggleHandles, singleCheckHandles, setValueHandles,
+} from './handles'
