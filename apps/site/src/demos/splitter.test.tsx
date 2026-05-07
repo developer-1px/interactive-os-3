@@ -7,9 +7,6 @@ afterEach(cleanup)
 const handle = () => screen.getByRole('separator') as HTMLElement
 const valueOf = () => Number(handle().getAttribute('aria-valuenow'))
 
-// NOTE: demo 는 orientation:'horizontal' 로 선언 — splitter axis 가
-// vertical numericStep (ArrowUp/Down) 으로 매핑한다 (separator 방향과 직각).
-
 describe('splitter demo — black-box (keyboard + mouse)', () => {
   it('초기 — value 40, min 10, max 90', () => {
     render(<Demo />)
@@ -51,10 +48,7 @@ describe('splitter demo — black-box (keyboard + mouse)', () => {
 
   it('meta.keys 의 모든 키가 black-box 동작 (value 변화)', () => {
     const startsFromMin = ['ArrowUp', 'PageUp', 'End']
-    // meta.keys 는 default(vertical) splitterAxis 기준이라 ArrowRight/Left 도 포함하지만,
-    // 본 demo 는 orientation:'horizontal' 로 vertical numericStep 사용 → ArrowRight/Left 무시.
-    const skipForThisDemo = ['ArrowRight', 'ArrowLeft']
-    for (const key of meta.keys!().filter((k) => !skipForThisDemo.includes(k))) {
+    for (const key of meta.keys!()) {
       cleanup()
       render(<Demo />)
       fireEvent.keyDown(handle(), { key: 'Home' })
