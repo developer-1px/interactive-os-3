@@ -103,9 +103,7 @@ describe('menu demo — black-box (keyboard + mouse)', () => {
       open: trigger().getAttribute('aria-expanded'),
       focus: (document.activeElement as HTMLElement)?.textContent ?? '',
     })
-    // submenu 키 (ArrowRight/Left) 는 axisKeys 에 포함되지만 본 demo 는 단일 레벨 — 변화 없음.
-    const skipForFlatMenu = ['ArrowRight', 'ArrowLeft']
-    for (const key of meta.keys!().filter((k) => !skipForFlatMenu.includes(k))) {
+    for (const key of meta.keys!()) {
       cleanup()
       render(<Demo />)
       fireEvent.click(trigger())

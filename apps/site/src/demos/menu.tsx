@@ -8,7 +8,7 @@ export const meta = {
   apg: 'menu',
   kind: 'collection' as const,
   blurb: 'A command menu for choosing actions from a focused list.',
-  keys: () => axisKeys(menuAxis()),
+  keys: () => axisKeys(menuAxis({ hasSubmenu: false })),
 }
 
 export default function MenuDemo() {
