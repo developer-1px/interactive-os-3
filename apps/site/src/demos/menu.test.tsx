@@ -93,4 +93,34 @@ describe('menu demo — black-box (keyboard + mouse)', () => {
     )
     for (const k of meta.keys!()) expect(screen.getByText(tag(k))).toBeTruthy()
   })
+
+  it('meta.keys 의 모든 키가 black-box 동작을 일으킨다', () => {
+    // axes/typeahead 는 '<printable>' 토큰을 사용 — 실제 키 전달 시 첫 글자로 변환.
+    const printable = (k: string) => k === '<printable>' || (k.length === 1 && /[A-Za-z]/.test(k))
+    const startsFromLast = ['Home', 'ArrowUp', 'ArrowLeft', 'PageUp']
+    const closingKeys = ['Enter', ' ', 'Escape', 'Tab', 'Click']
+    const snap = () => ({
+      open: trigger().getAttribute('aria-expanded'),
+      focus: (document.activeElement as HTMLElement)?.textContent ?? '',
+    })
+    // submenu 키 (ArrowRight/Left) 는 axisKeys 에 포함되지만 본 demo 는 단일 레벨 — 변화 없음.
+    const skipForFlatMenu = ['ArrowRight', 'ArrowLeft']
+    for (const key of meta.keys!().filter((k) => !skipForFlatMenu.includes(k))) {
+      cleanup()
+      render(<Demo />)
+      fireEvent.click(trigger())
+      const list = items()
+      list[0].focus()
+      if (startsFromLast.includes(key)) fireEvent.keyDown(document.activeElement!, { key: 'End' })
+      const before = snap()
+      const target = document.activeElement as HTMLElement
+      if (key === 'Click') fireEvent.click(list[0])
+      else if (printable(key)) fireEvent.keyDown(target, { key: 'o' })
+      else fireEvent.keyDown(target, { key })
+      const after = snap()
+      const changed = before.open !== after.open || before.focus !== after.focus
+      // closing 키는 menu 닫음으로 expanded 변화. navigation 키는 focus 변화.
+      expect({ key, changed, isClosing: closingKeys.includes(key) }).toMatchObject({ key, changed: true })
+    }
+  })
 })
