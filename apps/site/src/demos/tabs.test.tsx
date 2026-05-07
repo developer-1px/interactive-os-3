@@ -72,10 +72,7 @@ describe('tabs demo — black-box (keyboard + mouse)', () => {
       focusLabel: focused()?.textContent ?? '',
     })
     const startsFromLast = ['Home', 'ArrowLeft', 'ArrowUp', 'PageUp']
-    // automatic tabs: focus 이동 = selection 이동. Enter/Space 는 already-selected 에 대한 activate 라 no-op.
-    const noopInAuto = ['Enter', ' ']
     for (const key of meta.keys!()) {
-      if (noopInAuto.includes(key)) continue
       cleanup()
       render(<Demo />)
       if (startsFromLast.includes(key)) fireEvent.keyDown(focused(), { key: 'End' })
