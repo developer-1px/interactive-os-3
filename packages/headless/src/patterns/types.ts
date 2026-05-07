@@ -102,6 +102,27 @@ export interface BuiltinChordDescriptor {
   scope?: 'root' | 'item'
 }
 
+/**
+ * TreeCommand — tree pattern 이 실행 가능한 정의된 명령 어휘. 앱이 chord ↔ command
+ * 매핑을 자유롭게 바꾸려면 이 union 안에서 선택. 새 명령은 패턴이 추가해야 함 (앱 확장 X).
+ */
+export type TreeCommand =
+  | 'editStart'
+  | 'insertAfter'   // root 면 자동으로 appendChild
+  | 'remove'
+  | 'demote'        // 이전 형제의 마지막 자식으로 이동
+  | 'promote'       // 부모의 다음 형제로 이동
+  | 'undo'
+  | 'redo'
+  | 'paste-as-child'
+
+/** TreeCommandDescriptor — 앱이 keymap SSOT 로 선언하는 chord ↔ command 매핑 + 설명. */
+export interface TreeCommandDescriptor {
+  chord: string
+  command: TreeCommand
+  description?: string
+}
+
 /** rootProps — pattern 컨테이너에 spread. role/aria-* 필수, ref/onKey 포함. */
 export type RootProps = HTMLAttributes<HTMLElement> & {
   role: string

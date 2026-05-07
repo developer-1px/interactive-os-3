@@ -20,8 +20,8 @@
 
 export { useListboxPattern, listboxAxis, listboxEditKeys, listboxBuiltinChords, type ListboxOptions } from './listbox'
 export { useTabsPattern, tabsAxis, tabsKeys, type TabsOptions } from './tabs'
-export { useTreePattern, treeAxis, treeEditKeys, treeBuiltinChords, type TreeOptions } from './tree'
-export { type BuiltinChordDescriptor } from './types'
+export { useTreePattern, treeAxis, treeBuiltinChords, defaultTreeCommands, type TreeOptions } from './tree'
+export { type BuiltinChordDescriptor, type TreeCommand, type TreeCommandDescriptor } from './types'
 export { useRadioGroupPattern, radioGroupAxis, radioGroupKeys, type RadioGroupOptions } from './radioGroup'
 export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Outliner, outlineCrud } from '@apps/outliner'
-import { treeBuiltinChords } from '@p/headless/patterns'
+import { Outliner, outlineCrud, outlinerSpec } from '@apps/outliner'
 import { CopyButton } from '../catalog/CopyButton'
 import { HighlightedCode } from '../catalog/HighlightedCode'
 import { buildAppTabs } from '../catalog/buildAppTabs'
@@ -12,7 +11,7 @@ const SOURCES = import.meta.glob<string>(
   '../../../outliner/src/**/*.{ts,tsx}',
   { eager: true, query: '?raw', import: 'default' },
 )
-const TABS = buildAppTabs(SOURCES, 'widgets/Outliner.tsx')
+const TABS = buildAppTabs(SOURCES, 'Outliner.tsx')
 
 function OutlinerScreen() {
   const [activeKey, setActiveKey] = useState<string>(TABS[0].key)
@@ -24,7 +23,7 @@ function OutlinerScreen() {
       </div>
       <aside className="flex flex-col bg-neutral-50 border-l border-neutral-200 md:overflow-hidden">
         <div className="overflow-auto">
-          <KeymapPanel chords={treeBuiltinChords} title="Keymap (SSOT — treeBuiltinChords)" />
+          <KeymapPanel chords={outlinerSpec.commands} title="Keymap (SSOT — outlinerSpec.commands)" />
           <JsonInspector source={outlineCrud} title="Live JSON (zod-crud snapshot)" />
         </div>
       </aside>

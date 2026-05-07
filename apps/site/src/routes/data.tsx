@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { fromList, fromTree, pathAncestors } from '@p/headless'
+import { SnapPage } from '../layout/SnapPage'
 
 export const Route = createFileRoute('/data')({
   component: DataApp,
@@ -15,12 +16,12 @@ export const Route = createFileRoute('/data')({
 
 function DataApp() {
   return (
-    <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
+    <SnapPage>
       <Intro />
       <FromListSection />
       <FromTreeSection />
       <PathAncestorsSection />
-    </div>
+    </SnapPage>
   )
 }
 

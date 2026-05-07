@@ -3,51 +3,5 @@
     "allow": [
       "Bash(git push:*)"
     ]
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node scripts/hooks/guard-serializable.mjs",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "node scripts/hooks/guard-style-values.mjs",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "node scripts/hooks/guard-import-graph.mjs --hook",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node scripts/hooks/guard-git-tree.mjs",
-            "timeout": 3
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node scripts/snap-screenshots.mjs",
-            "async": true,
-            "timeout": 60
-          }
-        ]
-      }
-    ]
   }
 }

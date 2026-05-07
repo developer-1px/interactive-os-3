@@ -7,8 +7,7 @@ import type { NormalizedData } from '@p/headless'
  * label: column title 또는 card title.
  * meta.columnIds: column id 목록 (widget 이 컬럼별 listbox 인스턴스 만들 때 사용).
  */
-export function flattenBoard(doc: JsonDoc): {
-  data: NormalizedData
+export function flattenBoard(doc: JsonDoc): NormalizedData & {
   columnIds: NodeId[]
   rootId: NodeId
   /** card id → cards-array id (paste 시 parent 인지 위함). */
@@ -45,7 +44,9 @@ export function flattenBoard(doc: JsonDoc): {
   }
 
   return {
-    data: { entities, relationships, meta: { root: [...columnIds] } },
+    entities,
+    relationships,
+    meta: { root: [...columnIds] },
     columnIds: [...columnIds],
     rootId: doc.rootId,
     cardParentArray,

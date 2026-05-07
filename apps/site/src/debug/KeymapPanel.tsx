@@ -1,8 +1,14 @@
-import type { BuiltinChordDescriptor } from '@p/headless/patterns'
 import { fmtChord } from './fmtChord'
 
+interface CommandDescriptor {
+  chord: string
+  command?: string  // new shape (TreeCommandDescriptor)
+  uiEvent?: string  // legacy shape (BuiltinChordDescriptor)
+  description?: string
+}
+
 /** KeymapPanel — chord registry SSOT 표 렌더. clipboard:* 의사 chord 는 표시 제외. */
-export function KeymapPanel({ chords, title }: { chords: readonly BuiltinChordDescriptor[]; title: string }) {
+export function KeymapPanel({ chords, title }: { chords: readonly CommandDescriptor[]; title: string }) {
   const visible = chords.filter((c) => !c.chord.startsWith('clipboard:'))
   return (
     <section className="border-b border-neutral-200 p-6">
@@ -16,7 +22,7 @@ export function KeymapPanel({ chords, title }: { chords: readonly BuiltinChordDe
                   {fmtChord(c.chord)}
                 </kbd>
               </td>
-              <td className="py-1 pr-3 align-top font-mono text-[11px] text-blue-600">{c.uiEvent}</td>
+              <td className="py-1 pr-3 align-top font-mono text-[11px] text-blue-600">{c.command ?? c.uiEvent}</td>
               <td className="py-1 align-top text-neutral-600">{c.description}</td>
             </tr>
           ))}

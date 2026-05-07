@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
  * Enter=commit / Escape=cancel / blur=commit. mount 후 microtask 로 input 재포커스
  * (tree roving tabindex 가 li 로 가져가는 것 보정).
  */
-export function EditInput({ initial, onCommit }: { initial: string; onCommit: (value: string, cancelled: boolean) => void }) {
+export function EditInput({ initial, onCommit, className }: { initial: string; onCommit: (value: string, cancelled: boolean) => void; className?: string }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const cancelRef = useRef(false)
   const committedRef = useRef(false)
@@ -28,7 +28,7 @@ export function EditInput({ initial, onCommit }: { initial: string; onCommit: (v
         if (e.key === 'Enter') commit()
         if (e.key === 'Escape') { cancelRef.current = true; commit() }
       }}
-      className="flex-1 rounded border border-blue-400 bg-white px-1 outline-none"
+      className={className}
     />
   )
 }

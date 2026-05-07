@@ -34,6 +34,11 @@ export interface UsePatternClipboardArgs {
   on?: ClipboardOnMiddleware
   /** 패턴이 자기 builtin chord 목록 주입 — descriptor 기반 라우팅 */
   builtinChords?: readonly BuiltinChordDescriptor[]
+  /**
+   * tree 처럼 패턴이 자체 commands 로 chord dispatch 를 흡수했을 때 true.
+   * DEFAULT_CHORDS 비활성, 'on' middleware 만 작동 (default 없이 user chord 만 처리).
+   */
+  disableBuiltinChords?: boolean
 }
 
 export interface UsePatternClipboardReturn {
@@ -60,7 +65,7 @@ const DEFAULT_CHORDS: ReadonlyArray<{ chord: string; build: DefaultBuilder }> = 
 ]
 
 export function usePatternClipboard(args: UsePatternClipboardArgs): UsePatternClipboardReturn {
-  const { onEvent, activeId, insideEditable = 'forward', on } = args
+  const { onEvent, activeId, insideEditable = 'forward', on, disableBuiltinChords = false } = args
 
   const routeAndEmit = (e: React.ClipboardEvent, ev: UiEvent) => {
     if (!onEvent) return
@@ -93,8 +98,8 @@ export function usePatternClipboard(args: UsePatternClipboardArgs): UsePatternCl
     const userKeys = Object.keys(userMap)
     const consumed = new Set<string>()
 
-    // 1) builtin default chord 매칭
-    for (const { chord, build } of DEFAULT_CHORDS) {
+    // 1) builtin default chord 매칭 (disableBuiltinChords 면 skip — tree 가 자체 흡수)
+    if (!disableBuiltinChords) for (const { chord, build } of DEFAULT_CHORDS) {
       if (!matchEventToChord(ke, chord)) continue
       const ev = build(activeId)
       const orig = () => { if (ev && onEvent) onEvent(ev) }
@@ -112,7 +117,7 @@ export function usePatternClipboard(args: UsePatternClipboardArgs): UsePatternCl
     // 2) on 등록 chord 중 builtin 미포함 — noop original 로 호출
     for (const chord of userKeys) {
       if (consumed.has(chord)) continue
-      if (DEFAULT_CHORDS.some((d) => d.chord === chord)) continue
+      if (!disableBuiltinChords && DEFAULT_CHORDS.some((d) => d.chord === chord)) continue
       if (!matchEventToChord(ke, chord)) continue
       const noop = () => {}
       userMap[chord](ke as unknown as Event, noop)

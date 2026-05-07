@@ -5,7 +5,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { Outliner } from '@apps/outliner'
-import { crud } from '@apps/outliner/features/outlineCrud'
+import { crud } from '@apps/outliner/crud'
 
 import { beforeEach } from 'vitest'
 

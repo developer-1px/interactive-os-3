@@ -1,92 +1,67 @@
-// editable 옵션은 디폴트 false. true 일 때만 편집 어휘를 emit (W1 UiEvent 8종 참조).
+// editable 모드의 chord 어휘는 commands prop 으로 앱이 선언 (SSOT). default 제공.
 import { useCallback } from 'react'
 import {
   ROOT, getChildren, getLabel, isDisabled, getExpanded,
   type NormalizedData, type UiEvent,
 } from '../types'
-import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead, matchAnyChord } from '../axes'
-import { parseChord } from '../axes/chord'
+import { activate, composeAxes, multiSelect, treeExpand, treeNavigate, typeahead } from '../axes'
+import { matchEventToChord } from '../axes/chord'
 import type { InsideEditableMode } from '../key/insideEditable'
 import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
-
-/** tree edit-mode chord registry — declarative SSOT. */
-const TREE_EDIT_RENAME = ['Enter'] as const
-const TREE_EDIT_INSERT = ['Shift+Enter'] as const
-const TREE_EDIT_REMOVE = ['Backspace'] as const
-const TREE_EDIT_DEMOTE = ['Tab'] as const
-const TREE_EDIT_PROMOTE = ['Shift+Tab'] as const
-
-/** treeEditKeys — chord registry 합집합 도출. editable 모드 추가 키. */
-export const treeEditKeys = (): readonly string[] =>
-  Array.from(new Set([
-    ...TREE_EDIT_RENAME, ...TREE_EDIT_INSERT, ...TREE_EDIT_REMOVE, ...TREE_EDIT_DEMOTE, ...TREE_EDIT_PROMOTE,
-  ].map((c) => parseChord(c).key)))
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
-import type { BuiltinChordDescriptor, ItemProps, RootProps, TreeItem } from './types'
+import type {
+  BuiltinChordDescriptor, ItemProps, RootProps, TreeItem,
+  TreeCommand, TreeCommandDescriptor,
+} from './types'
+
+/**
+ * defaultTreeCommands — editable tree 의 기본 keymap. 앱이 시작점으로 spread 해서
+ * 일부만 override 하거나, 전체를 자기 spec 으로 대체할 수 있다.
+ */
+export const defaultTreeCommands: readonly TreeCommandDescriptor[] = [
+  { chord: 'Enter',       command: 'editStart',     description: 'Rename — enter inline edit' },
+  { chord: 'Shift+Enter', command: 'insertAfter',   description: 'Insert sibling (or child if root)' },
+  { chord: 'Backspace',   command: 'remove',        description: 'Remove focused item' },
+  { chord: 'Delete',      command: 'remove',        description: 'Remove focused item' },
+  { chord: 'Tab',         command: 'demote',        description: 'Demote (move under previous sibling)' },
+  { chord: 'Shift+Tab',   command: 'promote',       description: 'Promote (move out of parent)' },
+  { chord: 'mod+z',       command: 'undo',          description: 'Undo last operation' },
+  { chord: 'mod+shift+z', command: 'redo',          description: 'Redo' },
+  { chord: 'mod+y',       command: 'redo',          description: 'Redo (Windows fallback)' },
+  { chord: 'mod+shift+v', command: 'paste-as-child', description: 'Paste as child of focused item' },
+]
+
+/** treeBuiltinChords — backward-compat. KeymapPanel 등이 쓰던 옛 SSOT 의 default keymap 형태. */
+export const treeBuiltinChords: readonly BuiltinChordDescriptor[] = defaultTreeCommands.map((c) => ({
+  chord: c.chord,
+  uiEvent: c.command,
+  description: c.description ?? '',
+  scope: 'item',
+}))
 
 /** Options for {@link useTreePattern}. */
 export interface TreeOptions {
-  /** aria-orientation. Spec implicit value: 'vertical'. */
   orientation?: 'horizontal' | 'vertical'
-  /** Default: `!multiSelectable` (APG: single sff, multi explicit toggle). */
   selectionFollowsFocus?: boolean
-  /** aria-multiselectable. */
   multiSelectable?: boolean
   autoFocus?: boolean
-  /** Container entity for nested trees; defaults to ROOT. */
   containerId?: string
-  /** aria-label — ARIA: tree requires accessible name. */
   label?: string
   labelledBy?: string
-  /**
-   * APG `treeview-navigation` 변종. `'navigation'` 일 때 selected treeitem 에
-   * `aria-current="page"` 가 추가로 emit 된다 (sidebar/route nav 용도). default `'select'`.
-   */
   variant?: 'select' | 'navigation'
   /**
-   * 편집 모드 — Enter/Tab/Shift+Tab/Backspace 키를 패턴이 디폴트로 흡수한다.
-   * 디폴트 false (비편집). UiEvent 8종 (create/remove + paste 시퀀스) 으로 emit.
+   * editable 모드 — true 면 commands(미지정 시 defaultTreeCommands) 가 활성. false 면 chord 어휘 비활성(읽기-only).
    */
   editable?: boolean
   /**
-   * input/contenteditable 안에서 clipboard/단축키 라우팅 모드.
-   * 'forward' (default) — emit 하되 native 동작 보존(검색창 paste 등).
-   * 'native' — input 안이면 skip(인라인 편집 셀에서 native 양보).
-   * 'preventDefault' — emit + native 차단(커스텀 에디터).
+   * 사용자 chord ↔ command keymap. 앱이 SSOT 로 선언 — chord 추가/제거/재배치 자유.
+   * 미지정 + editable=true → defaultTreeCommands. 미지정 + editable=false → [] (chord 비활성).
    */
+  commands?: readonly TreeCommandDescriptor[]
   insideEditable?: InsideEditableMode
-  /**
-   * 사용자 chord 미들웨어. key+mouse 통합. default chord 와 충돌 시
-   * userFn(event, originalFn) 으로 wrap — originalFn 호출 여부로 default 실행 결정.
-   * default win — preventDefault 는 항상 발생.
-   */
   on?: ClipboardOnMiddleware
 }
-
-/**
- * tree 가 디폴트로 흡수하는 chord 목록 — descriptor SSOT.
- * clipboard event handler(onCopy/onCut/onPaste) 는 chord 가 아닌 React clipboard event 라
- * 별도 entry 로 표현 — chord 필드에 'clipboard:copy' 등 prefix 사용.
- */
-export const treeBuiltinChords: readonly BuiltinChordDescriptor[] = [
-  { chord: 'mod+z',       uiEvent: 'undo',   description: 'Undo last operation' },
-  { chord: 'mod+shift+z', uiEvent: 'redo',   description: 'Redo' },
-  { chord: 'mod+y',       uiEvent: 'redo',   description: 'Redo (Windows fallback)' },
-  { chord: 'Backspace',   uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
-  { chord: 'Delete',      uiEvent: 'remove', description: 'Remove focused item', scope: 'item' },
-  { chord: 'mod+shift+v', uiEvent: 'paste',  description: 'Paste as child of focused item', scope: 'item' },
-  // editable 모드 chord (opts.editable=true 일 때만 활성)
-  // NOTE: Backspace=remove 는 base 에 이미 등록됨(line 76) — editable 도 동일 emit 이라 중복 descriptor 금지.
-  { chord: TREE_EDIT_RENAME[0],  uiEvent: 'editStart',               description: 'Rename — enter inline edit',                       scope: 'item' },
-  { chord: TREE_EDIT_INSERT[0],  uiEvent: 'insertAfter|appendChild', description: 'Insert sibling (or child if root) — editable mode', scope: 'item' },
-  { chord: TREE_EDIT_DEMOTE[0],  uiEvent: 'cut+paste',               description: 'Demote (move under previous sibling)',             scope: 'item' },
-  { chord: TREE_EDIT_PROMOTE[0], uiEvent: 'cut+paste',               description: 'Promote (move out of parent)',                     scope: 'item' },
-  // clipboard React events — not chord-based but reserved on rootProps
-  { chord: 'clipboard:copy',  uiEvent: 'copy',  description: 'Copy focused item (React onCopy)',   scope: 'item' },
-  { chord: 'clipboard:cut',   uiEvent: 'cut',   description: 'Cut focused item (React onCut)',     scope: 'item' },
-  { chord: 'clipboard:paste', uiEvent: 'paste', description: 'Paste onto focused item (React onPaste)', scope: 'item' },
-]
 
 const findParent = (data: NormalizedData, id: string): string | null => {
   for (const [pid, kids] of Object.entries(data.relationships)) {
@@ -104,6 +79,56 @@ const singleAxis = treeAxis()
 const multiAxis = treeAxis({ multiSelectable: true })
 
 /**
+ * runCommand — TreeCommand 를 UiEvent 로 변환해 relay. id-바인딩 + data 컨텍스트(findParent)를
+ * 한 곳에 가둠. 새 command 추가 시 여기에만 case 추가하면 됨.
+ */
+function runCommand(
+  cmd: TreeCommand,
+  id: string | null,
+  data: NormalizedData,
+  containerId: string,
+  relay: (e: UiEvent) => void,
+): void {
+  if (cmd === 'undo') return relay({ type: 'undo' })
+  if (cmd === 'redo') return relay({ type: 'redo' })
+  if (!id || id === containerId) return  // 이하 cmd 는 focused item 필요
+  switch (cmd) {
+    case 'editStart':
+      relay({ type: 'editStart', id })
+      break
+    case 'insertAfter': {
+      const parentId = findParent(data, id)
+      if (parentId) relay({ type: 'insertAfter', siblingId: id })
+      else relay({ type: 'appendChild', parentId: id })
+      break
+    }
+    case 'remove':
+      relay({ type: 'remove', id })
+      break
+    case 'demote': {
+      const parentId = findParent(data, id)
+      if (parentId) {
+        const siblings = data.relationships[parentId] ?? []
+        const idx = siblings.indexOf(id)
+        const prev = idx > 0 ? siblings[idx - 1] : null
+        if (prev) relay({ type: 'move', id, targetId: prev, mode: 'child' })
+      }
+      break
+    }
+    case 'promote': {
+      const parentId = findParent(data, id)
+      if (parentId && parentId !== containerId) {
+        relay({ type: 'move', id, targetId: parentId, mode: 'sibling-after' })
+      }
+      break
+    }
+    case 'paste-as-child':
+      relay({ type: 'paste', targetId: id, mode: 'child' })
+      break
+  }
+}
+
+/**
  * tree — APG `/treeview/` recipe.
  * https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
  */
@@ -115,11 +140,6 @@ export function useTreePattern(
   rootProps: RootProps
   itemProps: (id: string) => ItemProps
   items: TreeItem[]
-  /**
-   * editProps — 인라인 편집 슬롯 헬퍼. meta.editing === id 면 commit/cancel
-   * 콜백 + initial 을 반환, 아니면 null. widget 은 null 여부로 input/label 분기만.
-   * commit 시 update + editEnd 어휘를 자동 dispatch (adapter 가 labelField 라우팅).
-   */
   editProps: (id: string) => null | { initial: string; onCommit: (value: string, cancelled: boolean) => void }
 } {
   const {
@@ -128,6 +148,10 @@ export function useTreePattern(
     insideEditable = 'forward',
   } = opts
   const sff = opts.selectionFollowsFocus ?? !multiSelectable
+
+  // commands SSOT 결정 — 앱이 명시 > editable=true 면 default > 그 외 빈 배열.
+  const commands: readonly TreeCommandDescriptor[] =
+    opts.commands ?? (editable ? defaultTreeCommands : [])
 
   const relay = useCallback(
     (e: UiEvent) => {
@@ -169,69 +193,35 @@ export function useTreePattern(
   walk(containerId, 1)
   const itemMap = new Map(flat.map((it) => [it.id, it]))
 
-  const editKeyDown = editable
-    ? (e: React.KeyboardEvent) => {
-        const id = focusId
-        if (id && id !== containerId) {
-          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_RENAME)) {
-            e.preventDefault()
-            relay({ type: 'editStart', id })
-            return
-          }
-          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_INSERT)) {
-            e.preventDefault()
-            // root 면 자식 추가, else 시블 추가. crud op 어휘 1:1.
-            const parentId = findParent(data, id)
-            if (parentId) relay({ type: 'insertAfter', siblingId: id })
-            else          relay({ type: 'appendChild', parentId: id })
-            return
-          }
-          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_REMOVE)) {
-            e.preventDefault()
-            relay({ type: 'remove', id })
-            return
-          }
-          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_DEMOTE)) {
-            // editable 모드의 Tab 은 항상 흡수 — demote 불가(첫 자식 등) 일 때도
-            // browser default 로 빠져 focus 가 트리 밖으로 이탈하면 사용자에게 불편.
-            e.preventDefault()
-            const parentId = findParent(data, id)
-            if (parentId) {
-              const siblings = data.relationships[parentId] ?? []
-              const idx = siblings.indexOf(id)
-              const prev = idx > 0 ? siblings[idx - 1] : null
-              if (prev) relay({ type: 'move', id, targetId: prev, mode: 'child' })
-            }
-            return
-          }
-          if (matchAnyChord(e as unknown as KeyboardEvent, TREE_EDIT_PROMOTE)) {
-            // editable 모드의 Shift+Tab 도 항상 흡수 — promote 불가(root 직속) 일 때도 focus 보존.
-            e.preventDefault()
-            const parentId = findParent(data, id)
-            if (parentId && parentId !== containerId) {
-              relay({ type: 'move', id, targetId: parentId, mode: 'sibling-after' })
-            }
-            return
-          }
-        }
-        delegate.onKeyDown(e)
+  // 단일 chord dispatcher — commands 배열 순회. 매칭되면 preventDefault + runCommand.
+  const dispatchCommandChord = (e: React.KeyboardEvent): boolean => {
+    for (const desc of commands) {
+      if (matchEventToChord(e.nativeEvent, desc.chord)) {
+        e.preventDefault()
+        runCommand(desc.command, focusId, data, containerId, relay)
+        return true
       }
-    : delegate.onKeyDown
+    }
+    return false
+  }
 
   const activeId = focusId && focusId !== containerId ? focusId : null
 
+  // clipboard event handlers (onCopy/onCut/onPaste) 만 — chord 는 위 dispatcher 가 흡수
   const clipboard = usePatternClipboard({
     onEvent,
     activeId,
     insideEditable,
     on: opts.on,
     builtinChords: treeBuiltinChords,
+    disableBuiltinChords: true,  // tree 가 자체 commands 로 모든 chord 처리
   })
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    editKeyDown(e)
+    if (dispatchCommandChord(e)) return
+    delegate.onKeyDown(e)
     if (e.defaultPrevented) return
-    clipboard.handleKeyDown(e)
+    clipboard.handleKeyDown(e)  // 'on' middleware 만 실행 (builtin chord 는 비활성)
   }
 
   const rootProps: RootProps = {

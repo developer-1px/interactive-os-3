@@ -1,11 +1,9 @@
 import type { JsonDoc, NodeId } from 'zod-crud'
 import type { NormalizedData } from '@p/headless'
+import { outlinerSpec } from './outliner.spec'
 
-/**
- * flattenOutline — JsonDoc 의 object 노드만 뽑아 NormalizedData 로 평탄화.
- * outline 표시는 *object 노드* = outline item. text 를 entity.label 로 노출.
- */
-export function flattenOutline(doc: JsonDoc): NormalizedData {
+/** JsonDoc → NormalizedData. spec.labelField 가 가리키는 child value 를 entity.label 로 노출. */
+export function flatten(doc: JsonDoc): NormalizedData {
   const entities: NormalizedData['entities'] = {}
   const relationships: NormalizedData['relationships'] = {}
 
@@ -14,7 +12,7 @@ export function flattenOutline(doc: JsonDoc): NormalizedData {
     if (!obj || obj.type !== 'object') return
     const text = obj.children
       .map((cid) => doc.nodes[cid])
-      .find((n) => n?.key === 'text')?.value
+      .find((n) => n?.key === outlinerSpec.labelField)?.value
     const childrenArr = obj.children
       .map((cid) => doc.nodes[cid])
       .find((n) => n?.key === 'children')

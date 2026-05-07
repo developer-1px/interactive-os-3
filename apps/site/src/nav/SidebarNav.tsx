@@ -1,10 +1,55 @@
 /**
  * 공통 좌측 네비. SSOT = 각 route 의 `staticData.palette` (router.tsx 에서 타입 선언).
  * 새 라우터 추가 = 그 파일 안에 `staticData.palette` 만 채우면 자동 등장.
+ *
+ * 표준 Wrapper 적용 — `<Nav data onEvent>` (navigationListPattern) 가 `<nav>` + `<a>` 를 emit.
+ * 라우팅은 onEvent('activate') 를 받아 host (TanStack router) 가 navigate.
  */
 import { useRef } from 'react'
-import { Link, useRouter } from '@tanstack/react-router'
+import { useRouter } from '@tanstack/react-router'
+import type { NormalizedData } from '@p/headless'
+import { Nav } from '../examples/_navigationListWrapper'
 import { collectPalette, paletteCategory, type PaletteEntry } from './palette'
+
+const buildHref = (e: PaletteEntry) => {
+  if (!e.params) return e.to
+  return Object.entries(e.params).reduce(
+    (path, [k, v]) => path.replace(`$${k}`, encodeURIComponent(v)),
+    e.to,
+  )
+}
+
+const buildData = (entries: PaletteEntry[], pathname: string): NormalizedData => {
+  const groups = new Map<string, PaletteEntry[]>()
+  for (const e of entries) {
+    const k = paletteCategory(e)
+    const arr = groups.get(k) ?? []
+    arr.push(e)
+    groups.set(k, arr)
+  }
+
+  const entities: NormalizedData['entities'] = {}
+  const relationships: NormalizedData['relationships'] = {}
+  const root: string[] = []
+
+  for (const [cat, list] of groups) {
+    entities[cat] = { label: cat }
+    relationships[cat] = list.map((e) => e.id)
+    root.push(cat)
+    for (const e of list) {
+      const href = buildHref(e)
+      entities[e.id] = {
+        label: e.label,
+        href,
+        to: e.to,
+        params: e.params,
+        current: pathname === href,
+      }
+    }
+  }
+
+  return { entities, relationships, meta: { root } }
+}
 
 export function SidebarNav() {
   const router = useRouter()
@@ -14,16 +59,20 @@ export function SidebarNav() {
       detailsRef.current?.removeAttribute('open')
     }
   }
-  const groups = new Map<string, PaletteEntry[]>()
-  for (const e of collectPalette(router)) {
-    const k = paletteCategory(e)
-    const arr = groups.get(k) ?? []
-    arr.push(e)
-    groups.set(k, arr)
+
+  const pathname = router.state.location.pathname
+  const data = buildData(collectPalette(router), pathname)
+
+  const onEvent = (event: { type: string; id?: string }) => {
+    if (event.type !== 'activate' || !event.id) return
+    const ent = data.entities[event.id]
+    if (!ent) return
+    closeOnMobile()
+    router.navigate({ to: ent.to as string, params: ent.params as never })
   }
 
   return (
-    <nav
+    <div
       aria-label="Site navigation"
       className="shrink-0 border-stone-200 bg-stone-50 text-sm border-b md:border-b-0 md:border-r md:h-screen md:w-56 md:overflow-y-auto"
     >
@@ -35,32 +84,19 @@ export function SidebarNav() {
         <summary className="cursor-pointer list-none rounded px-2 py-1 font-semibold text-stone-900 marker:hidden hover:bg-stone-200 md:hidden">
           ☰ @p/headless
         </summary>
-        <Link
-          to="/"
-          onClick={closeOnMobile}
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault()
+            closeOnMobile()
+            router.navigate({ to: '/' })
+          }}
           className="hidden rounded px-2 py-1 font-semibold text-stone-900 hover:bg-stone-200 md:block"
         >
           @p/headless
-        </Link>
-      {[...groups.entries()].map(([cat, list]) => (
-        <div key={cat} className="flex flex-col gap-0.5">
-          <h3 className="px-2 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
-            {cat}
-          </h3>
-          {list.map((e) => (
-            <Link
-              key={e.id}
-              to={e.to as never}
-              params={e.params as never}
-              onClick={closeOnMobile}
-              className="block rounded px-2 py-1 text-stone-700 [&:not([aria-current=page])]:hover:bg-stone-200 aria-[current=page]:bg-stone-900 aria-[current=page]:text-white"
-            >
-              {e.label}
-            </Link>
-          ))}
-        </div>
-      ))}
+        </a>
+        <Nav aria-label="Site navigation" data={data} onEvent={onEvent} />
       </details>
-    </nav>
+    </div>
   )
 }

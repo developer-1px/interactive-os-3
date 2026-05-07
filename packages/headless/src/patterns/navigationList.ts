@@ -6,6 +6,8 @@ export interface NavigationListOptions {
   /** aria-label — ARIA: navigation landmark requires accessible name. */
   label?: string
   labelledBy?: string
+  /** Container entity for the link list. Defaults to ROOT. */
+  containerId?: string
 }
 
 /**
@@ -30,9 +32,9 @@ export function navigationListPattern(
   linkProps: (id: string) => ItemProps
   items: (BaseItem & { current: boolean; href?: string })[]
 } {
-  const { label, labelledBy } = opts
+  const { label, labelledBy, containerId = ROOT } = opts
 
-  const ids = getChildren(data, ROOT)
+  const ids = getChildren(data, containerId)
   const items = ids.map((id, i) => {
     const ent = data.entities[id] ?? {}
     return {

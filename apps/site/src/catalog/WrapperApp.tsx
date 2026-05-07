@@ -2,13 +2,13 @@ import { CatalogSidebar } from './CatalogSidebar'
 import { Intro } from './Intro'
 import { WrapperScreen } from './WrapperScreen'
 import { WRAPPER_ENTRIES } from './registry.wrappers'
-import { useHashNavigation } from './useHashNavigation'
+import { SnapPage, useActiveHash } from '../layout/SnapPage'
 
 export function WrapperApp() {
-  const activeHash = useHashNavigation()
+  const activeHash = useActiveHash()
 
   return (
-    <div className="md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll">
+    <SnapPage>
       <Intro />
       {WRAPPER_ENTRIES.map((entry, index) => (
         <WrapperScreen
@@ -24,6 +24,6 @@ export function WrapperApp() {
         groups={[{ label: 'Wrappers', items: WRAPPER_ENTRIES }]}
         activeSlug={activeHash}
       />
-    </div>
+    </SnapPage>
   )
 }

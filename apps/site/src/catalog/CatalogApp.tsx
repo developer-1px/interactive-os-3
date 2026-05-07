@@ -4,13 +4,13 @@ import { Intro } from './Intro'
 import { PatternScreen } from './PatternScreen'
 import { KINDS, KIND_LIST } from './kind'
 import { ENTRIES } from './registry.patterns'
-import { useHashNavigation } from './useHashNavigation'
+import { SnapPage, useActiveHash } from '../layout/SnapPage'
 
 export function App() {
-  const activeHash = useHashNavigation()
+  const activeHash = useActiveHash()
 
   return (
-    <div className="md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll">
+    <SnapPage>
       <Intro />
       {ENTRIES.map((entry, i) => (
         <PatternScreen key={entry.slug} entry={entry} index={i} total={ENTRIES.length} />
@@ -25,6 +25,6 @@ export function App() {
         activeSlug={activeHash}
       />
       <ReproRecorderOverlay />
-    </div>
+    </SnapPage>
   )
 }
