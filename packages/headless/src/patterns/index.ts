@@ -22,7 +22,7 @@ export { useListboxPattern, listboxAxis, listboxEditKeys, listboxBuiltinChords, 
 export { useTabsPattern, tabsAxis, tabsKeys, type TabsOptions } from './tabs'
 export { useTreePattern, treeAxis, treeEditKeys, treeBuiltinChords, type TreeOptions } from './tree'
 export { type BuiltinChordDescriptor } from './types'
-export { useRadioGroupPattern, radioGroupAxis, type RadioGroupOptions } from './radioGroup'
+export { useRadioGroupPattern, radioGroupAxis, radioGroupKeys, type RadioGroupOptions } from './radioGroup'
 export { useToolbarPattern, toolbarAxis, type ToolbarOptions } from './toolbar'
 
 export { useMenuPattern, menuAxis, menuKeys, menuButtonTriggerKeys, type MenuOptions } from './menu'

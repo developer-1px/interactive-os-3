@@ -1,14 +1,13 @@
 import { fromList, reduceWithRadio } from '@p/headless'
-import { radioGroupAxis, useRadioGroupPattern } from '@p/headless/patterns'
+import { radioGroupKeys, useRadioGroupPattern } from '@p/headless/patterns'
 import { useLocalData } from '@p/headless/local'
-import { axisKeys } from '@p/headless'
 
 export const meta = {
   title: 'Radio Group',
   apg: 'radio',
   kind: 'collection' as const,
   blurb: 'A compact choice set where moving between options updates the selected value.',
-  keys: () => axisKeys(radioGroupAxis()),
+  keys: () => radioGroupKeys(),
 }
 
 export default function RadioGroupDemo() {
