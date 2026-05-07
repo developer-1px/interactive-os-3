@@ -9,10 +9,6 @@ const radios = () => screen.getAllByRole('radio') as HTMLElement[]
 const focused = () => radios().find((r) => r.tabIndex === 0)!
 const checked = () => radios().filter((r) => r.getAttribute('aria-checked') === 'true')
 
-// NOTE: 현 demo 는 reduceWithRadio 사용 — sff 가 emit 하는 'select' 를 reducer 가 흡수하지 않아
-// 키보드 navigate 는 focus 만 이동, selection 은 클릭(activate)/Space 에서만 변한다.
-// 본 테스트는 demo 의 "현재" 동작을 박제 — 추후 sff 를 활성화하면 expectation 수정 필요.
-
 describe('radioGroup demo — black-box (keyboard + mouse)', () => {
   it('초기 — Medium 이 checked', () => {
     render(<Demo />)
@@ -42,28 +38,32 @@ describe('radioGroup demo — black-box (keyboard + mouse)', () => {
     expect(checked()[0].textContent).toContain('Medium')
   })
 
-  it('ArrowDown 으로 focus 가 다음 radio 로 이동한다', () => {
+  it('ArrowDown 으로 focus + selection 동시 이동 (sff)', () => {
     render(<Demo />)
     fireEvent.click(radios()[0])
     expect(focused().textContent).toContain('Small')
     fireEvent.keyDown(focused(), { key: 'ArrowDown' })
     expect(focused().textContent).toContain('Medium')
+    expect(checked()[0].textContent).toContain('Medium')
   })
 
-  it('ArrowUp 으로 focus 가 이전 radio 로 이동한다', () => {
+  it('ArrowUp 으로 focus + selection 이전 radio (sff)', () => {
     render(<Demo />)
+    // 시작점을 명시적으로 Large 로 — End 키 사용 (sff 적용 후 navigate=Large + select=Large).
     fireEvent.click(radios()[0])
     fireEvent.keyDown(focused(), { key: 'End' })
     expect(focused().textContent).toContain('Large')
     fireEvent.keyDown(focused(), { key: 'ArrowUp' })
     expect(focused().textContent).toContain('Medium')
+    expect(checked()[0].textContent).toContain('Medium')
   })
 
-  it('ArrowRight 도 focus navigate (양 축 모두 활성)', () => {
+  it('ArrowRight 도 navigate + sff', () => {
     render(<Demo />)
     fireEvent.click(radios()[0])
     fireEvent.keyDown(focused(), { key: 'ArrowRight' })
     expect(focused().textContent).toContain('Medium')
+    expect(checked()[0].textContent).toContain('Medium')
   })
 
   it('Home/End 로 첫/마지막 radio 로 focus 이동', () => {
@@ -89,9 +89,7 @@ describe('radioGroup demo — black-box (keyboard + mouse)', () => {
     for (const key of meta.keys!()) {
       cleanup()
       render(<Demo />)
-      // 시작점: Small checked + Medium focused (검사 키가 변화를 일으킬 여지 확보).
       fireEvent.click(radios()[0])
-      fireEvent.keyDown(focused(), { key: 'ArrowDown' })
       if (startsFromLast.includes(key)) fireEvent.keyDown(focused(), { key: 'End' })
       const before = snap()
       if (key === 'Click') fireEvent.click(radios()[2])

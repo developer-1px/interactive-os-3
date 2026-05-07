@@ -25,13 +25,14 @@ export const checkToggle: Reducer = (d, e) => {
 /**
  * singleCheck — `aria-checked` 축의 single-of-group reducer fragment.
  *
- * `check` (직접) · `activate` (selection-follows-focus 의 default action) 둘 다 처리 —
- * radio / listbox(single) 입력을 같은 모양으로 흡수. select 축의 `singleSelect` 거울.
+ * `check` (직접) · `activate` (Enter/Space/Click) · `select` (selection-follows-focus
+ * 가 navigate→select 로 분해한 결과) 셋을 모두 처리 — radio / listbox(single) 입력을
+ * 같은 모양으로 흡수. select 축의 `singleSelect` 거울.
  *
  * Compose with `reduce`:
  *   const myReduce = composeReducers(reduce, singleCheck)
  */
 export const singleCheck: Reducer = (d, e) => {
-  if (e.type !== 'check' && e.type !== 'activate') return d
+  if (e.type !== 'check' && e.type !== 'activate' && e.type !== 'select') return d
   return replaceChecked(d, e.id).d
 }

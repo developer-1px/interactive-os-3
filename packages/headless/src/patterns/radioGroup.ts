@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { getLabel, isDisabled, type NormalizedData, type UiEvent } from '../types'
-import { activate, composeAxes, navigate } from '../axes'
+import { activate, axisKeys as axisKeysFn, composeAxes, navigate } from '../axes'
 import { selectionFollowsFocus as applySelectionFollowsFocus } from '../gesture'
 import { usePatternBase } from './usePatternBase'
 import type { BaseItem, ItemProps, RootProps } from './types'
@@ -32,11 +32,19 @@ export interface RadioGroupOptions {
   idPrefix?: string
 }
 
-// APG radiogroup: 양 축 Arrow 모두 navigate.
-/** RadioGroup 이 등록하는 axis — SSOT. */
+// APG radiogroup: 양 축 Arrow 모두 navigate. activate 는 click 활성화 위해 axis 에 포함.
+/** RadioGroup 이 등록하는 axis — SSOT (behavior 용). */
 export const radioGroupAxis = () =>
   composeAxes(navigate('vertical'), navigate('horizontal'), activate)
 const axis = radioGroupAxis()
+
+/**
+ * RadioGroup 이 advertise 하는 키 — sff 가 navigate 와 함께 selection 을 가져가
+ * Enter/Space 는 redundant. APG radio 도 Enter 미지정 / Space 는 form submit 컨텍스트
+ * 한정 → 본 라이브러리는 일관성 위해 둘 다 advertise 제외.
+ */
+export const radioGroupKeys = (): readonly string[] =>
+  axisKeysFn(radioGroupAxis()).filter((k) => k !== 'Enter' && k !== ' ')
 
 /**
  * radioGroup — APG `/radio/` recipe.
