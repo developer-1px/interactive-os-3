@@ -1,5 +1,4 @@
 import { fromKeyMap, tagAxis, type Axis } from './axis'
-import { parseTrigger } from '../trigger'
 import { getChildren, isDisabled } from '../types'
 import { INTENTS } from './keys'
 
@@ -11,14 +10,15 @@ import { INTENTS } from './keys'
  * 만 KeyHandler 형태로 남는다 — 분기 활성화는 treeExpand 가 선점 처리.
  *
  * 클릭은 분기/리프 관계없이 항상 activate (gesture 헬퍼가 분기/리프 의미 분해 담당).
+ *
+ * Click 은 entries 의 1급 chord — fromKeyMap 이 자동으로 spec.bindings 에 등재.
  */
-const activateOnLeafKey = fromKeyMap([
+const activateKeys = fromKeyMap([
   [INTENTS.activate.trigger, (d, id) => (getChildren(d, id).length ? null : [{ type: 'activate', id }])],
+  ['Click', { type: 'activate' }],
 ])
 
 export const activate: Axis = tagAxis((d, id, t) => {
   if (isDisabled(d, id)) return null
-  const p = parseTrigger(t)
-  if (p.kind === 'click') return [{ type: 'activate', id }]
-  return activateOnLeafKey(d, id, t)
-}, [...activateOnLeafKey.chords, 'Click'])
+  return activateKeys(d, id, t)
+}, activateKeys.chords, activateKeys.spec.bindings)

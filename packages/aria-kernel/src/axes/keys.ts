@@ -109,6 +109,12 @@ export const INTENTS = {
     selectAll: [k('a', { ctrl: true }), k('A', { ctrl: true }), k('a', { meta: true }), k('A', { meta: true })],
     rangeUp: k(KEYS.ArrowUp, { shift: true }),
     rangeDown: k(KEYS.ArrowDown, { shift: true }),
+    /** Shift+Space — anchor 부터 현재 focus 까지 range select. APG listbox spec. */
+    rangeFromAnchor: k(KEYS.Space, { shift: true }),
+    /** $mod+Shift+Home — 첫 항목까지 range. */
+    rangeToFirst: [k(KEYS.Home, { ctrl: true, shift: true }), k(KEYS.Home, { meta: true, shift: true })],
+    /** $mod+Shift+End — 마지막 항목까지 range. */
+    rangeToLast: [k(KEYS.End, { ctrl: true, shift: true }), k(KEYS.End, { meta: true, shift: true })],
   },
   select: {
     toggle: [k(KEYS.Space)],
@@ -118,6 +124,9 @@ export const INTENTS = {
     firstChild: k(KEYS.ArrowRight),
     prev: k(KEYS.ArrowUp),
     next: k(KEYS.ArrowDown),
+    /** $mod+Home/End — visible-flat 의 첫/마지막 (treegrid: first/last row corner). */
+    visibleStart: [k(KEYS.Home, { ctrl: true }), k(KEYS.Home, { meta: true })],
+    visibleEnd: [k(KEYS.End, { ctrl: true }), k(KEYS.End, { meta: true })],
   },
   treeExpand: {
     open: k(KEYS.ArrowRight),

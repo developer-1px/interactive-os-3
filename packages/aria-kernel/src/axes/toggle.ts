@@ -1,5 +1,4 @@
 import { fromKeyMap, tagAxis, type Axis } from './axis'
-import { parseTrigger } from '../trigger'
 import { isDisabled } from '../types'
 import { INTENTS } from './keys'
 
@@ -9,14 +8,15 @@ import { INTENTS } from './keys'
  * checkbox / aria-pressed button 등 ARIA APG 가 Space 만 명시한 토글 류 전용.
  * `activate` (Enter+Space+Click) 와 분리 — APG checkbox 는 Enter 미허용
  * (form submit 과 충돌). switch 는 spec 상 Enter 선택적이므로 별도 처리.
+ *
+ * Click 은 entries 의 1급 chord — fromKeyMap 이 자동으로 spec.bindings 에 등재.
  */
-const toggleOnKey = fromKeyMap([
+const toggleKeys = fromKeyMap([
   [INTENTS.toggle.trigger, { type: 'activate' }],
+  ['Click', { type: 'activate' }],
 ])
 
 export const toggle: Axis = tagAxis((d, id, t) => {
   if (isDisabled(d, id)) return null
-  const p = parseTrigger(t)
-  if (p.kind === 'click') return [{ type: 'activate', id }]
-  return toggleOnKey(d, id, t)
-}, [...toggleOnKey.chords, 'Click'])
+  return toggleKeys(d, id, t)
+}, toggleKeys.chords, toggleKeys.spec.bindings)

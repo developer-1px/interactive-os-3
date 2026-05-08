@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate, composeAxes, escape, INTENT_CHORDS, matchAnyChord,
-  navigate,
+  navigate, openControl,
 } from '../axes'
 import { bindAxis } from '../state/bind'
 import { useControlValue } from '../state/useControlValue'
@@ -21,9 +21,9 @@ const END = ['End'] as const
 const FORWARD_OPEN = [...ARROW_DOWN, ...HOME] as const
 const BACKWARD_OPEN = [...ARROW_UP, ...END] as const
 
-/** Combobox 가 등록하는 axis — SSOT. (Escape · Arrow/Home/End · Enter) */
+/** Combobox 가 등록하는 axis — SSOT. (Escape · Alt+Arrow popup control · Arrow/Home/End · Enter) */
 export const comboboxAxis = () =>
-  composeAxes(escape, navigate('vertical'), activate)
+  composeAxes(escape, openControl, navigate('vertical'), activate)
 
 /** Options for {@link useComboboxPattern}. */
 export interface ComboboxOptions {

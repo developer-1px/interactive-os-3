@@ -22,15 +22,53 @@ import { triggerMatches } from '../trigger'
  * `chords` 는 phase 4 (PRD #38) 추가 — demo 가 `keys: () => dedupe(probe(...))`
  * 보일러플레이트 없이 `axisKeys(axis)` 한 줄로 chord 추출 가능.
  */
+/**
+ * AxisBinding — 단일 chord ↔ emit(s) 정적 매핑 (직렬화 의도형).
+ *
+ * - `trigger`: chord 문자열 (tinykeys 형식, 'Click' 포함)
+ * - `emits`: chord 매치 시 발행되는 UiEvent type 목록. legacy KeyHandler 함수형 rhs 인
+ *   경우 빈 배열 + `dynamic: true` 로 표시
+ * - `dynamic`: rhs 가 함수형이라 emit type 이 런타임에 결정됨을 표시
+ */
+export type AxisBinding = {
+  readonly trigger: string
+  readonly emits: readonly { readonly type: string }[]
+  readonly dynamic?: true
+}
+
+/**
+ * AxisSpec — axis 가 노출하는 직렬화 가능한 행동 명세.
+ *
+ * SSOT 원칙: chord/emit 등 string 으로 표현 가능한 모든 정보는 axis 소스가 정본이며,
+ * `fromKeyMap` factory 가 entries 로부터 자동 생성. 자연어 설명은 본 spec 에 포함하지
+ * 않는다 — axis 모듈 JSDoc 을 별도 surface 로 둔다.
+ */
+export type AxisSpec = {
+  readonly chords: readonly string[]
+  readonly bindings: readonly AxisBinding[]
+}
+
 export type Axis = ((d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null) & {
   /** axis 가 응답하는 chord 목록 (string tinykeys 형식). 직렬화 가능. */
   readonly chords: readonly string[]
+  /** chord ↔ emit 매핑 포함 직렬화 가능 spec. APG 정합 매트릭스의 정본 surface. */
+  readonly spec: AxisSpec
 }
 
-/** axis 함수에 chords 메타 부착하는 helper. axis wrapper 가 inner axis chords 흡수할 때 사용. */
-export const tagAxis = (fn: (d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null, chords: readonly string[]): Axis => {
+/** axis 함수에 chords/spec 메타 부착하는 helper. axis wrapper 가 inner axis 메타 흡수할 때 사용. */
+export const tagAxis = (
+  fn: (d: NormalizedData, id: string, t: Trigger) => UiEvent[] | null,
+  chords: readonly string[],
+  bindings: readonly AxisBinding[] = [],
+): Axis => {
   const tagged = fn as Axis
-  Object.defineProperty(tagged, 'chords', { value: Object.freeze([...chords]), enumerable: true, configurable: true })
+  const frozenChords = Object.freeze([...chords])
+  const frozenBindings = Object.freeze(
+    bindings.map((b) => Object.freeze({ ...b, emits: Object.freeze(b.emits.map((e) => Object.freeze({ ...e }))) })),
+  )
+  const spec: AxisSpec = Object.freeze({ chords: frozenChords, bindings: frozenBindings })
+  Object.defineProperty(tagged, 'chords', { value: frozenChords, enumerable: true, configurable: true })
+  Object.defineProperty(tagged, 'spec', { value: spec, enumerable: true, configurable: true })
   return tagged
 }
 
@@ -48,9 +86,20 @@ export const composeAxes = (...axes: Axis[]): Axis => {
     }
     return null
   }
-  const seen = new Set<string>()
-  for (const a of axes) for (const c of a.chords ?? []) seen.add(c)
-  return tagAxis(fn, [...seen])
+  const seenChords = new Set<string>()
+  const chords: string[] = []
+  for (const a of axes) for (const c of a.chords ?? []) if (!seenChords.has(c)) { seenChords.add(c); chords.push(c) }
+  // bindings: 우선순위 보존 — 같은 trigger 가 여러 axis 에 있으면 앞쪽 axis 가 이긴다 (composeAxes 의 short-circuit 의미와 일치).
+  const seenTrig = new Set<string>()
+  const bindings: AxisBinding[] = []
+  for (const a of axes) {
+    for (const b of a.spec?.bindings ?? []) {
+      if (seenTrig.has(b.trigger)) continue
+      seenTrig.add(b.trigger)
+      bindings.push(b)
+    }
+  }
+  return tagAxis(fn, chords, bindings)
 }
 
 /** axisKeys — axis 가 응답하는 chord 의 key 부분만 추출 (display 용). */
@@ -133,11 +182,12 @@ const normalizeChord = (chord: KeyMapChord): { strings: readonly Chord[]; object
 export const fromKeyMap = (entries: KeyMap): Axis => {
   const fn = (d: NormalizedData, id: string, t: Trigger): UiEvent[] | null => {
     const p = parseTrigger(t)
-    if (p.kind !== 'key') return null
     for (const [chord, rhs] of entries) {
       const { strings, objects } = normalizeChord(chord)
+      // KeyChord 객체 매칭은 key trigger 만 (matchChord 가 ParsedKeyChord 가정).
+      // string chord 매칭은 triggerMatches 가 click/key 둘 다 처리 — Click 1급 진입.
       const hit =
-        (objects.length > 0 && matchChord(p, objects)) ||
+        (p.kind === 'key' && objects.length > 0 && matchChord(p, objects)) ||
         (strings.length > 0 && strings.some((s) => triggerMatches(t, s)))
       if (!hit) continue
       if (isHandlerFn(rhs)) return rhs(d, id)
@@ -146,17 +196,30 @@ export const fromKeyMap = (entries: KeyMap): Axis => {
     }
     return null
   }
+  // chord 목록 + binding 동시 추출. trigger 정규형 1개당 row 1 (memory: feedback_minimize_choices_for_llm).
   const chords: string[] = []
-  const seen = new Set<string>()
-  for (const [chord] of entries) {
+  const seenChord = new Set<string>()
+  const bindings: AxisBinding[] = []
+  const seenBindTrig = new Set<string>()
+  const pushChord = (s: string): void => {
+    if (!seenChord.has(s)) { seenChord.add(s); chords.push(s) }
+  }
+  const bindingFromRhs = (trigger: string, rhs: KeyMapEntryRhs): AxisBinding => {
+    if (isHandlerFn(rhs)) return { trigger, emits: [], dynamic: true }
+    const tmpls = Array.isArray(rhs) ? rhs : [rhs]
+    return { trigger, emits: tmpls.map((t) => ({ type: t.type })) }
+  }
+  for (const [chord, rhs] of entries) {
     const { strings, objects } = normalizeChord(chord)
-    for (const c of objects) {
-      const s = chordToString(c)
-      if (!seen.has(s)) { seen.add(s); chords.push(s) }
-    }
-    for (const s of strings) {
-      if (!seen.has(s)) { seen.add(s); chords.push(s) }
+    const triggers: string[] = []
+    for (const c of objects) triggers.push(chordToString(c))
+    for (const s of strings) triggers.push(s)
+    for (const trig of triggers) {
+      pushChord(trig)
+      if (seenBindTrig.has(trig)) continue
+      seenBindTrig.add(trig)
+      bindings.push(bindingFromRhs(trig, rhs))
     }
   }
-  return tagAxis(fn, chords)
+  return tagAxis(fn, chords, bindings)
 }

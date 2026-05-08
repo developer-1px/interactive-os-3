@@ -13,6 +13,7 @@ import { Route as WrappersRouteImport } from './routes/wrappers'
 import { Route as UieventsRouteImport } from './routes/uievents'
 import { Route as PatternsRouteImport } from './routes/patterns'
 import { Route as DataRouteImport } from './routes/data'
+import { Route as CoverageRouteImport } from './routes/coverage'
 import { Route as AxesRouteImport } from './routes/axes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
@@ -40,6 +41,11 @@ const PatternsRoute = PatternsRouteImport.update({
 const DataRoute = DataRouteImport.update({
   id: '/data',
   path: '/data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoverageRoute = CoverageRouteImport.update({
+  id: '/coverage',
+  path: '/coverage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AxesRoute = AxesRouteImport.update({
@@ -86,6 +92,7 @@ const AppsFinderSplatRoute = AppsFinderSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/coverage': typeof CoverageRoute
   '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/coverage': typeof CoverageRoute
   '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/axes': typeof AxesRoute
+  '/coverage': typeof CoverageRoute
   '/data': typeof DataRoute
   '/patterns': typeof PatternsRoute
   '/uievents': typeof UieventsRoute
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/axes'
+    | '/coverage'
     | '/data'
     | '/patterns'
     | '/uievents'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/axes'
+    | '/coverage'
     | '/data'
     | '/patterns'
     | '/uievents'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/axes'
+    | '/coverage'
     | '/data'
     | '/patterns'
     | '/uievents'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AxesRoute: typeof AxesRoute
+  CoverageRoute: typeof CoverageRoute
   DataRoute: typeof DataRoute
   PatternsRoute: typeof PatternsRoute
   UieventsRoute: typeof UieventsRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/data'
       fullPath: '/data'
       preLoaderRoute: typeof DataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coverage': {
+      id: '/coverage'
+      path: '/coverage'
+      fullPath: '/coverage'
+      preLoaderRoute: typeof CoverageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/axes': {
@@ -278,6 +298,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AxesRoute: AxesRoute,
+  CoverageRoute: CoverageRoute,
   DataRoute: DataRoute,
   PatternsRoute: PatternsRoute,
   UieventsRoute: UieventsRoute,
