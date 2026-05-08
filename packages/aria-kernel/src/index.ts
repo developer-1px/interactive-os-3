@@ -45,3 +45,11 @@ export {
   type GestureHelper,
 } from './gesture'
 
+// APG ↔ axis 정합 매트릭스 (EPIC #121).
+export { APG_KEYBOARD_SPEC, allApgChords, type ApgEntry } from './spec/apgKeyboardSpec'
+export { IMPL_CHORDS } from './spec/implChords'
+export { normalizeChord, normalizeChordSet } from './spec/normalizeChord'
+export {
+  UNIVERSAL_EXTRA, PATTERN_EXTRA_ALLOW, PATTERN_APG_WAIVE,
+} from './spec/apgCoverageAllowlist'
+

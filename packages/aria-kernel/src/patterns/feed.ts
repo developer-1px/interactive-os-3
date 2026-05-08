@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import type { NormalizedData, UiEvent } from '../types'
-import { pageNavigate } from '../axes'
+import { composeAxes, navigate, pageNavigate } from '../axes'
 import { useRovingTabIndex } from '../roving/useRovingTabIndex'
 import type { InsideEditableMode } from '../key/insideEditable'
 import { usePatternClipboard, type ClipboardOnMiddleware } from './usePatternClipboard'
 import type { BuiltinChordDescriptor, ItemProps, RootProps } from './types'
 
-/** Feed 가 등록하는 axis — SSOT. PageUp/PageDown → 인접 article navigate. */
-export const feedAxis = () => pageNavigate('vertical', 1)
+/** Feed 가 등록하는 axis — SSOT. ArrowDown/Up + Home/End (navigate) + PageUp/PageDown (pageNavigate). */
+export const feedAxis = () => composeAxes(pageNavigate('vertical', 1), navigate('vertical'))
 
 /** Feed article descriptor — id + optional label. */
 export interface FeedItem {

@@ -8,8 +8,11 @@ import { INTENTS } from './keys'
  * 다음 id 산수 (visible-flat) 는 reducer (`resolveNavigate`) 가 담당.
  */
 export const treeNavigate: Axis = fromKeyMap([
-  [INTENTS.treeNavigate.next,  { type: 'navigate', dir: 'visibleNext' }],
-  [INTENTS.treeNavigate.prev,  { type: 'navigate', dir: 'visiblePrev' }],
-  [INTENTS.navigate.start,     { type: 'navigate', dir: 'start' }],
-  [INTENTS.navigate.end,       { type: 'navigate', dir: 'end' }],
+  [INTENTS.treeNavigate.next,         { type: 'navigate', dir: 'visibleNext' }],
+  [INTENTS.treeNavigate.prev,         { type: 'navigate', dir: 'visiblePrev' }],
+  [INTENTS.navigate.start,            { type: 'navigate', dir: 'start' }],
+  [INTENTS.navigate.end,              { type: 'navigate', dir: 'end' }],
+  // $mod+Home/End — visible-flat 정점/끝점 (treegrid: first/last row).
+  [INTENTS.treeNavigate.visibleStart, { type: 'navigate', dir: 'start' }],
+  [INTENTS.treeNavigate.visibleEnd,   { type: 'navigate', dir: 'end' }],
 ])

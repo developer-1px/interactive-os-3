@@ -5,7 +5,7 @@ import {
 } from '../types'
 import {
   activate, composeAxes, escape,
-  gridNavigate, matchAnyChord,
+  gridNavigate, matchAnyChord, openControl,
 } from '../axes'
 import { bindAxis } from '../state/bind'
 import { useControlValue } from '../state/useControlValue'
@@ -17,9 +17,9 @@ const ARROW_DOWN = ['ArrowDown'] as const
 const ARROW_UP = ['ArrowUp'] as const
 const ESCAPE = ['Escape'] as const
 
-/** Combobox(grid popup) 가 등록하는 axis — Escape · 2D nav · Enter. */
+/** Combobox(grid popup) 가 등록하는 axis — Escape · Alt+Arrow popup control · 2D nav · Enter. */
 export const comboboxGridAxis = () =>
-  composeAxes(escape, gridNavigate, activate)
+  composeAxes(escape, openControl, gridNavigate, activate)
 
 export interface ComboboxGridOptions {
   value?: string

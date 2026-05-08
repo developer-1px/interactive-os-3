@@ -1,0 +1,169 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`APG ↔ axis chord coverage (Issue #123) > coverage matrix matches snapshot (drift gate) 1`] = `
+[
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "accordion",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "alert",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "alertDialog",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "breadcrumb",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "button",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "carousel",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "checkbox",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "combobox",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "comboboxGrid",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "dialog",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "disclosure",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "feed",
+  },
+  {
+    "apgGap": [
+      "F2",
+    ],
+    "implExtra": [],
+    "pattern": "grid",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "link",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "listbox",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "menu",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "menuButton",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "menubar",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "meter",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "navigationList",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "radioGroup",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "slider",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "sliderRange",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "spinbutton",
+  },
+  {
+    "apgGap": [
+      "Enter",
+    ],
+    "implExtra": [],
+    "pattern": "splitter",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "switch",
+  },
+  {
+    "apgGap": [
+      "Delete",
+    ],
+    "implExtra": [],
+    "pattern": "tabs",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "toolbar",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "tooltip",
+  },
+  {
+    "apgGap": [],
+    "implExtra": [],
+    "pattern": "tree",
+  },
+  {
+    "apgGap": [
+      "F2",
+    ],
+    "implExtra": [],
+    "pattern": "treeGrid",
+  },
+]
+`;
