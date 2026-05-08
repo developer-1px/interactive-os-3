@@ -118,6 +118,11 @@ function runCommand(
     case 'promote': {
       const parentId = findParent(data, id)
       if (parentId && parentId !== containerId) {
+        // Workflowy/Roam 정본 — following siblings 는 promoted 의 자식으로 흡수.
+        const siblings = data.relationships[parentId] ?? []
+        const idx = siblings.indexOf(id)
+        const following = idx >= 0 ? siblings.slice(idx + 1) : []
+        for (const sib of following) relay({ type: 'move', id: sib, targetId: id, mode: 'child' })
         relay({ type: 'move', id, targetId: parentId, mode: 'sibling-after' })
       }
       break

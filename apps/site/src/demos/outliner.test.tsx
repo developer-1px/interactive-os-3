@@ -34,7 +34,7 @@ const labelOf = (el: HTMLElement) => el.textContent?.replace(/[▾▸•]/g, '')
 const labels = () => items().map(labelOf)
 const find = (prefix: string) => items().find((el) => labelOf(el).startsWith(prefix))!
 const levelOf = (el: HTMLElement) => {
-  const lvl = el.style.getPropertyValue('--lvl')
+  const lvl = el.getAttribute('aria-level')
   return lvl ? parseInt(lvl, 10) : 0
 }
 
@@ -78,6 +78,31 @@ describe('Outliner — Shift+Tab promote (move 어휘)', () => {
     // root 자식 수 증가 (clipboard 가 잃은 자식만큼 root 가 얻음)
     const rootChildAtLevel2 = items().filter((el) => levelOf(el) === 2).map(labelOf)
     expect(rootChildAtLevel2.some((l) => l.startsWith('paste-as-sibling'))).toBe(true)
+  })
+})
+
+describe('Outliner — Shift+Tab promote 가 following siblings 를 자식으로 흡수', () => {
+  it('Shift+Tab 후 원래 같은 부모의 뒤따르던 형제는 promoted 의 자식이 된다', () => {
+    render(<Outliner />)
+    press('ArrowRight')                                          // root expand
+    press('ArrowDown'); press('ArrowDown'); press('ArrowDown')   // 'clipboard'
+    press('ArrowRight')                                          // expand clipboard
+    press('ArrowDown')                                           // 'paste-as-sibling' focused (level 3)
+    const promoted = find('paste-as-sibling')
+    const promotedLevelBefore = levelOf(promoted)
+    press('Tab', { shiftKey: true })
+    // promoted 는 한 단계 outdent + 새로 흡수한 자식 확인용 expand
+    const movedPromoted = items().find((el) => labelOf(el).startsWith('paste-as-sibling'))!
+    expect(levelOf(movedPromoted)).toBe(promotedLevelBefore - 1)
+    movedPromoted.focus()
+    fireEvent.keyDown(movedPromoted, { key: 'ArrowRight' })
+    // 원래 following sibling 'paste-as-child' 는 promoted 의 자식
+    const all = items()
+    const promotedIdx = all.findIndex((el) => labelOf(el).startsWith('paste-as-sibling'))
+    const followingIdx = all.findIndex((el) => labelOf(el).startsWith('paste-as-child'))
+    expect(followingIdx).toBeGreaterThanOrEqual(0)
+    expect(levelOf(all[followingIdx])).toBe(levelOf(all[promotedIdx]) + 1)
+    expect(promotedIdx).toBeLessThan(followingIdx)
   })
 })
 
